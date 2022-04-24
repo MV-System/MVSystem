@@ -4,7 +4,7 @@ import { NgxMaskModule } from 'ngx-mask';
 
 
 import { ClientesRegistroComponent } from './Clientes/Clientes-registro/clientes-registro.component';
-import { CellControlRoutingModule } from './cell-control-routing.module';
+import { MvSystemRoutingModule } from './mv-system-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SuplidorRegistroComponent } from './Suplidores/suplidor-registro/suplidor-registro.component';
 
@@ -18,10 +18,11 @@ import { SuplidorRegistroComponent } from './Suplidores/suplidor-registro/suplid
   ],
   imports: [
     CommonModule,
-    CellControlRoutingModule,
+    MvSystemRoutingModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    
 
   ]
 })
-export class CellControlModule { }
+export class MvSystemModule { }

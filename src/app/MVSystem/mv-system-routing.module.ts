@@ -24,4 +24,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class CellControlRoutingModule { }
+export class MvSystemRoutingModule { }

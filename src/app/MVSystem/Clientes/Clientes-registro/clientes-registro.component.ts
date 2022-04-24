@@ -135,25 +135,19 @@ validarCampos(nombreCampo: string) {
 				if (clienteInsertado.mensaje.includes('ya está')) {
 					this.toastr.error(clienteInsertado.mensaje, '',{closeButton: true,progressBar:true});
 					console.log('toastr clienteInsertado error');
-					this.mensajeAvisoInsert = clienteInsertado.mensaje;
+					// this.mensajeAvisoInsert = clienteInsertado.mensaje;
 				}
 				else{
 					this.toastr.success(clienteInsertado.mensaje, '',{closeButton: true,progressBar:true});
+          // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
 
+          // this.formRegistro.reset({
+          //     tipoCliente: 1,
+          //     tipoTelefono: 1
+          // });
 					console.log('OK');
 				}
-				
-				console.log(clienteInsertado);
-				
 			});
-    // this.clientes.push(model);
-    // console.log(this.clientes);
-    this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
-
-    // this.formRegistro.reset({
-    //     tipoCliente: 1,
-    //     tipoTelefono: 1
-    // });
     }
     else{
         this.toastr.error('Hay datos en el formulario incompletos', '',{closeButton: true,progressBar:true});

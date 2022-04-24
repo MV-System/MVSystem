@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'cell-control',
-    loadChildren: () => import('./CellControl/cell-control.module').then( m => m.CellControlModule )
+    path: 'mv-system',
+    loadChildren: () => import('./MVSystem/mv-system.module').then( m => m.MvSystemModule )
    },
 ];
 
