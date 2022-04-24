@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgxMaskModule } from 'ngx-mask';
 
 
 import { ClientesRegistroComponent } from './Clientes/Clientes-registro/clientes-registro.component';
@@ -13,16 +12,12 @@ import { SuplidorRegistroComponent } from './Suplidores/suplidor-registro/suplid
 
 @NgModule({
   declarations: [
-    ClientesRegistroComponent,
-    SuplidorRegistroComponent,
+ 
   ],
   imports: [
     CommonModule,
     MvSystemRoutingModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot(),
-    
-
   ]
 })
 export class MvSystemModule { }

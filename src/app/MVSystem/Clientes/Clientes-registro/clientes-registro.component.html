@@ -154,16 +154,17 @@
           
                 </tr>
               
-                <tr *ngFor="let cliente of clientesListar; let i = index">
-                    <td>{{i + 1}}</td>
-                    <td>{{cliente.iD_Tipo_Cliente}}</td>
-                    <td>{{cliente.nombres |  titlecase }}</td>
-                    <td>{{cliente.apellidos |  titlecase}}</td>
-                    <td>{{cliente.numero_Telefono}}</td>
-                    <td>{{cliente.iD_Tipo_Telefono}}</td>
-                    <td>{{cliente.limite_Credito}}</td>
-                    <td>{{cliente.email_Detalle}}</td>
-                    <td>{{cliente.direccion_Detalle }}</td>
+                <tr >
+                    <!-- object:{{clientesListar}} -->
+                    <!-- <td>{{i + 1}}</td> -->
+                    <td>{{clientesListar?.iD_Tipo_Cliente }}</td>
+                    <td>{{clientesListar?.nombres |  titlecase }}</td>
+                    <td>{{clientesListar?.apellidos |  titlecase}}</td>
+                    <td>{{clientesListar?.numero_Telefono}}</td>
+                    <td>{{clientesListar?.iD_Tipo_Telefono}}</td>
+                    <td>{{clientesListar?.limite_Credito}}</td>
+                    <td>{{clientesListar?.email_Detalle}}</td>
+                    <td>{{clientesListar?.direccion_Detalle }}</td>
                 </tr>
             </table>
         </div>

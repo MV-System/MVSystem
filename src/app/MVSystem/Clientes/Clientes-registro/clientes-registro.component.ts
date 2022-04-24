@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { TipoTelefono } from '../../interfaces/catalogo.interface';
 
-import { Cliente, ClienteRegistro, TipoCliente, TipoTelefono } from '../../interfaces/cliente.interface';
+import { Cliente, ClienteRegistro, TipoCliente } from '../../interfaces/cliente.interface';
+import { CatalogosService } from '../../services/catalogos.service';
 import { ClientesService } from '../../services/clientes.service';
 
 @Component({
@@ -11,11 +13,10 @@ import { ClientesService } from '../../services/clientes.service';
   styleUrls: ['./clientes-registro.component.css']
 })
 export class ClientesRegistroComponent implements OnInit {
-	mensajeAvisoInsert: any;
-    
     constructor(
         private fb: FormBuilder,
-        private _clientesService: ClientesService,
+        private clientesService: ClientesService,
+        private catalogosService: CatalogosService,
         private toastr: ToastrService ) { }
         
         
@@ -29,13 +30,13 @@ export class ClientesRegistroComponent implements OnInit {
     emailPattern         : string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 
     clientes: ClienteRegistro[]=[];
-    clientesListar: Cliente[]=[];
+    clientesListar!: Cliente;
     listaTipoClientes: TipoCliente[]=[];
     listaTipoTelefonos: TipoTelefono[]=[];
     bool!: boolean;
   //Forms
   formRegistro: FormGroup = this.fb.group({
-    nombre:       ['Xavier', [Validators.required]],
+    nombre:       ['Xavier client', [Validators.required]],
     apellido:     ['Mejia', Validators.required],
     tipoCliente:  [1],
     tipoClienteDescripcion:  [""],
@@ -44,7 +45,7 @@ export class ClientesRegistroComponent implements OnInit {
     telefono:     [8099728439,Validators.required],
     extensionNumero: [Validators.required] ,
     email:        ['',[Validators.pattern(this.emailPattern)]],
-    criterio:     [''],
+    // criterio:     [''],
     usuario:      ['Xmejia'],
 
     provincia:  ['Santo Domingo'],
@@ -68,7 +69,6 @@ export class ClientesRegistroComponent implements OnInit {
           nombres:        this.formRegistro.get('nombre')?.value,
           apellidos:      this.formRegistro.get('apellido')?.value,
           iD_Tipo_Cliente:   this.formRegistro.get('tipoCliente')?.value,
-          // tipo_Cliente_Descripcion:   this.formRegistro.get('tipoClienteDescripcion')?.value,
           limite_Credito: this.formRegistro.get('limiteCredito')?.value,
           numero_Telefono:      this.formRegistro.get('telefono')?.value,
           iD_Tipo_Telefono:  this.formRegistro.get('tipoTelefono')?.value,
@@ -92,70 +92,54 @@ export class ClientesRegistroComponent implements OnInit {
  
   get emailErrorMsg(): string{
     const errors = this.formRegistro.get('email')?.errors;
-    
-    //    if (errors?.required) {
-    //      return 'El correo es obligatorio'
-    //    }
        if(errors?.pattern){
          return 'El valor no tiene formato de correo';
        }
-    //    else if(errors?.emailTomado){
-    //      return 'El email ya existe'
-    //    }
        return ''
      }
-validarCampos(nombreCampo: string) {
+  validarCampos(nombreCampo: string) {
     return this.formRegistro.get(nombreCampo)?.invalid && 
            this.formRegistro.get(nombreCampo)?.touched
   }
   obtenerTipoTelefonos(){
-      this._clientesService.getTipoTelefonoLista()
+      this.catalogosService.getTipoTelefonoLista()
           .subscribe(tipoTelefono =>{
               this.listaTipoTelefonos = tipoTelefono;
-              console.log(this.listaTipoTelefonos);
-              
-          })
+          });
   }
   obtenerTipoClientes(){
-    this._clientesService.getTipoClienteLista()
+    this.clientesService.getTipoClienteLista()
         .subscribe(tipoCliente =>{
             this.listaTipoClientes = tipoCliente;
-            console.log(this.listaTipoClientes);
-            
-        })
-}
+        });
+  }
   registroCLiente(){
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
-        this._clientesService.postCliente(model)
-            .subscribe(clienteInsertado =>{
-				console.log(clienteInsertado);
-				
-				this.clientesListar =clienteInsertado;
+        this.clientesService.postCliente(model)
+            .subscribe((clienteInsertado: any) =>{
+              this.clientesListar = clienteInsertado;
+        
 				if (clienteInsertado.mensaje.includes('ya está')) {
-					this.toastr.error(clienteInsertado.mensaje, '',{closeButton: true,progressBar:true});
-					console.log('toastr clienteInsertado error');
-					// this.mensajeAvisoInsert = clienteInsertado.mensaje;
+          this.toastr.error(clienteInsertado.mensaje, '',
+          {closeButton: true,progressBar:true});
 				}
 				else{
-					this.toastr.success(clienteInsertado.mensaje, '',{closeButton: true,progressBar:true});
+					this.toastr.success(clienteInsertado.mensaje, '',
+          {closeButton: true,progressBar:true});
           // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
 
-          // this.formRegistro.reset({
-          //     tipoCliente: 1,
-          //     tipoTelefono: 1
-          // });
-					console.log('OK');
+          this.formRegistro.reset({
+              tipoCliente: 1,
+              tipoTelefono: 1
+          });
 				}
 			});
     }
     else{
-        this.toastr.error('Hay datos en el formulario incompletos', '',{closeButton: true,progressBar:true});
-console.log('toastr error');
-
+        this.toastr.error('Hay datos en el formulario incompletos', '',
+        {closeButton: true,progressBar:true});
     }
-
-  
   }
 
   

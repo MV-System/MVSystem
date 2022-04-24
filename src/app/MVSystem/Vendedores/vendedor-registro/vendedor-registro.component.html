@@ -1,0 +1,145 @@
+
+<h1>Registrar Vendedor</h1>
+
+<div class="container">
+    <div class="wrapper">
+        <div class="left">
+            <fieldset > 
+                <legend>Datos del Vendedor</legend>
+                    <div>
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroVendedor()">
+                
+                            <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span><br>
+                            <label >
+                                Nombre:
+                                <input  class="" 
+                                        placeholder="Inserte el nombre "
+                                        type="text"
+                                        required
+                                        formControlName="nombre" /><br>
+                            </label> 
+                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span><br>
+
+                            <label >
+                                Apellido: 
+                                <input  class=""
+                                        placeholder="Inserte el apellido "
+                                        type="text" 
+                                        required
+                                        formControlName="apellido" /><br><br>
+                            </label> 
+
+                            <select formControlName="tipoTelefono">
+                                <option *ngFor="let telefono of listaTipoTelefonos"
+                                        [value]="telefono.iD_Tipo_Telefono">
+                                        {{telefono.tipo_Telefono_Descripcion}}
+                                </option>
+                            
+                            </select><br><br>
+                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span>
+
+                            <label >
+                                Telefono:
+                                <input  formControlName="telefono"
+                                type="text" 
+                                mask="000-000-0000" 
+                                />
+                            </label> <br><br> 
+                            <label >
+                                <input  type="checkbox" (change)="onCheckboxChange($event)">
+                             Ext. No.:
+                             <input  
+                                     type="number" 
+                                     class="" 
+                                     placeholder="Inserte la extensión "
+                                     formControlName="extensionNumero"
+                                      /><br><br>
+                         </label> 
+                        
+                            <span style="color: red" *ngIf="validarCampos('email')">
+                                {{emailErrorMsg}}
+                              </span>
+                            <label >
+                                Email:
+                                <input  class="" 
+                                        type="email" 
+                                        formControlName="email" /><br><br>
+                            </label> 
+                            <label >
+                                Provincia:
+                                <input  class="" 
+                                        type="text" 
+                                        formControlName="provincia" /><br><br>
+                            </label> 
+                            <label >
+                                Sector:
+                                <input  class="" 
+                                        type="text" 
+                                        formControlName="sector" /><br><br>
+                            </label> 
+                            <label>
+                                Calle:
+                                <input  class="" 
+                                        type="text" 
+                                        formControlName="calle" /><br><br>
+                            </label> 
+                            <label>
+                                NO. Casa:
+                                <input  class="" 
+                                        type="text" 
+                                        formControlName="casaNumero" /><br><br>
+                            </label> 
+                   
+                    <input class="submit" type="submit" value="Guardar">
+                </form>
+            </div>
+        </fieldset>
+        </div>
+        <div class="right">
+            <table>
+                <tr>
+                    <th>Cod.</th>
+                  <th >Tipo</th>
+                  <th >Nombre</th>
+                  <th >Apellido</th>
+                  <th >Telefono</th>
+                  <th >Tipo de Telefono</th>
+                  <th >Email</th>
+                  <th >Provincia</th>
+                  <th >Sector</th>
+                  <th >Calle</th>
+                  <th >No. Casa</th>
+                </tr>
+              
+                <tr *ngFor="let i = index">
+                    <td>{{1 + 1}}</td>
+                    <td>{{vendedorListar?.nombres}}</td>
+                    <td>{{vendedorListar?.apellidos}}</td>
+                    <td>{{vendedorListar?.numero_Telefono}}</td>
+                    <td>{{vendedorListar?.iD_Tipo_Telefono}}</td>
+                    <td>{{vendedorListar?.email_Detalle}}</td>
+                    <td>{{vendedorListar?.direccion_Detalle}}</td>
+                    <td>{{vendedorListar?.usuario}}</td>
+         
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div>
+        <p>Form Valid: {{formRegistro.valid}}</p>
+        <p>Form Status: {{formRegistro.status}}</p>
+        <p>Form peding: {{formRegistro.pending}}</p>
+        <p>Form errors</p>
+        <pre>{{formRegistro.errors | json}}</pre>
+        <h5>Nombre</h5>
+        <pre>{{ formRegistro.controls.nombre.errors | json }}</pre>
+        <br>
+        <h5>Apellido</h5>
+        <pre>{{ formRegistro.controls.apellido.errors | json }}</pre>
+        <br>
+        <h5>Telefono</h5>
+        <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
+        <br>
+    </div>
+</div>
+

@@ -1,19 +1,19 @@
-<h1>Registrar Suplidor</h1>
+<h1>Registrar Proveedor</h1>
 
-<!-- <div class="container">
+<div class="container">
     <div class="wrapper">
         <div class="left">
             <fieldset > 
-                <legend>Datos del Cliente</legend>
+                <legend>Datos del Proveedor</legend>
                     <div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroCLiente()">
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroProveedor()">
                            <br>
                             <label >
-                                Tipo de cliente: 
-                                <select formControlName="tipoCliente">
-                                    <option *ngFor="let tipoCliente of listaTipoClientes"
-                                            [value]="tipoCliente.iD_Tipo_Cliente">
-                                            {{tipoCliente.tipo_Cliente_Descripcion}}
+                                Tipo de Proveedor: 
+                                <select formControlName="tipoProveedor">
+                                    <option *ngFor="let tipoProveedor of listaTipoProveedor"
+                                            [value]="tipoProveedor.iD_Tipo_Proveedor">
+                                            {{tipoProveedor.tipo_Proveedor_Descripcion}}
                                     </option>
                                 </select> <br>
                             </label> 
@@ -64,12 +64,7 @@
                                      formControlName="extensionNumero"
                                       /><br><br>
                          </label> 
-                            <label >
-                                Limite de credito:
-                                <input  class="" 
-                                        type="number" 
-                                        formControlName="limiteCredito" /><br><br>
-                            </label> 
+                        
                             <span style="color: red" *ngIf="validarCampos('email')">
                                 {{emailErrorMsg}}
                               </span>
@@ -118,7 +113,6 @@
                   <th >Apellido</th>
                   <th >Telefono</th>
                   <th >Tipo de Telefono</th>
-                  <th >Limite de credito</th>
                   <th >Email</th>
                   <th >Provincia</th>
                   <th >Sector</th>
@@ -126,19 +120,16 @@
                   <th >No. Casa</th>
                 </tr>
               
-                <tr *ngFor="let cliente of clientes; let i = index">
-                    <td>{{i + 1}}</td>
-                    <td>{{cliente.tipoCliente}}</td>
-                    <td>{{cliente.nombre}}</td>
-                    <td>{{cliente.apellido}}</td>
-                    <td>{{cliente.telefono}}</td>
-                    <td>{{cliente.tipoTelefono}}</td>
-                    <td>{{cliente.limiteCredito}}</td>
-                    <td>{{cliente.email}}</td>
-                    <td>{{cliente.provincia}}</td>
-                    <td>{{cliente.sector}}</td>
-                    <td>{{cliente.calle}}</td>
-                    <td>{{cliente.casaNumero}}</td>
+                <tr *ngFor="let i = index">
+                    <td>{{1 + 1}}</td>
+                    <td>{{proveedorListar?.nombres}}</td>
+                    <td>{{proveedorListar?.apellidos}}</td>
+                    <td>{{proveedorListar?.numero_Telefono}}</td>
+                    <td>{{proveedorListar?.iD_Tipo_Telefono}}</td>
+                    <td>{{proveedorListar?.email_Detalle}}</td>
+                    <td>{{proveedorListar?.direccion_Detalle}}</td>
+                    <td>{{proveedorListar?.usuario}}</td>
+         
                 </tr>
             </table>
         </div>
@@ -159,4 +150,4 @@
         <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
         <br>
     </div>
-</div> -->
+</div>
