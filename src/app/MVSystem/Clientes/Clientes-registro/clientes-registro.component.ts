@@ -68,10 +68,10 @@ export class ClientesRegistroComponent implements OnInit {
       const registro: ClienteRegistro = {
           nombres:        this.formRegistro.get('nombre')?.value,
           apellidos:      this.formRegistro.get('apellido')?.value,
-          iD_Tipo_Cliente:   this.formRegistro.get('tipoCliente')?.value,
+          iD_Tipo_Cliente:   Number(this.formRegistro.get('tipoCliente')?.value),
           limite_Credito: this.formRegistro.get('limiteCredito')?.value,
           numero_Telefono:      this.formRegistro.get('telefono')?.value,
-          iD_Tipo_Telefono:  this.formRegistro.get('tipoTelefono')?.value,
+          iD_Tipo_Telefono:Number(  this.formRegistro.get('tipoTelefono')?.value),
           extencion:  this.formRegistro.get('extencion')?.value,
           email_Detalle:      this.formRegistro.get('email')?.value,
           usuario:      this.formRegistro.get('usuario')?.value,
@@ -88,6 +88,8 @@ export class ClientesRegistroComponent implements OnInit {
     else{
         this.formRegistro.controls.extensionNumero.enable();
       }
+    console.log(event);
+
   }
  
   get emailErrorMsg(): string{
@@ -114,11 +116,15 @@ export class ClientesRegistroComponent implements OnInit {
         });
   }
   registroCLiente(){
+    this.formRegistro.markAllAsTouched();
+
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
         this.clientesService.postCliente(model)
             .subscribe((clienteInsertado: any) =>{
               this.clientesListar = clienteInsertado;
+              console.log(clienteInsertado);
+              
         
 				if (clienteInsertado.mensaje.includes('ya está')) {
           this.toastr.error(clienteInsertado.mensaje, '',

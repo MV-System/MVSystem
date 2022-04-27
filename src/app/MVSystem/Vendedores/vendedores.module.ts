@@ -2,8 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { VendedoresRoutingModule } from './vendedores-routing.module';
-import { VendedorRegistroComponent } from './vendedor-registro/vendedor-registro.component';
+
+
 import { ReactiveFormsModule } from '@angular/forms';
+import { VendedorRegistroComponent } from './vendedor-registro/vendedor-registro.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({
@@ -13,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     VendedoresRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskModule.forRoot(),
   ]
 })
 export class VendedoresModule { }

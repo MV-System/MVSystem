@@ -22,6 +22,10 @@ export class SuplidorRegistroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.formRegistro.controls.extensionNumero.disable();
+
+    this.obtenerTipoProveedor();
+    this.obtenerTipoTelefonos();
   }
   proveedor: ProveedorRegistro[]=[];
   proveedorListar!: Proveedor;
@@ -57,8 +61,8 @@ modeloRegistroProveedor(){
         nombres:         this.formRegistro.get('nombre')?.value,
         apellidos:       this.formRegistro.get('apellido')?.value,
         numero_Telefono: this.formRegistro.get('telefono')?.value,
-        iD_Tipo_Telefono:this.formRegistro.get('tipoTelefono')?.value,
-        iD_Tipo_Suplidor:this.formRegistro.get('tipoProveedor')?.value,
+        iD_Tipo_Telefono:Number( this.formRegistro.get('tipoTelefono')?.value),
+        iD_Tipo_Suplidor:Number(this.formRegistro.get('tipoProveedor')?.value),
         extencion:       this.formRegistro.get('extencion')?.value,
         email_Detalle:   this.formRegistro.get('email')?.value,
         usuario:         this.formRegistro.get('usuario')?.value,
@@ -75,6 +79,8 @@ onCheckboxChange(event: any) {
   else{
       this.formRegistro.controls.extensionNumero.enable();
     }
+    console.log(event);
+    
 }
 
 get emailErrorMsg(): string{
@@ -97,11 +103,17 @@ obtenerTipoTelefonos(){
 obtenerTipoProveedor(){
   this.proveedorService.getTipoProveedorLista()
       .subscribe(tipoProveedor =>{
+        console.log(tipoProveedor);
+        
           this.listaTipoProveedor = tipoProveedor;
       });
 }
 registroProveedor(){
+  this.formRegistro.markAllAsTouched();
+
   const model: ProveedorRegistro = this.modeloRegistroProveedor();
+  console.log(model);
+  
   if (this.formRegistro.valid) {
       this.proveedorService.postProveedor(model)
           .subscribe((proveedorInsertado: any) =>{

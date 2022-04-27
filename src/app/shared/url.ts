@@ -14,7 +14,7 @@ export let APIURL = {
     },    
     Proveedor:{
         Consultas:{
-            tipoProveedorLista: API + 'Catalogos/Tipo_Proveedor_Combo',
+            tipoProveedorLista: API + 'Catalogos/Tipo_suplidor_Combo',
         },
         Inserta:{
             ProveedorInserta: API + 'Proveedores/Proveedor_Insert',
@@ -25,7 +25,7 @@ export let APIURL = {
             
         },
         Inserta:{
-            vendedorInserta: API + ''
+            vendedorInserta: API + 'Vendedores/Vendedor_Insert'
         }
         
     }

@@ -6,6 +6,7 @@ import { Vendedor } from '../../interfaces/vendedor.interface';
 import { CatalogosService } from '../../services/catalogos.service';
 import { VendedorService } from '../../services/vendedor.service';
 
+
 @Component({
   selector: 'app-vendedor-registro',
   templateUrl: './vendedor-registro.component.html',
@@ -21,6 +22,9 @@ export class VendedorRegistroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.formRegistro.controls.extensionNumero.disable();
+
+    this.obtenerTipoTelefonos();
   }
 
     vendedor: Vendedor[]=[];
@@ -29,13 +33,12 @@ export class VendedorRegistroComponent implements OnInit {
     bool!: boolean;
   //Forms
   formRegistro: FormGroup = this.fb.group({
-    nombre:       ['Xavier vendedor', [Validators.required]],
-    apellido:     ['Mejia', Validators.required],
+    nombre:       ['', [Validators.required]],
+    apellido:     ['', Validators.required],
     tipoTelefono: [1],
     telefono:     [8099728439,Validators.required],
     extensionNumero: [] ,
     email:        [''],
-    // criterio:     [''],
     usuario:      ['Xmejia'],
     provincia:  ['Santo Domingo'],
     sector:     ['Buena Vista'],
@@ -52,6 +55,7 @@ export class VendedorRegistroComponent implements OnInit {
   
   ];
       const registro: Vendedor = {
+
           nombres:         this.formRegistro.get('nombre')?.value,
           apellidos:       this.formRegistro.get('apellido')?.value,
           numero_Telefono: this.formRegistro.get('telefono')?.value,
@@ -93,6 +97,7 @@ export class VendedorRegistroComponent implements OnInit {
   }
 
   registroVendedor(){
+    this.formRegistro.markAllAsTouched();
     const model: Vendedor = this.modeloRegistroVendedor();
     if (this.formRegistro.valid) {
         this.vendedorService.postVendedor(model)

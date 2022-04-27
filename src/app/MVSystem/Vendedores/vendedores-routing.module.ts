@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { VendedorRegistroComponent } from './vendedor-registro/vendedor-registro.component';
 
+
 const routes: Routes = [
   {
     path:'vendedores-registro',

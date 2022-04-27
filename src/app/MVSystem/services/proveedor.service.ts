@@ -18,7 +18,7 @@ export class ProveedorService {
       return this.http.get<any[]>(APIURL.Proveedor.Consultas.tipoProveedorLista);
     }
     // Post's
-    postProveedor(proveedor : ProveedorRegistro):Observable<any>{
-      return this.http.post(APIURL.Proveedor.Inserta.ProveedorInserta, proveedor);
+    postProveedor(proveedor : ProveedorRegistro):Observable<ProveedorRegistro>{
+      return this.http.post<ProveedorRegistro>(APIURL.Proveedor.Inserta.ProveedorInserta, proveedor);
     }
 }
