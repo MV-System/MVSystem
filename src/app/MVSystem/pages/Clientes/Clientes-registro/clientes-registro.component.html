@@ -1,22 +1,25 @@
-<h1>Registrar Proveedor</h1>
 
 <div class="container">
     <div class="wrapper">
         <div class="left">
+            <h1>Registrar Cliente</h1>
             <fieldset > 
-                <legend>Datos del Proveedor</legend>
+                <legend>Datos del Cliente</legend>
                     <div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroProveedor()">
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroCLiente()">
                            <br>
                             <label >
-                                Tipo de Proveedor: 
-                                <select formControlName="tipoProveedor">
-                                    <option *ngFor="let tipoProveedor of listaTipoProveedor"
-                                            [value]="tipoProveedor.iD_Tipo_Suplidor">
-                                            {{tipoProveedor.iD_Tipo_Suplidor}}
+                                <!-- --------------- DropDown Tipo Cliente --------------- -->
+                                Tipo de cliente: 
+                                <select formControlName="tipoCliente">
+                                    <!-- <option value="" disabled hidden>Elija el tipo de cliente</option> -->
+                                    <option *ngFor="let tipoCliente of listaTipoClientes"
+                                            [value]="tipoCliente.iD_Tipo_Cliente">
+                                            {{tipoCliente.tipo_Cliente_Descripcion}}
                                     </option>
                                 </select> <br>
                             </label> 
+                                <!-- --------------- Nombre Cliente --------------- -->
 
                             <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span><br>
                             <label >
@@ -27,8 +30,9 @@
                                         required
                                         formControlName="nombre" /><br>
                             </label> 
-                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span><br>
+                                <!-- --------------- Apellido Cliente --------------- -->
 
+                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span><br>
                             <label >
                                 Apellido: 
                                 <input  class=""
@@ -38,22 +42,28 @@
                                         formControlName="apellido" /><br><br>
                             </label> 
 
+                                <!-- --------------- DropDown Tipo Telefono Cliente --------------- -->
+
                             <select formControlName="tipoTelefono">
+                                <!-- <option value="" disabled hidden>Elija el tipo de telefono</option> -->
                                 <option *ngFor="let telefono of listaTipoTelefonos"
                                         [value]="telefono.iD_Tipo_Telefono">
                                         {{telefono.tipo_Telefono_Descripcion}}
                                 </option>
                             
-                            </select><br><br>
-                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span>
+                            </select><br>
+                                <!-- --------------- Telefono Cliente --------------- -->
 
+                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span><br>
                             <label >
-                                Telefono:
+                                Teléfono:
                                 <input  formControlName="telefono"
                                 type="text" 
                                 mask="000-000-0000" 
                                 />
                             </label> <br><br> 
+                                <!-- --------------- Extension Teléfono Cliente --------------- -->
+
                             <label >
                                 <input  type="checkbox" (change)="onCheckboxChange($event)">
                              Ext. No.:
@@ -63,8 +73,18 @@
                                      placeholder="Inserte la extensión "
                                      formControlName="extensionNumero"
                                       /><br><br>
+                                      
                          </label> 
-                        
+                                <!-- --------------- límite de credito Cliente --------------- -->
+
+                            <label >
+                                límite de credito:
+                                <input  class="" 
+                                        type="number" 
+                                        formControlName="limiteCredito" /><br><br>
+                            </label> 
+                                <!-- --------------- Email Cliente --------------- -->
+
                             <span style="color: red" *ngIf="validarCampos('email')">
                                 {{emailErrorMsg}}
                               </span>
@@ -74,29 +94,44 @@
                                         type="email" 
                                         formControlName="email" /><br><br>
                             </label> 
+
+                                <!-- --------------- Provincia Cliente --------------- -->
                             <label >
                                 Provincia:
                                 <input  class="" 
                                         type="text" 
                                         formControlName="provincia" /><br><br>
                             </label> 
+
+                                <!-- --------------- Sector Cliente --------------- -->
                             <label >
                                 Sector:
                                 <input  class="" 
                                         type="text" 
                                         formControlName="sector" /><br><br>
                             </label> 
+
+                            <!-- --------------- Calle Cliente --------------- -->
                             <label>
                                 Calle:
                                 <input  class="" 
                                         type="text" 
                                         formControlName="calle" /><br><br>
                             </label> 
+
+                            <!-- --------------- NO. Casa Cliente --------------- -->
                             <label>
                                 NO. Casa:
                                 <input  class="" 
                                         type="text" 
                                         formControlName="casaNumero" /><br><br>
+                            </label> 
+                             <!-- --------------- Usuario --------------- -->
+                            <label>
+                                Usuario:
+                                <input  class="" 
+                                        type="text" 
+                                        formControlName="usuario" /><br><br>
                             </label> 
                    
                     <input class="submit" type="submit" value="Guardar">
@@ -104,6 +139,8 @@
             </div>
         </fieldset>
         </div>
+    <a routerLink="/mv-system/Suplidores/suplidor-registro">ir</a>
+
         <div class="right">
             <table>
                 <tr>
@@ -113,23 +150,23 @@
                   <th >Apellido</th>
                   <th >Telefono</th>
                   <th >Tipo de Telefono</th>
+                  <th >Limite de credito</th>
                   <th >Email</th>
-                  <th >Provincia</th>
-                  <th >Sector</th>
-                  <th >Calle</th>
-                  <th >No. Casa</th>
+                  <th >Direccion</th>
+          
                 </tr>
               
-                <tr *ngFor="let i = index">
-                    <td>{{1 + 1}}</td>
-                    <td>{{proveedorListar?.nombres}}</td>
-                    <td>{{proveedorListar?.apellidos}}</td>
-                    <td>{{proveedorListar?.numero_Telefono}}</td>
-                    <td>{{proveedorListar?.iD_Tipo_Telefono}}</td>
-                    <td>{{proveedorListar?.email_Detalle}}</td>
-                    <td>{{proveedorListar?.direccion_Detalle}}</td>
-                    <td>{{proveedorListar?.usuario}}</td>
-         
+                <tr >
+                    <!-- object:{{clientesListar}} -->
+                    <!-- <td>{{i + 1}}</td> -->
+                    <td>{{clientesListar?.iD_Tipo_Cliente }}</td>
+                    <td>{{clientesListar?.nombres |  titlecase }}</td>
+                    <td>{{clientesListar?.apellidos |  titlecase}}</td>
+                    <td>{{clientesListar?.numero_Telefono}}</td>
+                    <td>{{clientesListar?.iD_Tipo_Telefono}}</td>
+                    <td>{{clientesListar?.limite_Credito}}</td>
+                    <td>{{clientesListar?.email_Detalle}}</td>
+                    <td>{{clientesListar?.direccion_Detalle }}</td>
                 </tr>
             </table>
         </div>

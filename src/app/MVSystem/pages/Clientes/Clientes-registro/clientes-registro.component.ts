@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TipoTelefono } from '../../interfaces/catalogo.interface';
+import { TipoTelefono } from '../../../interfaces/catalogo.interface';
 
-import { Cliente, ClienteRegistro, TipoCliente } from '../../interfaces/cliente.interface';
-import { CatalogosService } from '../../services/catalogos.service';
-import { ClientesService } from '../../services/clientes.service';
+import { Cliente, ClienteRegistro, TipoCliente } from '../../../interfaces/cliente.interface';
+import { CatalogosService } from '../../../services/catalogos.service';
+import { ClientesService } from '../../../services/clientes.service';
 
 @Component({
   selector: 'app-clientes-registro',

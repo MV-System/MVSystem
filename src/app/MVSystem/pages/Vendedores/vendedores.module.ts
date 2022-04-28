@@ -18,6 +18,10 @@ import { NgxMaskModule } from 'ngx-mask';
     VendedoresRoutingModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
-  ]
+  ],
+  // exports:[
+  //   VendedorRegistroComponent
+
+  // ]
 })
 export class VendedoresModule { }

@@ -1,4 +1,4 @@
-export interface ProveedorRegistro {
+export interface SuplidorRegistro {
     nombres:           string;
     apellidos:         string;
     numero_Telefono:   number;
@@ -10,7 +10,7 @@ export interface ProveedorRegistro {
     usuario?:           string;
   }
 
-  export interface Proveedor{
+  export interface Suplidor{
     iD_Suplidor: number
     nombres:           string;
     apellidos:         string;
@@ -25,7 +25,7 @@ export interface ProveedorRegistro {
 
   }
 
-  export interface TipoProveedor{
+  export interface TipoSuplidor{
     iD_Tipo_Suplidor:          number;
     tipo_Suplidor_Descripcion: string;
   }

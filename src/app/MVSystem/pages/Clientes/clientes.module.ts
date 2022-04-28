@@ -5,13 +5,13 @@ import { NgxMaskModule } from 'ngx-mask';
 
 
 import { ClientesRoutingModule } from './clientes-routing.module';
-import { ClientesRegistroComponent } from './Clientes-registro/clientes-registro.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ValueArrayPipe } from './pipes/value-array.pipe';
+import { ClientesRegistroComponent } from './Clientes-registro/clientes-registro.component';
+import { ValueArrayPipe } from '../../pipes/value-array.pipe';
 
 
 @NgModule({
-  declarations: [
+  declarations:[
     ClientesRegistroComponent,
     ValueArrayPipe,
   ],
@@ -20,6 +20,9 @@ import { ValueArrayPipe } from './pipes/value-array.pipe';
     ClientesRoutingModule,
     NgxMaskModule.forRoot(),
     ReactiveFormsModule,
-  ]
+  ],
+  // exports:[
+  //   ClientesRegistroComponent
+  // ]
 })
 export class ClientesModule { }

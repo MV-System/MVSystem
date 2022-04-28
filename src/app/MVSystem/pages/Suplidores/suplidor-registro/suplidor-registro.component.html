@@ -1,14 +1,23 @@
 
-<h1>Registrar Vendedor</h1>
-
 <div class="container">
     <div class="wrapper">
         <div class="left">
+            <h1>Registrar Suplidores</h1>
             <fieldset > 
-                <legend>Datos del Vendedor</legend>
+                <legend>Datos del Suplidores</legend>
                     <div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroVendedor()">
-                
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroSuplidores()">
+                           <br>
+                            <label >
+                                Tipo de Suplidores: 
+                                <select formControlName="tipoSuplidor">
+                                    <option *ngFor="let tipoSuplidores of listaTipoSuplidores"
+                                            [value]="tipoSuplidores.iD_Tipo_Suplidor">
+                                            {{tipoSuplidores.tipo_Suplidor_Descripcion}}
+                                    </option>
+                                </select> <br>
+                            </label> 
+
                             <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span><br>
                             <label >
                                 Nombre:
@@ -113,13 +122,13 @@
               
                 <tr *ngFor="let i = index">
                     <td>{{1 + 1}}</td>
-                    <td>{{vendedorListar?.nombres}}</td>
-                    <td>{{vendedorListar?.apellidos}}</td>
-                    <td>{{vendedorListar?.numero_Telefono}}</td>
-                    <td>{{vendedorListar?.iD_Tipo_Telefono}}</td>
-                    <td>{{vendedorListar?.email_Detalle}}</td>
-                    <td>{{vendedorListar?.direccion_Detalle}}</td>
-                    <td>{{vendedorListar?.usuario}}</td>
+                    <td>{{suplidorListar?.nombres}}</td>
+                    <td>{{suplidorListar?.apellidos}}</td>
+                    <td>{{suplidorListar?.numero_Telefono}}</td>
+                    <td>{{suplidorListar?.iD_Tipo_Telefono}}</td>
+                    <td>{{suplidorListar?.email_Detalle}}</td>
+                    <td>{{suplidorListar?.direccion_Detalle}}</td>
+                    <td>{{suplidorListar?.usuario}}</td>
          
                 </tr>
             </table>
@@ -142,4 +151,3 @@
         <br>
     </div>
 </div>
-

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProveedorService } from '../../services/proveedor.service';
 import { ToastrService } from 'ngx-toastr';
-import { TipoTelefono } from '../../interfaces/catalogo.interface';
-import { Proveedor, ProveedorRegistro, TipoProveedor } from '../../interfaces/proveedor.interface';
-import { CatalogosService } from '../../services/catalogos.service';
+import { TipoTelefono } from '../../../interfaces/catalogo.interface';
+import { CatalogosService } from '../../../services/catalogos.service';
+import { Suplidor, SuplidorRegistro, TipoSuplidor } from 'src/app/MVSystem/interfaces/suplidor.interface';
+import { SuplidorService } from 'src/app/MVSystem/services/Suplidor.service';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class SuplidorRegistroComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private proveedorService: ProveedorService,
+    private suplidorService:SuplidorService,
     private catalogosService: CatalogosService,
     private toastr: ToastrService
   ) { }
@@ -24,19 +24,19 @@ export class SuplidorRegistroComponent implements OnInit {
   ngOnInit(): void {
     this.formRegistro.controls.extensionNumero.disable();
 
-    this.obtenerTipoProveedor();
+    this.obtenerTipoSuplidor();
     this.obtenerTipoTelefonos();
   }
-  proveedor: ProveedorRegistro[]=[];
-  proveedorListar!: Proveedor;
-  listaTipoProveedor: TipoProveedor[]=[];
+  suplidor: SuplidorRegistro[]=[];
+  suplidorListar!: Suplidor;
+  listaTipoSuplidores: TipoSuplidor[]=[];
   listaTipoTelefonos: TipoTelefono[]=[];
   bool!: boolean;
 //Forms
 formRegistro: FormGroup = this.fb.group({
-  nombre:       ['Xavier Proveedor', [Validators.required]],
+  nombre:       ['Xavier suplidor', [Validators.required]],
   apellido:     ['Mejia', Validators.required],
-  tipoProveedor:  [1],
+  tipoSuplidor:  [1],
   tipoTelefono: [1],
   telefono:     [8099728439,Validators.required],
   extensionNumero: [] ,
@@ -49,7 +49,7 @@ formRegistro: FormGroup = this.fb.group({
   casaNumero: ['#18'],
 });
 
-modeloRegistroProveedor(){
+modeloRegistroSuplidor(){
   let direccion: any =[
     this.formRegistro.get('calle')?.value ,
     this.formRegistro.get('casaNumero')?.value,
@@ -57,12 +57,12 @@ modeloRegistroProveedor(){
     this.formRegistro.get('provincia')?.value
 
 ];
-    const registro: ProveedorRegistro = {
+    const registro: SuplidorRegistro = {
         nombres:         this.formRegistro.get('nombre')?.value,
         apellidos:       this.formRegistro.get('apellido')?.value,
         numero_Telefono: this.formRegistro.get('telefono')?.value,
         iD_Tipo_Telefono:Number( this.formRegistro.get('tipoTelefono')?.value),
-        iD_Tipo_Suplidor:Number(this.formRegistro.get('tipoProveedor')?.value),
+        iD_Tipo_Suplidor:Number(this.formRegistro.get('tipoSuplidor')?.value),
         extencion:       this.formRegistro.get('extencion')?.value,
         email_Detalle:   this.formRegistro.get('email')?.value,
         usuario:         this.formRegistro.get('usuario')?.value,
@@ -100,36 +100,36 @@ obtenerTipoTelefonos(){
             this.listaTipoTelefonos = tipoTelefono;
         });
 }
-obtenerTipoProveedor(){
-  this.proveedorService.getTipoProveedorLista()
-      .subscribe(tipoProveedor =>{
-        console.log(tipoProveedor);
+obtenerTipoSuplidor(){
+  this.suplidorService.getTipoSuplidorLista()
+      .subscribe(tipoSuplidor =>{
+        console.log(tipoSuplidor);
         
-          this.listaTipoProveedor = tipoProveedor;
+          this.listaTipoSuplidores = tipoSuplidor;
       });
 }
-registroProveedor(){
+registroSuplidores(){
   this.formRegistro.markAllAsTouched();
 
-  const model: ProveedorRegistro = this.modeloRegistroProveedor();
+  const model: SuplidorRegistro = this.modeloRegistroSuplidor();
   console.log(model);
   
   if (this.formRegistro.valid) {
-      this.proveedorService.postProveedor(model)
-          .subscribe((proveedorInsertado: any) =>{
-      console.log( proveedorInsertado);
+      this.suplidorService.postSuplidor(model)
+          .subscribe((suplidorInsertado: any) =>{
+      console.log( suplidorInsertado);
       console.log(model);
       
-      this.proveedorListar = proveedorInsertado;
-      console.log(this.proveedorListar);
+      this.suplidorListar = suplidorInsertado;
+      console.log(this.suplidorListar);
       
-      if (proveedorInsertado.mensaje.includes('ya está')) {
-        this.toastr.error(proveedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
+      if (suplidorInsertado.mensaje.includes('ya está')) {
+        this.toastr.error(suplidorInsertado.mensaje, '',{closeButton: true,progressBar:true});
       }
       else{
-        this.toastr.success(proveedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
+        this.toastr.success(suplidorInsertado.mensaje, '',{closeButton: true,progressBar:true});
         this.formRegistro.reset({
-            tipoProveedor: 1,
+            tipoSuplidor: 1,
             tipoTelefono: 1
         });
         console.log('OK');

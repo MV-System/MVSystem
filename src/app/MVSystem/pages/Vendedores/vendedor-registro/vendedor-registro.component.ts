@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TipoTelefono } from '../../interfaces/catalogo.interface';
-import { Vendedor } from '../../interfaces/vendedor.interface';
-import { CatalogosService } from '../../services/catalogos.service';
-import { VendedorService } from '../../services/vendedor.service';
+import { TipoTelefono } from '../../../interfaces/catalogo.interface';
+import { Vendedor } from '../../../interfaces/vendedor.interface';
+import { CatalogosService } from '../../../services/catalogos.service';
+import { VendedorService } from '../../../services/vendedor.service';
 
 
 @Component({

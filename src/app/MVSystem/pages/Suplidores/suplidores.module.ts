@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ProveedoresRoutingModule } from './proveedores-routing.module';
+
 import { SuplidorRegistroComponent } from './suplidor-registro/suplidor-registro.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
+import { SuplidoresRoutingModule } from './suplidores-routing.module';
 
 
 @NgModule({
   declarations: [
-    SuplidorRegistroComponent
+    SuplidorRegistroComponent,
   ],
   imports: [
     CommonModule,
-    ProveedoresRoutingModule,
+    SuplidoresRoutingModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
   ]
 })
-export class ProveedoresModule { }
+export class SuplidoresModule { }

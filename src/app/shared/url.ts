@@ -12,12 +12,12 @@ export let APIURL = {
             ClienteInserta: API + 'Clientes/Cliente_Insert',
         }
     },    
-    Proveedor:{
+    Suplidor:{
         Consultas:{
-            tipoProveedorLista: API + 'Catalogos/Tipo_suplidor_Combo',
+            tipoSuplidorLista: API + 'Catalogos/Tipo_suplidor_Combo',
         },
         Inserta:{
-            ProveedorInserta: API + 'Proveedores/Proveedor_Insert',
+            SuplidorInserta: API + 'Proveedores/Proveedor_Insert',
         }
     },
     Vendedor:{
