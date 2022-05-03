@@ -1,0 +1,142 @@
+
+<div class="container">
+    <div class="wrapper">
+        <div class="left">
+            <h1>Registrar Accesorios</h1>
+            <fieldset > 
+                <legend>Datos del Accesorios</legend>
+                    <div>
+                        <form [formGroup]="formRegistro" (ngSubmit)="1">
+                           <br>
+                           
+                            <span *ngIf="validarCampos('descripcion')" style="color: red">Este campo es requerido</span><br>
+
+                            <label >
+                                Descripción: 
+                                <input  class=""
+                                        placeholder="Inserte el descripcion "
+                                        type="text" 
+                                        required
+                                        formControlName="descripcion" /><br><br>
+                            </label> 
+                            <label >
+                                Cantidad: 
+                                <input  class=""
+                                        placeholder="Inserte el cantidad "
+                                        type="text" 
+                                        required
+                                        formControlName="cantidad" /><br><br>
+                            </label> 
+                            <!-- !  Usar ngMask -->
+                            <label >
+                                Costo: 
+                                <input  class=""
+                                        placeholder="Inserte el Costo "
+                                        prefix="RD$"
+                                        type="text" 
+                                        [mask]="validarCostoMask()" 
+                                        required
+                                        formControlName="costo" /><br><br>
+                            </label> 
+                            <label >
+                                Al detalle: 
+                                <input  class=""
+                                        type="text" 
+                                        required
+                                        formControlName="alDetalle" /><br><br>
+                            </label> 
+                            <label >
+                                Al Por Mayor: 
+                                <input  class=""
+                                        type="text" 
+                                        required
+                                        formControlName="alPorMayor" /><br><br>
+                            </label> 
+                            <label >
+                                IMEI Asociado: 
+                                <input  class=""
+                                        placeholder="Inserte el IMEI "
+                                        type="number" 
+                                        required
+                                        formControlName="IMEI" /><br><br>
+                            </label> 
+                            <label >
+                                <!-- ? Observacion: usar Rango aqui -->
+                                Cantidad Max.: 
+                                <input  class=""
+                                        placeholder="Inserte la cantidad maxima"
+                                        type="number" 
+                                        required
+                                        formControlName="cantidadMax" /><br><br>
+                            </label> 
+                            <label >
+                                <!-- ? Observacion: usar Rango aqui -->
+                            Cantidad Min.: 
+                            <input  class=""
+                                    placeholder="Inserte la cantidad minima"
+                                    type="number" 
+                                    required
+                                    formControlName="cantidadMin" /><br><br>
+                            </label> 
+                          <br><br>
+                          <select formControlName="marca">
+                            <!-- <option value="" disabled hidden>Elija el tipo de telefono</option> -->
+                            <option *ngFor="let marca of marcaListado"
+                                    [value]="marca.iD_Marca">
+                                    {{marca.descripcion}}
+                            </option>
+                        
+                        </select><br>
+                       
+                   
+                    <input class="submit" type="submit" value="Guardar">
+                </form>
+            </div>
+        </fieldset>
+        </div>
+        <div class="right">
+            <table>
+                <tr>
+                    <th>Cod.</th>
+                  <th >descripcion</th>
+                  <th >cantidad</th>
+                  <th >Costo</th>
+                  <th >Al Detalle</th>
+                  <th >Al Por Mayor</th>
+                  <th >IMEI</th>
+                  <th >Cantidad Maxima</th>
+                  <th >Cantidad Minima</th>
+                  <th >Marca</th>
+                </tr>
+              
+                <!-- <tr *ngFor="let i = index">
+                    <td>{{1 + 1}}</td>
+                    <td>{{marcaListado?.descripcion}}</td>
+                    <td>{{marcaListado?.cantidad}}</td>
+                    <td>{{marcaListado?.costo}}</td>
+                    <td>{{marcaListado?.iD_Tipo_Telefono}}</td>
+                    <td>{{marcaListado?.email_Detalle}}</td>
+                    <td>{{marcaListado?.direccion_Detalle}}</td>
+                    <td>{{marcaListado?.usuario}}</td>
+         
+                </tr> -->
+            </table>
+        </div>
+    </div>
+    <div>
+        <p>Form Valid: {{formRegistro.valid}}</p>
+        <p>Form Status: {{formRegistro.status}}</p>
+        <p>Form peding: {{formRegistro.pending}}</p>
+        <p>Form errors</p>
+        <pre>{{formRegistro.errors | json}}</pre>
+        <h5>descripcion</h5>
+        <pre>{{ formRegistro.controls.descripcion.errors | json }}</pre>
+        <br>
+        <h5>costo</h5>
+        <pre>{{ formRegistro.controls.costo.errors | json }}</pre>
+        <br>
+        <!-- <h5>Telefono</h5>
+        <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
+        <br> -->
+    </div>
+</div>

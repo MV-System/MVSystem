@@ -80,7 +80,7 @@ export class ClientesRegistroComponent implements OnInit {
       return registro;
   }
 
-  onCheckboxChange(event: any) {
+  onCheckboxChange(event: any ) {
     if(event.target.checked == false) {
         this.formRegistro.controls.extensionNumero.disable();
         this.formRegistro.get('extensionNumero')?.setValue("");
@@ -88,8 +88,6 @@ export class ClientesRegistroComponent implements OnInit {
     else{
         this.formRegistro.controls.extensionNumero.enable();
       }
-    console.log(event);
-
   }
  
   get emailErrorMsg(): string{

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ClientesModule } from './pages/Clientes/clientes.module';
 import { VendedoresModule } from './pages/Vendedores/vendedores.module';
 import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
+import { ComponentsModule } from './pages/components/components.module';
 
 
 
@@ -21,12 +22,14 @@ import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
     ReactiveFormsModule,
     SuplidoresModule,
     ClientesModule,
-    VendedoresModule
+    VendedoresModule,
+    ComponentsModule
   ],
   exports:[
     SuplidoresModule,
     ClientesModule,
-    VendedoresModule
+    VendedoresModule,
+    ComponentsModule
   ]
 })
 export class MvSystemModule { }

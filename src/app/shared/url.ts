@@ -3,7 +3,12 @@ import { environment } from '../../environments/environment';
 export let SERVER = environment.servername;
 let API = environment.api;
 export let APIURL = {
-    tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
+    Catalogos:{
+        tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
+        marcasLista:  API + 'Catalogos/Marcas_Combo',
+        modeloLista:  API + 'Catalogos/Modelo_Combo',
+        almacenLista: API + 'Catalogos/Almacen_Combo',
+    },
     Clientes:{
         Consultas:{
             tipoClienteLista: API + 'Catalogos/Tipo_Cliente_Combo',
