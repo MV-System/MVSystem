@@ -3,6 +3,14 @@ import { environment } from '../../environments/environment';
 export let SERVER = environment.servername;
 let API = environment.api;
 export let APIURL = {
+    Mantenimiento:{
+        Accesorio:{
+            Inserta:{
+                AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
+            }
+        },
+       
+    }, 
     Catalogos:{
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
         marcasLista:  API + 'Catalogos/Marcas_Combo',

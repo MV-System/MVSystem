@@ -6,7 +6,7 @@
             <fieldset > 
                 <legend>Datos del Accesorios</legend>
                     <div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="1">
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()">
                            <br>
                            
                             <span *ngIf="validarCampos('descripcion')" style="color: red">Este campo es requerido</span><br>
@@ -97,9 +97,9 @@
         <div class="right">
             <table>
                 <tr>
-                    <th>Cod.</th>
+                    <!-- <th>Cod.</th> -->
                   <th >descripcion</th>
-                  <th >cantidad</th>
+                  <!-- <th >cantidad</th>
                   <th >Costo</th>
                   <th >Al Detalle</th>
                   <th >Al Por Mayor</th>
@@ -107,17 +107,31 @@
                   <th >Cantidad Maxima</th>
                   <th >Cantidad Minima</th>
                   <th >Marca</th>
+                  <th >Usuario</th> -->
                 </tr>
-              
+                <tr *ngFor="let accesorio of accesoriosLista ;let i = index">
+                    <td></td>
+                    <td>{{accesorio?.descripcion_Accesorio}}</td>
+                    <!-- <td>{{accesorio?.cantidad}}</td>
+                    <td>{{accesorio?.costo_Equipo}}</td>
+                    <td>{{accesorio?.precio_Detalle}}</td>
+                    <td>{{accesorio?.precio_Por_Mayor}}</td>
+                    <td>{{accesorio?.imei_Equipo}}</td>
+                    <td>{{accesorio?.can_Max}}</td>
+                    <td>{{accesorio?.can_Min}}</td>
+                    <td>{{accesorio?.id_Modelo}}</td>
+                    <td>{{accesorio?.usuario}}</td> -->
+         
+                </tr>
                 <!-- <tr *ngFor="let i = index">
                     <td>{{1 + 1}}</td>
-                    <td>{{marcaListado?.descripcion}}</td>
-                    <td>{{marcaListado?.cantidad}}</td>
-                    <td>{{marcaListado?.costo}}</td>
-                    <td>{{marcaListado?.iD_Tipo_Telefono}}</td>
-                    <td>{{marcaListado?.email_Detalle}}</td>
-                    <td>{{marcaListado?.direccion_Detalle}}</td>
-                    <td>{{marcaListado?.usuario}}</td>
+                    <td>{{accesoriosLista?.descripcion_Accesorio}}</td>
+                    <td>{{accesoriosLista?.cantidad}}</td>
+                    <td>{{accesoriosLista?.costo}}</td>
+                    <td>{{accesoriosLista?.iD_Tipo_Telefono}}</td>
+                    <td>{{accesoriosLista?.email_Detalle}}</td>
+                    <td>{{accesoriosLista?.direccion_Detalle}}</td>
+                    <td>{{accesoriosLista?.usuario}}</td>
          
                 </tr> -->
             </table>

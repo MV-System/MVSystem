@@ -119,7 +119,7 @@ export class ClientesRegistroComponent implements OnInit {
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
         this.clientesService.postCliente(model)
-            .subscribe((clienteInsertado: any) =>{
+            .subscribe((clienteInsertado: Cliente) =>{
               this.clientesListar = clienteInsertado;
               console.log(clienteInsertado);
               

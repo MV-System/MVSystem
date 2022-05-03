@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIURL } from 'src/app/shared/url';
 import { Observable } from 'rxjs';
-import {  TipoCliente, ClienteRegistro } from '../interfaces/cliente.interface';
+import {  TipoCliente, ClienteRegistro, Cliente } from '../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class ClientesService {
   }
 
   // Post's
-  postCliente(cliente : ClienteRegistro):Observable<any>{
-    return this.http.post(APIURL.Clientes.Inserta.ClienteInserta, cliente);
+  postCliente(cliente : ClienteRegistro):Observable<Cliente>{
+    return this.http.post<Cliente>(APIURL.Clientes.Inserta.ClienteInserta, cliente);
   }
 }
