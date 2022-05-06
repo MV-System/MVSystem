@@ -134,12 +134,12 @@ export class AccesoriosComponent implements OnInit {
       this.msgValidacionesCamposFormNumericos();
       console.log('form valid');
 
-      // this.mantenimientoService.postAccesorio(model)
-      //                         .subscribe((accesorio:any) =>{
-      //                           console.log(accesorio);
-      //                           this.accesoriosLista = accesorio;
+      this.mantenimientoService.postAccesorio(model)
+                              .subscribe((accesorio:any) =>{
+                                console.log(accesorio);
+                                this.accesoriosLista = accesorio;
 
-      //                         });
+                              });
     }
     console.log(this.accesoriosLista);
   }
