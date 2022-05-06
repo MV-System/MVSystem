@@ -65,6 +65,20 @@ export class AccesoriosComponent implements OnInit {
     almacen: [, Validators.required],
     usuario: ['', Validators.required],
   });
+
+  msgValidacionesCamposFormCantMaxCantMin() {
+    if (
+      this.formRegistro.get('cantidadMin')?.value >
+      this.formRegistro.get('cantidadMax')?.value
+    ) {
+      this.toastr.error(
+        'La cantidad minima no puede ser mayor a la cantidad maxima',
+        '',
+        { closeButton: true, progressBar: true }
+      );
+      return;
+    }
+  }
   msgValidacionesCamposFormDetallePorMayor() {
     if (
       this.formRegistro.get('alPorMayor')?.value >
@@ -78,6 +92,7 @@ export class AccesoriosComponent implements OnInit {
       return;
     }
   }
+
   msgValidacionesCamposFormNumericos() {
     let camposNumerico: string[] = [
       'cantidad',
@@ -114,6 +129,7 @@ export class AccesoriosComponent implements OnInit {
     const model: Accesorio = this.modeloRegistroAccesorio();
 
     if (this.formRegistro.valid) {
+      this.msgValidacionesCamposFormCantMaxCantMin();
       this.msgValidacionesCamposFormDetallePorMayor();
       this.msgValidacionesCamposFormNumericos();
       console.log('form valid');
