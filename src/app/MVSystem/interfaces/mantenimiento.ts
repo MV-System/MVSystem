@@ -1,6 +1,6 @@
 
 export interface Accesorio {
-    imei_Equipo:           string;
+    imei_Equipo?:           null;
     id_Modelo:             number;
     codigo?:               string;
     descripcion_Accesorio: string;
@@ -15,4 +15,12 @@ export interface Accesorio {
     disponible?:           string;
     disponible_Detalle?:   string;
     usuario:               string;
+}
+
+
+export interface AccesorioLista {
+    descripcion_Accesorio: string;
+    precio_Por_Mayor:      number;
+    precio_Detalle:        number;
+    cantidad:              number;
 }

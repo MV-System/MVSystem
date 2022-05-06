@@ -1,109 +1,191 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CatalogosService } from '../../../services/catalogos.service';
-import { MarcaEquipo } from '../../../interfaces/catalogo.interface';
-import { Accesorio } from '../../../interfaces/mantenimiento';
+import {
+  Almacen,
+  MarcaEquipo,
+  ModeloEquipo,
+} from '../../../interfaces/catalogo.interface';
+import { Accesorio, AccesorioLista } from '../../../interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
+import { ToastrService } from 'ngx-toastr';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-accesorios',
   templateUrl: './accesorios.component.html',
-  styleUrls: ['./accesorios.component.css']
+  styleUrls: ['./accesorios.component.css'],
 })
 export class AccesoriosComponent implements OnInit {
-  marcaListado: MarcaEquipo[]=[];
-  costoMask: string = "";
-  accesoriosLista: Accesorio[]=[];
+  marcaListado: MarcaEquipo[] = [];
+  costoMask: string = '';
+  accesoriosLista!: any;
+  almacenListado: Almacen[] = [];
+  modeloListado: ModeloEquipo[] = [];
 
-  constructor(private fb: FormBuilder,
-              private catalogosService: CatalogosService,
-              private mantenimientoService: MantenimientoService) { }
+  constructor(
+    private fb: FormBuilder,
+    private catalogosService: CatalogosService,
+    private mantenimientoService: MantenimientoService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
+    this.formRegistro.reset({
+      descripcion: 'Protector Pantalla',
+      cantidad: 10,
+      costo: 500,
+      alDetalle: 1000,
+      alPorMayor: 975,
+      IMEI: '',
+      cantidadMax: 10,
+      cantidadMin: 2,
+      // marca:  11, //Apple
+      // modelo: 63, // "Iphone 12 Pro Max"
+      almacen: 2,
+      usuario: 'Xavier08',
+    });
     this.obtenerMarcasLista();
+    this.obtenerAlmacenLista();
+    // this.obtenerModeloLista();
     this.validarCostoMask();
   }
-//Forms
-formRegistro: FormGroup = this.fb.group({
-  descripcion:       ['Cover IPhone 13 Pro', [Validators.required]],
-  cantidad:     [10, Validators.required],
-  costo:  [,Validators.required],
-  alDetalle:  [,Validators.required],
-  alPorMayor:[,Validators.required],
-  IMEI: [,Validators.required],
-  cantidadMax:     [,Validators.required],
-  cantidadMin: [,Validators.required] ,
-  marca: [,Validators.required], 
-  modelo: [,Validators.required], 
-  almacen: [,Validators.required], 
-  usuario: [,Validators.required], 
-});
+  //Forms
+  formRegistro: FormGroup = this.fb.group({
+    descripcion: ['', [Validators.required]],
+    cantidad: [, Validators.required],
+    costo: [, Validators.required],
+    alDetalle: [, Validators.required],
+    alPorMayor: [, Validators.required],
+    IMEI: [,],
+    cantidadMax: [, Validators.required],
+    cantidadMin: [, Validators.required],
+    marca: [, Validators.required],
+    modelo: [, Validators.required],
+    almacen: [, Validators.required],
+    usuario: ['', Validators.required],
+  });
+  msgValidacionesCamposFormDetallePorMayor() {
+    if (
+      this.formRegistro.get('alPorMayor')?.value >
+      this.formRegistro.get('alDetalle')?.value
+    ) {
+      this.toastr.error(
+        'El monto al por mayor, debe ser menor que el monto Al detalle',
+        '',
+        { closeButton: true, progressBar: true }
+      );
+      return;
+    }
+  }
+  msgValidacionesCamposFormNumericos() {
+    let camposNumerico: string[] = [
+      'cantidad',
+      'costo',
+      'alDetalle',
+      'alPorMayor',
+      'cantidadMax',
+      'cantidadMin',
+    ];
+    camposNumerico.forEach((campo) => {
+      if (
+        this.formRegistro.get(campo)?.value < 0 ||
+        this.formRegistro.get(campo)?.value == 0
+      ) {
+        this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
+          closeButton: true,
+          progressBar: true,
+        });
+        return;
+      }
+    });
+  }
 
-  registroAccesorio(){
+  selectoresMarcaModeloValidator() {
+    if (this.formRegistro.get('marca')?.valid) {
+      this.formRegistro.get('modelo')?.reset();
+      this.obtenerModeloLista();
+    }
+  }
+
+  registroAccesorio() {
     this.formRegistro.markAllAsTouched();
 
     const model: Accesorio = this.modeloRegistroAccesorio();
-    if (this.formRegistro.valid) {
-    // this.mantenimientoService.postAccesorio(model)
-    //                         .subscribe(accesorio =>{
-    //                           console.log(accesorio);
-                              
-    //                         });
-    }
-    this.accesoriosLista.push(model);
-    console.log(this.accesoriosLista);
-    
-  }
-  modeloRegistroAccesorio(){
 
-    const accesorioModel: Accesorio ={
+    if (this.formRegistro.valid) {
+      this.msgValidacionesCamposFormDetallePorMayor();
+      this.msgValidacionesCamposFormNumericos();
+      console.log('form valid');
+
+      // this.mantenimientoService.postAccesorio(model)
+      //                         .subscribe((accesorio:any) =>{
+      //                           console.log(accesorio);
+      //                           this.accesoriosLista = accesorio;
+
+      //                         });
+    }
+    console.log(this.accesoriosLista);
+  }
+  modeloRegistroAccesorio() {
+    const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,
       descripcion_Accesorio: this.formRegistro.get('descripcion')?.value,
-      cantidad:this.formRegistro.get('cantidad')?.value,
-      costo_Equipo:this.formRegistro.get('costo')?.value,
-      precio_Detalle:this.formRegistro.get('alDetalle')?.value,
-      precio_Por_Mayor:this.formRegistro.get('alPorMayor')?.value,
+      cantidad: this.formRegistro.get('cantidad')?.value,
+      costo_Equipo: Number(this.formRegistro.get('costo')?.value),
+      precio_Detalle: this.formRegistro.get('alDetalle')?.value,
+      precio_Por_Mayor: this.formRegistro.get('alPorMayor')?.value,
       imei_Equipo: this.formRegistro.get('IMEI')?.value,
-      can_Max:this.formRegistro.get('cantidadMax')?.value,
-      can_Min:this.formRegistro.get('cantidadMin')?.value,
+      can_Max: this.formRegistro.get('cantidadMax')?.value,
+      can_Min: this.formRegistro.get('cantidadMin')?.value,
       id_Modelo: this.formRegistro.get('modelo')?.value,
-      id_Almacen:this.formRegistro.get('almacen')?.value,
+      id_Almacen: this.formRegistro.get('almacen')?.value,
       // cod_Barra:this.formRegistro.get('IMEI')?.value, //? preguntar //
       // disponible: this.formRegistro.get('IMEI')?.value,
       // disponible_Detalle: this.formRegistro.get('IMEI')?.value,
-      usuario: this.formRegistro.get('IMEI')?.value
-  }
-  return accesorioModel;
+      usuario: this.formRegistro.get('usuario')?.value,
+      disponible: 'S',
+    };
+    return accesorioModel;
   }
   validarCampos(nombreCampo: string) {
-    return this.formRegistro.get(nombreCampo)?.invalid && 
-          this.formRegistro.get(nombreCampo)?.touched
+    return (
+      this.formRegistro.get(nombreCampo)?.invalid &&
+      this.formRegistro.get(nombreCampo)?.touched
+    );
   }
 
-  obtenerMarcasLista(){
-    this.catalogosService.getMarcasLista()
-                    .subscribe(marca=>{
-                      this.marcaListado = marca;
-                    })
+  obtenerMarcasLista() {
+    this.catalogosService.getMarcasLista().subscribe((marca) => {
+      this.marcaListado = marca;
+    });
   }
-  validarCostoMask(){
-  
+  obtenerAlmacenLista() {
+    this.catalogosService.getAlmaceLista().subscribe((almacen) => {
+      this.almacenListado = almacen;
+    });
+  }
+  obtenerModeloLista() {
+    this.catalogosService.getModeloLista().subscribe((modelo) => {
+      this.modeloListado = modelo;
+    });
+  }
+  validarCostoMask() {
     const costoValue = this.formRegistro.get('costo')?.value;
     if (costoValue < 999) {
-      this.costoMask = "000"
+      this.costoMask = '000';
     }
     if (costoValue > 999) {
-      this.costoMask = "0,0000"
+      this.costoMask = '0,0000';
     }
-     if(costoValue > 9999){
-      this.costoMask = "00,000"
+    if (costoValue > 9999) {
+      this.costoMask = '00,000';
     }
-     if(costoValue > 99999){
-      this.costoMask = "000,000"
+    if (costoValue > 99999) {
+      this.costoMask = '000,000';
     }
-    console.log(this.costoMask);
-    
-    return  this.costoMask; 
-  }
+    // console.log(this.costoMask);
 
+    return this.costoMask;
+  }
 }

@@ -7,7 +7,7 @@
                 <legend>Datos del Cliente</legend>
                     <div>
                         <form [formGroup]="formRegistro" (ngSubmit)="registroCLiente()">
-                           <br>
+                           
                             <label >
                                 <!-- --------------- DropDown Tipo Cliente --------------- -->
                                 Tipo de cliente: 
@@ -17,33 +17,33 @@
                                             [value]="tipoCliente.iD_Tipo_Cliente">
                                             {{tipoCliente.tipo_Cliente_Descripcion}}
                                     </option>
-                                </select> <br>
+                                </select> 
                             </label> 
                                 <!-- --------------- Nombre Cliente --------------- -->
 
-                            <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span><br>
+                            <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span>
                             <label >
                                 Nombre:
                                 <input  class="" 
                                         placeholder="Inserte el nombre "
                                         type="text"
                                         required
-                                        formControlName="nombre" /><br>
+                                        formControlName="nombre" />
                             </label> 
                                 <!-- --------------- Apellido Cliente --------------- -->
 
-                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span><br>
+                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span>
                             <label >
                                 Apellido: 
                                 <input  class=""
                                         placeholder="Inserte el apellido "
                                         type="text" 
                                         required
-                                        formControlName="apellido" /><br><br>
+                                        formControlName="apellido" />
                             </label> 
 
                                 <!-- --------------- DropDown Tipo Telefono Cliente --------------- -->
-
+                            <label>Tipo Telefono </label>
                             <select formControlName="tipoTelefono">
                                 <!-- <option value="" disabled hidden>Elija el tipo de telefono</option> -->
                                 <option *ngFor="let telefono of listaTipoTelefonos"
@@ -51,17 +51,17 @@
                                         {{telefono.tipo_Telefono_Descripcion}}
                                 </option>
                             
-                            </select><br>
+                            </select>
                                 <!-- --------------- Telefono Cliente --------------- -->
 
-                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span><br>
+                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span>
                             <label >
                                 Teléfono:
                                 <input  formControlName="telefono"
                                 type="text" 
                                 mask="000-000-0000" 
                                 />
-                            </label> <br><br> 
+                            </label>  
                                 <!-- --------------- Extension Teléfono Cliente --------------- -->
 
                             <label >
@@ -72,7 +72,7 @@
                                      class="" 
                                      placeholder="Inserte la extensión "
                                      formControlName="extensionNumero"
-                                      /><br><br>
+                                      />
                                       
                          </label> 
                                 <!-- --------------- límite de credito Cliente --------------- -->
@@ -81,7 +81,7 @@
                                 límite de credito:
                                 <input  class="" 
                                         type="number" 
-                                        formControlName="limiteCredito" /><br><br>
+                                        formControlName="limiteCredito" />
                             </label> 
                                 <!-- --------------- Email Cliente --------------- -->
 
@@ -92,7 +92,7 @@
                                 Email:
                                 <input  class="" 
                                         type="email" 
-                                        formControlName="email" /><br><br>
+                                        formControlName="email" />
                             </label> 
 
                                 <!-- --------------- Provincia Cliente --------------- -->
@@ -100,7 +100,7 @@
                                 Provincia:
                                 <input  class="" 
                                         type="text" 
-                                        formControlName="provincia" /><br><br>
+                                        formControlName="provincia" />
                             </label> 
 
                                 <!-- --------------- Sector Cliente --------------- -->
@@ -108,7 +108,7 @@
                                 Sector:
                                 <input  class="" 
                                         type="text" 
-                                        formControlName="sector" /><br><br>
+                                        formControlName="sector" />
                             </label> 
 
                             <!-- --------------- Calle Cliente --------------- -->
@@ -116,7 +116,7 @@
                                 Calle:
                                 <input  class="" 
                                         type="text" 
-                                        formControlName="calle" /><br><br>
+                                        formControlName="calle" />
                             </label> 
 
                             <!-- --------------- NO. Casa Cliente --------------- -->
@@ -124,14 +124,14 @@
                                 NO. Casa:
                                 <input  class="" 
                                         type="text" 
-                                        formControlName="casaNumero" /><br><br>
+                                        formControlName="casaNumero" />
                             </label> 
                              <!-- --------------- Usuario --------------- -->
                             <label>
                                 Usuario:
                                 <input  class="" 
                                         type="text" 
-                                        formControlName="usuario" /><br><br>
+                                        formControlName="usuario" />
                             </label> 
                    
                     <input class="submit" type="submit" value="Guardar">
@@ -178,12 +178,12 @@
         <pre>{{formRegistro.errors | json}}</pre>
         <h5>Nombre</h5>
         <pre>{{ formRegistro.controls.nombre.errors | json }}</pre>
-        <br>
+        
         <h5>Apellido</h5>
         <pre>{{ formRegistro.controls.apellido.errors | json }}</pre>
-        <br>
+        
         <h5>Telefono</h5>
         <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
-        <br>
+        
     </div>
 </div>

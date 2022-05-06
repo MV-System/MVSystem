@@ -1,4 +1,6 @@
 
+
+
 <div class="container">
     <div class="wrapper">
         <div class="left">
@@ -7,9 +9,9 @@
                 <legend>Datos del Accesorios</legend>
                     <div>
                         <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()">
-                           <br>
                            
-                            <span *ngIf="validarCampos('descripcion')" style="color: red">Este campo es requerido</span><br>
+                           
+                            <span class="validatorField" *ngIf="validarCampos('descripcion')" >Este campo es requerido</span>
 
                             <label >
                                 Descripción: 
@@ -17,17 +19,20 @@
                                         placeholder="Inserte el descripcion "
                                         type="text" 
                                         required
-                                        formControlName="descripcion" /><br><br>
+                                        formControlName="descripcion" />
                             </label> 
+
+                            <span *ngIf="validarCampos('cantidad')" >Este campo es requerido</span>
                             <label >
                                 Cantidad: 
                                 <input  class=""
                                         placeholder="Inserte el cantidad "
-                                        type="text" 
+                                        type="number" 
                                         required
-                                        formControlName="cantidad" /><br><br>
+                                        formControlName="cantidad" />
                             </label> 
-                            <!-- !  Usar ngMask -->
+
+                            <span class="validatorField" *ngIf="validarCampos('costo')" >Este campo es requerido</span>
                             <label >
                                 Costo: 
                                 <input  class=""
@@ -36,30 +41,38 @@
                                         type="text" 
                                         [mask]="validarCostoMask()" 
                                         required
-                                        formControlName="costo" /><br><br>
+                                        formControlName="costo" />
                             </label> 
+
+                            <span *ngIf="validarCampos('alDetalle')" >Este campo es requerido</span>
                             <label >
                                 Al detalle: 
                                 <input  class=""
-                                        type="text" 
+                                        type="number" 
                                         required
-                                        formControlName="alDetalle" /><br><br>
+                                        formControlName="alDetalle" />
                             </label> 
+
+                            <span class="validatorField" *ngIf="validarCampos('alPorMayor')" >Este campo es requerido</span>
                             <label >
                                 Al Por Mayor: 
                                 <input  class=""
-                                        type="text" 
+                                        type="number" 
                                         required
-                                        formControlName="alPorMayor" /><br><br>
+                                        formControlName="alPorMayor" />
                             </label> 
+
+                            <!-- <span *ngIf="validarCampos('IMEI')" >Este campo es requerido</span> -->
                             <label >
                                 IMEI Asociado: 
                                 <input  class=""
                                         placeholder="Inserte el IMEI "
                                         type="number" 
-                                        required
-                                        formControlName="IMEI" /><br><br>
+                                        
+                                        formControlName="IMEI" />
                             </label> 
+
+                            <span class="validatorField" *ngIf="validarCampos('cantidadMax')" >Este campo es requerido</span>
                             <label >
                                 <!-- ? Observacion: usar Rango aqui -->
                                 Cantidad Max.: 
@@ -67,8 +80,10 @@
                                         placeholder="Inserte la cantidad maxima"
                                         type="number" 
                                         required
-                                        formControlName="cantidadMax" /><br><br>
+                                        formControlName="cantidadMax" />
                             </label> 
+
+                            <span class="validatorField" *ngIf="validarCampos('cantidadMin')" >Este campo es requerido</span>
                             <label >
                                 <!-- ? Observacion: usar Rango aqui -->
                             Cantidad Min.: 
@@ -76,17 +91,40 @@
                                     placeholder="Inserte la cantidad minima"
                                     type="number" 
                                     required
-                                    formControlName="cantidadMin" /><br><br>
+                                    formControlName="cantidadMin" />
                             </label> 
-                          <br><br>
-                          <select formControlName="marca">
-                            <!-- <option value="" disabled hidden>Elija el tipo de telefono</option> -->
+                       
+
+                          <span class="validatorField" *ngIf="validarCampos('marca')" >Este campo es requerido</span>
+                          
+                          <label >Marca:</label>
+                          <select (change)="selectoresMarcaModeloValidator()"  formControlName="marca">
                             <option *ngFor="let marca of marcaListado"
                                     [value]="marca.iD_Marca">
                                     {{marca.descripcion}}
                             </option>
+                        </select>
+
+                        <div *ngIf="modeloListado.length !==0">
+                        <span class="validatorField" *ngIf="validarCampos('modelo')" >Este campo es requerido</span>
+                            <label >Modelo:</label>
+                            <select formControlName="modelo" >
+                                <option *ngFor="let modelo of modeloListado"
+                                        [value]="modelo.iD_Modelo">
+                                        {{modelo.descripcion}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <span class="validatorField" *ngIf="validarCampos('almacen')" >Este campo es requerido</span>
+                        <label >Almacen:</label>
+                        <select formControlName="almacen">
+                            <option *ngFor="let almacen of almacenListado"
+                                    [value]="almacen.iD_Almacen">
+                                    {{almacen.descripcion}}
+                            </option>
                         
-                        </select><br>
+                        </select>
                        
                    
                     <input class="submit" type="submit" value="Guardar">
@@ -98,42 +136,24 @@
             <table>
                 <tr>
                     <!-- <th>Cod.</th> -->
-                  <th >descripcion</th>
-                  <!-- <th >cantidad</th>
-                  <th >Costo</th>
-                  <th >Al Detalle</th>
-                  <th >Al Por Mayor</th>
-                  <th >IMEI</th>
+                    <th >descripcion</th>
+                    <th>Al Por Mayor</th>
+                    <th>Al Detalle</th>
+                    <th>cantidad</th>
+                  <!-- <th >IMEI</th>
                   <th >Cantidad Maxima</th>
                   <th >Cantidad Minima</th>
                   <th >Marca</th>
                   <th >Usuario</th> -->
                 </tr>
-                <tr *ngFor="let accesorio of accesoriosLista ;let i = index">
-                    <td></td>
-                    <td>{{accesorio?.descripcion_Accesorio}}</td>
-                    <!-- <td>{{accesorio?.cantidad}}</td>
-                    <td>{{accesorio?.costo_Equipo}}</td>
-                    <td>{{accesorio?.precio_Detalle}}</td>
-                    <td>{{accesorio?.precio_Por_Mayor}}</td>
-                    <td>{{accesorio?.imei_Equipo}}</td>
-                    <td>{{accesorio?.can_Max}}</td>
-                    <td>{{accesorio?.can_Min}}</td>
-                    <td>{{accesorio?.id_Modelo}}</td>
-                    <td>{{accesorio?.usuario}}</td> -->
-         
-                </tr>
-                <!-- <tr *ngFor="let i = index">
+          
+                <tr *ngFor="let i = index">
                     <td>{{1 + 1}}</td>
                     <td>{{accesoriosLista?.descripcion_Accesorio}}</td>
+                    <td>{{accesoriosLista?.precio_Por_Mayor}}</td>
+                    <td>{{accesoriosLista?.precio_Detalle}}</td>
                     <td>{{accesoriosLista?.cantidad}}</td>
-                    <td>{{accesoriosLista?.costo}}</td>
-                    <td>{{accesoriosLista?.iD_Tipo_Telefono}}</td>
-                    <td>{{accesoriosLista?.email_Detalle}}</td>
-                    <td>{{accesoriosLista?.direccion_Detalle}}</td>
-                    <td>{{accesoriosLista?.usuario}}</td>
-         
-                </tr> -->
+                </tr>
             </table>
         </div>
     </div>
@@ -141,16 +161,22 @@
         <p>Form Valid: {{formRegistro.valid}}</p>
         <p>Form Status: {{formRegistro.status}}</p>
         <p>Form peding: {{formRegistro.pending}}</p>
+        <h5>Marca</h5>
+        <pre>{{ formRegistro.controls.marca.errors | json }}</pre>
+        <h5>Marca touhed</h5>
+        <pre>{{ formRegistro.controls.marca.touched | json }}</pre>
+        
         <p>Form errors</p>
         <pre>{{formRegistro.errors | json}}</pre>
         <h5>descripcion</h5>
         <pre>{{ formRegistro.controls.descripcion.errors | json }}</pre>
-        <br>
+        
         <h5>costo</h5>
         <pre>{{ formRegistro.controls.costo.errors | json }}</pre>
-        <br>
-        <!-- <h5>Telefono</h5>
-        <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
-        <br> -->
+        
+        <h5>IMEI</h5>
+        <pre>{{ formRegistro.controls.IMEI.errors | json }}</pre>
+        
+      
     </div>
 </div>
