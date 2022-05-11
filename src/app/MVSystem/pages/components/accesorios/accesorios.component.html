@@ -22,7 +22,7 @@
                                         formControlName="descripcion" />
                             </label> 
 
-                            <span *ngIf="validarCampos('cantidad')" >Este campo es requerido</span>
+                            <span class="validatorField" *ngIf="validarCampos('cantidad')" >Este campo es requerido</span>
                             <label >
                                 Cantidad: 
                                 <input  class=""
@@ -37,9 +37,8 @@
                                 Costo: 
                                 <input  class=""
                                         placeholder="Inserte el Costo "
-                                        prefix="RD$"
                                         type="text" 
-                                        [mask]="validarCostoMask()" 
+                                        currencyMask
                                         required
                                         formControlName="costo" />
                             </label> 

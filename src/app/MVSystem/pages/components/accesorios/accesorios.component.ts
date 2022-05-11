@@ -31,24 +31,25 @@ export class AccesoriosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+ 
     this.formRegistro.reset({
       descripcion: 'Protector Pantalla',
       cantidad: 10,
-      costo: 500,
+      costo: 5500,
       alDetalle: 1000,
       alPorMayor: 975,
-      IMEI: '',
+      // IMEI: '',
       cantidadMax: 10,
       cantidadMin: 2,
-      // marca:  11, //Apple
-      // modelo: 63, // "Iphone 12 Pro Max"
+      marca:  11, //Apple
+      modelo: 63, // "Iphone 12 Pro Max"
       almacen: 2,
       usuario: 'Xavier08',
     });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
     // this.obtenerModeloLista();
-    this.validarCostoMask();
+
   }
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -78,6 +79,7 @@ export class AccesoriosComponent implements OnInit {
       );
       return;
     }
+    
   }
   msgValidacionesCamposFormDetallePorMayor() {
     if (
@@ -86,6 +88,20 @@ export class AccesoriosComponent implements OnInit {
     ) {
       this.toastr.error(
         'El monto al por mayor, debe ser menor que el monto Al detalle',
+        '',
+        { closeButton: true, progressBar: true }
+      );
+      return;
+    }
+  }
+  //Al detalle no puede ser mayor que el costo
+  ValidarCamposFormCostoDetalle() {
+    if (
+      this.formRegistro.get('alDetalle')?.value >
+      this.formRegistro.get('costo')?.value 
+    ) {
+      this.toastr.error(
+        'El monto de Al detalle no puede ser mayor que el Costo',
         '',
         { closeButton: true, progressBar: true }
       );
@@ -118,30 +134,35 @@ export class AccesoriosComponent implements OnInit {
 
   selectoresMarcaModeloValidator() {
     if (this.formRegistro.get('marca')?.valid) {
-      this.formRegistro.get('modelo')?.reset();
       this.obtenerModeloLista();
     }
+  }
+  validacionesRegistro(){
+    this.msgValidacionesCamposFormCantMaxCantMin();
+    this.msgValidacionesCamposFormDetallePorMayor();
+    this.msgValidacionesCamposFormNumericos();
+    this.ValidarCamposFormCostoDetalle();
+    console.log(this.formRegistro.errors);
+    
+    return !this.formRegistro.errors ? true : false;
   }
 
   registroAccesorio() {
     this.formRegistro.markAllAsTouched();
-
+    
     const model: Accesorio = this.modeloRegistroAccesorio();
 
-    if (this.formRegistro.valid) {
-      this.msgValidacionesCamposFormCantMaxCantMin();
-      this.msgValidacionesCamposFormDetallePorMayor();
-      this.msgValidacionesCamposFormNumericos();
+    if ( this.formRegistro.valid && !this.validacionesRegistro()  ) {
       console.log('form valid');
 
+ 
       this.mantenimientoService.postAccesorio(model)
                               .subscribe((accesorio:any) =>{
-                                console.log(accesorio);
+                                console.log('accesorio insertado');
                                 this.accesoriosLista = accesorio;
-
+                                this.toastr.success('Accesorio registrado con exito!')
                               });
     }
-    console.log(this.accesoriosLista);
   }
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
@@ -154,7 +175,7 @@ export class AccesoriosComponent implements OnInit {
       imei_Equipo: this.formRegistro.get('IMEI')?.value,
       can_Max: this.formRegistro.get('cantidadMax')?.value,
       can_Min: this.formRegistro.get('cantidadMin')?.value,
-      id_Modelo: this.formRegistro.get('modelo')?.value,
+      id_Modelo:Number( this.formRegistro.get('modelo')?.value),
       id_Almacen: this.formRegistro.get('almacen')?.value,
       // cod_Barra:this.formRegistro.get('IMEI')?.value, //? preguntar //
       // disponible: this.formRegistro.get('IMEI')?.value,
@@ -182,26 +203,10 @@ export class AccesoriosComponent implements OnInit {
     });
   }
   obtenerModeloLista() {
-    this.catalogosService.getModeloLista().subscribe((modelo) => {
+    let idMarca = this.formRegistro.get('marca')?.value;
+    this.catalogosService.getModeloLista(idMarca).subscribe((modelo) => {
       this.modeloListado = modelo;
     });
   }
-  validarCostoMask() {
-    const costoValue = this.formRegistro.get('costo')?.value;
-    if (costoValue < 999) {
-      this.costoMask = '000';
-    }
-    if (costoValue > 999) {
-      this.costoMask = '0,0000';
-    }
-    if (costoValue > 9999) {
-      this.costoMask = '00,000';
-    }
-    if (costoValue > 99999) {
-      this.costoMask = '000,000';
-    }
-    // console.log(this.costoMask);
 
-    return this.costoMask;
-  }
 }

@@ -1,6 +1,5 @@
 import { environment } from '../../environments/environment';
 
-export let SERVER = environment.servername;
 let API = environment.api;
 export let APIURL = {
     Mantenimiento:{
