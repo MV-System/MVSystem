@@ -4,9 +4,9 @@
 <div class="container">
     <div class="wrapper">
         <div class="left">
-            <h1>Registrar Accesorios</h1>
+            <h1 id="registro">Registrar Accesorios</h1>
             <fieldset > 
-                <legend>Datos del Accesorios</legend>
+                <legend >Datos del Accesorios</legend>
                     <div>
                         <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()">
                            
@@ -16,7 +16,7 @@
                             <label >
                                 Descripción: 
                                 <input  class=""
-                                        placeholder="Inserte el descripcion "
+                                        placeholder="Inserte la descripción "
                                         type="text" 
                                         required
                                         formControlName="descripcion" />
@@ -26,7 +26,7 @@
                             <label >
                                 Cantidad: 
                                 <input  class=""
-                                        placeholder="Inserte el cantidad "
+                                        placeholder="Inserte la cantidad "
                                         type="number" 
                                         required
                                         formControlName="cantidad" />
@@ -43,7 +43,7 @@
                                         formControlName="costo" />
                             </label> 
 
-                            <span *ngIf="validarCampos('alDetalle')" >Este campo es requerido</span>
+                            <span class="validatorField" *ngIf="validarCampos('alDetalle')" >Este campo es requerido</span>
                             <label >
                                 Al detalle: 
                                 <input  class=""
@@ -126,7 +126,7 @@
                         </select>
                        
                    
-                    <input class="submit" type="submit" value="Guardar">
+                    <input class="submit"  type="submit" value="Guardar">
                 </form>
             </div>
         </fieldset>
@@ -135,7 +135,7 @@
             <table>
                 <tr>
                     <!-- <th>Cod.</th> -->
-                    <th >descripcion</th>
+                    <th >descripción</th>
                     <th>Al Por Mayor</th>
                     <th>Al Detalle</th>
                     <th>cantidad</th>
@@ -167,7 +167,7 @@
         
         <p>Form errors</p>
         <pre>{{formRegistro.errors | json}}</pre>
-        <h5>descripcion</h5>
+        <h5>descripción</h5>
         <pre>{{ formRegistro.controls.descripcion.errors | json }}</pre>
         
         <h5>costo</h5>

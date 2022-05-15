@@ -6,7 +6,7 @@ import { TipoTelefono } from '../../../interfaces/catalogo.interface';
 import { Cliente, ClienteRegistro, TipoCliente } from '../../../interfaces/cliente.interface';
 import { CatalogosService } from '../../../services/catalogos.service';
 import { ClientesService } from '../../../services/clientes.service';
-
+import * as $ from"jquery";
 @Component({
   selector: 'app-clientes-registro',
   templateUrl: './clientes-registro.component.html',
@@ -21,6 +21,23 @@ export class ClientesRegistroComponent implements OnInit {
         
         
     ngOnInit(): void {
+      // this.formRegistro.reset({
+      //   nombre:       'Xavier client',
+      //   apellido:     'Mejia',
+      //   tipoCliente:  [1],
+      //   tipoClienteDescripcion:  [""],
+      //   limiteCredito:"2500",
+      //   tipoTelefono: 1,
+      //   telefono:     8099728439,
+      //   extensionNumero: '' ,
+      //   email:        '',
+      //   // criterio:     [''],
+      //   usuario:      'Xmejia',
+      //   provincia:  'Santo Domingo',
+      //   sector:     'Buena Vista',
+      //   calle:      'Primera',
+      //   casaNumero: '#18',
+      // })
         this.formRegistro.controls.extensionNumero.disable();
         this.obtenerTipoTelefonos();
         this.obtenerTipoClientes();
@@ -36,22 +53,21 @@ export class ClientesRegistroComponent implements OnInit {
     bool!: boolean;
   //Forms
   formRegistro: FormGroup = this.fb.group({
-    nombre:       ['Xavier client', [Validators.required]],
-    apellido:     ['Mejia', Validators.required],
+    nombre:       ['', [Validators.required]],
+    apellido:     ['', Validators.required],
     tipoCliente:  [1],
     tipoClienteDescripcion:  [""],
-    limiteCredito:["2500"],
+    limiteCredito:["200"],
     tipoTelefono: [1],
-    telefono:     [8099728439,Validators.required],
-    extensionNumero: [Validators.required] ,
+    telefono:     [,],
+    extensionNumero: [,Validators.required] ,
     email:        ['',[Validators.pattern(this.emailPattern)]],
     // criterio:     [''],
-    usuario:      ['Xmejia'],
-
-    provincia:  ['Santo Domingo'],
-    sector:     ['Buena Vista'],
-    calle:      ['Primera'],
-    casaNumero: ['#18'],
+    usuario:      [''],
+    provincia:  [''],
+    sector:     [''],
+    calle:      [''],
+    casaNumero: [''],
     // extensionNumero: new FormControl({disabled: this.bool},Validators.required) ,
   });
 
@@ -114,7 +130,6 @@ export class ClientesRegistroComponent implements OnInit {
         });
   }
   registroCLiente(){
-    this.formRegistro.markAllAsTouched();
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
@@ -129,6 +144,7 @@ export class ClientesRegistroComponent implements OnInit {
           {closeButton: true,progressBar:true});
 				}
 				else{
+
 					this.toastr.success(clienteInsertado.mensaje, '',
           {closeButton: true,progressBar:true});
           // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
@@ -141,6 +157,8 @@ export class ClientesRegistroComponent implements OnInit {
 			});
     }
     else{
+      this.formRegistro.markAllAsTouched();
+      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
         this.toastr.error('Hay datos en el formulario incompletos', '',
         {closeButton: true,progressBar:true});
     }

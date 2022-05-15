@@ -10,6 +10,7 @@ import { Accesorio, AccesorioLista } from '../../../interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap, tap } from 'rxjs/operators';
+import * as $ from"jquery";
 
 @Component({
   selector: 'app-accesorios',
@@ -32,20 +33,20 @@ export class AccesoriosComponent implements OnInit {
 
   ngOnInit(): void {
  
-    this.formRegistro.reset({
-      descripcion: 'Protector Pantalla',
-      cantidad: 10,
-      costo: 5500,
-      alDetalle: 1000,
-      alPorMayor: 975,
-      // IMEI: '',
-      cantidadMax: 10,
-      cantidadMin: 2,
-      marca:  11, //Apple
-      modelo: 63, // "Iphone 12 Pro Max"
-      almacen: 2,
-      usuario: 'Xavier08',
-    });
+    // this.formRegistro.reset({
+    //   descripcion: 'Protector Pantalla',
+    //   cantidad: 10,
+    //   costo: 5500,
+    //   alDetalle: 1000,
+    //   alPorMayor: 975,
+    //   // IMEI: '',
+    //   cantidadMax: 10,
+    //   cantidadMin: 2,
+    //   marca:  11, //Apple
+    //   modelo: 63, // "Iphone 12 Pro Max"
+    //   almacen: 2,
+    //   usuario: 'Xavier08',
+    // });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
     // this.obtenerModeloLista();
@@ -72,6 +73,7 @@ export class AccesoriosComponent implements OnInit {
       this.formRegistro.get('cantidadMin')?.value >
       this.formRegistro.get('cantidadMax')?.value
     ) {
+      this.formRegistro.setErrors({error:''})
       this.toastr.error(
         'La cantidad minima no puede ser mayor a la cantidad maxima',
         '',
@@ -79,13 +81,13 @@ export class AccesoriosComponent implements OnInit {
       );
       return;
     }
-    
   }
   msgValidacionesCamposFormDetallePorMayor() {
     if (
       this.formRegistro.get('alPorMayor')?.value >
       this.formRegistro.get('alDetalle')?.value
     ) {
+      this.formRegistro.setErrors({error:''})
       this.toastr.error(
         'El monto al por mayor, debe ser menor que el monto Al detalle',
         '',
@@ -96,10 +98,13 @@ export class AccesoriosComponent implements OnInit {
   }
   //Al detalle no puede ser mayor que el costo
   ValidarCamposFormCostoDetalle() {
+    console.log(this.formRegistro.get('costo')?.value);
+    
     if (
       this.formRegistro.get('alDetalle')?.value >
-      this.formRegistro.get('costo')?.value 
-    ) {
+      this.formRegistro.get('costo')?.value  && this.formRegistro.get('costo')?.value !== null)
+     {
+      this.formRegistro.setErrors({error:''})
       this.toastr.error(
         'El monto de Al detalle no puede ser mayor que el Costo',
         '',
@@ -123,7 +128,8 @@ export class AccesoriosComponent implements OnInit {
         this.formRegistro.get(campo)?.value < 0 ||
         this.formRegistro.get(campo)?.value == 0
       ) {
-        this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
+      this.formRegistro.setErrors({error:''})
+      this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
           closeButton: true,
           progressBar: true,
         });
@@ -142,27 +148,28 @@ export class AccesoriosComponent implements OnInit {
     this.msgValidacionesCamposFormDetallePorMayor();
     this.msgValidacionesCamposFormNumericos();
     this.ValidarCamposFormCostoDetalle();
-    console.log(this.formRegistro.errors);
-    
-    return !this.formRegistro.errors ? true : false;
   }
 
   registroAccesorio() {
-    this.formRegistro.markAllAsTouched();
-    
     const model: Accesorio = this.modeloRegistroAccesorio();
+    this.validacionesRegistro()
+      if ( this.formRegistro.valid   ) {
+        this.mantenimientoService.postAccesorio(model)
+                                .subscribe((accesorio:any) =>{
+                                  console.log('accesorio insertado');
+                                  this.accesoriosLista = accesorio;
+                                  this.toastr.success('Accesorio registrado con exito!')
+                                });
+      }
+      else{
+        this.formRegistro.markAllAsTouched();
+        $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
 
-    if ( this.formRegistro.valid && !this.validacionesRegistro()  ) {
-      console.log('form valid');
-
- 
-      this.mantenimientoService.postAccesorio(model)
-                              .subscribe((accesorio:any) =>{
-                                console.log('accesorio insertado');
-                                this.accesoriosLista = accesorio;
-                                this.toastr.success('Accesorio registrado con exito!')
-                              });
-    }
+        this.toastr.error('Hay datos en el formulario incompletos', '', {
+          closeButton: true,
+          progressBar: true,
+        });
+      }
   }
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {

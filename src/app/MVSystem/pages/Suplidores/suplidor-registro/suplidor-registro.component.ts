@@ -9,7 +9,7 @@ import {
   SuplidorRegistro,
   TipoSuplidor,
 } from 'src/app/MVSystem/interfaces/suplidor.interface';
-
+import * as $ from"jquery";
 @Component({
   selector: 'app-suplidor-registro',
   templateUrl: './suplidor-registro.component.html',
@@ -24,6 +24,21 @@ export class SuplidorRegistroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    //    this.formRegistro.reset({
+    //     nombre: 'Xavier suplidor',
+    //     apellido: 'Mejia',
+    //     tipoSuplidor: 1,
+    //     tipoTelefono: 1,
+    //     telefono: 8099728439,
+    //     extensionNumero: '',
+    //     email: '',
+    //     // criterio:     [''],
+    //     usuario: 'Xmejia',
+    //     provincia: 'Santo Domingo',
+    //     sector: 'Buena Vista',
+    //     calle: 'Primera',
+    //     casaNumero: '#18',
+    // });
     this.formRegistro.controls.extensionNumero.disable();
 
     this.obtenerTipoSuplidor();
@@ -36,19 +51,19 @@ export class SuplidorRegistroComponent implements OnInit {
   bool!: boolean;
   //Forms
   formRegistro: FormGroup = this.fb.group({
-    nombre: ['Xavier suplidor', [Validators.required]],
-    apellido: ['Mejia', Validators.required],
+    nombre: ['', [Validators.required]],
+    apellido: ['', Validators.required],
     tipoSuplidor: [1],
     tipoTelefono: [1],
-    telefono: [8099728439, Validators.required],
-    extensionNumero: [],
+    telefono: [, Validators.required],
+    extensionNumero: [,],
     email: [''],
     // criterio:     [''],
-    usuario: ['Xmejia'],
-    provincia: ['Santo Domingo'],
-    sector: ['Buena Vista'],
-    calle: ['Primera'],
-    casaNumero: ['#18'],
+    usuario: [''],
+    provincia: [''],
+    sector: [''],
+    calle: [''],
+    casaNumero: [''],
   });
 
   modeloRegistroSuplidor() {
@@ -158,6 +173,8 @@ export class SuplidorRegistroComponent implements OnInit {
         closeButton: true,
         progressBar: true,
       });
+      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+
     }
   }
 }

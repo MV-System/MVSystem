@@ -3,13 +3,13 @@
 <div class="container">
     <div class="wrapper">
         <div class="left">
-            <h1>Registrar Vendedor</h1>
+            <h1 id="registro">Registrar Vendedor</h1>
             <fieldset > 
                 <legend>Datos del Vendedor</legend>
                     <div>
                         <form [formGroup]="formRegistro" (ngSubmit)="registroVendedor()">
                 
-                            <span *ngIf="validarCampos('nombre')" style="color: red">Este campo es requerido</span>
+                            <span class="validatorField"  *ngIf="validarCampos('nombre')" >Este campo es requerido</span>
                             <label >
                                 Nombre:
                                 <input  class="" 
@@ -18,7 +18,7 @@
                                         required
                                         formControlName="nombre" />
                             </label> 
-                            <span *ngIf="validarCampos('apellido')" style="color: red">Este campo es requerido</span>
+                            <span class="validatorField"  *ngIf="validarCampos('apellido')" >Este campo es requerido</span>
 
                             <label >
                                 Apellido: 
@@ -37,7 +37,7 @@
                                 </option>
                             
                             </select>
-                            <span *ngIf="validarCampos('telefono')" style="color: red">Este campo es requerido</span>
+                            <span class="validatorField"  *ngIf="validarCampos('telefono')" >Este campo es requerido</span>
 
                             <label >
                                 Telefono:
@@ -57,7 +57,7 @@
                                       />
                          </label> 
                         
-                            <span style="color: red" *ngIf="validarCampos('email')">
+                            <span class="validatorField"  *ngIf="validarCampos('email')">
                                 {{emailErrorMsg}}
                               </span>
                             <label >
@@ -126,7 +126,7 @@
             </table>
         </div>
     </div>
-    <div>
+    <!-- <div>
         <p>Form Valid: {{formRegistro.valid}}</p>
         <p>Form Status: {{formRegistro.status}}</p>
         <p>Form peding: {{formRegistro.pending}}</p>
@@ -142,5 +142,5 @@
         <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
         
     </div>
-</div>
+</div> -->
 

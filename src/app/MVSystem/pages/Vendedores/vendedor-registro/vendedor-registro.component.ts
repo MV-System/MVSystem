@@ -5,7 +5,7 @@ import { TipoTelefono } from '../../../interfaces/catalogo.interface';
 import { Vendedor } from '../../../interfaces/vendedor.interface';
 import { CatalogosService } from '../../../services/catalogos.service';
 import { VendedorService } from '../../../services/vendedor.service';
-
+import * as $ from"jquery";
 
 @Component({
   selector: 'app-vendedor-registro',
@@ -97,7 +97,6 @@ export class VendedorRegistroComponent implements OnInit {
   }
 
   registroVendedor(){
-    this.formRegistro.markAllAsTouched();
     const model: Vendedor = this.modeloRegistroVendedor();
     if (this.formRegistro.valid) {
         this.vendedorService.postVendedor(model)
@@ -119,7 +118,9 @@ export class VendedorRegistroComponent implements OnInit {
       });
     }
     else{
-        this.toastr.error('Hay datos en el formulario incompletos', '',{closeButton: true,progressBar:true});
+      this.formRegistro.markAllAsTouched();
+      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+      this.toastr.error('Hay datos en el formulario incompletos', '',{closeButton: true,progressBar:true});
     }
   }
   
