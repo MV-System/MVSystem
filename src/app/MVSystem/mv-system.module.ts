@@ -9,13 +9,15 @@ import { VendedoresModule } from './pages/Vendedores/vendedores.module';
 import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
 import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
+import { FacturacionComponent } from './pages/facturacion/facturacion/facturacion.component';
 
 
 
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    FacturacionComponent
   
   ],
   imports: [
