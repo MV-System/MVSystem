@@ -57,7 +57,7 @@ export class ClientesRegistroComponent implements OnInit {
     apellido:     ['', Validators.required],
     tipoCliente:  [1],
     tipoClienteDescripcion:  [""],
-    limiteCredito:["200"],
+    limiteCredito:[,],
     tipoTelefono: [1],
     telefono:     [,],
     extensionNumero: [,Validators.required] ,

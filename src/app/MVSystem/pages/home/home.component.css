@@ -1,0 +1,7 @@
+.my-element {
+    display: inline-block;
+    margin: 0 0.5rem;
+    color: rgb(48, 116, 204);
+    animation: wobble infinite; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 2s ; /* don't forget to set a duration! */
+  }

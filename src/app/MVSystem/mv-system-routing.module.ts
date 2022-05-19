@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 
 
 const routes: Routes = [
+  {
+    path: 'home',
+    component: HomeComponent
+  },
   {
     path: 'clientes',
     loadChildren: () => import('./pages/Clientes/clientes.module').then( m => m.ClientesModule )
@@ -16,8 +21,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Vendedores/vendedores.module').then( m => m.VendedoresModule )
    },
    {
-    path: 'mantenimiento',
-    loadChildren: () => import('./pages/components/components.module').then( m => m.ComponentsModule )
+    path: 'accesorios',
+    loadChildren: () => import('./pages/Accesorios/accesorios.module').then( m => m.AccesoriosModule )
    },
 
 ];

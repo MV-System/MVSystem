@@ -18,6 +18,7 @@
     "@angular/platform-browser": "~12.1.0-",
     "@angular/platform-browser-dynamic": "~12.1.0-",
     "@angular/router": "~12.1.0-",
+    "apexcharts": "^3.35.2",
     "jquery": "^3.6.0",
     "ng2-currency-mask": "^13.0.3",
     "ngx-mask": "^13.1.13",

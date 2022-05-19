@@ -7,14 +7,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ClientesModule } from './pages/Clientes/clientes.module';
 import { VendedoresModule } from './pages/Vendedores/vendedores.module';
 import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
-import { ComponentsModule } from './pages/components/components.module';
+import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
+import { HomeComponent } from './pages/home/home.component';
 
 
 
 
 @NgModule({
   declarations: [
-    
+    HomeComponent
+  
   ],
   imports: [
     CommonModule,
@@ -23,13 +25,14 @@ import { ComponentsModule } from './pages/components/components.module';
     SuplidoresModule,
     ClientesModule,
     VendedoresModule,
-    ComponentsModule
+    AccesoriosModule
   ],
   exports:[
     SuplidoresModule,
     ClientesModule,
     VendedoresModule,
-    ComponentsModule
+    AccesoriosModule,
+    HomeComponent
   ]
 })
 export class MvSystemModule { }
