@@ -12,7 +12,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     // this.chart();
     // this.chartPie();
-    console.log('home');
     
   }
   // chart() {

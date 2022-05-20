@@ -14,15 +14,16 @@ import * as $ from"jquery";
 
 @Component({
   selector: 'app-accesorios',
-  templateUrl: './accesorios.component.html',
-  styleUrls: ['./accesorios.component.css'],
+  templateUrl: './accesorios-registro.component.html',
+  styleUrls: ['./accesorios-registro.component.css'],
 })
-export class AccesoriosComponent implements OnInit {
+export class AccesoriosRegistroComponent implements OnInit {
   marcaListado: MarcaEquipo[] = [];
   costoMask: string = '';
   accesoriosLista!: any;
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
+  btnDisabled: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -64,13 +65,20 @@ export class AccesoriosComponent implements OnInit {
     cantidadMin: [, Validators.required],
     marca: [, Validators.required],
     modelo: [, Validators.required],
-    almacen: [, Validators.required],
-    usuario: ['', Validators.required],
+    almacen: [2, Validators.required],
+    usuario: [''],
   });
+  /**
+ * If the form is valid, set the button to disabled, otherwise set it to enabled.
+ * @returns The return value of the function is the value of the last statement executed.
+ */
+   btnDisable(){
+    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  }
 
   msgValidacionesCamposFormCantMaxCantMin() {
     if (
-      this.formRegistro.get('cantidadMin')?.value >
+      this.formRegistro.get('cantidadMin')?.value <
       this.formRegistro.get('cantidadMax')?.value
     ) {
       this.formRegistro.setErrors({error:''})
@@ -98,7 +106,6 @@ export class AccesoriosComponent implements OnInit {
   }
   //Al detalle no puede ser mayor que el costo
   ValidarCamposFormCostoDetalle() {
-    console.log(this.formRegistro.get('costo')?.value);
     
     if (
       this.formRegistro.get('alDetalle')?.value >
@@ -156,7 +163,6 @@ export class AccesoriosComponent implements OnInit {
       if ( this.formRegistro.valid   ) {
         this.mantenimientoService.postAccesorio(model)
                                 .subscribe((accesorio:any) =>{
-                                  console.log('accesorio insertado');
                                   this.accesoriosLista = accesorio;
                                   this.toastr.success('Accesorio registrado con exito!')
                                 });
@@ -175,13 +181,13 @@ export class AccesoriosComponent implements OnInit {
     const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,
       descripcion_Accesorio: this.formRegistro.get('descripcion')?.value,
-      cantidad: this.formRegistro.get('cantidad')?.value,
+      cantidad:Number(  this.formRegistro.get('cantidad')?.value),
       costo_Equipo: Number(this.formRegistro.get('costo')?.value),
-      precio_Detalle: this.formRegistro.get('alDetalle')?.value,
-      precio_Por_Mayor: this.formRegistro.get('alPorMayor')?.value,
+      precio_Detalle:Number( this.formRegistro.get('alDetalle')?.value),
+      precio_Por_Mayor:Number(  this.formRegistro.get('alPorMayor')?.value),
       imei_Equipo: this.formRegistro.get('IMEI')?.value,
-      can_Max: this.formRegistro.get('cantidadMax')?.value,
-      can_Min: this.formRegistro.get('cantidadMin')?.value,
+      can_Max:Number(  this.formRegistro.get('cantidadMax')?.value),
+      can_Min:Number(  this.formRegistro.get('cantidadMin')?.value),
       id_Modelo:Number( this.formRegistro.get('modelo')?.value),
       id_Almacen: this.formRegistro.get('almacen')?.value,
       // cod_Barra:this.formRegistro.get('IMEI')?.value, //? preguntar //

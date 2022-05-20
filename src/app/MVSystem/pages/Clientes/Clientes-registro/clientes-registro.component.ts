@@ -7,6 +7,7 @@ import { Cliente, ClienteRegistro, TipoCliente } from '../../../interfaces/clien
 import { CatalogosService } from '../../../services/catalogos.service';
 import { ClientesService } from '../../../services/clientes.service';
 import * as $ from"jquery";
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-clientes-registro',
   templateUrl: './clientes-registro.component.html',
@@ -41,16 +42,18 @@ export class ClientesRegistroComponent implements OnInit {
         this.formRegistro.controls.extensionNumero.disable();
         this.obtenerTipoTelefonos();
         this.obtenerTipoClientes();
+        this.btnDisable();
     }
     //Properties
     nombreApellidoPattern: string = '([a-zA-ZÀ-ÿ]+)';
     emailPattern         : string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 
-    clientes: ClienteRegistro[]=[];
-    clientesListar!: Cliente;
+    clientes:          ClienteRegistro[]=[];
+    clientesListar!:   Cliente;
     listaTipoClientes: TipoCliente[]=[];
-    listaTipoTelefonos: TipoTelefono[]=[];
-    bool!: boolean;
+    listaTipoTelefonos:TipoTelefono[]=[];
+    btnDisabled: boolean = true;
+
   //Forms
   formRegistro: FormGroup = this.fb.group({
     nombre:       ['', [Validators.required]],
@@ -79,20 +82,18 @@ export class ClientesRegistroComponent implements OnInit {
       this.formRegistro.get('provincia')?.value
 
   ];
-
- 
-      const registro: ClienteRegistro = {
-          nombres:        this.formRegistro.get('nombre')?.value,
-          apellidos:      this.formRegistro.get('apellido')?.value,
-          iD_Tipo_Cliente:   Number(this.formRegistro.get('tipoCliente')?.value),
-          limite_Credito: this.formRegistro.get('limiteCredito')?.value,
-          numero_Telefono:      this.formRegistro.get('telefono')?.value,
-          iD_Tipo_Telefono:Number(  this.formRegistro.get('tipoTelefono')?.value),
-          extencion:  this.formRegistro.get('extencion')?.value,
-          email_Detalle:      this.formRegistro.get('email')?.value,
-          usuario:      this.formRegistro.get('usuario')?.value,
-          direccion_Detalle:     direccion.toString(),
-      }
+    const registro: ClienteRegistro = {
+        nombres:        this.formRegistro.get('nombre')?.value,
+        apellidos:      this.formRegistro.get('apellido')?.value,
+        iD_Tipo_Cliente:  Number(this.formRegistro.get('tipoCliente')?.value),
+        limite_Credito:   this.formRegistro.get('limiteCredito')?.value,
+        numero_Telefono:  Number( this.formRegistro.get('telefono')?.value),
+        iD_Tipo_Telefono: Number(  this.formRegistro.get('tipoTelefono')?.value),
+        extencion:  this.formRegistro.get('extencion')?.value,
+        email_Detalle:      this.formRegistro.get('email')?.value,
+        usuario:      this.formRegistro.get('usuario')?.value,
+        direccion_Detalle:     direccion.toString(),
+    }
       return registro;
   }
 
@@ -106,6 +107,10 @@ export class ClientesRegistroComponent implements OnInit {
       }
   }
  
+/**
+ * If the form control has an error, return the error message. Otherwise, return an empty string.
+ * @returns The error message.
+ */
   get emailErrorMsg(): string{
     const errors = this.formRegistro.get('email')?.errors;
        if(errors?.pattern){
@@ -113,31 +118,51 @@ export class ClientesRegistroComponent implements OnInit {
        }
        return ''
      }
+/**
+ * If the form control is invalid and has been touched, return true. Otherwise, return false.
+ * @param {string} nombreCampo - string
+ * @returns a boolean value.
+ */
   validarCampos(nombreCampo: string) {
     return this.formRegistro.get(nombreCampo)?.invalid && 
            this.formRegistro.get(nombreCampo)?.touched
   }
+/**
+ * The function obtenerTipoTelefonos() calls the getTipoTelefonoLista() function in the
+ * catalogosService service, which returns an Observable of type TipoTelefono[], which is then
+ * subscribed to and the result is assigned to the listaTipoTelefonos variable.
+ */
   obtenerTipoTelefonos(){
       this.catalogosService.getTipoTelefonoLista()
           .subscribe(tipoTelefono =>{
               this.listaTipoTelefonos = tipoTelefono;
           });
   }
+/**
+ * It's a function that calls a service that returns an observable, which is then subscribed to and the
+ * result is assigned to a variable.
+ */
   obtenerTipoClientes(){
     this.clientesService.getTipoClienteLista()
         .subscribe(tipoCliente =>{
             this.listaTipoClientes = tipoCliente;
         });
   }
-  registroCLiente(){
+/**
+ * If the form is valid, set the button to disabled, otherwise set it to enabled.
+ * @returns The return value of the function is the value of the last statement executed.
+ */
+  btnDisable(){
+    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  }
+  registroCliente(){
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
+      
         this.clientesService.postCliente(model)
             .subscribe((clienteInsertado: Cliente) =>{
               this.clientesListar = clienteInsertado;
-              console.log(clienteInsertado);
-              
         
 				if (clienteInsertado.mensaje.includes('ya está')) {
           this.toastr.error(clienteInsertado.mensaje, '',

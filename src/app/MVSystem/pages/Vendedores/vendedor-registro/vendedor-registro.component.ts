@@ -30,7 +30,8 @@ export class VendedorRegistroComponent implements OnInit {
     vendedor: Vendedor[]=[];
     vendedorListar!: Vendedor;
     listaTipoTelefonos: TipoTelefono[]=[];
-    bool!: boolean;
+    btnDisabled: boolean = true;
+
   //Forms
   formRegistro: FormGroup = this.fb.group({
     nombre:       ['', [Validators.required]],
@@ -45,7 +46,13 @@ export class VendedorRegistroComponent implements OnInit {
     calle:      ['Primera'],
     casaNumero: ['#18'],
   });
-  
+  /**
+ * If the form is valid, set the button to disabled, otherwise set it to enabled.
+ * @returns The return value of the function is the value of the last statement executed.
+ */
+ btnDisable(){
+  return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+}
   modeloRegistroVendedor(){
     let direccion: any =[
       this.formRegistro.get('calle')?.value ,
@@ -101,8 +108,6 @@ export class VendedorRegistroComponent implements OnInit {
     if (this.formRegistro.valid) {
         this.vendedorService.postVendedor(model)
             .subscribe((VendedorInsertado: any) =>{
-        console.log( VendedorInsertado);
-        console.log(model);
         
         this.vendedorListar = VendedorInsertado;
         if (VendedorInsertado.mensaje.includes('ya está')) {

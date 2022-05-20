@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AccesoriosComponent } from './accesorios/accesorios.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { AccesoriosRoutingModule } from './accesorios-routing.module';
+import { AccesoriosRegistroComponent } from './accesorios-registro/accesorios-registro.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -17,7 +17,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 };
 @NgModule({
   declarations: [
-    AccesoriosComponent,
+    AccesoriosRegistroComponent,
   ],
   imports: [
     CommonModule,

@@ -48,7 +48,8 @@ export class SuplidorRegistroComponent implements OnInit {
   suplidorListar!: Suplidor;
   listaTipoSuplidores: TipoSuplidor[] = [];
   listaTipoTelefonos: TipoTelefono[] = [];
-  bool!: boolean;
+  btnDisabled: boolean = true;
+
   //Forms
   formRegistro: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
@@ -76,7 +77,7 @@ export class SuplidorRegistroComponent implements OnInit {
     const registro: SuplidorRegistro = {
       nombres: this.formRegistro.get('nombre')?.value,
       apellidos: this.formRegistro.get('apellido')?.value,
-      numero_Telefono: this.formRegistro.get('telefono')?.value,
+      numero_Telefono: Number( this.formRegistro.get('telefono')?.value),
       iD_Tipo_Telefono: Number(this.formRegistro.get('tipoTelefono')?.value),
       iD_Tipo_Suplidor: Number(this.formRegistro.get('tipoSuplidor')?.value),
       extencion: this.formRegistro.get('extencion')?.value,
@@ -86,14 +87,19 @@ export class SuplidorRegistroComponent implements OnInit {
     };
     return registro;
   }
-
+/**
+ * If the form is valid, set the button to disabled, otherwise set it to enabled.
+ * @returns The return value of the function is the value of the last statement executed.
+ */
+ btnDisable(){
+  return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+}
 /**
  * If the checkbox is checked, enable the input field. If the checkbox is unchecked, disable the input
  * field and clear the value
  * @param {any} event - any
  */
   onCheckboxChange(event: any) {
-    console.log(event);
     
     if (event.target.checked == false) {
       this.formRegistro.controls.extensionNumero.disable();

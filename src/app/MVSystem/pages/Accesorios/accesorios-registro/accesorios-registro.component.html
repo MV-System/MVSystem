@@ -1,0 +1,198 @@
+
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Registro Accesorios</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro Accesorios</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+<section class="section" >
+<div class="row" >
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" >Datos del Accesorio</h5>
+
+              <!--  Form -->
+              <form [formGroup]="formRegistro" 
+                    (ngSubmit)="registroAccesorio()"
+                    class="row g-3 needs-validation"
+                    novalidate>
+
+                    <!-- --------------- Descripción Accesorio --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" 
+                            class="form-control" 
+                            formControlName="descripcion" 
+                            aria-describedby="inputGroupPrepend" required>
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('descripcion')}">
+                        Este campo es requerido.
+                      </div>
+                </div>
+
+                    <!-- --------------- Cantidad Accesorio --------------- -->               
+                <div class="col-md-6">  
+                    <label  class="form-label">Cantidad</label>
+                    <input  type="text" 
+                            class="form-control" 
+                            required
+                            formControlName="cantidad">
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('cantidad')}">
+                                Este campo es requerido.
+                            </div>
+                </div>
+
+                <!-- --------------- Costo Accesorio --------------- -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Costo 
+                    </label> 
+                    <input  class="form-control"
+                            type="text" 
+                            currencyMask
+                            placeholder="RD$"
+                            required
+                            formControlName="costo" />
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('costo')}">
+                        Este campo es requerido.
+                    </div>
+                </div>
+
+                    <!-- --------------- Al detalle Accesorio --------------- -->
+                  <div class="col-md-4">
+                    <label  class="form-label">Al detalle</label>
+                    <input type="text"
+                            class="form-control" 
+                            required
+                            formControlName="alDetalle">
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('alDetalle')}">
+                                Este campo es requerido.
+                            </div>
+                  </div>
+
+                <!-- --------------- Al Por Mayor:  Accesorio --------------- -->
+                  <div class="col-md-4">
+                    <label class="form-label">Al Por Mayor </label>
+                    <input  type="text" 
+                            class="form-control"
+                            required
+                            formControlName="alPorMayor" >
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('alPorMayor')}">
+                                Este campo es requerido.
+                            </div>
+                  </div>
+
+                  <!-- --------------- IMEI Accesorio --------------- -->
+                <div class="col-md-4">
+                  <label class="form-label">IMEI Asociado</label>
+                  <input type="text" 
+                        class="form-control"  
+                        formControlName="IMEI">                     
+                </div>
+
+                <!-- --------------- Cantidad Max Accesorio --------------- -->
+                <div class="col-md-4">
+                  <label  class="form-label">Cantidad Max.</label>
+                  <input type="text" 
+                        class="form-control" 
+                        required
+                        formControlName="cantidadMax">
+                        <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('cantidadMax')}">
+                            Este campo es requerido.
+                          </div>
+                </div>
+
+                <!-- --------------- Cantidad Min Accesorio --------------- -->
+                <div class="col-md-4">
+                    <label  class="form-label">Cantidad Min.</label>
+                    <input type="text" 
+                            class="form-control" 
+                            required
+                            formControlName="cantidadMin">
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('cantidadMin')}">
+                                Este campo es requerido.
+                              </div>
+                </div>
+         <!-- --------------- Almacen Accesorio --------------- -->
+         <div class="col-md-4">
+            <label  class="form-label">Almacen</label>
+                <select formControlName="almacen" 
+                        class="form-select">
+                    <option *ngFor="let almacen of almacenListado"
+                    [value]="almacen.iD_Almacen">
+                    {{almacen.descripcion}}
+                    </option>
+                </select>
+        </div>
+                <!-- --------------- Marca Accesorio --------------- -->
+                <div class="col-md-4">
+                    <label  class="form-label">Marca</label>
+                        <select (change)="selectoresMarcaModeloValidator()"  
+                                formControlName="marca" 
+                                class="form-select">
+                            <!-- <option selected>Choose...</option>
+                            <option>...</option> -->
+                            <option *ngFor="let marca of marcaListado"
+                            [value]="marca.iD_Marca">
+                            {{marca.descripcion}}
+                            </option>
+                        </select>
+                </div>
+                <!-- --------------- Modelo Accesorio --------------- -->
+
+                <div class="col-md-4" *ngIf="modeloListado.length !==0">
+                    <label  class="form-label">Modelo</label>
+                        <select formControlName="modelo" 
+                                class="form-select">
+                            <!-- <option selected>Choose...</option>
+                            <option>...</option> -->
+                            <option *ngFor="let modelo of modeloListado"
+                            [value]="modelo.iD_Modelo">
+                            {{modelo.descripcion}}
+                            </option>
+                        </select>
+                </div> 
+          
+           
+                <div class="text-center ">
+                  <button class="btn btn-primary" type="submit" (change)="btnDisable()">Guardar</button>
+                </div>
+                <p>form valid {{formRegistro.valid}}</p>
+              </form>
+              <!-- End  Form -->
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+</main>
+<!-- 
+        <div class="right">
+            <table>
+                <tr>
+                 
+                    <th >descripción</th>
+                    <th>Al Por Mayor</th>
+                    <th>Al Detalle</th>
+                    <th>cantidad</th>
+             
+                </tr>
+          
+                <tr *ngFor="let i = index">
+                    <td>{{1 + 1}}</td>
+                    <td>{{accesoriosLista?.descripcion_Accesorio}}</td>
+                    <td>{{accesoriosLista?.precio_Por_Mayor}}</td>
+                    <td>{{accesoriosLista?.precio_Detalle}}</td>
+                    <td>{{accesoriosLista?.cantidad}}</td>
+                </tr>
+            </table>
+        </div> -->
+
+

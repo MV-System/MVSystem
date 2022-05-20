@@ -1,101 +1,163 @@
 
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Registrar Vendedor</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro vendedor</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+<section class="section" >
+<div class="row" >
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" >Datos del vendedor</h5>
 
-<div class="container">
-    <div class="wrapper">
-        <div class="left">
-            <h1 id="registro">Registrar Vendedor</h1>
-            <fieldset > 
-                <legend>Datos del Vendedor</legend>
-                    <div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroVendedor()">
+              <!--  Form -->
+              <form [formGroup]="formRegistro" 
+                    (ngSubmit)="registroVendedor()"
+                    class="row g-3 needs-validation"
+                    novalidate>
+           
+
+                    <!-- --------------- Nombre vendedor --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" 
+                            class="form-control" 
+                            formControlName="nombre" 
+                            aria-describedby="inputGroupPrepend" required>
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('nombre')}">
+                        Este campo es requerido.
+                      </div>
+                </div>
+
+                    <!-- --------------- Apellido vendedor --------------- -->               
+                <div class="col-md-6">  
+                    <label  class="form-label">Apellido</label>
+                    <input  type="text" 
+                            class="form-control" 
+                            required
+                            formControlName="apellido">
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                                Este campo es requerido.
+                            </div>
+                </div>
+
+                <!-- --------------- DropDown Tipo Telefono vendedor --------------- -->
                 
-                            <span class="validatorField"  *ngIf="validarCampos('nombre')" >Este campo es requerido</span>
-                            <label >
-                                Nombre:
-                                <input  class="" 
-                                        placeholder="Inserte el nombre "
-                                        type="text"
-                                        required
-                                        formControlName="nombre" />
-                            </label> 
-                            <span class="validatorField"  *ngIf="validarCampos('apellido')" >Este campo es requerido</span>
+                <div class="col-md-6">
+                    <label  class="form-label">Tipo Número</label>
+                    <select formControlName="tipoTelefono" class="form-select">
+                        <option *ngFor="let telefono of listaTipoTelefonos"
+                        [value]="telefono.iD_Tipo_Telefono">
+                        {{telefono.tipo_Telefono_Descripcion}}
+                        </option>
+                    </select>
+                </div>
 
-                            <label >
-                                Apellido: 
-                                <input  class=""
-                                        placeholder="Inserte el apellido "
-                                        type="text" 
-                                        required
-                                        formControlName="apellido" />
-                            </label> 
-                            
-                            <label >Tipo Telefono </label>
-                            <select formControlName="tipoTelefono">
-                                <option *ngFor="let telefono of listaTipoTelefonos"
-                                        [value]="telefono.iD_Tipo_Telefono">
-                                        {{telefono.tipo_Telefono_Descripcion}}
-                                </option>
-                            
-                            </select>
-                            <span class="validatorField"  *ngIf="validarCampos('telefono')" >Este campo es requerido</span>
+                  <!-- --------------- Telefono vendedor --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Teléfono:
+                    </label> 
+                    <input  
+                    class="form-control"
+                    required
+                    formControlName="telefono"
+                    type="text" 
+                    mask="000-000-0000" 
+                    />
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                        Este campo es requerido.
+                    </div>
+                </div>
 
-                            <label >
-                                Telefono:
-                                <input  formControlName="telefono"
-                                type="text" 
-                                mask="000-000-0000" 
-                                />
-                            </label>  
-                            <label >
-                                <input  type="checkbox" (change)="onCheckboxChange($event)">
-                             Ext. No.:
-                             <input  
-                                     type="number" 
-                                     class="" 
-                                     placeholder="Inserte la extensión "
-                                     formControlName="extensionNumero"
-                                      />
-                         </label> 
-                        
-                            <span class="validatorField"  *ngIf="validarCampos('email')">
-                                {{emailErrorMsg}}
-                              </span>
-                            <label >
-                                Email:
-                                <input  class="" 
-                                        type="email" 
-                                        formControlName="email" />
-                            </label> 
-                            <label >
-                                Provincia:
-                                <input  class="" 
-                                        type="text" 
-                                        formControlName="provincia" />
-                            </label> 
-                            <label >
-                                Sector:
-                                <input  class="" 
-                                        type="text" 
-                                        formControlName="sector" />
-                            </label> 
-                            <label>
-                                Calle:
-                                <input  class="" 
-                                        type="text" 
-                                        formControlName="calle" />
-                            </label> 
-                            <label>
-                                NO. Casa:
-                                <input  class="" 
-                                        type="text" 
-                                        formControlName="casaNumero" />
-                            </label> 
-                   
-                    <input class="submit" type="submit" value="Guardar">
-                </form>
+                    <!-- --------------- Extension Teléfono vendedor --------------- -->
+                <div class="col-md-2 ">
+                    <label  class="form-label">&nbsp;</label>
+                    <div class="form-check">
+                        <label >
+                            <input  class="form-check-input" 
+                                    type="checkbox" 
+                                    
+                                    (change)="onCheckboxChange($event)">
+                                    Ext. No.:
+                        </label> 
+                    </div>
+                </div>
+
+                  <div class="col-md-4">
+                    <label  class="form-label">&nbsp;</label>
+                    <input type="text"
+                            class="form-control" 
+                            placeholder="Inserte la extensión "
+                            formControlName="extensionNumero">
+                  </div>
+
+               
+
+                  <!-- --------------- Email vendedor --------------- -->
+                <div class="col-12">
+                  <label class="form-label">Email</label>
+                  <input type="email" 
+                        class="form-control"  
+                        formControlName="email">
+                        <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('email')}">
+                            {{emailErrorMsg}}
+                          </div>
+                </div>
+
+                <!-- --------------- Provincia vendedor --------------- -->
+                <div class="col-md-6">
+                  <label  class="form-label">Provincia</label>
+                  <input type="text" 
+                        class="form-control" 
+                        formControlName="provincia">
+                </div>
+
+                <!-- --------------- Sector vendedor --------------- -->
+                <div class="col-md-6">
+                    <label  class="form-label">Sector</label>
+                    <input type="text" 
+                            class="form-control" 
+                            formControlName="sector">
+                </div>
+
+                <!-- --------------- Calle vendedor --------------- -->
+                <div class="col-md-6">
+                  <label class="form-label">Calle</label>
+                  <input type="text" 
+                        class="form-control" 
+                        formControlName="calle">
+                </div>
+
+                <!-- --------------- NO. Casa vendedor --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">Casa No.</label>
+                    <input type="text"
+                            class="form-control" 
+                            formControlName="casaNumero">
+                </div>
+           
+                <div class="text-center " >
+                  <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>                 
+                </div>
+              </form>
+              <!-- End  Form -->
             </div>
-        </fieldset>
         </div>
+    </div>
+</div>
+</section>
+
+</main>
+
+<!-- 
         <div class="right">
             <table>
                 <tr>
@@ -124,23 +186,5 @@
          
                 </tr>
             </table>
-        </div>
-    </div>
-    <!-- <div>
-        <p>Form Valid: {{formRegistro.valid}}</p>
-        <p>Form Status: {{formRegistro.status}}</p>
-        <p>Form peding: {{formRegistro.pending}}</p>
-        <p>Form errors</p>
-        <pre>{{formRegistro.errors | json}}</pre>
-        <h5>Nombre</h5>
-        <pre>{{ formRegistro.controls.nombre.errors | json }}</pre>
-        
-        <h5>Apellido</h5>
-        <pre>{{ formRegistro.controls.apellido.errors | json }}</pre>
-        
-        <h5>Telefono</h5>
-        <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
-        
-    </div>
-</div> -->
-
+        </div> -->
+   
