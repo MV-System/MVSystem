@@ -27,6 +27,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
-],
+  ],
 })
 export class AccesoriosModule { }

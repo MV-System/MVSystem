@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -17,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
   ],
   imports: [
     AppRoutingModule,
+    RouterModule,
     BrowserAnimationsModule,
     BrowserModule,
     SharedModule,

@@ -1,9 +1,11 @@
 .validatorField{
     display: block;
-    margin-bottom: 10px;
+    width: 100%;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
     color: red;
   }
-  
+
 span{
   display: block;
   margin-bottom: 10px

@@ -5,7 +5,7 @@
         <h1 id="registro">Registro Accesorios</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item">Mantenimiento</li>
                 <li class="breadcrumb-item active">Registro Accesorios</li>
             </ol>
@@ -68,6 +68,8 @@
                   <div class="col-md-4">
                     <label  class="form-label">Al detalle</label>
                     <input type="text"
+                            currencyMask
+                            placeholder="RD$"
                             class="form-control" 
                             required
                             formControlName="alDetalle">
@@ -80,6 +82,8 @@
                   <div class="col-md-4">
                     <label class="form-label">Al Por Mayor </label>
                     <input  type="text" 
+                            currencyMask
+                            placeholder="RD$"
                             class="form-control"
                             required
                             formControlName="alPorMayor" >
@@ -91,15 +95,15 @@
                   <!-- --------------- IMEI Accesorio --------------- -->
                 <div class="col-md-4">
                   <label class="form-label">IMEI Asociado</label>
-                  <input type="text" 
+                  <input type="number" 
                         class="form-control"  
                         formControlName="IMEI">                     
                 </div>
 
                 <!-- --------------- Cantidad Max Accesorio --------------- -->
                 <div class="col-md-4">
-                  <label  class="form-label">Cantidad Max.</label>
-                  <input type="text" 
+                  <label  class="form-label">Cantidad Maxima</label>
+                  <input type="number" 
                         class="form-control" 
                         required
                         formControlName="cantidadMax">
@@ -110,8 +114,8 @@
 
                 <!-- --------------- Cantidad Min Accesorio --------------- -->
                 <div class="col-md-4">
-                    <label  class="form-label">Cantidad Min.</label>
-                    <input type="text" 
+                    <label  class="form-label">Cantidad Minima</label>
+                    <input type="number" 
                             class="form-control" 
                             required
                             formControlName="cantidadMin">
@@ -163,7 +167,6 @@
                 <div class="text-center ">
                   <button class="btn btn-primary" type="submit" (change)="btnDisable()">Guardar</button>
                 </div>
-                <p>form valid {{formRegistro.valid}}</p>
               </form>
               <!-- End  Form -->
             </div>

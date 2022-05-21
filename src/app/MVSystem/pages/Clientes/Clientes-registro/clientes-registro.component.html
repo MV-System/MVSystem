@@ -3,7 +3,7 @@
         <h1 id="registro">Registro Clientes</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item">Mantenimiento</li>
                 <li class="breadcrumb-item active">Registro clientes</li>
             </ol>
@@ -51,7 +51,7 @@
                             class="form-control" 
                             formControlName="nombre" 
                             aria-describedby="inputGroupPrepend" required>
-                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('nombre')}">
+                    <div class="validatorField"  *ngIf="validarCampos('nombre')">
                         Este campo es requerido.
                       </div>
                 </div>
@@ -123,6 +123,8 @@
                   <div class="col-md-3">
                     <label class="form-label">Limite credito</label>
                     <input  type="text" 
+                            currencyMask
+                            placeholder="RD$"
                             class="form-control"
                             formControlName="limiteCredito" >
                   </div>

@@ -5,7 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
   {
-    path: 'home',
+    path: '',
     component: HomeComponent
   },
   {
@@ -24,7 +24,10 @@ const routes: Routes = [
     path: 'accesorios',
     loadChildren: () => import('./pages/Accesorios/accesorios.module').then( m => m.AccesoriosModule )
    },
-
+   {
+    path: 'facturacion',
+    loadChildren: () => import('./pages/facturacion/facturacion.module').then( m => m.FacturacionModule )
+   },
 ];
 
 @NgModule({

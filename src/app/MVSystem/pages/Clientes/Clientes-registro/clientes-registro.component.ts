@@ -43,6 +43,23 @@ export class ClientesRegistroComponent implements OnInit {
         this.obtenerTipoTelefonos();
         this.obtenerTipoClientes();
         this.btnDisable();
+        // var needsValidation = document.querySelectorAll('.needs-validation')
+
+        // Array.prototype.slice.call(needsValidation)
+        //   .forEach((form) => {
+        //     form.addEventListener('submit', (event: { preventDefault: () => void; stopPropagation: () => void; }) => {
+        //       if (!form.checkValidity()) {
+        //         event.preventDefault()
+        //         event.stopPropagation()
+        //       }
+        //       if(this.formRegistro.valid){
+        //         form.classList.add('was-validated')
+
+        //       }
+      
+        //       form.classList.add('was-validated')
+        //     }, false)
+        //   })
     }
     //Properties
     nombreApellidoPattern: string = '([a-zA-ZÀ-ÿ]+)';
@@ -97,6 +114,11 @@ export class ClientesRegistroComponent implements OnInit {
       return registro;
   }
 
+/**
+ * If the checkbox is checked, enable the input field. If the checkbox is unchecked, disable the input
+ * field.
+ * @param {any} event - any
+ */
   onCheckboxChange(event: any ) {
     if(event.target.checked == false) {
         this.formRegistro.controls.extensionNumero.disable();
