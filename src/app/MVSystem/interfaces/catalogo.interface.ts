@@ -17,3 +17,10 @@ export interface ModeloEquipo {
   iD_Modelo:   number;
   descripcion: string;
 }
+
+
+export interface TipoFactura {
+  iD_Tipo_Factura:          number;
+  descripcion_Factura_Tipo: string;
+}
+

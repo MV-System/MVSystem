@@ -15,6 +15,7 @@ export let APIURL = {
         marcasLista:  API + 'Catalogos/Marcas_Combo',
         modeloLista:  API + 'Catalogos/Modelos_Combo',
         almacenLista: API + 'Catalogos/Almacen_Combo',
+        tipoFacturasLista: API + 'Catalogos/Tipos_Factura_Combo',
     },
     Clientes:{
         Consultas:{

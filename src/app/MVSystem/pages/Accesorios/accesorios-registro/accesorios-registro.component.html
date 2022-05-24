@@ -97,6 +97,8 @@
                   <label class="form-label">IMEI Asociado</label>
                   <input type="number" 
                         class="form-control"  
+                        max="21"
+                        *ngIf=" "
                         formControlName="IMEI">                     
                 </div>
 
@@ -136,17 +138,37 @@
         </div>
                 <!-- --------------- Marca Accesorio --------------- -->
                 <div class="col-md-4">
-                    <label  class="form-label">Marca</label>
+                        <label  class="form-label">Marca</label>
                         <select (change)="selectoresMarcaModeloValidator()"  
                                 formControlName="marca" 
                                 class="form-select">
-                            <!-- <option selected>Choose...</option>
-                            <option>...</option> -->
                             <option *ngFor="let marca of marcaListado"
                             [value]="marca.iD_Marca">
                             {{marca.descripcion}}
                             </option>
                         </select>
+                        <select class="js-example-basic-single" name="state">
+                            <option value="AL">Alabama</option>
+                              ...
+                            <option value="WY">Wyoming</option>
+                          </select>
+                        <!-- <ng-select  
+                        class="form-select"[items]="marcaListado "
+                                    bindLabel="descripcion"
+                                    formControlName="marca"
+                                    bindValue="marca.iD_Marca"
+                                    [virtualScroll]="false"
+                                    
+                                     >
+                        </ng-select> -->
+                        <!-- <ng-select  class="form-select">
+                            <ng-option *ngFor="let marca of marcaListado" 
+                                        [value]="marca.iD_Marca" 
+                                        >
+                                        {{marca.descripcion}}
+                                    </ng-option>
+                            
+                        </ng-select> -->
                 </div>
                 <!-- --------------- Modelo Accesorio --------------- -->
 

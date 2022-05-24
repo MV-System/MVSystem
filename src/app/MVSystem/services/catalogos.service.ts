@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura } from '../interfaces/catalogo.interface';
 
 
 
@@ -24,6 +24,9 @@ export class CatalogosService {
     }
     getAlmaceLista():Observable<Almacen[]>{
       return this.http.get<Almacen[]>(APIURL.Catalogos.almacenLista);
+    }  
+    getTipoFacturaLista():Observable<TipoFactura[]>{
+      return this.http.get<TipoFactura[]>(APIURL.Catalogos.tipoFacturasLista);
     }
 
 }

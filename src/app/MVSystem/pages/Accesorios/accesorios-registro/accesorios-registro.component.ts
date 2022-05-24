@@ -33,7 +33,9 @@ export class AccesoriosRegistroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
- 
+    $(document).ready(function() {
+      $('.js-example-basic-single').select2();
+  });
     // this.formRegistro.reset({
     //   descripcion: 'Protector Pantalla',
     //   cantidad: 10,
@@ -50,8 +52,6 @@ export class AccesoriosRegistroComponent implements OnInit {
     // });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
-    // this.obtenerModeloLista();
-
   }
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -60,7 +60,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     costo: [, Validators.required],
     alDetalle: [, Validators.required],
     alPorMayor: [, Validators.required],
-    IMEI: [,],
+    IMEI: [,Validators.max(15)],
     cantidadMax: [, Validators.required],
     cantidadMin: [, Validators.required],
     marca: [, Validators.required],
@@ -108,12 +108,12 @@ export class AccesoriosRegistroComponent implements OnInit {
   ValidarCamposFormCostoDetalle() {
     
     if (
-      this.formRegistro.get('alDetalle')?.value >
+      this.formRegistro.get('alDetalle')?.value <
       this.formRegistro.get('costo')?.value  && this.formRegistro.get('costo')?.value !== null)
      {
       this.formRegistro.setErrors({error:''})
       this.toastr.error(
-        'El monto de Al detalle no puede ser mayor que el Costo',
+        'El monto de Al detalle no puede ser menor que el Costo',
         '',
         { closeButton: true, progressBar: true }
       );
@@ -159,13 +159,15 @@ export class AccesoriosRegistroComponent implements OnInit {
 
   registroAccesorio() {
     const model: Accesorio = this.modeloRegistroAccesorio();
+    console.log(this.formRegistro.get('marca')?.value);
+    
     this.validacionesRegistro()
       if ( this.formRegistro.valid   ) {
-        this.mantenimientoService.postAccesorio(model)
-                                .subscribe((accesorio:any) =>{
-                                  this.accesoriosLista = accesorio;
-                                  this.toastr.success('Accesorio registrado con exito!')
-                                });
+        // this.mantenimientoService.postAccesorio(model)
+        //                         .subscribe((accesorio:any) =>{
+        //                           this.accesoriosLista = accesorio;
+        //                           this.toastr.success('Accesorio registrado con exito!')
+        //                         });
       }
       else{
         this.formRegistro.markAllAsTouched();

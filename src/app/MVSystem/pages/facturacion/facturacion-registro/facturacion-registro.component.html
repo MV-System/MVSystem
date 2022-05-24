@@ -1,1 +1,273 @@
-<p>facturacion works!</p>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Facturación</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Facturación</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+<section class="section" >
+<div class="row" >
+    <!-- ??section datos del cliente -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title" >DATOS DEL CLIENTE</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 class="card-title" >ID Cliente: </h5>
+                    </div>
+                </div>
+
+              <!--  Form -->
+              <form [formGroup]="formRegistro" 
+                    (ngSubmit)="registroFactura()"
+                    class="row g-3 needs-validation"
+                    novalidate>
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <label class="form-check-label" >
+                                    Persona 
+                                    <input class="form-check-input" type="checkbox" >
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-check">
+                                <label class="form-check-label" >
+                                    Empresa
+                                    <input class="form-check-input" type="checkbox" >
+                              </label>
+                            </div>
+                          </div>
+                    </div>
+                    <!-- --------------- Nombre Cliente --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" 
+                            class="form-control" 
+                            formControlName="nombre" 
+                            aria-describedby="inputGroupPrepend" required>
+                    <div class="validatorField"  *ngIf="validarCampos('nombre')">
+                        Este campo es requerido.
+                      </div>
+                </div>
+
+                    <!-- --------------- Apellido Cliente --------------- -->               
+                <div class="col-md-6">  
+                    <label  class="form-label">Apellido</label>
+                    <input  type="text" 
+                            class="form-control" 
+                            required
+                            formControlName="apellido">
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                                Este campo es requerido.
+                            </div>
+                </div>
+
+
+                  <!-- --------------- Telefono Cliente --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Teléfono:
+                    </label> 
+                    <input  
+                    class="form-control"
+                    required
+                    formControlName="telefono"
+                    type="text" 
+                    mask="000-000-0000" 
+                    />
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                        Este campo es requerido.
+                    </div>
+                </div>
+
+
+                <div class="text-end" >
+                  <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                </div>
+              </form>
+              <!-- End  Form -->
+            </div>
+        </div>
+    </div>
+    <!-- ??section datos de factura -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title" >DATOS DE FACTURACIÓN</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 class="card-title" >No. factura: </h5>
+                    </div>
+                </div>
+
+              <!--  Form -->
+              <form [formGroup]="formRegistro" 
+                    class="row g-3 needs-validation"
+                    novalidate>
+                 
+                    <!-- --------------- Vendedores --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">Vendedor</label>
+                    <select formControlName="vendedor" class="form-select">
+                        <option *ngFor="let TipoFactura of listaTipoFactura"
+                                [value]="TipoFactura.iD_Tipo_Factura">
+                        {{TipoFactura.descripcion_Factura_Tipo}}
+                        </option>
+                    </select>
+                    <div class="validatorField"  *ngIf="validarCampos('nombre')">
+                        Este campo es requerido.
+                      </div>
+                </div>
+
+                    <!-- --------------- Tipo factura --------------- -->               
+                <div class="col-md-6">  
+                        <label  class="form-label">Tipo Factura</label>
+                    <select formControlName="vendedor" class="form-select">
+                        <option *ngFor="let TipoFactura of listaTipoFactura"
+                                [value]="TipoFactura.iD_Tipo_Factura">
+                        {{TipoFactura.descripcion_Factura_Tipo}}
+                        </option>
+                    </select>
+                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                                Este campo es requerido.
+                            </div>
+                </div>
+
+
+                  <!-- --------------- Fecha de facturacion --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Fecha de facturacion:
+                    </label> 
+                    <input  
+                        class="form-control"
+                        required
+                        formControlName="fechaFacturacion"
+                        type="date" />
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                        Este campo es requerido.
+                    </div>
+                </div>
+                <!-- --------------- Fecha limite de pago --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                    Fecha de facturacion:
+                    </label> 
+                    <input  
+                        class="form-control"
+                        required
+                        formControlName="fechaFacturacion"
+                        type="date"/>
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                    Este campo es requerido.
+                    </div>
+                </div>
+                <!-- --------------- Tipo de pago --------------- -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Tipo de pago:
+                    </label> 
+                    <select formControlName="vendedor" class="form-select">
+                        <option *ngFor="let TipoFactura of listaTipoFactura"
+                                [value]="TipoFactura.iD_Tipo_Factura">
+                        {{TipoFactura.descripcion_Factura_Tipo}}
+                        </option>
+                    </select>
+                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                    Este campo es requerido.
+                    </div>
+                </div>
+                <!-- --------------- Garantia de pago --------------- -->
+
+                <div class="col-md-5">
+
+                    <div class="form-check">
+                        <label class="form-label" >
+                             Aplicar garantia
+                            <input class="form-check-input" type="checkbox" >
+                        </label>
+                    </div>
+                 
+                    <select formControlName="vendedor" class="form-select">
+                        <option *ngFor="let TipoFactura of listaTipoFactura"
+                                [value]="TipoFactura.iD_Tipo_Factura">
+                        {{TipoFactura.descripcion_Factura_Tipo}}
+                        </option>
+                    </select>
+                  </div>
+              </form>
+              <!-- End  Form -->
+            </div>
+        </div>
+    </div>
+           <!-- ??section detalle de la factura -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h5 class="card-title" >DETALLE DE LA FACTURA</h5>
+                <!--  Form -->
+                <form [formGroup]="formRegistro" 
+                    class="row g-3 needs-validation"
+                    novalidate> 
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <label class="form-check-label" >
+                                    Aplicar ITBIS
+                                    <input class="form-check-input" type="checkbox" >
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-check">
+                                <label class="form-check-label" >
+                                    Factura con comprobante
+                                    <input class="form-check-input" 
+                                            type="checkbox" 
+                                            (change)="onCheckboxChange($event)">
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <select formControlName="comprobante" class="form-select">
+                                <option *ngFor="let TipoFactura of listaTipoFactura"
+                                        [value]="TipoFactura.iD_Tipo_Factura">
+                                {{TipoFactura.descripcion_Factura_Tipo}}
+                                </option>
+                            </select>
+                          </div>
+                    </div>
+
+                </form>
+                <!-- End  Form -->
+                    </div>
+                <!-- End detalle de la factura -->
+
+                <div class="col-md-3">
+                    <h5  class="card-title text-center">Vista previa</h5>
+                    <div class="card" >
+                        <img src="assets/img/product-2.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <!-- End vista previa -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+</main>

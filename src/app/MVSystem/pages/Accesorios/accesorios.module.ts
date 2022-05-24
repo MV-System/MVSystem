@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { AccesoriosRoutingModule } from './accesorios-routing.module';
 import { AccesoriosRegistroComponent } from './accesorios-registro/accesorios-registro.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -23,7 +24,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CommonModule,
     AccesoriosRoutingModule,
     ReactiveFormsModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    NgSelectModule,
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

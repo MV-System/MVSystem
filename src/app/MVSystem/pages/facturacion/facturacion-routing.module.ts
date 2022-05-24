@@ -5,7 +5,7 @@ import { FacturacionRegistroComponent } from './facturacion-registro/facturacion
 
 const routes: Routes = [
   {
-    path:'facturacion-registro',
+    path:'',
     component: FacturacionRegistroComponent
   }
 ];
