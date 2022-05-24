@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
-import { TipoFactura } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -11,6 +11,7 @@ import { TipoFactura } from 'src/app/MVSystem/interfaces/catalogo.interface';
 })
 export class FacturacionRegistroComponent implements OnInit {
   listaTipoFactura: TipoFactura[]=[];
+  listaPagoFactura: TipoPago[]=[];
 
   constructor(
               private fb: FormBuilder,
@@ -20,6 +21,7 @@ export class FacturacionRegistroComponent implements OnInit {
   ngOnInit(): void {
     this.btnDisable();
     this.obtenerTipoFactura();
+    this.obtenerTipoPago();
     this.formRegistro.controls.comprobante.disable();
   }
   btnDisabled: boolean = true;
@@ -32,22 +34,10 @@ export class FacturacionRegistroComponent implements OnInit {
     telefono:   [,Validators.required],
     vendedor:   [,],
     tipoFactura:[,],
-    tipoPago:[,],
+    tipoPago:[1,],
     fechaFacturacion:[,],
     comprobante:[,],
 
-
-    tipoClienteDescripcion:  [""],
-    tipoTelefono: [1],
-    extensionNumero: [,Validators.required] ,
-   
-    // criterio:     [''],
-    usuario:      [''],
-    provincia:  [''],
-    sector:     [''],
-    calle:      [''],
-    casaNumero: [''],
-    // extensionNumero: new FormControl({disabled: this.bool},Validators.required) ,
   });
 
   // formCliente: FormGroup = this.fb.group({
@@ -83,5 +73,11 @@ export class FacturacionRegistroComponent implements OnInit {
         .subscribe(TipoFactura =>{
             this.listaTipoFactura = TipoFactura;
         });
-}
+  }
+  obtenerTipoPago(){
+    this.catalogosService.getTipoPagoLista()
+        .subscribe(TipoPago =>{
+            this.listaPagoFactura = TipoPago;
+        });
+  }
 }

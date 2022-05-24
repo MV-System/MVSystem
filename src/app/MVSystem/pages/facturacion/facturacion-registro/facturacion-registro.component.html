@@ -179,9 +179,9 @@
                         Tipo de pago:
                     </label> 
                     <select formControlName="vendedor" class="form-select">
-                        <option *ngFor="let TipoFactura of listaTipoFactura"
-                                [value]="TipoFactura.iD_Tipo_Factura">
-                        {{TipoFactura.descripcion_Factura_Tipo}}
+                        <option *ngFor="let TipoPago of listaPagoFactura"
+                                [value]="TipoPago.iD_Tipo_Pagos">
+                        {{TipoPago.descripcion_Tipo_Pagos}}
                         </option>
                     </select>
                     <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">

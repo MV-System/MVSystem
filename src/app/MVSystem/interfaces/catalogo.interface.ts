@@ -24,3 +24,9 @@ export interface TipoFactura {
   descripcion_Factura_Tipo: string;
 }
 
+export interface TipoPago {
+  iD_Tipo_Pagos:          number;
+  descripcion_Tipo_Pagos: string;
+}
+
+
