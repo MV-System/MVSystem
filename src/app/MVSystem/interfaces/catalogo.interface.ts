@@ -29,4 +29,9 @@ export interface TipoPago {
   descripcion_Tipo_Pagos: string;
 }
 
+export interface TipoComprobante {
+  nfcTipoNumero:      number;
+  nfcTipoDescripcion: string;
+}
+
 

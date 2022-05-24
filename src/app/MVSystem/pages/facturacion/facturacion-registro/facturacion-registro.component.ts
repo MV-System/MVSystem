@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
-import { TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -12,6 +12,7 @@ import { TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.inte
 export class FacturacionRegistroComponent implements OnInit {
   listaTipoFactura: TipoFactura[]=[];
   listaPagoFactura: TipoPago[]=[];
+  listaTipoComprobante: TipoComprobante[]=[];
 
   constructor(
               private fb: FormBuilder,
@@ -22,6 +23,7 @@ export class FacturacionRegistroComponent implements OnInit {
     this.btnDisable();
     this.obtenerTipoFactura();
     this.obtenerTipoPago();
+    this.obtenerTipoComprobante();
     this.formRegistro.controls.comprobante.disable();
   }
   btnDisabled: boolean = true;
@@ -33,11 +35,11 @@ export class FacturacionRegistroComponent implements OnInit {
     apellido:   [''],
     telefono:   [,Validators.required],
     vendedor:   [,],
-    tipoFactura:[,],
+    tipoFactura:[1,],
     tipoPago:[1,],
     fechaFacturacion:[,],
-    comprobante:[,],
-
+    comprobante:[0,],
+    fechaLimitePago:[,]
   });
 
   // formCliente: FormGroup = this.fb.group({
@@ -78,6 +80,12 @@ export class FacturacionRegistroComponent implements OnInit {
     this.catalogosService.getTipoPagoLista()
         .subscribe(TipoPago =>{
             this.listaPagoFactura = TipoPago;
+        });
+  }
+  obtenerTipoComprobante(){
+    this.catalogosService.getTipoComprobanteLista()
+        .subscribe(TipoComprobante =>{
+            this.listaTipoComprobante = TipoComprobante;
         });
   }
 }

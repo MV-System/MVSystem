@@ -133,7 +133,7 @@
                     <!-- --------------- Tipo factura --------------- -->               
                 <div class="col-md-6">  
                         <label  class="form-label">Tipo Factura</label>
-                    <select formControlName="vendedor" class="form-select">
+                    <select formControlName="tipoFactura" class="form-select">
                         <option *ngFor="let TipoFactura of listaTipoFactura"
                                 [value]="TipoFactura.iD_Tipo_Factura">
                         {{TipoFactura.descripcion_Factura_Tipo}}
@@ -162,12 +162,12 @@
                 <!-- --------------- Fecha limite de pago --------------- -->
                 <div class="col-md-6">
                     <label class="form-label">
-                    Fecha de facturacion:
+                    Fecha limite de pago:
                     </label> 
                     <input  
                         class="form-control"
                         required
-                        formControlName="fechaFacturacion"
+                        formControlName="fechaLimitePago"
                         type="date"/>
                     <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
                     Este campo es requerido.
@@ -178,7 +178,7 @@
                     <label class="form-label">
                         Tipo de pago:
                     </label> 
-                    <select formControlName="vendedor" class="form-select">
+                    <select formControlName="tipoPago" class="form-select">
                         <option *ngFor="let TipoPago of listaPagoFactura"
                                 [value]="TipoPago.iD_Tipo_Pagos">
                         {{TipoPago.descripcion_Tipo_Pagos}}
@@ -243,9 +243,9 @@
                           </div>
                           <div class="col-md-3">
                             <select formControlName="comprobante" class="form-select">
-                                <option *ngFor="let TipoFactura of listaTipoFactura"
-                                        [value]="TipoFactura.iD_Tipo_Factura">
-                                {{TipoFactura.descripcion_Factura_Tipo}}
+                                <option *ngFor="let tipoComprobante of listaTipoComprobante;"
+                                        [value]="tipoComprobante.nfcTipoNumero">
+                                {{tipoComprobante.nfcTipoDescripcion}}
                                 </option>
                             </select>
                           </div>
