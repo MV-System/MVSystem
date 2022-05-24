@@ -33,9 +33,7 @@ export class AccesoriosRegistroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    $(document).ready(function() {
-      $('.js-example-basic-single').select2();
-  });
+
     // this.formRegistro.reset({
     //   descripcion: 'Protector Pantalla',
     //   cantidad: 10,
