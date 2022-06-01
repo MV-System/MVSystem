@@ -39,3 +39,10 @@ export interface TipoCliente {
   tipo_Cliente_Descripcion: string;
 }
 
+
+export interface ClienteConsultaCriterio {
+  nombres:         string;
+  apellidos:       string;
+  numero_Telefono: number;
+  mensaje:         string;
+}

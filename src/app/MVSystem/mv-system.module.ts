@@ -17,9 +17,7 @@ import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-re
 
 @NgModule({
   declarations: [
-    HomeComponent,
-    FacturacionRegistroComponent
-  
+    HomeComponent  
   ],
   imports: [
     CommonModule,

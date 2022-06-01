@@ -2,13 +2,31 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FacturacionRoutingModule } from './facturacion-routing.module';
+import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+import { FacturacionRegistroComponent } from './facturacion-registro/facturacion-registro.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
-
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "left",
+  allowNegative: false,
+  decimal: ",",
+  precision: 2,
+  prefix: "RD$ ",
+  suffix: "",
+  thousands: "."
+};
 @NgModule({
-  declarations: [],
+  declarations: [
+    FacturacionRegistroComponent
+  ],
   imports: [
     CommonModule,
-    FacturacionRoutingModule
-  ]
+    FacturacionRoutingModule,
+    CurrencyMaskModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
+  ],
 })
 export class FacturacionModule { }

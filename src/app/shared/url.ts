@@ -22,6 +22,7 @@ export let APIURL = {
     Clientes:{
         Consultas:{
             tipoClienteLista: API + 'Catalogos/Tipo_Cliente_Combo',
+            ClienteLista: API + 'Clientes/Get_Cliente',
         },
         Inserta:{
             ClienteInserta: API + 'Clientes/Cliente_Insert',

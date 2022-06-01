@@ -1,6 +1,5 @@
 .validatorField{
     display: block;
-    width: 100%;
     font-size: 0.875em;
     margin-top: 0.25rem;
     color: red;
@@ -48,6 +47,19 @@ input {
     padding: 1.5rem;
     margin-right: 40px;
     float: left;
+}
+.table-mvsystem-thead {
+  background-color:  rgba(13, 150, 127, 0.218);
+  border-radius: 2px;
+ 
+  border-color: rgb(186,227,46);
+}
+.table-mvsystem {
+  border-radius: 20px;
+}
+.box-pay{
+  border: 1px solid rgb(179, 179, 179);
+  font-size: 15px;
 }
 table {
     font-family: arial, sans-serif;

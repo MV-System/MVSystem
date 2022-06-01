@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
 import { TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { ClientesService } from '../../../services/clientes.service';
 
 @Component({
   selector: 'app-facturacion',
@@ -13,11 +14,13 @@ export class FacturacionRegistroComponent implements OnInit {
   listaTipoFactura: TipoFactura[]=[];
   listaPagoFactura: TipoPago[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
+  nombreCliente: string | undefined;
 
   constructor(
               private fb: FormBuilder,
               private catalogosService: CatalogosService,
-              private toastr: ToastrService ) { }
+              private toastr: ToastrService,
+              private clientesService: ClientesService ) { }
 
   ngOnInit(): void {
     this.btnDisable();
@@ -25,6 +28,7 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerTipoPago();
     this.obtenerTipoComprobante();
     this.formRegistro.controls.comprobante.disable();
+    this.obtenerClientesPorNombreTelefono();
   }
   btnDisabled: boolean = true;
 
@@ -39,7 +43,11 @@ export class FacturacionRegistroComponent implements OnInit {
     tipoPago:[1,],
     fechaFacturacion:[,],
     comprobante:[0,],
-    fechaLimitePago:[,]
+    fechaLimitePago:[,],
+
+    monto:[,],
+    empresa:[,],
+    RNC:[,]
   });
 
   // formCliente: FormGroup = this.fb.group({
@@ -48,6 +56,18 @@ export class FacturacionRegistroComponent implements OnInit {
   // })
   registroFactura(){
 
+  }
+  obtenerClientesPorNombreTelefono(){
+    this.clientesService.getClientesPorNombreTelefono('xavier')
+                        .subscribe( cliente => {
+                          cliente.forEach( ({nombres,apellidos, numero_Telefono}) => {
+                            this.nombreCliente = nombres;
+                            console.log(nombres);
+                            console.log(apellidos);
+                            console.log(numero_Telefono);
+                          });
+                          
+                        })
   }
   onCheckboxChange(event: any ) {
     if(event.target.checked == false) {

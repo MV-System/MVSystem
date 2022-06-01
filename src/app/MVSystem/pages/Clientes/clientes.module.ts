@@ -35,8 +35,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],
-  // exports:[
-  //   ClientesRegistroComponent
-  // ]
+
 })
 export class ClientesModule { }
