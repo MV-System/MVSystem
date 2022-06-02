@@ -50,24 +50,41 @@ export class FacturacionRegistroComponent implements OnInit {
     RNC:[,]
   });
 
-  // formCliente: FormGroup = this.fb.group({
-  //   nombre:     [''],
-  //   apellido:   [''],
-  // })
+  formCliente: FormGroup = this.fb.group({
+    nombre:     ['',Validators.required],
+    apellido:   [''],
+    numeroTelefono: ['',Validators.required],
+  });
+
+  criterioBusqueda: any = {
+    criterio: '',
+  }
+
   registroFactura(){
 
   }
   obtenerClientesPorNombreTelefono(){
-    this.clientesService.getClientesPorNombreTelefono('xavier')
+    this.formCliente.controls.nombre.setValue('');
+    this.formCliente.controls.apellido.setValue('');
+
+    
+    this.criterioBusqueda.criterio = this.formCliente.controls.numeroTelefono.value;
+    console.log(this.criterioBusqueda.criterio);
+    if (this.criterioBusqueda.criterio !== '') {
+      
+    // document.getElementsByName("verificacion")[0].innerHTML = 'ok';
+    this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
                           cliente.forEach( ({nombres,apellidos, numero_Telefono}) => {
                             this.nombreCliente = nombres;
+                            this.formCliente.controls.nombre.setValue(nombres);
+                            this.formCliente.controls.apellido.setValue(apellidos);
                             console.log(nombres);
-                            console.log(apellidos);
                             console.log(numero_Telefono);
                           });
                           
-                        })
+                        });
+                      }
   }
   onCheckboxChange(event: any ) {
     if(event.target.checked == false) {
@@ -88,7 +105,7 @@ export class FacturacionRegistroComponent implements OnInit {
          this.formRegistro.get(nombreCampo)?.touched
 }
   btnDisable(){
-    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+    return ( this.formCliente.controls.numeroTelefono.value )  ? this.btnDisabled = false: this.btnDisabled = true;
   }
   obtenerTipoFactura(){
     this.catalogosService.getTipoFacturaLista()
