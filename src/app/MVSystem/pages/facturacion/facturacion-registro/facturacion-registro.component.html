@@ -48,7 +48,7 @@
                             <!-- --------------- Nombre Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control"  formControlName="nombre" readonly aria-describedby="inputGroupPrepend" value="xavier" required>
+                                <input type="text" class="form-control"  formControlName="nombre" readonly aria-describedby="inputGroupPrepend" >
                                
                                 <div class="validatorField" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
@@ -58,7 +58,7 @@
                             <!-- --------------- Apellido Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
-                                <input type="text" class="form-control" required formControlName="apellido" readonly>
+                                <input type="text" class="form-control"  formControlName="apellido" readonly>
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
                                     Este campo es requerido.
                                 </div>
@@ -78,10 +78,16 @@
 
 
                             <div class="text-end">
-                                <button class="btn btn-primary" 
+                                <button *ngIf="loadingButtonBuscar == false"  class="btn btn-primary" 
                                         type="submit" 
                                         [ngClass]="{'disabled':btnDisable()}"
-                                        (click)="obtenerClientesPorNombreTelefono()">Buscar</button>
+                                      
+                                        (click)="obtenerClientesPorNombreTelefono()">Buscar
+                                </button>
+                                        
+                                <button *ngIf="loadingButtonBuscar ===true" class="btn btn-primary" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                </button>                           
                             </div>
                         </form>
                         <!-- End  Form -->

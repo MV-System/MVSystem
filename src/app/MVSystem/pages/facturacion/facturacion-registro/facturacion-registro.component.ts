@@ -15,6 +15,7 @@ export class FacturacionRegistroComponent implements OnInit {
   listaPagoFactura: TipoPago[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
   nombreCliente: string | undefined;
+  loadingButtonBuscar: boolean = false;
 
   constructor(
               private fb: FormBuilder,
@@ -28,7 +29,7 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerTipoPago();
     this.obtenerTipoComprobante();
     this.formRegistro.controls.comprobante.disable();
-    this.obtenerClientesPorNombreTelefono();
+    // this.obtenerClientesPorNombreTelefono();
   }
   btnDisabled: boolean = true;
 
@@ -51,9 +52,9 @@ export class FacturacionRegistroComponent implements OnInit {
   });
 
   formCliente: FormGroup = this.fb.group({
-    nombre:     ['',Validators.required],
+    nombre:     [''],
     apellido:   [''],
-    numeroTelefono: ['',Validators.required],
+    numeroTelefono: ['',[Validators.required,Validators.min(10)]],
   });
 
   criterioBusqueda: any = {
@@ -63,19 +64,25 @@ export class FacturacionRegistroComponent implements OnInit {
   registroFactura(){
 
   }
+  // loadingSpinner(){
+  //   return this.loadingButtonBuscar == true ? this.loadingButtonBuscar == true : this.loadingButtonBuscar == false;
+  // }
   obtenerClientesPorNombreTelefono(){
     this.formCliente.controls.nombre.setValue('');
     this.formCliente.controls.apellido.setValue('');
+    console.log( this.loadingButtonBuscar);
 
+    this.loadingButtonBuscar = true;
     
     this.criterioBusqueda.criterio = this.formCliente.controls.numeroTelefono.value;
     console.log(this.criterioBusqueda.criterio);
     if (this.criterioBusqueda.criterio !== '') {
       
-    // document.getElementsByName("verificacion")[0].innerHTML = 'ok';
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
+                          
                           cliente.forEach( ({nombres,apellidos, numero_Telefono}) => {
+                            this.loadingButtonBuscar = false;
                             this.nombreCliente = nombres;
                             this.formCliente.controls.nombre.setValue(nombres);
                             this.formCliente.controls.apellido.setValue(apellidos);
@@ -105,7 +112,7 @@ export class FacturacionRegistroComponent implements OnInit {
          this.formRegistro.get(nombreCampo)?.touched
 }
   btnDisable(){
-    return ( this.formCliente.controls.numeroTelefono.value )  ? this.btnDisabled = false: this.btnDisabled = true;
+    return ( this.formCliente.valid )  ? this.btnDisabled = false: this.btnDisabled = true;
   }
   obtenerTipoFactura(){
     this.catalogosService.getTipoFacturaLista()
