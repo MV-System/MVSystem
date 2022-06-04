@@ -34,5 +34,5 @@ export class CatalogosService {
     getTipoComprobanteLista():Observable<TipoComprobante[]>{
       return this.http.get<TipoComprobante[]>(APIURL.Catalogos.tipoComprobanteLista);
     }
-
+ 
 }

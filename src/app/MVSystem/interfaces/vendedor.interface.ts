@@ -23,3 +23,8 @@ export interface Vendedor {
     usuario:           null;
 
 }
+
+export interface VendedorLista {
+    iD_Vendedor: number;
+    nombres:     string;
+  }

@@ -38,6 +38,7 @@ export let APIURL = {
     },
     Vendedor:{
         Consultas:{
+            vendedoresLista: API + 'Catalogos/Vendedores_Combo'
             
         },
         Inserta:{

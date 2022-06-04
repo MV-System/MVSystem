@@ -4,6 +4,10 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
 import { TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { ClientesService } from '../../../services/clientes.service';
+import { VendedorService } from '../../../services/vendedor.service';
+import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
+import { FacturaRegistro } from 'src/app/MVSystem/interfaces/mantenimiento';
+import { ModeloEquipo } from '../../../interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -14,21 +18,25 @@ export class FacturacionRegistroComponent implements OnInit {
   listaTipoFactura: TipoFactura[]=[];
   listaPagoFactura: TipoPago[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
-  nombreCliente: string | undefined;
   loadingButtonBuscar: boolean = false;
+  listaVendedor: VendedorLista[]=[]
+
 
   constructor(
               private fb: FormBuilder,
               private catalogosService: CatalogosService,
               private toastr: ToastrService,
-              private clientesService: ClientesService ) { }
+              private clientesService: ClientesService,
+              private vendedorService: VendedorService ) { }
 
   ngOnInit(): void {
     this.btnDisable();
     this.obtenerTipoFactura();
     this.obtenerTipoPago();
     this.obtenerTipoComprobante();
-    this.formRegistro.controls.comprobante.disable();
+    this.obtenerVendedor();
+    this.deshabilitadorInputFacturaComprobante();
+
     // this.obtenerClientesPorNombreTelefono();
   }
   btnDisabled: boolean = true;
@@ -46,60 +54,108 @@ export class FacturacionRegistroComponent implements OnInit {
     comprobante:[0,],
     fechaLimitePago:[,],
 
-    monto:[,],
+    garantia:[,],
+
+    // persona:[1,],
     empresa:[,],
+
+    // monto:[,],
     RNC:[,]
   });
 
-  formCliente: FormGroup = this.fb.group({
-    nombre:     [''],
-    apellido:   [''],
-    numeroTelefono: ['',[Validators.required,Validators.min(10)]],
-  });
+  // formCliente: FormGroup = this.fb.group({
+  //   nombre:     [''],
+  //   apellido:   [''],
+  //   numeroTelefono: ['',[Validators.required,Validators.min(10)]],
+  //   idCliente: [,]
+  // });
 
   criterioBusqueda: any = {
     criterio: '',
   }
-
+  modeloRegistroFacturacion(){
+    const model: FacturaRegistro= {
+      idCliente:Number(  this.formRegistro.get('idCliente')?.value),
+      nombre: this.formRegistro.get('nombre')?.value,
+      apellido: this.formRegistro.get('apellido')?.value,
+      telefono: this.formRegistro.get('telefono')?.value,
+      vendedor:Number(  this.formRegistro.get('vendedor')?.value),
+      tipoFactura:Number(  this.formRegistro.get('tipoFactura')?.value),
+      tipoPago:Number(  this.formRegistro.get('tipoPago')?.value),
+      fechaFacturacion: this.formRegistro.get('fechaFacturacion')?.value,
+      comprobante:Number( this.formRegistro.get('comprobante')?.value),
+      fechaLimitePago: this.formRegistro.get('fechaLimitePago')?.value,
+      garantia: this.formRegistro.get('garantia')?.value,
+      // persona:Number( this.formRegistro.get('persona')?.value),
+      empresa:  this.formRegistro.get('empresa')?.value,
+      monto: this.formRegistro.get('monto')?.value,
+      RNC: this.formRegistro.get('RNC')?.value
+    }
+    return model;
+  }
+  deshabilitadorInputFacturaComprobante(){
+    this.formRegistro.get('comprobante')?.disable();
+    this.formRegistro.get('RNC')?.disable();
+    this.formRegistro.get('empresa')?.disable();
+    this.formRegistro.get('garantia')?.disable();
+  }
   registroFactura(){
+    if (this.formRegistro.invalid) {
+      
+        this.formRegistro.markAllAsTouched();
+    }
+    else{
 
+      const modelo = this.modeloRegistroFacturacion();
+      console.log(modelo);
+    }
   }
   // loadingSpinner(){
   //   return this.loadingButtonBuscar == true ? this.loadingButtonBuscar == true : this.loadingButtonBuscar == false;
   // }
   obtenerClientesPorNombreTelefono(){
-    this.formCliente.controls.nombre.setValue('');
-    this.formCliente.controls.apellido.setValue('');
-    console.log( this.loadingButtonBuscar);
+    this.formRegistro.controls.nombre.setValue('');
+    this.formRegistro.controls.apellido.setValue('');
+    this.formRegistro.controls.idCliente.setValue('');
 
     this.loadingButtonBuscar = true;
     
-    this.criterioBusqueda.criterio = this.formCliente.controls.numeroTelefono.value;
-    console.log(this.criterioBusqueda.criterio);
+    this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
     if (this.criterioBusqueda.criterio !== '') {
       
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
                           
-                          cliente.forEach( ({nombres,apellidos, numero_Telefono}) => {
+                          cliente.forEach( ({nombres,apellidos, numero_Telefono,id_Cliente}) => {
                             this.loadingButtonBuscar = false;
-                            this.nombreCliente = nombres;
-                            this.formCliente.controls.nombre.setValue(nombres);
-                            this.formCliente.controls.apellido.setValue(apellidos);
-                            console.log(nombres);
-                            console.log(numero_Telefono);
+                         
+                            this.formRegistro.controls.nombre.setValue(nombres);
+                            this.formRegistro.controls.apellido.setValue(apellidos);
+                            this.formRegistro.controls.idCliente.setValue(id_Cliente);
+                       
                           });
                           
                         });
                       }
   }
-  onCheckboxChange(event: any ) {
+  onCheckboxChange(event: any, campo: any ) {
     if(event.target.checked == false) {
-        this.formRegistro.controls.comprobante.disable();
-        // this.formRegistro.get('comprobante')?.setValue("");
+        this.formRegistro.get(campo)?.disable();
     } 
     else{
-        this.formRegistro.controls.comprobante.enable();
+        this.formRegistro.get(campo)?.enable();
+      }
+  }
+  onCheckboxChangeFactura(event: any) {
+    if(event.target.checked == false) {
+        this.formRegistro.get('comprobante')?.disable();
+        this.formRegistro.get('RNC')?.disable();
+        this.formRegistro.get('empresa')?.disable();
+    } 
+    else{
+        this.formRegistro.get('comprobante')?.enable();
+        this.formRegistro.get('RNC')?.enable();
+        this.formRegistro.get('empresa')?.enable();
       }
   }
 /**
@@ -112,7 +168,7 @@ export class FacturacionRegistroComponent implements OnInit {
          this.formRegistro.get(nombreCampo)?.touched
 }
   btnDisable(){
-    return ( this.formCliente.valid )  ? this.btnDisabled = false: this.btnDisabled = true;
+    return ( this.formRegistro.get('telefono')?.value )  ? this.btnDisabled = false: this.btnDisabled = true;
   }
   obtenerTipoFactura(){
     this.catalogosService.getTipoFacturaLista()
@@ -131,5 +187,12 @@ export class FacturacionRegistroComponent implements OnInit {
         .subscribe(TipoComprobante =>{
             this.listaTipoComprobante = TipoComprobante;
         });
+  }
+
+  obtenerVendedor(){
+    this.vendedorService.getVendedorLista()
+                        .subscribe( (vendedor) =>{
+                            this.listaVendedor = vendedor;
+                        })
   }
 }

@@ -24,3 +24,20 @@ export interface AccesorioLista {
     precio_Detalle:        number;
     cantidad:              number;
 }
+export interface FacturaRegistro{
+    idCliente:  number;
+    nombre:     string;
+    apellido:   string;
+    telefono:   number;
+    vendedor:   number;
+    tipoFactura: number;
+    tipoPago: number;
+    fechaFacturacion: Date
+    comprobante:number;
+    fechaLimitePago: Date
+    garantia:string;
+    // persona: number;
+    empresa: string;
+    monto: number;
+    RNC: string;
+}

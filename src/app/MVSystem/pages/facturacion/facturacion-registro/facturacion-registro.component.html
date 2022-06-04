@@ -10,45 +10,49 @@
     </div>
     <!-- End Page Title -->
     <section class="section">
+        <form [formGroup]="formRegistro" (ngSubmit)="registroFactura()">
         <div class="row">
             <!-- ??section datos del cliente -->
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
+                            
+                       
+                        <!--  Form -->
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <h5 class="card-title">DATOS DEL CLIENTE</h5>
                             </div>
-                            <div class="col-md-3">
-                                <h5 class="card-title">ID Cliente: </h5>
+                            <div class="col-md-4">
+                                <h5 class="card-title">ID Cliente: <i class="textMv">{{formRegistro.controls.idCliente.value}}</i> </h5>
                             </div>
                         </div>
+                        <!-- <form [formGroup]="formCliente" (ngSubmit)="obtenerClientesPorNombreTelefono()" class="row g-3 needs-validation" novalidate> -->
+                            <!-- <div class="row">
 
-                        <!--  Form -->
-                        <form [formGroup]="formCliente" (ngSubmit)="obtenerClientesPorNombreTelefono()" class="row g-3 needs-validation" novalidate>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            Persona 
+                                            <input class="form-check-input" type="radio" formControlName="persona" checked  value="1">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                             Empresa
+                                            <input class="form-check-input" type="radio" formControlName="empresa" value="2">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- --------------- Nombre Cliente --------------- -->
                             <div class="row">
 
-                                <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                    Persona 
-                                    <input class="form-check-input" type="checkbox" >
-                              </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                    Empresa
-                                    <input class="form-check-input" type="checkbox" >
-                              </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- --------------- Nombre Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control"  formControlName="nombre" readonly aria-describedby="inputGroupPrepend" >
+                                <input type="text" class="form-control"  formControlName="nombre" required readonly aria-describedby="inputGroupPrepend" >
                                
                                 <div class="validatorField" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
@@ -58,7 +62,7 @@
                             <!-- --------------- Apellido Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
-                                <input type="text" class="form-control"  formControlName="apellido" readonly>
+                                <input type="text" class="form-control"  formControlName="apellido" required readonly>
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
                                     Este campo es requerido.
                                 </div>
@@ -70,11 +74,12 @@
                                 <label class="form-label">
                                      Teléfono:
                                 </label>
-                                <input class="form-control" required formControlName="numeroTelefono" type="text" mask="000-000-0000" />
+                                <input class="form-control"  formControlName="telefono" type="text" required mask="000-000-0000" />
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
                                     Este campo es requerido.
                                 </div>
                             </div>
+                        </div>
 
 
                             <div class="text-end">
@@ -89,7 +94,7 @@
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 </button>                           
                             </div>
-                        </form>
+                        <!-- </form> -->
                         <!-- End  Form -->
                     </div>
                 </div>
@@ -113,10 +118,10 @@
                             <!-- --------------- Vendedores --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Vendedor</label>
-                                <select formControlName="vendedor" class="form-select">
-                        <option *ngFor="let TipoFactura of listaTipoFactura"
-                                [value]="TipoFactura.iD_Tipo_Factura">
-                        {{TipoFactura.descripcion_Factura_Tipo}}
+                                <select formControlName="vendedor" required class="form-select">
+                        <option *ngFor="let vendedor of listaVendedor"
+                                [value]="vendedor.iD_Vendedor">
+                        {{vendedor.nombres}}
                         </option>
                     </select>
                                 <div class="validatorField" *ngIf="validarCampos('vendedor')">
@@ -152,9 +157,9 @@
                             <!-- --------------- Fecha limite de pago --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">
-                    Fecha limite de pago:
-                    </label>
-                                <input class="form-control" required formControlName="fechaLimitePago" type="date" />
+                                    Fecha limite de pago:
+                                </label>
+                                <input class="form-control"  formControlName="fechaLimitePago" type="date" />
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('fechaLimitePago')}">
                                     Este campo es requerido.
                                 </div>
@@ -181,11 +186,11 @@
                                 <div class="form-check">
                                     <label class="form-label">
                              Aplicar garantia
-                            <input class="form-check-input" type="checkbox" >
+                            <input class="form-check-input" type="checkbox"  (change)="onCheckboxChange($event,'garantia')">
                         </label>
                                 </div>
 
-                                <select formControlName="vendedor" class="form-select">
+                                <select formControlName="garantia" class="form-select">
                         <option *ngFor="let TipoFactura of listaTipoFactura"
                                 [value]="TipoFactura.iD_Tipo_Factura">
                         {{TipoFactura.descripcion_Factura_Tipo}}
@@ -205,13 +210,14 @@
                             <div class="col-md-9">
                                 <h5 class="card-title">DETALLE DE LA FACTURA</h5>
                                 <!--  Form -->
-                                <form [formGroup]="formRegistro" class="row g-3 needs-validation" novalidate>
+                                <!-- <form [formGroup]="formRegistro" class="row g-3 needs-validation" novalidate> -->
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     Aplicar ITBIS
-                                                    <input class="form-check-input" type="checkbox" >
+                                                    <input class="form-check-input" 
+                                                            type="checkbox">
                                                 </label>
                                             </div>
                                         </div>
@@ -221,7 +227,7 @@
                                                     Factura con comprobante
                                                     <input class="form-check-input" 
                                                             type="checkbox" 
-                                                            (change)="onCheckboxChange($event)">
+                                                            (change)="onCheckboxChangeFactura($event )">
                                                 </label>
                                             </div>
                                         </div>
@@ -234,7 +240,7 @@
                                             </select>
                                         </div>
                                     </div>
-                            <!-- <div class="row"> -->
+                            <div class="row">
                                 <!-- --------------- RNC --------------- -->
                                 <div class="col-md-3">
                                     <label class="form-label">RNC</label>
@@ -247,7 +253,7 @@
                                     <input type="text" class="form-control" formControlName="empresa">
                                 </div>
 
-                            <!-- </div> -->
+                            </div>
                             
                         <!-- --------------- Nota de credito --------------- -->
                         <!-- <div class="col-md-2">
@@ -278,8 +284,8 @@
                             </div> -->
                                 
                                 <div class="col-md-12">
-                                    <table class="table-mvsystem">
-                                        <thead class="table-mvsystem-thead">
+                                    <table class="table-mvsystem mt-3">
+                                        <thead >
                                             <tr>
                                                 <th>Codigo</th>
                                                 <th>Descripción</th>
@@ -293,10 +299,10 @@
                                         <tbody >
                                             <tr>
                                                 <td class="col-md-2">
-                                                    <input type="text" class="form-control" formControlName="RNC">
+                                                    <input type="text" class="form-control" >
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control" formControlName="RNC">
+                                                    <input type="text" class="form-control">
                                                 </td>
                                                 <td class="col-md-1">
                                                     <input type="number" class="form-control">
@@ -331,8 +337,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                                
-                                </form>
+                                <div>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-printer"></i>
+                                        Imprimir
+                                    </button>
+                                    Form Valid? {{formRegistro.valid}}
+                                </div>
+                                <!-- </form> -->
                                 <!-- End  Form -->
                             </div>
                             <!-- End detalle de la factura -->
@@ -349,6 +361,7 @@
                 </div>
             </div>
         </div>
+    </form>
     </section>
 
 </main>

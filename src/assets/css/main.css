@@ -1,3 +1,12 @@
+:root{
+  --mvSystemGreen: rgba(13, 150, 127, 0.218);
+  --mvSystemText: rgba(38, 140, 94, 0.856);
+}
+.card-title .textMv {
+  color: var(--mvSystemText);
+  font-weight: 800;
+  font-size: 18px;
+}
 .validatorField{
     display: block;
     font-size: 0.875em;
@@ -48,11 +57,11 @@ input {
     margin-right: 40px;
     float: left;
 }
-.table-mvsystem-thead {
-  background-color:  rgba(13, 150, 127, 0.218);
+.table-mvsystem thead{
+  background-color:  var(--mvSystemGreen);
   border-radius: 2px;
  
-  border-color: rgb(186,227,46);
+  /* border-color: rgb(186,227,46); */
 }
 .table-mvsystem {
   border-radius: 20px;
