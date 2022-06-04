@@ -59,7 +59,7 @@ input {
 }
 .table-mvsystem thead{
   background-color:  var(--mvSystemGreen);
-  border-radius: 2px;
+  border-radius: 6px;
  
   /* border-color: rgb(186,227,46); */
 }
@@ -69,6 +69,7 @@ input {
 .box-pay{
   border: 1px solid rgb(179, 179, 179);
   font-size: 15px;
+  border-radius: 6px
 }
 table {
     font-family: arial, sans-serif;

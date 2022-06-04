@@ -20,7 +20,7 @@ export class FacturacionRegistroComponent implements OnInit {
   listaTipoComprobante: TipoComprobante[]=[];
   loadingButtonBuscar: boolean = false;
   listaVendedor: VendedorLista[]=[]
-
+  nuevoAccesorio: number[]=[1]
 
   constructor(
               private fb: FormBuilder,
@@ -49,11 +49,11 @@ export class FacturacionRegistroComponent implements OnInit {
     telefono:   [,Validators.required],
     vendedor:   [,],
     tipoFactura:[1,],
-    tipoPago:[1,],
+    tipoPago:[,],
     fechaFacturacion:[,],
     comprobante:[0,],
     fechaLimitePago:[,],
-
+    accesorio:[,],
     garantia:[,],
 
     // persona:[1,],
@@ -73,6 +73,15 @@ export class FacturacionRegistroComponent implements OnInit {
   criterioBusqueda: any = {
     criterio: '',
   }
+
+  agregarNuevoAccesorio(){
+    
+      console.log('change');
+      
+       this.nuevoAccesorio?.push(1)
+    
+  }
+
   modeloRegistroFacturacion(){
     const model: FacturaRegistro= {
       idCliente:Number(  this.formRegistro.get('idCliente')?.value),
@@ -118,10 +127,12 @@ export class FacturacionRegistroComponent implements OnInit {
     this.formRegistro.controls.apellido.setValue('');
     this.formRegistro.controls.idCliente.setValue('');
 
-    this.loadingButtonBuscar = true;
     
     this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
     if (this.criterioBusqueda.criterio !== '') {
+      console.log('busquedda');
+      
+      this.loadingButtonBuscar = true;
       
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
@@ -163,13 +174,16 @@ export class FacturacionRegistroComponent implements OnInit {
  * @param {string} nombreCampo - string
  * @returns a boolean value.
  */
- validarCampos(nombreCampo: string) {
-  return this.formRegistro.get(nombreCampo)?.invalid && 
-         this.formRegistro.get(nombreCampo)?.touched
-}
-  btnDisable(){
-    return ( this.formRegistro.get('telefono')?.value )  ? this.btnDisabled = false: this.btnDisabled = true;
+  validarCampos(nombreCampo: string) {
+    return this.formRegistro.get(nombreCampo)?.invalid && 
+          this.formRegistro.get(nombreCampo)?.touched
   }
+  btnDisable(){
+    return (  this.formRegistro.get('telefono')?.value > 9)  ? this.btnDisabled = false: this.btnDisabled = true;
+  }
+
+  //catalogos
+  
   obtenerTipoFactura(){
     this.catalogosService.getTipoFacturaLista()
         .subscribe(TipoFactura =>{
@@ -188,7 +202,6 @@ export class FacturacionRegistroComponent implements OnInit {
             this.listaTipoComprobante = TipoComprobante;
         });
   }
-
   obtenerVendedor(){
     this.vendedorService.getVendedorLista()
                         .subscribe( (vendedor) =>{

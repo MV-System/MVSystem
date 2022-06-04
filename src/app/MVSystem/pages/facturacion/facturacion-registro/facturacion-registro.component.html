@@ -16,8 +16,8 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                            
-                       
+
+
                         <!--  Form -->
                         <div class="row">
                             <div class="col-md-8">
@@ -33,7 +33,7 @@
                                 <div class="col-md-3">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            Persona 
+                                            Persona
                                             <input class="form-check-input" type="radio" formControlName="persona" checked  value="1">
                                         </label>
                                     </div>
@@ -53,19 +53,19 @@
                             <div class="col-md-6">
                                 <label class="form-label">Nombre</label>
                                 <input type="text" class="form-control"  formControlName="nombre" required readonly aria-describedby="inputGroupPrepend" >
-                               
-                                <div class="validatorField" *ngIf="validarCampos('nombre')">
+
+                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- --------------- Apellido Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
                                 <input type="text" class="form-control"  formControlName="apellido" required readonly>
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                                <!-- <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
                                     Este campo es requerido.
-                                </div>
+                                </div> -->
                             </div>
 
 
@@ -83,16 +83,16 @@
 
 
                             <div class="text-end">
-                                <button *ngIf="loadingButtonBuscar == false"  class="btn btn-primary" 
-                                        type="submit" 
+                                <button *ngIf="loadingButtonBuscar == false"  class="btn btn-primary"
+                                        type="submit"
                                         [ngClass]="{'disabled':btnDisable()}"
-                                      
+
                                         (click)="obtenerClientesPorNombreTelefono()">Buscar
                                 </button>
-                                        
+
                                 <button *ngIf="loadingButtonBuscar ===true" class="btn btn-primary" type="button" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                </button>                           
+                                </button>
                             </div>
                         <!-- </form> -->
                         <!-- End  Form -->
@@ -216,7 +216,7 @@
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     Aplicar ITBIS
-                                                    <input class="form-check-input" 
+                                                    <input class="form-check-input"
                                                             type="checkbox">
                                                 </label>
                                             </div>
@@ -225,8 +225,8 @@
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     Factura con comprobante
-                                                    <input class="form-check-input" 
-                                                            type="checkbox" 
+                                                    <input class="form-check-input"
+                                                            type="checkbox"
                                                             (change)="onCheckboxChangeFactura($event )">
                                                 </label>
                                             </div>
@@ -254,7 +254,7 @@
                                 </div>
 
                             </div>
-                            
+
                         <!-- --------------- Nota de credito --------------- -->
                         <!-- <div class="col-md-2">
                             <div class="form-check">
@@ -269,20 +269,20 @@
                         <!-- --------------- Monto --------------- -->
                         <!-- <div class="col-md-2">
                             <label class="form-label">Monto</label>
-                            <input type="text" 
-                                    class="form-control" 
-                                    placeholder="RD$" 
-                                    formControlName="monto" 
+                            <input type="text"
+                                    class="form-control"
+                                    placeholder="RD$"
+                                    formControlName="monto"
                                     currencyMask>
                         </div> -->
                             <!-- --------------- Nota --------------- -->
                             <!-- <div class="col-md-6">
                                 <label class="form-label">Nota</label>
-                                <textarea type="text" 
+                                <textarea type="text"
                                             class="form-control">
                                 </textarea>
                             </div> -->
-                                
+
                                 <div class="col-md-12">
                                     <table class="table-mvsystem mt-3">
                                         <thead >
@@ -297,17 +297,23 @@
                                             </tr>
                                         </thead>
                                         <tbody >
-                                            <tr>
+                                            <tr *ngFor="let nuevo of nuevoAccesorio">
                                                 <td class="col-md-2">
                                                     <input type="text" class="form-control" >
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control">
+                                                    <select formControlName="tipoPago" (change)="agregarNuevoAccesorio()" class="form-select">
+                                                        <option *ngFor="let TipoPago of listaPagoFactura"
+                                                                [value]="TipoPago.iD_Tipo_Pagos"
+                                                               >
+                                                        {{TipoPago.descripcion_Tipo_Pagos}}
+                                                        </option>
+                                                    </select>
                                                 </td>
                                                 <td class="col-md-1">
                                                     <input type="number" class="form-control">
                                                 </td>
-                                                
+
                                                 <td>12,500.00</td>
                                                 <td>0</td>
                                                 <td>0</td>
