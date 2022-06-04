@@ -76,10 +76,12 @@ export class FacturacionRegistroComponent implements OnInit {
 
   agregarNuevoAccesorio(){
     
-      console.log('change');
-      
-       this.nuevoAccesorio?.push(1)
+    console.log('change');
     
+    this.nuevoAccesorio?.push(1)
+    console.log(this.nuevoAccesorio);
+ 
+        
   }
 
   modeloRegistroFacturacion(){
