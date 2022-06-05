@@ -18,6 +18,7 @@ export let APIURL = {
         tipoFacturasLista: API + 'Catalogos/Tipos_Factura_Combo',
         tipoPagoLista: API + 'Catalogos/Tipos_Pagos_Combo',
         tipoComprobanteLista: API + 'Catalogos/GetComprobantes_Combo',
+        accesorioLista: API + 'Catalogos/Accesorios_Facturacion_Lista',
     },
     Clientes:{
         Consultas:{

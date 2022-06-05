@@ -35,9 +35,16 @@ export interface FacturaRegistro{
     fechaFacturacion: Date
     comprobante:number;
     fechaLimitePago: Date
+    accesorio: AccesorioFactura[];
     garantia:string;
     // persona: number;
     empresa: string;
     monto: number;
     RNC: string;
+}
+export interface AccesorioFactura{
+    codigo: number;
+    descripcion: string;
+    cantidad: number;
+    precio: number;
 }

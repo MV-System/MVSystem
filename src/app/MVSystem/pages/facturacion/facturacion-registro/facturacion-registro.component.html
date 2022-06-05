@@ -297,16 +297,15 @@
                                             </tr>
                                         </thead>
                                         <tbody >
-                                            <tr *ngFor="let nuevo of nuevoAccesorio">
+                                            <tr *ngFor="let nuevo of nuevoInputAccesorio">
                                                 <td class="col-md-2">
                                                     <input type="text" class="form-control" >
                                                 </td>
                                                 <td>
-                                                    <select formControlName="tipoPago" (change)="agregarNuevoAccesorio()" class="form-select">
-                                                        <option *ngFor="let TipoPago of listaPagoFactura"
-                                                                [value]="TipoPago.iD_Tipo_Pagos"
-                                                               >
-                                                        {{TipoPago.descripcion_Tipo_Pagos}}
+                                                    <select formControlName="accesorio" (change)="agregarNuevoAccesorio(nuevo)" class="form-select">
+                                                        <option *ngFor="let accesorio of listaAccesorio"
+                                                                 [value]="accesorio.id">
+                                                            {{accesorio.accesorio_Descripcion}}/ {{accesorio.modelo}}
                                                         </option>
                                                     </select>
                                                 </td>
@@ -324,7 +323,7 @@
                                         <hr>
                                         <div class="row">
 
-                                            <p class="col-md-8">Total articulos: 1</p>
+                                            <p class="col-md-8">Total articulos: {{nuevoInputAccesorio.length}}</p>
                                             <div class="col-md-4 text-end">
                                                 <div class="box-pay">
                                                    <div class="row">

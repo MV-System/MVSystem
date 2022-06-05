@@ -34,6 +34,18 @@ export interface TipoComprobante {
   nfcTipoDescripcion: string;
 }
 
+export interface AccesorioLista {
+  codigo?:                Codigo;
+  id:                    number;
+  accesorio_Descripcion: string;
+  modelo:                string;
+  codigo_Barra:          number;
+}
+
+export enum Codigo {
+  Empty = "",
+  W323 = "w323",
+}
 
 
 
