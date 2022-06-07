@@ -82,9 +82,16 @@ export class EquipoRegistroComponent implements OnInit {
 
         this.mantenimientoService.postEquipo(model)
                                 .subscribe((equipo) =>{
-                                  equipo.forEach((element: any) => {
-                                    
-                                    this.equipoValorRetorno.push(element);
+                                  
+                                  equipo.forEach((equipoRegistrado: any) => {
+                                    this.equipoValorRetorno.forEach(({imei})=>{
+
+                                      if (equipoRegistrado.imei == imei) {
+                                        console.log(`los imei's son iguales`);
+                                        return ;
+                                      }
+                                    });
+                                    this.equipoValorRetorno.push(equipoRegistrado);
                                   });
                                   console.log( this.equipoValorRetorno );
 
@@ -93,6 +100,11 @@ export class EquipoRegistroComponent implements OnInit {
       }
 
   }
+  // validarImeiEnListaRegistro(){
+  //   if (condition) {
+      
+  //   }
+  // }
   validacionesRegistro(){
     this.validarCamposFormCostoDetalle();
     this.msgValidacionesCamposFormComisionDetallePorMayor();
@@ -221,6 +233,7 @@ export class EquipoRegistroComponent implements OnInit {
   }
 
   selectoresMarcaModeloValidator() {
+    this.formRegistro.get('modelo')?.setValue('');
     if (this.formRegistro.get('marca')?.valid) {
       this.formRegistro.controls.modelo.enable();
 
