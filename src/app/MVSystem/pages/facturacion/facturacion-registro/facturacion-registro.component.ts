@@ -51,16 +51,16 @@ export class FacturacionRegistroComponent implements OnInit {
     telefono:   [,Validators.required],
     vendedor:   [,],
     tipoFactura:[1,],
-    tipoPago:[0,],
+    tipoPago:[1,],
     fechaFacturacion:[,],
     comprobante:[0,],
     fechaLimitePago:[,],
     accesorio:[,],
     garantia:[,],
-
+    cantidadAccesorio:[,],
     // persona:[1,],
     empresa:[,],
-
+    codigo:[,],
     // monto:[,],
     RNC:[,]
   });
@@ -83,15 +83,26 @@ export class FacturacionRegistroComponent implements OnInit {
    }
     
     else if( this.nuevoInputAccesorio.length ==index  ) {
-      this.nuevoInputAccesorio?.push(this.nuevoInputAccesorio.length + 1)
-      console.log(this.formRegistro.get('accesorio')?.value);
+      this.nuevoInputAccesorio?.push(this.nuevoInputAccesorio.length + 1);
+      // this.formRegistro.controls.codigo.setValue(index);
+      // console.log(this.formRegistro.get('accesorio')?.value);
       
     }
      
 
   }
-
+  obtenerIdAccesorio(id: number){
+    console.log(id);
+    
+  }
   modeloRegistroFacturacion(){
+    this.AccesorioFacturaRegistro =[{
+      codigo: this.formRegistro.get('codigo')?.value,
+      descripcion: this.formRegistro.get('accesorio')?.value,
+      cantidad: this.formRegistro.get('cantidadAccesorio')?.value,
+      // precio: this.formRegistro.get('precio')?.value,
+    }
+    ]
     const model: FacturaRegistro= {
       idCliente: Number(this.formRegistro.get('idCliente')?.value),
       nombre: this.formRegistro.get('nombre')?.value,
@@ -143,7 +154,6 @@ export class FacturacionRegistroComponent implements OnInit {
     
     this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
     if (this.criterioBusqueda.criterio !== '') {
-      console.log('busquedda');
       
       this.loadingButtonBuscar = true;
       

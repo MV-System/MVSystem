@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'facturacion',
     loadChildren: () => import('./pages/facturacion/facturacion.module').then( m => m.FacturacionModule )
    },
+   {
+    path: 'equipo',
+    loadChildren: () => import('./pages/Equipo/equipo.module').then( m => m.EquipoModule )
+   },
 ];
 
 @NgModule({

@@ -10,6 +10,7 @@ import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
 import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
 import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-registro/facturacion-registro.component';
+import { EquipoModule } from './pages/Equipo/equipo.module';
 
 
 
@@ -17,7 +18,7 @@ import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-re
 
 @NgModule({
   declarations: [
-    HomeComponent  
+    HomeComponent
   ],
   imports: [
     CommonModule,
@@ -26,13 +27,15 @@ import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-re
     SuplidoresModule,
     ClientesModule,
     VendedoresModule,
-    AccesoriosModule
+    AccesoriosModule,
+    EquipoModule
   ],
   exports:[
     SuplidoresModule,
     ClientesModule,
     VendedoresModule,
     AccesoriosModule,
+    EquipoModule,
     HomeComponent
   ]
 })

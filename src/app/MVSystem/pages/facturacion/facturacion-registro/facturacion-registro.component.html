@@ -299,18 +299,19 @@
                                         <tbody >
                                             <tr *ngFor="let nuevo of nuevoInputAccesorio">
                                                 <td class="col-md-2">
-                                                    <input type="text" class="form-control" >
+                                                    <input type="text" class="form-control" formControlName="codigo">
                                                 </td>
                                                 <td>
                                                     <select formControlName="accesorio" (change)="agregarNuevoAccesorio(nuevo)" class="form-select">
                                                         <option *ngFor="let accesorio of listaAccesorio"
-                                                                 [value]="accesorio.id">
+                                                                 [value]="accesorio.accesorio_Descripcion + accesorio.modelo"
+                                                                 (click)="obtenerIdAccesorio(accesorio.id)">
                                                             {{accesorio.accesorio_Descripcion}}/ {{accesorio.modelo}}
                                                         </option>
                                                     </select>
                                                 </td>
                                                 <td class="col-md-1">
-                                                    <input type="number" class="form-control">
+                                                    <input type="number" class="form-control" formControlName="cantidadAccesorio">
                                                 </td>
 
                                                 <td>12,500.00</td>

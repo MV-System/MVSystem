@@ -1,0 +1,251 @@
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Registro Equipos</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro Equipos</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+<section class="section" >
+<div class="row" >
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" >Datos del Equipo</h5>
+
+              <!--  Form -->
+              <form [formGroup]="formRegistro"
+                    (ngSubmit)="registroEquipos()"
+                    class="row g-3 needs-validation"
+                    novalidate>
+            <!-- <div class="row"> -->
+                    <!-- --------------- Factura No. --------------- -->
+                    <div class="col-md-6">
+                        <label  class="form-label">Factura No.</label>
+                        <input type="text"
+                            class="form-control"
+                            formControlName="factura">
+                    </div>
+
+                    <!-- --------------- IMEI  --------------- -->
+                    <div class="col-md-6">
+                        <label  class="form-label">IMEI</label>
+                        <input type="text"
+                                class="form-control"
+                                formControlName="IMEI">
+                    </div>
+
+                    <!-- --------------- Costo  --------------- -->
+                    <div class="col-md-4">
+                        <label class="form-label">Costo</label>
+                        <input  type="text"
+                                class="form-control"
+                                placeholder="RD$"
+                                required
+                                currencyMask
+                                formControlName="costo">
+                    </div>
+
+                    <!-- --------------- Al detalle  --------------- -->
+                    <div class="col-md-4">
+                        <label class="form-label">Al detalle</label>
+                        <input type="text"
+                                class="form-control"
+                                placeholder="RD$"
+                                required
+                                currencyMask
+                                formControlName="alDetalle">
+                    </div>
+                    <!-- --------------- Al por Mayor  --------------- -->
+                    <div class="col-md-4">
+                        <label class="form-label">Al por Mayor</label>
+                        <input type="text"
+                                class="form-control"
+                                placeholder="RD$"
+                                required
+                                currencyMask
+                                formControlName="alPorMayor">
+                    </div>
+                     <!-- --------------- Comision Detalle  --------------- -->
+                     <div class="col-md-4">
+                        <label class="form-label">Comision Detalle</label>
+                        <input type="text"
+                                class="form-control"
+                                placeholder="RD$"
+                                required
+                                currencyMask
+                                formControlName="comisionDetalle">
+                    </div>
+                     <!-- --------------- Comision Mayor  --------------- -->
+                     <div class="col-md-4">
+                        <label class="form-label">Comision Mayor</label>
+                        <input type="text"
+                                class="form-control"
+                                placeholder="RD$"
+                                required
+                                currencyMask
+                                formControlName="comisionMayor">
+                    </div>
+                    <!-- --------------- DropDown Tecnologia --------------- -->
+
+     
+                <div class="col-md-4">
+                    <label  class="form-label">Tecnología</label>
+                    <select formControlName="tecnologia" class="form-select">
+                        <option *ngFor="let tecnologia of listaTecnologia"
+                                [value]="tecnologia.iD_Tecnologia">
+                        {{tecnologia.descripcion}}
+                        </option>
+                    </select>
+                </div>
+            
+             
+                    <!-- --------------- DropDown Garantia --------------- -->
+   
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <label >
+                                <input  class="form-check-input"
+                                        type="checkbox"
+                                        (change)="onCheckboxChange($event,'garantia')">
+                                        Garantia
+                            </label>
+                        </div>
+                            <select formControlName="garantia" class="form-select">
+                                <option *ngFor="let garantia of listaGarantia"
+                                        [value]="garantia.iD_Garantia">
+                                {{garantia.descripcion}}
+                                </option>
+                            </select>
+                    </div>
+                    <!-- --------------- DropDown Desbloqueado --------------- -->
+
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <label >
+                            <input  class="form-check-input"
+                                    type="checkbox"
+
+                                    (change)="onCheckboxChange($event,'desbloqueado')">
+                                    Desbloqueado
+                        </label>
+                    </div>
+                    <select formControlName="desbloqueado" class="form-select">
+                        <option *ngFor="let desbloqueo of listaDesbloqueo"
+                        [value]="desbloqueo.iD_Bloqueo">
+                        {{desbloqueo.descripcion}}
+                        </option>
+                    </select>
+                </div>
+                 
+                     <!-- --------------- Almacen  --------------- -->
+                <div class="col-md-4">
+                    <label  class="form-label">Almacen</label>
+                        <select formControlName="almacen"
+                                class="form-select"
+                                required>
+                            <option *ngFor="let almacen of listaAlmacen"
+                            [value]="almacen.iD_Almacen">
+                            {{almacen.descripcion}}
+                            </option>
+                        </select>
+                </div>
+                <!-- --------------- Marca  --------------- -->
+                <div class="col-md-5">
+                    <label  class="form-label">Marca</label>
+                    <select (change)="selectoresMarcaModeloValidator()"
+                            class="form-select"
+                            formControlName="marca"
+                            required>
+                        <option *ngFor="let marca of listaMarca"
+                        [value]="marca.iD_Marca">
+                        {{marca.descripcion}}
+                        </option>
+                    </select>
+                </div>
+                  <!-- --------------- Modelo  --------------- -->
+
+                  <div class="col-md-7" >
+                    <label  class="form-label">Modelo</label>
+                        <select formControlName="modelo"
+                                class="form-select" 
+                                required>
+                            
+                            <option *ngFor="let modelo of listaModelo"
+                            [value]="modelo.iD_Modelo">
+                            {{modelo.descripcion}}
+                            </option>
+                        </select>
+                </div>
+                   <!-- --------------- DropDown Suplidor --------------- -->
+                    <div class="col-md-4">
+                        <label  class="form-label">Suplidor</label>
+                        <select formControlName="suplidor" 
+                                class="form-select"
+                                required>
+                            <option *ngFor="let suplidor of listaSuplidor"
+                                    [value]="suplidor.iD_Suplidor">
+                            {{suplidor.descripcion}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label"></label>
+                        <div class="form-check">
+                            <label >
+                                <input  class="form-check-input"
+                                        type="checkbox"
+                                        formControlName="disponible">
+                                        Disponible
+                            </label>
+                        </div>
+                    </div>
+                <div class="text-end" >
+                  <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
+                </div>
+                {{formRegistro.valid }}
+              </form>
+              <!-- End  Form -->
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" >Equipo agregados</h5>
+              <div class="right">
+                <table>
+                    <tr>
+                        <th>Cod.</th>
+                      <th >IMEI</th>
+                      <th >Marca</th>
+                      <th >Modelo</th>
+                  
+                    </tr>
+            
+                    <tr *ngFor="let equipo of  equipoValorRetorno;let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{equipo.imei}}</td>
+                        <td>{{equipo?.marca}}</td>
+                        <td>{{equipo?.modelo}}</td>
+                  
+            
+                    </tr>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+</main>
+
+
+     
+
+

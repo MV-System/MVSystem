@@ -50,6 +50,8 @@ export class AccesoriosRegistroComponent implements OnInit {
     // });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
+    this.formRegistro.get('modelo')?.disable();
+
   }
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -103,7 +105,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     }
   }
   //Al detalle no puede ser mayor que el costo
-  ValidarCamposFormCostoDetalle() {
+  validarCamposFormCostoDetalle() {
     
     if (
       this.formRegistro.get('alDetalle')?.value <
@@ -145,6 +147,7 @@ export class AccesoriosRegistroComponent implements OnInit {
 
   selectoresMarcaModeloValidator() {
     if (this.formRegistro.get('marca')?.valid) {
+      this.formRegistro.get('modelo')?.enable();
       this.obtenerModeloLista();
     }
   }
@@ -152,20 +155,19 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.msgValidacionesCamposFormCantMaxCantMin();
     this.msgValidacionesCamposFormDetallePorMayor();
     this.msgValidacionesCamposFormNumericos();
-    this.ValidarCamposFormCostoDetalle();
+    this.validarCamposFormCostoDetalle();
   }
 
   registroAccesorio() {
     const model: Accesorio = this.modeloRegistroAccesorio();
-    console.log(this.formRegistro.get('marca')?.value);
     
     this.validacionesRegistro()
       if ( this.formRegistro.valid   ) {
-        // this.mantenimientoService.postAccesorio(model)
-        //                         .subscribe((accesorio:any) =>{
-        //                           this.accesoriosLista = accesorio;
-        //                           this.toastr.success('Accesorio registrado con exito!')
-        //                         });
+        this.mantenimientoService.postAccesorio(model)
+                                .subscribe((accesorio:any) =>{
+                                  this.accesoriosLista = accesorio;
+                                  this.toastr.success('Accesorio registrado con exito!')
+                                });
       }
       else{
         this.formRegistro.markAllAsTouched();
