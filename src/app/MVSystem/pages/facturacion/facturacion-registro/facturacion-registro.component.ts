@@ -85,7 +85,6 @@ export class FacturacionRegistroComponent implements OnInit {
     else if( this.nuevoInputAccesorio.length ==index  ) {
       this.nuevoInputAccesorio?.push(this.nuevoInputAccesorio.length + 1);
       // this.formRegistro.controls.codigo.setValue(index);
-      // console.log(this.formRegistro.get('accesorio')?.value);
       
     }
      

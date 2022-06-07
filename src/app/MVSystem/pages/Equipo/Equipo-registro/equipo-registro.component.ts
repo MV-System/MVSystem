@@ -23,6 +23,7 @@ export class EquipoRegistroComponent implements OnInit {
   listaModelo:  ModeloEquipo[]=[];
   equipoValorRetorno: any[]=[];
   listaEquipoRegistrados: any[]=[];
+  imeiRegistrado: any;
   constructor(
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
@@ -81,22 +82,25 @@ export class EquipoRegistroComponent implements OnInit {
         // console.log( this.listaEquipoRegistrados);
 
         this.mantenimientoService.postEquipo(model)
-                                .subscribe((equipo) =>{
-                                  
-                                  equipo.forEach((equipoRegistrado: any) => {
-                                    this.equipoValorRetorno.forEach(({imei})=>{
+            .subscribe((equipo) =>{
+              
+              equipo.forEach((equipoRegistrado: any) => {
 
-                                      if (equipoRegistrado.imei == imei) {
-                                        console.log(`los imei's son iguales`);
-                                        return ;
-                                      }
-                                    });
-                                    this.equipoValorRetorno.push(equipoRegistrado);
-                                  });
-                                  console.log( this.equipoValorRetorno );
+                this.equipoValorRetorno.forEach(({imei})=>{
+                  this.imeiRegistrado =imei;
+                 
+                });
+                if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
+                  this.toastr.error('El IMEI del Equipo debe ser diferente!');
 
-                                  this.toastr.success('Equipo registrado con exito!')
-                                });
+                  return
+                }
+                else{
+                  this.equipoValorRetorno.push(equipoRegistrado);
+                  this.toastr.success('Equipo registrado con exito!');
+                }
+              });
+            });
       }
 
   }
