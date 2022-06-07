@@ -43,6 +43,6 @@ export interface TipoCliente {
 export interface ClienteConsultaCriterio {
   nombres:         string;
   apellidos:       string;
-  numero_Telefono: number;
-  mensaje:         string;
+  numero_Telefono:  number;
+  id_Cliente:         string;
 }

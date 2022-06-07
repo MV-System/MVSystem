@@ -34,4 +34,40 @@ export interface TipoComprobante {
   nfcTipoDescripcion: string;
 }
 
+export interface AccesorioLista {
+  codigo?:                Codigo;
+  id:                    number;
+  accesorio_Descripcion: string;
+  modelo:                string;
+  codigo_Barra:          number;
+}
+
+export enum Codigo {
+  Empty = "",
+  W323 = "w323",
+}
+export interface Garantia {
+  iD_Garantia: number;
+  descripcion: string;
+}
+export interface Desbloqueo {
+  iD_Bloqueo:  number;
+  descripcion: string;
+}
+export interface CondicionEquipo {
+  iD_Condicion: number;
+  descripcion:  string;
+}
+export interface Tecnologia {
+  iD_Tecnologia: number;
+  descripcion:   string;
+}
+export interface Suplidor {
+  iD_Suplidor: number;
+  descripcion: string;
+}
+
+
+
+
 

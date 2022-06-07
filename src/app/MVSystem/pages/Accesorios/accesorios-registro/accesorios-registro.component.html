@@ -98,7 +98,7 @@
                   <input type="number" 
                         class="form-control"  
                         max="21"
-                        *ngIf=" "
+                       
                         formControlName="IMEI">                     
                 </div>
 
@@ -147,11 +147,7 @@
                             {{marca.descripcion}}
                             </option>
                         </select>
-                        <select class="js-example-basic-single" name="state">
-                            <option value="AL">Alabama</option>
-                              ...
-                            <option value="WY">Wyoming</option>
-                          </select>
+               
                         <!-- <ng-select  
                         class="form-select"[items]="marcaListado "
                                     bindLabel="descripcion"
@@ -172,7 +168,7 @@
                 </div>
                 <!-- --------------- Modelo Accesorio --------------- -->
 
-                <div class="col-md-4" *ngIf="modeloListado.length !==0">
+                <div class="col-md-4" >
                     <label  class="form-label">Modelo</label>
                         <select formControlName="modelo" 
                                 class="form-select">

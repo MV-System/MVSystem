@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor } from '../interfaces/catalogo.interface';
 
 
 
@@ -34,5 +34,22 @@ export class CatalogosService {
     getTipoComprobanteLista():Observable<TipoComprobante[]>{
       return this.http.get<TipoComprobante[]>(APIURL.Catalogos.tipoComprobanteLista);
     }
-
+    getAccesorioLista():Observable<AccesorioLista[]>{
+      return this.http.get<AccesorioLista[]>(APIURL.Catalogos.accesorioLista);
+    }
+    getGarantiaLista():Observable<Garantia[]>{
+      return this.http.get<Garantia[]>(APIURL.Catalogos.garantiaLista);
+    }
+    getDesbloqueoLista():Observable<Desbloqueo[]>{
+      return this.http.get<Desbloqueo[]>(APIURL.Catalogos.desbloqueadoLista);
+    }
+    getCondicionEquipoLista():Observable<CondicionEquipo[]>{
+      return this.http.get<CondicionEquipo[]>(APIURL.Catalogos.condicionEquipoLista);
+    }
+    getTecnologiaLista():Observable<Tecnologia[]>{
+      return this.http.get<Tecnologia[]>(APIURL.Catalogos.tecnologiasComboLista);
+    }
+    getSuplidorLista():Observable<Suplidor[]>{
+      return this.http.get<Suplidor[]>(APIURL.Catalogos.suplidorComboLista);
+    }
 }
