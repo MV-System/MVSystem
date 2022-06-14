@@ -37,14 +37,14 @@ export class VendedorRegistroComponent implements OnInit {
     nombre:       ['', [Validators.required]],
     apellido:     ['', Validators.required],
     tipoTelefono: [1],
-    telefono:     [8099728439,Validators.required],
+    telefono:     [,Validators.required],
     extensionNumero: [] ,
     email:        [''],
-    usuario:      ['Xmejia'],
-    provincia:  ['Santo Domingo'],
-    sector:     ['Buena Vista'],
-    calle:      ['Primera'],
-    casaNumero: ['#18'],
+    usuario:      [''],
+    provincia:  [''],
+    sector:     [''],
+    calle:      [''],
+    casaNumero: [''],
   });
   /**
  * If the form is valid, set the button to disabled, otherwise set it to enabled.

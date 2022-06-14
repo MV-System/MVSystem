@@ -50,6 +50,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     // });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
+    this.btnDisable();
     this.formRegistro.get('modelo')?.disable();
 
   }
@@ -67,6 +68,8 @@ export class AccesoriosRegistroComponent implements OnInit {
     modelo: [, Validators.required],
     almacen: [2, Validators.required],
     usuario: [''],
+
+    fechaFacturacion:[,]
   });
   /**
  * If the form is valid, set the button to disabled, otherwise set it to enabled.
@@ -196,6 +199,7 @@ export class AccesoriosRegistroComponent implements OnInit {
       // disponible: this.formRegistro.get('IMEI')?.value,
       // disponible_Detalle: this.formRegistro.get('IMEI')?.value,
       usuario: this.formRegistro.get('usuario')?.value,
+      // usuario: this.formRegistro.get('fechaFacturacion')?.value,
       disponible: 'S',
     };
     return accesorioModel;

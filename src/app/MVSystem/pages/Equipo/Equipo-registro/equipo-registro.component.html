@@ -104,14 +104,16 @@
 
                 <!-- --------------- DropDown Garantia --------------- -->
                 <div class="col-md-4">
-                    <div class="form-check">
+                    <!-- <div class="form-check">
                         <label >
                             <input  class="form-check-input"
                                     type="checkbox"
                                     (change)="onCheckboxChange($event,'garantia')">
                                     Garantia
                         </label>
-                    </div>
+                    </div> -->
+                    <label  class="form-label">Garantia</label>
+
                         <select formControlName="garantia" class="form-select">
                             <option *ngFor="let garantia of listaGarantia"
                                     [value]="garantia.iD_Garantia">
@@ -122,16 +124,17 @@
                 <!-- --------------- DropDown Desbloqueado --------------- -->
 
                 <div class="col-md-4">
-                    <div class="form-check">
+                    <!-- <div class="form-check">
                         <label >
                             <input  class="form-check-input"
                                     type="checkbox"
-
                                     (change)="onCheckboxChange($event,'desbloqueado')">
                                     Desbloqueado
                         </label>
-                    </div>
-                    <select formControlName="desbloqueado" class="form-select">
+                    </div> -->
+                    <label  class="form-label">Desbloqueado</label>
+
+                    <select formControlName="idEstadoBloqueo" class="form-select">
                         <option *ngFor="let desbloqueo of listaDesbloqueo"
                         [value]="desbloqueo.iD_Bloqueo">
                         {{desbloqueo.descripcion}}
@@ -180,16 +183,18 @@
                    <!-- --------------- DropDown Suplidor --------------- -->
                 <div class="col-md-4">
                     <label  class="form-label">Suplidor</label>
-                    <select formControlName="suplidor" 
+                    <select class="js-example-basic-single"
+                            formControlName="suplidor" 
                             class="form-select"
-                            required>
+                            required
+                            id="js-example-basic-single">
                         <option *ngFor="let suplidor of listaSuplidor"
                                 [value]="suplidor.iD_Suplidor">
                         {{suplidor.descripcion}}
                         </option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <label class="form-label"></label>
                     <div class="form-check">
                         <label >
@@ -199,11 +204,20 @@
                                     Disponible
                         </label>
                     </div>
+                </div> -->
+                <div class="col-md-4">
+                    <label class="form-label"></label>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="Leave a comment here"
+                                        formControlName="notaAdicional"
+                                        style="height: 100px;">
+                            </textarea>
+                            <label for="floatingTextarea">Nota adicional</label>
+                            </div>
                 </div>
                 <div class="text-end" >
                   <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
                 </div>
-                {{formRegistro.valid }}
               </form>
               <!-- End  Form -->
             </div>
@@ -234,13 +248,22 @@
                         </tbody>
                     </table>
                 </div>
+                <!-- <select class="js-example-basic-multiple" name="states[]" >
+                    <option value="AL">Alabama</option>
+                      ...
+                    <option value="WY">Wyoming</option>
+                  </select> -->
             </div>
         </div>
     </div>
 </div>
 </section>
 </main>
-
+<script>
+           $(document).ready(function() {
+                            $('.js-example-basic-single').select2();
+                        });
+</script>
 
      
 

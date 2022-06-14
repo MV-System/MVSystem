@@ -46,11 +46,13 @@
                   </div> -->
                     <!-- --------------- Nombre Cliente --------------- -->
                 <div class="col-md-6">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">Nombre <span class="required-field">*</span></label>
                     <input type="text" 
                             class="form-control" 
                             formControlName="nombre" 
-                            aria-describedby="inputGroupPrepend" required>
+                            aria-describedby="inputGroupPrepend" required
+                            [ngClass]="{'is-invalid':validarCampos('nombre')}">
+
                     <div class="validatorField"  *ngIf="validarCampos('nombre')">
                         Este campo es requerido.
                       </div>
@@ -58,12 +60,13 @@
 
                     <!-- --------------- Apellido Cliente --------------- -->               
                 <div class="col-md-6">  
-                    <label  class="form-label">Apellido</label>
+                    <label  class="form-label">Apellido <span class="required-field">*</span></label>
                     <input  type="text" 
                             class="form-control" 
                             required
-                            formControlName="apellido">
-                            <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                            formControlName="apellido"
+                            [ngClass]="{'is-invalid':validarCampos('apellido')}">
+                            <div class="validatorField"  *ngIf="validarCampos('apellido')">
                                 Este campo es requerido.
                             </div>
                 </div>
@@ -84,6 +87,7 @@
                 <div class="col-md-6">
                     <label class="form-label">
                         Teléfono:
+                        <span class="required-field">*</span>
                     </label> 
                     <input  
                     class="form-control"
@@ -91,8 +95,9 @@
                     formControlName="telefono"
                     type="text" 
                     mask="000-000-0000" 
+                    [ngClass]="{'is-invalid':validarCampos('telefono')}"
                     />
-                    <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                    <div class="validatorField" *ngIf="validarCampos('telefono')" >
                         Este campo es requerido.
                     </div>
                 </div>
@@ -134,8 +139,10 @@
                   <label class="form-label">Email</label>
                   <input type="email" 
                         class="form-control"  
-                        formControlName="email">
-                        <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('email')}">
+                        formControlName="email"
+                        
+                        [ngClass]="{'is-invalid':validarCamposEmail('email')}">
+                        <div class="validatorField"  >
                             {{emailErrorMsg}}
                           </div>
                 </div>
