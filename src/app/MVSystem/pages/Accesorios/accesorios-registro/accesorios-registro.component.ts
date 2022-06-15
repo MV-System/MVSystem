@@ -149,9 +149,14 @@ export class AccesoriosRegistroComponent implements OnInit {
   }
 
   selectoresMarcaModeloValidator() {
-    if (this.formRegistro.get('marca')?.valid) {
+    this.formRegistro.get('modelo')?.setValue('');
+    if (this.formRegistro.get('marca')?.value) {
       this.formRegistro.get('modelo')?.enable();
       this.obtenerModeloLista();
+    }
+    else{
+      this.formRegistro.controls.modelo.disable();
+
     }
   }
   validacionesRegistro(){

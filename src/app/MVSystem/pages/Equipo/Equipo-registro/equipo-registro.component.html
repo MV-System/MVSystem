@@ -157,28 +157,25 @@
                 <!-- --------------- Marca  --------------- -->
                 <div class="col-md-5">
                     <label  class="form-label">Marca</label>
-                    <select (change)="selectoresMarcaModeloValidator()"
-                            class="form-select"
-                            formControlName="marca"
-                            required>
-                        <option *ngFor="let marca of listaMarca"
-                        [value]="marca.iD_Marca">
-                        {{marca.descripcion}}
-                        </option>
-                    </select>
+                        <ng-select  formControlName="marca"
+                                    (change)="selectoresMarcaModeloValidator()">
+                            <ng-option *ngFor="let marca of listaMarca" 
+                                        [value]="marca.iD_Marca">
+                                        {{marca.descripcion}}
+                                    </ng-option>
+                            
+                        </ng-select>
                 </div>
                   <!-- --------------- Modelo  --------------- -->
 
                 <div class="col-md-7" >
                     <label  class="form-label">Modelo</label>
-                        <select formControlName="modelo"
-                                class="form-select" 
-                                required>
-                            <option *ngFor="let modelo of listaModelo"
-                            [value]="modelo.iD_Modelo">
-                            {{modelo.descripcion}}
-                            </option>
-                        </select>
+                    <ng-select formControlName="modelo">
+                        <ng-option *ngFor="let modelo of listaModelo" 
+                                    [value]="modelo.iD_Modelo">
+                                    {{modelo.descripcion}}
+                         </ng-option>
+                    </ng-select>
                 </div>
                    <!-- --------------- DropDown Suplidor --------------- -->
                 <div class="col-md-4">

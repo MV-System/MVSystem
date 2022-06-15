@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Almacen, Desbloqueo, Garantia, MarcaEquipo, ModeloEquipo, Tecnologia } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../services/catalogos.service';
 import { CondicionEquipo, Suplidor } from '../../../interfaces/catalogo.interface';
@@ -46,7 +46,6 @@ export class EquipoRegistroComponent implements OnInit {
     this.obtenerSuplidor();
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
-    console.log( this.obtenerEquipoNumeroRegistro());
     
     // this.formRegistro.controls.garantia.disable();
     // this.formRegistro.controls.desbloqueado.disable();
@@ -59,9 +58,9 @@ export class EquipoRegistroComponent implements OnInit {
   formRegistro: FormGroup = this.fb.group({
   factura:["",],
   IMEI:["",],
-  costo:[,],
-  alDetalle:[,],
-  alPorMayor:[,],
+  costo:[, [Validators.required]],
+  alDetalle:[, [Validators.required]],
+  alPorMayor:[, [Validators.required]],
   comisionDetalle:[,],
   comisionMayor:[,],
   nota:[,],
@@ -83,7 +82,6 @@ export class EquipoRegistroComponent implements OnInit {
 
   registroEquipos(){
     const model: Equipo =this.modeloRegistroEquipo();
-    console.log(model);
     
     this.validacionesRegistro()
     if ( this.formRegistro.valid   ) {
@@ -109,6 +107,12 @@ export class EquipoRegistroComponent implements OnInit {
                 }
               });
             });
+      }
+      else{
+        this.formRegistro.markAllAsTouched();
+        $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+          this.toastr.error('Hay datos en el formulario incompletos', '',
+          {closeButton: true,progressBar:true});
       }
 
   }
@@ -242,10 +246,14 @@ export class EquipoRegistroComponent implements OnInit {
 
   selectoresMarcaModeloValidator() {
     this.formRegistro.get('modelo')?.setValue('');
-    if (this.formRegistro.get('marca')?.valid) {
+    if (this.formRegistro.get('marca')?.value) {
       this.formRegistro.controls.modelo.enable();
 
       this.obtenerModeloLista();
+    }
+    else{
+      this.formRegistro.controls.modelo.disable();
+
     }
   }
 

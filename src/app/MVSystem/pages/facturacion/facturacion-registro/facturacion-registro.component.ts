@@ -153,14 +153,16 @@ export class FacturacionRegistroComponent implements OnInit {
     
     this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
     if (this.criterioBusqueda.criterio !== '' && this.criterioBusqueda.criterio !== null) {
-      console.log(this.criterioBusqueda.criterio);
-      
       
       this.loadingButtonBuscar = true;
       
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
-                          console.log('search');
+                  
+                          if (cliente.length == 0) {
+                            this.loadingButtonBuscar = false;
+                            this.toastr.warning('No existe este número');
+                          }
                           
                           cliente.forEach( ({nombres,apellidos, numero_Telefono,id_Cliente}) => {
                             this.loadingButtonBuscar = false;
