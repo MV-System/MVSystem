@@ -26,10 +26,6 @@
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "tsconfig.app.json",
                         "assets": [
-<<<<<<< HEAD
-
-=======
->>>>>>> f3a3750fd8d03f155137af6865536041c3b36a73
                             "src/favicon.ico",
                             "src/assets"
                         ],
