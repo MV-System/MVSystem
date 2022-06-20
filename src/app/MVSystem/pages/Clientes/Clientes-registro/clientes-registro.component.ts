@@ -135,7 +135,7 @@ export class ClientesRegistroComponent implements OnInit {
  */
   get emailErrorMsg(): string{
     const errors = this.formRegistro.get('email')?.errors;
-       if(errors?.pattern){
+    if(errors?.pattern ){
          return 'El valor no tiene formato de correo';
        }
        return ''
@@ -148,6 +148,9 @@ export class ClientesRegistroComponent implements OnInit {
   validarCampos(nombreCampo: string) {
     return this.formRegistro.get(nombreCampo)?.invalid && 
            this.formRegistro.get(nombreCampo)?.touched
+  }
+  validarCamposEmail(nombreCampo: string) {
+    return  this.formRegistro.get(nombreCampo)?.errors
   }
 /**
  * The function obtenerTipoTelefonos() calls the getTipoTelefonoLista() function in the

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { Accesorio, Equipo } from '../interfaces/mantenimiento';
+import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
 
 @Injectable({
@@ -20,4 +21,9 @@ export class MantenimientoService{
     return this.http.post<any>(APIURL.Mantenimiento.Equipo.Inserta.EquipoInserta, equipo);
   }
 
+  //Get's
+
+  getEquipoNumeroRegistro():Observable<EquipoNumeroRegistro[]>{
+    return this.http.get<EquipoNumeroRegistro[]>(APIURL.Mantenimiento.Equipo.Consulta.EquipoNumeroRegistro)
+  }
 }

@@ -152,12 +152,17 @@ export class FacturacionRegistroComponent implements OnInit {
 
     
     this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
-    if (this.criterioBusqueda.criterio !== '') {
+    if (this.criterioBusqueda.criterio !== '' && this.criterioBusqueda.criterio !== null) {
       
       this.loadingButtonBuscar = true;
       
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
                         .subscribe( cliente => {
+                  
+                          if (cliente.length == 0) {
+                            this.loadingButtonBuscar = false;
+                            this.toastr.warning('No existe este número');
+                          }
                           
                           cliente.forEach( ({nombres,apellidos, numero_Telefono,id_Cliente}) => {
                             this.loadingButtonBuscar = false;

@@ -11,6 +11,9 @@ export let APIURL = {
        Equipo:{
            Inserta:{
             EquipoInserta: API + 'Equipos/Equipo_Insert',
+           },
+           Consulta:{
+               EquipoNumeroRegistro: API + 'Equipos/Numero_Registro'
            }
        }
     }, 
