@@ -4,10 +4,11 @@ import { HomeComponent } from './pages/home/home.component';
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: HomeComponent
-  },
+  // {
+  //   path: '',
+  //   component: HomeComponent,
+  //   pathMatch:'full'
+  // },
   {
     path: 'clientes',
     loadChildren: () => import('./pages/Clientes/clientes.module').then( m => m.ClientesModule )

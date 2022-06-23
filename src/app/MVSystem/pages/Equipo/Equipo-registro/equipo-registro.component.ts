@@ -46,7 +46,7 @@ export class EquipoRegistroComponent implements OnInit {
     this.obtenerSuplidor();
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
-    
+    this.obtenerEquipoNumeroRegistro();
     // this.formRegistro.controls.garantia.disable();
     // this.formRegistro.controls.desbloqueado.disable();
     this.formRegistro.controls.modelo.disable();
@@ -63,7 +63,7 @@ export class EquipoRegistroComponent implements OnInit {
   alPorMayor:[, [Validators.required]],
   comisionDetalle:[,],
   comisionMayor:[,],
-  nota:[,],
+  nota:["",],
   idCondicion:[1,],
   idEstadoBloqueo:[1,],
   notaAdicional:['',],
@@ -82,6 +82,7 @@ export class EquipoRegistroComponent implements OnInit {
 
   registroEquipos(){
     const model: Equipo =this.modeloRegistroEquipo();
+    console.log(model);
     
     this.validacionesRegistro()
     if ( this.formRegistro.valid   ) {

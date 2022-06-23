@@ -37,20 +37,15 @@
                     <div class="col-md-8"></div>
                   </div>
 
-                  <!-- <div class="col-md-6">
-                    <label for="validationCustom03" class="form-label">City</label>
-                    <input type="text" class="form-control" id="validationCustom03" required>
-                        <div class="invalid-feedback">
-                        Please provide a valid city.
-                        </div>
-                  </div> -->
+    
                     <!-- --------------- Nombre Cliente --------------- -->
                 <div class="col-md-6">
                     <label class="form-label">Nombre <span class="required-field">*</span></label>
                     <input type="text" 
                             class="form-control" 
                             formControlName="nombre" 
-                            aria-describedby="inputGroupPrepend" required
+                            aria-describedby="inputGroupPrepend"
+                            required
                             [ngClass]="{'is-invalid':validarCampos('nombre')}">
 
                     <div class="validatorField"  *ngIf="validarCampos('nombre')">

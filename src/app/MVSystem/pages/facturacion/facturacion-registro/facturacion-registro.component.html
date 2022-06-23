@@ -184,19 +184,21 @@
 
                             <div class="col-md-5">
 
-                                <div class="form-check">
+                                <!-- <div class="form-check">
                                     <label class="form-label">
-                             Aplicar garantia
-                            <input class="form-check-input" type="checkbox"  (change)="onCheckboxChange($event,'garantia')">
-                        </label>
-                                </div>
-
-                                <select formControlName="garantia" class="form-select">
-                        <option *ngFor="let TipoFactura of listaTipoFactura"
-                                [value]="TipoFactura.iD_Tipo_Factura">
-                        {{TipoFactura.descripcion_Factura_Tipo}}
-                        </option>
-                    </select>
+                                        Aplicar garantia
+                                        <input class="form-check-input" type="checkbox"  (change)="onCheckboxChange($event,'garantia')">
+                                     </label>
+                                 </div> -->
+                                 <label class="form-label">
+                                    Garantia
+                                 </label>
+                                 <select formControlName="garantia" class="form-select">
+                                    <option *ngFor="let garantia of listaGarantia"
+                                            [value]="garantia.iD_Garantia">
+                                    {{garantia.descripcion}}
+                                    </option>
+                                </select>
                             </div>
                         </form>
                         <!-- End  Form -->
@@ -222,18 +224,24 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <!-- <div class="col-md-4">
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     Factura con comprobante
                                                     <input class="form-check-input"
                                                             type="checkbox"
-                                                            (change)="onCheckboxChangeFactura($event )">
+                                                            >
                                                 </label>
                                             </div>
+                                        </div> -->
+                                        <div class="col-md-3">
+                                            <label>
+                                                Tipo de comprobante :
+                                            </label>
                                         </div>
-                                    <div class="col-md-3">
-                                            <select formControlName="comprobante" class="form-select">
+                                        <div class="col-md-4">
+                                            
+                                            <select formControlName="comprobante" class="form-select" (change)="onCheckboxChangeFactura('comprobante' )">
                                                 <option *ngFor="let tipoComprobante of listaTipoComprobante;"
                                                         [value]="tipoComprobante.nfcTipoNumero">
                                                 {{tipoComprobante.nfcTipoDescripcion}}
@@ -312,10 +320,11 @@
                                                     </select> -->
                                                   
                                                     <ng-select formControlName="accesorio"
-                                                                (change)="agregarNuevoAccesorio(nuevo)">
+                                                                (change)="agregarNuevoAccesorioAlArray(nuevo)">
                                                         <ng-option *ngFor="let accesorio of listaAccesorio" 
                                                                     [value]="accesorio.accesorio_Descripcion + accesorio.modelo"
-                                                                    (click)="obtenerIdAccesorio(accesorio.id)">
+                                                                    (click)="obtenerDetalleFactura(accesorio.id ,accesorio.precio_Detalle,accesorio.precio_Por_Mayor)"
+                                                                    >
                                                                     {{accesorio.accesorio_Descripcion}}/ {{accesorio.modelo}}
                                                          </ng-option>
                                                     </ng-select>

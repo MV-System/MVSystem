@@ -40,6 +40,9 @@ export interface AccesorioLista {
   accesorio_Descripcion: string;
   modelo:                string;
   codigo_Barra:          number;
+  precio_Detalle:        number;
+  precio_Por_Mayor:      number;
+
 }
 
 export enum Codigo {
