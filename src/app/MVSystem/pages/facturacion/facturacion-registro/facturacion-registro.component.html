@@ -303,47 +303,49 @@
                                                 <th>Subtotal</th>
                                                 <th>Descuento</th>
                                                 <th>Total</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody >
-                                            <tr *ngFor="let nuevo of nuevoInputAccesorio">
+                                            <tr *ngFor="let nuevoArticulo of nuevoInputArticulo">
                                                 <td class="col-md-2">
                                                     <input type="text" class="form-control" formControlName="codigo">
                                                 </td>
                                                 <td class="col-md-4">
-                                                    <!-- <select formControlName="accesorio" (change)="agregarNuevoAccesorio(nuevo)" class="form-select">
+                                                    <!-- <select formControlName="articulo" (change)="agregarNuevoArticuloAlArray(nuevoArticulo)" class="form-select">
                                                         <option *ngFor="let accesorio of listaAccesorio"
                                                                  [value]="accesorio.accesorio_Descripcion + accesorio.modelo"
-                                                                 (click)="obtenerIdAccesorio(accesorio.id)">
+                                                                 (click)="obtenerDatosEquipoSelect(accesorio.id)">
                                                             {{accesorio.accesorio_Descripcion}}/ {{accesorio.modelo}}
                                                         </option>
                                                     </select> -->
                                                   
-                                                    <ng-select formControlName="accesorio"
-                                                                (change)="agregarNuevoAccesorioAlArray(nuevo)">
-                                                        <ng-option *ngFor="let accesorio of listaAccesorio" 
-                                                                    [value]="accesorio.accesorio_Descripcion + accesorio.modelo"
-                                                                    (click)="obtenerDetalleFactura(accesorio.id ,accesorio.precio_Detalle,accesorio.precio_Por_Mayor)"
-                                                                    >
-                                                                    {{accesorio.accesorio_Descripcion}}/ {{accesorio.modelo}}
+                                                    <ng-select formControlName="articulo"
+                                                                (change)="agregarNuevoArticuloAlArray(nuevoArticulo)">
+                                                        <ng-option *ngFor="let articulo of listaAccesorio" 
+                                                                    [value]="articulo.accesorio_Descripcion + articulo.modelo"
+                                                                    (click)="obtenerDatosEquipoSelect(articulo.id ,articulo.precio_Detalle,articulo.precio_Por_Mayor)"
+                                                                    (change)="alQuitarArticulo($event)">
+                                                                    {{articulo.accesorio_Descripcion}}/ {{articulo.modelo}}
                                                          </ng-option>
                                                     </ng-select>
                                                 </td>
                                                 <td class="col-md-1">
-                                                    <input type="number" class="form-control" formControlName="cantidadAccesorio">
+                                                    <input type="number" class="form-control" formControlName="cantidadArticulo">
                                                 </td>
 
                                                 <td>12,500.00</td>
                                                 <td>0</td>
                                                 <td>0</td>
                                                 <td>12,500.00</td>
+                                                <td><h2 *ngIf="nuevoInputArticulo.length !==1"><i class="bi bi-trash" (click)="borrarArticulo(nuevoArticulo)" style="color: rgb(205, 65, 65);cursor: pointer;"></i></h2></td>
                                             </tr>
                                         </tbody>
                                         </table>
                                         <hr>
                                         <div class="row">
 
-                                            <p class="col-md-8">Total articulos: {{nuevoInputAccesorio.length}}</p>
+                                            <p class="col-md-8">Total articulos: {{nuevoInputArticulo.length}}</p>
                                             <div class="col-md-4 text-end">
                                                 <div class="box-pay">
                                                    <div class="row">

@@ -6,16 +6,22 @@ export let APIURL = {
         Accesorio:{
             Inserta:{
                 AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
-            }
+            },
         },
-       Equipo:{
+
+        Factura:{
+            Inserta:{
+                FacturaInserta: API + 'Factura/PostFactura',
+            },
+        },
+        Equipo:{
            Inserta:{
             EquipoInserta: API + 'Equipos/Equipo_Insert',
            },
            Consulta:{
                EquipoNumeroRegistro: API + 'Equipos/Numero_Registro'
-           }
-       }
+           },
+        }
     }, 
     Catalogos:{
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',

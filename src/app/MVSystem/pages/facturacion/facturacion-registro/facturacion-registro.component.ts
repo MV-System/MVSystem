@@ -6,9 +6,10 @@ import { Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSyst
 import { ClientesService } from '../../../services/clientes.service';
 import { VendedorService } from '../../../services/vendedor.service';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
-import { DetalleFactura, FacturaRegistro } from 'src/app/MVSystem/interfaces/mantenimiento';
+import { DetalleFacturaList, FacturaRegistro } from 'src/app/MVSystem/interfaces/mantenimiento';
 import { ModeloEquipo, AccesorioLista, Codigo } from '../../../interfaces/catalogo.interface';
 import { AccesorioFactura, Accesorio } from '../../../interfaces/mantenimiento';
+import { MantenimientoService } from '../../../services/mantenimiento.service';
 
 @Component({
   selector: 'app-facturacion',
@@ -16,14 +17,14 @@ import { AccesorioFactura, Accesorio } from '../../../interfaces/mantenimiento';
   styleUrls: ['./facturacion-registro.component.css']
 })
 export class FacturacionRegistroComponent implements OnInit {
-  detalleFacturaRegistro: DetalleFactura[]=[];
+  detalleFacturaRegistro: DetalleFacturaList[]=[];
   listaTipoFactura: TipoFactura[]=[];
   listaVendedor: VendedorLista[]=[]
   listaPagoFactura: TipoPago[]=[];
   listaGarantia: Garantia[]=[];
   listaAccesorio: AccesorioLista[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
-  nuevoInputAccesorio: number[]=[1]
+  nuevoInputArticulo: number[]=[1]
   loadingButtonBuscar: boolean = false;
 
 
@@ -32,7 +33,8 @@ export class FacturacionRegistroComponent implements OnInit {
               private catalogosService: CatalogosService,
               private toastr: ToastrService,
               private clientesService: ClientesService,
-              private vendedorService: VendedorService ) { }
+              private vendedorService: VendedorService,
+              private mantenimientoService: MantenimientoService ) { }
 
   ngOnInit(): void {
     this.btnDisable();
@@ -59,18 +61,18 @@ export class FacturacionRegistroComponent implements OnInit {
     almacen:    [,],
     tipoFactura:[1,],
     tipoPago:[1,],
-    fechaFacturacion:[,],
+    fechaFacturacion:['',],
     comprobante:[0,],
     fechaLimitePago:[,],
-    accesorio:[,],
+    articulo:[,],
     garantia:[8,],
-    cantidadAccesorio:[,],
-    nota:[,],
+    cantidadArticulo:[,],
+    nota:['',],
     // persona:[1,],
     empresa:[,],
     codigo:[,],
     // monto:[,],
-    RNC:[,]
+    RNC:['',]
   });
 
   // formCliente: FormGroup = this.fb.group({
@@ -85,8 +87,7 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   registroFactura(){
-    this.obtenerDetalleFactura()
-
+    this.obtenerDetalleFactura();
     if (this.formRegistro.invalid) {
       
         this.formRegistro.markAllAsTouched();
@@ -94,7 +95,12 @@ export class FacturacionRegistroComponent implements OnInit {
     else{
 
       const modelo = this.modeloRegistroFacturacion();
-      console.log(modelo);
+      // this.mantenimientoService.postFactura(modelo)
+      //                         .subscribe(factura =>{
+      //                           console.log(factura);
+                                
+      //                         })
+      // console.log(modelo);
     }
   }
 
@@ -107,43 +113,78 @@ export class FacturacionRegistroComponent implements OnInit {
     this.formRegistro.get('fechaFacturacion')?.setValue(output);
     return output;
   }
-  agregarNuevoAccesorioAlArray(index: number){
-    
+  agregarNuevoArticuloAlArray(index: number){
+    // const ngOption = document.querySelector('ng-select');
+    // console.log(ngOption);
+
   
-    if( this.nuevoInputAccesorio.length == 1 ){
-     this.nuevoInputAccesorio?.push(this.nuevoInputAccesorio.length + 1); 
+    if( this.nuevoInputArticulo.length == 1 ){
+     this.nuevoInputArticulo?.push(this.nuevoInputArticulo.length + 1); 
    }
     
-    else if( this.nuevoInputAccesorio.length ==index  ) {
-      this.nuevoInputAccesorio?.push(this.nuevoInputAccesorio.length + 1);
+    else if( this.nuevoInputArticulo.lastIndexOf(this.nuevoInputArticulo.length ) == 1  ){
+      this.nuevoInputArticulo?.push(this.nuevoInputArticulo.length + 1);
       // this.formRegistro.controls.codigo.setValue(index);
       
     }
 
     /* Si ya se eligió un accesorio 
     se debe bloquear la opcion de elegir el tipo de factura */
-    if (this.nuevoInputAccesorio.length > 1) {
+    if (this.nuevoInputArticulo.length > 1) {
       this.formRegistro.get('tipoFactura')?.disable();
     }
+    // console.log({index:index});
     
+    // console.log({arrays:this.nuevoInputArticulo});
+    // console.log({arraysLength:this.nuevoInputArticulo.length});
+    // console.log({ultimoLista:this.nuevoInputArticulo.lastIndexOf(this.nuevoInputArticulo.length)});
      
   }
-  // precioVenta?: number, precioMayor?: number
-  obtenerDetalleFactura(idEquipo?: number, precioDetalle?: number,precioMayor?: number){
-
+  borrarArticulo(id: number){
+    console.log(id);
+    let deleteInputAccesorio: number[]=[];
+    deleteInputAccesorio = this.nuevoInputArticulo.filter((item) => {
+      return item !== id;
+    });
+   this.nuevoInputArticulo =deleteInputAccesorio;
+  }
+  alQuitarArticulo(e: any){
+    console.log(e);
     
-      let modelAccesorio: DetalleFactura ={
+  }
+  obtenerDatosEquipoSelect(idEquipo?: number, precioDetalle?: number,precioMayor?: number){
+    const ngOption = document.querySelector('ng-option');
+    console.log(ngOption);
+    
+    const datosEquipo =[
+      idEquipo,
+      precioDetalle,
+      precioMayor
+    ]
+    console.log(datosEquipo);
+    
+    return datosEquipo;
+  }
+  // precioVenta?: number, precioMayor?: number
+  obtenerDetalleFactura(){
+    
+      // this.obtenerDatosEquipoSelect().forEach(datosEquipo =>{
+      //   console.log(datosEquipo);
+        
+      // })
+    
+      let modelAccesorio: DetalleFacturaList ={
         // descripcion: (accesorio +' '+ modelo),
-        idEquipo:Number( idEquipo),
+        idEquipo:6,
         cantidad: this.formRegistro.get('cantidadAccesorio')?.value,
         numeroFactura: 0,
-        idAlmacen: 0,
         idTipo: 0,
         idVendedor: 0,
         idTipoFactura: 0,
         idGarantia: 0,
-        precio: Number( (this.formRegistro.get('tipoFactura')?.value == 1? precioDetalle : 0) ||
-                (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)),
+        precio: 200,
+        // precio: Number( (this.formRegistro.get('tipoFactura')?.value == 1? precioDetalle : 0) ||
+        //         (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)),
           // precio:       (this.formRegistro.get('tipoFactura')?.value == 1? precioVenta : 0),
         // precio:      (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)
         subTotal: 0,
@@ -152,19 +193,14 @@ export class FacturacionRegistroComponent implements OnInit {
         total: 0,
         fechaRegistro: this.obtenerFechaDiaActual()
       }
-
-    this.detalleFacturaRegistro.push(modelAccesorio)
-    console.log(modelAccesorio);
+     
+      // console.log(modelAccesorio);
+        this.detalleFacturaRegistro.push(modelAccesorio);
+        return this.detalleFacturaRegistro
     
   }
   modeloRegistroFacturacion(){
-    // this.accesorioFacturaRegistro =[{
-    //   codigo: this.formRegistro.get('codigo')?.value,
-    //   descripcion: this.formRegistro.get('accesorio')?.value,
-    //   cantidad: this.formRegistro.get('cantidadAccesorio')?.value,
-  
-    // }
-    // ]
+
     const model: FacturaRegistro= {
       numeroFactura: 0,
       idCliente: Number(this.formRegistro.get('idCliente')?.value),
@@ -175,24 +211,26 @@ export class FacturacionRegistroComponent implements OnInit {
       // nombre: this.formRegistro.get('nombre')?.value,
       // apellido: this.formRegistro.get('apellido')?.value,
       // telefono: this.formRegistro.get('telefono')?.value,
-      fechaFacturacion: this.formRegistro.get('fechaFacturacion')?.value,
+      fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
       ncfTipoNumero: Number(this.formRegistro.get('comprobante')?.value),
-      // comprobante: Number(this.formRegistro.get('comprobante')?.value),
+      RNC: this.formRegistro.get('RNC')?.value,
       fechaLimitePago: this.formRegistro.get('fechaLimitePago')?.value,
       garantia: this.formRegistro.get('garantia')?.value,
       nota: this.formRegistro.get('nota')?.value,
       // persona:Number( this.formRegistro.get('persona')?.value),
       // empresa: this.formRegistro.get('empresa')?.value,
       // monto: this.formRegistro.get('monto')?.value,
-      // RNC: this.formRegistro.get('RNC')?.value,
+      descripcion: "",
       itbis: 0,
       subTotal: 0,
       total: 0,
       abono: 0,
       descuento: 0,
-      cantidadArticulos: 0,
-      detalleFactura: this.detalleFacturaRegistro,
+      cantidadArticulos: this.nuevoInputArticulo.length,
+      detalleFacturaList: this.detalleFacturaRegistro,
     }
+    // console.log(this.detalleFacturaRegistro);
+    
     return model;
   }
   deshabilitadorInputFacturaComprobante(){
@@ -314,7 +352,6 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenetAccesorios(){
     this.catalogosService.getAccesorioLista()
                         .subscribe(accesorio=>{
-
                           this.listaAccesorio = accesorio;
                         })
   }

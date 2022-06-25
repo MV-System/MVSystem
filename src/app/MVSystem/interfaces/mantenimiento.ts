@@ -42,8 +42,8 @@ export interface FacturaRegistro{
     idTipoFactura: number;
     idTipoPago: number;
     ncfTipoNumero: number;
-    // comprobante:number;
-    fechaFacturacion: string;
+    // ncfFiscal:number;
+    fechaRegistro: string;
     fechaLimitePago: string;
     // accesorio: AccesorioFactura[];
     garantia:string;
@@ -51,8 +51,9 @@ export interface FacturaRegistro{
     nota: string;
     // persona: number;
     // empresa: string;
-    // RNC: string;
+    RNC: string;
 
+    descripcion: string;
     itbis: number;
     subTotal: number;
     total: number;
@@ -60,11 +61,10 @@ export interface FacturaRegistro{
     descuento: number;
     
     cantidadArticulos: number;
-    detalleFactura: DetalleFactura[];
+    detalleFacturaList: DetalleFacturaList[];
 }
-export interface DetalleFactura{
+export interface DetalleFacturaList{
     numeroFactura:  number;
-    idAlmacen: number ;
     idEquipo: number ;
     idTipo: number ;
     idVendedor: number ;
@@ -76,9 +76,9 @@ export interface DetalleFactura{
     descuento:  number;
     itbis:  number;
     total:  number;
+    fechaRegistro: string;
     // Estado: ;
     // Usuario: ;
-    fechaRegistro: string;
     // Descripcion: ;
 }
 
