@@ -24,8 +24,12 @@ export class FacturacionRegistroComponent implements OnInit {
   listaGarantia: Garantia[]=[];
   listaAccesorio: AccesorioLista[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
-  nuevoInputArticulo: number[]=[1]
+  nuevoInputArticulo: number[]=[1];
+  nuevoInputArticuloList: any[]=[]
   loadingButtonBuscar: boolean = false;
+  precioArticulo!: number;
+  subTotal!: number;
+  totalArticulo!: number;
 
 
   constructor(
@@ -43,10 +47,14 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerTipoComprobante();
     this.obtenerVendedor();
     this.obtenetAccesorios();
-    this.deshabilitadorInputFacturaComprobante();
+    this.deshabilitadorInputs();
     this.obtenerFechaDiaActual();
     this.obtenerGarantia();
-    
+    this.nuevoInputArticuloList =[{
+      idEquipo: 0,
+      descripcion: '',
+
+    }]
     // this.formRegistro.get('fechaFacturacion')?.setValue()
   }
   btnDisabled: boolean = true;
@@ -72,7 +80,9 @@ export class FacturacionRegistroComponent implements OnInit {
     empresa:[,],
     codigo:[,],
     // monto:[,],
-    RNC:['',]
+    RNC:['',],
+
+    descuento:[,]
   });
 
   // formCliente: FormGroup = this.fb.group({
@@ -100,24 +110,35 @@ export class FacturacionRegistroComponent implements OnInit {
       //                           console.log(factura);
                                 
       //                         })
-      // console.log(modelo);
+      console.log(modelo);
     }
   }
 
+  desactivarActivarFechaLimitepago(){
 
+    if (this.formRegistro.get('tipoPago')?.value == 2) {
+      this.formRegistro.get('fechaLimitePago')?.enable()
+    }
+    else{
+      this.formRegistro.get('fechaLimitePago')?.disable()
+    }
+    
+  }
   obtenerFechaDiaActual(){
     let date = new Date();
     let output =  String( date.getFullYear() ).padStart(2, '0') + '-' + 
                   String( date.getMonth() + 1).padStart(2, '0') + '-' + 
                   date.getDate();
     this.formRegistro.get('fechaFacturacion')?.setValue(output);
+    this.formRegistro.get('fechaLimitePago')?.setValue(output);
     return output;
   }
   agregarNuevoArticuloAlArray(index: number){
     // const ngOption = document.querySelector('ng-select');
     // console.log(ngOption);
+    console.log(index);
 
-  
+    this.detalleFacturaRegistro.push(this.obtenerDetalleFactura());
     if( this.nuevoInputArticulo.length == 1 ){
      this.nuevoInputArticulo?.push(this.nuevoInputArticulo.length + 1); 
    }
@@ -140,6 +161,7 @@ export class FacturacionRegistroComponent implements OnInit {
     // console.log({ultimoLista:this.nuevoInputArticulo.lastIndexOf(this.nuevoInputArticulo.length)});
      
   }
+  //TODO
   borrarArticulo(id: number){
     console.log(id);
     let deleteInputAccesorio: number[]=[];
@@ -148,10 +170,12 @@ export class FacturacionRegistroComponent implements OnInit {
     });
    this.nuevoInputArticulo =deleteInputAccesorio;
   }
+   //TODO
   alQuitarArticulo(e: any){
     console.log(e);
     
   }
+   //TODO
   obtenerDatosEquipoSelect(idEquipo?: number, precioDetalle?: number,precioMayor?: number){
     const ngOption = document.querySelector('ng-option');
     console.log(ngOption);
@@ -165,39 +189,57 @@ export class FacturacionRegistroComponent implements OnInit {
     
     return datosEquipo;
   }
-  // precioVenta?: number, precioMayor?: number
-  obtenerDetalleFactura(){
+  obtenerCantidadArticulo(){
+    let cantidadAccesorio =this.formRegistro.get('articulo')?.value.split('/')[5];
+
+    console.log(cantidadAccesorio);
+     return Number( this.formRegistro.get('cantidadArticulo')?.value) > cantidadAccesorio? 
+           this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadAccesorio}`):
+           Number( this.formRegistro.get('cantidadArticulo')?.value)
+
     
-      // this.obtenerDatosEquipoSelect().forEach(datosEquipo =>{
-      //   console.log(datosEquipo);
-        
-      // })
+    
+  }
+  obtenerDescuentoArticulo():number{
+    return Number( this.formRegistro.get('descuento')?.value);
+  }
+  obtenerDetalleFactura(){
+
+      let id =this.formRegistro.get('articulo')?.value;
+
+      let idEquipo =   id.split('/')[0];
+      let descripcion =id.split('/')[1] + id.split('/')[2];
+      let precioDetalle =   id.split('/')[3];
+      let precioMayor =   id.split('/')[4];
+    console.log(this.formRegistro.get('cantidadAccesorio')?.value);
     
       let modelAccesorio: DetalleFacturaList ={
-        // descripcion: (accesorio +' '+ modelo),
-        idEquipo:6,
-        cantidad: this.formRegistro.get('cantidadAccesorio')?.value,
         numeroFactura: 0,
-        idTipo: 0,
-        idVendedor: 0,
-        idTipoFactura: 0,
-        idGarantia: 0,
-        precio: 200,
-        // precio: Number( (this.formRegistro.get('tipoFactura')?.value == 1? precioDetalle : 0) ||
-        //         (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)),
-          // precio:       (this.formRegistro.get('tipoFactura')?.value == 1? precioVenta : 0),
-        // precio:      (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)
+        idEquipo:Number( idEquipo),
+        descripcion: descripcion,
+        idTipo:  1,
+        idGarantia: this.formRegistro.get('garantia')?.value,
         subTotal: 0,
-        descuento: 0,
+        cantidad:Number( this.obtenerCantidadArticulo()),
+        precio: Number( (this.formRegistro.get('tipoFactura')?.value == 1? precioDetalle : 0) ||
+                (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0)),
+        descuento: Number(this.obtenerDescuentoArticulo()),
         itbis: 0,
         total: 0,
-        fechaRegistro: this.obtenerFechaDiaActual()
+        fechaRegistro: this.obtenerFechaDiaActual(),
       }
-     
-      // console.log(modelAccesorio);
-        this.detalleFacturaRegistro.push(modelAccesorio);
-        return this.detalleFacturaRegistro
+     console.log(this.precioArticulo= modelAccesorio.precio);
+     console.log(this.subTotal= modelAccesorio.precio * modelAccesorio.cantidad );
+     console.log(this.totalArticulo= ( this.subTotal - modelAccesorio.descuento)   );
+     this.calcularSubTotal(modelAccesorio.precio, modelAccesorio.cantidad)
+       
+        return modelAccesorio;
     
+  }
+  calcularSubTotal(numero1: number, numero2: number){
+    console.log(numero1 * numero2);
+    
+        return numero1 * numero2;
   }
   modeloRegistroFacturacion(){
 
@@ -233,11 +275,13 @@ export class FacturacionRegistroComponent implements OnInit {
     
     return model;
   }
-  deshabilitadorInputFacturaComprobante(){
+  deshabilitadorInputs(){
     // this.formRegistro.get('comprobante')?.disable();
     this.formRegistro.get('RNC')?.disable();
     this.formRegistro.get('empresa')?.disable();
     // this.formRegistro.get('garantia')?.disable();
+    this.formRegistro.get('fechaLimitePago')?.disable()
+
   }
 
   //  loadingSpinner(){
@@ -295,7 +339,7 @@ export class FacturacionRegistroComponent implements OnInit {
       
         } 
         else{
-          this.deshabilitadorInputFacturaComprobante();
+          this.deshabilitadorInputs();
             // this.formRegistro.get('comprobante')?.enable();
             // this.formRegistro.get('RNC')?.disable();
             // this.formRegistro.get('empresa')?.disable();
@@ -335,7 +379,8 @@ export class FacturacionRegistroComponent implements OnInit {
     this.catalogosService.getTipoPagoLista()
         .subscribe(TipoPago =>{
             this.listaPagoFactura = TipoPago;
-        });
+          });
+          
   }
   obtenerTipoComprobante(){
     this.catalogosService.getTipoComprobanteLista()

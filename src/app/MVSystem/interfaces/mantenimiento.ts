@@ -66,20 +66,18 @@ export interface FacturaRegistro{
 export interface DetalleFacturaList{
     numeroFactura:  number;
     idEquipo: number ;
+    descripcion: string;
     idTipo: number ;
-    idVendedor: number ;
-    idTipoFactura: number ;
     idGarantia: number ;
+    subTotal:  number;
     cantidad:  number;
     precio:  number;
-    subTotal:  number;
     descuento:  number;
     itbis:  number;
     total:  number;
     fechaRegistro: string;
     // Estado: ;
     // Usuario: ;
-    // Descripcion: ;
 }
 
 export interface Equipo {

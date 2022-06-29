@@ -35,14 +35,14 @@ export interface TipoComprobante {
 }
 
 export interface AccesorioLista {
-  codigo?:                Codigo;
-  id:                    number;
   accesorio_Descripcion: string;
-  modelo:                string;
-  codigo_Barra:          number;
-  precio_Detalle:        number;
-  precio_Por_Mayor:      number;
-
+  codigo?:         Codigo;
+  id:              number;
+  modelo:          string;
+  codigo_Barra:    number;
+  precio_Detalle:  number;
+  precio_Por_Mayor:number;
+  cantidad:        number;
 }
 
 export enum Codigo {

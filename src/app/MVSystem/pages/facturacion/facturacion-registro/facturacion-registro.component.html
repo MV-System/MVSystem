@@ -52,7 +52,12 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Nombre </label>
-                                <input type="text" class="form-control"  formControlName="nombre" required readonly aria-describedby="inputGroupPrepend" >
+                                <input type="text" 
+                                        class="form-control"  
+                                        formControlName="nombre" 
+                                        required 
+                                        readonly 
+                                        [ngClass]="{'is-invalid':validarCampos('nombre')}" >
 
                                 <!-- <div class="validatorField" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
@@ -62,7 +67,12 @@
                             <!-- --------------- Apellido Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
-                                <input type="text" class="form-control"  formControlName="apellido" required readonly>
+                                <input type="text" 
+                                        class="form-control"  
+                                        formControlName="apellido" 
+                                        required 
+                                        readonly
+                                        [ngClass]="{'is-invalid':validarCampos('apellido')}">
                                 <!-- <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
                                     Este campo es requerido.
                                 </div> -->
@@ -75,7 +85,12 @@
                                      Teléfono:
                                      <span class="required-field">*</span>
                                 </label>
-                                <input class="form-control"  formControlName="telefono" type="text" required mask="000-000-0000"  />
+                                <input class="form-control"  
+                                        formControlName="telefono" 
+                                        type="text" 
+                                        required 
+                                        mask="000-000-0000"
+                                        [ngClass]="{'is-invalid':validarCampos('telefono')}"  />
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
                                     Este campo es requerido.
                                 </div>
@@ -133,7 +148,8 @@
                             <!-- --------------- Tipo factura --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Tipo Factura</label>
-                                <select formControlName="tipoFactura" class="form-select">
+                                <select formControlName="tipoFactura" 
+                                        class="form-select">
                         <option *ngFor="let TipoFactura of listaTipoFactura"
                                 [value]="TipoFactura.iD_Tipo_Factura">
                         {{TipoFactura.descripcion_Factura_Tipo}}
@@ -170,7 +186,9 @@
                                 <label class="form-label">
                                      Tipo de pago:
                                 </label>
-                                <select formControlName="tipoPago" class="form-select">
+                                <select formControlName="tipoPago" 
+                                        class="form-select"
+                                        (change)="desactivarActivarFechaLimitepago()">
                                     <option *ngFor="let TipoPago of listaPagoFactura"
                                             [value]="TipoPago.iD_Tipo_Pagos">
                                     {{TipoPago.descripcion_Tipo_Pagos}}
@@ -307,7 +325,7 @@
                                             </tr>
                                         </thead>
                                         <tbody >
-                                            <tr *ngFor="let nuevoArticulo of nuevoInputArticulo">
+                                            <tr *ngFor="let nuevoArticulo of nuevoInputArticuloList; let i = index">
                                                 <td class="col-md-2">
                                                     <input type="text" class="form-control" formControlName="codigo">
                                                 </td>
@@ -323,22 +341,37 @@
                                                     <ng-select formControlName="articulo"
                                                                 (change)="agregarNuevoArticuloAlArray(nuevoArticulo)">
                                                         <ng-option *ngFor="let articulo of listaAccesorio" 
-                                                                    [value]="articulo.accesorio_Descripcion + articulo.modelo"
+                                                                    [value]="articulo.id +'/'+ 
+                                                                                articulo.accesorio_Descripcion +'/'+ 
+                                                                                articulo.modelo +'/'+
+                                                                                articulo.precio_Detalle +'/'+
+                                                                                articulo.precio_Por_Mayor +'/'+
+                                                                                articulo.cantidad"
                                                                     (click)="obtenerDatosEquipoSelect(articulo.id ,articulo.precio_Detalle,articulo.precio_Por_Mayor)"
                                                                     (change)="alQuitarArticulo($event)">
-                                                                    {{articulo.accesorio_Descripcion}}/ {{articulo.modelo}}
+                                                                    {{articulo.accesorio_Descripcion}} -- {{articulo.modelo}}
                                                          </ng-option>
                                                     </ng-select>
                                                 </td>
                                                 <td class="col-md-1">
-                                                    <input type="number" class="form-control" formControlName="cantidadArticulo">
+                                                    <input type="number" 
+                                                            required 
+                                                            class="form-control" 
+                                                            formControlName="cantidadArticulo"
+                                                            (keyup)="obtenerCantidadArticulo()"
+                                                            [ngClass]="{'is-invalid':validarCampos('cantidadArticulo')}">
                                                 </td>
 
-                                                <td>12,500.00</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>12,500.00</td>
-                                                <td><h2 *ngIf="nuevoInputArticulo.length !==1"><i class="bi bi-trash" (click)="borrarArticulo(nuevoArticulo)" style="color: rgb(205, 65, 65);cursor: pointer;"></i></h2></td>
+                                                <td >{{precioArticulo}}</td>
+                                                <td>{{subTotal}}</td>
+                                                <td class="col-md-1">
+                                                    <input type="number" 
+                                                            class="form-control" 
+                                                            formControlName="descuento"
+                                                            (keyup)="obtenerDescuentoArticulo()">
+                                                </td>
+                                                <td>{{totalArticulo}}</td>
+                                                <td><h2 *ngIf="nuevoInputArticulo.length !==1"><i class="bi bi-trash" (click)="borrarArticulo(i)" style="color: rgb(205, 65, 65);cursor: pointer;"></i></h2></td>
                                             </tr>
                                         </tbody>
                                         </table>
