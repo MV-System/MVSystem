@@ -70,6 +70,7 @@ export class FacturacionRegistroComponent implements OnInit {
         fechaRegistro: ''
     // this.formRegistro.get('fechaFacturacion')?.setValue()
   }];
+  
 }
   btnDisabled: boolean = true;
 
@@ -88,7 +89,7 @@ export class FacturacionRegistroComponent implements OnInit {
     fechaLimitePago:[,],
     articulo:[,],
     garantia:[8,],
-    cantidadArticulo:[,],
+    cantidadElegida:[,],
     nota:['',],
     // persona:[1,],
     empresa:[,],
@@ -141,10 +142,12 @@ export class FacturacionRegistroComponent implements OnInit {
       let descripcion =articulo.split('/')[1] + articulo.split('/')[2];
       let precioDetalle =   articulo.split('/')[3];
       let precioMayor =   articulo.split('/')[4];
-      let cantidadArticulo =this.formRegistro.get('cantidadArticulo')?.value;
+      let cantidadElegida =this.formRegistro.get('cantidadElegida')?.value;
       let calculoPrecio =  this.calcularPrecioSegunTipofactura(precioDetalle,precioMayor);
+      
+      
       this.precioArticulo =calculoPrecio
-      // console.log(this.subTotal= cantidadArticulo == 0?calculoPrecio :  cantidadArticulo * calculoPrecio);
+      // console.log(this.subTotal= cantidadElegida == 0?calculoPrecio :  cantidadElegida * calculoPrecio);
       this.obtenerCantidadArticulo();
       let modelAccesorio: DetalleFacturaList ={
         numeroFactura: 0,
@@ -152,18 +155,19 @@ export class FacturacionRegistroComponent implements OnInit {
         descripcion: descripcion,
         idTipo:  1,
         idGarantia: this.formRegistro.get('garantia')?.value,
-        subTotal: this.subTotal,
-        cantidad: cantidadArticulo,
-        // cantidad: this.obtenerCantidadArticulo() ?
-        //           this.formRegistro.get('cantidadArticulo')?.setValue(0) || 0   :
-        //           Number(this.formRegistro.get('cantidadArticulo')?.value),
+        // subTotal: this.subTotal,
+        subTotal:  this.subTotal ,
+        // cantidad: cantidadElegida,
+        cantidad: this.obtenerCantidadArticulo() ?
+                  this.formRegistro.get('cantidadElegida')?.value || 0   :
+                  Number(this.formRegistro.get('cantidadElegida')?.value),
         precio: calculoPrecio,
         descuento: Number( this.formRegistro.get('descuento')?.value),
         // itbis: 0,
         total: this.totalArticulo,
         fechaRegistro: this.obtenerFechaDiaActual(),
       }
-      console.log(modelAccesorio);
+     
       
         this.precioArticulo= modelAccesorio.precio
 
@@ -198,9 +202,25 @@ export class FacturacionRegistroComponent implements OnInit {
     this.formRegistro.get('fechaLimitePago')?.setValue(output);
     return output;
   }
+  agregarNuevoArticuloVacioAlArray(){
+    this.detalleFacturaRegistro.push({ 
+      numeroFactura: 0,
+      idEquipo:0,
+      descripcion: '',
+      idTipo:  0,
+      idGarantia: 0,
+      subTotal: 0,
+      cantidad: 0,
+      precio: 0,
+      descuento: 0,
+      // itbis: 0,
+      total: 0,
+      fechaRegistro: ''})
+  }
+
   //TODO
   agregarNuevoArticuloAlArray(){
-    console.log(this.detalleFacturaRegistro.length);
+    
     
     
     
@@ -254,29 +274,17 @@ console.log(this.detalleFacturaRegistro);
     
   }
    //TODO
-  obtenerDatosEquipoSelect(idEquipo?: number, precioDetalle?: number,precioMayor?: number){
-    // console.log('equi');
-    
-    // const datosEquipo =[
-    //   idEquipo,
-    //   precioDetalle,
-    //   precioMayor
-    // ]
-    // console.log(datosEquipo);
-    
-    // return datosEquipo;
-  }
   obtenerCantidadArticulo(){
     console.log('key');
     
     let cantidadStockAccesorio =this.formRegistro.get('articulo')?.value.split('/')[5];
-    let cantidadElegida =this.formRegistro.get('cantidadArticulo')?.value;
+    let cantidadElegida =this.formRegistro.get('cantidadElegida')?.value;
     this.subTotal =this.precioArticulo * cantidadElegida;
-
+ 
     this.calculoTotal()
-     return Number( this.formRegistro.get('cantidadArticulo')?.value) > cantidadStockAccesorio? 
+     return Number( cantidadElegida) > cantidadStockAccesorio? 
            this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`):
-           Number( this.formRegistro.get('cantidadArticulo')?.value)
+           Number( cantidadElegida)
 
     
     
