@@ -73,7 +73,7 @@ export interface DetalleFacturaList{
     cantidad:  number;
     precio:  number;
     descuento:  number;
-    itbis:  number;
+    // itbis:  number;
     total:  number;
     fechaRegistro: string;
     // Estado: ;
