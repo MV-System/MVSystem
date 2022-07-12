@@ -1,0 +1,39 @@
+<p>marcas works!</p>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Registro de Marcas</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro Marcas</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datos de la Marca</h5>
+
+                        <!--  Form -->
+                        <form class="row g-3 needs-validation" novalidate>
+
+
+                            <!-- --------------- Nombre vendedor --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre De la Marca <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" formControlName="nombre" aria-describedby="inputGroupPrepend">
+                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')"> -->
+                                Este campo es requerido.
+                            </div>
+                        </form>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
