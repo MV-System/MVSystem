@@ -141,7 +141,7 @@ export class FacturacionRegistroComponent implements OnInit {
   }
   obtenerDetalleFactura(){
 
-      let articulo =this.formRegistro.get('articulo')?.value;
+      let articulo =this.formRegistroArticulo.get('articulo')?.value;
       if (articulo == null) {
         //Aqui limpiar valores del objeto del articulo
       }
@@ -167,7 +167,7 @@ export class FacturacionRegistroComponent implements OnInit {
                   this.formRegistroArticulo.get('cantidadElegida')?.value || 0   :
                   Number(this.formRegistroArticulo.get('cantidadElegida')?.value),
         precio:   this.calculoPrecio,
-        descuento: Number( this.formRegistro.get('descuento')?.value),
+        descuento: Number( this.formRegistroArticulo.get('descuento')?.value),
         total: this.totalArticulo,
         fechaRegistro: this.obtenerFechaDiaActual(),
       }
@@ -216,12 +216,13 @@ export class FacturacionRegistroComponent implements OnInit {
     this.formRegistro.get('cantidadElegidaS')?.disable();
     this.formRegistro.get('descuentoS')?.disable();
 
-    this.detalleFacturaRegistro= this.detalleFacturaRegistro.filter((id) => id.idEquipo !== 0);
+    // this.detalleFacturaRegistro= this.detalleFacturaRegistro.filter((id) => id.idEquipo !== 0);
  
     this.detalleFacturaRegistro.push(this.obtenerDetalleFactura());
+    this.formRegistroArticulo.reset();
+    this.subTotal =0
 
-
-console.log(this.detalleFacturaRegistro);
+  console.log(this.detalleFacturaRegistro);
 
     
     //  this.nuevoInputArticulo.lastIndexOf(this.nuevoInputArticulo.length ) == 1  )
@@ -269,7 +270,7 @@ console.log(this.detalleFacturaRegistro);
   }
 
   calculoTotal(){
-    this.totalArticulo= ( this.subTotal -  Number( this.formRegistro.get('descuento')?.value));
+    this.totalArticulo= ( this.subTotal -  Number( this.formRegistroArticulo.get('descuento')?.value));
     return this.totalArticulo;
 
   }
