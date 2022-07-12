@@ -11,6 +11,7 @@ import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
 import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-registro/facturacion-registro.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
+import { MarcasComponent } from './pages/marcas/marcas.component';
 
 
 
@@ -18,7 +19,8 @@ import { EquipoModule } from './pages/Equipo/equipo.module';
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    MarcasComponent
   ],
   imports: [
     CommonModule,
