@@ -11,3 +11,14 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] { -moz-appearance:textfield; }
+.ng-dropdown-panel 
+.ng-dropdown-panel-items 
+.ng-optgroup, 
+.ng-dropdown-panel 
+.ng-dropdown-panel-items 
+.ng-option { 
+  white-space: unset !important; 
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  background-color: rgba(13, 150, 127, 0.218);
+}

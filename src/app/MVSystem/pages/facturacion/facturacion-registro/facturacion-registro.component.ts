@@ -24,12 +24,11 @@ export class FacturacionRegistroComponent implements OnInit {
   listaGarantia: Garantia[]=[];
   listaAccesorio: AccesorioLista[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
-  nuevoInputArticulo: number[]=[1];
-  nuevoInputArticuloList: any[]=[]
   loadingButtonBuscar: boolean = false;
   precioArticulo!: number;
   subTotal!: number;
   totalArticulo!: number;
+
 
 
   constructor(
@@ -130,7 +129,6 @@ export class FacturacionRegistroComponent implements OnInit {
                 (this.formRegistro.get('tipoFactura')?.value == 2? precioMayor : 0))
   }
   obtenerDetalleFactura(){
-    console.log('obtenerDetalleFactura');
 
       let articulo =this.formRegistro.get('articulo')?.value;
       if (articulo == null) {
@@ -140,14 +138,11 @@ export class FacturacionRegistroComponent implements OnInit {
 
       let idEquipo =   articulo.split('/')[0];
       let descripcion =articulo.split('/')[1] + articulo.split('/')[2];
-      let precioDetalle =   articulo.split('/')[3];
+      let precioDetalle =  articulo.split('/')[3];
       let precioMayor =   articulo.split('/')[4];
-      let cantidadElegida =this.formRegistro.get('cantidadElegida')?.value;
       let calculoPrecio =  this.calcularPrecioSegunTipofactura(precioDetalle,precioMayor);
       
-      
-      this.precioArticulo =calculoPrecio
-      // console.log(this.subTotal= cantidadElegida == 0?calculoPrecio :  cantidadElegida * calculoPrecio);
+      let subTotal =this.calcularSubTotal(calculoPrecio);
       this.obtenerCantidadArticulo();
       let modelAccesorio: DetalleFacturaList ={
         numeroFactura: 0,
@@ -155,28 +150,27 @@ export class FacturacionRegistroComponent implements OnInit {
         descripcion: descripcion,
         idTipo:  1,
         idGarantia: this.formRegistro.get('garantia')?.value,
-        // subTotal: this.subTotal,
-        subTotal:  this.subTotal ,
-        // cantidad: cantidadElegida,
+        subTotal:  subTotal ,
         cantidad: this.obtenerCantidadArticulo() ?
                   this.formRegistro.get('cantidadElegida')?.value || 0   :
                   Number(this.formRegistro.get('cantidadElegida')?.value),
-        precio: calculoPrecio,
+        precio:  calculoPrecio,
         descuento: Number( this.formRegistro.get('descuento')?.value),
-        // itbis: 0,
         total: this.totalArticulo,
         fechaRegistro: this.obtenerFechaDiaActual(),
       }
      
       
-        this.precioArticulo= modelAccesorio.precio
 
     //  console.log(this.totalArticulo= ( this.subTotal - modelAccesorio.descuento)   );
       this.calculoTotal();
-    //  this.calcularSubTotal(modelAccesorio.precio, modelAccesorio.cantidad)
        
         return modelAccesorio;
     
+  }
+  calcularSubTotal(precio: number) {
+    return  this.subTotal = precio * 
+            this.formRegistro.get('cantidadElegida')?.value;
   }
   desactivarActivarFechaLimitepago(){
 
@@ -202,28 +196,11 @@ export class FacturacionRegistroComponent implements OnInit {
     this.formRegistro.get('fechaLimitePago')?.setValue(output);
     return output;
   }
-  agregarNuevoArticuloVacioAlArray(){
-    this.detalleFacturaRegistro.push({ 
-      numeroFactura: 0,
-      idEquipo:0,
-      descripcion: '',
-      idTipo:  0,
-      idGarantia: 0,
-      subTotal: 0,
-      cantidad: 0,
-      precio: 0,
-      descuento: 0,
-      // itbis: 0,
-      total: 0,
-      fechaRegistro: ''})
-  }
+
 
   //TODO
   agregarNuevoArticuloAlArray(){
-    
-    
-    
-    
+
     this.detalleFacturaRegistro= this.detalleFacturaRegistro.filter((id) => id.idEquipo !== 0);
  
     this.detalleFacturaRegistro.push(this.obtenerDetalleFactura());
@@ -261,27 +238,21 @@ console.log(this.detalleFacturaRegistro);
   }
   //TODO
   borrarArticulo(id: number){
-    console.log(id);
-    let deleteInputAccesorio: number[]=[];
-    deleteInputAccesorio = this.nuevoInputArticulo.filter((item) => {
-      return item !== id;
+    this.detalleFacturaRegistro.filter((item) => {
+      return item.idEquipo !== id;
     });
-   this.nuevoInputArticulo =deleteInputAccesorio;
+        console.log(id);
+        
   }
-   //TODO
-  alQuitarArticulo(e: any){
-    console.log(e);
-    
-  }
+ 
    //TODO
   obtenerCantidadArticulo(){
     console.log('key');
     
     let cantidadStockAccesorio =this.formRegistro.get('articulo')?.value.split('/')[5];
     let cantidadElegida =this.formRegistro.get('cantidadElegida')?.value;
-    this.subTotal =this.precioArticulo * cantidadElegida;
  
-    this.calculoTotal()
+    this.calculoTotal();
      return Number( cantidadElegida) > cantidadStockAccesorio? 
            this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`):
            Number( cantidadElegida)
@@ -299,11 +270,7 @@ console.log(this.detalleFacturaRegistro);
     return this.totalArticulo;
 
   }
-  calcularSubTotal(numero1: number, numero2: number){
-    console.log(numero1 * numero2);
-    
-        return numero1 * numero2;
-  }
+
   modeloRegistroFacturacion(){
 
     const model: FacturaRegistro= {
@@ -313,28 +280,21 @@ console.log(this.detalleFacturaRegistro);
       idAlmacen: Number(this.formRegistro.get('almacen')?.value),
       idTipoFactura: Number(this.formRegistro.get('tipoFactura')?.value),
       idTipoPago: Number(this.formRegistro.get('tipoPago')?.value),
-      // nombre: this.formRegistro.get('nombre')?.value,
-      // apellido: this.formRegistro.get('apellido')?.value,
-      // telefono: this.formRegistro.get('telefono')?.value,
       fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
       ncfTipoNumero: Number(this.formRegistro.get('comprobante')?.value),
       RNC: this.formRegistro.get('RNC')?.value,
       fechaLimitePago: this.formRegistro.get('fechaLimitePago')?.value,
       garantia: this.formRegistro.get('garantia')?.value,
       nota: this.formRegistro.get('nota')?.value,
-      // persona:Number( this.formRegistro.get('persona')?.value),
-      // empresa: this.formRegistro.get('empresa')?.value,
-      // monto: this.formRegistro.get('monto')?.value,
       descripcion: "",
       itbis: 0,
       subTotal: 0,
       total: 0,
       abono: 0,
       descuento: 0,
-      cantidadArticulos: this.nuevoInputArticulo.length,
+      cantidadArticulos: this.detalleFacturaRegistro.length,
       detalleFacturaList: this.detalleFacturaRegistro,
     }
-    // console.log(this.detalleFacturaRegistro);
     
     return model;
   }
