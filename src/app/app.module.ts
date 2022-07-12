@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,6 +24,44 @@ import { RouterModule } from '@angular/router';
     BrowserModule,
     SharedModule,
     HttpClientModule,
+    ToastrModule.forRoot(),
+
+  ],
+  exports:[
+    SharedModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+=======
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+import { ToastrModule } from 'ngx-toastr';
+import { SharedModule } from './shared/shared.module';
+import { RouterModule } from '@angular/router';
+//import { MarcasComponent } from './pages/marcas/marcas.component';
+
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+   // MarcasComponent
+  ],
+  imports: [
+    AppRoutingModule,
+    RouterModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    SharedModule,
+    HttpClientModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
     }),
@@ -35,3 +74,4 @@ import { RouterModule } from '@angular/router';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+>>>>>>> 4f121640941dfd063b132236d128c24c324ba398
