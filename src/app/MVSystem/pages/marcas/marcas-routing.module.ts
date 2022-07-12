@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MarcasComponent } from './marcas.component';
+import { MarcasRegistroComponent } from './marcas-facturacion/marcas-registro.component';
 import { RouterModule, Routes } from '@angular/router';
 
 
 const routes: Routes = [
   {
-    path:'marcas',
-    component:MarcasComponent
+    path:'registro',
+    component:MarcasRegistroComponent
   }
 ];
 

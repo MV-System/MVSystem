@@ -10,6 +10,10 @@ const routes: Routes = [
   //   pathMatch:'full'
   // },
   {
+    path: 'marcas',
+    loadChildren: () => import('./pages/marcas/marcas.module').then( m => m.MarcasModule )
+   },
+  {
     path: 'clientes',
     loadChildren: () => import('./pages/Clientes/clientes.module').then( m => m.ClientesModule )
    },
