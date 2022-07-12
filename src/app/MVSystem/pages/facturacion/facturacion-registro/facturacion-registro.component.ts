@@ -18,6 +18,7 @@ import { MantenimientoService } from '../../../services/mantenimiento.service';
 })
 export class FacturacionRegistroComponent implements OnInit {
   detalleFacturaRegistro: DetalleFacturaList[]=[];
+  detalleFacturaRegistroLista: DetalleFacturaList[]=[];
   listaTipoFactura: TipoFactura[]=[];
   listaVendedor: VendedorLista[]=[]
   listaPagoFactura: TipoPago[]=[];
@@ -28,6 +29,7 @@ export class FacturacionRegistroComponent implements OnInit {
   precioArticulo!: number;
   subTotal!: number;
   totalArticulo!: number;
+  calculoPrecio!: number;
 
 
 
@@ -54,26 +56,31 @@ export class FacturacionRegistroComponent implements OnInit {
     //   descripcion: '',
 
     // }]
-    this.detalleFacturaRegistro =[{
-      numeroFactura: 0,
-        idEquipo:0,
-        descripcion: '',
-        idTipo:  0,
-        idGarantia: 0,
-        subTotal: 0,
-        cantidad: 0,
-        precio: 0,
-        descuento: 0,
-        // itbis: 0,
-        total: 0,
-        fechaRegistro: ''
-    // this.formRegistro.get('fechaFacturacion')?.setValue()
-  }];
+  //   this.detalleFacturaRegistro =[{
+  //     numeroFactura: 0,
+  //       idEquipo:0,
+  //       descripcion: '',
+  //       idTipo:  0,
+  //       idGarantia: 0,
+  //       subTotal: 0,
+  //       cantidad: 0,
+  //       precio: 0,
+  //       descuento: 0,
+  //       // itbis: 0,
+  //       total: 0,
+  //       fechaRegistro: ''
+  // }];
   
 }
   btnDisabled: boolean = true;
 
   //Forms
+  formRegistroArticulo: FormGroup = this.fb.group({
+    codigo:[,],
+    cantidadElegida:[,],
+    articulo:[,],
+    descuento:[,],
+  })
   formRegistro: FormGroup = this.fb.group({
     idCliente:  [''],
     nombre:     [''],
@@ -86,20 +93,24 @@ export class FacturacionRegistroComponent implements OnInit {
     fechaFacturacion:['',],
     comprobante:[0,],
     fechaLimitePago:[,],
-    articulo:[,],
     garantia:[8,],
-    cantidadElegida:[,],
     nota:['',],
     // persona:[1,],
     empresa:[,],
     codigo:[,],
     // monto:[,],
     RNC:['',],
+
+   
+
+    cantidadElegidaS:[,],
+    articuloS:[,],
+    descuentoS:[,],
+
     subTotal:[,],
     subTotalArticulo:[,],
     precioArticulo:[,],
     totalArticulo:[,],
-    descuento:[,]
   });
 
 
@@ -135,15 +146,16 @@ export class FacturacionRegistroComponent implements OnInit {
         //Aqui limpiar valores del objeto del articulo
       }
 
-
-      let idEquipo =   articulo.split('/')[0];
-      let descripcion =articulo.split('/')[1] + articulo.split('/')[2];
-      let precioDetalle =  articulo.split('/')[3];
+      let idEquipo =      articulo.split('/')[0];
+      let descripcion =   articulo.split('/')[1] + '|' + articulo.split('/')[2];
+      let precioDetalle = articulo.split('/')[3];
       let precioMayor =   articulo.split('/')[4];
-      let calculoPrecio =  this.calcularPrecioSegunTipofactura(precioDetalle,precioMayor);
-      
-      let subTotal =this.calcularSubTotal(calculoPrecio);
+
+      this.calculoPrecio = this.calcularPrecioSegunTipofactura(precioDetalle,precioMayor);
+      let subTotal =this.calcularSubTotalArticulo( this.calculoPrecio);
+      this.subTotal =subTotal;
       this.obtenerCantidadArticulo();
+
       let modelAccesorio: DetalleFacturaList ={
         numeroFactura: 0,
         idEquipo:Number( idEquipo),
@@ -152,9 +164,9 @@ export class FacturacionRegistroComponent implements OnInit {
         idGarantia: this.formRegistro.get('garantia')?.value,
         subTotal:  subTotal ,
         cantidad: this.obtenerCantidadArticulo() ?
-                  this.formRegistro.get('cantidadElegida')?.value || 0   :
-                  Number(this.formRegistro.get('cantidadElegida')?.value),
-        precio:  calculoPrecio,
+                  this.formRegistroArticulo.get('cantidadElegida')?.value || 0   :
+                  Number(this.formRegistroArticulo.get('cantidadElegida')?.value),
+        precio:   this.calculoPrecio,
         descuento: Number( this.formRegistro.get('descuento')?.value),
         total: this.totalArticulo,
         fechaRegistro: this.obtenerFechaDiaActual(),
@@ -168,9 +180,9 @@ export class FacturacionRegistroComponent implements OnInit {
         return modelAccesorio;
     
   }
-  calcularSubTotal(precio: number) {
+  calcularSubTotalArticulo(precio: number) {
     return  this.subTotal = precio * 
-            this.formRegistro.get('cantidadElegida')?.value;
+            this.formRegistroArticulo.get('cantidadElegida')?.value;
   }
   desactivarActivarFechaLimitepago(){
 
@@ -200,24 +212,14 @@ export class FacturacionRegistroComponent implements OnInit {
 
   //TODO
   agregarNuevoArticuloAlArray(){
+    this.formRegistro.get('articuloS')?.disable();
+    this.formRegistro.get('cantidadElegidaS')?.disable();
+    this.formRegistro.get('descuentoS')?.disable();
 
     this.detalleFacturaRegistro= this.detalleFacturaRegistro.filter((id) => id.idEquipo !== 0);
  
     this.detalleFacturaRegistro.push(this.obtenerDetalleFactura());
-    this.detalleFacturaRegistro.push({ 
-      numeroFactura: 0,
-      idEquipo:0,
-      descripcion: '',
-      idTipo:  0,
-      idGarantia: 0,
-      subTotal: 0,
-      cantidad: 0,
-      precio: 0,
-      descuento: 0,
-      // itbis: 0,
-      total: 0,
-      fechaRegistro: ''})
-    
+
 
 console.log(this.detalleFacturaRegistro);
 
@@ -244,13 +246,14 @@ console.log(this.detalleFacturaRegistro);
         console.log(id);
         
   }
- 
+
    //TODO
   obtenerCantidadArticulo(){
     console.log('key');
+  
     
     let cantidadStockAccesorio =this.formRegistro.get('articulo')?.value.split('/')[5];
-    let cantidadElegida =this.formRegistro.get('cantidadElegida')?.value;
+    let cantidadElegida =this.formRegistroArticulo.get('cantidadElegida')?.value;
  
     this.calculoTotal();
      return Number( cantidadElegida) > cantidadStockAccesorio? 
