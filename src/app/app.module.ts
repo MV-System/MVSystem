@@ -9,12 +9,14 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { MarcasComponent } from './pages/marcas/marcas.component';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MarcasComponent
   ],
   imports: [
     AppRoutingModule,
