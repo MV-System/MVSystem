@@ -24,7 +24,9 @@ import { RouterModule } from '@angular/router';
     BrowserModule,
     SharedModule,
     HttpClientModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      preventDuplicates: true,
+    }),
 
   ],
   exports:[

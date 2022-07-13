@@ -73,11 +73,14 @@ export interface DetalleFacturaList{
     cantidad:  number;
     precio:  number;
     descuento:  number;
-    // itbis:  number;
+    idVendedor:   number;
+    idTipoFactura: number;
+
+    itbis:  number;
     total:  number;
     fechaRegistro: string;
     // Estado: ;
-    // Usuario: ;
+    Usuario: string;
 }
 
 export interface Equipo {

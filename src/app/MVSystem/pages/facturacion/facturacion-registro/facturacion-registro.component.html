@@ -27,6 +27,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-10">
+                                    <label class="form-label">Lista artículos
+                                        <span class="required-field">*</span>
+                                    </label>
                                     <ng-select formControlName="articulo" (change)="obtenerDetalleFactura()" required>
                                         <ng-option *ngFor="let articulo of listaAccesorio" 
                                                     [value]="articulo.id +'/'+ 
@@ -47,19 +50,20 @@
                                                 placeholder="Cantidad"
         
                                                 formControlName="cantidadElegida"
-                                                (keyup)="obtenerCantidadArticulo()"
+                                                (keyup)="obtenerCantidadArticuloStock()"
                                                 [ngClass]="{'is-invalid':validarCamposArticulo('cantidadElegida')}">
                                          
                                     </div>
-                                    <div class="col-md-2">
-                                        Subtotal: {{ subTotal }}
+                                    <div class="col-md-3">
+                                        Subtotal: <strong>{{ subTotal | currency }}</strong>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="number" 
                                                 class="form-control" 
                                                 placeholder="Descuento"
                                                 formControlName="descuento"
-                                                (keyup)="obtenerDescuentoArticulo()">
+                                                (keyup)="obtenerDescuentoArticulo()"
+                                                [ngClass]="{'is-invalid':validarInputArticulo()}">
                                     </div>
                                 </div>
                             </form>
@@ -247,7 +251,8 @@
                                 <label class="form-label">
                                     Fecha de facturacion:
                                 </label>
-                                <input class="form-control" required formControlName="fechaFacturacion" type="date" />
+                                <input class="form-control" required formControlName="fechaFacturacion" type="date" 
+                                (change)="obtenerFechaFacturacion()"/>
                                 <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('fechaFacturacion')}">
                                     Este campo es requerido.
                                 </div>
@@ -435,7 +440,7 @@
                                         <hr>
                                         <div class="row">
 
-                                            <p class="col-md-8">Total artículos: {{detalleFacturaRegistro.length -1}}</p>
+                                            <p class="col-md-8">Total artículos: {{detalleFacturaRegistro.length }}</p>
                                             <div class="col-md-4 text-end" *ngIf="detalleFacturaRegistro.length">
                                                 <div class="box-pay">
                                                    <div class="row">
@@ -459,7 +464,6 @@
                                         <i class="bi bi-printer"></i>
                                         Imprimir
                                     </button>
-                                    Form Valid? {{formRegistro.valid}}
                                 </div>
                                 <!-- </form> -->
                                 <!-- End  Form -->
