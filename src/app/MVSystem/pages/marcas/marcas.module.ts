@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MarcasRoutingModule } from './marcas-routing.module';
-import { MarcasRegistroComponent } from './marcas-facturacion/marcas-registro.component';
+import { MarcasRegistroComponent } from './marcas-registro/marcas-registro.component';
 
 
 
