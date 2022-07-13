@@ -25,12 +25,13 @@ export class FacturacionRegistroComponent implements OnInit {
   listaGarantia: Garantia[]=[];
   listaAccesorio: AccesorioLista[]=[];
   listaTipoComprobante: TipoComprobante[]=[];
-  loadingButtonBuscar: boolean = false;
   precioArticulo!: number;
   subTotal!: number;
   totalArticulo!: number;
   calculoPrecio!: number;
-
+  loadingButtonBuscar: boolean = false;
+  btnDisabledTelefono: boolean = true;
+  btnDisabledArticulo: boolean = true;
 
 
   constructor(
@@ -42,7 +43,8 @@ export class FacturacionRegistroComponent implements OnInit {
               private mantenimientoService: MantenimientoService ) { }
 
   ngOnInit(): void {
-    this.btnDisable();
+    this.btnDisableTelefono();
+    this.btnDisableArticulo();
     this.obtenerTipoFactura();
     this.obtenerTipoPago();
     this.obtenerTipoComprobante();
@@ -50,29 +52,9 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenetAccesorios();
     this.deshabilitadorInputs();
     this.obtenerFechaDiaActual();
-    this.obtenerGarantia();
-    // this.nuevoInputArticuloList =[{
-    //   idEquipo: 0,
-    //   descripcion: '',
-
-    // }]
-  //   this.detalleFacturaRegistro =[{
-  //     numeroFactura: 0,
-  //       idEquipo:0,
-  //       descripcion: '',
-  //       idTipo:  0,
-  //       idGarantia: 0,
-  //       subTotal: 0,
-  //       cantidad: 0,
-  //       precio: 0,
-  //       descuento: 0,
-  //       // itbis: 0,
-  //       total: 0,
-  //       fechaRegistro: ''
-  // }];
-  
+    this.obtenerGarantia();  
 }
-  btnDisabled: boolean = true;
+
 
   //Forms
   formRegistroArticulo: FormGroup = this.fb.group({
@@ -101,11 +83,9 @@ export class FacturacionRegistroComponent implements OnInit {
     // monto:[,],
     RNC:['',],
 
-   
-
-    cantidadElegidaS:[,],
-    articuloS:[,],
-    descuentoS:[,],
+    cantidadElegidaLista:[,],
+    articuloLista:[,],
+    descuentoLista:[,],
 
     subTotal:[,],
     subTotalArticulo:[,],
@@ -142,12 +122,8 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenerDetalleFactura(){
 
       let articulo =this.formRegistroArticulo.get('articulo')?.value;
-      if (articulo == null) {
-        //Aqui limpiar valores del objeto del articulo
-      }
-
       let idEquipo =      articulo.split('/')[0];
-      let descripcion =   articulo.split('/')[1] + '|' + articulo.split('/')[2];
+      let descripcion =   articulo.split('/')[1] +  '  ' + articulo.split('/')[2];
       let precioDetalle = articulo.split('/')[3];
       let precioMayor =   articulo.split('/')[4];
 
@@ -171,10 +147,6 @@ export class FacturacionRegistroComponent implements OnInit {
         total: this.totalArticulo,
         fechaRegistro: this.obtenerFechaDiaActual(),
       }
-     
-      
-
-    //  console.log(this.totalArticulo= ( this.subTotal - modelAccesorio.descuento)   );
       this.calculoTotal();
        
         return modelAccesorio;
@@ -212,9 +184,9 @@ export class FacturacionRegistroComponent implements OnInit {
 
   //TODO
   agregarNuevoArticuloAlArray(){
-    this.formRegistro.get('articuloS')?.disable();
-    this.formRegistro.get('cantidadElegidaS')?.disable();
-    this.formRegistro.get('descuentoS')?.disable();
+    this.formRegistro.get('articuloLista')?.disable();
+    this.formRegistro.get('cantidadElegidaLista')?.disable();
+    this.formRegistro.get('descuentoLista')?.disable();
 
     // this.detalleFacturaRegistro= this.detalleFacturaRegistro.filter((id) => id.idEquipo !== 0);
  
@@ -252,9 +224,12 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenerCantidadArticulo(){
     console.log('key');
   
+    console.log(this.calculoPrecio);
     
-    let cantidadStockAccesorio =this.formRegistro.get('articulo')?.value.split('/')[5];
+    let cantidadStockAccesorio =this.formRegistroArticulo.get('articulo')?.value.split('/')[5];
     let cantidadElegida =this.formRegistroArticulo.get('cantidadElegida')?.value;
+ console.log(cantidadStockAccesorio);
+ console.log(cantidadElegida);
  
     this.calculoTotal();
      return Number( cantidadElegida) > cantidadStockAccesorio? 
@@ -383,12 +358,20 @@ export class FacturacionRegistroComponent implements OnInit {
     return this.formRegistro.get(nombreCampo)?.invalid && 
           this.formRegistro.get(nombreCampo)?.touched
   }
-  btnDisable(){
-    return (  this.formRegistro.get('telefono')?.value > 9)  ? 
-              this.btnDisabled = false: 
-              this.btnDisabled = true;
+  validarCamposArticulo(nombreCampo: string) {
+    return this.formRegistroArticulo.get(nombreCampo)?.invalid && 
+          this.formRegistroArticulo.get(nombreCampo)?.touched
   }
-
+  btnDisableTelefono(){
+    return (  this.formRegistro.get('telefono')?.value > 9)  ? 
+              this.btnDisabledTelefono = false: 
+              this.btnDisabledTelefono = true;
+  }
+  btnDisableArticulo(){
+    return (  this.formRegistroArticulo.get('cantidadElegida')?.value > 0)  ? 
+              this.btnDisabledTelefono = false: 
+              this.btnDisabledTelefono = true;
+  }
   //catalogos
   obtenerGarantia(){
     this.catalogosService.getGarantiaLista()

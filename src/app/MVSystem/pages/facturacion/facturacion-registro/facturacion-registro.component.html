@@ -7,7 +7,7 @@
         <div class="modal-dialog modal-lg ">
           <div class="modal-content ">
             <div class="modal-header">
-              <h5 class="modal-title">Registro Articulo</h5>
+              <h5 class="modal-title">Registro Artículo</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -20,14 +20,14 @@
                                         <input type="text" 
                                                 class="form-control" 
                                                 formControlName="codigo"
-                                                placeholder="Codigo">
+                                                placeholder="Código">
                                     </div>
                                     <div class="col-md-9">
-                                        <button class="btn btn-dark">Buscar por codigo</button>
+                                        <button class="btn btn-dark">Buscar por código</button>
                                     </div>
                                 </div>
                                 <div class="col-md-10">
-                                    <ng-select formControlName="articulo" (change)="obtenerDetalleFactura()">
+                                    <ng-select formControlName="articulo" (change)="obtenerDetalleFactura()" required>
                                         <ng-option *ngFor="let articulo of listaAccesorio" 
                                                     [value]="articulo.id +'/'+ 
                                                             articulo.accesorio_Descripcion +'/'+ 
@@ -47,8 +47,9 @@
                                                 placeholder="Cantidad"
         
                                                 formControlName="cantidadElegida"
-                                                (keyup)="obtenerCantidadArticulo()">
-                                                <!-- [ngClass]="{'is-invalid':validarCampos('cantidadElegida')}" -->
+                                                (keyup)="obtenerCantidadArticulo()"
+                                                [ngClass]="{'is-invalid':validarCamposArticulo('cantidadElegida')}">
+                                         
                                     </div>
                                     <div class="col-md-2">
                                         Subtotal: {{ subTotal }}
@@ -68,8 +69,11 @@
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-primary" (click)="agregarNuevoArticuloAlArray()">Guardar y seguir</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
+              <button type="button" 
+                        class="btn btn-primary" 
+                        (click)="agregarNuevoArticuloAlArray()"
+                        [ngClass]="{'disabled':btnDisableArticulo()}">Guardar y seguir</button>
             </div>
           </div>
         </div>
@@ -180,7 +184,7 @@
                             <div class="text-end">
                                 <button *ngIf="loadingButtonBuscar == false"  class="btn btn-primary"
                                         type="submit"
-                                        [ngClass]="{'disabled':btnDisable()}"
+                                        [ngClass]="{'disabled':btnDisableTelefono()}"
 
                                         (click)="obtenerClientesPorNombreTelefono()">Buscar
                                 </button>
@@ -387,7 +391,7 @@
                             </div> -->
                             <hr>
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarArticuloModal">
-                                Agregar Articulo
+                                Agregar Artículo
                               </button>
                                 <div class="col-md-12" >
                                     
@@ -395,7 +399,7 @@
                                     <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="detalleFacturaRegistro.length">
                                         <thead >
                                             <tr>
-                                                <th>Codigo</th>
+                                                <th>Código</th>
                                                 <th>Descripción</th>
                                                 <th>Cant.</th>
                                                 <th>Precio</th>
@@ -431,7 +435,7 @@
                                         <hr>
                                         <div class="row">
 
-                                            <p class="col-md-8">Total articulos: {{detalleFacturaRegistro.length -1}}</p>
+                                            <p class="col-md-8">Total artículos: {{detalleFacturaRegistro.length -1}}</p>
                                             <div class="col-md-4 text-end" *ngIf="detalleFacturaRegistro.length">
                                                 <div class="box-pay">
                                                    <div class="row">
