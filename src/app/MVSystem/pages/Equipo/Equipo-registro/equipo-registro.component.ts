@@ -61,8 +61,8 @@ export class EquipoRegistroComponent implements OnInit {
   costo:[, [Validators.required]],
   alDetalle:[, [Validators.required]],
   alPorMayor:[, [Validators.required]],
-  comisionDetalle:[,],
-  comisionMayor:[,],
+  comisionDetalle:[0,],
+  comisionMayor:[0,],
   nota:["",],
   idCondicion:[1,],
   idEstadoBloqueo:[1,],
@@ -70,7 +70,7 @@ export class EquipoRegistroComponent implements OnInit {
   tecnologia:[1,],
   garantia:[8,],
   estado:[,],
-  almacen:[2,],
+  almacen:[,],
   marca:[,],
   modelo:[,],
   suplidor:[,],
@@ -83,7 +83,7 @@ export class EquipoRegistroComponent implements OnInit {
   registroEquipos(){
     const model: Equipo =this.modeloRegistroEquipo();
     console.log(model);
-    
+
     this.validacionesRegistro()
     if ( this.formRegistro.valid   ) {
 
@@ -120,8 +120,8 @@ export class EquipoRegistroComponent implements OnInit {
 
   validacionesRegistro(){
     this.validarCamposFormCostoDetalle();
-    this.msgValidacionesCamposFormComisionDetallePorMayor();
-    this.msgValidacionesCamposFormDetallePorMayor();
+    //this.msgValidacionesCamposFormComisionDetallePorMayor();
+    //this.msgValidacionesCamposFormDetallePorMayor();
     this.msgValidacionesCamposFormNumericos();
 
   }
@@ -199,8 +199,8 @@ export class EquipoRegistroComponent implements OnInit {
       'costo',
       'alDetalle',
       'alPorMayor',
-      'comisionDetalle',
-      'comisionMayor',
+     // 'comisionDetalle',
+     // 'comisionMayor',
     ];
     camposNumerico.forEach((campo) => {
       if (
@@ -297,7 +297,7 @@ export class EquipoRegistroComponent implements OnInit {
   obtenerSuplidor(){
     this.catalogosService.getSuplidorLista()
                         .subscribe(suplidor=>{
-                   
+
                           this.listaSuplidor = suplidor;
                         })
   }

@@ -109,7 +109,7 @@ export class AccesoriosRegistroComponent implements OnInit {
   }
   //Al detalle no puede ser mayor que el costo
   validarCamposFormCostoDetalle() {
-    
+
     if (
       this.formRegistro.get('alDetalle')?.value <
       this.formRegistro.get('costo')?.value  && this.formRegistro.get('costo')?.value !== null)
@@ -168,7 +168,7 @@ export class AccesoriosRegistroComponent implements OnInit {
 
   registroAccesorio() {
     const model: Accesorio = this.modeloRegistroAccesorio();
-    
+
     this.validacionesRegistro()
       if ( this.formRegistro.valid   ) {
         this.mantenimientoService.postAccesorio(model)

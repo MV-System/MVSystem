@@ -1,4 +1,3 @@
-
 <main id="main" class="main">
     <div class="pagetitle">
         <h1 id="registro">Registro Equipos</h1>
@@ -9,127 +8,89 @@
                 <li class="breadcrumb-item active">Registro Equipos</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
-<section class="section" >
-<div class="row" >
-    <div class="col-lg-7">
-        <div class="card">
-            <div class="card-body">
-              <h5 class="card-title" >Datos del Equipo</h5>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datos del Equipo</h5>
 
-              <!--  Form -->
-              <form [formGroup]="formRegistro"
-                    (ngSubmit)="registroEquipos()"
-                    class="row g-3 needs-validation"
-                    novalidate>
+                        <!--  Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroEquipos()" class="row g-3 needs-validation" novalidate>
 
-                <!-- --------------- Factura No. --------------- -->
-                <div class="col-md-6">
-                    <label  class="form-label">Factura No.</label>
-                    <input type="text"
-                        class="form-control"
-                        formControlName="factura">
-                </div>
+                            <!-- --------------- Factura No. --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Factura No.</label>
+                                <input type="text" class="form-control" formControlName="factura">
+                            </div>
 
-                <!-- --------------- IMEI  --------------- -->
-                <div class="col-md-6">
-                    <label  class="form-label">IMEI</label>
-                    <input type="text"
-                            class="form-control"
-                            formControlName="IMEI"
-                            [ngClass]="{'is-invalid':validarCampos('IMEI')}">
-                        <div class="validatorField"  *ngIf="validarCampos('IMEI')">
+                            <!-- --------------- IMEI  --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">IMEI</label>
+                                <input type="text" class="form-control" formControlName="IMEI" [ngClass]="{'is-invalid':validarCampos('IMEI')}">
+                                <div class="validatorField" *ngIf="validarCampos('IMEI')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- --------------- Costo  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Costo</label>
+                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="costo" required [ngClass]="{'is-invalid':validarCampos('costo')}">
+                                <div class="validatorField" *ngIf="validarCampos('costo')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- --------------- Al detalle  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Al detalle</label>
+                                <input type="text" class="form-control" placeholder="RD$" required currencyMask formControlName="alDetalle" required [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
+                                <div class="validatorField" *ngIf="validarCampos('alDetalle')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                            <!-- --------------- Al por Mayor  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Al por Mayor</label>
+                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="alPorMayor" required [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
+                                <div class="validatorField" *ngIf="validarCampos('alPorMayor')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                            <!-- --------------- Comision Detalle  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Comision Detalle</label>
+                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="comisionDetalle" required [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
+                                <!-- <div class="validatorField"  *ngIf="validarCampos('comisionDetalle')">
                             Este campo es requerido.
-                        </div>
-                </div>
+                        </div> -->
+                            </div>
+                            <!-- --------------- Comision Mayor  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Comision Mayor</label>
+                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="comisionMayor" required [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
+                                <!-- <div class="validatorField" *ngIf="validarCampos('comisionMayor')">
+                                    Este campo es requerido.
+                                </div> -->
+                            </div>
+                            <!-- --------------- DropDown Tecnologia --------------- -->
 
-                <!-- --------------- Costo  --------------- -->
-                <div class="col-md-4">
-                    <label class="form-label">Costo</label>
-                    <input  type="text"
-                            class="form-control"
-                            placeholder="RD$"
-                            currencyMask
-                            formControlName="costo"
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('costo')}">
-                            <div class="validatorField"  *ngIf="validarCampos('costo')">
-                                Este campo es requerido.
-                              </div>
-                </div>
-
-                <!-- --------------- Al detalle  --------------- -->
-                <div class="col-md-4">
-                    <label class="form-label">Al detalle</label>
-                    <input type="text"
-                            class="form-control"
-                            placeholder="RD$"
-                            required
-                            currencyMask
-                            formControlName="alDetalle"  
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
-                        <div class="validatorField"  *ngIf="validarCampos('alDetalle')">
-                            Este campo es requerido.
-                        </div>
-                </div>
-                <!-- --------------- Al por Mayor  --------------- -->
-                <div class="col-md-4">
-                    <label class="form-label">Al por Mayor</label>
-                    <input type="text"
-                            class="form-control"
-                            placeholder="RD$"
-                            currencyMask
-                            formControlName="alPorMayor"  
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
-                        <div class="validatorField"  *ngIf="validarCampos('alPorMayor')">
-                            Este campo es requerido.
-                        </div>
-                </div>
-                    <!-- --------------- Comision Detalle  --------------- -->
-                    <div class="col-md-4">
-                    <label class="form-label">Comision Detalle</label>
-                    <input type="text"
-                            class="form-control"
-                            placeholder="RD$"
-                            currencyMask
-                            formControlName="comisionDetalle" 
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
-                        <div class="validatorField"  *ngIf="validarCampos('comisionDetalle')">
-                            Este campo es requerido.
-                        </div>
-                </div>
-                    <!-- --------------- Comision Mayor  --------------- -->
-                    <div class="col-md-4">
-                    <label class="form-label">Comision Mayor</label>
-                    <input type="text"
-                            class="form-control"
-                            placeholder="RD$"
-                            currencyMask
-                            formControlName="comisionMayor"
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
-                            <div class="validatorField"  *ngIf="validarCampos('comisionMayor')">
-                                Este campo es requerido.
-                              </div>
-                </div>
-                <!-- --------------- DropDown Tecnologia --------------- -->
-     
-                <div class="col-md-4">
-                    <label  class="form-label">Tecnología</label>
-                    <select formControlName="tecnologia" class="form-select">
+                            <div class="col-md-4">
+                                <label class="form-label">Tecnología</label>
+                                <select formControlName="tecnologia" class="form-select">
                         <option *ngFor="let tecnologia of listaTecnologia"
                                 [value]="tecnologia.iD_Tecnologia">
                         {{tecnologia.descripcion}}
                         </option>
                     </select>
-                </div>
+                            </div>
 
-                <!-- --------------- DropDown Garantia --------------- -->
-                <div class="col-md-4">
-                    <!-- <div class="form-check">
+                            <!-- --------------- DropDown Garantia --------------- -->
+                            <div class="col-md-4">
+                                <!-- <div class="form-check">
                         <label >
                             <input  class="form-check-input"
                                     type="checkbox"
@@ -137,19 +98,19 @@
                                     Garantia
                         </label>
                     </div> -->
-                    <label  class="form-label">Garantia</label>
+                                <label class="form-label">Garantia</label>
 
-                        <select formControlName="garantia" class="form-select">
+                                <select formControlName="garantia" class="form-select">
                             <option *ngFor="let garantia of listaGarantia"
                                     [value]="garantia.iD_Garantia">
                             {{garantia.descripcion}}
                             </option>
                         </select>
-                </div>
-                <!-- --------------- DropDown Desbloqueado --------------- -->
+                            </div>
+                            <!-- --------------- DropDown Desbloqueado --------------- -->
 
-                <div class="col-md-4">
-                    <!-- <div class="form-check">
+                            <div class="col-md-4">
+                                <!-- <div class="form-check">
                         <label >
                             <input  class="form-check-input"
                                     type="checkbox"
@@ -157,73 +118,63 @@
                                     Desbloqueado
                         </label>
                     </div> -->
-                    <label  class="form-label">Desbloqueado</label>
+                                <label class="form-label">Desbloqueado</label>
 
-                    <select formControlName="idEstadoBloqueo" class="form-select">
+                                <select formControlName="idEstadoBloqueo" class="form-select">
                         <option *ngFor="let desbloqueo of listaDesbloqueo"
                         [value]="desbloqueo.iD_Bloqueo">
                         {{desbloqueo.descripcion}}
                         </option>
                     </select>
-                </div>
-                 
-                     <!-- --------------- Almacen  --------------- -->
-                <div class="col-md-4">
-                    <label  class="form-label">Almacen</label>
-                        <select formControlName="almacen"
-                                class="form-select"
-                                required>
+                            </div>
+
+                            <!-- --------------- Almacen  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Almacen</label>
+                                <select formControlName="almacen" class="form-select" required>
                             <option *ngFor="let almacen of listaAlmacen"
                             [value]="almacen.iD_Almacen">
                             {{almacen.descripcion}}
                             </option>
                         </select>
-                </div>
-                <!-- --------------- Marca  --------------- -->
-                <div class="col-md-5">
-                    <label  class="form-label">Marca</label>
-                        <ng-select  formControlName="marca"
-                                    (change)="selectoresMarcaModeloValidator()"
-                                    required >
-                            <ng-option *ngFor="let marca of listaMarca" 
-                                        [value]="marca.iD_Marca">
+                            </div>
+                            <!-- --------------- Marca  --------------- -->
+                            <div class="col-md-5">
+                                <label class="form-label">Marca</label>
+                                <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required>
+                                    <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
                                         {{marca.descripcion}}
                                     </ng-option>
-                            
-                        </ng-select>
-                        <div class="validatorField"  *ngIf="validarCampos('marca')">
-                            Este campo es requerido.
-                          </div>
-                </div>
-                  <!-- --------------- Modelo  --------------- -->
 
-                <div class="col-md-7" >
-                    <label  class="form-label">Modelo</label>
-                    <ng-select formControlName="modelo">
-                        <ng-option *ngFor="let modelo of listaModelo" 
-                                    [value]="modelo.iD_Modelo">
-                                    {{modelo.descripcion}}
-                         </ng-option>
-                    </ng-select>
-                </div>
-                   <!-- --------------- DropDown Suplidor --------------- -->
-                <div class="col-md-5">
-                    <label  class="form-label">Suplidor</label>
-                    <select class="js-example-basic-single"
-                            formControlName="suplidor" 
-                            class="form-select"
-                            required
-                            id="js-example-basic-single">
+                                </ng-select>
+                                <div class="validatorField" *ngIf="validarCampos('marca')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                            <!-- --------------- Modelo  --------------- -->
+
+                            <div class="col-md-7">
+                                <label class="form-label">Modelo</label>
+                                <ng-select formControlName="modelo">
+                                    <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
+                                        {{modelo.descripcion}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                            <!-- --------------- DropDown Suplidor --------------- -->
+                            <div class="col-md-5">
+                                <label class="form-label">Suplidor</label>
+                                <select class="js-example-basic-single" formControlName="suplidor" class="form-select" required id="js-example-basic-single">
                         <option *ngFor="let suplidor of listaSuplidor"
                                 [value]="suplidor.iD_Suplidor">
                         {{suplidor.descripcion}}
                         </option>
                     </select>
-                    <div class="validatorField"  *ngIf="validarCampos('suplidor')">
-                        Este campo es requerido.
-                      </div>
-                </div>
-                <!-- <div class="col-md-4">
+                                <div class="validatorField" *ngIf="validarCampos('suplidor')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-4">
                     <label class="form-label"></label>
                     <div class="form-check">
                         <label >
@@ -234,67 +185,61 @@
                         </label>
                     </div>
                 </div> -->
-                
-                <div class="col-md-7">
-                    <label class="form-label"></label>
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" placeholder="Leave a comment here"
-                                        formControlName="notaAdicional"
-                                        style="height: 100px;">
+
+                            <div class="col-md-7">
+                                <label class="form-label"></label>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" placeholder="Leave a comment here" formControlName="notaAdicional" style="height: 100px;">
                             </textarea>
-                            <label for="floatingTextarea">Nota adicional</label>
+                                    <label for="floatingTextarea">Nota adicional</label>
+                                </div>
                             </div>
+                            <div class="text-end">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
+                            </div>
+                        </form>
+                        <!-- End  Form -->
+                    </div>
                 </div>
-                <div class="text-end" >
-                  <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
-                </div>
-              </form>
-              <!-- End  Form -->
             </div>
-        </div>
-    </div>
-    <!-- Tabla equipos agregados -->
-    <div class="col-lg-5">
-        <div class="card">
-            <div class="card-body">
-              <h5 class="card-title" >Equipo agregados</h5>
-                <div >
-                    <table class="table table-Secondary">
-                        <thead>
-                            <tr>
-                                <th>Cod.</th>
-                                <th>IMEI</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
-                                <td>{{i + 1}}</td>
-                                <td>{{equipo.imei}}</td>
-                                <td>{{equipo?.marca}}</td>
-                                <td>{{equipo?.modelo}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- <select class="js-example-basic-multiple" name="states[]" >
+            <!-- Tabla equipos agregados -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Equipo agregados</h5>
+                        <div>
+                            <table class="table table-Secondary">
+                                <thead>
+                                    <tr>
+                                        <th>Cod.</th>
+                                        <th>IMEI</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
+                                        <td>{{i + 1}}</td>
+                                        <td>{{equipo.imei}}</td>
+                                        <td>{{equipo?.marca}}</td>
+                                        <td>{{equipo?.modelo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- <select class="js-example-basic-multiple" name="states[]" >
                     <option value="AL">Alabama</option>
                       ...
                     <option value="WY">Wyoming</option>
                   </select> -->
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-</section>
+    </section>
 </main>
 <script>
-           $(document).ready(function() {
-                            $('.js-example-basic-single').select2();
-                        });
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
 </script>
-
-     
-
-
