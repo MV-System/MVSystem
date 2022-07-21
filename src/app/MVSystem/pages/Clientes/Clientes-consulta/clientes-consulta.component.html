@@ -1,0 +1,72 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Consulta Clientes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Consulta</li>
+                <li class="breadcrumb-item active">Consulta clientes</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+    <section class="section" >
+        <div class="row" >
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                    <!-- <h5 class="card-title" >Clientes</h5> -->
+                    <div class="search-bar mt-3">
+
+                        <form [formGroup]="formBusqueda" (ngSubmit)="obtenerClientesPorNombreTelefono()" role="search">
+                            <input type="search" placeholder="Enter para buscar todos o por nombre o telefono " autofocus required formControlName="criterio" />
+                            <button type="submit">Buscar</button>    
+                        </form>
+
+                        <section class="section mt-4">
+                        <div class="row">
+                          <div class="col-lg-12">
+                  
+                            <div class="card">
+                              <div class="card-body">
+                                <h5 class="card-title">Clientes</h5>
+                  
+                                <!-- Table with stripped rows -->
+                                <table class="table datatable">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col">Nombre</th>
+                                      <th scope="col">Apellido</th>
+                                      <th scope="col">Telefono</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let cliente of listaClientes | paginate: { itemsPerPage: 10, currentPage: page }">
+                                      <th scope="row">{{cliente.id_Cliente}}</th>
+                                      <td>{{cliente.nombres | titlecase}}</td>
+                                      <td>{{cliente.apellidos | titlecase}}</td>
+                                      <td>{{cliente.numero_Telefono}}</td>
+                                    </tr>
+                                    
+                                  </tbody>
+                                </table>
+                                <pagination-controls (pageChange)="pageChanged($event)" *ngIf="listaClientes.length > 10"></pagination-controls>
+                                <!-- End Table with stripped rows -->
+                  
+                              </div>
+                            </div>
+                  
+                          </div>
+                        </div>
+                      </section>
+                      </div>
+                      <!-- End Search Bar -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- End #main -->

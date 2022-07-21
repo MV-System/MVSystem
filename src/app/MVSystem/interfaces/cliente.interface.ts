@@ -6,11 +6,11 @@ export interface ClienteRegistro {
   limite_Credito: string;
   numero_Telefono: number;
   iD_Tipo_Telefono: number;
-  extencion: null;
+  extencion: number;
   email_Detalle: string;
   direccion_Detalle: string;
-  criterio?: null;
-  usuario: null;
+  criterio?: string;
+  usuario: string;
   provincia?: string;
   sector?: string;
   calle?: string;

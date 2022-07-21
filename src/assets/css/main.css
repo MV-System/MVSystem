@@ -2,6 +2,7 @@
   --mvSystemGreen: rgba(13, 150, 127, 0.218);
   --mvSystemText: rgba(38, 140, 94, 0.856);
 }
+
 .card-title .textMv {
   color: var(--mvSystemText);
   font-weight: 800;

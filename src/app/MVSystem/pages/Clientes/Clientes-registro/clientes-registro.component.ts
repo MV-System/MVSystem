@@ -83,7 +83,7 @@ export class ClientesRegistroComponent implements OnInit {
     extensionNumero: [,Validators.required] ,
     email:        ['',[Validators.pattern(this.emailPattern)]],
     // criterio:     [''],
-    usuario:      [''],
+    usuario:      ['',],
     provincia:  [''],
     sector:     [''],
     calle:      [''],
@@ -103,12 +103,15 @@ export class ClientesRegistroComponent implements OnInit {
         nombres:        this.formRegistro.get('nombre')?.value,
         apellidos:      this.formRegistro.get('apellido')?.value,
         iD_Tipo_Cliente:  Number(this.formRegistro.get('tipoCliente')?.value),
-        limite_Credito:   this.formRegistro.get('limiteCredito')?.value,
+        limite_Credito: ( this.formRegistro.get('limiteCredito')?.value == null) ?
+                          this.formRegistro.get('limiteCredito')?.setValue(0)    :
+                          this.formRegistro.get('limiteCredito')?.value,
         numero_Telefono:  Number( this.formRegistro.get('telefono')?.value),
         iD_Tipo_Telefono: Number(  this.formRegistro.get('tipoTelefono')?.value),
         extencion:  this.formRegistro.get('extencion')?.value,
         email_Detalle:      this.formRegistro.get('email')?.value,
-        usuario:      this.formRegistro.get('usuario')?.value,
+        usuario:      "Jon Doe",
+        // usuario:      this.formRegistro.get('usuario')?.value,
         direccion_Detalle:     direccion.toString(),
     }
       return registro;
@@ -183,6 +186,8 @@ export class ClientesRegistroComponent implements OnInit {
   registroCliente(){
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
+    console.log(model);
+    
     if (this.formRegistro.valid) {
       
         this.clientesService.postCliente(model)
@@ -194,7 +199,8 @@ export class ClientesRegistroComponent implements OnInit {
           {closeButton: true,progressBar:true});
 				}
 				else{
-
+            console.log(clienteInsertado.mensaje);
+            
 					this.toastr.success(clienteInsertado.mensaje, '',
           {closeButton: true,progressBar:true});
           // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
