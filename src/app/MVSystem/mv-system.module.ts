@@ -12,7 +12,6 @@ import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
 import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-registro/facturacion-registro.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
-import { ModelosRegistrosComponent } from './pages/Modelos/modelos-registros/modelos-registros.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 
@@ -21,8 +20,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
-    HomeComponent,
-    ModelosRegistrosComponent
+    HomeComponent
   ],
   imports: [
     CommonModule,
