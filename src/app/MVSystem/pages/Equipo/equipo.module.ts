@@ -6,6 +6,7 @@ import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.compo
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -18,7 +19,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 };
 @NgModule({
   declarations: [
-    EquipoRegistroComponent
+    EquipoRegistroComponent,
+    EquipoConsultaComponent
   ],
   imports: [
     CommonModule,
