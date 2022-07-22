@@ -59,7 +59,7 @@ export interface FacturaRegistro{
     total: number;
     abono: number;
     descuento: number;
-    
+
     cantidadArticulos: number;
     detalleFacturaList: DetalleFacturaList[];
 }
@@ -115,4 +115,9 @@ export interface EquipoObjRetorno {
     precioDetalle:      number;
     disponible_Detalle: null;
     mensaje:            string;
+}
+
+export interface MarcaObjRetorno{
+  Cod:                  number;
+  Marca:                string;
 }
