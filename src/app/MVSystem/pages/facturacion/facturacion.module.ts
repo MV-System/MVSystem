@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FacturacionRoutingModule } from './facturacion-routing.module';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { FacturacionRegistroComponent } from './facturacion-registro/facturacion-registro.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -27,7 +27,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CurrencyMaskModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
-    NgSelectModule
+    NgSelectModule,
+    FormsModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
