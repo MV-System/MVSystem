@@ -302,6 +302,9 @@
                                     <hr>
                                     <div class="col-md-12">
 
+                                        <button type="button" class="btn btn-success">
+                                            Agregar Artículo
+                                        </button>
 
                                         <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="articulos.length">
                                             <thead>
@@ -323,7 +326,9 @@
                                                             <td class="col-md-12">
 
                                                                 <ng-select formControlName="articulo" id="articulo"
-                                                                    (change)="obtenerDetalleFactura(i)" required>
+                                                                    (keydown.enter)="cantidadInput.focus()"
+                                                                    (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
+                                                                    required>
                                                                     <ng-option *ngFor="let articulo of listaAccesorio"
                                                                         [value]="articulo.id +'/'+ 
                                                                                         articulo.accesorio_Descripcion +'/'+ 
@@ -342,7 +347,8 @@
                                                             <td class="col-md-1">
                                                                 <input type="number" required class="form-control"
                                                                     placeholder="Cantidad" formControlName="cantidad"
-                                                                    (keyup.enter)="agregarArticulo() "
+                                                                    (keydown.enter)="descuentoInput.focus()"
+                                                                    #cantidadInput
                                                                     (change)="obtenerCantidadArticuloStock(i)"
                                                                     [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}">
                                                                 <!-- <input formControlName="cantidad" /> -->
@@ -355,7 +361,7 @@
                                                             </td>
                                                             <td class="col-md-1">
                                                                 <input formControlName="descuento" type="number"
-                                                                    (keyup.enter)="agregarArticulo() "
+                                                                    #descuentoInput (keydown.enter)="agregarArticulo()"
                                                                     (change)="obtenerCantidadArticuloStock(i)" />
                                                             </td>
 
