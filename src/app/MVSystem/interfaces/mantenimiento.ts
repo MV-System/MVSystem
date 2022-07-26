@@ -118,6 +118,7 @@ export interface EquipoObjRetorno {
 }
 
 export interface MarcaObjRetorno{
-  Cod:                  number;
-  Marca:                string;
+  iD_Marca:             number;
+  descripcion:          string;
+  mensaje:              string;
 }

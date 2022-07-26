@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import {MarcaObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
+import { MarcaService } from 'src/app/MVSystem/services/marca.service';
+
 
 @Component({
   selector: 'app-marcas-registro',
@@ -23,6 +25,7 @@ export class MarcasRegistroComponent implements OnInit {
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
     private toastr: ToastrService,
+    private MarcaService: MarcaService,
   ) { }
 
   ngOnInit(): void {
@@ -79,21 +82,20 @@ export class MarcasRegistroComponent implements OnInit {
   registroMarca(){
 
     const model: MarcaEquipo = this.modeloRegistroMarca();
-    console.log(model);
 
     if (this.formRegistro.valid) {
 
-        this.clientesService.postMarca(model)
-            .subscribe((clienteInsertado: MarcaEquipo) =>{
+        this.MarcaService.postMarca(model)
+            .subscribe((MarcaInsertada: MarcaObjRetorno) =>{
 
-				if (clienteInsertado.mensaje.includes('ya está')) {
-          this.toastr.error(clienteInsertado.mensaje, '',
+				if (MarcaInsertada.mensaje.includes('ya está')) {
+          this.toastr.error(MarcaInsertada.mensaje, '',
           {closeButton: true,progressBar:true});
 				}
 				else{
-            console.log(clienteInsertado.mensaje);
+            console.log(MarcaInsertada.mensaje);
 
-					this.toastr.success(clienteInsertado.mensaje, '',
+					this.toastr.success(MarcaInsertada.mensaje, '',
           {closeButton: true,progressBar:true});
           // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
 

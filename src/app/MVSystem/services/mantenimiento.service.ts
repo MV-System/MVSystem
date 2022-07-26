@@ -24,9 +24,7 @@ export class MantenimientoService{
   postFactura(factura : FacturaRegistro):Observable<any>{
     return this.http.post<any>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
-  postMarca(marca : MarcaEquipo):Observable<MarcaObjRetorno[]>{
-    return this.http.post<MarcaObjRetorno[]>(APIURL.Marca.Inserta.MarcaInserta, marca);
-  }
+
   //Get's
 
   getEquipoNumeroRegistro():Observable<EquipoNumeroRegistro[]>{

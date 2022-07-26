@@ -6,7 +6,7 @@ export interface TipoTelefono {
 export interface MarcaEquipo {
   iD_Marca:    number;
   descripcion: string;
-  mensaje: string;
+  mensaje?: string;
 }
 
 export interface Almacen {
