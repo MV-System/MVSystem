@@ -333,6 +333,10 @@ export class FacturacionRegistroComponent implements OnInit {
 
   borrarArticulo(index: number) {
     this.articulos.removeAt(index)
+
+    if (this.articulos.length === 0)
+      this.agregarArticulo()
+
     this.refreshGeneralValues();
   }
 
@@ -425,6 +429,16 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos.controls[index].value
     const subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+
+    if (!currentArticulo.articulo) {
+      this.articulos.controls[index].patchValue({
+        descuento: 0,
+        cantidad: 1,
+      })
+
+      return
+    }
+
 
     let cantidadStockAccesorio = currentArticulo.articulo.split('/')[5];
     let cantidadElegida = currentArticulo.cantidad;
