@@ -1,90 +1,3 @@
-<!-- modal agregar accesorio -->
-
-<div class="card">
-    <div class="card-body">
-      <!-- Basic Modal -->
-      <div class="modal fade" id="agregarArticuloModal" tabindex="-1">
-        <div class="modal-dialog modal-lg ">
-          <div class="modal-content ">
-            <div class="modal-header">
-              <h5 class="modal-title">Registro Artículo</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row" >
-                    <div class="col-lg-12">
-                        <div class="card-body">
-                            <form [formGroup]="formRegistroArticulo" >
-                                <div class="row">
-                                    <div class="col-md-2 mb-2">
-                                        <input type="text" 
-                                                class="form-control" 
-                                                formControlName="codigo"
-                                                placeholder="Código">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <button class="btn btn-dark">Buscar por código</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-10">
-                                    <label class="form-label">Lista artículos
-                                        <span class="required-field">*</span>
-                                    </label>
-                                    <ng-select formControlName="articulo" (change)="obtenerDetalleFactura()" required>
-                                        <ng-option *ngFor="let articulo of listaAccesorio" 
-                                                    [value]="articulo.id +'/'+ 
-                                                            articulo.accesorio_Descripcion +'/'+ 
-                                                            articulo.modelo +'/'+
-                                                            articulo.precio_Detalle +'/'+
-                                                            articulo.precio_Por_Mayor +'/'+
-                                                            articulo.cantidad" >
-                                                    {{articulo.accesorio_Descripcion  | titlecase}} | {{articulo.modelo | titlecase}} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor )| currency}}
-                                        </ng-option>
-                                    </ng-select>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="number" 
-                                                required 
-                                                class="form-control" 
-                                                placeholder="Cantidad"
-        
-                                                formControlName="cantidadElegida"
-                                                (keyup)="obtenerCantidadArticuloStock()"
-                                                [ngClass]="{'is-invalid':validarCamposArticulo('cantidadElegida')}">
-                                         
-                                    </div>
-                                    <div class="col-md-3">
-                                        Subtotal: <strong>{{ subTotal | currency }}</strong>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="number" 
-                                                class="form-control" 
-                                                placeholder="Descuento"
-                                                formControlName="descuento"
-                                                (keyup)="obtenerDescuentoArticulo()"
-                                                [ngClass]="{'is-invalid':validarInputArticulo()}">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
-              <button type="button" 
-                        class="btn btn-primary" 
-                        (click)="agregarNuevoArticuloAlArray()"
-                        [ngClass]="{'disabled':btnDisableArticulo()}">Guardar y seguir</button>
-            </div>
-          </div>
-        </div>
-      </div><!-- End Basic Modal-->
-    </div>
-  </div>
-  <!-- End modal -->
 <main id="main" class="main">
     <div class="pagetitle">
         <h1 id="registro">Facturación</h1>
@@ -98,23 +11,24 @@
     <!-- End Page Title -->
     <section class="section">
         <form [formGroup]="formRegistro" (ngSubmit)="registroFactura()">
-        <div class="row">
-            <!-- ??section datos del cliente -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
+            <div class="row">
+                <!-- ??section datos del cliente -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
 
 
-                        <!--  Form -->
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="card-title">DATOS DEL CLIENTE</h5>
+                            <!--  Form -->
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="card-title">DATOS DEL CLIENTE</h5>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5 class="card-title">ID Cliente: <i
+                                            class="textMv">{{formRegistro.controls.idCliente.value}}</i> </h5>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <h5 class="card-title">ID Cliente: <i class="textMv">{{formRegistro.controls.idCliente.value}}</i> </h5>
-                            </div>
-                        </div>
-                        <!-- <form [formGroup]="formCliente" (ngSubmit)="obtenerClientesPorNombreTelefono()" class="row g-3 needs-validation" novalidate> -->
+                            <!-- <form [formGroup]="formCliente" (ngSubmit)="obtenerClientesPorNombreTelefono()" class="row g-3 needs-validation" novalidate> -->
                             <!-- <div class="row">
 
                                 <div class="col-md-3">
@@ -137,193 +51,183 @@
                             <!-- --------------- Nombre Cliente --------------- -->
                             <div class="row">
 
-                            <div class="col-md-6">
-                                <label class="form-label">Nombre </label>
-                                <input type="text" 
-                                        class="form-control"  
-                                        formControlName="nombre" 
-                                        required 
-                                        readonly 
-                                        [ngClass]="{'is-invalid':validarCampos('nombre')}" >
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre </label>
+                                    <input type="text" class="form-control" formControlName="nombre" required readonly
+                                        [ngClass]="{'is-invalid':validarCampos('nombre')}">
 
-                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')">
+                                    <!-- <div class="validatorField" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
                                 </div> -->
-                            </div>
+                                </div>
 
-                            <!-- --------------- Apellido Cliente --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">Apellido</label>
-                                <input type="text" 
-                                        class="form-control"  
-                                        formControlName="apellido" 
-                                        required 
-                                        readonly
+                                <!-- --------------- Apellido Cliente --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" formControlName="apellido" required readonly
                                         [ngClass]="{'is-invalid':validarCampos('apellido')}">
-                                <!-- <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
+                                    <!-- <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('apellido')}">
                                     Este campo es requerido.
                                 </div> -->
-                            </div>
+                                </div>
 
 
-                            <!-- --------------- Telefono Cliente --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                     Teléfono:
-                                     <span class="required-field">*</span>
-                                </label>
-                                <input class="form-control"  
-                                        formControlName="telefono" 
-                                        type="text" 
-                                        required 
-                                        mask="000-000-0000"
-                                        [ngClass]="{'is-invalid':validarCampos('telefono')}"  />
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
-                                    Este campo es requerido.
+                                <!-- --------------- Telefono Cliente --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Teléfono:
+                                        <span class="required-field">*</span>
+                                    </label>
+                                    <input class="form-control" formControlName="telefono" type="text" required
+                                        mask="000-000-0000" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                    <div class="validatorField"
+                                        [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
+                                        Este campo es requerido.
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
 
                             <div class="text-end">
-                                <button *ngIf="loadingButtonBuscar == false"  class="btn btn-primary"
-                                        type="submit"
-                                        [ngClass]="{'disabled':btnDisableTelefono()}"
-
-                                        (click)="obtenerClientesPorNombreTelefono()">Buscar
+                                <button *ngIf="loadingButtonBuscar == false" class="btn btn-primary" type="submit"
+                                    [ngClass]="{'disabled':btnDisableTelefono()}"
+                                    (click)="obtenerClientesPorNombreTelefono()">Buscar
                                 </button>
 
-                                <button *ngIf="loadingButtonBuscar ===true" class="btn btn-primary" type="button" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <button *ngIf="loadingButtonBuscar ===true" class="btn btn-primary" type="button"
+                                    disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
                                 </button>
                             </div>
-                        <!-- </form> -->
-                        <!-- End  Form -->
+                            <!-- </form> -->
+                            <!-- End  Form -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- ??section datos de factura -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h5 class="card-title">DATOS DE FACTURA</h5>
-                            </div>
-                            <!-- <div class="col-md-3">
+                <!-- ??section datos de factura -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h5 class="card-title">DATOS DE FACTURA</h5>
+                                </div>
+                                <!-- <div class="col-md-3">
                                 <h5 class="card-title">No. factura: </h5>
                             </div> -->
-                        </div>
-
-                        <!--  Form -->
-                        <form [formGroup]="formRegistro" class="row g-3 needs-validation" novalidate>
-
-                            <!-- --------------- Vendedores --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">Vendedor <span class="required-field">*</span></label>
-                                <select formControlName="vendedor" required class="form-select">
-                        <option *ngFor="let vendedor of listaVendedor"
-                                [value]="vendedor.iD_Vendedor">
-                        {{vendedor.nombres}}
-                        </option>
-                    </select>
-                                <div class="validatorField" *ngIf="validarCampos('vendedor')">
-                                    Este campo es requerido.
-                                </div>
                             </div>
 
-                            <!-- --------------- Tipo factura --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">Tipo Factura</label>
-                                <select formControlName="tipoFactura" 
-                                        class="form-select">
-                                 <option *ngFor="let TipoFactura of listaTipoFactura"
-                                   [value]="TipoFactura.iD_Tipo_Factura">
-                                     {{TipoFactura.descripcion_Factura_Tipo}}
-                                </option>
-                              </select>
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('tipoFactura')}">
-                                    Este campo es requerido.
+                            <!--  Form -->
+                            <form [formGroup]="formRegistro" class="row g-3 needs-validation" novalidate>
+
+                                <!-- --------------- Vendedores --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Vendedor <span class="required-field">*</span></label>
+                                    <select formControlName="vendedor" required class="form-select">
+                                        <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.iD_Vendedor">
+                                            {{vendedor.nombres}}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('vendedor')">
+                                        Este campo es requerido.
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- --------------- Fecha de facturacion --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    Fecha de facturacion:
-                                </label>
-                                <input class="form-control" required formControlName="fechaFacturacion" type="date" 
-                                (change)="obtenerFechaFacturacion()"/>
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('fechaFacturacion')}">
-                                    Este campo es requerido.
+
+                                <!-- --------------- Tipo factura --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo Factura</label>
+                                    <select formControlName="tipoFactura" class="form-select">
+                                        <option *ngFor="let TipoFactura of listaTipoFactura"
+                                            [value]="TipoFactura.iD_Tipo_Factura">
+                                            {{TipoFactura.descripcion_Factura_Tipo}}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField"
+                                        [ngClass]="{'invalid-feedback':!validarCampos('tipoFactura')}">
+                                        Este campo es requerido.
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- --------------- Fecha limite de pago --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    Fecha limite de pago:
-                                </label>
-                                <input class="form-control"  formControlName="fechaLimitePago" type="date" />
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('fechaLimitePago')}">
-                                    Este campo es requerido.
+                                <!-- --------------- Fecha de facturacion --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Fecha de facturacion:
+                                    </label>
+                                    <input class="form-control" required formControlName="fechaFacturacion"
+                                        type="date" />
+                                    <div class="validatorField"
+                                        [ngClass]="{'invalid-feedback':!validarCampos('fechaFacturacion')}">
+                                        Este campo es requerido.
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- --------------- Tipo de pago --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                     Tipo de pago:
-                                </label>
-                                <select formControlName="tipoPago" 
-                                        class="form-select"
+                                <!-- --------------- Fecha limite de pago --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Fecha limite de pago:
+                                    </label>
+                                    <input class="form-control" formControlName="fechaLimitePago" type="date" />
+                                    <div class="validatorField"
+                                        [ngClass]="{'invalid-feedback':!validarCampos('fechaLimitePago')}">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                                <!-- --------------- Tipo de pago --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Tipo de pago:
+                                    </label>
+                                    <select formControlName="tipoPago" class="form-select"
                                         (change)="desactivarActivarFechaLimitepago()">
-                                    <option *ngFor="let TipoPago of listaPagoFactura"
+                                        <option *ngFor="let TipoPago of listaPagoFactura"
                                             [value]="TipoPago.iD_Tipo_Pagos">
-                                    {{TipoPago.descripcion_Tipo_Pagos}}
-                                    </option>
-                                </select>
-                                <div class="validatorField" [ngClass]="{'invalid-feedback':!validarCampos('tipoPago')}">
-                                    Este campo es requerido.
+                                            {{TipoPago.descripcion_Tipo_Pagos}}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField"
+                                        [ngClass]="{'invalid-feedback':!validarCampos('tipoPago')}">
+                                        Este campo es requerido.
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- --------------- Garantia de pago --------------- -->
+                                <!-- --------------- Garantia de pago --------------- -->
 
-                            <div class="col-md-5">
+                                <div class="col-md-5">
 
-                                <!-- <div class="form-check">
+                                    <!-- <div class="form-check">
                                     <label class="form-label">
                                         Aplicar garantia
                                         <input class="form-check-input" type="checkbox"  (change)="onCheckboxChange($event,'garantia')">
                                      </label>
                                  </div> -->
-                                 <label class="form-label">
-                                    Garantia
-                                 </label>
-                                 <select formControlName="garantia" class="form-select">
-                                    <option *ngFor="let garantia of listaGarantia"
-                                            [value]="garantia.iD_Garantia">
-                                    {{garantia.descripcion}}
-                                    </option>
-                                </select>
-                            </div>
-                        </form>
-                        <!-- End  Form -->
+                                    <label class="form-label">
+                                        Garantia
+                                    </label>
+                                    <select formControlName="garantia" class="form-select">
+                                        <option *ngFor="let garantia of listaGarantia" [value]="garantia.iD_Garantia">
+                                            {{garantia.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
+                            <!-- End  Form -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- ??section detalle de la factura -->
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h5 class="card-title">DETALLE DE LA FACTURA</h5>
-                                <!--  Form -->
+                <!-- ??section detalle de la factura -->
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h5 class="card-title">DETALLE DE LA FACTURA</h5>
+                                    <!--  Form -->
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     Aplicar ITBIS
-                                                    <input class="form-check-input"
-                                                            type="checkbox">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        formControlName="aplicarItbis"
+                                                        (change)="refreshGeneralValues()">
                                                 </label>
                                             </div>
                                         </div>
@@ -343,32 +247,33 @@
                                             </label>
                                         </div>
                                         <div class="col-md-4">
-                                            
-                                            <select formControlName="comprobante" class="form-select" (change)="onCheckboxChangeFactura('comprobante' )">
+
+                                            <select formControlName="comprobante" class="form-select"
+                                                (change)="onCheckboxChangeFactura('comprobante' )">
                                                 <option *ngFor="let tipoComprobante of listaTipoComprobante;"
-                                                        [value]="tipoComprobante.nfcTipoNumero">
-                                                {{tipoComprobante.nfcTipoDescripcion}}
+                                                    [value]="tipoComprobante.nfcTipoNumero">
+                                                    {{tipoComprobante.nfcTipoDescripcion}}
                                                 </option>
                                             </select>
                                         </div>
                                     </div>
-                            <div class="row">
-                                <!-- --------------- RNC --------------- -->
-                                <div class="col-md-3">
-                                    <label class="form-label">RNC</label>
-                                    <input type="text" class="form-control" formControlName="RNC">
-                                </div>
+                                    <div class="row">
+                                        <!-- --------------- RNC --------------- -->
+                                        <div class="col-md-3">
+                                            <label class="form-label">RNC</label>
+                                            <input type="text" class="form-control" formControlName="RNC">
+                                        </div>
 
-                                <!-- --------------- Empresa --------------- -->
-                                <div class="col-md-9">
-                                    <label class="form-label">Empresa</label>
-                                    <input type="text" class="form-control" formControlName="empresa">
-                                </div>
+                                        <!-- --------------- Empresa --------------- -->
+                                        <div class="col-md-9">
+                                            <label class="form-label">Empresa</label>
+                                            <input type="text" class="form-control" formControlName="empresa">
+                                        </div>
 
-                            </div>
+                                    </div>
 
-                        <!-- --------------- Nota de credito --------------- -->
-                        <!-- <div class="col-md-2">
+                                    <!-- --------------- Nota de credito --------------- -->
+                                    <!-- <div class="col-md-2">
                             <div class="form-check">
                                 <label class="form-label">
                                     Nota de credito
@@ -378,8 +283,8 @@
                             <input type="text" class="form-control" formControlName="monto">
                         </div> -->
 
-                        <!-- --------------- Monto --------------- -->
-                        <!-- <div class="col-md-2">
+                                    <!-- --------------- Monto --------------- -->
+                                    <!-- <div class="col-md-2">
                             <label class="form-label">Monto</label>
                             <input type="text"
                                     class="form-control"
@@ -387,102 +292,134 @@
                                     formControlName="monto"
                                     currencyMask>
                         </div> -->
-                            <!-- --------------- Nota --------------- -->
-                            <!-- <div class="col-md-6">
+                                    <!-- --------------- Nota --------------- -->
+                                    <!-- <div class="col-md-6">
                                 <label class="form-label">Nota</label>
                                 <textarea type="text"
                                             class="form-control">
                                 </textarea>
                             </div> -->
-                            <hr>
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarArticuloModal">
-                                Agregar Artículo
-                              </button>
-                                <div class="col-md-12" >
-                                    
-                                    
-                                    <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="detalleFacturaRegistro.length">
-                                        <thead >
-                                            <tr>
-                                                <th>Código</th>
-                                                <th>Descripción</th>
-                                                <th>Cant.</th>
-                                                <th>Precio</th>
-                                                <th>Subtotal</th>
-                                                <th>Descuento</th>
-                                                <th>Total</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let detalleFactura of detalleFacturaRegistro; let i = index" >
-                                                <td class="col-md-2">
-                                                    {{detalleFactura.idEquipo}}
-                                                </td>
-                                                <td class="col-md-4">
-                                                       {{detalleFactura.descripcion  | titlecase}} 
-                                                </td>
-                                                <td class="col-md-1">
-                                                 {{detalleFactura.cantidad}}
-                                                </td>
-                                                <td >{{ detalleFactura.precio }}</td>
-                                                <td >{{ detalleFactura.subTotal }}</td>
-                                                <td class="col-md-1">
-                                                    {{detalleFactura.descuento}}
-                                                </td>
-                                       
-                                                <td>{{detalleFactura.total}}</td>
-                                                <td><h2 *ngIf="detalleFacturaRegistro.length !==1"><i class="bi bi-trash" (click)="borrarArticulo(i)" style="color: rgb(205, 65, 65);cursor: pointer;"></i></h2></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                 
+                                    <hr>
+                                    <div class="col-md-12">
+
+
+                                        <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="articulos.length">
+                                            <thead>
+                                                <tr>
+                                                    <th>Descripción</th>
+                                                    <th>Cant.</th>
+                                                    <th>Precio</th>
+                                                    <th>Subtotal</th>
+                                                    <th>Descuento</th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container formArrayName="articulos">
+                                                    <tr
+                                                        *ngFor="let detalleFactura of articulos.controls; let i = index">
+                                                        <ng-container [formGroupName]="i">
+                                                            <td class="col-md-12">
+
+                                                                <ng-select formControlName="articulo" id="articulo"
+                                                                    (change)="obtenerDetalleFactura(i)" required>
+                                                                    <ng-option *ngFor="let articulo of listaAccesorio"
+                                                                        [value]="articulo.id +'/'+ 
+                                                                                        articulo.accesorio_Descripcion +'/'+ 
+                                                                                        articulo.modelo +'/'+
+                                                                                        articulo.precio_Detalle +'/'+
+                                                                                        articulo.precio_Por_Mayor +'/'+
+                                                                                        articulo.cantidad">
+                                                                        {{articulo.accesorio_Descripcion | titlecase}} |
+                                                                        {{articulo.modelo | titlecase}} | {{
+                                                                        calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor
+                                                                        )| currency}}
+                                                                    </ng-option>
+                                                                </ng-select>
+                                                            </td>
+
+                                                            <td class="col-md-1">
+                                                                <input type="number" required class="form-control"
+                                                                    placeholder="Cantidad" formControlName="cantidad"
+                                                                    (keyup.enter)="agregarArticulo() "
+                                                                    (change)="obtenerCantidadArticuloStock(i)"
+                                                                    [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}">
+                                                                <!-- <input formControlName="cantidad" /> -->
+                                                            </td>
+                                                            <td>
+                                                                {{detalleFactura.value.precio}}
+                                                            </td>
+                                                            <td>
+                                                                {{detalleFactura.value.subTotal}}
+                                                            </td>
+                                                            <td class="col-md-1">
+                                                                <input formControlName="descuento" type="number"
+                                                                    (keyup.enter)="agregarArticulo() "
+                                                                    (change)="obtenerCantidadArticuloStock(i)" />
+                                                            </td>
+
+                                                            <td>
+                                                                {{detalleFactura.value.total}}
+                                                            </td>
+                                                            <td>
+                                                                <i class="bi bi-trash" (click)="borrarArticulo(i)"
+                                                                    style="color: rgb(205, 65, 65);cursor: pointer;"></i>
+
+                                                            </td>
+                                                        </ng-container>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+
                                         <hr>
                                         <div class="row">
 
-                                            <p class="col-md-8">Total artículos: {{detalleFacturaRegistro.length }}</p>
-                                            <div class="col-md-4 text-end" *ngIf="detalleFacturaRegistro.length">
+                                            <p class="col-md-8">Total artículos: {{articulos.length }}
+                                            </p>
+                                            <div class="col-md-4 text-end" *ngIf="articulos.length">
                                                 <div class="box-pay">
-                                                   <div class="row">
-                                                       <p class="col-md-7">Subtotal:</p>
-                                                       <p class="col-md-3">0</p>
-                                                       <p class="col-md-7">Descuento:</p>
-                                                       <p class="col-md-3">0</p>
-                                                       <p class="col-md-7">ITBIS:</p>
-                                                       <p class="col-md-3">0</p>
-                                                       <p class="col-md-7">Total:</p>
-                                                       <p class="col-md-3">0</p>
-                                                       <p class="col-md-7">Abono:</p>
-                                                       <p class="col-md-3">0</p>
-                                                   </div>
+                                                    <div class="row">
+                                                        <p class="col-md-7">Subtotal:</p>
+                                                        <p class="col-md-3">{{subTotal}}</p>
+                                                        <p class="col-md-7">Descuento:</p>
+                                                        <p class="col-md-3">{{descuento}}</p>
+                                                        <p class="col-md-7">ITBIS:</p>
+                                                        <p class="col-md-3">{{itbis}}</p>
+                                                        <p class="col-md-7">Total:</p>
+                                                        <p class="col-md-3">{{total}}</p>
+                                                        <p class="col-md-7">Abono:</p>
+                                                        <p class="col-md-3">{{abono}}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                <div>
-                                    <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid">
-                                        <i class="bi bi-printer"></i>
-                                        Imprimir
-                                    </button>
+                                    <div>
+                                        <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid">
+                                            <i class="bi bi-printer"></i>
+                                            Imprimir
+                                        </button>
+                                    </div>
+                                    <!-- </form> -->
+                                    <!-- End  Form -->
                                 </div>
-                                <!-- </form> -->
-                                <!-- End  Form -->
-                            </div>
-                            <!-- End detalle de la factura -->
+                                <!-- End detalle de la factura -->
 
-                            <div class="col-md-3">
-                                <h5 class="card-title text-center">Vista previa</h5>
-                                <div class="card">
-                                    <img src="assets/img/product-2.jpg" class="card-img-top" alt="...">
+                                <div class="col-md-3">
+                                    <h5 class="card-title text-center">Vista previa</h5>
+                                    <div class="card">
+                                        <!-- <img src="assets/img/product-2.jpg" class="card-img-top" alt="..."> -->
+                                    </div>
                                 </div>
+                                <!-- End vista previa -->
                             </div>
-                            <!-- End vista previa -->
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
     </section>
 
 </main>
