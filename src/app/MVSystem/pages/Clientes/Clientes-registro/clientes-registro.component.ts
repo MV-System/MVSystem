@@ -19,47 +19,14 @@ export class ClientesRegistroComponent implements OnInit {
         private clientesService: ClientesService,
         private catalogosService: CatalogosService,
         private toastr: ToastrService ) { }
-        
-        
+
+
     ngOnInit(): void {
-      // this.formRegistro.reset({
-      //   nombre:       'Xavier client',
-      //   apellido:     'Mejia',
-      //   tipoCliente:  [1],
-      //   tipoClienteDescripcion:  [""],
-      //   limiteCredito:"2500",
-      //   tipoTelefono: 1,
-      //   telefono:     8099728439,
-      //   extensionNumero: '' ,
-      //   email:        '',
-      //   // criterio:     [''],
-      //   usuario:      'Xmejia',
-      //   provincia:  'Santo Domingo',
-      //   sector:     'Buena Vista',
-      //   calle:      'Primera',
-      //   casaNumero: '#18',
-      // })
+
         this.formRegistro.controls.extensionNumero.disable();
         this.obtenerTipoTelefonos();
         this.obtenerTipoClientes();
         this.btnDisable();
-        // var needsValidation = document.querySelectorAll('.needs-validation')
-
-        // Array.prototype.slice.call(needsValidation)
-        //   .forEach((form) => {
-        //     form.addEventListener('submit', (event: { preventDefault: () => void; stopPropagation: () => void; }) => {
-        //       if (!form.checkValidity()) {
-        //         event.preventDefault()
-        //         event.stopPropagation()
-        //       }
-        //       if(this.formRegistro.valid){
-        //         form.classList.add('was-validated')
-
-        //       }
-      
-        //       form.classList.add('was-validated')
-        //     }, false)
-        //   })
     }
     //Properties
     nombreApellidoPattern: string = '([a-zA-ZÀ-ÿ]+)';
@@ -88,7 +55,6 @@ export class ClientesRegistroComponent implements OnInit {
     sector:     [''],
     calle:      [''],
     casaNumero: [''],
-    // extensionNumero: new FormControl({disabled: this.bool},Validators.required) ,
   });
 
   modeloRegistroCliente(){
@@ -126,12 +92,12 @@ export class ClientesRegistroComponent implements OnInit {
     if(event.target.checked == false) {
         this.formRegistro.controls.extensionNumero.disable();
         this.formRegistro.get('extensionNumero')?.setValue("");
-    } 
+    }
     else{
         this.formRegistro.controls.extensionNumero.enable();
       }
   }
- 
+
 /**
  * If the form control has an error, return the error message. Otherwise, return an empty string.
  * @returns The error message.
@@ -149,7 +115,7 @@ export class ClientesRegistroComponent implements OnInit {
  * @returns a boolean value.
  */
   validarCampos(nombreCampo: string) {
-    return this.formRegistro.get(nombreCampo)?.invalid && 
+    return this.formRegistro.get(nombreCampo)?.invalid &&
            this.formRegistro.get(nombreCampo)?.touched
   }
   validarCamposEmail(nombreCampo: string) {
@@ -187,20 +153,20 @@ export class ClientesRegistroComponent implements OnInit {
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
     console.log(model);
-    
+
     if (this.formRegistro.valid) {
-      
+
         this.clientesService.postCliente(model)
             .subscribe((clienteInsertado: Cliente) =>{
               this.clientesListar = clienteInsertado;
-        
+
 				if (clienteInsertado.mensaje.includes('ya está')) {
           this.toastr.error(clienteInsertado.mensaje, '',
           {closeButton: true,progressBar:true});
 				}
 				else{
             console.log(clienteInsertado.mensaje);
-            
+
 					this.toastr.success(clienteInsertado.mensaje, '',
           {closeButton: true,progressBar:true});
           // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
@@ -220,6 +186,6 @@ export class ClientesRegistroComponent implements OnInit {
     }
   }
 
-  
+
 
 }

@@ -25,11 +25,11 @@
                             <!-- --------------- Nombre de la marca --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre De la Marca <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="nombre" aria-describedby="inputGroupPrepend">
+                                <input type="text" class="form-control" formControlName="descripcion" aria-describedby="inputGroupPrepend">
                                 <div class="text-center ">
                                     <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
                                 </div>
-                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')"> -->
+                                <div class="validatorField" *ngIf="validarCampos('nombre')"></div>
                                 Este campo es requerido.
                             </div>
 
@@ -41,7 +41,7 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <h5 class="card-title">Equipo agregados</h5>
+                                <h5 class="card-title">Marcas agregadas</h5>
                                 <div>
                                     <table class="table table-Secondary">
                                         <thead>
@@ -54,7 +54,7 @@
                                             <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
                                                 <td>{{i + 1}}</td>
                                                 <td>{{Marca.iD_Marca}</td>
-                                                <td>{{Marca?.descripcion}}</td>
+                                                <td>{{Marca.descripcion}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
