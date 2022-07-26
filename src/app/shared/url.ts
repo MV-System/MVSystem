@@ -26,7 +26,7 @@ export let APIURL = {
         },
         Marca:{
           Inserta:{
-           MarcaInserta: API + 'Marca/Marca_Insert',
+           MarcaInserta: API + 'Marcas/Marca_Insert',
           },
     },
     Catalogos:{
