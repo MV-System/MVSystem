@@ -8,6 +8,7 @@ export interface MarcaEquipo {
   descripcion: string;
   usuario?: string;
   mensaje?: string;
+
 }
 
 export interface Almacen {

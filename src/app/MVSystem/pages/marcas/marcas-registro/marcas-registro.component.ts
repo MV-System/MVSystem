@@ -20,6 +20,7 @@ export class MarcasRegistroComponent implements OnInit {
   marcaListado: MarcaEquipo[] = [];
   marcaValorRetorno: MarcaObjRetorno[]=[];
   btnDisabled: boolean = true;
+  IdMarcaReg!: number;
 
   constructor(
     private catalogosService: CatalogosService,
@@ -40,7 +41,7 @@ export class MarcasRegistroComponent implements OnInit {
   }
 
   formRegistro: FormGroup = this.fb.group({
-    descripcion: [[Validators.required]]
+    descripcion: ['', Validators.required]
   });
 
   obtenerMarcasLista() {
@@ -49,31 +50,11 @@ export class MarcasRegistroComponent implements OnInit {
     });
   }
 
-  obtenerModeloLista() {
-    let idMarca = this.formRegistro.get('marca')?.value;
-    this.catalogosService.getModeloLista(idMarca).subscribe((modelo) => {
-      this.modeloListado = modelo;
-    });
-  }
-
-
-  // selectoresMarcaModeloValidator() {
-  //   this.formRegistro.get('modelo')?.setValue('');
-  //   if (this.formRegistro.get('marca')?.value) {
-  //     this.formRegistro.get('modelo')?.enable();
-  //     this.obtenerModeloLista();
-  //   }
-  //   else{
-  //     this.formRegistro.controls.modelo.disable();
-
-  //   }
-  // }
-
   modeloRegistroMarca(){
 
     const registro: MarcaEquipo = {
       descripcion:        this.formRegistro.get('descripcion')?.value,
-      usuario:            this.formRegistro.get('usuario')?.value,
+      usuario:     "Ventura"//       this.formRegistro.get('usuario')?.value,
 
     }
       return registro;
@@ -83,26 +64,16 @@ export class MarcasRegistroComponent implements OnInit {
     const model: MarcaEquipo = this.modeloRegistroMarca();
 
     if (this.formRegistro.valid) {
-
         this.MarcaService.postMarca(model)
             .subscribe((MarcaInsertada: MarcaObjRetorno) =>{
+             debugger;
+                this.marcaValorRetorno.push(MarcaInsertada);
 
-				if (MarcaInsertada.mensaje.includes('ya está')) {
-          this.toastr.error(MarcaInsertada.mensaje, '',
-          {closeButton: true,progressBar:true});
-				}
-				else{
-            console.log(MarcaInsertada.mensaje);
-
-					this.toastr.success(MarcaInsertada.mensaje, '',
-          {closeButton: true,progressBar:true});
-          // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
+              this.toastr.success(MarcaInsertada.mensaje, '',
+           {closeButton: true,progressBar:true});
 
           this.formRegistro.reset({
-              tipoCliente: 1,
-              tipoTelefono: 1
           });
-				}
 			});
     }
     else{

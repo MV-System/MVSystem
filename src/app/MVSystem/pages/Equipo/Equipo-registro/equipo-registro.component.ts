@@ -82,21 +82,18 @@ export class EquipoRegistroComponent implements OnInit {
 
   registroEquipos(){
     const model: Equipo =this.modeloRegistroEquipo();
-    console.log(model);
 
     this.validacionesRegistro()
-    if ( this.formRegistro.valid   ) {
-
-
+    if ( this.formRegistro.valid) {
         this.mantenimientoService.postEquipo(model)
             .subscribe((equipo) =>{
-
               equipo.forEach((equipoRegistrado) => {
 
                 this.equipoValorRetorno.forEach(({imei})=>{
                   this.imeiRegistrado =imei;
 
                 });
+
                 if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
                   this.toastr.error('El IMEI del Equipo debe ser diferente!');
 
@@ -271,6 +268,7 @@ export class EquipoRegistroComponent implements OnInit {
 
 
   obtenerGarantia(){
+
   this.catalogosService.getGarantiaLista()
                       .subscribe(garantia=>{
                         this.listaGarantia = garantia;
@@ -302,10 +300,13 @@ export class EquipoRegistroComponent implements OnInit {
                         })
   }
   obtenerMarcasLista() {
+
     this.catalogosService.getMarcasLista().subscribe((marca) => {
       this.listaMarca = marca;
     });
   }
+
+
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.listaAlmacen = almacen;

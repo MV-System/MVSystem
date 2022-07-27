@@ -19,20 +19,21 @@
                         <h5 class="card-title">Datos de la Marca</h5>
 
                         <!--  Form -->
-                        <form class="row g-3 needs-validation" novalidate>
-
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroMarca()" class="row g-3 needs-validation" novalidate>
 
                             <!-- --------------- Nombre de la marca --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre De la Marca <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="descripcion" aria-describedby="inputGroupPrepend">
-                                <div class="text-center ">
-                                    <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
-                                </div>
+                                <input type="text" class="form-control" required formControlName="descripcion" aria-describedby="inputGroupPrepend">
+
                                 <div class="validatorField" *ngIf="validarCampos('nombre')"></div>
                                 Este campo es requerido.
                             </div>
+                            <!-- --------------- Apellido Cliente --------------- -->
 
+                            <div class="text-center ">
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
                         </form>
                         <!-- End  Form -->
                     </div>
@@ -52,8 +53,8 @@
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
-                                                <td>{{i + 1}}</td>
-                                                <td>{{Marca.iD_Marca}</td>
+                                                <!-- <td>{{i + 1}}</td> -->
+                                                <td>{{Marca.ID_Marca}</td>
                                                 <td>{{Marca.descripcion}}</td>
                                             </tr>
                                         </tbody>

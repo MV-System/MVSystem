@@ -152,8 +152,7 @@ export class ClientesRegistroComponent implements OnInit {
   registroCliente(){
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
-    console.log(model);
-
+    debugger;
     if (this.formRegistro.valid) {
 
         this.clientesService.postCliente(model)
