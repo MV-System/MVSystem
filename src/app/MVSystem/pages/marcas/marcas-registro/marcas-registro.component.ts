@@ -66,8 +66,7 @@ export class MarcasRegistroComponent implements OnInit {
     if (this.formRegistro.valid) {
         this.MarcaService.postMarca(model)
             .subscribe((MarcaInsertada: MarcaObjRetorno) =>{
-             debugger;
-                this.marcaValorRetorno.push(MarcaInsertada);
+                 this.marcaValorRetorno.push(MarcaInsertada);
 
               this.toastr.success(MarcaInsertada.mensaje, '',
            {closeButton: true,progressBar:true});

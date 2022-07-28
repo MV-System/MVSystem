@@ -28,12 +28,13 @@
 
                                 <div class="validatorField" *ngIf="validarCampos('nombre')"></div>
                                 Este campo es requerido.
-                            </div>
-                            <!-- --------------- Apellido Cliente --------------- -->
 
-                            <div class="text-center ">
-                                <button class="btn btn-primary" type="submit">Guardar</button>
                             </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                            </div>
+
+
                         </form>
                         <!-- End  Form -->
                     </div>
@@ -54,7 +55,7 @@
                                         <tbody>
                                             <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
                                                 <!-- <td>{{i + 1}}</td> -->
-                                                <td>{{Marca.ID_Marca}</td>
+                                                <td>{{Marca.iD_Marca}}</td>
                                                 <td>{{Marca.descripcion}}</td>
                                             </tr>
                                         </tbody>
