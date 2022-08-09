@@ -397,7 +397,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid">
+                                        <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid"
+                                            (click)="imprimir()">
                                             <i class="bi bi-printer"></i>
                                             Imprimir
                                         </button>

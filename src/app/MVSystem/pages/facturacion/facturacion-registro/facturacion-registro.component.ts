@@ -238,13 +238,12 @@ export class FacturacionRegistroComponent implements OnInit {
     return total
   }
 
-  modeloRegistroFacturacion() {
-
+  modeloRegistroFacturacion(): FacturaRegistro {
     const model: FacturaRegistro = {
       numeroFactura: 0,
       idCliente: Number(this.formRegistro.get('idCliente')?.value),
       idVendedor: Number(this.formRegistro.get('vendedor')?.value),
-      idAlmacen: Number(this.formRegistro.get('almacen')?.value),
+      idAlmacen: 1,//Number(this.formRegistro.get('almacen')?.value),
       idTipoFactura: Number(this.formRegistro.get('tipoFactura')?.value),
       idTipoPago: Number(this.formRegistro.get('tipoPago')?.value),
       fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
@@ -266,6 +265,7 @@ export class FacturacionRegistroComponent implements OnInit {
 
     return model;
   }
+
   deshabilitadorInputs() {
     // this.formRegistro.get('comprobante')?.disable();
     this.formRegistro.get('RNC')?.disable();
@@ -444,5 +444,36 @@ export class FacturacionRegistroComponent implements OnInit {
       .subscribe(accesorio => {
         this.listaAccesorio = accesorio;
       })
+  }
+
+  imprimir() {
+    const factura = this.modeloRegistroFacturacion()
+
+    this.registroFactura
+    for (let control of this.articulos.controls) {
+      factura.detalleFacturaList.push({
+        cantidad: Number(control.get('cantidad')?.value),
+        descripcion: control.get('descripcion')?.value,
+        numeroFactura: 0,
+        idEquipo: control.get('idEquipo')?.value,
+        idTipo: control.get('idTipo')?.value,
+        idGarantia: control.get('idGarantia')?.value,
+        subTotal: control.get('subTotal')?.value,
+        precio: control.get('precio')?.value,
+        descuento: control.get('descuento')?.value,
+        idVendedor: control.get('')?.value,
+        idTipoFactura: control.get('')?.value,
+        itbis: 0,
+        total: control.get('total')?.value,
+        fechaRegistro: control.get('fechaRegistro')?.value,
+        Usuario: 'f',
+      })
+
+      this.mantenimientoService.postFactura(factura)
+        .subscribe(facturaResponse => {
+          console.log(facturaResponse);
+        })
+      debugger
+    }
   }
 }
