@@ -10,7 +10,7 @@
     </div>
     <!-- End Page Title -->
     <section class="section">
-        <form [formGroup]="formRegistro" (ngSubmit)="registroFactura()">
+        <form [formGroup]="formRegistro">
             <div class="row">
                 <!-- ??section datos del cliente -->
                 <div class="col-lg-6">
@@ -89,7 +89,7 @@
 
 
                             <div class="text-end">
-                                <button *ngIf="loadingButtonBuscar == false" class="btn btn-primary" type="submit"
+                                <button *ngIf="loadingButtonBuscar == false" class="btn btn-primary" type="button"
                                     [ngClass]="{'disabled':btnDisableTelefono()}"
                                     (click)="obtenerClientesPorNombreTelefono()">Buscar
                                 </button>
@@ -397,7 +397,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid"
+                                        <button type="button" class="btn btn-success" [disabled]="formRegistro.invalid"
                                             (click)="imprimir()">
                                             <i class="bi bi-printer"></i>
                                             Imprimir

@@ -100,22 +100,22 @@ export class FacturacionRegistroComponent implements OnInit {
     criterio: '',
   }
 
-  registroFactura() {
-    // this.obtenerDetalleFactura();
-    if (this.formRegistro.invalid) {
+  // registroFactura() {
+  //   // this.obtenerDetalleFactura();
+  //   if (this.formRegistro.invalid) {
 
-      this.formRegistro.markAllAsTouched();
-    }
-    else {
+  //     this.formRegistro.markAllAsTouched();
+  //   }
+  //   else {
 
-      const modelo = this.modeloRegistroFacturacion();
-      // this.mantenimientoService.postFactura(modelo)
-      //                         .subscribe(factura =>{
-      //                           console.log(factura);
+  //     const modelo = this.modeloRegistroFacturacion();
+  //     // this.mantenimientoService.postFactura(modelo)
+  //     //                         .subscribe(factura =>{
+  //     //                           console.log(factura);
 
-      //                         })
-    }
-  }
+  //     //                         })
+  //   }
+  // }
   calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
     return Number((this.formRegistro.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
       (this.formRegistro.get('tipoFactura')?.value == 2 ? precioMayor : 0))
@@ -128,6 +128,10 @@ export class FacturacionRegistroComponent implements OnInit {
     if (!currentArticulo || !articulo)
       return
 
+    debugger;
+
+    currentArticulo.idTipo = 2;
+    currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.split('/')[0];
     currentArticulo.descripcion = articulo.split('/')[1] + '  ' + articulo.split('/')[2];
     currentArticulo.precioDetalle = articulo.split('/')[3];
@@ -198,7 +202,7 @@ export class FacturacionRegistroComponent implements OnInit {
       cantidad: [1],
       descripcion: [''],
       descuento: [0],
-      fechaRegistro: ['dd/MM/yyyy'],
+      fechaRegistro: [new Date().toDateString()],
       idEquipo: [0],
       idGarantia: [0],
       idTipo: [0],
@@ -449,7 +453,7 @@ export class FacturacionRegistroComponent implements OnInit {
   imprimir() {
     const factura = this.modeloRegistroFacturacion()
 
-    this.registroFactura
+    // this.registroFactura
     for (let control of this.articulos.controls) {
       factura.detalleFacturaList.push({
         cantidad: Number(control.get('cantidad')?.value),
@@ -468,12 +472,12 @@ export class FacturacionRegistroComponent implements OnInit {
         fechaRegistro: control.get('fechaRegistro')?.value,
         Usuario: 'f',
       })
-
-      this.mantenimientoService.postFactura(factura)
-        .subscribe(facturaResponse => {
-          console.log(facturaResponse);
-        })
-      debugger
     }
+
+    this.mantenimientoService.postFactura(factura)
+      .subscribe(facturaResponse => {
+        console.log(facturaResponse);
+      })
+    debugger
   }
 }
