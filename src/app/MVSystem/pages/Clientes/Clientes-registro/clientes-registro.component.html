@@ -8,24 +8,22 @@
                 <li class="breadcrumb-item active">Registro clientes</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
-<section class="section" >
-<div class="row" >
-    <div class="col-lg-7">
-        <div class="card">
-            <div class="card-body">
-              <h5 class="card-title" >Datos del cliente</h5>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datos del cliente</h5>
 
-              <!--  Form -->
-              <form [formGroup]="formRegistro" 
-                    (ngSubmit)="registroCliente()"
-                    class="row g-3 needs-validation"
-                    novalidate>
-                    <!-- --------------- DropDown Tipo Cliente --------------- -->
-                  <div class="row">
-                    <div class="col-md-4">
-                        <label  class="form-label">Tipo cliente</label>
-                            <select formControlName="tipoCliente" class="form-select">
+                        <!--  Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroCliente()" class="row g-3 needs-validation" novalidate>
+                            <!-- --------------- DropDown Tipo Cliente --------------- -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Tipo cliente</label>
+                                    <select formControlName="tipoCliente" class="form-select">
                                 <!-- <option selected>Choose...</option>
                                 <option>...</option> -->
                                 <option *ngFor="let tipoCliente of listaTipoClientes"
@@ -33,164 +31,129 @@
                                 {{tipoCliente.tipo_Cliente_Descripcion}}
                                 </option>
                             </select>
-                    </div>
-                    <div class="col-md-8"></div>
-                  </div>
-
-    
-                    <!-- --------------- Nombre Cliente --------------- -->
-                <div class="col-md-6">
-                    <label class="form-label">Nombre <span class="required-field">*</span></label>
-                    <input type="text" 
-                            class="form-control" 
-                            formControlName="nombre" 
-                            aria-describedby="inputGroupPrepend"
-                            required
-                            [ngClass]="{'is-invalid':validarCampos('nombre')}">
-
-                    <div class="validatorField"  *ngIf="validarCampos('nombre')">
-                        Este campo es requerido.
-                      </div>
-                </div>
-
-                    <!-- --------------- Apellido Cliente --------------- -->               
-                <div class="col-md-6">  
-                    <label  class="form-label">Apellido <span class="required-field">*</span></label>
-                    <input  type="text" 
-                            class="form-control" 
-                            required
-                            formControlName="apellido"
-                            [ngClass]="{'is-invalid':validarCampos('apellido')}">
-                            <div class="validatorField"  *ngIf="validarCampos('apellido')">
-                                Este campo es requerido.
+                                </div>
+                                <div class="col-md-8"></div>
                             </div>
-                </div>
 
-                <!-- --------------- DropDown Tipo Telefono Cliente --------------- -->
-                
-                <div class="col-md-6">
-                    <label  class="form-label">Tipo Número</label>
-                    <select formControlName="tipoTelefono" class="form-select">
+
+                            <!-- --------------- Nombre Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" formControlName="nombre" aria-describedby="inputGroupPrepend" required [ngClass]="{'is-invalid':validarCampos('nombre')}">
+
+                                <div class="validatorField" *ngIf="validarCampos('nombre')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- --------------- Apellido Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" required formControlName="apellido" [ngClass]="{'is-invalid':validarCampos('apellido')}">
+                                <div class="validatorField" *ngIf="validarCampos('apellido')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- --------------- DropDown Tipo Telefono Cliente --------------- -->
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo Número</label>
+                                <select formControlName="tipoTelefono" class="form-select">
                         <option *ngFor="let telefono of listaTipoTelefonos"
                         [value]="telefono.iD_Tipo_Telefono">
                         {{telefono.tipo_Telefono_Descripcion}}
                         </option>
                     </select>
-                </div>
+                            </div>
 
-                  <!-- --------------- Telefono Cliente --------------- -->
-                <div class="col-md-6">
-                    <label class="form-label">
+                            <!-- --------------- Telefono Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">
                         Teléfono:
                         <span class="required-field">*</span>
-                    </label> 
-                    <input  
-                    class="form-control"
-                    required
-                    formControlName="telefono"
-                    type="text" 
-                    mask="000-000-0000" 
-                    [ngClass]="{'is-invalid':validarCampos('telefono')}"
-                    />
-                    <div class="validatorField" *ngIf="validarCampos('telefono')" >
-                        Este campo es requerido.
-                    </div>
-                </div>
+                    </label>
+                                <input class="form-control" required formControlName="telefono" type="text" mask="000-000-0000" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                <div class="validatorField" *ngIf="validarCampos('telefono')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
 
-                    <!-- --------------- Extension Teléfono Cliente --------------- -->
-                <div class="col-md-2 ">
-                    <label  class="form-label">&nbsp;</label>
-                    <div class="form-check">
-                        <label >
-                            <input  class="form-check-input" 
-                                    type="checkbox" 
-                                    
+                            <!-- --------------- Extension Teléfono Cliente --------------- -->
+                            <div class="col-md-2 ">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="form-check">
+                                    <label>
+                            <input  class="form-check-input"
+                                    type="checkbox"
+
                                     (change)="onCheckboxChange($event)">
                                     Ext. No.:
-                        </label> 
+                        </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">&nbsp;</label>
+                                <input type="text" class="form-control" placeholder="Inserte la extensión " formControlName="extensionNumero">
+                            </div>
+
+                            <!-- --------------- límite de credito Cliente --------------- -->
+                            <div class="col-md-3">
+                                <label class="form-label">Limite credito</label>
+                                <input type="text" currencyMask placeholder="RD$" class="form-control" formControlName="limiteCredito">
+                            </div>
+
+                            <!-- --------------- Email Cliente --------------- -->
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid':validarCamposEmail('email')}">
+                                <div class="validatorField">
+                                    {{emailErrorMsg}}
+                                </div>
+                            </div>
+
+                            <!-- --------------- Provincia Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Provincia</label>
+                                <input type="text" class="form-control" formControlName="provincia">
+                            </div>
+
+                            <!-- --------------- Sector Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Sector</label>
+                                <input type="text" class="form-control" formControlName="sector">
+                            </div>
+
+                            <!-- --------------- Calle Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Calle</label>
+                                <input type="text" class="form-control" formControlName="calle">
+                            </div>
+
+                            <!-- --------------- NO. Casa Cliente --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Casa No.</label>
+                                <input type="text" class="form-control" formControlName="casaNumero">
+                            </div>
+
+                            <div class="text-center ">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                            </div>
+                        </form>
+                        <!-- End  Form -->
                     </div>
                 </div>
-
-                  <div class="col-md-4">
-                    <label  class="form-label">&nbsp;</label>
-                    <input type="text"
-                            class="form-control" 
-                            placeholder="Inserte la extensión "
-                            formControlName="extensionNumero">
-                  </div>
-
-                <!-- --------------- límite de credito Cliente --------------- -->
-                  <div class="col-md-3">
-                    <label class="form-label">Limite credito</label>
-                    <input  type="text" 
-                            currencyMask
-                            placeholder="RD$"
-                            class="form-control"
-                            formControlName="limiteCredito" >
-                  </div>
-
-                  <!-- --------------- Email Cliente --------------- -->
-                <div class="col-12">
-                  <label class="form-label">Email</label>
-                  <input type="email" 
-                        class="form-control"  
-                        formControlName="email"
-                        
-                        [ngClass]="{'is-invalid':validarCamposEmail('email')}">
-                        <div class="validatorField"  >
-                            {{emailErrorMsg}}
-                          </div>
-                </div>
-
-                <!-- --------------- Provincia Cliente --------------- -->
-                <div class="col-md-6">
-                  <label  class="form-label">Provincia</label>
-                  <input type="text" 
-                        class="form-control" 
-                        formControlName="provincia">
-                </div>
-
-                <!-- --------------- Sector Cliente --------------- -->
-                <div class="col-md-6">
-                    <label  class="form-label">Sector</label>
-                    <input type="text" 
-                            class="form-control" 
-                            formControlName="sector">
-                </div>
-
-                <!-- --------------- Calle Cliente --------------- -->
-                <div class="col-md-6">
-                  <label class="form-label">Calle</label>
-                  <input type="text" 
-                        class="form-control" 
-                        formControlName="calle">
-                </div>
-
-                <!-- --------------- NO. Casa Cliente --------------- -->
-                <div class="col-md-6">
-                    <label class="form-label">Casa No.</label>
-                    <input type="text"
-                            class="form-control" 
-                            formControlName="casaNumero">
-                </div>
-           
-                <div class="text-center " >
-                  <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
-                </div>
-              </form>
-              <!-- End  Form -->
             </div>
         </div>
-    </div>
-</div>
-</section>
+    </section>
 
 </main>
 <!-- End #main -->
-  
+
 <!-- <div class="container">
     <div class="wrapper">
-        
+
 
         <div class="right">
             <table>
@@ -204,9 +167,9 @@
                   <th >Limite de credito</th>
                   <th >Email</th>
                   <th >Direccion</th>
-          
+
                 </tr>
-              
+
                 <tr >
                     <td>{{clientesListar?.idContacto}}</td>
                     <td>{{clientesListar?.iD_Tipo_Cliente }}</td>
@@ -229,12 +192,12 @@
         <pre>{{formRegistro.errors | json}}</pre>
         <h5>Nombre</h5>
         <pre>{{ formRegistro.controls.nombre.errors | json }}</pre>
-        
+
         <h5>Apellido</h5>
         <pre>{{ formRegistro.controls.apellido.errors | json }}</pre>
-        
+
         <h5>Telefono</h5>
         <pre>{{ formRegistro.controls.telefono.errors | json }}</pre>
-        
+
     </div>
 </div> -->

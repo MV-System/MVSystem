@@ -2,8 +2,9 @@ import { environment } from '../../environments/environment';
 
 let API = environment.api;
 export let APIURL = {
-    Mantenimiento:{
-        Accesorio:{
+    //Mantenimiento:{
+
+      Accesorio:{
             Inserta:{
                 AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
             },
@@ -18,12 +19,17 @@ export let APIURL = {
            Inserta:{
             EquipoInserta: API + 'Equipos/Equipo_Insert',
            },
+
            Consulta:{
                EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
                EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
            },
-        }
-    }, 
+        },
+        Marca:{
+          Inserta:{
+           MarcaInserta: API + 'Marcas/Marca_Insert',
+          },
+    },
     Catalogos:{
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
         marcasLista:       API + 'Catalogos/Marcas_Combo',
@@ -47,7 +53,7 @@ export let APIURL = {
         Inserta:{
             ClienteInserta: API + 'Clientes/Cliente_Insert',
         }
-    },    
+    },
     Suplidor:{
         Consultas:{
             tipoSuplidorLista: API + 'Catalogos/Tipo_suplidor_Combo',
@@ -59,11 +65,12 @@ export let APIURL = {
     Vendedor:{
         Consultas:{
             vendedoresLista: API + 'Catalogos/Vendedores_Combo'
-            
+
         },
         Inserta:{
             vendedorInserta: API + 'Vendedores/Vendedor_Insert'
         }
-        
+
     }
+//}
 }

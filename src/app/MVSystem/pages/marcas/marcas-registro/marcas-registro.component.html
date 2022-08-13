@@ -19,39 +19,56 @@
                         <h5 class="card-title">Datos de la Marca</h5>
 
                         <!--  Form -->
-                        <form class="row g-3 needs-validation" novalidate>
-
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroMarca()" class="row g-3 needs-validation" novalidate>
 
                             <!-- --------------- Nombre de la marca --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre De la Marca <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="nombre" aria-describedby="inputGroupPrepend">
-                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')"> -->
+                                <input type="text" class="form-control" required formControlName="descripcion" aria-describedby="inputGroupPrepend">
+
+                                <div class="validatorField" *ngIf="validarCampos('nombre')"></div>
                                 Este campo es requerido.
+
                             </div>
-                            <!-- --------------- Marca Accesorio --------------- -->
-                            <div class="col-md-4">
-
-                                <label class="form-label">Marca</label>
-                                <!-- <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()">
-                                    <ng-option *ngFor="let marca of marcaListado" [value]="marca.iD_Marca">
-                                        {{marca.descripcion}}
-                                    </ng-option>
-
-                                </ng-select>-->
+                            <div class="col-md-6">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
                             </div>
-                            <!-- --------------- Modelo Accesorio --------------- -->
 
-                            <!-- <div class="col-md-4">
-                                <label class="form-label">Modelo</label>
-                                <ng-select formControlName="modelo">
-                                    <ng-option *ngFor="let modelo of modeloListado" [value]="modelo.iD_Modelo">
-                                        {{modelo.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                            </div> -->
+
                         </form>
                         <!-- End  Form -->
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h5 class="card-title">Marcas agregadas</h5>
+                                <div>
+                                    <table class="table table-Secondary">
+                                        <thead>
+                                            <tr>
+                                                <th>Cod.</th>
+                                                <th>Marca</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
+                                                <!-- <td>{{i + 1}}</td> -->
+                                                <td>{{Marca.iD_Marca}}</td>
+                                                <td>{{Marca.descripcion}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- <select class="js-example-basic-multiple" name="states[]" >
+                          <option value="AL">Alabama</option>
+                            ...
+                          <option value="WY">Wyoming</option>
+                        </select> -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

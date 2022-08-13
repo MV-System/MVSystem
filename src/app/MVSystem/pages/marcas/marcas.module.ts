@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MarcasRoutingModule } from './marcas-routing.module';
 import { MarcasRegistroComponent } from './marcas-registro/marcas-registro.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -11,7 +12,9 @@ import { MarcasRegistroComponent } from './marcas-registro/marcas-registro.compo
   ],
   imports: [
     CommonModule,
-    MarcasRoutingModule
+    MarcasRoutingModule,
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class MarcasModule { }

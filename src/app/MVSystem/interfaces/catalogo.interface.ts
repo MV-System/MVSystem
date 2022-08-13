@@ -4,8 +4,11 @@ export interface TipoTelefono {
   }
 
 export interface MarcaEquipo {
-  iD_Marca:    number;
+  iD_Marca?:    number;
   descripcion: string;
+  usuario?: string;
+  mensaje?: string;
+
 }
 
 export interface Almacen {

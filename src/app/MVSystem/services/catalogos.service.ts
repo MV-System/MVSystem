@@ -24,7 +24,7 @@ export class CatalogosService {
     }
     getAlmaceLista():Observable<Almacen[]>{
       return this.http.get<Almacen[]>(APIURL.Catalogos.almacenLista);
-    }  
+    }
     getTipoFacturaLista():Observable<TipoFactura[]>{
       return this.http.get<TipoFactura[]>(APIURL.Catalogos.tipoFacturasLista);
     }

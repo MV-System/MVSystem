@@ -59,7 +59,7 @@ export interface FacturaRegistro{
     total: number;
     abono: number;
     descuento: number;
-    
+
     cantidadArticulos: number;
     detalleFacturaList: DetalleFacturaList[];
 }
@@ -87,3 +87,9 @@ export interface DetalleFacturaList{
 
 
 
+}
+
+export interface MarcaObjRetorno{
+  iD_Marca:             number;
+  descripcion:          string;
+  mensaje:              string;

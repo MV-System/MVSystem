@@ -13,7 +13,7 @@ import { VendedorLista, VendedorRegistro } from "../interfaces/vendedor.interfac
 export class VendedorService {
     constructor(private http: HttpClient) { }
 
- 
+
     // Post's
     postVendedor(vendedor : any):Observable<VendedorRegistro>{
       return this.http.post<VendedorRegistro>(APIURL.Vendedor.Inserta.vendedorInserta,vendedor);
