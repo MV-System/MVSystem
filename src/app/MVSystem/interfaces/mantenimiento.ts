@@ -83,36 +83,7 @@ export interface DetalleFacturaList{
     Usuario: string;
 }
 
-export interface Equipo {
-    Imei:               string;
-    ID_Modelo:          number;
-    ID_Tecnologia:      number;
-    ID_Garantia:        number;
-    ID_Condicion?:       number;
-    ID_Estado_Bloqueo?:  number;
-    ID_Almacen:         number;
-    ID_Suplidor:        number;
-    Numero_de_Factura:  string;
-    Precio_Por_Mayor:   number;
-    Precio_Detalle:     number;
-    Costo_Equipo:       number;
-    Desbloqueado:       string;
-    Disponible:         string;
-    Nota_Adicional?: string;
-    Usuario:            string;
-    Numero_Registro?:    number;
-    Comision_Por_Mayor: number;
-    Comision_Detalle:   number;
-}
 
 
 
-export interface EquipoObjRetorno {
-    imei:               string;
-    modelo:             string;
-    marca:              string;
-    precioPorMayor:     number;
-    precioDetalle:      number;
-    disponible_Detalle: null;
-    mensaje:            string;
-}
+

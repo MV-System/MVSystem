@@ -2,7 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
-import { Accesorio, Equipo, EquipoObjRetorno, FacturaRegistro } from '../interfaces/mantenimiento';
+import { Equipo, EquipoObjRetorno } from "../interfaces/equipo.interface";
+import { Accesorio, FacturaRegistro } from "../interfaces/mantenimiento";
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
 

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -27,7 +28,9 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoRoutingModule,
     ReactiveFormsModule,
     CurrencyMaskModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxPaginationModule,
+
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

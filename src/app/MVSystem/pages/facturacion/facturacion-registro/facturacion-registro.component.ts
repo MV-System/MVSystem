@@ -445,6 +445,8 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenetAccesorios(){
     this.catalogosService.getAccesorioLista()
                         .subscribe(accesorio=>{
+                          console.log(accesorio);
+                          
                           this.listaAccesorio = accesorio;
                         })
   }

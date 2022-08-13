@@ -10,6 +10,7 @@ import {
   TipoSuplidor,
 } from 'src/app/MVSystem/interfaces/suplidor.interface';
 import * as $ from"jquery";
+
 @Component({
   selector: 'app-suplidor-registro',
   templateUrl: './suplidor-registro.component.html',

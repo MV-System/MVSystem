@@ -1,0 +1,50 @@
+
+  
+.card-body{
+    background-color: #f6f9ff;
+}
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+  
+
+  
+  button {
+    height: var(--height);
+    font-family: var(--font-fam);
+    border: 0;
+    /* color: var(--color-dark); */
+    color: var(--color-dark);
+    font-size: 1.1rem;
+  }
+  
+
+  button {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--btn-width);
+    font-weight: bold;
+    background: var(--color-brand);
+    border-radius: 0 var(--rad) var(--rad) 0;
+  }
+  
+  label {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+  }
+  th{
+    font-size: 13px;
+  }
+  td{
+    font-size: 13px;
+  }

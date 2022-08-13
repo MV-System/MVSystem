@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -21,6 +22,7 @@ import { RouterModule } from '@angular/router';
     AppRoutingModule,
     RouterModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     BrowserModule,
     SharedModule,
     HttpClientModule,

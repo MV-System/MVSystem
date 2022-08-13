@@ -19,7 +19,8 @@ export let APIURL = {
             EquipoInserta: API + 'Equipos/Equipo_Insert',
            },
            Consulta:{
-               EquipoNumeroRegistro: API + 'Equipos/Numero_Registro'
+               EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
+               EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
            },
         }
     }, 
