@@ -323,6 +323,7 @@
                                                             <td class="col-md-12">
 
                                                                 <ng-select formControlName="articulo" id="articulo"
+                                                                    [addTag]="addArticuloImei"
                                                                     (change)="obtenerDetalleFactura(i)" required>
                                                                     <ng-option *ngFor="let articulo of listaAccesorio"
                                                                         [value]="articulo.id +'/'+ 

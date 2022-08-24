@@ -121,14 +121,46 @@ export class FacturacionRegistroComponent implements OnInit {
       (this.formRegistro.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
 
+  addArticuloImei = (imei: string) => {
+    return new Promise((resolve) => {
+      this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
+        if (equipos && equipos[0].precioDetalle > 0) {
+          debugger
+          const equipo = equipos[0]
+
+          const articulo: AccesorioLista = {
+            accesorio_Descripcion: `${equipo.marca}`,
+            cantidad: 1,
+            id: Number(equipo.Imei),
+            codigo_Barra: 0,
+            modelo: equipo.modelo,
+            precio_Detalle: equipo.precioDetalle,
+            precio_Por_Mayor: equipo.precioPorMayor,
+            codigo: null!,
+          }
+
+          this.listaAccesorio.push(articulo)
+          resolve(articulo.id + '/' +
+            articulo.accesorio_Descripcion + '/' +
+            articulo.modelo + '/' +
+            articulo.precio_Detalle + '/' +
+            articulo.precio_Por_Mayor + '/' +
+            articulo.cantidad)
+        }
+        else {
+          this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
+        }
+
+      })
+    })
+  }
+
   obtenerDetalleFactura(index: number) {
     const currentArticulo = this.articulos.controls[index].value
     let articulo = currentArticulo.articulo;
 
     if (!currentArticulo || !articulo)
       return
-
-    debugger;
 
     currentArticulo.idTipo = 2;
     currentArticulo.idGarantia = 1;
@@ -478,6 +510,5 @@ export class FacturacionRegistroComponent implements OnInit {
       .subscribe(facturaResponse => {
         console.log(facturaResponse);
       })
-    debugger
   }
 }

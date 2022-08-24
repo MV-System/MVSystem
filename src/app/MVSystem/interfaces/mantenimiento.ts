@@ -1,44 +1,44 @@
 
 export interface Accesorio {
-    imei_Equipo?:           null;
-    id_Modelo:             number;
-    codigo?:               string;
+    imei_Equipo?: null;
+    id_Modelo: number;
+    codigo?: string;
     descripcion_Accesorio: string;
-    id_Almacen:            number;
-    cantidad:              number;
-    can_Max:               number;
-    can_Min:               number;
-    precio_Por_Mayor:      number;
-    precio_Detalle:        number;
-    costo_Equipo:          number;
-    cod_Barra?:            number;
-    disponible?:           string;
-    disponible_Detalle?:   string;
-    usuario:               string;
+    id_Almacen: number;
+    cantidad: number;
+    can_Max: number;
+    can_Min: number;
+    precio_Por_Mayor: number;
+    precio_Detalle: number;
+    costo_Equipo: number;
+    cod_Barra?: number;
+    disponible?: string;
+    disponible_Detalle?: string;
+    usuario: string;
 }
 
 
 export interface AccesorioLista {
     descripcion_Accesorio: string;
-    precio_Por_Mayor:      number;
-    precio_Detalle:        number;
-    cantidad:              number;
+    precio_Por_Mayor: number;
+    precio_Detalle: number;
+    cantidad: number;
 }
-export interface AccesorioFactura{
+export interface AccesorioFactura {
     codigo?: string;
     descripcion: string;
     cantidad: number;
     precio?: number;
-    precio_Detalle?:        number;
-    precio_Por_Mayor?:      number;
+    precio_Detalle?: number;
+    precio_Por_Mayor?: number;
 }
-export interface FacturaRegistro{
+export interface FacturaRegistro {
     numeroFactura: number;
-    idCliente:  number;
+    idCliente: number;
     // nombre:     string;
     // apellido:   string;
     // telefono:   number;
-    idVendedor:   number;
+    idVendedor: number;
     idTipoFactura: number;
     idTipoPago: number;
     ncfTipoNumero: number;
@@ -46,7 +46,7 @@ export interface FacturaRegistro{
     fechaRegistro: string;
     fechaLimitePago: string;
     // accesorio: AccesorioFactura[];
-    garantia:string;
+    garantia: string;
     idAlmacen: number;
     nota: string;
     // persona: number;
@@ -59,60 +59,62 @@ export interface FacturaRegistro{
     total: number;
     abono: number;
     descuento: number;
-    
+
     cantidadArticulos: number;
     detalleFacturaList: DetalleFacturaList[];
 }
-export interface DetalleFacturaList{
-    numeroFactura:  number;
-    idEquipo: number ;
+export interface DetalleFacturaList {
+    numeroFactura: number;
+    idEquipo: number;
     descripcion: string;
-    idTipo: number ;
-    idGarantia: number ;
-    subTotal:  number;
-    cantidad:  number;
-    precio:  number;
-    descuento:  number;
-    idVendedor:   number;
+    idTipo: number;
+    idGarantia: number;
+    subTotal: number;
+    cantidad: number;
+    precio: number;
+    descuento: number;
+    idVendedor: number;
     idTipoFactura: number;
 
-    itbis:  number;
-    total:  number;
+    itbis: number;
+    total: number;
     fechaRegistro: string;
     // Estado: ;
     Usuario: string;
 }
 
 export interface Equipo {
-    Imei:               string;
-    ID_Modelo:          number;
-    ID_Tecnologia:      number;
-    ID_Garantia:        number;
-    ID_Condicion?:       number;
-    ID_Estado_Bloqueo?:  number;
-    ID_Almacen:         number;
-    ID_Suplidor:        number;
-    Numero_de_Factura:  string;
-    Precio_Por_Mayor:   number;
-    Precio_Detalle:     number;
-    Costo_Equipo:       number;
-    Desbloqueado:       string;
-    Disponible:         string;
+    Imei: string;
+    marca: string;
+    modelo: string;
+    ID_Modelo: number;
+    ID_Tecnologia: number;
+    ID_Garantia: number;
+    ID_Condicion?: number;
+    ID_Estado_Bloqueo?: number;
+    ID_Almacen: number;
+    ID_Suplidor: number;
+    Numero_de_Factura: string;
+    precioPorMayor: number;
+    precioDetalle: number;
+    Costo_Equipo: number;
+    Desbloqueado: string;
+    Disponible: string;
     Nota_Adicional?: string;
-    Usuario:            string;
-    Numero_Registro?:    number;
+    Usuario: string;
+    Numero_Registro?: number;
     Comision_Por_Mayor: number;
-    Comision_Detalle:   number;
+    Comision_Detalle: number;
 }
 
 
 
 export interface EquipoObjRetorno {
-    imei:               string;
-    modelo:             string;
-    marca:              string;
-    precioPorMayor:     number;
-    precioDetalle:      number;
+    imei: string;
+    modelo: string;
+    marca: string;
+    precioPorMayor: number;
+    precioDetalle: number;
     disponible_Detalle: null;
-    mensaje:            string;
+    mensaje: string;
 }
