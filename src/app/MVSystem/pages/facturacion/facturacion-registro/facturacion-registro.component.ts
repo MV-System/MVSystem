@@ -100,34 +100,73 @@ export class FacturacionRegistroComponent implements OnInit {
     criterio: '',
   }
 
-  registroFactura() {
-    // this.obtenerDetalleFactura();
-    if (this.formRegistro.invalid) {
+  // registroFactura() {
+  //   // this.obtenerDetalleFactura();
+  //   if (this.formRegistro.invalid) {
 
-      this.formRegistro.markAllAsTouched();
-    }
-    else {
+  //     this.formRegistro.markAllAsTouched();
+  //   }
+  //   else {
 
-      const modelo = this.modeloRegistroFacturacion();
-      // this.mantenimientoService.postFactura(modelo)
-      //                         .subscribe(factura =>{
-      //                           console.log(factura);
+  //     const modelo = this.modeloRegistroFacturacion();
+  //     // this.mantenimientoService.postFactura(modelo)
+  //     //                         .subscribe(factura =>{
+  //     //                           console.log(factura);
 
-      //                         })
-    }
-  }
+  //     //                         })
+  //   }
+  // }
   calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
     return Number((this.formRegistro.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
       (this.formRegistro.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
 
+  addArticuloImei = (imei: string) => {
+    return new Promise((resolve) => {
+      this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
+        if (equipos && equipos[0].precioDetalle > 0) {
+          debugger
+          const equipo = equipos[0]
+
+          const articulo: AccesorioLista = {
+            accesorio_Descripcion: `${equipo.marca}`,
+            cantidad: 1,
+            id: equipo.Imei,
+            codigo_Barra: 0,
+            modelo: equipo.modelo,
+            precio_Detalle: equipo.precioDetalle,
+            precio_Por_Mayor: equipo.precioPorMayor,
+            codigo: null!,
+            idTipo: 1,
+          }
+
+          this.listaAccesorio.push(articulo)
+          resolve(articulo.id + '/' +
+            articulo.accesorio_Descripcion + '/' +
+            articulo.modelo + '/' +
+            articulo.precio_Detalle + '/' +
+            articulo.precio_Por_Mayor + '/' +
+            articulo.cantidad + '/' +
+            articulo.idTipo)
+        }
+        else {
+          this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
+        }
+
+      })
+    })
+  }
+
   obtenerDetalleFactura(index: number) {
+    debugger
     const currentArticulo = this.articulos.controls[index].value
     let articulo = currentArticulo.articulo;
 
     if (!currentArticulo || !articulo)
       return
 
+    currentArticulo.idTipo = articulo.split('/')[6];
+    currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.split('/')[0];
     currentArticulo.descripcion = articulo.split('/')[1] + '  ' + articulo.split('/')[2];
     currentArticulo.precioDetalle = articulo.split('/')[3];
@@ -198,7 +237,7 @@ export class FacturacionRegistroComponent implements OnInit {
       cantidad: [1],
       descripcion: [''],
       descuento: [0],
-      fechaRegistro: ['dd/MM/yyyy'],
+      fechaRegistro: [new Date().toDateString()],
       idEquipo: [0],
       idGarantia: [0],
       idTipo: [0],
@@ -238,13 +277,12 @@ export class FacturacionRegistroComponent implements OnInit {
     return total
   }
 
-  modeloRegistroFacturacion() {
-
+  modeloRegistroFacturacion(): FacturaRegistro {
     const model: FacturaRegistro = {
       numeroFactura: 0,
       idCliente: Number(this.formRegistro.get('idCliente')?.value),
       idVendedor: Number(this.formRegistro.get('vendedor')?.value),
-      idAlmacen: Number(this.formRegistro.get('almacen')?.value),
+      idAlmacen: 1,//Number(this.formRegistro.get('almacen')?.value),
       idTipoFactura: Number(this.formRegistro.get('tipoFactura')?.value),
       idTipoPago: Number(this.formRegistro.get('tipoPago')?.value),
       fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
@@ -266,6 +304,7 @@ export class FacturacionRegistroComponent implements OnInit {
 
     return model;
   }
+
   deshabilitadorInputs() {
     // this.formRegistro.get('comprobante')?.disable();
     this.formRegistro.get('RNC')?.disable();
@@ -456,9 +495,39 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenetAccesorios() {
     this.catalogosService.getAccesorioLista()
       .subscribe(accesorio => {
-                          console.log(accesorio);
-                          
+        console.log(accesorio);
+
         this.listaAccesorio = accesorio;
+      })
+  }
+
+  imprimir() {
+    const factura = this.modeloRegistroFacturacion()
+
+    // this.registroFactura
+    for (let control of this.articulos.controls) {
+      factura.detalleFacturaList.push({
+        cantidad: Number(control.get('cantidad')?.value),
+        descripcion: control.get('descripcion')?.value,
+        numeroFactura: 0,
+        idEquipo: control.get('idEquipo')?.value,
+        idTipo: control.get('idTipo')?.value,
+        idGarantia: control.get('idGarantia')?.value,
+        subTotal: control.get('subTotal')?.value,
+        precio: control.get('precio')?.value,
+        descuento: control.get('descuento')?.value,
+        idVendedor: control.get('')?.value,
+        idTipoFactura: control.get('')?.value,
+        itbis: 0,
+        total: control.get('total')?.value,
+        fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
+        Usuario: 'f',
+      })
+    }
+
+    this.mantenimientoService.postFactura(factura)
+      .subscribe(facturaResponse => {
+        console.log(facturaResponse);
       })
   }
 }

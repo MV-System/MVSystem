@@ -9,26 +9,26 @@ import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-reg
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 
-export class MantenimientoService{
-    constructor(private http: HttpClient) { }
+export class MantenimientoService {
+  constructor(private http: HttpClient) { }
 
-    // Post's
-  postAccesorio(accesorio : Accesorio):Observable<any>{
+  // Post's
+  postAccesorio(accesorio: Accesorio): Observable<any> {
     return this.http.post<any>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);
   }
-  postEquipo(equipo : Equipo):Observable<EquipoObjRetorno[]>{
+  postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
-  postFactura(factura : FacturaRegistro):Observable<any>{
+  postFactura(factura: FacturaRegistro): Observable<any> {
     return this.http.post<any>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
 
   //Get's
 
-  getEquipoNumeroRegistro():Observable<EquipoNumeroRegistro[]>{
+  getEquipoNumeroRegistro(): Observable<EquipoNumeroRegistro[]> {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }
 }
