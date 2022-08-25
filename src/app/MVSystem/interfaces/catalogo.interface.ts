@@ -37,7 +37,7 @@ export interface TipoComprobante {
 export interface AccesorioLista {
   accesorio_Descripcion: string;
   codigo?: Codigo;
-  id: number;
+  id: string;
   modelo: string;
   codigo_Barra: number;
   precio_Detalle: number;

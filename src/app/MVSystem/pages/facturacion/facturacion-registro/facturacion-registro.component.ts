@@ -131,7 +131,7 @@ export class FacturacionRegistroComponent implements OnInit {
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.marca}`,
             cantidad: 1,
-            id: Number(equipo.imei),
+            id: equipo.imei,
             codigo_Barra: 0,
             modelo: equipo.modelo,
             precio_Detalle: equipo.precioDetalle,
