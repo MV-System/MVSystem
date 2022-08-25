@@ -314,7 +314,7 @@ export class EquipoRegistroComponent implements OnInit {
   }
   obtenerModeloLista() {
     let idMarca = this.formRegistro.get('marca')?.value;
-    this.catalogosService.getModeloLista(idMarca).subscribe((modelo) => {
+    this.catalogosService.getModeloByMarcaLista(idMarca).subscribe((modelo) => {
       this.listaModelo = modelo;
     });
   }

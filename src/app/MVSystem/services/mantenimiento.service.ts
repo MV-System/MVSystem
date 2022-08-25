@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Accesorio, Equipo, EquipoObjRetorno, FacturaRegistro, MarcaObjRetorno } from '../interfaces/mantenimiento';
+import { Equipo, EquipoObjRetorno } from "../interfaces/equipo.interface";
+import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
 

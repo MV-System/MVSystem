@@ -17,43 +17,85 @@
                     <div class="card-body">
                     <!-- <h5 class="card-title" >Clientes</h5> -->
                     <div class="search-bar mt-3">
+                      <!-- (ngSubmit)="equiposDisponiblesAlmacen(13)" -->
+                      <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
+                        <div class="row ">
+                          
+                          <!-- Search IMEI -->
+                              <!-- <i class="bi bi-funnel"></i> -->
+                              <div class="col-md-1">
+                                <label >
+                                  Disponible
+                                  <input type="checkbox" 
+                                        class="form-check-input"
+                                        (change)="onCheckboxDisponibleChange($event)">
+                                </label>
+                              </div>
+                              <div class="col-md-1">
+                                <label >
+                                  Vendidos
+                                  <input type="checkbox" 
+                                        class="form-check-input"
+                                        (change)="onCheckboxVendidosChange($event)">
+                                </label>
+                              </div>
+                            <div class="col-md-2">
+                              <label class="form-label">Por IMEI</label>
+                              <div class="col-md-12">
+                                <input class="form-control" 
+                                       type="search" 
+                                       placeholder="IMEI" 
+                                       autofocus 
+                                       required 
+                                       formControlName="imei" 
+                                       (keyup)="obtenerEquiposDisponibles()"/>
+                                <button type="submit">Buscar</button>   
+                              </div>
+                            </div>
 
-                        <form [formGroup]="formBusqueda" (ngSubmit)="equiposDisponiblesAlmacen(13)" role="search">
-                            <input class="form-control" type="search" placeholder="Enter para buscar todos o por nombre o telefono " autofocus required formControlName="criterio" />
-                            <button type="submit">Buscar</button>   
-                          <input type="checkbox" (change)="equiposDisponiblesAlmacen(13)" > 
-
-                          <div class="col-md-4">
-                            <label  class="form-label">Almacen</label>
-                                <select formControlName="almacen" 
-                                        class="form-select">
-                                    <option *ngFor="let almacen of almacenListado"
-                                    [value]="almacen.iD_Almacen">
-                                    {{almacen.descripcion}}
-                                    </option>
-                                </select>
+                            <div class="col-md-2">
+                              <!-- Search by almacen -->
+                              <!-- <input type="checkbox" (change)="onCheckboxChange($event)" >  -->
+                                <label  class="form-label">Almacen</label>
+                                    <ng-select  formControlName="almacen" 
+                                             (change)="obtenerEquiposDisponibles()">
+                                        <ng-option *ngFor="let almacen of almacenListado"
+                                        [value]="almacen.iD_Almacen"  >
+                                        {{almacen.descripcion}}
+                                        </ng-option>
+                                    </ng-select >
+                            </div>
+                            <div class="col-md-2">
+                            <!-- --------------- Suplidores --------------- -->
+                              <label class="form-label">Suplidor </label>
+                              <ng-select formControlName="suplidor" 
+                                        required 
+                                        (change)="obtenerEquiposDisponibles()">
+                                  <ng-option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
+                                      {{vendedor.nombres}}
+                                  </ng-option>
+                              </ng-select>
+                          </div>
+                          <div class="col-md-2">
+                            <!-- Search by -->
+                            <label  class="form-label">Modelo</label>
+                            <ng-select formControlName="modelo"
+                            (change)="obtenerEquiposDisponibles()">
+                                <ng-option *ngFor="let modelo of modeloListado" 
+                                            [value]="modelo.descripcion">
+                                            {{modelo.descripcion}}
+                                  </ng-option>
+                            </ng-select>
+                          </div> 
                         </div>
 
-                        <div class="col-md-4" >
-                          <label  class="form-label">Modelo</label>
-                              <ng-select formControlName="modelo">
-                                  <ng-option *ngFor="let modelo of modeloListado" 
-                                              [value]="modelo.iD_Modelo">
-                                              {{modelo.descripcion}}
-                                   </ng-option>
-                              </ng-select>
-                        </div> 
-                        
                       </form>
-
                         <section class="section mt-4 ">
                         <div class="row">
-                          <div class="col-lg-12">
-                  
+                          <div class="col-lg-12 scroll-table">
                                 <h5 class="card-title">Equipos</h5>
-                  
                                 <!-- Table with stripped rows -->
-                                <table class="table datatable">
+                                <table class="table datatable ">
                                   <thead>
                                     <tr>
                                       <th scope="col">Imei</th>
@@ -75,27 +117,32 @@
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr *ngFor="let cliente of listaEquipos | paginate: { itemsPerPage: 10, currentPage: page }">
-                                      <td>{{cliente.imei}}</td>
-                                      <td>{{cliente.descripcion }}</td>
-                                      <td>{{cliente.tecnologia }}</td>
-                                      <td>{{cliente.garantia}}</td>
-                                      <td>{{cliente.precioPorMayor}}</td>
-                                      <td>{{cliente.precioDetalle}}</td>
-                                      <td>{{cliente.costoEquipo}}</td>
-                                      <td>{{cliente.isDesbloqueado}}</td>
-                                      <td>{{cliente.isDisponible}}</td>
-                                      <td>{{cliente.notaAdicional}}</td>
-                                      <td>{{cliente.comisionDetalle}}</td>
-                                      <td>{{cliente.comisionPorMayor}}</td>
-                                      <td>{{cliente.descripcionAlmacen}}</td>
-                                      <td>{{cliente.suplidor}}</td>
-                                      <td>{{cliente.fecharegistro | date}}</td>
+                                    <tr class="animate__animated animate__fadeIn" 
+                                        *ngFor="let equipo of equiposDisponibles | 
+                                                paginate: { 
+                                                  itemsPerPage: filter.pageSize, 
+                                                  currentPage: filter.pageIndex,
+                                                  totalItems:totalRecord
+                                                }">
+                                      <td>{{equipo.imei}}</td>
+                                      <td>{{equipo.descripcion }}</td>
+                                      <td>{{equipo.tecnologia }}</td>
+                                      <td>{{equipo.garantia}}</td>
+                                      <td>{{equipo.precioPorMayor}}</td>
+                                      <td>{{equipo.precioDetalle}}</td>
+                                      <td>{{equipo.costoEquipo}}</td>
+                                      <td>{{equipo.isDesbloqueado}}</td>
+                                      <td>{{equipo.isDisponible}}</td>
+                                      <td>{{equipo.notaAdicional}}</td>
+                                      <td>{{equipo.comisionDetalle}}</td>
+                                      <td>{{equipo.comisionPorMayor}}</td>
+                                      <td>{{equipo.descripcionAlmacen}}</td>
+                                      <td>{{equipo.suplidor}}</td>
+                                      <td>{{equipo.fecharegistro | date}}</td>
                                     </tr>
                                     
                                   </tbody>
                                 </table>
-                                <pagination-controls (pageChange)="pageChanged($event)" *ngIf="listaEquipos.length > 10"></pagination-controls>
                                 <!-- End Table with stripped rows -->
                   
                               </div>
@@ -107,6 +154,8 @@
                     </div>
                 </div>
             </div>
+            <pagination-controls (pageChange)="pageChanged($event)" *ngIf="equiposDisponibles.length >= 10"></pagination-controls>
+
         </div>
     </section>
 </main>

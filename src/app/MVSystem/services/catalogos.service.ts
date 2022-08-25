@@ -19,8 +19,11 @@ export class CatalogosService {
     getMarcasLista():Observable<MarcaEquipo[]>{
       return this.http.get<MarcaEquipo[]>(APIURL.Catalogos.marcasLista);
     }
-    getModeloLista(idMarca?: number):Observable<ModeloEquipo[]>{
+    getModeloByMarcaLista(idMarca?: number):Observable<ModeloEquipo[]>{
       return this.http.get<ModeloEquipo[]>(`${APIURL.Catalogos.modeloLista}?ID_Marca=`+ idMarca );
+    }
+    getModeloLista():Observable<ModeloEquipo[]>{
+      return this.http.get<ModeloEquipo[]>(`${APIURL.Catalogos.modeloLista}` );
     }
     getAlmaceLista():Observable<Almacen[]>{
       return this.http.get<Almacen[]>(APIURL.Catalogos.almacenLista);

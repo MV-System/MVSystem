@@ -84,12 +84,10 @@ export interface DetalleFacturaList{
 }
 
 
-
-
-
-}
-
 export interface MarcaObjRetorno{
-  iD_Marca:             number;
-  descripcion:          string;
-  mensaje:              string;
+    iD_Marca:             number;
+    descripcion:          string;
+    mensaje:              string;
+  }
+
+

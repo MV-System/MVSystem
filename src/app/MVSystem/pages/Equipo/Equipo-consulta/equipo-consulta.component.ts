@@ -1,55 +1,125 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { EquipoService } from '../../../services/equipo.service';
 import { EquipoDisponible } from '../../../interfaces/equipo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { Almacen, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
+import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
+import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 
 @Component({
   selector: 'app-equipo-consulta',
   templateUrl: './equipo-consulta.component.html',
   styleUrls: ['./equipo-consulta.component.css']
 })
-export class EquipoConsultaComponent implements OnInit {
+export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
 
   constructor(private fb: FormBuilder,
               private equipoService:EquipoService,
               private catalogosService: CatalogosService,
+              private vendedorService: VendedorService,
     ) { }
+    ngAfterViewInit(){
+      this.obtenerEquiposDisponibles();
 
+    }
   ngOnInit(): void {
-    this.obtenerEquiposDisponibles();
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
+    this.obtenerVendedor();
+    // this.form.controls.almacen.disable();
+
   }
+  
+  currentPage:  number = 1;
+  totalRecord!: number;
+  line!:        number;
+  lastLine!:    number;
   almacenListado: Almacen[] = [];
-  modeloListado: ModeloEquipo[] = [];
+  modeloListado:  ModeloEquipo[] = [];
+  listaVendedor:  VendedorLista[] = []
 
-  page: number = 1;
-  listaEquipos: EquipoDisponible[]= [];
+  // pagination: Pagination ={
+  //   page: 1,
+  //   pageSize: 10
+  // }
+   filter: any ={
+    almacen:0,
+    modelo:'',
+    imei:'',
+    suplidor:'',
+    pageIndex: 1,
+    pageSize: 10,
 
-  formBusqueda: FormGroup = this.fb.group({
-    criterio:['',],
-    almacen:[,],
-    modelo:[,]
+  }
+  equiposDisponibles: EquipoDisponible[]= [];
+
+  form: FormGroup = this.fb.group({
+    almacen:['',],
+    suplidor:['',],
+    imei:['',],
+    modelo:['',],
   })
 
-
+  getValueFilterForm(){
+    let almacenValue =this.form.get('almacen')?.value;
+    let suplidorValue =this.form.get('suplidor')?.value;
+    let modeloValue =this.form.get('modelo')?.value;
+    this.filter.almacen = almacenValue == null ? '':almacenValue;
+    
+    this.filter.suplidor = suplidorValue == null ? '':suplidorValue
+    this.filter.modelo = modeloValue == null ? '':modeloValue
+    this.filter.imei = this.form.get('imei')?.value;
+  }
 
   obtenerEquiposDisponibles(){
-    this.equipoService.getEquipoDisponible()
+    this.getValueFilterForm();
+    this.equipoService.getEquipoDisponible(this.filter)
         .subscribe(equipo => {
-      this.listaEquipos = equipo
+          if (equipo.length) {
+            
+            this.totalRecord = equipo[0].totalRecord;
+            this.line = equipo[0].line;
+            this.lastLine = equipo[0].lastLine;
+            
+          }
+          this.equiposDisponibles = equipo
+
 
         })
   }
-  equiposDisponiblesAlmacen(almacen: number ){
-
-    this.listaEquipos = this.listaEquipos.filter(x=>x.idAlmacen == 13);
-
+  onCheckboxDisponibleChange(event: Event){
+    if ((<HTMLInputElement>event.target).checked == true) {
+      this.obtenerEquiposDisponibles();
+    }
   }
+  onCheckboxVendidosChange(event: Event){
+    if ((<HTMLInputElement>event.target).checked == true) {
+      this.obtenerEquiposVendidos();
+    }
+  }
+  obtenerEquiposVendidos() {
+    throw new Error('Method not implemented.');
+  }
+  // onCheckboxChange(event: any ) {
+  //   if(event.target.checked == false) {
+  //       this.form.controls.almacen.disable();
+  //       this.form.get('almacen')?.setValue("");
+  //   }
+  //   else{
+  //       this.form.controls.almacen.enable();
+  //     }
+  // }
+  validarCampos(nombreCampo: string) {
+    return this.form.get(nombreCampo)?.invalid &&
+      this.form.get(nombreCampo)?.touched
+  }
+
   pageChanged(index: number){
-    this.page = index
+    this.currentPage = index;
+    this.filter.pageIndex = index;
+    this.obtenerEquiposDisponibles()
     console.log(index);
     
   }
@@ -61,6 +131,14 @@ export class EquipoConsultaComponent implements OnInit {
   obtenerModeloLista() {
     this.catalogosService.getModeloLista().subscribe((modelo) => {
       this.modeloListado = modelo;
+      // console.log(modelo);
+      
     });
+  }
+  obtenerVendedor() {
+    this.vendedorService.getVendedorLista()
+      .subscribe((vendedor) => {
+        this.listaVendedor = vendedor;
+      })
   }
 }

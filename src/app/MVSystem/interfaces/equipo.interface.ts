@@ -50,4 +50,16 @@ export interface EquipoDisponible {
     idSuplidor:         number;
     idAlmacen:          number;
     fecharegistro:      string;
+    lastLine:           number;
+    line:               number;
+    totalRecord:        number;
+
+}
+export interface EquipoDisponibleQuery {
+    almacen : number;
+    suplidor: string;
+    imei: string;
+    modelo: string;
+    pageIndex: number;
+    pageSize: number;
 }
