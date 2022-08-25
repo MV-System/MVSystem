@@ -84,7 +84,7 @@ export interface DetalleFacturaList {
 }
 
 export interface Equipo {
-    Imei: string;
+    imei: string;
     marca: string;
     modelo: string;
     ID_Modelo: number;

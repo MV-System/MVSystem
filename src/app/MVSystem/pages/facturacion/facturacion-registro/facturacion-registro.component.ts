@@ -131,12 +131,13 @@ export class FacturacionRegistroComponent implements OnInit {
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.marca}`,
             cantidad: 1,
-            id: Number(equipo.Imei),
+            id: Number(equipo.imei),
             codigo_Barra: 0,
             modelo: equipo.modelo,
             precio_Detalle: equipo.precioDetalle,
             precio_Por_Mayor: equipo.precioPorMayor,
             codigo: null!,
+            idTipo: 1,
           }
 
           this.listaAccesorio.push(articulo)
@@ -145,7 +146,8 @@ export class FacturacionRegistroComponent implements OnInit {
             articulo.modelo + '/' +
             articulo.precio_Detalle + '/' +
             articulo.precio_Por_Mayor + '/' +
-            articulo.cantidad)
+            articulo.cantidad + '/' +
+            articulo.idTipo)
         }
         else {
           this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
@@ -156,13 +158,14 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   obtenerDetalleFactura(index: number) {
+    debugger
     const currentArticulo = this.articulos.controls[index].value
     let articulo = currentArticulo.articulo;
 
     if (!currentArticulo || !articulo)
       return
 
-    currentArticulo.idTipo = 2;
+    currentArticulo.idTipo = articulo.split('/')[6];
     currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.split('/')[0];
     currentArticulo.descripcion = articulo.split('/')[1] + '  ' + articulo.split('/')[2];
@@ -501,7 +504,7 @@ export class FacturacionRegistroComponent implements OnInit {
         idTipoFactura: control.get('')?.value,
         itbis: 0,
         total: control.get('total')?.value,
-        fechaRegistro: control.get('fechaRegistro')?.value,
+        fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
         Usuario: 'f',
       })
     }
