@@ -23,6 +23,7 @@ export let APIURL = {
            Consulta:{
                EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
                EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
+               EquipoVendido: API + 'Equipos/GetEquiposVendidos',
            },
         },
         Marca:{

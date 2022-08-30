@@ -7,6 +7,7 @@ import { Almacen, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.inte
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
+import { IMyDrpOptions } from 'mydaterangepicker';
 
 @Component({
   selector: 'app-equipo-consulta',
@@ -14,6 +15,7 @@ import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
   styleUrls: ['./equipo-consulta.component.css']
 })
 export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
+  equipoTipo: boolean = false;
 
   constructor(private fb: FormBuilder,
               private equipoService:EquipoService,
@@ -24,6 +26,9 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
       this.obtenerEquiposDisponibles();
 
     }
+    ngDestroy():void{
+      
+    }
   ngOnInit(): void {
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
@@ -31,7 +36,7 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
     // this.form.controls.almacen.disable();
 
   }
-  
+  showDatePicker : boolean = false;
   currentPage:  number = 1;
   totalRecord!: number;
   line!:        number;
@@ -51,7 +56,8 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
     suplidor:'',
     pageIndex: 1,
     pageSize: 10,
-
+    fechaInicio:'',
+    fechaFinal:''
   }
   equiposDisponibles: EquipoDisponible[]= [];
 
@@ -60,7 +66,45 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
     suplidor:['',],
     imei:['',],
     modelo:['',],
+    rangeDate:['']
   })
+  myDateRangePickerOptions: IMyDrpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
+  onDateRangeChanged(event: any){
+    
+    if(event.beginDate.year === 0){
+      this.filter.fechaInicio = ""
+      this.filter.fechaFinal = ""
+    }else{
+      // 06/05/2022
+      this.filter.fechaInicio = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`
+      this.filter.fechaFinal = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`
+      console.log(this.filter);
+      
+    }
+  
+  
+    this.obtenerEquiposDisponibles();
+  
+  }
+  setDateRange(): void {
+
+  let date = new Date();
+  this.form.patchValue({rangoFecha: {
+    beginDate: {
+          day: date.getDate(),
+          month: date.getMonth() + 1,
+          year: date.getFullYear()
+      },
+      endDate: {
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear()
+      }
+  }});
+  
+}
 
   getValueFilterForm(){
     let almacenValue =this.form.get('almacen')?.value;
@@ -74,7 +118,10 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
   }
 
   obtenerEquiposDisponibles(){
+    
     this.getValueFilterForm();
+    console.log(this.filter);
+    
     this.equipoService.getEquipoDisponible(this.filter)
         .subscribe(equipo => {
           if (equipo.length) {
@@ -90,18 +137,19 @@ export class EquipoConsultaComponent implements OnInit ,AfterViewInit{
         })
   }
   onCheckboxDisponibleChange(event: Event){
+    this.equipoTipo = !this.equipoTipo;
+
     if ((<HTMLInputElement>event.target).checked == true) {
       this.obtenerEquiposDisponibles();
     }
   }
   onCheckboxVendidosChange(event: Event){
+  this.equipoTipo = !this.equipoTipo;
+    
     if ((<HTMLInputElement>event.target).checked == true) {
-      this.obtenerEquiposVendidos();
     }
   }
-  obtenerEquiposVendidos() {
-    throw new Error('Method not implemented.');
-  }
+
   // onCheckboxChange(event: any ) {
   //   if(event.target.checked == false) {
   //       this.form.controls.almacen.disable();

@@ -8,6 +8,8 @@ import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -21,7 +23,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 @NgModule({
   declarations: [
     EquipoRegistroComponent,
-    EquipoConsultaComponent
+    EquipoConsultaComponent,
+    EquipoConsultaVendidoComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CurrencyMaskModule,
     NgSelectModule,
     NgxPaginationModule,
-
+    MyDateRangePickerModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

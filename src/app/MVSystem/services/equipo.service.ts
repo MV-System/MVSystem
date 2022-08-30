@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible,EquipoDisponibleQuery } from "../interfaces/equipo.interface";
+import { EquipoDisponible, EquipoDisponibleQuery, EquipoVendido, EquipoVendidoFilter } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -25,7 +25,32 @@ export class EquipoService{
         '&pageIndex='+
         EquipoDisponibleQuery.pageIndex +
         '&pageSize=' +
-        EquipoDisponibleQuery.pageSize;
+        EquipoDisponibleQuery.pageSize +
+        '&fechaInicio=' +
+        EquipoDisponibleQuery.fechaInicio +
+        '&fechaFinal='+
+        EquipoDisponibleQuery.fechaFinal ;
+        
         return this.http.get<EquipoDisponible[]>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
+    }
+    getEquipoVendido( EquipoVendido: EquipoVendidoFilter):Observable<EquipoVendido[]>{
+        const search =
+        'Almacen='+
+        EquipoVendido.almacen +
+        '&suplidor='+
+        EquipoVendido.suplidor +
+        '&fechaRegistro='+
+        EquipoVendido.fechaRegistro +
+        '&modelo='+
+        EquipoVendido.modelo +
+        '&pageIndex='+
+        EquipoVendido.pageIndex +
+        '&pageSize=' +
+        EquipoVendido.pageSize +
+        '&fechaInicio=' +
+        EquipoVendido.fechaInicio +
+        '&fechaFinal='+
+        EquipoVendido.fechaFinal ;
+        return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
 }
