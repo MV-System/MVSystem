@@ -24,7 +24,7 @@ export let APIURL = {
                EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
                EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
                EquipoVendido: API + 'Equipos/GetEquiposVendidos',
-           },
+        },
     },
     Marca: {
         Inserta: {
