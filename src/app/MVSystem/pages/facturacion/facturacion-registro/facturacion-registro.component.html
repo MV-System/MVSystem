@@ -10,7 +10,7 @@
     </div>
     <!-- End Page Title -->
     <section class="section">
-        <form [formGroup]="formRegistro" (ngSubmit)="registroFactura()">
+        <form [formGroup]="formRegistro">
             <div class="row">
                 <!-- ??section datos del cliente -->
                 <div class="col-lg-6">
@@ -89,7 +89,7 @@
 
 
                             <div class="text-end">
-                                <button *ngIf="loadingButtonBuscar == false" class="btn btn-primary" type="submit"
+                                <button *ngIf="loadingButtonBuscar == false" class="btn btn-primary" type="button"
                                     [ngClass]="{'disabled':btnDisableTelefono()}"
                                     (click)="obtenerClientesPorNombreTelefono()">Buscar
                                 </button>
@@ -326,6 +326,7 @@
                                                             <td class="col-md-12">
 
                                                                 <ng-select formControlName="articulo" id="articulo"
+                                                                    [addTag]="addArticuloImei"
                                                                     (keydown.enter)="cantidadInput.focus()"
                                                                     (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
                                                                     required>
@@ -335,7 +336,7 @@
                                                                                         articulo.modelo +'/'+
                                                                                         articulo.precio_Detalle +'/'+
                                                                                         articulo.precio_Por_Mayor +'/'+
-                                                                                        articulo.cantidad">
+                                                                                        articulo.cantidad+'/2'">
                                                                         {{articulo.accesorio_Descripcion | titlecase}} |
                                                                         {{articulo.modelo | titlecase}} | {{
                                                                         calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor
@@ -403,7 +404,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button type="submit" class="btn btn-success" [disabled]="formRegistro.invalid">
+                                        <button type="button" class="btn btn-success" [disabled]="formRegistro.invalid"
+                                            (click)="imprimir()">
                                             <i class="bi bi-printer"></i>
                                             Imprimir
                                         </button>

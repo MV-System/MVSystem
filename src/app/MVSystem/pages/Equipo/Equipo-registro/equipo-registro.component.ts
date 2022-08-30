@@ -19,15 +19,15 @@ export interface EquipoNumeroRegistro {
   styleUrls: ['./equipo-registro.component.css']
 })
 export class EquipoRegistroComponent implements OnInit {
-  listaGarantia: Garantia[]=[];
-  listaDesbloqueo: Desbloqueo[]=[];
-  listaCondicionEquipo: CondicionEquipo[]=[];
-  listaTecnologia: Tecnologia[]=[];
-  listaSuplidor:Suplidor[]=[];
-  listaMarca:   MarcaEquipo[]=[];
-  listaAlmacen: Almacen[]=[];
-  listaModelo:  ModeloEquipo[]=[];
-  equipoValorRetorno: EquipoObjRetorno[]=[];
+  listaGarantia: Garantia[] = [];
+  listaDesbloqueo: Desbloqueo[] = [];
+  listaCondicionEquipo: CondicionEquipo[] = [];
+  listaTecnologia: Tecnologia[] = [];
+  listaSuplidor: Suplidor[] = [];
+  listaMarca: MarcaEquipo[] = [];
+  listaAlmacen: Almacen[] = [];
+  listaModelo: ModeloEquipo[] = [];
+  equipoValorRetorno: EquipoObjRetorno[] = [];
 
   imeiRegistrado!: string;
   numeroRegistro!: number;
@@ -56,93 +56,97 @@ export class EquipoRegistroComponent implements OnInit {
   btnDisabled: boolean = true;
 
   formRegistro: FormGroup = this.fb.group({
-  factura:["",],
-  IMEI:["",],
-  costo:[, [Validators.required]],
-  alDetalle:[, [Validators.required]],
-  alPorMayor:[, [Validators.required]],
-  comisionDetalle:[0,],
-  comisionMayor:[0,],
-  nota:["",],
-  idCondicion:[1,],
-  idEstadoBloqueo:[1,],
-  notaAdicional:['',],
-  tecnologia:[1,],
-  garantia:[8,],
-  estado:[,],
-  almacen:[,],
-  marca:[,],
-  modelo:[,],
-  suplidor:[,],
-  disponible:['S',],
-  desbloqueado:['S',],
-  numeroRegistro:[,],
-  usuario:['xavier',]
+    factura: ["",],
+    IMEI: ["",],
+    costo: [, [Validators.required]],
+    alDetalle: [, [Validators.required]],
+    alPorMayor: [, [Validators.required]],
+    comisionDetalle: [0,],
+    comisionMayor: [0,],
+    nota: ["",],
+    idCondicion: [1,],
+    idEstadoBloqueo: [1,],
+    notaAdicional: ['',],
+    tecnologia: [1,],
+    garantia: [8,],
+    estado: [,],
+    almacen: [,],
+    marca: [,],
+    modelo: [,],
+    suplidor: [,],
+    disponible: ['S',],
+    desbloqueado: ['S',],
+    numeroRegistro: [,],
+    usuario: ['xavier',]
   })
 
-  registroEquipos(){
-    const model: Equipo =this.modeloRegistroEquipo();
+  registroEquipos() {
+    const model: Equipo = this.modeloRegistroEquipo();
 
     this.validacionesRegistro()
-    if ( this.formRegistro.valid) {
-        this.mantenimientoService.postEquipo(model)
-            .subscribe((equipo) =>{
-              equipo.forEach((equipoRegistrado) => {
+    if (this.formRegistro.valid) {
+      this.mantenimientoService.postEquipo(model)
+        .subscribe((equipo) => {
+          equipo.forEach((equipoRegistrado) => {
 
-                this.equipoValorRetorno.forEach(({imei})=>{
-                  this.imeiRegistrado =imei;
+            this.equipoValorRetorno.forEach(({ imei }) => {
+              this.imeiRegistrado = imei;
 
-                });
-
-                if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
-                  this.toastr.error('El IMEI del Equipo debe ser diferente!');
-
-                  return
-                }
-                else{
-                  this.equipoValorRetorno.push(equipoRegistrado);
-                  this.toastr.success('Equipo registrado con exito!');
-                }
-              });
             });
-      }
-      else{
-        this.formRegistro.markAllAsTouched();
-        $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
-          this.toastr.error('Hay datos en el formulario incompletos', '',
-          {closeButton: true,progressBar:true});
-      }
+
+            if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
+              this.toastr.error('El IMEI del Equipo debe ser diferente!');
+
+              return
+            }
+            else {
+              this.equipoValorRetorno.push(equipoRegistrado);
+              this.toastr.success('Equipo registrado con exito!');
+            }
+          });
+        });
+    }
+    else {
+      this.formRegistro.markAllAsTouched();
+      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+      this.toastr.error('Hay datos en el formulario incompletos', '',
+        { closeButton: true, progressBar: true });
+    }
 
   }
 
-  validacionesRegistro(){
+  validacionesRegistro() {
     this.validarCamposFormCostoDetalle();
     //this.msgValidacionesCamposFormComisionDetallePorMayor();
     //this.msgValidacionesCamposFormDetallePorMayor();
     this.msgValidacionesCamposFormNumericos();
 
   }
-  modeloRegistroEquipo(){
-    const model: Equipo ={
+  modeloRegistroEquipo() {
+    const model: Equipo = {
       Imei: this.formRegistro.get('IMEI')?.value,
-      ID_Modelo: Number( this.formRegistro.get('modelo')?.value),
-      ID_Tecnologia: Number( this.formRegistro.get('tecnologia')?.value),
-      ID_Garantia: Number( this.formRegistro.get('garantia')?.value),
-      ID_Condicion: Number( this.formRegistro.get('idCondicion')?.value),
-      ID_Estado_Bloqueo: Number( this.formRegistro.get('idEstadoBloqueo')?.value),
-      ID_Almacen: Number( this.formRegistro.get('almacen')?.value),
-      ID_Suplidor: Number( this.formRegistro.get('suplidor')?.value),
+      marca: '',
+      modelo: '',
+      ID_Modelo: Number(this.formRegistro.get('modelo')?.value),
+      ID_Tecnologia: Number(this.formRegistro.get('tecnologia')?.value),
+      ID_Garantia: Number(this.formRegistro.get('garantia')?.value),
+      ID_Condicion: Number(this.formRegistro.get('idCondicion')?.value),
+      ID_Estado_Bloqueo: Number(this.formRegistro.get('idEstadoBloqueo')?.value),
+      ID_Almacen: Number(this.formRegistro.get('almacen')?.value),
+      ID_Suplidor: Number(this.formRegistro.get('suplidor')?.value),
       Numero_de_Factura: this.formRegistro.get('factura')?.value,
-      Precio_Por_Mayor: Number( this.formRegistro.get('alPorMayor')?.value),
-      Precio_Detalle: Number( this.formRegistro.get('alDetalle')?.value),
-      Costo_Equipo: Number( this.formRegistro.get('costo')?.value),
+      precioPorMayor: Number(this.formRegistro.get('alPorMayor')?.value),
+      precioDetalle: Number(this.formRegistro.get('alDetalle')?.value),
+      Costo_Equipo: Number(this.formRegistro.get('costo')?.value),
       Desbloqueado: this.formRegistro.get('desbloqueado')?.value,
       Disponible: this.formRegistro.get('disponible')?.value,
       Nota_Adicional: this.formRegistro.get('notaAdicional')?.value,
       Usuario: this.formRegistro.get('usuario')?.value,
-      Numero_Registro:this.numeroRegistro,
-      Comision_Por_Mayor: Number( this.formRegistro.get('comisionMayor')?.value),
-      Comision_Detalle: Number( this.formRegistro.get('comisionDetalle')?.value)
+      Numero_Registro: this.numeroRegistro,
+      Comision_Por_Mayor: Number(this.formRegistro.get('comisionMayor')?.value),
+      Comision_Detalle: Number(this.formRegistro.get('comisionDetalle')?.value),
+      Precio_Detalle: 0,
+      Precio_Por_Mayor: 0,
     }
     return model;
   }
@@ -151,7 +155,7 @@ export class EquipoRegistroComponent implements OnInit {
       this.formRegistro.get('comisionMayor')?.value >
       this.formRegistro.get('comisionDetalle')?.value
     ) {
-      this.formRegistro.setErrors({error:''})
+      this.formRegistro.setErrors({ error: '' })
       this.toastr.error(
         'La comision al por mayor no puede ser mayor a la comision al detalle',
         '',
@@ -165,7 +169,7 @@ export class EquipoRegistroComponent implements OnInit {
       this.formRegistro.get('alPorMayor')?.value >
       this.formRegistro.get('alDetalle')?.value
     ) {
-      this.formRegistro.setErrors({error:''})
+      this.formRegistro.setErrors({ error: '' })
       this.toastr.error(
         'El monto al por mayor, debe ser menor que el monto Al detalle',
         '',
@@ -179,9 +183,8 @@ export class EquipoRegistroComponent implements OnInit {
 
     if (
       this.formRegistro.get('alDetalle')?.value <
-      this.formRegistro.get('costo')?.value  && this.formRegistro.get('costo')?.value !== null)
-      {
-      this.formRegistro.setErrors({error:''})
+      this.formRegistro.get('costo')?.value && this.formRegistro.get('costo')?.value !== null) {
+      this.formRegistro.setErrors({ error: '' })
       this.toastr.error(
         'El monto de Al detalle no puede ser menor que el Costo',
         '',
@@ -196,16 +199,16 @@ export class EquipoRegistroComponent implements OnInit {
       'costo',
       'alDetalle',
       'alPorMayor',
-     // 'comisionDetalle',
-     // 'comisionMayor',
+      // 'comisionDetalle',
+      // 'comisionMayor',
     ];
     camposNumerico.forEach((campo) => {
       if (
         this.formRegistro.get(campo)?.value < 0 ||
         this.formRegistro.get(campo)?.value == 0
       ) {
-      this.formRegistro.setErrors({error:''})
-      this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
+        this.formRegistro.setErrors({ error: '' })
+        this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
           closeButton: true,
           progressBar: true,
         });
@@ -213,8 +216,8 @@ export class EquipoRegistroComponent implements OnInit {
       }
     });
   }
-  btnDisable(){
-    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  btnDisable() {
+    return this.formRegistro.valid ? this.btnDisabled = false : this.btnDisabled = true;
   }
   /**
  * If the checkbox is checked, enable the input field. If the checkbox is unchecked, disable the input
@@ -249,55 +252,55 @@ export class EquipoRegistroComponent implements OnInit {
 
       this.obtenerModeloLista();
     }
-    else{
+    else {
       this.formRegistro.controls.modelo.disable();
 
     }
   }
 
-  obtenerEquipoNumeroRegistro(){
+  obtenerEquipoNumeroRegistro() {
     this.mantenimientoService.getEquipoNumeroRegistro()
-    .subscribe(numeroRegistro =>{
-      numeroRegistro.forEach(({numero_Registro})=>{
-        this.numeroRegistro = numero_Registro;
+      .subscribe(numeroRegistro => {
+        numeroRegistro.forEach(({ numero_Registro }) => {
+          this.numeroRegistro = numero_Registro;
+        });
       });
-    });
   }
 
   //Catalogos
 
 
-  obtenerGarantia(){
+  obtenerGarantia() {
 
-  this.catalogosService.getGarantiaLista()
-                      .subscribe(garantia=>{
-                        this.listaGarantia = garantia;
-                      })
+    this.catalogosService.getGarantiaLista()
+      .subscribe(garantia => {
+        this.listaGarantia = garantia;
+      })
   }
-  obtenerDesbloqueo(){
+  obtenerDesbloqueo() {
     this.catalogosService.getDesbloqueoLista()
-                        .subscribe(desbloqueo=>{
-                          this.listaDesbloqueo = desbloqueo;
-                        })
+      .subscribe(desbloqueo => {
+        this.listaDesbloqueo = desbloqueo;
+      })
   }
-  obtenerCondicionEquipo(){
+  obtenerCondicionEquipo() {
     this.catalogosService.getCondicionEquipoLista()
-                        .subscribe(condicionEquipo=>{
-                          this.listaCondicionEquipo = condicionEquipo;
-                        })
+      .subscribe(condicionEquipo => {
+        this.listaCondicionEquipo = condicionEquipo;
+      })
   }
-  obtenerTecnologia(){
+  obtenerTecnologia() {
     this.catalogosService.getTecnologiaLista()
-                        .subscribe(tecnologia=>{
-                          this.listaTecnologia = tecnologia;
-                        })
+      .subscribe(tecnologia => {
+        this.listaTecnologia = tecnologia;
+      })
   }
-  obtenerSuplidor(){
+  obtenerSuplidor() {
     this.catalogosService.getSuplidorLista()
-                        .subscribe(suplidor=>{
+      .subscribe(suplidor => {
 
-                          this.listaSuplidor = suplidor;
-                        })
+        this.listaSuplidor = suplidor;
+      })
   }
   obtenerMarcasLista() {
 
