@@ -2,18 +2,20 @@
 export const environment = {
   production: true,
   servername: "localhost",
-  AppName:"MV System",
+  AppName: "MV System",
   // api: "https://complaintsmanagement.azurewebsites.net/",
 <<<<<<< HEAD
   //  api: "https://mvsystemapi.azurewebsites.net/",
   // api: "http://localhost:7010/",
-  api: "http://localhost:58883/",
-=======
-   //api: "https://mvsystemapi.azurewebsites.net/",
-  // api: "http://localhost:7010/",
-   api: "http://localhost:58883/",
->>>>>>> e153e3f80a39efc06c36679ad1c666ed0c732156
+  api: "https://localhost:5001/",
 
-  AUTHO:""
+=======
+  // api: "https://mvsystemapi.azurewebsites.net/",
+  api: "https://localhost:5001/",
+  // api: "http://localhost:58883/",
+  // api: "http://localhost:58883/",
+  // api: 'http://localhost:58883/',
+  AUTHO: ""
+>>>>>>> f75bcc8fa1fac7c7fbdaf2e83a03f43dddc7b247
 };
 
