@@ -7,7 +7,6 @@ import { Equipo, EquipoObjRetorno } from "../interfaces/equipo.interface";
 import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +22,9 @@ export class MantenimientoService {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
   postFactura(factura: FacturaRegistro): Observable<any> {
-    return this.http.post<any>(APIURL.Factura.Inserta.FacturaInserta, factura);
+    return this.http.post<any>(APIURL.Factura.Inserta.FacturaInserta, factura, {
+      responseType: 'blob' as 'json'
+    });
   }
 
   //Get's

@@ -79,7 +79,8 @@
                                         <span class="required-field">*</span>
                                     </label>
                                     <input class="form-control" formControlName="telefono" type="text" required
-                                        mask="000-000-0000" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                        (input)="BuscarCliente()" mask="000-000-0000"
+                                        [ngClass]="{'is-invalid':validarCampos('telefono')}" />
                                     <div class="validatorField"
                                         [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
                                         Este campo es requerido.

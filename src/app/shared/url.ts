@@ -12,7 +12,7 @@ export let APIURL = {
 
     Factura: {
         Inserta: {
-            FacturaInserta: API + 'Factura/PostFactura',
+            FacturaInserta: API + 'FacturacionReporte/PostFactura',
         },
     },
     Equipo: {
@@ -20,10 +20,10 @@ export let APIURL = {
             EquipoInserta: API + 'Equipos/Equipo_Insert',
         },
 
-           Consulta:{
-               EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
-               EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
-               EquipoVendido: API + 'Equipos/GetEquiposVendidos',
+        Consulta: {
+            EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
+            EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
+            EquipoVendido: API + 'Equipos/GetEquiposVendidos',
         },
     },
     Marca: {

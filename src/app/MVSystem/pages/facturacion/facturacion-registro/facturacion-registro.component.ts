@@ -125,7 +125,6 @@ export class FacturacionRegistroComponent implements OnInit {
     return new Promise((resolve) => {
       this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
         if (equipos && equipos[0].precioDetalle > 0) {
-          debugger
           const equipo = equipos[0]
 
           const articulo: AccesorioLista = {
@@ -158,7 +157,6 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   obtenerDetalleFactura(index: number) {
-    debugger
     const currentArticulo = this.articulos.controls[index].value
     let articulo = currentArticulo.articulo;
 
@@ -526,8 +524,20 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     this.mantenimientoService.postFactura(factura)
-      .subscribe(facturaResponse => {
-        console.log(facturaResponse);
+      .subscribe((blobResponse) => { // download file
+        debugger
+        var blob = new Blob([blobResponse], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
       })
+  }
+
+  BuscarCliente() {
+    if (this.formRegistro.get('telefono')?.value.length === 10)
+      this.obtenerClientesPorNombreTelefono()
   }
 }
