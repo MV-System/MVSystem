@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import {
@@ -20,7 +20,7 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   styleUrls: ['./equipo-disponible.component.css'],
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy {
-  equipoQuantity: any;
+
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -37,6 +37,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  equipoQuantity!:Observable<number>;
   subscription!: Subscription;
   currentPage: number = 1;
   totalRecord!: number;
@@ -69,8 +70,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     totalEquipos:[0,],
     totalInventario:[0,]
   });
-  obtenerTotalEquipos(cantidad: number){
-    this.equipoQuantity =interval(10).pipe(take(cantidad + 1));
+  obtenerTotalEquipos(cantidadEquipo: number){
+    this.equipoQuantity =interval(10).pipe(take(cantidadEquipo + 1));
+  }
+  obtenerTotalInventario(totalInventario: number){
+      this.form .get('totalInventario')?.setValue( totalInventario);
   }
   obtenerEquiposDisponibles() {
     this.getValueFilterForm();
@@ -78,6 +82,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
         this.obtenerTotalEquipos(equipo[0].totalRecord);
+        this.obtenerTotalInventario(equipo[0].totalInventario);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;

@@ -57,7 +57,7 @@ export interface EquipoDisponible {
     lastLine:           number;
     line:               number;
     totalRecord:        number;
-
+    totalInventario:    number;
 }
 export interface EquipoDisponibleQuery {
     almacen : number;
