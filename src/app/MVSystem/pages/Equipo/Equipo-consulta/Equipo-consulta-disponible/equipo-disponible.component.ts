@@ -30,13 +30,9 @@ export class EquipoDisponibleComponent implements OnInit,OnDestroy {
 
   }
   ngOnDestroy(): void {
-    console.log("OnDestroy Form users");
-    
     this.subscription.unsubscribe();
-    
   }
   subscription!: Subscription;
-
   currentPage:  number = 1;
   totalRecord!: number;
   line!:        number;
