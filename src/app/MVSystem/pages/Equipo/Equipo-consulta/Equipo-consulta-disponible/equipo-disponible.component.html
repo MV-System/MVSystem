@@ -36,6 +36,21 @@
                     </ng-option>
                 </ng-select>
             </div>
+       <!-- Cuadro totales -->
+                <div class="col-md-2">
+                    <div class="row mb-3">
+                        <input type="number" value="{{equipoQuantity | async}}" formControlName="totalEquipos" class="form-control total" >
+
+                    </div>
+                    <div class="row ">
+                        <input type="number" formControlName="totalInventario" class="form-control total" >
+
+                    </div>
+                </div>
+       <!-- Fin Cuadro totales -->
+
+            <div class="row">
+
             <div class="col-md-2">
                 <!-- Search by -->
                 <label class="form-label">Modelo</label>
@@ -57,6 +72,10 @@
                 </my-date-range-picker>
             </div>
         </div>
+
+    </div>
+ 
+
     </form>
     <section class="section mt-4 ">
         <div class="row">

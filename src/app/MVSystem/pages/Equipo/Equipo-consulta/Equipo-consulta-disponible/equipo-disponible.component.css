@@ -42,4 +42,6 @@
   .display-filter-content {
       display: flex !important;
   }
-  
+  input.total{
+    text-align: center
+  }
