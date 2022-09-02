@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import {
   Almacen,
   ModeloEquipo,
@@ -11,6 +11,7 @@ import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -18,6 +19,8 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
 export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
+  totalFacturado!: number;
+  totalGanancia!: number;
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -34,6 +37,9 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   @Input() active: boolean = false;
+
+  equipoQuantity!:Observable<number>;
+  totalInventario!: number;
   subscription!: Subscription;
   currentPage: number = 1;
   totalRecord!: number;
@@ -43,6 +49,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
   modeloListado: ModeloEquipo[] = [];
   listaVendedor: VendedorLista[] = [];
   equiposVendidos: EquipoVendido[] = [];
+  rangeDatePlaceholder:Date=new Date()
 
   filter: any = {
     almacen: 0,
@@ -106,11 +113,33 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
   }
+  obtenerTotalEquipos(cantidadEquipo: number){
+    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+  }
+  obtenerTotalFacturado(totalFacturado: number){
+    this.totalFacturado =totalFacturado;
+  }
+  obtenerTotalGanancia(totalGanancia: number){
+    this.totalGanancia =totalGanancia;
+  }
+  obtenerTotalInventario(totalInventario: number){
+    this.totalInventario =totalInventario;
+  }
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
+        console.log(equipo);
+        
+        let record = equipo.length == 0?0:equipo[0].totalRecord;
+        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
+        let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
+        let totalGanancia = equipo.length == 0?0:equipo[0].totalGanancia;
+        this.obtenerTotalEquipos(record);
+        this.obtenerTotalInventario(totalInventario);
+        this.obtenerTotalFacturado(totalFacturado);
+        this.obtenerTotalGanancia(totalGanancia);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;

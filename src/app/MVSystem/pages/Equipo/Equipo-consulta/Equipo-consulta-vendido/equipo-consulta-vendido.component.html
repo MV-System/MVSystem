@@ -36,8 +36,7 @@
 										</ng-select>
 									</div>
 									<div class="row">
-
-										<div class="col-md-3">
+										<div class="col-md-2">
 											Rango de fecha
 											<my-date-range-picker 
 												name="rangoFecha" 
@@ -56,16 +55,49 @@
 												[options]="myDateRangePickerOptions"
 												formControlName="fechaRegistro" 
 												(dateRangeChanged)="onDateRangeChanged($event)"
-												placeholder=" 01/01/1950  -  01/01/2022">
+												placeholder=" {{01/01/2005 | date }} -  {{rangeDatePlaceholder | date}}">
 											</my-date-range-picker>
 										</div>
 									</div>
+									
+										
+
+										
 								</div>
 								<div class="row">
-									<!-- Total Equipos -->
-									<!-- Total Inventario
-									Total Facturado
-									Total Ganancia -->
+									<!-- Cuadro totales -->
+									<ng-container  *ngIf="equiposVendidos.length">
+										<div class="col-md-2">
+											<div class="row mb-3">
+												Total Equipos
+												<label  class="form-control total" >
+													{{equipoQuantity | async}}
+												</label>
+											</div>
+											<div class="row mb-3">
+												Total Inventario
+												<label  class="form-control total" >
+													{{totalInventario | currency}}
+												</label>
+											</div>
+											<div class="row mb-3">
+												Total Facturado
+
+												<label  class="form-control total" >
+													{{totalFacturado | currency}}
+												</label>
+											</div>
+											<div class="row mb-3">
+												Total Ganancias
+												<label  class="form-control total" >
+													{{totalGanancia | currency}}
+												</label>
+											</div>
+										</div>
+									
+									</ng-container>
+									
+									<!-- Fin Cuadro totales -->
 								</div>
 							</form>
 							<section class="section mt-4 ">
@@ -121,7 +153,9 @@
 											</tbody>
 										</table>
 										<!-- End Table with stripped rows -->
-
+										<div class="not-data" *ngIf="!equiposVendidos.length">
+											Datos no encontrados
+										</div>
 									</div>
 								</div>
 							</section>						

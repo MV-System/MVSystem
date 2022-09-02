@@ -42,6 +42,6 @@
   .display-filter-content {
       display: flex !important;
   }
-  input.total{
+  label.total{
     text-align: center
   }

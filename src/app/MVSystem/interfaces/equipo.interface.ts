@@ -102,4 +102,7 @@ export interface EquipoVendido {
     line:               number;
     lastLine:           number;
     totalRecord:        number;
+    totalInventario:    number;
+    totalGanancia:      number;
+    totalFacturado:     number;
 }

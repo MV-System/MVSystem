@@ -20,7 +20,6 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   styleUrls: ['./equipo-disponible.component.css'],
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy {
-
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -39,6 +38,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
   }
   equipoQuantity!:Observable<number>;
   subscription!: Subscription;
+  rangeDatePlaceholder:Date=new Date();
+  totalInventario!: number;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -71,18 +72,23 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     totalInventario:[0,]
   });
   obtenerTotalEquipos(cantidadEquipo: number){
-    this.equipoQuantity =interval(10).pipe(take(cantidadEquipo + 1));
+    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
   }
   obtenerTotalInventario(totalInventario: number){
-      this.form .get('totalInventario')?.setValue( totalInventario);
+    this.totalInventario =totalInventario;
   }
   obtenerEquiposDisponibles() {
+    console.log(this.totalInventario);
+    
     this.getValueFilterForm();
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        this.obtenerTotalEquipos(equipo[0].totalRecord);
-        this.obtenerTotalInventario(equipo[0].totalInventario);
+        let record = equipo.length == 0?0:equipo[0].totalRecord;
+        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
+        this.obtenerTotalEquipos(record);
+        
+        this.obtenerTotalInventario(totalInventario);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;
