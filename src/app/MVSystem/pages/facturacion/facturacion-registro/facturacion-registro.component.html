@@ -347,12 +347,13 @@
                                                             </td>
 
                                                             <td class="col-md-1">
-                                                                <input type="number" required class="form-control"
+                                                                <input type="text" required class="form-control"
                                                                     placeholder="Cantidad" formControlName="cantidad"
                                                                     (keydown.enter)="descuentoInput.focus()"
                                                                     #cantidadInput
                                                                     (change)="obtenerCantidadArticuloStock(i)"
-                                                                    [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}">
+                                                                    [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}"
+                                                                    appNumeric [maxlen]="4">
                                                                 <!-- <input formControlName="cantidad" /> -->
                                                             </td>
                                                             <td>
@@ -363,7 +364,8 @@
                                                             </td>
                                                             <td class="col-md-1">
                                                                 <input formControlName="descuento" type="number"
-                                                                    #descuentoInput (keydown.enter)="agregarArticulo()"
+                                                                    appNumeric [maxlen]="4" #descuentoInput
+                                                                    [decimals]="2" (keydown.enter)="agregarArticulo()"
                                                                     (change)="obtenerCantidadArticuloStock(i)" />
                                                             </td>
 
