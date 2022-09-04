@@ -46,6 +46,7 @@ export let APIURL = {
         condicionEquipoLista: API + 'Catalogos/Condicion_Equipo_Combo',
         tecnologiasComboLista: API + 'Catalogos/Tecnologias_Combo',
         suplidorComboLista: API + 'Catalogos/Suplidor_Combo',
+        AsumeITBIS: API + 'Catalogos/AsumeITBIS',
     },
     Clientes: {
         Consultas: {

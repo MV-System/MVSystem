@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS } from '../interfaces/catalogo.interface';
 import { Equipo } from "../interfaces/equipo.interface";
 
 
@@ -40,6 +40,9 @@ export class CatalogosService {
   }
   getAccesorioLista(): Observable<AccesorioLista[]> {
     return this.http.get<AccesorioLista[]>(APIURL.Catalogos.accesorioLista);
+  }
+  getAsumeITBIS(): Observable<AsumeITBIS> {
+    return this.http.get<AsumeITBIS>(APIURL.Catalogos.AsumeITBIS);
   }
   getGarantiaLista(): Observable<Garantia[]> {
     return this.http.get<Garantia[]>(APIURL.Catalogos.garantiaLista);

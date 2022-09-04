@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
-import { Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { ClientesService } from '../../../services/clientes.service';
 import { VendedorService } from '../../../services/vendedor.service';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
@@ -29,6 +29,7 @@ export class FacturacionRegistroComponent implements OnInit {
   listaVendedor: VendedorLista[] = []
   listaPagoFactura: TipoPago[] = [];
   listaGarantia: Garantia[] = [];
+  asumeItbis: AsumeITBIS = null!;
   listaAccesorio: AccesorioLista[] = [];
   listaTipoComprobante: TipoComprobante[] = [];
   loadingButtonBuscar: boolean = false;
@@ -60,7 +61,15 @@ export class FacturacionRegistroComponent implements OnInit {
     this.deshabilitadorInputs();
     this.obtenerFechaDiaActual();
     this.obtenerGarantia();
+    this.obtenerItbis();
     this.agregarArticulo();
+  }
+
+  obtenerItbis() {
+    this.catalogosService.getAsumeITBIS()
+      .subscribe(itbis => {
+        this.asumeItbis = itbis;
+      })
   }
 
   formRegistro: FormGroup = this.fb.group({
@@ -376,8 +385,14 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (this.formRegistro.get('aplicarItbis')?.value) {
-      this.itbis = this.total * .18;
-      this.subTotal -= this.itbis;
+      this.itbis = this.total * this.asumeItbis.itbiS_Valor
+
+      if (this.asumeItbis.asumeITBIS == 'N') {
+        this.total += this.itbis
+      }
+      else {
+        this.subTotal -= this.itbis;
+      }
     }
   }
 

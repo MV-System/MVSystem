@@ -57,6 +57,10 @@ export interface Garantia {
   iD_Garantia: number;
   descripcion: string;
 }
+export interface AsumeITBIS {
+  asumeITBIS: string;
+  itbiS_Valor: number;
+}
 export interface Desbloqueo {
   iD_Bloqueo: number;
   descripcion: string;
