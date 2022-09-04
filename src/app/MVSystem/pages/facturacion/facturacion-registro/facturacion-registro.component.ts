@@ -130,7 +130,7 @@ export class FacturacionRegistroComponent implements OnInit {
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.marca}`,
             cantidad: 1,
-            id: equipo.Imei,
+            id: equipo.imei,
             codigo_Barra: 0,
             modelo: equipo.modelo,
             precio_Detalle: equipo.precioDetalle,
@@ -140,6 +140,7 @@ export class FacturacionRegistroComponent implements OnInit {
           }
 
           this.listaAccesorio.push(articulo)
+          debugger
           resolve(articulo.id + '/' +
             articulo.accesorio_Descripcion + '/' +
             articulo.modelo + '/' +
@@ -169,6 +170,18 @@ export class FacturacionRegistroComponent implements OnInit {
     currentArticulo.descripcion = articulo.split('/')[1] + '  ' + articulo.split('/')[2];
     currentArticulo.precioDetalle = articulo.split('/')[3];
     currentArticulo.precioMayor = articulo.split('/')[4];
+
+    for (let articuloAddIndex in this.articulos.controls) {
+      if (articuloAddIndex == index.toString())
+        continue
+
+      debugger
+      let currentArticuloList = this.articulos.controls[articuloAddIndex].value
+      if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
+        this.borrarArticulo(index)
+        this.toastr.error("Este articulo ya fue registrado")
+      }
+    }
 
     currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
 
@@ -525,7 +538,6 @@ export class FacturacionRegistroComponent implements OnInit {
 
     this.mantenimientoService.postFactura(factura)
       .subscribe((blobResponse) => { // download file
-        debugger
         var blob = new Blob([blobResponse], { type: 'application/pdf' });
         const blobUrl = URL.createObjectURL(blob);
         const iframe = document.createElement('iframe');

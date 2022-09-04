@@ -124,7 +124,7 @@ export class EquipoRegistroComponent implements OnInit {
   }
   modeloRegistroEquipo() {
     const model: Equipo = {
-      Imei: this.formRegistro.get('IMEI')?.value,
+      imei: this.formRegistro.get('IMEI')?.value,
       marca: '',
       modelo: '',
       ID_Modelo: Number(this.formRegistro.get('modelo')?.value),
