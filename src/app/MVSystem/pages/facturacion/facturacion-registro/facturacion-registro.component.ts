@@ -35,6 +35,7 @@ export class FacturacionRegistroComponent implements OnInit {
   loadingButtonBuscar: boolean = false;
   btnDisabledTelefono: boolean = true;
   btnDisabledArticulo: boolean = true;
+  clienteReadOnly: boolean = true
 
   subTotal: number = 0;
   descuento: number = 0;
@@ -322,6 +323,22 @@ export class FacturacionRegistroComponent implements OnInit {
       detalleFacturaList: [],
     }
 
+    if (!this.clienteReadOnly) {
+      debugger
+      model.Cliente = {
+        apellidos: this.formRegistro.get('apellido')?.value,
+        nombres: this.formRegistro.get('nombre')?.value,
+        iD_Tipo_Cliente: 1,
+        limite_Credito: '0',
+        numero_Telefono: this.formRegistro.get('telefono')?.value,
+        iD_Tipo_Telefono: 1,
+        extencion: 0,
+        direccion_Detalle: '',
+        email_Detalle: '',
+        usuario: this.formRegistro.get('vendedor')?.value,
+      }
+    }
+
     return model;
   }
 
@@ -352,21 +369,22 @@ export class FacturacionRegistroComponent implements OnInit {
 
       this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
         .subscribe(cliente => {
+          this.clienteReadOnly = cliente.length > 0
 
-          if (cliente.length == 0) {
+          if (this.clienteReadOnly) {
+            cliente.forEach(({ nombres, apellidos, numero_Telefono, id_Cliente }) => {
+              this.loadingButtonBuscar = false;
+
+              this.formRegistro.controls.nombre.setValue(nombres);
+              this.formRegistro.controls.apellido.setValue(apellidos);
+              this.formRegistro.controls.idCliente.setValue(id_Cliente);
+
+            });
+          }
+          else {
             this.loadingButtonBuscar = false;
             this.toastr.warning('No existe este número');
           }
-
-          cliente.forEach(({ nombres, apellidos, numero_Telefono, id_Cliente }) => {
-            this.loadingButtonBuscar = false;
-
-            this.formRegistro.controls.nombre.setValue(nombres);
-            this.formRegistro.controls.apellido.setValue(apellidos);
-            this.formRegistro.controls.idCliente.setValue(id_Cliente);
-
-          });
-
         });
     }
   }

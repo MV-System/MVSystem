@@ -1,3 +1,4 @@
+import { ClienteRegistro } from "./cliente.interface";
 
 export interface Accesorio {
     imei_Equipo?: null;
@@ -62,6 +63,8 @@ export interface FacturaRegistro {
 
     cantidadArticulos: number;
     detalleFacturaList: DetalleFacturaList[];
+
+    Cliente?: ClienteRegistro
 }
 export interface DetalleFacturaList {
     numeroFactura: number;
