@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { interval, Observable, Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './equipo-consulta-vendido.component.html',
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
-export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
+export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
   totalFacturado!: number;
   totalGanancia!: number;
   constructor(
@@ -36,7 +36,19 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    const change =  changes["clearFilter"];
+
+    if(change && change.previousValue != change.currentValue){
+
+      this.clearFilters();
+    }
+ 
+  }
   @Input() active: boolean = false;
+  @Input() clearFilter:any;
 
   equipoQuantity!:Observable<number>;
   totalInventario!: number;
@@ -71,7 +83,12 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
-
+  clearFilters(){
+    this.form.reset();
+    this.filter.fechaInicio = '';
+    this.filter.fechaFinal = '';
+    this.obtenerEquiposVendidos()
+  }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
@@ -127,10 +144,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy {
   }
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
+    
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
-        console.log(equipo);
         
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;

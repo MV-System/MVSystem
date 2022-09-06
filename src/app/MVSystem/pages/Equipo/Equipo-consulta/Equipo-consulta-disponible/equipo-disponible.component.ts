@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { interval, Subscription, Observable } from 'rxjs';
@@ -19,7 +19,7 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   templateUrl: './equipo-disponible.component.html',
   styleUrls: ['./equipo-disponible.component.css'],
 })
-export class EquipoDisponibleComponent implements OnInit, OnDestroy {
+export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -32,10 +32,23 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
     this.obtenerVendedor();
+
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    const change =  changes["clearFilter"];
+
+    if(change && change.previousValue != change.currentValue){
+
+      this.clearFilters();
+    }
+ 
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  @Input() clearFilter:any;
   equipoQuantity!:Observable<number>;
   subscription!: Subscription;
   rangeDatePlaceholder:Date=new Date();
@@ -71,6 +84,13 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     totalEquipos:[0,],
     totalInventario:[0,]
   });
+   clearFilters(){
+    this.form.reset();
+    this.filter.imei = '';
+    this.filter.fechaInicio = '';
+    this.filter.fechaFinal = '';
+    this.obtenerEquiposDisponibles()
+  }
   obtenerTotalEquipos(cantidadEquipo: number){
     this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
   }
@@ -78,12 +98,19 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     this.totalInventario =totalInventario;
   }
   obtenerEquiposDisponibles() {
-    console.log(this.totalInventario);
-    
+
     this.getValueFilterForm();
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
+        
+        var blob = new Blob([equipo], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
@@ -101,10 +128,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy {
     let almacenValue = this.form.get('almacen')?.value;
     let suplidorValue = this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
+    let imei = this.form.get('imei')?.value;
     this.filter.almacen = almacenValue == null ? '' : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
-    this.filter.imei = this.form.get('imei')?.value;
+    this.filter.imei = imei == null ? '' : imei;
   }
   setDateRange(): void {
     let date = new Date();

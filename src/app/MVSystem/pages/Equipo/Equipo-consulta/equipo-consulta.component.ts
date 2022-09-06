@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-equipo-consulta',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./equipo-consulta.component.css']
 })
 export class EquipoConsultaComponent implements OnInit {
+  filter :any;
 
   constructor() { }
 
@@ -14,7 +15,9 @@ export class EquipoConsultaComponent implements OnInit {
 
   onCheckboxEquipoChange(event: Event){
     this.equipoTipo = Number((<HTMLInputElement>event.target).value);
-    if ((<HTMLInputElement>event.target).checked == true) {
-    }
+  }
+
+  clearFilters(e: any){
+    this.filter = e
   }
 }

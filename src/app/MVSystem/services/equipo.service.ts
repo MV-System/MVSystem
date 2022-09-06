@@ -12,7 +12,7 @@ export class EquipoService{
     
     constructor(private http: HttpClient) {}
 
-    getEquipoDisponible( EquipoDisponibleQuery:EquipoDisponibleQuery):Observable<EquipoDisponible[]>{
+    getEquipoDisponible( EquipoDisponibleQuery:EquipoDisponibleQuery):Observable<any>{
         const search =
         'Almacen='+
         EquipoDisponibleQuery.almacen +
@@ -31,7 +31,7 @@ export class EquipoService{
         '&fechaFinal='+
         EquipoDisponibleQuery.fechaFinal ;
         
-        return this.http.get<EquipoDisponible[]>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
+        return this.http.get<any>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
     }
     getEquipoVendido( EquipoVendido: EquipoVendidoFilter):Observable<EquipoVendido[]>{
         const search =
