@@ -13,7 +13,8 @@
     background-color: #f6f9ff;
 }
 .clear-filter{
-  color: #293250;
-  background-color: #FFD55A;
+  color: white;
+  /* color: #293250; */
+  background-color: #c29307;
   font-weight: 600;
 }

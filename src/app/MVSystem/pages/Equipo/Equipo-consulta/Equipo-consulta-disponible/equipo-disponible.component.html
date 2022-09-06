@@ -10,7 +10,7 @@
                     <input class="form-control"  placeholder="IMEI" 
                          formControlName="imei"
                         (keyup.enter)="obtenerEquiposDisponibles()" />
-                    <button type="submit">Buscar</button>
+                    <!-- <button type="submit">Buscar</button> -->
                 </div>
             </div>
 
@@ -78,15 +78,22 @@
                     (dateRangeChanged)="onDateRangeChanged($event)"
                     placeholder=" {{01/01/2005 | date }} -  {{rangeDatePlaceholder | date}}">
                 </my-date-range-picker>
+              
             </div>
         </div>
 
+   
     </div>
  
 
     </form>
     <section class="section mt-4 ">
+        <button class="btn print mx-1"  (click)="printReportEquipoDisponibles()">
+            Imprimir reporte <i class="bi bi-printer"></i>
+        </button>
         <div class="row">
+        
+
             <div class="col-lg-12 scroll-table">
                 <h5 class="card-title">Equipos</h5>
                 <!-- Table with stripped rows -->

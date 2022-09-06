@@ -41,3 +41,9 @@ input[type=number] { -moz-appearance:textfield; }
   font-weight: bold;
   font-style: italic;
 }
+.print {
+  color: white;
+  margin-left: 11px;
+  background-color: #467ff1;
+  font-weight: 600;
+}

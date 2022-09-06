@@ -104,13 +104,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
         
-        var blob = new Blob([equipo], { type: 'application/pdf' });
-        const blobUrl = URL.createObjectURL(blob);
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = blobUrl;
-        document.body.appendChild(iframe);
-        iframe.contentWindow?.print();
+      
+        
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
@@ -122,7 +117,26 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposDisponibles = equipo;
+
       });
+  }
+  printReportEquipoDisponibles(){
+    console.log('print');
+    
+    let equipo: any = this.equiposDisponibles;
+    this.equipoService.postEquipoDisponible(equipo)
+    .subscribe((blobResp)=>{
+console.log(blobResp);
+
+      var blob = new Blob([blobResp], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      iframe.contentWindow?.print();
+    })
+    
   }
   getValueFilterForm() {
     let almacenValue = this.form.get('almacen')?.value;

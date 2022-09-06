@@ -53,4 +53,10 @@ export class EquipoService{
         EquipoVendido.fechaFinal ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
+    postEquipoDisponible(equipo: EquipoDisponible){
+        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoReporteInserta,equipo,{
+            responseType: 'blob' as 'json'
+          });
+          
+    }
 }
