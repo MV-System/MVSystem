@@ -33,7 +33,10 @@ export interface EquipoObjRetorno {
     disponible_Detalle: null;
     mensaje: string;
 }
-
+export interface EquipoDisponibleReporte{
+    equipoDisponibles: EquipoDisponible[];
+    fechaImpresion: string;
+}
 export interface EquipoDisponible {
     imei: string;
     descripcion: string;

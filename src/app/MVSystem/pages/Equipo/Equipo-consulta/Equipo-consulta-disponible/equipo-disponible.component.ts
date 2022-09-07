@@ -8,7 +8,7 @@ import {
   Almacen,
   ModeloEquipo,
 } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoDisponible } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoDisponible, EquipoDisponibleReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
@@ -61,6 +61,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   modeloListado: ModeloEquipo[] = [];
   listaVendedor: VendedorLista[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
+  equiposDisponibleReporte!: EquipoDisponibleReporte[];
   filter: any = {
     almacen: 0,
     modelo: '',
@@ -122,11 +123,23 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
   printReportEquipoDisponibles(){
     console.log('print');
+    const model :EquipoDisponibleReporte = {
+      equipoDisponibles : [],
+      fechaImpresion: new Date().toDateString(),
+    }
+
+    this.equiposDisponibles.forEach(ele=>{
+      model.equipoDisponibles.push(ele);
+
+    });
+    console.log(model);
     
-    let equipo: any = this.equiposDisponibles;
-    this.equipoService.postEquipoDisponible(equipo)
+    // console.log(equipos);
+
+
+    this.equipoService.postEquipoDisponible(model)
     .subscribe((blobResp)=>{
-console.log(blobResp);
+      console.log(blobResp);
 
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
