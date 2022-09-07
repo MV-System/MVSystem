@@ -151,5 +151,5 @@
             </div>
         </div>
     </section>
-    <pagination-controls (pageChange)="pageChanged($event)" *ngIf="equiposDisponibles.length >= 10">
+    <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10">
     </pagination-controls>

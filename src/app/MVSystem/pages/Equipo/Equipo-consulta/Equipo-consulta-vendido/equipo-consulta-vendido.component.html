@@ -100,6 +100,9 @@
 								</div>
 							</form>
 							<section class="section mt-4 ">
+								<button class="btn print mx-1"  (click)="printReportEquipoVendido()">
+									Imprimir reporte <i class="bi bi-printer"></i>
+								</button>
 								<div class="row">
 									<div class="col-lg-12 scroll-table">
 										<h5 class="card-title">Equipos</h5>
@@ -109,20 +112,21 @@
 												<tr>
 													<th scope="col">Imei</th>
 													<th scope="col">Descripción</th>
-													<th scope="col">Tecnologia</th>
-													<th scope="col">Garantia</th>
 													<th scope="col">Precio Mayor</th>
 													<th scope="col">Precio Detalle</th>
 													<th scope="col">Costo</th>
+													<th scope="col">Precio Vendido</th>
+													<th scope="col">Tipo Factura</th>
 													<th scope="col">Desbloq.</th>
-													<!-- <th scope="col">Desbloqueado</th> -->
-													<th scope="col">Disponible</th>
 													<th scope="col">Nota</th>
-													<th scope="col">Comision Detalle</th>
-													<th scope="col">Comision Por Mayor</th>
 													<th scope="col">Almacen</th>
 													<th scope="col">Suplidor</th>
+													<th scope="col">Vendedor</th>
+													<th scope="col">Cliente</th>
+													<th scope="col">Fecha facturado</th>
 													<th scope="col">Fecha Registro</th>
+													<th scope="col">Comision Detalle</th>
+													<th scope="col">Comision Por Mayor</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -137,16 +141,18 @@
 													<td>{{equipo.precioPorMayor | currency}}</td>
 													<td>{{equipo.precioDetalle | currency}}</td>
 													<td>{{equipo.costoEquipo | currency}}</td>
+													<td>{{equipo.precioVendido | currency}}</td>
 													<td>{{equipo.tipoFactura }}</td>
-													<td>{{equipo.isDesbloqueado}}</td>
+													<td>{{equipo.isDesbloqueado}}</td>												
 													<td>{{equipo.notaAdicional}}</td>
-													<td>{{equipo.comisionDetalle | currency}}</td>
-													<td>{{equipo.comisionPorMayor | currency}}</td>
 													<td>{{equipo.descripcionAlmacen}}</td>
 													<td>{{equipo.suplidor}}</td>
-													<td>{{equipo.cliente}}</td>
 													<td>{{equipo.vendedor}}</td>
+													<td>{{equipo.cliente}}</td>
+													<td>{{equipo.fechaFacturado | date}}</td>
 													<td>{{equipo.fechaRegistro | date}}</td>
+													<td>{{equipo.comisionDetalle | currency}}</td>
+													<td>{{equipo.comisionPorMayor | currency}}</td>
 												</tr>
 
 											</tbody>
@@ -158,7 +164,7 @@
 									</div>
 								</div>
 							</section>						
-			<pagination-controls (pageChange)="pageChanged($event)" *ngIf="equiposVendidos.length >= 10">
+			<pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10">
 			</pagination-controls>
 
 

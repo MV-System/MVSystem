@@ -6,7 +6,7 @@ import {
   Almacen,
   ModeloEquipo,
 } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoVendido } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoVendido, EquipoVendidoReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
@@ -164,6 +164,26 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
         }
         this.equiposVendidos = equipo;
       });
+  }
+  printReportEquipoVendido(){
+    const model :EquipoVendidoReporte = {
+      equipoVendidos : [],
+      fechaImpresion: new Date().toDateString(),
+    }
+    this.equiposVendidos.forEach(equipo=>{
+      model.equipoVendidos.push(equipo);
+    });
+    this.equipoService.postEquipoVendido(model)
+    .subscribe((blobResp)=>{
+      var blob = new Blob([blobResp], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      iframe.contentWindow?.print();
+    })
+    
   }
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {

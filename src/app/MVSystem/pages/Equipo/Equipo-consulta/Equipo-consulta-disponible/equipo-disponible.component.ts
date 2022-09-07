@@ -8,7 +8,7 @@ import {
   Almacen,
   ModeloEquipo,
 } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoDisponible } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoDisponible, EquipoDisponibleReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
@@ -61,6 +61,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   modeloListado: ModeloEquipo[] = [];
   listaVendedor: VendedorLista[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
+  equiposDisponibleReporte!: EquipoDisponibleReporte[];
   filter: any = {
     almacen: 0,
     modelo: '',
@@ -104,8 +105,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
         
-      
-        
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
@@ -121,13 +120,15 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
   printReportEquipoDisponibles(){
-    console.log('print');
-    
-    let equipo: any = this.equiposDisponibles;
-    this.equipoService.postEquipoDisponible(equipo)
+    const model :EquipoDisponibleReporte = {
+      equipoDisponibles : [],
+      fechaImpresion: new Date().toDateString(),
+    }
+    this.equiposDisponibles.forEach(equipo=>{
+      model.equipoDisponibles.push(equipo);
+    });
+    this.equipoService.postEquipoDisponible(model)
     .subscribe((blobResp)=>{
-console.log(blobResp);
-
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
       const iframe = document.createElement('iframe');
