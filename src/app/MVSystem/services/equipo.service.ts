@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter } from '../interfaces/equipo.interface';
+import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -53,34 +53,15 @@ export class EquipoService{
         EquipoVendido.fechaFinal ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
-    postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{
-        
-        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoReporteInserta, Equipo,{
+    postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
+        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
-          });
-          
+          });   
     }
-    // postEquipoDisponible(EquipoDisponibleQuery: EquipoDisponibleQuery): Observable<any>{
-    //     const search =
-    //     'Almacen='+
-    //     EquipoDisponibleQuery.almacen +
-    //     '&suplidor='+
-    //     EquipoDisponibleQuery.suplidor +
-    //     '&imei='+
-    //     EquipoDisponibleQuery.imei +
-    //     '&modelo='+
-    //     EquipoDisponibleQuery.modelo +
-    //     '&pageIndex='+
-    //     EquipoDisponibleQuery.pageIndex +
-    //     '&pageSize=' +
-    //     EquipoDisponibleQuery.pageSize +
-    //     '&fechaInicio=' +
-    //     EquipoDisponibleQuery.fechaInicio +
-    //     '&fechaFinal='+
-    //     EquipoDisponibleQuery.fechaFinal ;
-    //     return this.http.post<any>(`${APIURL.Equipo.Inserta.EquipoReporteInserta}?`+ search,{
-    //         responseType: 'blob' as 'json'
-    //       });
-          
-    // }
+    postEquipoVendido(Equipo: EquipoVendidoReporte): Observable<any>{        
+        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoVendidoReporteInserta, Equipo,{
+            responseType: 'blob' as 'json'
+          });   
+    }
+    
 }

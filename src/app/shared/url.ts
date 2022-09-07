@@ -18,7 +18,8 @@ export let APIURL = {
     Equipo: {
         Inserta: {
             EquipoInserta: API + 'Equipos/Equipo_Insert',
-            EquipoReporteInserta: API + 'EquipoDisponibleReporte/GetEquiposDisponible',
+            EquipoDisponibleReporteInserta: API + 'EquipoDisponibleReporte/GetEquiposDisponible',
+            EquipoVendidoReporteInserta: API + 'EquipoVendidoReporte/GetEquiposVendidos',
         },
 
         Consulta: {
