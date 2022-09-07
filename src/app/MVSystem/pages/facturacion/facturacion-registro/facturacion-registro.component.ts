@@ -73,7 +73,7 @@ export class FacturacionRegistroComponent implements OnInit {
       })
   }
 
-  formRegistro: FormGroup = this.fb.group({
+  initialValues: any = {
     idCliente: [''],
     nombre: [''],
     apellido: [''],
@@ -103,8 +103,9 @@ export class FacturacionRegistroComponent implements OnInit {
     totalArticulo: [,],
     articulos: this.fb.array([]),
     aplicarItbis: [false,],
-  });
+  }
 
+  formRegistro: FormGroup = this.fb.group(this.initialValues);
 
   criterioBusqueda: any = {
     criterio: '',
@@ -570,7 +571,19 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     this.mantenimientoService.postFactura(factura)
-      .subscribe((blobResponse) => { // download file
+      .subscribe((blobResponse) => {
+        this.formRegistro.reset({
+          tipoFactura: 1,
+          tipoPago: 1,
+          comprobante: 0,
+          garantia: 8,
+          aplicarItbis: false,
+        })
+
+        this.articulos.clear()
+        this.obtenerFechaDiaActual()
+        this.agregarArticulo()
+
         var blob = new Blob([blobResponse], { type: 'application/pdf' });
         const blobUrl = URL.createObjectURL(blob);
         const iframe = document.createElement('iframe');
