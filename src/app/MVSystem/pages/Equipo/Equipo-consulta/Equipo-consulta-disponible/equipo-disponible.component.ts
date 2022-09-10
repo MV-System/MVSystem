@@ -13,6 +13,7 @@ import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -25,7 +26,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
-    private vendedorService: VendedorService
+    private vendedorService: VendedorService,
+    private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -50,10 +52,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.unsubscribe();
   }
   @Input() clearFilter:any;
-  equipoQuantity!:Observable<number>;
+  // equipoQuantity!: Observable<number>;
+  equipoQuantity: number=0;
   subscription!: Subscription;
   rangeDatePlaceholder:Date=new Date();
-  totalInventario!: number;
+  totalInventario: number=0;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -94,7 +97,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.obtenerEquiposDisponibles()
   }
   obtenerTotalEquipos(cantidadEquipo: number){
-    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    this.equipoQuantity = cantidadEquipo + 1;
   }
   obtenerTotalInventario(totalInventario: number){
     this.totalInventario =totalInventario;
@@ -122,12 +126,13 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
   printReportEquipoDisponibles(){
     const model :EquipoDisponibleReporte = {
+      equipoFilter:this.filter,
       equipoDisponibles : [],
       fechaImpresion: new Date().toDateString(),
     }
-    this.equiposDisponibles.forEach(equipo=>{
-      model.equipoDisponibles.push(equipo);
-    });
+    // this.equiposDisponibles.forEach(equipo=>{
+    //   model.equipoDisponibles.push(equipo);
+    // });
     this.equipoService.postEquipoDisponible(model)
     .subscribe((blobResp)=>{
       this.printing = !this.printing;
@@ -138,7 +143,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
-    })
+    },(err)=>{
+      console.log(err);
+      this.printing = !this.printing;
+      this.toast.error('Error','Erro al imprimir reporte');
+    });
     this.printing = !this.printing;
   }
   getValueFilterForm() {

@@ -42,12 +42,13 @@
                 </ng-select>
             </div>
        <!-- Cuadro totales -->
-       <ng-container *ngIf="equiposDisponibles.length">
+       <ng-container >
            <div class="col-md-2">
                <div class="row mb-3">
                 Total Equipos
                    <label  class="form-control total" >
-                       {{equipoQuantity | async}}
+                       {{equipoQuantity }}
+                       <!-- {{equipoQuantity | async}} -->
                    </label>
                </div>
                <div class="row ">

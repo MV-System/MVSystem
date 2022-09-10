@@ -20,8 +20,7 @@ import { Suplidor } from '../../../../interfaces/catalogo.interface';
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
 export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
-  totalFacturado!: number;
-  totalGanancia!: number;
+ 
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -52,10 +51,13 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   @Input() active: boolean = false;
   @Input() clearFilter:any;
 
-  printing: boolean = false;
-  equipoQuantity!:Observable<number>;
-  totalInventario!: number;
   subscription!: Subscription;
+  printing: boolean = false;
+  totalFacturado: number = 0;
+  totalGanancia: number = 0;
+  equipoQuantity:number=0;
+  // equipoQuantity!:Observable<number>;
+  totalInventario: number = 0;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -140,11 +142,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.filter.vendedor = vendedor == null ? '' : vendedor;
     this.filter.suplidor = suplidor == null ? '' : suplidor;
     this.filter.modelo = modelo == null ? '' : modelo;
-    console.log(this.filter);
-    
   }
   obtenerTotalEquipos(cantidadEquipo: number){
-    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    this.equipoQuantity = cantidadEquipo + 1;
   }
   obtenerTotalFacturado(totalFacturado: number){
     this.totalFacturado =totalFacturado;
@@ -182,12 +183,13 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   }
   printReportEquipoVendido(){
     const model :EquipoVendidoReporte = {
+      equipoFilter:this.filter,
       equipoVendidos : [],
       fechaImpresion: new Date().toDateString(),
     }
-    this.equiposVendidos.forEach(equipo=>{
-      model.equipoVendidos.push(equipo);
-    });
+    // this.equiposVendidos.forEach(equipo=>{
+    //   model.equipoVendidos.push(equipo);
+    // });
     this.equipoService.postEquipoVendido(model)
     .subscribe((blobResp)=>{
       this.printing = !this.printing;
@@ -198,6 +200,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
+    },(err)=>{
+      console.log(err);
+      this.printing = !this.printing;
+      
     })
     this.printing = !this.printing;
   }
