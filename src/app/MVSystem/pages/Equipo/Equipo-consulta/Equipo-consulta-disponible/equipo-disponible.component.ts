@@ -20,6 +20,7 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   styleUrls: ['./equipo-disponible.component.css'],
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
+  printing: boolean = false;
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -129,6 +130,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     });
     this.equipoService.postEquipoDisponible(model)
     .subscribe((blobResp)=>{
+      this.printing = !this.printing;
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
       const iframe = document.createElement('iframe');
@@ -137,7 +139,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     })
-    
+    this.printing = !this.printing;
   }
   getValueFilterForm() {
     let almacenValue = this.form.get('almacen')?.value;

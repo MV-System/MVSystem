@@ -12,6 +12,7 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { take } from 'rxjs/operators';
+import { Suplidor } from '../../../../interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -32,6 +33,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
     this.obtenerVendedor();
+    this.obtenerSuplidor();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -50,6 +52,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   @Input() active: boolean = false;
   @Input() clearFilter:any;
 
+  printing: boolean = false;
   equipoQuantity!:Observable<number>;
   totalInventario!: number;
   subscription!: Subscription;
@@ -60,6 +63,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
   listaVendedor: VendedorLista[] = [];
+  listaSuplidor: Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
   rangeDatePlaceholder:Date=new Date()
 
@@ -67,6 +71,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     almacen: 0,
     modelo: '',
     suplidor: '',
+    vendedor: '',
     fechaRegistro: '',
     pageIndex: 1,
     pageSize: 10,
@@ -76,9 +81,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   form: FormGroup = this.fb.group({
     almacen: [''],
     suplidor: [''],
-    fechaRegistro: [''],
+    vendedor: [''],
     modelo: [''],
     rangeDate: [''],
+    fechaRegistro: [''],
   });
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -122,13 +128,20 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerEquiposVendidos();
   }
   getValueFilterForm() {
-    let almacenValue = this.form.get('almacen')?.value;
-    let suplidorValue = this.form.get('suplidor')?.value;
-    let modeloValue = this.form.get('modelo')?.value;
-    this.filter.almacen = almacenValue == null ? '' : almacenValue;
-
-    this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
-    this.filter.modelo = modeloValue == null ? '' : modeloValue;
+    const {
+      almacen,
+      suplidor,
+      vendedor,
+      modelo,
+      fechaRegistro
+    } = this.form.value;
+    this.filter.fechaRegistro = fechaRegistro == null ? '' : fechaRegistro;
+    this.filter.almacen = almacen == null ? '' : almacen;
+    this.filter.vendedor = vendedor == null ? '' : vendedor;
+    this.filter.suplidor = suplidor == null ? '' : suplidor;
+    this.filter.modelo = modelo == null ? '' : modelo;
+    console.log(this.filter);
+    
   }
   obtenerTotalEquipos(cantidadEquipo: number){
     this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
@@ -163,6 +176,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposVendidos = equipo;
+        console.log(this.equiposVendidos);
+        
       });
   }
   printReportEquipoVendido(){
@@ -175,6 +190,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     });
     this.equipoService.postEquipoVendido(model)
     .subscribe((blobResp)=>{
+      this.printing = !this.printing;
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
       const iframe = document.createElement('iframe');
@@ -183,7 +199,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     })
-    
+    this.printing = !this.printing;
   }
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
@@ -198,6 +214,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   obtenerVendedor() {
     this.vendedorService.getVendedorLista().subscribe((vendedor) => {
       this.listaVendedor = vendedor;
+    });
+  }
+  obtenerSuplidor() {
+    this.catalogosService.getSuplidorLista().subscribe((suplidor) => {
+      this.listaSuplidor = suplidor;
     });
   }
 }

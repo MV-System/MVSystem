@@ -10,9 +10,9 @@ import { VendedoresModule } from './pages/Vendedores/vendedores.module';
 import { SuplidoresModule } from './pages/Suplidores/suplidores.module';
 import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
-import { FacturacionRegistroComponent } from './pages/facturacion/facturacion-registro/facturacion-registro.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -31,7 +31,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ClientesModule,
     VendedoresModule,
     AccesoriosModule,
-    EquipoModule
+    EquipoModule,
+    SharedModule
   ],
   exports:[
     SuplidoresModule,

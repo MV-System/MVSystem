@@ -1,3 +1,8 @@
+ 
+
+<r-loading *ngIf="printing"></r-loading>
+
+
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
 
         <div class="row ">
@@ -151,5 +156,5 @@
             </div>
         </div>
     </section>
-    <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10">
+    <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10 && equiposDisponibles.length">
     </pagination-controls>

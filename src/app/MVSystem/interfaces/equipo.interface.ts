@@ -75,6 +75,7 @@ export interface EquipoDisponibleQuery {
 export interface EquipoVendidoFilter {
     almacen: number;
     suplidor: string;
+    vendedor: string;
     fechaRegistro: string;
     modelo: string;
     pageIndex: number;
