@@ -19,14 +19,14 @@ import { Suplidor } from '../../../../interfaces/catalogo.interface';
   templateUrl: './equipo-consulta-vendido.component.html',
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
-export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
- 
+export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy, OnChanges {
+
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
     private vendedorService: VendedorService
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.obtenerEquiposVendidos();
     this.obtenerAlmacenLista();
@@ -40,22 +40,22 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    const change =  changes["clearFilter"];
+    const change = changes["clearFilter"];
 
-    if(change && change.previousValue != change.currentValue){
+    if (change && change.previousValue != change.currentValue) {
 
       this.clearFilters();
     }
- 
+
   }
   @Input() active: boolean = false;
-  @Input() clearFilter:any;
+  @Input() clearFilter: any;
 
   subscription!: Subscription;
   printing: boolean = false;
   totalFacturado: number = 0;
   totalGanancia: number = 0;
-  equipoQuantity:number=0;
+  equipoQuantity: number = 0;
   // equipoQuantity!:Observable<number>;
   totalInventario: number = 0;
   currentPage: number = 1;
@@ -67,7 +67,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   listaVendedor: VendedorLista[] = [];
   listaSuplidor: Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
-  rangeDatePlaceholder:Date=new Date()
+  rangeDatePlaceholder: Date = new Date()
 
   filter: any = {
     almacen: 0,
@@ -91,7 +91,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
-  clearFilters(){
+  clearFilters() {
     this.form.reset();
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
@@ -143,30 +143,30 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.filter.suplidor = suplidor == null ? '' : suplidor;
     this.filter.modelo = modelo == null ? '' : modelo;
   }
-  obtenerTotalEquipos(cantidadEquipo: number){
+  obtenerTotalEquipos(cantidadEquipo: number) {
     // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
     this.equipoQuantity = cantidadEquipo + 1;
   }
-  obtenerTotalFacturado(totalFacturado: number){
-    this.totalFacturado =totalFacturado;
+  obtenerTotalFacturado(totalFacturado: number) {
+    this.totalFacturado = totalFacturado;
   }
-  obtenerTotalGanancia(totalGanancia: number){
-    this.totalGanancia =totalGanancia;
+  obtenerTotalGanancia(totalGanancia: number) {
+    this.totalGanancia = totalGanancia;
   }
-  obtenerTotalInventario(totalInventario: number){
-    this.totalInventario =totalInventario;
+  obtenerTotalInventario(totalInventario: number) {
+    this.totalInventario = totalInventario;
   }
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
-    
+
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
-        
-        let record = equipo.length == 0?0:equipo[0].totalRecord;
-        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
-        let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
-        let totalGanancia = equipo.length == 0?0:equipo[0].totalGanancia;
+
+        let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
+        let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
+        let totalFacturado = equipo.length == 0 ? 0 : equipo[0].totalFacturado;
+        let totalGanancia = equipo.length == 0 ? 0 : equipo[0].totalGanancia;
         this.obtenerTotalEquipos(record);
         this.obtenerTotalInventario(totalInventario);
         this.obtenerTotalFacturado(totalFacturado);
@@ -177,34 +177,31 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposVendidos = equipo;
-        console.log(this.equiposVendidos);
-        
+
       });
   }
-  printReportEquipoVendido(){
-    const model :EquipoVendidoReporte = {
-      equipoFilter:this.filter,
-      equipoVendidos : [],
+  printReportEquipoVendido() {
+    const model: EquipoVendidoReporte = {
+      equipoFilter: this.filter,
+      equipoVendidos: [],
       fechaImpresion: new Date().toDateString(),
     }
     // this.equiposVendidos.forEach(equipo=>{
     //   model.equipoVendidos.push(equipo);
     // });
     this.equipoService.postEquipoVendido(model)
-    .subscribe((blobResp)=>{
-      this.printing = !this.printing;
-      var blob = new Blob([blobResp], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.contentWindow?.print();
-    },(err)=>{
-      console.log(err);
-      this.printing = !this.printing;
-      
-    })
+      .subscribe((blobResp) => {
+        this.printing = !this.printing;
+        var blob = new Blob([blobResp], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
+      }, (err) => {
+        this.printing = !this.printing;
+      })
     this.printing = !this.printing;
   }
   obtenerAlmacenLista() {

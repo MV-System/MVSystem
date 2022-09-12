@@ -163,8 +163,6 @@ export class ClientesRegistroComponent implements OnInit {
               { closeButton: true, progressBar: true });
           }
           else {
-            console.log(clienteInsertado.mensaje);
-
             this.toastr.success(clienteInsertado.mensaje, '',
               { closeButton: true, progressBar: true });
             // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});

@@ -122,7 +122,6 @@ export class FacturacionRegistroComponent implements OnInit {
   //     const modelo = this.modeloRegistroFacturacion();
   //     // this.mantenimientoService.postFactura(modelo)
   //     //                         .subscribe(factura =>{
-  //     //                           console.log(factura);
 
   //     //                         })
   //   }
@@ -245,9 +244,6 @@ export class FacturacionRegistroComponent implements OnInit {
     let output = String(date.getFullYear()).padStart(2, '0') + '-' +
       String(date.getMonth() + 1).padStart(2, '0') + '-' +
       String(date.getDate()).padStart(2, '0');
-    // console.log(output);
-    // console.log(date);
-
 
     this.formRegistro.get('fechaFacturacion')?.setValue(output);
     this.formRegistro.get('fechaLimitePago')?.setValue(output);
@@ -540,8 +536,6 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenetAccesorios() {
     this.catalogosService.getAccesorioLista()
       .subscribe(accesorio => {
-        console.log(accesorio);
-
         this.listaAccesorio = accesorio;
       })
   }

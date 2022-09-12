@@ -28,7 +28,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private catalogosService: CatalogosService,
     private vendedorService: VendedorService,
     private toast: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.obtenerEquiposDisponibles();
@@ -40,23 +40,23 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    const change =  changes["clearFilter"];
+    const change = changes["clearFilter"];
 
-    if(change && change.previousValue != change.currentValue){
+    if (change && change.previousValue != change.currentValue) {
 
       this.clearFilters();
     }
- 
+
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  @Input() clearFilter:any;
+  @Input() clearFilter: any;
   // equipoQuantity!: Observable<number>;
-  equipoQuantity: number=0;
+  equipoQuantity: number = 0;
   subscription!: Subscription;
-  rangeDatePlaceholder:Date=new Date();
-  totalInventario: number=0;
+  rangeDatePlaceholder: Date = new Date();
+  totalInventario: number = 0;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -86,22 +86,22 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     imei: [''],
     modelo: [''],
     rangeDate: [''],
-    totalEquipos:[0,],
-    totalInventario:[0,]
+    totalEquipos: [0,],
+    totalInventario: [0,]
   });
-   clearFilters(){
+  clearFilters() {
     this.form.reset();
     this.filter.imei = '';
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
     this.obtenerEquiposDisponibles()
   }
-  obtenerTotalEquipos(cantidadEquipo: number){
+  obtenerTotalEquipos(cantidadEquipo: number) {
     // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
     this.equipoQuantity = cantidadEquipo + 1;
   }
-  obtenerTotalInventario(totalInventario: number){
-    this.totalInventario =totalInventario;
+  obtenerTotalInventario(totalInventario: number) {
+    this.totalInventario = totalInventario;
   }
   obtenerEquiposDisponibles() {
 
@@ -109,11 +109,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        
-        let record = equipo.length == 0?0:equipo[0].totalRecord;
-        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
+
+        let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
+        let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
-        
+
         this.obtenerTotalInventario(totalInventario);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
@@ -124,30 +124,29 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
       });
   }
-  printReportEquipoDisponibles(){
-    const model :EquipoDisponibleReporte = {
-      equipoFilter:this.filter,
-      equipoDisponibles : [],
+  printReportEquipoDisponibles() {
+    const model: EquipoDisponibleReporte = {
+      equipoFilter: this.filter,
+      equipoDisponibles: [],
       fechaImpresion: new Date().toDateString(),
     }
     // this.equiposDisponibles.forEach(equipo=>{
     //   model.equipoDisponibles.push(equipo);
     // });
     this.equipoService.postEquipoDisponible(model)
-    .subscribe((blobResp)=>{
-      this.printing = !this.printing;
-      var blob = new Blob([blobResp], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.contentWindow?.print();
-    },(err)=>{
-      console.log(err);
-      this.printing = !this.printing;
-      this.toast.error('Error','Erro al imprimir reporte');
-    });
+      .subscribe((blobResp) => {
+        this.printing = !this.printing;
+        var blob = new Blob([blobResp], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
+      }, (err) => {
+        this.printing = !this.printing;
+        this.toast.error('Error', 'Erro al imprimir reporte');
+      });
     this.printing = !this.printing;
   }
   getValueFilterForm() {
