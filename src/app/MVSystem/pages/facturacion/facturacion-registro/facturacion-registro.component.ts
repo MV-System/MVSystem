@@ -170,8 +170,6 @@ export class FacturacionRegistroComponent implements OnInit {
     const currentFormGroup: FormGroup = this.articulos.controls[index] as FormGroup
     currentFormGroup.controls["cantidad"].enable()
 
-    debugger
-
     const currentArticulo = currentFormGroup.getRawValue()
     let articulo = currentArticulo.articulo;
 
@@ -389,14 +387,22 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (this.formRegistro.get('aplicarItbis')?.value) {
-      this.itbis = this.total * this.asumeItbis.itbiS_Valor
+      debugger
+      const itbis = this.asumeItbis.itbiS_Valor * 100
 
-      if (this.asumeItbis.asumeITBIS == 'N') {
-        this.total += this.itbis
+      if (this.asumeItbis.asumeITBIS == 'Y') {
+        const amountNew = this.total / (itbis / 100 + 1);
+
+        this.itbis = this.total - amountNew;
+        this.total = amountNew;
       }
       else {
-        this.subTotal -= this.itbis;
+        this.itbis = (this.total * itbis) / 100;
+        this.total = this.total + this.itbis;
       }
+
+      this.itbis = Number(this.itbis.toFixed(2))
+      this.total = Number(this.total.toFixed(2))
     }
   }
 
