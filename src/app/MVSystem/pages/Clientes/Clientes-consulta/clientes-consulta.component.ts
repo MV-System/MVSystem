@@ -10,42 +10,39 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./clientes-consulta.component.css']
 })
 export class ClientesConsultaComponent implements OnInit {
-  listaClientes: ClienteConsultaCriterio[]=[];
+  listaClientes: ClienteConsultaCriterio[] = [];
 
   constructor(private clientesService: ClientesService,
-              private fb: FormBuilder,
-              private toastr: ToastrService) { }
-              
+    private fb: FormBuilder,
+    private toastr: ToastrService) { }
+
 
   ngOnInit(): void {
   }
   page: number = 1;
   formBusqueda: FormGroup = this.fb.group({
-    criterio:['',]
+    criterio: ['',]
   })
   criterioBusqueda: any = {
     criterio: '',
   }
-  obtenerClientesPorNombreTelefono(){
+  obtenerClientesPorNombreTelefono() {
 
     this.criterioBusqueda.criterio = this.formBusqueda.controls.criterio.value;
 
-      
+
     this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
-                        .subscribe( cliente => {
-                          this.listaClientes =cliente;
-                          console.log(cliente);
-                          
-                          if (cliente.length == 0) {
-                            this.toastr.error("No existen datos con este criterio de busqueda!")
-         
-                          }
-                        });
-                      }
-  pageChanged(index: number){
-    this.page = index
-    console.log(index);
-    
+      .subscribe(cliente => {
+        this.listaClientes = cliente;
+
+        if (cliente.length == 0) {
+          this.toastr.error("No existen datos con este criterio de busqueda!")
+
+        }
+      });
   }
-  
+  pageChanged(index: number) {
+    this.page = index
+  }
+
 }
