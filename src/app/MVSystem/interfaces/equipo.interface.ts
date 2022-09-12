@@ -74,9 +74,10 @@ export interface EquipoDisponibleQuery {
     fechaFinal: string;
 }
 export interface EquipoVendidoFilter {
-    almacen: number;
+    almacen:  number;
     suplidor: string;
     vendedor: string;
+    telefono: number;
     fechaRegistro: string;
     modelo: string;
     pageIndex: number;
@@ -107,6 +108,7 @@ export interface EquipoVendido {
     precioVendido: number;
     precioDetalle: number;
     costoEquipo: number;
+    itbis:number;
     comisionDetalle: number;
     comisionPorMayor: number;
     tipoFactura: string;

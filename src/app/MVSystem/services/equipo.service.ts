@@ -39,6 +39,8 @@ export class EquipoService{
         EquipoVendido.almacen +
         '&suplidor='+
         EquipoVendido.suplidor +
+        '&telefono='+
+        EquipoVendido.telefono +
         '&vendedor='+
         EquipoVendido.vendedor +
         '&fechaRegistro='+

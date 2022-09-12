@@ -70,10 +70,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   rangeDatePlaceholder:Date=new Date()
 
   filter: any = {
-    almacen: 0,
+    almacen: 1,
     modelo: '',
     suplidor: '',
     vendedor: '',
+    telefono:'',
     fechaRegistro: '',
     pageIndex: 1,
     pageSize: 10,
@@ -87,6 +88,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     modelo: [''],
     rangeDate: [''],
     fechaRegistro: [''],
+    telefono:[''],
   });
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -130,22 +132,33 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerEquiposVendidos();
   }
   getValueFilterForm() {
+  const nullOrEmpty =(data: null)=>{return data== null ? '':data}
     const {
       almacen,
       suplidor,
       vendedor,
       modelo,
-      fechaRegistro
+      fechaRegistro,
+      telefono,
     } = this.form.value;
-    this.filter.fechaRegistro = fechaRegistro == null ? '' : fechaRegistro;
-    this.filter.almacen = almacen == null ? '' : almacen;
-    this.filter.vendedor = vendedor == null ? '' : vendedor;
-    this.filter.suplidor = suplidor == null ? '' : suplidor;
-    this.filter.modelo = modelo == null ? '' : modelo;
+    this.filter.fechaRegistro = nullOrEmpty(fechaRegistro);
+    this.filter.almacen = nullOrEmpty(almacen);
+    this.filter.vendedor = nullOrEmpty(vendedor);
+    this.filter.suplidor = nullOrEmpty(suplidor);
+    this.filter.modelo = nullOrEmpty(modelo);
+    this.filter.telefono = nullOrEmpty(telefono);  
+  }
+  onSearchByTelefono(){
+    if(this.form.controls.telefono.value.length == 10){
+      this.obtenerEquiposVendidos();
+    }
+    else if(this.form.controls.telefono.value.length <= 0){
+      this.obtenerEquiposVendidos();
+    }
   }
   obtenerTotalEquipos(cantidadEquipo: number){
     // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
-    this.equipoQuantity = cantidadEquipo + 1;
+    this.equipoQuantity = cantidadEquipo;
   }
   obtenerTotalFacturado(totalFacturado: number){
     this.totalFacturado =totalFacturado;
@@ -177,7 +190,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposVendidos = equipo;
-        console.log(this.equiposVendidos);
         
       });
   }
@@ -201,7 +213,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     },(err)=>{
-      console.log(err);
       this.printing = !this.printing;
       
     })

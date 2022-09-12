@@ -41,7 +41,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     const change =  changes["clearFilter"];
-
+    console.log(change);
+    
     if(change && change.previousValue != change.currentValue){
 
       this.clearFilters();
@@ -98,7 +99,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
   obtenerTotalEquipos(cantidadEquipo: number){
     // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
-    this.equipoQuantity = cantidadEquipo + 1;
+    this.equipoQuantity = cantidadEquipo;
   }
   obtenerTotalInventario(totalInventario: number){
     this.totalInventario =totalInventario;
@@ -130,9 +131,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       equipoDisponibles : [],
       fechaImpresion: new Date().toDateString(),
     }
-    // this.equiposDisponibles.forEach(equipo=>{
-    //   model.equipoDisponibles.push(equipo);
-    // });
     this.equipoService.postEquipoDisponible(model)
     .subscribe((blobResp)=>{
       this.printing = !this.printing;
@@ -144,9 +142,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     },(err)=>{
-      console.log(err);
       this.printing = !this.printing;
-      this.toast.error('Error','Erro al imprimir reporte');
+      this.toast.error('Error','Error al imprimir reporte');
     });
     this.printing = !this.printing;
   }

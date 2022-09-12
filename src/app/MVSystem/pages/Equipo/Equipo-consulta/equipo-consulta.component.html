@@ -47,11 +47,11 @@
             <div class="search-bar mt-3">
               <app-equipo-disponible
                 [clearFilter]="filter"
-                *ngIf="equipoTipo == 1"></app-equipo-disponible>
+                *ngIf="equipoTipo == disponible"></app-equipo-disponible>
               <app-equipo-consulta-vendido
                 [clearFilter]="filter"
 
-                *ngIf="equipoTipo == 2"></app-equipo-consulta-vendido>
+                *ngIf="equipoTipo == vendido"></app-equipo-consulta-vendido>
             </div>
           </div>
         </div>
