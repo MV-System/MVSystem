@@ -150,7 +150,6 @@ export class FacturacionRegistroComponent implements OnInit {
           }
 
           this.listaAccesorio.push(articulo)
-          debugger
           resolve(articulo.id + '/' +
             articulo.accesorio_Descripcion + '/' +
             articulo.modelo + '/' +
@@ -168,11 +167,17 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   obtenerDetalleFactura(index: number) {
-    const currentArticulo = this.articulos.controls[index].value
+    const currentFormGroup: FormGroup = this.articulos.controls[index] as FormGroup
+    currentFormGroup.controls["cantidad"].enable()
+
+    debugger
+
+    const currentArticulo = currentFormGroup.getRawValue()
     let articulo = currentArticulo.articulo;
 
     if (!currentArticulo || !articulo)
       return
+
 
     currentArticulo.idTipo = articulo.split('/')[6];
     currentArticulo.idGarantia = 1;
@@ -185,7 +190,6 @@ export class FacturacionRegistroComponent implements OnInit {
       if (articuloAddIndex == index.toString())
         continue
 
-      debugger
       let currentArticuloList = this.articulos.controls[articuloAddIndex].value
       if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
         this.borrarArticulo(index)
@@ -202,25 +206,11 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerCantidadArticuloStock(index)
 
     this.refreshGeneralValues();
-    // let modelAccesorio: DetalleFacturaList = {
-    //   numeroFactura: 0,
-    //   idEquipo: Number(idEquipo),
-    //   descripcion: descripcion,
-    //   idTipo: 1,
-    //   idGarantia: this.formRegistro.get('garantia')?.value,
-    //   subTotal: subTotal,
-    //   cantidad: this.obtenerCantidadArticulo() ?
-    //     this.formRegistroArticulo.get('cantidadElegida')?.value || 0 :
-    //     Number(this.formRegistroArticulo.get('cantidadElegida')?.value),
-    //   precio: this.calculoPrecio,
-    //   descuento: Number(this.formRegistroArticulo.get('descuento')?.value),
-    //   total: this.totalArticulo,
-    //   fechaRegistro: this.obtenerFechaDiaActual(),
-    // }
-    // this.calculoTotal();
 
-    // return modelAccesorio;
 
+    //Tiene que estar al final. EnmaJim note
+    if (currentArticulo.idTipo == 1)
+      currentFormGroup.controls["cantidad"].disable()
   }
 
   calcularSubTotalArticulo(precio: number, cantidad: number) {
@@ -321,7 +311,6 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (!this.clienteReadOnly) {
-      debugger
       model.Cliente = {
         apellidos: this.formRegistro.get('apellido')?.value,
         nombres: this.formRegistro.get('nombre')?.value,
