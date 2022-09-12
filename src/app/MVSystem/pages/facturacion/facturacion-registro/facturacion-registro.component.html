@@ -50,6 +50,14 @@
                             </div> -->
                             <!-- --------------- Nombre Cliente --------------- -->
                             <div class="row">
+                                <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()">
+                                    <ng-option *ngFor="let cliente of clientes" [value]="cliente.numero_Telefono">
+                                        {{cliente.nombres}} {{cliente.apellidos}} - {{cliente.numero_Telefono}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="row">
 
                                 <div class="col-md-6">
                                     <label class="form-label">Nombre </label>
@@ -80,8 +88,8 @@
                                         <span class="required-field">*</span>
                                     </label>
                                     <input class="form-control" formControlName="telefono" type="text" required
-                                        (input)="BuscarCliente()" mask="000-000-0000"
-                                        [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                        [value]="formRegistro.value.telefono" (input)="BuscarCliente()"
+                                        mask="000-000-0000" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
                                     <div class="validatorField"
                                         [ngClass]="{'invalid-feedback':!validarCampos('telefono')}">
                                         Este campo es requerido.

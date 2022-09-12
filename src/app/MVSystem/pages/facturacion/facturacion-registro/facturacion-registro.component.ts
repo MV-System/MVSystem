@@ -11,6 +11,7 @@ import { ModeloEquipo, AccesorioLista, Codigo } from '../../../interfaces/catalo
 import { AccesorioFactura, Accesorio } from '../../../interfaces/mantenimiento';
 import { MantenimientoService } from '../../../services/mantenimiento.service';
 import { elementAt } from 'rxjs/operators';
+import { ClienteConsultaCriterio } from 'src/app/MVSystem/interfaces/cliente.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -25,6 +26,7 @@ export class FacturacionRegistroComponent implements OnInit {
 
   // detalleFacturaRegistro: DetalleFacturaList[] = [];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
+  clientes: ClienteConsultaCriterio[] = []
   listaTipoFactura: TipoFactura[] = [];
   listaVendedor: VendedorLista[] = []
   listaPagoFactura: TipoPago[] = [];
@@ -64,6 +66,7 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerGarantia();
     this.obtenerItbis();
     this.agregarArticulo();
+    this.obtenerClientes();
   }
 
   obtenerItbis() {
@@ -77,7 +80,7 @@ export class FacturacionRegistroComponent implements OnInit {
     idCliente: [''],
     nombre: [''],
     apellido: [''],
-    telefono: [, Validators.required],
+    telefono: ['', Validators.required],
     vendedor: [,],
     almacen: [,],
     tipoFactura: [1,],
@@ -586,5 +589,16 @@ export class FacturacionRegistroComponent implements OnInit {
   BuscarCliente() {
     if (this.formRegistro.get('telefono')?.value.length === 10)
       this.obtenerClientesPorNombreTelefono()
+  }
+
+  obtenerClientes() {
+    this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
+      this.clientes = clientes
+    })
+  }
+
+  changeNumeroTelefono() {
+    debugger
+    //this.formRegistro.value['telefono'] 
   }
 }
