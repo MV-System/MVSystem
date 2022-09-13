@@ -13,6 +13,7 @@ import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { take } from 'rxjs/operators';
 import { Suplidor } from '../../../../interfaces/catalogo.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -25,7 +26,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
-    private vendedorService: VendedorService
+    private vendedorService: VendedorService,
+    private toast: ToastrService
   ) {}
   ngOnInit(): void {
     this.obtenerEquiposVendidos();
@@ -213,10 +215,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     },(err)=>{
-      this.printing = !this.printing;
-      
+      this.printing = !this.printing;    
+      this.toast.error('Error','Error al imprimir reporte');
     })
     this.printing = !this.printing;
+
   }
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
