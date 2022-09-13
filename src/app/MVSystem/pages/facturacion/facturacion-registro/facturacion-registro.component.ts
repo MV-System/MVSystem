@@ -339,8 +339,8 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   //  loadingSpinner(){
-  //    return this.loadingButtonBuscar == true ? 
-  //       this.loadingButtonBuscar == true 
+  //    return this.loadingButtonBuscar == true ?
+  //       this.loadingButtonBuscar == true
   //       : this.loadingButtonBuscar == false;
   //  }
   obtenerClientesPorNombreTelefono() {
@@ -393,7 +393,7 @@ export class FacturacionRegistroComponent implements OnInit {
       debugger
       const itbis = this.asumeItbis.itbiS_Valor * 100
 
-      if (this.asumeItbis.asumeITBIS == 'Y') {
+      if (this.asumeItbis.asumeITBIS == 'S') {
         const amountNew = this.total / (itbis / 100 + 1);
 
         this.itbis = this.total - amountNew;
@@ -599,6 +599,6 @@ export class FacturacionRegistroComponent implements OnInit {
 
   changeNumeroTelefono() {
     debugger
-    //this.formRegistro.value['telefono'] 
+    //this.formRegistro.value['telefono']
   }
 }
