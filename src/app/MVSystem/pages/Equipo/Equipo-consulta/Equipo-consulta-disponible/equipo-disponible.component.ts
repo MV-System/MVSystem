@@ -41,10 +41,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     const change = changes["clearFilter"];
-    console.log(change);
-    
     if (change && change.previousValue != change.currentValue) {
-
       this.clearFilters();
     }
 
@@ -107,14 +104,17 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   obtenerEquiposDisponibles() {
 
     this.getValueFilterForm();
+    console.log(this.filter);
+
     this.subscription = this.equipoService
+    
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
+        console.log(equipo);
 
         let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
         let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
-
         this.obtenerTotalInventario(totalInventario);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;

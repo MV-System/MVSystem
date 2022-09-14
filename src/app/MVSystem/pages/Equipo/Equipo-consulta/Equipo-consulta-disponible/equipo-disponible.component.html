@@ -121,6 +121,8 @@
   <div class="row">
     <div class="col-lg-12 scroll-table">
       <h5 class="card-title">Equipos</h5>
+      <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+
       <!-- Table with stripped rows -->
       <table class="table datatable">
         <thead>
@@ -181,5 +183,5 @@
 </section>
 <pagination-controls
   (pageChange)="pageChanged($event)"
-  *ngIf="totalRecord >= 10 && equiposDisponibles.length">
+  *ngIf="totalRecord > 10 && equiposDisponibles.length">
 </pagination-controls>

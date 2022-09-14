@@ -9,18 +9,23 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <!-- Search by telefono (cliente) -->
-              <label class="form-label">Por telefono</label>
-              <div class="col-md-12">
+              <label class="form-label"> Por telefono</label>
                 <input
                   class="form-control"
                   placeholder="telefono cliente"
                   formControlName="telefono"
-                  mask="000-000-0000"
                   (input)="onSearchByTelefono()"
                   (keyup.enter)="obtenerEquiposVendidos()" />
-              </div>
             </div>
-
+            <div class="col-md-4">
+              <!-- Search by IMEI -->
+              <label class="form-label">Por IMEI</label>
+                <input
+                  class="form-control"
+                  placeholder="IMEI"
+                  formControlName="imei"
+                  (keyup.enter)="obtenerEquiposVendidos()" />
+            </div>
             <div class="col-md-4">
               <!-- Search by almacen -->
               <label class="form-label">Almacen</label>
@@ -34,52 +39,57 @@
                 </ng-option>
               </ng-select>
             </div>
-            <div class="col-md-4">
-              <!-- --------------- Suplidores --------------- -->
-              <label class="form-label">Suplidor </label>
-              <ng-select
-                formControlName="suplidor"
-                (change)="obtenerEquiposVendidos()" >
-                <ng-option
-                  *ngFor="let suplidor of listaSuplidor"
-                  [value]="suplidor.descripcion">
-                  {{ suplidor.descripcion }}
-                </ng-option>
-              </ng-select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <!-- --------------- Vendedores --------------- -->
-              <label class="form-label">Vendedor </label>
-              <ng-select
-                formControlName="vendedor"
-                (change)="obtenerEquiposVendidos()" >
-                <ng-option
-                  *ngFor="let vendedor of listaVendedor"
-                  [value]="vendedor.nombres" >
-                  {{ vendedor.nombres }}
-                </ng-option>
-              </ng-select>
-            </div>
 
-            <div class="col-md-4">
-              <!-- Search by -->
-              <label class="form-label">Modelo</label>
-              <ng-select
-                formControlName="modelo"
-                (change)="obtenerEquiposVendidos()">
-                <ng-option
-                  *ngFor="let modelo of modeloListado"
-                  [value]="modelo.descripcion" >
-                  {{ modelo.descripcion }}
-                </ng-option>
-              </ng-select>
-            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <!-- --------------- Suplidores --------------- -->
+                <label class="form-label">Suplidor </label>
+                <ng-select
+                  formControlName="suplidor"
+                  (change)="obtenerEquiposVendidos()" >
+                  <ng-option
+                    *ngFor="let suplidor of listaSuplidor"
+                    [value]="suplidor.descripcion">
+                    {{ suplidor.descripcion }}
+                  </ng-option>
+                </ng-select>
+              </div>
+
+              <div class="col-md-4">
+                <!-- --------------- Vendedores --------------- -->
+                <label class="form-label">Vendedor </label>
+                <ng-select
+                  formControlName="vendedor"
+                  (change)="obtenerEquiposVendidos()" >
+                  <ng-option
+                    *ngFor="let vendedor of listaVendedor"
+                    [value]="vendedor.nombres" >
+                    {{ vendedor.nombres }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-4">
+                <!-- Search by -->
+                <label class="form-label">Modelo</label>
+                <ng-select
+                  formControlName="modelo"
+                  (change)="obtenerEquiposVendidos()">
+                  <ng-option
+                    *ngFor="let modelo of modeloListado"
+                    [value]="modelo.descripcion" >
+                    {{ modelo.descripcion }}
+                  </ng-option>
+                </ng-select>
+              </div>
+          </div>
+
+       
+
+       
           </div>
           <div class="row">
             <div class="col-md-5">
-              <label class="form-label row mx-2">Rango de fecha</label>
+              <label class="form-label row mx-2">Fecha de registro</label>
               <my-date-range-picker
                 [options]="myDateRangePickerOptions"
                 formControlName="rangeDate"
@@ -89,12 +99,19 @@
               </my-date-range-picker>
             </div>
             <div class="col-md-5">
-              <label class="form-label">Fecha de facturado</label>
-              <input
+              <label class="form-label">Fecha de facturación</label>
+              <my-date-range-picker
+              [options]="myDateRangePickerOptions"
+              formControlName="rangeDateFactura"
+              (dateRangeChanged)="onDateRangeFacturaChanged($event)"
+              placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                rangeDatePlaceholder | date }}" >
+            </my-date-range-picker>
+              <!-- <input
                 type="date"
                 class="form-control"
                 formControlName="fechaRegistro"
-                (change)="obtenerEquiposVendidos()"  />
+                (change)="obtenerEquiposVendidos()"  /> -->
             </div>
           </div>
         </div>
@@ -107,30 +124,36 @@
             <!-- Cuadro totales -->
             <ng-container>
               <div class="col-md-12">
-                <div class="row mb-4">
+                <div class="row mb-2">
                   Total Equipos
                   <label class="form-control total">
                     {{ equipoQuantity }}
                     <!-- {{equipoQuantity | async}} -->
                   </label>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-2">
                   Total Inventario
                   <label class="form-control total">
                     {{ totalInventario | currency }}
                   </label>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-2">
                   Total Facturado
 
                   <label class="form-control total">
                     {{ totalFacturado | currency }}
                   </label>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-2">
                   Total Ganancias
                   <label class="form-control total">
                     {{ totalGanancia | currency }}
+                  </label>
+                </div>
+                <div class="row mb-2">
+                  Total Itbis
+                  <label class="form-control total">
+                    {{ totalItbis | currency }}
                   </label>
                 </div>
               </div>
@@ -150,6 +173,7 @@
   <div class="row">
     <div class="col-lg-12 scroll-table">
       <h5 class="card-title">Equipos</h5>
+      <p>Mostrando {{filter.pageIndex}} al {{filter.pageSize}} de {{totalRecord}} registros</p>
       <!-- Table with stripped rows -->
       <table class="table datatable">
         <thead>
@@ -215,7 +239,7 @@
 </section>
 <pagination-controls
   (pageChange)="pageChanged($event)"
-  *ngIf="totalRecord >= 10 && equiposVendidos.length">
+  *ngIf="totalRecord > 5 && equiposVendidos.length">
 </pagination-controls>
 
 <!-- End #main -->
