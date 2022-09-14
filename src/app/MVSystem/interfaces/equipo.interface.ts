@@ -77,6 +77,7 @@ export interface EquipoVendidoFilter {
     almacen:  number;
     suplidor: string;
     vendedor: string;
+    imei: string;
     telefono: number;
     fechaRegistro: string;
     modelo: string;
@@ -84,6 +85,8 @@ export interface EquipoVendidoFilter {
     pageSize: number;
     fechaInicio: string;
     fechaFinal: string;
+    fechaInicioFactura: string;
+    fechaFinalFactura: string;
 }
 export interface filterEquipos{
     almacen: number,
@@ -126,4 +129,5 @@ export interface EquipoVendido {
     totalInventario: number;
     totalGanancia: number;
     totalFacturado: number;
+    totalItbis: number;
 }

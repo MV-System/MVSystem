@@ -41,6 +41,8 @@ export class EquipoService{
         EquipoVendido.suplidor +
         '&telefono='+
         EquipoVendido.telefono +
+        '&imei='+
+        EquipoVendido.imei +
         '&vendedor='+
         EquipoVendido.vendedor +
         '&fechaRegistro='+
@@ -54,7 +56,11 @@ export class EquipoService{
         '&fechaInicio=' +
         EquipoVendido.fechaInicio +
         '&fechaFinal='+
-        EquipoVendido.fechaFinal ;
+        EquipoVendido.fechaFinal +
+        '&fechaInicioFactura=' +
+        EquipoVendido.fechaInicioFactura +
+        '&fechaFinalFactura='+
+        EquipoVendido.fechaFinalFactura ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
