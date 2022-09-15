@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Equipo, EquipoObjRetorno } from "../interfaces/equipo.interface";
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
@@ -27,9 +27,17 @@ export class MantenimientoService {
     });
   }
 
+  modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
+    return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
+  }
+
   //Get's
 
   getEquipoNumeroRegistro(): Observable<EquipoNumeroRegistro[]> {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
+  }
+
+  getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
+    return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)
   }
 }

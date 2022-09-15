@@ -11,6 +11,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
+import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatus/equipo-modificacion-estatus.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -26,7 +27,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoRegistroComponent,
     EquipoConsultaComponent,
     EquipoConsultaVendidoComponent,
-    EquipoDisponibleComponent
+    EquipoDisponibleComponent,
+    EquipoModificacionEstatusComponent
   ],
   imports: [
     CommonModule,

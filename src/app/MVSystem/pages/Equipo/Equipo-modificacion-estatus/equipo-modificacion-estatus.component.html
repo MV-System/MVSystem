@@ -1,0 +1,104 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="cambiarEstatusEquipo">Cambiar estatus a Equipo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Cambiar estatus a equipo</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Consulta Imei de equipo</h5>
+                        <!--  Form -->
+                        <form [formGroup]="cambiarEstadoForm" (ngSubmit)="cambiarEstatus()" class="row g-3 needs-validation" novalidate>
+                            <!-- --------------- IMEI  --------------- -->
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">IMEI</label>
+                                    <input type="text" class="form-control" placeholder="Enter para realizar busqueda"
+                                        [ngClass]="{'is-invalid':validarCampos('imei')}"
+                                        formControlName="imei"
+                                        (keyup.enter)="obtenerEquipoByImei()"
+                                        [readonly]="existeEquipo">
+                                    <div class="validatorField" *ngIf="validarCampos('imei')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Estatus</label>
+                                    <select formControlName="condicionId" class="form-select">
+                                        <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
+                                            {{estado?.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Costo</label>
+                                    <input type="text" class="form-control"  formControlName="costoEquipo"  placeholder="RD$">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio Por Mayor</label>
+                                    <input type="text" class="form-control"  formControlName="precioPorMayor" currencyMask placeholder="RD$">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio de Detalle</label>
+                                    <input type="text" class="form-control"  formControlName="precioDetalle" currencyMask placeholder="RD$">
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Comision Por Mayor</label>
+                                    <input type="text" class="form-control"  formControlName="comisionMayor" currencyMask placeholder="RD$">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Comision de Detalle</label>
+                                    <input type="text" class="form-control" formControlName="comisionDetalle" currencyMask placeholder="RD$"> 
+                                </div>
+                            </div>
+                            
+                            
+                            <!-- --------------- DropDown Desbloqueado --------------- --> 
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Desbloqueado</label>
+                                    <select formControlName="estadoBloqueoId" class="form-select">
+                                        <option *ngFor="let estado of equipoEstadosBloqueoCatalogo" [value]="estado?.iD_Bloqueo">
+                                            {{estado?.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-warning mx-2" type="button" (click)="resetForm()" [disabled]=!existeEquipo>Cancelar</button>
+                                <button class="btn btn-primary" type="submit" [disabled]=!existeEquipo>Guardar</button>
+                            </div>
+                        </form>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main> 

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
+import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatus/equipo-modificacion-estatus.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,12 @@ const routes: Routes = [
   {
     path:'equipo-consulta',
     component:EquipoConsultaComponent
-  }
+  },
+  {
+    path:'equipo-cambiar-estatus',
+    component:EquipoModificacionEstatusComponent
+  },
+  
 ];
 
 @NgModule({
