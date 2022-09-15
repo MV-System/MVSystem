@@ -101,11 +101,22 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   obtenerTotalInventario(totalInventario: number) {
     this.totalInventario = totalInventario;
   }
+  onFilterPropHasValue(){
+    if(
+    this.filter.imei !=="" ||
+    this.filter.fechaInicio !="" ||
+    this.filter.fechaFinal !==""||
+    this.filter.almacen  !==""||
+    this.filter.modelo !==""||
+    this.filter.suplidor !==""){
+
+      this.filter.pageIndex = 1;
+    }
+
+  }
   obtenerEquiposDisponibles() {
-
     this.getValueFilterForm();
-    console.log(this.filter);
-
+    this.onFilterPropHasValue();
     this.subscription = this.equipoService
     
       .getEquipoDisponible(this.filter)
@@ -152,7 +163,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     let suplidorValue = this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
     let imei = this.form.get('imei')?.value;
-    this.filter.almacen = almacenValue == null ? '' : almacenValue;
+    this.filter.almacen = almacenValue == null ? 0 : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;

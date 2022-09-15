@@ -73,7 +73,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   rangeDatePlaceholder:Date=new Date()
 
   filter: any = {
-    almacen: 1,
+    almacen: '',
     modelo: '',
     suplidor: '',
     vendedor: '',
@@ -129,23 +129,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
     this.obtenerEquiposVendidos();
   }
-  // setDateRange(): void {
-  //   let date = new Date();
-  //   this.form.patchValue({
-  //     rangoFecha: {
-  //       beginDate: {
-  //         day: date.getDate(),
-  //         month: date.getMonth() + 1,
-  //         year: date.getFullYear(),
-  //       },
-  //       endDate: {
-  //         day: date.getDate(),
-  //         month: date.getMonth() + 1,
-  //         year: date.getFullYear(),
-  //       },
-  //     },
-  //   });
-  // }
   pageChanged(index: number) {
     this.currentPage = index;
     this.filter.pageIndex = index;
@@ -195,8 +178,27 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   obtenerTotalInventario(totalInventario: number){
     this.totalInventario =totalInventario;
   }
+  onFilterPropHasValue(){
+    if(
+    this.filter.imei !=="" ||
+    this.filter.almacen  !==""||
+    this.filter.modelo !==""||
+    this.filter.suplidor !=="" ||
+    this.filter.vendedor !=="" ||
+    this.filter.telefono !=="" ||
+    this.filter.fechaInicio !="" ||
+    this.filter.fechaFinal !==""||
+    this.filter.fechaInicioFactura !==""||
+    this.filter.fechaFinalFactura !=="" 
+    ){
+
+      this.filter.pageIndex = 1;
+    }
+
+  }
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
+    this.onFilterPropHasValue();
     console.log(this.filter);
     
     this.subscription = this.equipoService
