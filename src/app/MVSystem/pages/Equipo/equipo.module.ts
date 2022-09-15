@@ -13,6 +13,7 @@ import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consult
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { NgxMaskModule } from 'ngx-mask';
+import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -28,7 +29,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoRegistroComponent,
     EquipoConsultaComponent,
     EquipoConsultaVendidoComponent,
-    EquipoDisponibleComponent
+    EquipoDisponibleComponent,
+    EquipoTransferenciaComponent
   ],
   imports: [
     CommonModule,

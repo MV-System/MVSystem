@@ -27,6 +27,7 @@ export let APIURL = {
             EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
+            EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
         },
     },
     Marca: {
