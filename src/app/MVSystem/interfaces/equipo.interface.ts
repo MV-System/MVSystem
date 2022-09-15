@@ -131,3 +131,11 @@ export interface EquipoVendido {
     totalFacturado: number;
     totalItbis: number;
 }
+
+export interface EquipoTransferencia{
+    imei:string;
+    modelo:string;
+    procedencia:string;
+    destino:string;
+    mensaje:string;
+}

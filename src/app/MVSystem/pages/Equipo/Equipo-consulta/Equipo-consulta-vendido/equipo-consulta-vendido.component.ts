@@ -199,8 +199,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
     this.onFilterPropHasValue();
-    console.log(this.filter);
-    
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {

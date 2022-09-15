@@ -1,1 +1,84 @@
-<p>equipo-transferencia works!</p>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Transferencia de equipo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Transferencia  del equipo</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">Datos de equipo</h5>
+                        <!--  Form -->
+                        <form [formGroup]="form"  class="row g-3 needs-validation" >
+
+                            <div class="row">
+                                <!-- Search by imei -->
+                                <label class="form-label">Imei a transferir</label>
+                                <div class="col-md-12">
+                                  <input
+                                    class="form-control"
+                                    placeholder="imei"
+                                    formControlName="imei"
+                                    (keyup.enter)="getEquipoByImei()" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Almacen</label>
+                                <ng-select
+                                  formControlName="almacen">
+                                  <ng-option
+                                    *ngFor="let almacen of almacenes"
+                                    [value]="almacen.descripcion" >
+                                    {{ almacen.descripcion }}
+                                  </ng-option>
+                                </ng-select>
+                              </div>
+                            <div class="text-center ">
+                                <button class="btn btn-primary" type="submit" *ngIf="equiposToTranfer.length" >Imprimir reporte</button>
+                            </div>
+                        </form>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5" *ngIf="equiposToTranfer.length">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Equipo agregados</h5>
+                        <div>
+                            <table class="table table-Secondary">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>IMEI</th>
+                                        <th>Modelo</th>
+                                        <th>Procedencia</th>
+                                        <th>Destino</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let equipo of equiposToTranfer;let i = index">
+                                        <td>{{i + 1}}</td>
+                                        <td>{{equipo.imei}}</td>
+                                        <td>{{equipo?.modelo}}</td>
+                                        <td>{{equipo?.procedencia}}</td>
+                                        <td>{{equipo?.destino}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- End #main -->

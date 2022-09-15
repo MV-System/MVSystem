@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte } from '../interfaces/equipo.interface';
+import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -11,7 +11,7 @@ import { Pagination } from '../interfaces/pagination.interfaces';
 export class EquipoService{
     
     constructor(private http: HttpClient) {}
-
+    //GET'S
     getEquipoDisponible( EquipoDisponibleQuery:EquipoDisponibleQuery):Observable<any>{
         const search =
         'Almacen='+
@@ -63,6 +63,10 @@ export class EquipoService{
         EquipoVendido.fechaFinalFactura ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
+    getEquipoByImei(imei: string):Observable<EquipoTransferencia[]>{
+        return this.http.get<EquipoTransferencia[]>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
+    }
+    //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
