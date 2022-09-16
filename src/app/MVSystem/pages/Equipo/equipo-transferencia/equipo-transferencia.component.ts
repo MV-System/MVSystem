@@ -62,7 +62,6 @@ export class EquipoTransferenciaComponent implements OnInit {
   //  return this.listEquiposToTransfer= this.listEquiposToTransfer.filter((equipoId,index)=> index !== i);
   }
   getEquipoByImei(){
-    console.log(this.form.get('almacen')?.value);
     
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
@@ -96,6 +95,7 @@ export class EquipoTransferenciaComponent implements OnInit {
           }
           
           this.postTransferenciaEquipo(transfer);
+          this.form.get('imei')?.reset();
           // this.equipoToTransfer.push(transfer)
         }
       });
