@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia } from '../interfaces/equipo.interface';
+import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia, EquipoAlmacenTransferir } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -65,6 +65,9 @@ export class EquipoService{
     }
     getEquipoByImei(imei: string):Observable<EquipoTransferencia[]>{
         return this.http.get<EquipoTransferencia[]>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
+    } 
+    getTransferenciaId():Observable<number>{
+        return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
     }
     //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
@@ -77,5 +80,7 @@ export class EquipoService{
             responseType: 'blob' as 'json'
           });   
     }
-    
+    postTransferenciaEquipo(equipo: EquipoAlmacenTransferir){
+        return this.http.post(APIURL.Equipo.Inserta.EquipoTransferenciaInserta, equipo)
+    }
 }

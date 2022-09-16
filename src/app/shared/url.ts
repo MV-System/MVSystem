@@ -20,6 +20,7 @@ export let APIURL = {
             EquipoInserta: API + 'Equipos/Equipo_Insert',
             EquipoDisponibleReporteInserta: API + 'EquipoDisponibleReporte/GetEquiposDisponible',
             EquipoVendidoReporteInserta: API + 'EquipoVendidoReporte/GetEquiposVendidos',
+            EquipoTransferenciaInserta: API + 'Equipos/PostEquipoTransferencia',
         },
 
         Consulta: {
@@ -28,6 +29,7 @@ export let APIURL = {
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
+            EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
         },
     },
     Marca: {

@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { EquipoTransferencia } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { EquipoService } from '../../../services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
+import { EquipoAlmacenTransferir } from '../../../interfaces/equipo.interface';
 
 @Component({
   selector: 'app-equipo-transferencia',
@@ -12,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./equipo-transferencia.component.css']
 })
 export class EquipoTransferenciaComponent implements OnInit {
+
 
   constructor(
     private equipoService:EquipoService,
@@ -21,17 +23,21 @@ export class EquipoTransferenciaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAlmacenes();
+    this.getTransferenciaId();
   }
   almacenes: Almacen[]=[];
-  equiposToTranfer:EquipoTransferencia[]=[];
-  
+  listEquiposToTransfer:EquipoTransferencia[]=[];
+  equipoToTransfer:EquipoAlmacenTransferir[]=[];
+  idTransferencia!: number;
+  cantidadEquipoATransferir: number=0;
+
   form: FormGroup = this.fb.group({
     imei:[''],
-    almacen:['Principal',]
+    almacen:[2,]
   })
   validateImei():boolean{
     let bool= false;
-    this.equiposToTranfer.forEach((imeiAdded)=>
+    this.listEquiposToTransfer.forEach((imeiAdded)=>
     {
       if(this.form.get('imei')?.value ==imeiAdded.imei){
 
@@ -41,9 +47,26 @@ export class EquipoTransferenciaComponent implements OnInit {
     });
     return bool;
   }
+  postTransferenciaEquipo(equipoToTransfer:EquipoAlmacenTransferir){
+    
+    
+    this.equipoService.postTransferenciaEquipo(equipoToTransfer)
+    .subscribe(resp=>{
+      console.log(resp);
+      
+    })
+  }
+  deleteEquipo(imei: string){
+    this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
+   return this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
+  //  return this.listEquiposToTransfer= this.listEquiposToTransfer.filter((equipoId,index)=> index !== i);
+  }
   getEquipoByImei(){
+    console.log(this.form.get('almacen')?.value);
+    
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
+      
       !equipo.length?this.toastr.error('Imei no encontrado!'):equipo; 
       if(this.validateImei()){
           return
@@ -57,15 +80,33 @@ export class EquipoTransferenciaComponent implements OnInit {
           const model:EquipoTransferencia ={
             imei: equipoResp.imei,
             modelo: equipoResp.modelo,
-            procedencia: '',
-            destino: this.form.get('almacen')?.value,
-            mensaje: ''
+            almacenSalida: equipoResp.almacenSalida,
+            almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
+            mensaje: '',
           }
-          this.equiposToTranfer.push(model);
+          this.listEquiposToTransfer.push(model);
+
+          this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
+          const transfer: EquipoAlmacenTransferir={
+            id: this.idTransferencia ,
+            imei: equipoResp.imei,
+            almacenSalida:Number( equipoResp.almacenSalidaId),
+            almacenDestino: this.form.get('almacen')?.value,
+            cantidadEquipos: this.cantidadEquipoATransferir
+          }
+          
+          this.postTransferenciaEquipo(transfer);
+          // this.equipoToTransfer.push(transfer)
         }
       });
     
     });
+  }
+  getTransferenciaId(){
+    this.equipoService.getTransferenciaId()
+    .subscribe((id)=>{
+      this.idTransferencia = id + 1;
+    })
   }
   getAlmacenes() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {

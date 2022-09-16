@@ -12,13 +12,12 @@
     <!-- End Page Title -->
     <section class="section">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-5">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-2">Datos de equipo</h5>
                         <!--  Form -->
                         <form [formGroup]="form"  class="row g-3 needs-validation" >
-
                             <div class="row">
                                 <!-- Search by imei -->
                                 <label class="form-label">Imei a transferir</label>
@@ -30,26 +29,40 @@
                                     (keyup.enter)="getEquipoByImei()" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Almacen</label>
-                                <ng-select
-                                  formControlName="almacen">
+                            <div class="col-md-4 ">
+                                <label class="form-label">Almacen destino</label>
+                                <ng-select formControlName="almacen">
                                   <ng-option
                                     *ngFor="let almacen of almacenes"
-                                    [value]="almacen.descripcion" >
+                                    [value]="almacen.iD_Almacen" >
                                     {{ almacen.descripcion }}
                                   </ng-option>
                                 </ng-select>
                               </div>
+                              <div class="row mt-3">
+                                <div class="col-md-6">
+
+                                    Total articulos
+                                    <label class="form-control text-center ">
+                                      {{ cantidadEquipoATransferir }}
+                                    </label>
+                                </div>
+
+                              </div>
                             <div class="text-center ">
-                                <button class="btn btn-primary" type="submit" *ngIf="equiposToTranfer.length" >Imprimir reporte</button>
+                                <button class="btn btn-primary" 
+                                        type="submit" 
+                                        *ngIf="listEquiposToTransfer.length" >
+                                        Imprimir reporte
+                                </button>
                             </div>
                         </form>
                         <!-- End  Form -->
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5" *ngIf="equiposToTranfer.length">
+            <!-- Lista de Equipos agregados  -->
+            <div class="col-lg-7" *ngIf="listEquiposToTransfer.length">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Equipo agregados</h5>
@@ -60,17 +73,19 @@
                                         <th>#</th>
                                         <th>IMEI</th>
                                         <th>Modelo</th>
-                                        <th>Procedencia</th>
-                                        <th>Destino</th>
+                                        <th>Almacen Salida</th>
+                                        <th>Almacen Destino</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let equipo of equiposToTranfer;let i = index">
+                                    <tr *ngFor="let equipo of listEquiposToTransfer;let i = index">
                                         <td>{{i + 1}}</td>
                                         <td>{{equipo.imei}}</td>
                                         <td>{{equipo?.modelo}}</td>
-                                        <td>{{equipo?.procedencia}}</td>
-                                        <td>{{equipo?.destino}}</td>
+                                        <td>{{equipo?.almacenSalida}}</td>
+                                        <td>{{equipo?.almacenDestino}}</td>
+                                        <td> <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
+                                            style="color: rgb(205, 65, 65);cursor: pointer;"></i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -78,6 +93,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Lista end -->
         </div>
     </section>
 </main>
