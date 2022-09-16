@@ -83,7 +83,7 @@ export class EquipoTransferenciaComponent implements OnInit {
             almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
             mensaje: '',
           }
-          this.listEquiposToTransfer.push(model);
+          this.listEquiposToTransfer.unshift (model);
 
           this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
           const transfer: EquipoAlmacenTransferir={
