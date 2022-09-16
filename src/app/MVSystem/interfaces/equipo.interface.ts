@@ -104,6 +104,13 @@ export interface EquipoVendidoReporte{
     equipoVendidos: EquipoVendido[];
     fechaImpresion: string;
 }
+export interface EquipoTransferenciaReporte{
+    idTransferencia: number;
+    equipoTransferencias: EquipoTransferencia[]
+    fechaTransferencia: string;
+    usuario: string;
+    total: number;
+}
 export interface EquipoVendido {
     imei: string;
     descripcion: string;

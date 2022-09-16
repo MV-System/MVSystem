@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia, EquipoAlmacenTransferir } from '../interfaces/equipo.interface';
+import {  EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia, EquipoAlmacenTransferir, EquipoTransferenciaReporte } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -77,6 +77,11 @@ export class EquipoService{
     }
     postEquipoVendido(Equipo: EquipoVendidoReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoVendidoReporteInserta, Equipo,{
+            responseType: 'blob' as 'json'
+          });   
+    }
+    postEquipoTransferencia(Equipo: EquipoTransferenciaReporte): Observable<any>{        
+        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoTransferenciaReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
           });   
     }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EquipoTransferencia } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { EquipoService } from '../../../services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoAlmacenTransferir } from '../../../interfaces/equipo.interface';
@@ -19,7 +19,8 @@ export class EquipoTransferenciaComponent implements OnInit {
     private equipoService:EquipoService,
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    ) { }
 
   ngOnInit(): void {
     this.getAlmacenes();
@@ -30,6 +31,7 @@ export class EquipoTransferenciaComponent implements OnInit {
   equipoToTransfer:EquipoAlmacenTransferir[]=[];
   idTransferencia!: number;
   cantidadEquipoATransferir: number=0;
+  printing: boolean = false;
 
   form: FormGroup = this.fb.group({
     imei:[''],
@@ -83,7 +85,7 @@ export class EquipoTransferenciaComponent implements OnInit {
             almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
             mensaje: '',
           }
-          this.listEquiposToTransfer.unshift (model);
+          this.listEquiposToTransfer.unshift(model);
 
           this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
           const transfer: EquipoAlmacenTransferir={
@@ -101,6 +103,35 @@ export class EquipoTransferenciaComponent implements OnInit {
       });
     
     });
+  }
+  printReportEquipoVendido(){
+
+      const model :EquipoTransferenciaReporte = {
+        idTransferencia: this.idTransferencia,
+        equipoTransferencias: this.listEquiposToTransfer,
+        fechaTransferencia: new Date().toDateString(),
+        usuario: 'Xavier',
+        total: this.cantidadEquipoATransferir
+      }
+
+    console.log(model);
+    
+    this.equipoService.postEquipoTransferencia(model)
+    .subscribe((blobResp)=>{
+      this.printing = !this.printing;
+      var blob = new Blob([blobResp], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      iframe.contentWindow?.print();
+    },(err)=>{
+      this.printing = !this.printing;    
+      this.toastr.error('Error','Error al imprimir reporte');
+    })
+    this.printing = !this.printing;
+
   }
   getTransferenciaId(){
     this.equipoService.getTransferenciaId()
