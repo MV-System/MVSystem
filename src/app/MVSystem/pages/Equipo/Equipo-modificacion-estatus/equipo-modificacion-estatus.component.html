@@ -17,19 +17,16 @@
                     <div class="card-body">
                         <h5 class="card-title">Consulta Imei de equipo</h5>
                         <!--  Form -->
-                        <form [formGroup]="cambiarEstadoForm" (ngSubmit)="cambiarEstatus()" class="row g-3 needs-validation" novalidate>
+                        <form [formGroup]="cambiarEstadoForm" class="row g-3 needs-validation" novalidate>
                             <!-- --------------- IMEI  --------------- -->
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">IMEI</label>
-                                    <input type="text" class="form-control" placeholder="Enter para realizar busqueda"
-                                        [ngClass]="{'is-invalid':validarCampos('imei')}"
+                                    <input type="text" class="form-control" maxlength="16" placeholder="Enter para realizar busqueda"
                                         formControlName="imei"
                                         (keyup.enter)="obtenerEquipoByImei()"
                                         [readonly]="existeEquipo">
-                                    <div class="validatorField" *ngIf="validarCampos('imei')">
-                                        Este campo es requerido.
-                                    </div>
+                                  
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -47,20 +44,31 @@
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Costo</label>
-                                    <input type="text" class="form-control"  formControlName="costoEquipo"  placeholder="RD$">
+                                    <input type="text" class="form-control"  formControlName="costoEquipo" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                    <div class="validatorField" *ngIf="validarCampos('costoEquipo') && existeEquipo">
+                                        {{mensajeErrorCampoCosto}}
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Precio Por Mayor</label>
-                                    <input type="text" class="form-control"  formControlName="precioPorMayor" currencyMask placeholder="RD$">
+                                    <input type="text" class="form-control"  formControlName="precioPorMayor" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                    <div class="validatorField" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
+                                        {{mensajeErrorCampoPrecioMayor}}
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Precio de Detalle</label>
-                                    <input type="text" class="form-control"  formControlName="precioDetalle" currencyMask placeholder="RD$">
+                                    <input type="text" class="form-control is-invalid"  formControlName="precioDetalle" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                </div>
+                                <div class="validatorField" *ngIf="validarCampos('precioDetalle') && existeEquipo">
+                                    {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
                             </div>
                             
@@ -90,11 +98,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <div>
-                                <button class="btn btn-warning mx-2" type="button" (click)="resetForm()" [disabled]=!existeEquipo>Cancelar</button>
-                                <button class="btn btn-primary" type="submit" [disabled]=!existeEquipo>Guardar</button>
-                            </div>
                         </form>
+                        <div class="pt-2">
+                            <button class="btn btn-warning mx-2" (click)="resetForm()" [disabled]=!existeEquipo>Cancelar</button>
+                            <button class="btn btn-primary" (click)="cambiarEstatus()" [disabled]=!existeEquipo>Guardar</button>
+                        </div>
                         <!-- End  Form -->
                     </div>
                 </div>
