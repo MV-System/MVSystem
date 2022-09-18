@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { EquipoRoutingModule } from './equipo-routing.module';
-import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SharedModule } from '../../../shared/shared.module';
+
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxMaskModule } from 'ngx-mask';
+import { NgxPaginationModule } from 'ngx-pagination';
+
+import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
-import { SharedModule } from '../../../shared/shared.module';
-import { NgxMaskModule } from 'ngx-mask';
+import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -34,15 +36,15 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   ],
   imports: [
     CommonModule,
-    EquipoRoutingModule,
-    ReactiveFormsModule,
     CurrencyMaskModule,
-    NgSelectModule,
-    NgxPaginationModule,
-    NgxMaskModule.forRoot(),
+    EquipoRoutingModule,
+    FormsModule,
     MyDateRangePickerModule,
+    NgSelectModule,
+    NgxMaskModule.forRoot(),
+    NgxPaginationModule,
+    ReactiveFormsModule,
     SharedModule,
-    FormsModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

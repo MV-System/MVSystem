@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { interval, Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
   Almacen,
   ModeloEquipo,
@@ -11,7 +11,6 @@ import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
-import { take } from 'rxjs/operators';
 import { Suplidor } from '../../../../interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 
@@ -50,27 +49,25 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
  
   }
-  @Input() active: boolean = false;
   @Input() clearFilter:any;
 
   subscription!: Subscription;
   printing: boolean = false;
-  totalFacturado: number = 0;
-  totalGanancia: number = 0;
-  totalItbis: number = 0;
-  equipoQuantity:number=0;
-  // equipoQuantity!:Observable<number>;
+  totalFacturado:  number = 0;
+  totalGanancia:   number = 0;
+  totalItbis:      number = 0;
+  equipoQuantity:  number = 0;
   totalInventario: number = 0;
-  currentPage: number = 1;
-  totalRecord!: number;
-  line!: number;
-  lastLine!: number;
-  almacenListado: Almacen[] = [];
-  modeloListado: ModeloEquipo[] = [];
-  listaVendedor: VendedorLista[] = [];
-  listaSuplidor: Suplidor[] = [];
+  currentPage:     number = 1;
+  totalRecord!:    number;
+  line!:           number;
+  lastLine!:       number;
+  almacenListado:  Almacen[] = [];
+  modeloListado:   ModeloEquipo[] = [];
+  listaVendedor:   VendedorLista[] = [];
+  listaSuplidor:   Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
-  rangeDatePlaceholder:Date=new Date()
+  rangeDatePlaceholder: Date =new Date()
 
   filter: any = {
     almacen: '',
@@ -79,7 +76,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     vendedor: '',
     telefono:'',
     imei:'',
-    // fechaRegistro: '',
     pageIndex: 1,
     pageSize: 10,
     fechaInicio: '',
@@ -94,7 +90,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     modelo: [''],
     rangeDate: [''],
     rangeDateFactura: [''],
-    // fechaRegistro: [''],
     telefono:[''],
     imei:['',],
   });
@@ -228,9 +223,6 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       equipoVendidos : [],
       fechaImpresion: new Date().toDateString(),
     }
-    // this.equiposVendidos.forEach(equipo=>{
-    //   model.equipoVendidos.push(equipo);
-    // });
     this.equipoService.postEquipoVendido(model)
     .subscribe((blobResp)=>{
       this.printing = !this.printing;

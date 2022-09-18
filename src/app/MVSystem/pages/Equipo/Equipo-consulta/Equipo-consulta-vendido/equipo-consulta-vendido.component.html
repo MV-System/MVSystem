@@ -1,5 +1,6 @@
 <r-loading *ngIf="printing"></r-loading>
-<form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
+<div class="animate__animated animate__fadeIn">
+<form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search" >
   <div class="row">
     <div class="col-lg-8">
       <div class="card">
@@ -241,5 +242,6 @@
   (pageChange)="pageChanged($event)"
   *ngIf="totalRecord > 5 && equiposVendidos.length">
 </pagination-controls>
+</div>
 
 <!-- End #main -->

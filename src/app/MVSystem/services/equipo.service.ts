@@ -1,9 +1,17 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import {  EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia, EquipoAlmacenTransferir, EquipoTransferenciaReporte } from '../interfaces/equipo.interface';
+import {  
+    EquipoDisponibleQuery, 
+    EquipoDisponibleReporte, 
+    EquipoVendido, 
+    EquipoVendidoFilter, 
+    EquipoVendidoReporte, 
+    EquipoTransferencia, 
+    EquipoAlmacenTransferir, 
+    EquipoTransferenciaReporte 
+} from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
-import { Pagination } from '../interfaces/pagination.interfaces';
 
 @Injectable({
     providedIn:'root'

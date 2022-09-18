@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { interval, Subscription, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 import {
   Almacen,
@@ -21,7 +20,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./equipo-disponible.component.css'],
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
-  printing: boolean = false;
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -50,20 +48,21 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.unsubscribe();
   }
   @Input() clearFilter: any;
-  // equipoQuantity!: Observable<number>;
-  equipoQuantity: number = 0;
   subscription!: Subscription;
+  printing: boolean = false;
   rangeDatePlaceholder: Date = new Date();
+  equipoQuantity:  number = 0;
   totalInventario: number = 0;
-  currentPage: number = 1;
-  totalRecord!: number;
-  line!: number;
-  lastLine!: number;
+  currentPage:     number = 1;
+  totalRecord!:    number;
+  line!:           number;
+  lastLine!:       number;
   almacenListado: Almacen[] = [];
-  modeloListado: ModeloEquipo[] = [];
-  listaVendedor: VendedorLista[] = [];
+  modeloListado:  ModeloEquipo[] = [];
+  listaVendedor:  VendedorLista[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
   equiposDisponibleReporte!: EquipoDisponibleReporte[];
+
   filter: any = {
     almacen: 0,
     modelo: '',
@@ -74,7 +73,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     fechaInicio: '',
     fechaFinal: '',
   };
-
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
@@ -95,7 +93,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.obtenerEquiposDisponibles()
   }
   obtenerTotalEquipos(cantidadEquipo: number) {
-    // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
     this.equipoQuantity = cantidadEquipo;
   }
   obtenerTotalInventario(totalInventario: number) {
@@ -121,7 +118,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        console.log(equipo);
 
         let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
         let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
@@ -185,7 +181,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       },
     });
   }
-
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
@@ -202,7 +197,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.pageIndex = index;
     this.obtenerEquiposDisponibles();
   }
-
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.almacenListado = almacen;

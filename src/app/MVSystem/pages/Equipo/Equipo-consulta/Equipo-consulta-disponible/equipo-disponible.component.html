@@ -1,4 +1,5 @@
 <r-loading *ngIf="printing"></r-loading>
+<div class="animate__animated animate__fadeIn">
 
 <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
   <div class="row">
@@ -185,3 +186,4 @@
   (pageChange)="pageChanged($event)"
   *ngIf="totalRecord > 10 && equiposDisponibles.length">
 </pagination-controls>
+</div>
