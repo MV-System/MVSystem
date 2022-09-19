@@ -6,6 +6,7 @@ import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng
 import { AccesoriosRoutingModule } from './accesorios-routing.module';
 import { AccesoriosRegistroComponent } from './accesorios-registro/accesorios-registro.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AccesorioConsultaComponent } from './accesorio-consulta/accesorio-consulta.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -19,6 +20,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 @NgModule({
   declarations: [
     AccesoriosRegistroComponent,
+    AccesorioConsultaComponent,
   ],
   imports: [
     CommonModule,

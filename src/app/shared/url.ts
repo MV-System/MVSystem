@@ -8,6 +8,10 @@ export let APIURL = {
         Inserta: {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
         },
+        Consulta:{
+            AccesorioConsulta: API + 'Accesorios/GetAllAccesorios',
+
+        }
     },
 
     Factura: {
