@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { EquipoDisponible, EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte } from '../interfaces/equipo.interface';
+import {  EquipoDisponibleQuery, EquipoDisponibleReporte, EquipoVendido, EquipoVendidoFilter, EquipoVendidoReporte, EquipoTransferencia, EquipoAlmacenTransferir, EquipoTransferenciaReporte } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
 import { Pagination } from '../interfaces/pagination.interfaces';
@@ -11,7 +11,7 @@ import { Pagination } from '../interfaces/pagination.interfaces';
 export class EquipoService{
     
     constructor(private http: HttpClient) {}
-
+    //GET'S
     getEquipoDisponible( EquipoDisponibleQuery:EquipoDisponibleQuery):Observable<any>{
         const search =
         'Almacen='+
@@ -39,6 +39,12 @@ export class EquipoService{
         EquipoVendido.almacen +
         '&suplidor='+
         EquipoVendido.suplidor +
+        '&telefono='+
+        EquipoVendido.telefono +
+        '&imei='+
+        EquipoVendido.imei +
+        '&vendedor='+
+        EquipoVendido.vendedor +
         '&fechaRegistro='+
         EquipoVendido.fechaRegistro +
         '&modelo='+
@@ -50,9 +56,20 @@ export class EquipoService{
         '&fechaInicio=' +
         EquipoVendido.fechaInicio +
         '&fechaFinal='+
-        EquipoVendido.fechaFinal ;
+        EquipoVendido.fechaFinal +
+        '&fechaInicioFactura=' +
+        EquipoVendido.fechaInicioFactura +
+        '&fechaFinalFactura='+
+        EquipoVendido.fechaFinalFactura ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
+    getEquipoByImei(imei: string):Observable<EquipoTransferencia[]>{
+        return this.http.get<EquipoTransferencia[]>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
+    } 
+    getTransferenciaId():Observable<number>{
+        return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
+    }
+    //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
@@ -63,5 +80,12 @@ export class EquipoService{
             responseType: 'blob' as 'json'
           });   
     }
-    
+    postEquipoTransferencia(Equipo: EquipoTransferenciaReporte): Observable<any>{        
+        return this.http.post<any>(APIURL.Equipo.Inserta.EquipoTransferenciaReporteInserta, Equipo,{
+            responseType: 'blob' as 'json'
+          });   
+    }
+    postTransferenciaEquipo(equipo: EquipoAlmacenTransferir){
+        return this.http.post(APIURL.Equipo.Inserta.EquipoTransferenciaInserta, equipo)
+    }
 }

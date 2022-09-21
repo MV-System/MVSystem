@@ -42,17 +42,16 @@
                   
                   <button class="btn clear-filter" (click)="clearFilters($event)">Limpiar filtros  <i class="ri-filter-off-line"></i></button>
                 </ng-container>
-             
               </div>
             </div>
             <div class="search-bar mt-3">
               <app-equipo-disponible
                 [clearFilter]="filter"
-                *ngIf="equipoTipo == 1"></app-equipo-disponible>
+                *ngIf="equipoTipo == disponible"></app-equipo-disponible>
               <app-equipo-consulta-vendido
                 [clearFilter]="filter"
 
-                *ngIf="equipoTipo == 2"></app-equipo-consulta-vendido>
+                *ngIf="equipoTipo == vendido"></app-equipo-consulta-vendido>
             </div>
           </div>
         </div>
@@ -60,4 +59,5 @@
     </div>
   </section>
 </main>
+
 <!-- End #main -->

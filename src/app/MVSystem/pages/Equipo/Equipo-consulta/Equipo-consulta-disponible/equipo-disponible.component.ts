@@ -13,6 +13,7 @@ import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -20,12 +21,14 @@ import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
   styleUrls: ['./equipo-disponible.component.css'],
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
+  printing: boolean = false;
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
-    private vendedorService: VendedorService
-  ) {}
+    private vendedorService: VendedorService,
+    private toast: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.obtenerEquiposDisponibles();
@@ -37,22 +40,21 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    const change =  changes["clearFilter"];
-
-    if(change && change.previousValue != change.currentValue){
-
+    const change = changes["clearFilter"];
+    if (change && change.previousValue != change.currentValue) {
       this.clearFilters();
     }
- 
+
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  @Input() clearFilter:any;
-  equipoQuantity!:Observable<number>;
+  @Input() clearFilter: any;
+  // equipoQuantity!: Observable<number>;
+  equipoQuantity: number = 0;
   subscription!: Subscription;
-  rangeDatePlaceholder:Date=new Date();
-  totalInventario!: number;
+  rangeDatePlaceholder: Date = new Date();
+  totalInventario: number = 0;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -82,33 +84,48 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     imei: [''],
     modelo: [''],
     rangeDate: [''],
-    totalEquipos:[0,],
-    totalInventario:[0,]
+    totalEquipos: [0,],
+    totalInventario: [0,]
   });
-   clearFilters(){
+  clearFilters() {
     this.form.reset();
     this.filter.imei = '';
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
     this.obtenerEquiposDisponibles()
   }
-  obtenerTotalEquipos(cantidadEquipo: number){
-    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+  obtenerTotalEquipos(cantidadEquipo: number) {
+    // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    this.equipoQuantity = cantidadEquipo;
   }
-  obtenerTotalInventario(totalInventario: number){
-    this.totalInventario =totalInventario;
+  obtenerTotalInventario(totalInventario: number) {
+    this.totalInventario = totalInventario;
+  }
+  onFilterPropHasValue(){
+    if(
+    this.filter.imei !=="" ||
+    this.filter.fechaInicio !="" ||
+    this.filter.fechaFinal !==""||
+    this.filter.almacen  !==""||
+    this.filter.modelo !==""||
+    this.filter.suplidor !==""){
+
+      this.filter.pageIndex = 1;
+    }
+
   }
   obtenerEquiposDisponibles() {
-
     this.getValueFilterForm();
+    this.onFilterPropHasValue();
     this.subscription = this.equipoService
+    
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        
-        let record = equipo.length == 0?0:equipo[0].totalRecord;
-        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
+        console.log(equipo);
+
+        let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
+        let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
-        
         this.obtenerTotalInventario(totalInventario);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
@@ -119,32 +136,34 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
       });
   }
-  printReportEquipoDisponibles(){
-    const model :EquipoDisponibleReporte = {
-      equipoDisponibles : [],
+  printReportEquipoDisponibles() {
+    const model: EquipoDisponibleReporte = {
+      equipoFilter: this.filter,
+      equipoDisponibles: [],
       fechaImpresion: new Date().toDateString(),
     }
-    this.equiposDisponibles.forEach(equipo=>{
-      model.equipoDisponibles.push(equipo);
-    });
     this.equipoService.postEquipoDisponible(model)
-    .subscribe((blobResp)=>{
-      var blob = new Blob([blobResp], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.contentWindow?.print();
-    })
-    
+      .subscribe((blobResp) => {
+        this.printing = !this.printing;
+        var blob = new Blob([blobResp], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
+      }, (err) => {
+        this.printing = !this.printing;
+      this.toast.error('Error','Error al imprimir reporte');
+    });
+    this.printing = !this.printing;
   }
   getValueFilterForm() {
     let almacenValue = this.form.get('almacen')?.value;
     let suplidorValue = this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
     let imei = this.form.get('imei')?.value;
-    this.filter.almacen = almacenValue == null ? '' : almacenValue;
+    this.filter.almacen = almacenValue == null ? 0 : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;

@@ -6,18 +6,20 @@ import { Component, OnInit, Output } from '@angular/core';
   styleUrls: ['./equipo-consulta.component.css']
 })
 export class EquipoConsultaComponent implements OnInit {
-  filter :any;
 
   constructor() { }
-
   ngOnInit(): void {}
-  equipoTipo: number =1;
+  filter !:Event;
+  equipoTipo: number = 1;
+  disponible: number = 1;
+  vendido:    number = 2;
 
   onCheckboxEquipoChange(event: Event){
     this.equipoTipo = Number((<HTMLInputElement>event.target).value);
   }
 
-  clearFilters(e: any){
-    this.filter = e
+  clearFilters(event: Event){
+    this.filter = event;
+    
   }
 }

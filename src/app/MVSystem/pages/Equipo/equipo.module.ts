@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { EquipoRoutingModule } from './equipo-routing.module';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
@@ -12,6 +12,9 @@ import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
 import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatus/equipo-modificacion-estatus.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { NgxMaskModule } from 'ngx-mask';
+import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -28,7 +31,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoConsultaComponent,
     EquipoConsultaVendidoComponent,
     EquipoDisponibleComponent,
-    EquipoModificacionEstatusComponent
+    EquipoModificacionEstatusComponent,
+    EquipoTransferenciaComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +41,10 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CurrencyMaskModule,
     NgSelectModule,
     NgxPaginationModule,
-    MyDateRangePickerModule
+    NgxMaskModule.forRoot(),
+    MyDateRangePickerModule,
+    SharedModule,
+    FormsModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

@@ -70,8 +70,7 @@ export class ClientesRegistroComponent implements OnInit {
       apellidos: this.formRegistro.get('apellido')?.value,
       iD_Tipo_Cliente: Number(this.formRegistro.get('tipoCliente')?.value),
       limite_Credito: (this.formRegistro.get('limiteCredito')?.value == null) ?
-        this.formRegistro.get('limiteCredito')?.setValue(0) :
-        this.formRegistro.get('limiteCredito')?.value,
+       0 :  this.formRegistro.get('limiteCredito')?.value,
       numero_Telefono: Number(this.formRegistro.get('telefono')?.value),
       iD_Tipo_Telefono: Number(this.formRegistro.get('tipoTelefono')?.value),
       extencion: this.formRegistro.get('extencion')?.value,
@@ -163,8 +162,6 @@ export class ClientesRegistroComponent implements OnInit {
               { closeButton: true, progressBar: true });
           }
           else {
-            console.log(clienteInsertado.mensaje);
-
             this.toastr.success(clienteInsertado.mensaje, '',
               { closeButton: true, progressBar: true });
             // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});

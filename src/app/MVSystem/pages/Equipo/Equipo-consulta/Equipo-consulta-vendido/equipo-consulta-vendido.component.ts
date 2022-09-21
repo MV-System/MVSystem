@@ -12,6 +12,8 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { take } from 'rxjs/operators';
+import { Suplidor } from '../../../../interfaces/catalogo.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -19,19 +21,20 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
 export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
-  totalFacturado!: number;
-  totalGanancia!: number;
+ 
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
-    private vendedorService: VendedorService
+    private vendedorService: VendedorService,
+    private toast: ToastrService
   ) {}
   ngOnInit(): void {
     this.obtenerEquiposVendidos();
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
     this.obtenerVendedor();
+    this.obtenerSuplidor();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -50,9 +53,14 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   @Input() active: boolean = false;
   @Input() clearFilter:any;
 
-  equipoQuantity!:Observable<number>;
-  totalInventario!: number;
   subscription!: Subscription;
+  printing: boolean = false;
+  totalFacturado: number = 0;
+  totalGanancia: number = 0;
+  totalItbis: number = 0;
+  equipoQuantity:number=0;
+  // equipoQuantity!:Observable<number>;
+  totalInventario: number = 0;
   currentPage: number = 1;
   totalRecord!: number;
   line!: number;
@@ -60,25 +68,35 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
   listaVendedor: VendedorLista[] = [];
+  listaSuplidor: Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
   rangeDatePlaceholder:Date=new Date()
 
   filter: any = {
-    almacen: 0,
+    almacen: '',
     modelo: '',
     suplidor: '',
-    fechaRegistro: '',
+    vendedor: '',
+    telefono:'',
+    imei:'',
+    // fechaRegistro: '',
     pageIndex: 1,
     pageSize: 10,
     fechaInicio: '',
     fechaFinal: '',
+    fechaInicioFactura: '',
+    fechaFinalFactura: '',
   };
   form: FormGroup = this.fb.group({
     almacen: [''],
     suplidor: [''],
-    fechaRegistro: [''],
+    vendedor: [''],
     modelo: [''],
     rangeDate: [''],
+    rangeDateFactura: [''],
+    // fechaRegistro: [''],
+    telefono:[''],
+    imei:['',],
   });
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -87,6 +105,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.form.reset();
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
+    this.filter.fechaInicioFactura ='';
+    this.filter.fechaFinalFactura ='';
     this.obtenerEquiposVendidos()
   }
   onDateRangeChanged(event: any) {
@@ -99,22 +119,15 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
     this.obtenerEquiposVendidos();
   }
-  setDateRange(): void {
-    let date = new Date();
-    this.form.patchValue({
-      rangoFecha: {
-        beginDate: {
-          day: date.getDate(),
-          month: date.getMonth() + 1,
-          year: date.getFullYear(),
-        },
-        endDate: {
-          day: date.getDate(),
-          month: date.getMonth() + 1,
-          year: date.getFullYear(),
-        },
-      },
-    });
+  onDateRangeFacturaChanged(event: any) {
+    if (event.beginDate.year === 0) {
+      this.filter.fechaInicioFactura = '';
+      this.filter.fechaFinalFactura = '';
+    } else {
+      this.filter.fechaInicioFactura = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
+      this.filter.fechaFinalFactura = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+    }
+    this.obtenerEquiposVendidos();
   }
   pageChanged(index: number) {
     this.currentPage = index;
@@ -122,16 +135,36 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerEquiposVendidos();
   }
   getValueFilterForm() {
-    let almacenValue = this.form.get('almacen')?.value;
-    let suplidorValue = this.form.get('suplidor')?.value;
-    let modeloValue = this.form.get('modelo')?.value;
-    this.filter.almacen = almacenValue == null ? '' : almacenValue;
-
-    this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
-    this.filter.modelo = modeloValue == null ? '' : modeloValue;
+  const nullOrEmpty =(data: null)=>{return data== null ? '':data}
+    const {
+      almacen,
+      suplidor,
+      vendedor,
+      modelo,
+      fechaRegistro,
+      telefono,
+      imei
+    } = this.form.value;
+    this.filter.fechaRegistro = nullOrEmpty(fechaRegistro);
+    this.filter.almacen = nullOrEmpty(almacen);
+    this.filter.vendedor = nullOrEmpty(vendedor);
+    this.filter.suplidor = nullOrEmpty(suplidor);
+    this.filter.modelo = nullOrEmpty(modelo);
+    this.filter.telefono = nullOrEmpty(telefono);  
+    this.filter.imei = nullOrEmpty(imei);  
+  }
+  onSearchByTelefono(){
+    let telefonoFormValue = this.form.controls.telefono.value;
+    if(telefonoFormValue.length == 10){
+      this.obtenerEquiposVendidos();
+    }
+    else if(telefonoFormValue.length <= 0){
+      this.obtenerEquiposVendidos();
+    }
   }
   obtenerTotalEquipos(cantidadEquipo: number){
-    this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    // this.equipoQuantity = interval(10).pipe(take(cantidadEquipo + 1));
+    this.equipoQuantity = cantidadEquipo;
   }
   obtenerTotalFacturado(totalFacturado: number){
     this.totalFacturado =totalFacturado;
@@ -139,12 +172,33 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   obtenerTotalGanancia(totalGanancia: number){
     this.totalGanancia =totalGanancia;
   }
+  obtenerTotalItbis(totalItbis: number){
+    this.totalItbis =totalItbis;
+  }
   obtenerTotalInventario(totalInventario: number){
     this.totalInventario =totalInventario;
   }
+  onFilterPropHasValue(){
+    if(
+    this.filter.imei !=="" ||
+    this.filter.almacen  !==""||
+    this.filter.modelo !==""||
+    this.filter.suplidor !=="" ||
+    this.filter.vendedor !=="" ||
+    this.filter.telefono !=="" ||
+    this.filter.fechaInicio !="" ||
+    this.filter.fechaFinal !==""||
+    this.filter.fechaInicioFactura !==""||
+    this.filter.fechaFinalFactura !=="" 
+    ){
+
+      this.filter.pageIndex = 1;
+    }
+
+  }
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
-    
+    this.onFilterPropHasValue();
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
@@ -153,28 +207,33 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
         let totalGanancia = equipo.length == 0?0:equipo[0].totalGanancia;
+        let totalItbis = equipo.length == 0?0:equipo[0].totalItbis;
         this.obtenerTotalEquipos(record);
         this.obtenerTotalInventario(totalInventario);
         this.obtenerTotalFacturado(totalFacturado);
         this.obtenerTotalGanancia(totalGanancia);
+        this.obtenerTotalItbis(totalItbis);
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposVendidos = equipo;
+        
       });
   }
   printReportEquipoVendido(){
     const model :EquipoVendidoReporte = {
+      equipoFilter:this.filter,
       equipoVendidos : [],
       fechaImpresion: new Date().toDateString(),
     }
-    this.equiposVendidos.forEach(equipo=>{
-      model.equipoVendidos.push(equipo);
-    });
+    // this.equiposVendidos.forEach(equipo=>{
+    //   model.equipoVendidos.push(equipo);
+    // });
     this.equipoService.postEquipoVendido(model)
     .subscribe((blobResp)=>{
+      this.printing = !this.printing;
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
       const iframe = document.createElement('iframe');
@@ -182,8 +241,12 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
+    },(err)=>{
+      this.printing = !this.printing;    
+      this.toast.error('Error','Error al imprimir reporte');
     })
-    
+    this.printing = !this.printing;
+
   }
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
@@ -198,6 +261,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   obtenerVendedor() {
     this.vendedorService.getVendedorLista().subscribe((vendedor) => {
       this.listaVendedor = vendedor;
+    });
+  }
+  obtenerSuplidor() {
+    this.catalogosService.getSuplidorLista().subscribe((suplidor) => {
+      this.listaSuplidor = suplidor;
     });
   }
 }

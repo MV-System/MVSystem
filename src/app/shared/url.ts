@@ -18,15 +18,19 @@ export let APIURL = {
     Equipo: {
         Inserta: {
             EquipoInserta: API + 'Equipos/Equipo_Insert',
-            EquipoDisponibleReporteInserta: API + 'EquipoDisponibleReporte/GetEquiposDisponible',
-            EquipoVendidoReporteInserta: API + 'EquipoVendidoReporte/GetEquiposVendidos'
+            EquipoDisponibleReporteInserta: API + 'EquipoReporte/EquipoDisponibleReporte/GetEquiposDisponible',
+            EquipoVendidoReporteInserta: API + 'EquipoReporte/EquipoVendidoReporte/GetEquiposVendidos',
+            EquipoTransferenciaReporteInserta: API + 'EquipoReporte/EquipoTransferenciaReporte',
+            EquipoTransferenciaInserta: API + 'Equipos/PostEquipoTransferencia',
         },
         Consulta: {
             EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
             EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
-            EquipoModificarEstatus: API + 'Equipos/GetEquipoByImei'
+            EquipoModificarEstatus: API + 'Equipos/GetEquipoByImei',
+            EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
+            EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
         },
         Modifica: {
             ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo'

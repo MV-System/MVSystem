@@ -5,6 +5,7 @@ export const environment = {
   AppName: "MV System",
   //  api: "https://complaintsmanagement.azurewebsites.net/",
   // api: "https://mvsystemapi.azurewebsites.net/",
+   //api: "https://cellcontrolapipago.azurewebsites.net/",
   api: "http://localhost:5001/",
 
   AUTHO: ""

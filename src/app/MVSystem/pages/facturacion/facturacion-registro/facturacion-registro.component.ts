@@ -11,6 +11,7 @@ import { ModeloEquipo, AccesorioLista, Codigo } from '../../../interfaces/catalo
 import { AccesorioFactura, Accesorio } from '../../../interfaces/mantenimiento';
 import { MantenimientoService } from '../../../services/mantenimiento.service';
 import { elementAt } from 'rxjs/operators';
+import { ClienteConsultaCriterio } from 'src/app/MVSystem/interfaces/cliente.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -25,6 +26,7 @@ export class FacturacionRegistroComponent implements OnInit {
 
   // detalleFacturaRegistro: DetalleFacturaList[] = [];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
+  clientes: ClienteConsultaCriterio[] = []
   listaTipoFactura: TipoFactura[] = [];
   listaVendedor: VendedorLista[] = []
   listaPagoFactura: TipoPago[] = [];
@@ -64,6 +66,7 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerGarantia();
     this.obtenerItbis();
     this.agregarArticulo();
+    this.obtenerClientes();
   }
 
   obtenerItbis() {
@@ -77,7 +80,7 @@ export class FacturacionRegistroComponent implements OnInit {
     idCliente: [''],
     nombre: [''],
     apellido: [''],
-    telefono: [, Validators.required],
+    telefono: ['', Validators.required],
     vendedor: [,],
     almacen: [,],
     tipoFactura: [1,],
@@ -122,7 +125,6 @@ export class FacturacionRegistroComponent implements OnInit {
   //     const modelo = this.modeloRegistroFacturacion();
   //     // this.mantenimientoService.postFactura(modelo)
   //     //                         .subscribe(factura =>{
-  //     //                           console.log(factura);
 
   //     //                         })
   //   }
@@ -151,7 +153,6 @@ export class FacturacionRegistroComponent implements OnInit {
           }
 
           this.listaAccesorio.push(articulo)
-          debugger
           resolve(articulo.id + '/' +
             articulo.accesorio_Descripcion + '/' +
             articulo.modelo + '/' +
@@ -169,11 +170,15 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   obtenerDetalleFactura(index: number) {
-    const currentArticulo = this.articulos.controls[index].value
+    const currentFormGroup: FormGroup = this.articulos.controls[index] as FormGroup
+    currentFormGroup.controls["cantidad"].enable()
+
+    const currentArticulo = currentFormGroup.getRawValue()
     let articulo = currentArticulo.articulo;
 
     if (!currentArticulo || !articulo)
       return
+
 
     currentArticulo.idTipo = articulo.split('/')[6];
     currentArticulo.idGarantia = 1;
@@ -186,7 +191,6 @@ export class FacturacionRegistroComponent implements OnInit {
       if (articuloAddIndex == index.toString())
         continue
 
-      debugger
       let currentArticuloList = this.articulos.controls[articuloAddIndex].value
       if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
         this.borrarArticulo(index)
@@ -203,25 +207,11 @@ export class FacturacionRegistroComponent implements OnInit {
     this.obtenerCantidadArticuloStock(index)
 
     this.refreshGeneralValues();
-    // let modelAccesorio: DetalleFacturaList = {
-    //   numeroFactura: 0,
-    //   idEquipo: Number(idEquipo),
-    //   descripcion: descripcion,
-    //   idTipo: 1,
-    //   idGarantia: this.formRegistro.get('garantia')?.value,
-    //   subTotal: subTotal,
-    //   cantidad: this.obtenerCantidadArticulo() ?
-    //     this.formRegistroArticulo.get('cantidadElegida')?.value || 0 :
-    //     Number(this.formRegistroArticulo.get('cantidadElegida')?.value),
-    //   precio: this.calculoPrecio,
-    //   descuento: Number(this.formRegistroArticulo.get('descuento')?.value),
-    //   total: this.totalArticulo,
-    //   fechaRegistro: this.obtenerFechaDiaActual(),
-    // }
-    // this.calculoTotal();
 
-    // return modelAccesorio;
 
+    //Tiene que estar al final. EnmaJim note
+    if (currentArticulo.idTipo == 1)
+      currentFormGroup.controls["cantidad"].disable()
   }
 
   calcularSubTotalArticulo(precio: number, cantidad: number) {
@@ -245,9 +235,6 @@ export class FacturacionRegistroComponent implements OnInit {
     let output = String(date.getFullYear()).padStart(2, '0') + '-' +
       String(date.getMonth() + 1).padStart(2, '0') + '-' +
       String(date.getDate()).padStart(2, '0');
-    // console.log(output);
-    // console.log(date);
-
 
     this.formRegistro.get('fechaFacturacion')?.setValue(output);
     this.formRegistro.get('fechaLimitePago')?.setValue(output);
@@ -325,7 +312,6 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (!this.clienteReadOnly) {
-      debugger
       model.Cliente = {
         apellidos: this.formRegistro.get('apellido')?.value,
         nombres: this.formRegistro.get('nombre')?.value,
@@ -353,8 +339,8 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   //  loadingSpinner(){
-  //    return this.loadingButtonBuscar == true ? 
-  //       this.loadingButtonBuscar == true 
+  //    return this.loadingButtonBuscar == true ?
+  //       this.loadingButtonBuscar == true
   //       : this.loadingButtonBuscar == false;
   //  }
   obtenerClientesPorNombreTelefono() {
@@ -404,14 +390,22 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (this.formRegistro.get('aplicarItbis')?.value) {
-      this.itbis = this.total * this.asumeItbis.itbiS_Valor
+      debugger
+      const itbis = this.asumeItbis.itbiS_Valor * 100
 
-      if (this.asumeItbis.asumeITBIS == 'N') {
-        this.total += this.itbis
+      if (this.asumeItbis.asumeITBIS == 'S') {
+        const amountNew = this.total / (itbis / 100 + 1);
+
+        this.itbis = this.total - amountNew;
+        this.total = amountNew;
       }
       else {
-        this.subTotal -= this.itbis;
+        this.itbis = (this.total * itbis) / 100;
+        this.total = this.total + this.itbis;
       }
+
+      this.itbis = Number(this.itbis.toFixed(2))
+      this.total = Number(this.total.toFixed(2))
     }
   }
 
@@ -540,8 +534,6 @@ export class FacturacionRegistroComponent implements OnInit {
   obtenetAccesorios() {
     this.catalogosService.getAccesorioLista()
       .subscribe(accesorio => {
-        console.log(accesorio);
-
         this.listaAccesorio = accesorio;
       })
   }
@@ -597,5 +589,16 @@ export class FacturacionRegistroComponent implements OnInit {
   BuscarCliente() {
     if (this.formRegistro.get('telefono')?.value.length === 10)
       this.obtenerClientesPorNombreTelefono()
+  }
+
+  obtenerClientes() {
+    this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
+      this.clientes = clientes
+    })
+  }
+
+  changeNumeroTelefono() {
+    debugger
+    //this.formRegistro.value['telefono']
   }
 }

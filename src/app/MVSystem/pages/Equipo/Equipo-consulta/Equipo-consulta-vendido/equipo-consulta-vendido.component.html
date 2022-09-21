@@ -1,171 +1,245 @@
+<r-loading *ngIf="printing"></r-loading>
+<form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <span class="card-title">Filtros</span>
+          
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <!-- Search by telefono (cliente) -->
+              <label class="form-label"> Por telefono</label>
+                <input
+                  class="form-control"
+                  placeholder="telefono cliente"
+                  formControlName="telefono"
+                  (input)="onSearchByTelefono()"
+                  (keyup.enter)="obtenerEquiposVendidos()" />
+            </div>
+            <div class="col-md-4">
+              <!-- Search by IMEI -->
+              <label class="form-label">Por IMEI</label>
+                <input
+                  class="form-control"
+                  placeholder="IMEI"
+                  formControlName="imei"
+                  (keyup.enter)="obtenerEquiposVendidos()" />
+            </div>
+            <div class="col-md-4">
+              <!-- Search by almacen -->
+              <label class="form-label">Almacen</label>
+              <ng-select
+                formControlName="almacen"
+                (change)="obtenerEquiposVendidos()">
+                <ng-option
+                  *ngFor="let almacen of almacenListado"
+                  [value]="almacen.iD_Almacen">
+                  {{ almacen.descripcion }}
+                </ng-option>
+              </ng-select>
+            </div>
 
+            <div class="row">
+              <div class="col-md-4">
+                <!-- --------------- Suplidores --------------- -->
+                <label class="form-label">Suplidor </label>
+                <ng-select
+                  formControlName="suplidor"
+                  (change)="obtenerEquiposVendidos()" >
+                  <ng-option
+                    *ngFor="let suplidor of listaSuplidor"
+                    [value]="suplidor.descripcion">
+                    {{ suplidor.descripcion }}
+                  </ng-option>
+                </ng-select>
+              </div>
 
-							<form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
-								<div class="row ">
-									<div class="col-md-2">
-										<!-- Search by almacen -->
-										<!-- <input type="checkbox" (change)="onCheckboxChange($event)" >  -->
-										<label class="form-label">Almacen</label>
-										<ng-select formControlName="almacen" (change)="obtenerEquiposVendidos()">
-											<ng-option *ngFor="let almacen of almacenListado"
-												[value]="almacen.iD_Almacen">
-												{{almacen.descripcion}}
-											</ng-option>
-										</ng-select>
-									</div>
-									<div class="col-md-2">
-										<!-- --------------- Suplidores --------------- -->
-										<label class="form-label">Suplidor </label>
-										<ng-select formControlName="suplidor" 
-											(change)="obtenerEquiposVendidos()">
-											<ng-option *ngFor="let vendedor of listaVendedor"
-												[value]="vendedor.nombres">
-												{{vendedor.nombres}}
-											</ng-option>
-										</ng-select>
-									</div>
-									<div class="col-md-2">
-										<!-- Search by -->
-										<label class="form-label">Modelo</label>
-										<ng-select formControlName="modelo" (change)="obtenerEquiposVendidos()">
-											<ng-option *ngFor="let modelo of modeloListado"
-												[value]="modelo.descripcion">
-												{{modelo.descripcion}}
-											</ng-option>
-										</ng-select>
-									</div>
-									<div class="row">
-										<div class="col-md-2">
-											Rango de fecha
-											<my-date-range-picker 
-												name="rangoFecha" 
-												
-												[options]="myDateRangePickerOptions"
-												formControlName="rangeDate" 
-												(dateRangeChanged)="onDateRangeChanged($event)"
-												placeholder=" 01/01/1950  -  01/01/2022">
-											</my-date-range-picker>
-										</div>
-										<div class="col-md-3">
-											Fecha de registro
-											<my-date-range-picker 
-												name="fechaRegistro" 
-												firts
-												[options]="myDateRangePickerOptions"
-												formControlName="fechaRegistro" 
-												(dateRangeChanged)="onDateRangeChanged($event)"
-												placeholder=" {{01/01/2005 | date }} -  {{rangeDatePlaceholder | date}}">
-											</my-date-range-picker>
-										</div>
-									</div>
-									
-										
+              <div class="col-md-4">
+                <!-- --------------- Vendedores --------------- -->
+                <label class="form-label">Vendedor </label>
+                <ng-select
+                  formControlName="vendedor"
+                  (change)="obtenerEquiposVendidos()" >
+                  <ng-option
+                    *ngFor="let vendedor of listaVendedor"
+                    [value]="vendedor.nombres" >
+                    {{ vendedor.nombres }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-4">
+                <!-- Search by -->
+                <label class="form-label">Modelo</label>
+                <ng-select
+                  formControlName="modelo"
+                  (change)="obtenerEquiposVendidos()">
+                  <ng-option
+                    *ngFor="let modelo of modeloListado"
+                    [value]="modelo.descripcion" >
+                    {{ modelo.descripcion }}
+                  </ng-option>
+                </ng-select>
+              </div>
+          </div>
 
-										
-								</div>
-								<div class="row">
-									<!-- Cuadro totales -->
-									<ng-container  *ngIf="equiposVendidos.length">
-										<div class="col-md-2">
-											<div class="row mb-3">
-												Total Equipos
-												<label  class="form-control total" >
-													{{equipoQuantity | async}}
-												</label>
-											</div>
-											<div class="row mb-3">
-												Total Inventario
-												<label  class="form-control total" >
-													{{totalInventario | currency}}
-												</label>
-											</div>
-											<div class="row mb-3">
-												Total Facturado
+       
 
-												<label  class="form-control total" >
-													{{totalFacturado | currency}}
-												</label>
-											</div>
-											<div class="row mb-3">
-												Total Ganancias
-												<label  class="form-control total" >
-													{{totalGanancia | currency}}
-												</label>
-											</div>
-										</div>
-									
-									</ng-container>
-									
-									<!-- Fin Cuadro totales -->
-								</div>
-							</form>
-							<section class="section mt-4 ">
-								<button class="btn print mx-1"  (click)="printReportEquipoVendido()">
-									Imprimir reporte <i class="bi bi-printer"></i>
-								</button>
-								<div class="row">
-									<div class="col-lg-12 scroll-table">
-										<h5 class="card-title">Equipos</h5>
-										<!-- Table with stripped rows -->
-										<table class="table datatable ">
-											<thead>
-												<tr>
-													<th scope="col">Imei</th>
-													<th scope="col">Descripción</th>
-													<th scope="col">Precio Mayor</th>
-													<th scope="col">Precio Detalle</th>
-													<th scope="col">Costo</th>
-													<th scope="col">Precio Vendido</th>
-													<th scope="col">Tipo Factura</th>
-													<th scope="col">Desbloq.</th>
-													<th scope="col">Nota</th>
-													<th scope="col">Almacen</th>
-													<th scope="col">Suplidor</th>
-													<th scope="col">Vendedor</th>
-													<th scope="col">Cliente</th>
-													<th scope="col">Fecha facturado</th>
-													<th scope="col">Fecha Registro</th>
-													<th scope="col">Comision Detalle</th>
-													<th scope="col">Comision Por Mayor</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr class="animate__animated animate__fadeIn" *ngFor="let equipo of equiposVendidos | 
-                                                  paginate: { 
-                                                    itemsPerPage: filter.pageSize, 
-                                                    currentPage: filter.pageIndex,
-                                                    totalItems:totalRecord
-                                                  }">
-													<td>{{equipo.imei}}</td>
-													<td>{{equipo.descripcion }}</td>
-													<td>{{equipo.precioPorMayor | currency}}</td>
-													<td>{{equipo.precioDetalle | currency}}</td>
-													<td>{{equipo.costoEquipo | currency}}</td>
-													<td>{{equipo.precioVendido | currency}}</td>
-													<td>{{equipo.tipoFactura }}</td>
-													<td>{{equipo.isDesbloqueado}}</td>												
-													<td>{{equipo.notaAdicional}}</td>
-													<td>{{equipo.descripcionAlmacen}}</td>
-													<td>{{equipo.suplidor}}</td>
-													<td>{{equipo.vendedor}}</td>
-													<td>{{equipo.cliente}}</td>
-													<td>{{equipo.fechaFacturado | date}}</td>
-													<td>{{equipo.fechaRegistro | date}}</td>
-													<td>{{equipo.comisionDetalle | currency}}</td>
-													<td>{{equipo.comisionPorMayor | currency}}</td>
-												</tr>
+       
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <label class="form-label row mx-2">Fecha de registro</label>
+              <my-date-range-picker
+                [options]="myDateRangePickerOptions"
+                formControlName="rangeDate"
+                (dateRangeChanged)="onDateRangeChanged($event)"
+                placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                  rangeDatePlaceholder | date }}" >
+              </my-date-range-picker>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label row mx-2">Fecha de facturación</label>
+              <my-date-range-picker
+              [options]="myDateRangePickerOptions"
+              formControlName="rangeDateFactura"
+              (dateRangeChanged)="onDateRangeFacturaChanged($event)"
+              placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                rangeDatePlaceholder | date }}" >
+            </my-date-range-picker>
+              <!-- <input
+                type="date"
+                class="form-control"
+                formControlName="fechaRegistro"
+                (change)="obtenerEquiposVendidos()"  /> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mx-1 text-center mt-3">
+            <!-- Cuadro totales -->
+            <ng-container>
+              <div class="col-md-12">
+                <div class="row mb-2">
+                  Total Equipos
+                  <label class="form-control total">
+                    {{ equipoQuantity }}
+                    <!-- {{equipoQuantity | async}} -->
+                  </label>
+                </div>
+                <div class="row mb-2">
+                  Total Inventario
+                  <label class="form-control total">
+                    {{ totalInventario | currency }}
+                  </label>
+                </div>
+                <div class="row mb-2">
+                  Total Facturado
 
-											</tbody>
-										</table>
-										<!-- End Table with stripped rows -->
-										<div class="not-data" *ngIf="!equiposVendidos.length">
-											Datos no encontrados
-										</div>
-									</div>
-								</div>
-							</section>						
-			<pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10">
-			</pagination-controls>
+                  <label class="form-control total">
+                    {{ totalFacturado | currency }}
+                  </label>
+                </div>
+                <div class="row mb-2">
+                  Total Ganancias
+                  <label class="form-control total">
+                    {{ totalGanancia | currency }}
+                  </label>
+                </div>
+                <div class="row mb-2">
+                  Total Itbis
+                  <label class="form-control total">
+                    {{ totalItbis | currency }}
+                  </label>
+                </div>
+              </div>
+            </ng-container>
 
+            <!-- Fin Cuadro totales -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<section class="section mt-4">
+  <button class="btn print mx-1" (click)="printReportEquipoVendido()">
+    Imprimir reporte <i class="bi bi-printer"></i>
+  </button>
+  <div class="row">
+    <div class="col-lg-12 scroll-table">
+      <h5 class="card-title">Equipos</h5>
+      <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+      <!-- Table with stripped rows -->
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th scope="col">Imei</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Precio Mayor</th>
+            <th scope="col">Precio Detalle</th>
+            <th scope="col">Costo</th>
+            <th scope="col">Itbis</th>
+            <th scope="col">Precio Vendido</th>
+            <th scope="col">Tipo Factura</th>
+            <th scope="col">Desbloq.</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Almacen</th>
+            <th scope="col">Suplidor</th>
+            <th scope="col">Vendedor</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Fecha facturado</th>
+            <th scope="col">Fecha Registro</th>
+            <th scope="col">Comision Detalle</th>
+            <th scope="col">Comision Por Mayor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="animate__animated animate__fadeIn"
+            *ngFor="
+              let equipo of equiposVendidos
+                | paginate
+                  : {
+                      itemsPerPage: filter.pageSize,
+                      currentPage: filter.pageIndex,
+                      totalItems: totalRecord
+                    } " >
+            <td>{{ equipo.imei }}</td>
+            <td>{{ equipo.descripcion }}</td>
+            <td>{{ equipo.precioPorMayor | currency }}</td>
+            <td>{{ equipo.precioDetalle | currency }}</td>
+            <td>{{ equipo.costoEquipo | currency }}</td>
+            <td>{{ equipo.itbis | currency }}</td>
+            <td>{{ equipo.precioVendido | currency }}</td>
+            <td>{{ equipo.tipoFactura }}</td>
+            <td>{{ equipo.isDesbloqueado }}</td>
+            <td>{{ equipo.notaAdicional }}</td>
+            <td>{{ equipo.descripcionAlmacen }}</td>
+            <td>{{ equipo.suplidor }}</td>
+            <td>{{ equipo.vendedor }}</td>
+            <td>{{ equipo.cliente }}</td>
+            <td>{{ equipo.fechaFacturado | date }}</td>
+            <td>{{ equipo.fechaRegistro | date }}</td>
+            <td>{{ equipo.comisionDetalle | currency }}</td>
+            <td>{{ equipo.comisionPorMayor | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+      <div class="not-data" *ngIf="!equiposVendidos.length">
+        Datos no encontrados
+      </div>
+    </div>
+  </div>
+</section>
+<pagination-controls
+  (pageChange)="pageChanged($event)"
+  *ngIf="totalRecord > 5 && equiposVendidos.length">
+</pagination-controls>
 
 <!-- End #main -->
