@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path:'equipo-transferencia',
     component:EquipoTransferenciaComponent
+  },
+  {
+    path:'equipo-cambiar-estatus',
+    component:EquipoModificacionEstatusComponent
   }
 ];
 
