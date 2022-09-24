@@ -155,3 +155,27 @@ export interface EquipoAlmacenTransferir {
     almacenDestino:  number;
     cantidadEquipos: number;
 }
+
+export interface EquipoModificarEstatus{
+    imei: string;
+    condicionId: number;
+    condicionDescripcion?: string;
+    costoEquipo: number;
+    comisionDetalle: number;
+    comisionMayor: number;
+    precioPorMayor: number;
+    precioDetalle: number;
+    estadoBloqueoId: number;
+    estadoBloqueoDescripcion?: string;
+}
+
+export interface EquipoModificarEstatusSet{
+    imei: string;
+    condicionId: number;
+    costoEquipo: number;
+    comisionDetalle: number;
+    comisionMayor: number;
+    precioPorMayor: number;
+    precioDetalle: number;
+    estadoBloqueoId: number;
+}

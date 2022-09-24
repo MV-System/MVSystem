@@ -27,15 +27,18 @@ export let APIURL = {
             EquipoTransferenciaReporteInserta: API + 'EquipoReporte/EquipoTransferenciaReporte',
             EquipoTransferenciaInserta: API + 'Equipos/PostEquipoTransferencia',
         },
-
         Consulta: {
             EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
             EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
+            EquipoModificarEstatus: API + 'Equipos/GetEquipoPreciosEstatusByImei',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
         },
+        Modifica: {
+            ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo'
+        }
     },
     Marca: {
         Inserta: {

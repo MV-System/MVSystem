@@ -1,0 +1,112 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="cambiarEstatusEquipo">Cambiar estatus a Equipo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Cambiar estatus a equipo</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Consulta Imei de equipo</h5>
+                        <!--  Form -->
+                        <form [formGroup]="cambiarEstadoForm" class="row g-3 needs-validation" novalidate>
+                            <!-- --------------- IMEI  --------------- -->
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">IMEI</label>
+                                    <input type="text" class="form-control" maxlength="16" placeholder="Enter para realizar busqueda"
+                                        formControlName="imei"
+                                        (keyup.enter)="obtenerEquipoByImei()"
+                                        [readonly]="existeEquipo">
+                                  
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Estatus</label>
+                                    <select formControlName="condicionId" class="form-select">
+                                        <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
+                                            {{estado?.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Costo</label>
+                                    <input type="text" class="form-control"  formControlName="costoEquipo" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                    <div class="validatorField" *ngIf="validarCampos('costoEquipo') && existeEquipo">
+                                        {{mensajeErrorCampoCosto}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio Por Mayor</label>
+                                    <input type="text" class="form-control"  formControlName="precioPorMayor" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                    <div class="validatorField" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
+                                        {{mensajeErrorCampoPrecioMayor}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio de Detalle</label>
+                                    <input type="text" class="form-control is-invalid"  formControlName="precioDetalle" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                </div>
+                                <div class="validatorField" *ngIf="validarCampos('precioDetalle') && existeEquipo">
+                                    {{mensajeErrorCampoPrecioDetalle}}
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Comision Por Mayor</label>
+                                    <input type="text" class="form-control"  formControlName="comisionMayor" currencyMask placeholder="RD$">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Comision de Detalle</label>
+                                    <input type="text" class="form-control" formControlName="comisionDetalle" currencyMask placeholder="RD$"> 
+                                </div>
+                            </div>
+                            
+                            
+                            <!-- --------------- DropDown Desbloqueado --------------- --> 
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Desbloqueado</label>
+                                    <select formControlName="estadoBloqueoId" class="form-select">
+                                        <option *ngFor="let estado of equipoEstadosBloqueoCatalogo" [value]="estado?.iD_Bloqueo">
+                                            {{estado?.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="pt-2">
+                            <button class="btn btn-warning mx-2" (click)="resetForm()" [disabled]=!existeEquipo>Cancelar</button>
+                            <button class="btn btn-primary" (click)="cambiarEstatus()" [disabled]=!existeEquipo>Guardar</button>
+                        </div>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main> 
