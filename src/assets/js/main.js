@@ -40,32 +40,31 @@ $(document).ready(function(){
   /**
    * Sidebar toggle
    */
-   $("body").on('click','.toggle-sidebar-btn', function(e) {
+  //  $("body").on('click','.toggle-sidebar-btn', function(e) {
   
-    const  documents =  document.querySelector('.toggle-sidebar');
-    console.log(documents);
-    if (documents) {
-      // if ($(e.target).closest('.sidebar').length == 0)
-      $('body').removeClass('toggle-sidebar')
-      console.log('remove');
-    }
+  //   const  documents =  document.querySelector('.toggle-sidebar');
+  //   if (documents) {
+      
+  //     $('body').removeClass('toggle-sidebar')
+  //     console.log('remove');
+  //     e.stopPropagation();
+  //   }
+  // });
+  
+  //  $('body').on('click', '.toggle-sidebar-btn', function(e){
+  //   const  documents =  document.querySelector('.toggle-sidebar');
+  //   if(!documents){
+  //     e.stopPropagation();
+  //     console.log('add');
+  //     $('body').addClass('toggle-sidebar')
+  //   }
+  //   });
 
-  });
-  
-   $('body').on('click', '.toggle-sidebar-btn', function(e){
-    const  documents =  document.querySelector('.toggle-sidebar');
-    if(!documents){
-      e.stopPropagation();
-      console.log('add');
-      $('body').addClass('toggle-sidebar')
-    }
-    });
+    //*BACK-TO-TOP */
 
     $("body").on('click','.back-to-top', function(e) {
-      console.log('ok');
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
     });
 
   
@@ -104,7 +103,6 @@ $(document).ready(function(){
    */
   let selectHeader = select('#header')
   if (selectHeader) {
-    console.log(selectHeader);
     const headerScrolled = () => {
       if (window.scrollY > 100) {
         selectHeader.classList.add('header-scrolled')
@@ -225,26 +223,8 @@ $(document).ready(function(){
       }, false)
     })
 
-  /**
-   * Initiate Datatables
-   */
-  const datatables = select('.datatable', true)
-  datatables.forEach(datatable => {
-    new simpleDatatables.DataTable(datatable);
-  })
 
-  /**
-   * Autoresize echart charts
-   */
-  const mainContainer = select('#main');
-  if (mainContainer) {
-    setTimeout(() => {
-      new ResizeObserver(function() {
-        select('.echart', true).forEach(getEchart => {
-          echarts.getInstanceByDom(getEchart).resize();
-        })
-      }).observe(mainContainer);
-    }, 200);
-  }
+
+
 
 });

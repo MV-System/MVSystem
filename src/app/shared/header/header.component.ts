@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {  Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit(): void {
-  }
+    
 
+
+  }
+  @ViewChild('toggleSidebarBtn') toggleSidebar!: ElementRef;
+
+
+  onSidebarToggle = ()=>{
+      const toggle =  document.querySelector('.toggle-sidebar');
+      if (!toggle) {
+        $('body').addClass('toggle-sidebar')   
+      }
+      else{
+        $('body').removeClass('toggle-sidebar')
+      }
+  }
 }

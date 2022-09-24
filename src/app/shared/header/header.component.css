@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 * {
   margin: 0;
-  padding: 0;
+  /* padding: 0; */
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -41,7 +41,7 @@ body {
     position: relative;
     display: inline-block;
   }
-  
+
   .liSeparado{
     width: 200px;
     border: 2px solid #a3c93e;
@@ -74,7 +74,7 @@ color: #000;
     padding: 12px 16px;
     z-index: 1;
   }
-  
+
   .dropdown:hover .dropdown-content {
     display: block;
   font-size: 1.1em;
