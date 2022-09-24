@@ -15,11 +15,11 @@ export class AccesoriosService{
     const query =
     'PageNumber=' +
         pagination.pageIndex +
-    'PageSize=' +
+    '&PageSize=' +
         pagination.pageSize +
-    'accesorio=' +
+    '&accesorio=' +
         accesorio +
-    'almacen' +
+    '&almacen' +
         almacen;
         return this.http.get<AccesorioAll[]>(`${APIURL.Accesorio.Consulta.AccesorioConsulta}?` + query)
   }

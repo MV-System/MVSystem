@@ -18,26 +18,19 @@ export class ClientesConsultaComponent implements OnInit {
 
 
   ngOnInit(): void {
+
   }
   page: number = 1;
   formBusqueda: FormGroup = this.fb.group({
     criterio: ['',]
   })
-  criterioBusqueda: any = {
-    criterio: '',
-  }
   obtenerClientesPorNombreTelefono() {
-
-    this.criterioBusqueda.criterio = this.formBusqueda.controls.criterio.value;
-
-
-    this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
+    let criterio = this.formBusqueda.controls.criterio.value;
+    this.clientesService.getClientesPorNombreTelefono(criterio)
       .subscribe(cliente => {
         this.listaClientes = cliente;
-
         if (cliente.length == 0) {
           this.toastr.error("No existen datos con este criterio de busqueda!")
-
         }
       });
   }

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
-import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
+import { EquipoTransferenciaComponent } from './Equipo-transferencia/equipo-transferencia.component';
 
 const routes: Routes = [
   {
