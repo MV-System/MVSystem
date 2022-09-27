@@ -8,7 +8,7 @@ export let APIURL = {
         Inserta: {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
         },
-        Consulta:{
+        Consulta: {
             AccesorioConsulta: API + 'Accesorios/GetAllAccesorios',
 
         }
@@ -43,6 +43,11 @@ export let APIURL = {
     Marca: {
         Inserta: {
             MarcaInserta: API + 'Marcas/Marca_Insert',
+        },
+    },
+    Modelo: {
+        Inserta: {
+            ModeloInserta: API + 'Marcas/Modelo_Insert',
         },
     },
     Catalogos: {
@@ -86,7 +91,9 @@ export let APIURL = {
         Inserta: {
             vendedorInserta: API + 'Vendedores/Vendedor_Insert'
         }
-
-    }
+    },
+    Login: {
+        Login: API + 'login/login'
+    },
     //}
 }

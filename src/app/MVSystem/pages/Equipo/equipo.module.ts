@@ -15,8 +15,8 @@ import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.compo
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
 import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatus/equipo-modificacion-estatus.component';
-import { EquipoTransferenciaComponent } from './Equipo-transferencia/equipo-transferencia.component';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
+import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",

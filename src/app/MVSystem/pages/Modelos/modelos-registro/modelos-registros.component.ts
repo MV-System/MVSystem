@@ -1,15 +1,100 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ModeloObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
+import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
+import { ModeloService } from 'src/app/MVSystem/services/modelo.service';
+import { MarcaEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-modelos-registros',
   templateUrl: './modelos-registros.component.html',
   styleUrls: ['./modelos-registros.component.css']
 })
-export class ModelosRegistrosComponent implements OnInit {
 
-  constructor() { }
+export class ModelosRegistrosComponent implements OnInit {
+  modeloValorRetorno: ModeloObjRetorno[]=[];
+
+  btnDisabled: boolean = true;
+  IdMarcaReg!: number;
+  listaModelo: ModeloEquipo[] = [];
+  listaMarca: MarcaEquipo[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private ModeloService: ModeloService,
+    private catalogosService: CatalogosService,
+  ) { }
 
   ngOnInit(): void {
   }
+  formRegistro: FormGroup = this.fb.group({
+    descripcion: ['', Validators.required]
+  });
+  selectoresMarcaModeloValidator() {
+    this.formRegistro.get('modelo')?.setValue('');
+    if (this.formRegistro.get('marca')?.value) {
+      this.formRegistro.controls.modelo.enable();
 
+      this.obtenerModeloLista();
+    }
+    else {
+      this.formRegistro.controls.modelo.disable();
+
+    }
+  }
+  obtenerModeloLista() {
+    let idMarca = this.formRegistro.get('marca')?.value;
+    this.catalogosService.getModeloByMarcaLista(idMarca).subscribe((modelo) => {
+      this.listaModelo = modelo;
+    });
+  }
+  modeloRegistroMarca(){
+
+    const registro: ModeloEquipo = {
+      descripcion: this.formRegistro.get('descripcion')?.value,
+      usuario: "Ventura" //       this.formRegistro.get('usuario')?.value,
+      ,
+      iD_Modelo: 0
+    }
+      return registro;
+  }
+  validarCampos(nombreCampo: string) {
+    return this.formRegistro.get(nombreCampo)?.invalid &&
+           this.formRegistro.get(nombreCampo)?.touched
+  }
+  btnDisable(){
+    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  }
+  obtenerMarcasLista() {
+
+    this.catalogosService.getMarcasLista().subscribe((marca) => {
+      this.listaMarca = marca;
+    });
+  }
+
+  registroModelo(){
+
+    const model: ModeloEquipo = this.modeloRegistroMarca();
+
+    if (this.formRegistro.valid) {
+        this.ModeloService.postModelo(model)
+            .subscribe((ModeloInsertado: ModeloObjRetorno) =>{
+                 this.modeloValorRetorno.push(ModeloInsertado);
+
+              this.toastr.success(ModeloInsertado.mensaje, '',
+           {closeButton: true,progressBar:true});
+
+          this.formRegistro.reset({
+          });
+			});
+    }
+    else{
+      this.formRegistro.markAllAsTouched();
+      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+        this.toastr.error('Hay datos en el formulario incompletos', '',
+        {closeButton: true,progressBar:true});
+    }
+  }
 }
