@@ -18,8 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginModule,
-    //loadChildren: () => import('./MVSystem/pages/login/login.module').then(m => m.LoginModule)
+    loadChildren: () => import('./MVSystem/pages/login/login.module').then(m => m.LoginModule)
   },
 ];
 

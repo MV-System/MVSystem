@@ -8,7 +8,7 @@ export let APIURL = {
         Inserta: {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
         },
-        Consulta:{
+        Consulta: {
             AccesorioConsulta: API + 'Accesorios/GetAllAccesorios',
 
         }
@@ -46,10 +46,10 @@ export let APIURL = {
         },
     },
     Modelo: {
-      Inserta: {
-          ModeloInserta: API + 'Marcas/Modelo_Insert',
-      },
-  },
+        Inserta: {
+            ModeloInserta: API + 'Marcas/Modelo_Insert',
+        },
+    },
     Catalogos: {
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
         marcasLista: API + 'Catalogos/Marcas_Combo',
@@ -91,7 +91,9 @@ export let APIURL = {
         Inserta: {
             vendedorInserta: API + 'Vendedores/Vendedor_Insert'
         }
-
-    }
+    },
+    Login: {
+        Login: API + 'login/login'
+    },
     //}
 }

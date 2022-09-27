@@ -1,4 +1,5 @@
-import {  Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-header',
@@ -7,23 +8,30 @@ import {  Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/c
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private renderer: Renderer2) { }
+  userName: string
+
+  constructor(
+    loginService: LoginService
+  ) {
+    this.userName = loginService.getUserName()
+  }
 
   ngOnInit(): void {
-    
-
-
   }
   @ViewChild('toggleSidebarBtn') toggleSidebar!: ElementRef;
 
 
-  onSidebarToggle = ()=>{
-      const toggle =  document.querySelector('.toggle-sidebar');
-      if (!toggle) {
-        $('body').addClass('toggle-sidebar')   
-      }
-      else{
-        $('body').removeClass('toggle-sidebar')
-      }
+  onSidebarToggle = () => {
+    const toggle = document.querySelector('.toggle-sidebar');
+    if (!toggle) {
+      $('body').addClass('toggle-sidebar')
+    }
+    else {
+      $('body').removeClass('toggle-sidebar')
+    }
+  }
+
+  logout() {
+    localStorage.clear()
   }
 }
