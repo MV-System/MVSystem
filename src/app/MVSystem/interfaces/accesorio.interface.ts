@@ -13,4 +13,5 @@ export interface AccesorioAll {
     disponibleDetalle:    string;
     codBarra:             number;
     almacen:              string;
+    totalInventario:      number;    
 }

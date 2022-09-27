@@ -41,8 +41,9 @@ export class AccesorioConsultaComponent implements OnInit {
     this.accesoriosService.getAllAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
       this.accesorios= accesorios;
-      console.log(accesorios);
-      
+      accesorios.forEach(({totalInventario}) => {
+        this.totalInventario = totalInventario;
+      });      
     })
   }
   obtenerAlmacenLista() {

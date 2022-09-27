@@ -91,8 +91,8 @@ export class EquipoTransferenciaComponent implements OnInit {
           const transfer: EquipoAlmacenTransferir={
             id: this.idTransferencia ,
             imei: equipoResp.imei,
-            almacenSalida:Number( equipoResp.almacenSalidaId),
-            almacenDestino: this.form.get('almacen')?.value,
+            // almacenSalida:Number( equipoResp.almacenSalidaId),
+            // almacenDestino: this.form.get('almacen')?.value,
             cantidadEquipos: this.cantidadEquipoATransferir
           }
           
@@ -130,6 +130,7 @@ export class EquipoTransferenciaComponent implements OnInit {
       this.printing = !this.printing;    
       this.toastr.error('Error','Error al imprimir reporte');
     })
+    this.listEquiposToTransfer =[];
     this.printing = !this.printing;
 
   }
