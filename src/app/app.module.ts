@@ -12,6 +12,7 @@ import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MvSystemModule } from './MVSystem/mv-system.module';
+import { LoginModule } from './MVSystem/pages/login/login.module';
 
 
 
@@ -28,12 +29,13 @@ import { MvSystemModule } from './MVSystem/mv-system.module';
     SharedModule,
     HttpClientModule,
     MvSystemModule,
+    LoginModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
     }),
 
   ],
-  exports:[
+  exports: [
     SharedModule
   ],
   providers: [],
