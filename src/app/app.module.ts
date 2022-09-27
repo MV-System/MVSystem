@@ -1,7 +1,7 @@
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -12,7 +12,9 @@ import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MvSystemModule } from './MVSystem/mv-system.module';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+
+
 
 @NgModule({
   declarations: [
@@ -32,10 +34,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
     }),
 
   ],
-  exports:[
+  exports: [
     SharedModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
