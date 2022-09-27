@@ -93,7 +93,11 @@ export interface MarcaObjRetorno {
     mensaje: string;
 }
 
-
+export interface ModeloObjRetorno {
+  iD_Modelo: number;
+  descripcion: string;
+  mensaje: string;
+}
 
 export interface EquipoObjRetorno {
     imei: string;

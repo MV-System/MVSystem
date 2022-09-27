@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModelosRoutingModule } from './modelos-routing.module';
 import { ModelosRegistrosComponent } from './modelos-registro/modelos-registros.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 
 
 
@@ -11,7 +14,10 @@ import { ModelosRegistrosComponent } from './modelos-registro/modelos-registros.
   ],
   imports: [
     CommonModule,
-    ModelosRoutingModule
+    ModelosRoutingModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    FormsModule
   ]
 })
 export class ModelosModule { }

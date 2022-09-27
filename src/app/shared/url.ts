@@ -45,6 +45,11 @@ export let APIURL = {
             MarcaInserta: API + 'Marcas/Marca_Insert',
         },
     },
+    Modelo: {
+      Inserta: {
+          ModeloInserta: API + 'Marcas/Modelo_Insert',
+      },
+  },
     Catalogos: {
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
         marcasLista: API + 'Catalogos/Marcas_Combo',

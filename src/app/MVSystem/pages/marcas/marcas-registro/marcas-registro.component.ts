@@ -9,12 +9,12 @@ import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.se
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/MVSystem/services/marca.service';
 
-
 @Component({
   selector: 'app-marcas-registro',
   templateUrl: './marcas-registro.component.html',
   styleUrls: ['./marcas-registro.component.css']
 })
+
 export class MarcasRegistroComponent implements OnInit {
   modeloListado: ModeloEquipo[] = [];
   marcaListado: MarcaEquipo[] = [];
