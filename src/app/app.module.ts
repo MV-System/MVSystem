@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MvSystemModule } from './MVSystem/mv-system.module';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { LoginModule } from './MVSystem/pages/login/login.module';
 
 
 
@@ -29,6 +30,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     SharedModule,
     HttpClientModule,
     MvSystemModule,
+    LoginModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
     }),
