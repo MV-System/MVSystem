@@ -34,7 +34,7 @@ import { SharedModule } from '../shared/shared.module';
     EquipoModule,
     SharedModule
   ],
-  exports:[
+  exports: [
     SuplidoresModule,
     ClientesModule,
     VendedoresModule,

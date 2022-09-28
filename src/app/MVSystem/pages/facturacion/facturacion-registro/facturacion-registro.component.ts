@@ -390,7 +390,6 @@ export class FacturacionRegistroComponent implements OnInit {
     }
 
     if (this.formRegistro.get('aplicarItbis')?.value) {
-      debugger
       const itbis = this.asumeItbis.itbiS_Valor * 100
 
       if (this.asumeItbis.asumeITBIS == 'S') {
@@ -598,7 +597,6 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   changeNumeroTelefono() {
-    debugger
     //this.formRegistro.value['telefono']
   }
 }
