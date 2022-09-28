@@ -45,7 +45,7 @@
 
                                 <h5 class="card-title">Marcas agregadas</h5>
                                 <div>
-                                    <table class="table table-Secondary">
+                                    <!-- <table class="table table-Secondary">
                                         <thead>
                                             <tr>
                                                 <th>Cod.</th>
@@ -54,13 +54,48 @@
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
-                                                <!-- <td>{{i + 1}}</td> -->
                                                 <td>{{Marca.iD_Marca}}</td>
                                                 <td>{{Marca.descripcion}}</td>
                                             </tr>
                                         </tbody>
-                                    </table>
+                                    </table> -->
+                                    <table class="table table-Secondary">
+                                      <thead>
+                                          <tr>
+                                              <th>Cod.</th>
+                                              <th>Marca</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
+                                          <td>{{Marca.iD_Marca}}</td>
+                                          <td>{{Marca.descripcion}}</td>
+                                      </tr>
+                                        <tr *ngFor="let Marca of marcaListado;let i = index">
+                                          <td>{{Marca.iD_Marca}}</td>
+                                          <td>{{Marca.descripcion}}</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+
                                 </div>
+                                <!-- <h5 class="card-title">Marcas existentes</h5>
+                                <div>
+                                    <table class="table table-Secondary">
+                                        <thead>
+                                            <tr>
+                                                <th>Cod.</th>
+                                                <th>Marca</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr obtenerMarcasLista()>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div> -->
 
                                 <!-- <select class="js-example-basic-multiple" name="states[]" >
                           <option value="AL">Alabama</option>

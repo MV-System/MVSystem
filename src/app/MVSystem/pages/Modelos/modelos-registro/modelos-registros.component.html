@@ -16,72 +16,71 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Datos del Modelo</h5>
-
+                    <form [formGroup]="formRegistro" (ngSubmit)="registroModelo()" class="row g-3 needs-validation" novalidate>
                     <!-- --------------- Marca  --------------- -->
                     <div class="col-md-5">
                       <label class="form-label">Marca</label>
                       <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required>
-                          <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
+                          <ng-option *ngFor="let marca of marcaListado" [value]="marca.iD_Marca">
                               {{marca.descripcion}}
                           </ng-option>
                       </ng-select>
-                      <div class="validatorField" *ngIf="validarCampos('marca')">
+                      <!-- <div class="validatorField" *ngIf="validarCampos('marca')">
                           Este campo es requerido.
-                      </div>
+                      </div> -->
                   </div>
-                    <!--  Form -->
-                    <form [formGroup]="formRegistro" (ngSubmit)="registroModelo()" class="row g-3 needs-validation" novalidate>
 
-                        <!-- --------------- Nombre del modelo --------------- -->
+                   <!-- --------------- Nombre del modelo --------------- -->
                          <div class="col-md-6">
                             <label class="form-label">Nombre Del Modelo<span class="required-field">*</span></label>
                             <input type="text" class="form-control" required formControlName="descripcion" aria-describedby="inputGroupPrepend">
 
-                            <div class="validatorField" *ngIf="validarCampos('nombre')"></div>
+                            <div class="validatorField" *ngIf="validarCampos('descripcion')"></div>
                             Este campo es requerido.
 
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                          <!-- <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button> -->
+                          <button class="btn btn-primary" type="submit">Guardar</button>
                         </div>
+                        <div class="col-lg-5">
+                          <div class="card">
+                              <div class="card-body">
 
+                                  <h5 class="card-title">Modelos agregados</h5>
+                                  <div>
+                                      <table class="table table-Secondary">
+                                          <thead>
+                                              <tr>
+                                                  <th>Cod.</th>
+                                                  <th>Modelo</th>
+                                              </tr>
+                                          </thead>
+                                         <tbody formControlName="modelo">
+                                            <tr *ngFor="let Modelo of modeloValorRetorno;let i = index">
+                                              <td>{{Modelo.iD_Modelo}</td>
+                                              <td>{{Modelo.descripcion}}</td>
+                                          </tr>
+                                            <tr *ngFor="let Modelo of listaModelo;let i = index">
+                                              <td>{{Modelo.iD_Modelo}}</td>
+                                              <td>{{Modelo.descripcion}}</td>
+                                          </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
 
+                                  <!-- <select class="js-example-basic-multiple" name="states[]" >
+                            <option value="AL">Alabama</option>
+                              ...
+                            <option value="WY">Wyoming</option>
+                          </select> -->
+                              </div>
+                          </div>
+                      </div>
                      </form>
                     <!-- End  Form -->
-
                 </div>
 
-                <div class="col-lg-5">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <h5 class="card-title">Modelos agregados</h5>
-                            <div>
-                                <table class="table table-Secondary">
-                                    <thead>
-                                        <tr>
-                                            <th>Cod.</th>
-                                            <th>Modelo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let Modelo of modeloValorRetorno;let i = index">
-                                            <!-- <td>{{i + 1}}</td> -->
-                                            <td>{{Modelo.iD_Modelo}}</td>
-                                            <td>{{Modelo.descripcion</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- <select class="js-example-basic-multiple" name="states[]" >
-                      <option value="AL">Alabama</option>
-                        ...
-                      <option value="WY">Wyoming</option>
-                    </select> -->
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

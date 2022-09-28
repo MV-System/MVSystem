@@ -34,20 +34,6 @@ export class AccesoriosRegistroComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // this.formRegistro.reset({
-    //   descripcion: 'Protector Pantalla',
-    //   cantidad: 10,
-    //   costo: 5500,
-    //   alDetalle: 1000,
-    //   alPorMayor: 975,
-    //   // IMEI: '',
-    //   cantidadMax: 10,
-    //   cantidadMin: 2,
-    //   marca:  11, //Apple
-    //   modelo: 63, // "Iphone 12 Pro Max"
-    //   almacen: 2,
-    //   usuario: 'Xavier08',
-    // });
     this.obtenerMarcasLista();
     this.obtenerAlmacenLista();
     this.btnDisable();
@@ -78,10 +64,26 @@ export class AccesoriosRegistroComponent implements OnInit {
    btnDisable(){
     return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
   }
+  selectoresMarcaModeloValidator() {
+    debugger;
+    this.formRegistro.get('modelo')?.setValue('');
+    if (this.formRegistro.get('marca')?.value) {
+      this.formRegistro.get('modelo')?.enable();
+      this.obtenerModeloLista();
+    }
+    else{
+      this.formRegistro.controls.modelo.disable();
 
+    }
+  }
+  obtenerMarcasLista() {
+    this.catalogosService.getMarcasLista().subscribe((marca) => {
+      this.marcaListado = marca;
+    });
+  }
   msgValidacionesCamposFormCantMaxCantMin() {
     if (
-      this.formRegistro.get('cantidadMin')?.value <
+      this.formRegistro.get('cantidadMin')?.value >
       this.formRegistro.get('cantidadMax')?.value
     ) {
       this.formRegistro.setErrors({error:''})
@@ -148,17 +150,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     });
   }
 
-  selectoresMarcaModeloValidator() {
-    this.formRegistro.get('modelo')?.setValue('');
-    if (this.formRegistro.get('marca')?.value) {
-      this.formRegistro.get('modelo')?.enable();
-      this.obtenerModeloLista();
-    }
-    else{
-      this.formRegistro.controls.modelo.disable();
 
-    }
-  }
   validacionesRegistro(){
     this.msgValidacionesCamposFormCantMaxCantMin();
     this.msgValidacionesCamposFormDetallePorMayor();
@@ -175,6 +167,8 @@ export class AccesoriosRegistroComponent implements OnInit {
                                 .subscribe((accesorio:any) =>{
                                   this.accesoriosLista = accesorio;
                                   this.toastr.success('Accesorio registrado con exito!')
+                                  this.formRegistro.reset({
+                                  });
                                 });
       }
       else{
@@ -216,11 +210,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     );
   }
 
-  obtenerMarcasLista() {
-    this.catalogosService.getMarcasLista().subscribe((marca) => {
-      this.marcaListado = marca;
-    });
-  }
+
   obtenerAlmacenLista() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.almacenListado = almacen;

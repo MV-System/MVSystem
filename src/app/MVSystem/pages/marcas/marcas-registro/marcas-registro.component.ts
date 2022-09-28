@@ -1,4 +1,4 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MarcaEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../services/catalogos.service';
@@ -8,6 +8,7 @@ import {MarcaObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/MVSystem/services/marca.service';
+import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
 
 @Component({
   selector: 'app-marcas-registro',
@@ -32,6 +33,7 @@ export class MarcasRegistroComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerMarcasLista();
   }
+
   validarCampos(nombreCampo: string) {
     return this.formRegistro.get(nombreCampo)?.invalid &&
            this.formRegistro.get(nombreCampo)?.touched

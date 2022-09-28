@@ -14,11 +14,10 @@ import { MarcaEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.
 
 export class ModelosRegistrosComponent implements OnInit {
   modeloValorRetorno: ModeloObjRetorno[]=[];
-
   btnDisabled: boolean = true;
   IdMarcaReg!: number;
   listaModelo: ModeloEquipo[] = [];
-  listaMarca: MarcaEquipo[] = [];
+  marcaListado: MarcaEquipo[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -28,24 +27,42 @@ export class ModelosRegistrosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.obtenerMarcasLista();
+    //this.obtenerModeloLista();
+    this.formRegistro.get('modelo')?.disable();
   }
+
+  // btnDisable(){
+  //   return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  // }
   formRegistro: FormGroup = this.fb.group({
-    descripcion: ['', Validators.required]
+    descripcion: ['', Validators.required],
+    marca: [, Validators.required],
+    modelo: [, Validators.required]
   });
   selectoresMarcaModeloValidator() {
+    // debugger;
     this.formRegistro.get('modelo')?.setValue('');
-    if (this.formRegistro.get('marca')?.value) {
-      this.formRegistro.controls.modelo.enable();
+    //console.log(this.formRegistro.get('marca')?.value);
 
+    if (this.formRegistro.get('marca')?.value) {
+      this.formRegistro.get('modelo')?.enable();
       this.obtenerModeloLista();
     }
-    else {
+    else{
       this.formRegistro.controls.modelo.disable();
 
     }
   }
+  obtenerMarcasLista() {
+    this.catalogosService.getMarcasLista().subscribe((marca) => {
+      this.marcaListado = marca;
+    });
+  }
   obtenerModeloLista() {
+
     let idMarca = this.formRegistro.get('marca')?.value;
+    //let idMarca = 9;
     this.catalogosService.getModeloByMarcaLista(idMarca).subscribe((modelo) => {
       this.listaModelo = modelo;
     });
@@ -61,17 +78,9 @@ export class ModelosRegistrosComponent implements OnInit {
       return registro;
   }
   validarCampos(nombreCampo: string) {
+
     return this.formRegistro.get(nombreCampo)?.invalid &&
            this.formRegistro.get(nombreCampo)?.touched
-  }
-  btnDisable(){
-    return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
-  }
-  obtenerMarcasLista() {
-
-    this.catalogosService.getMarcasLista().subscribe((marca) => {
-      this.listaMarca = marca;
-    });
   }
 
   registroModelo(){
