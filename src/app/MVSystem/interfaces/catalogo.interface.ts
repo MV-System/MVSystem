@@ -17,6 +17,7 @@ export interface Almacen {
 }
 
 export interface ModeloEquipo {
+  iD_Marca?: number;
   iD_Modelo: number;
   descripcion: string;
   usuario?: string;

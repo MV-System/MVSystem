@@ -25,10 +25,7 @@
                               {{marca.descripcion}}
                           </ng-option>
                       </ng-select>
-                      <!-- <div class="validatorField" *ngIf="validarCampos('marca')">
-                          Este campo es requerido.
-                      </div> -->
-                  </div>
+                    </div>
 
                    <!-- --------------- Nombre del modelo --------------- -->
                          <div class="col-md-6">
@@ -40,8 +37,8 @@
 
                         </div>
                         <div class="col-md-6">
-                          <!-- <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button> -->
-                          <button class="btn btn-primary" type="submit">Guardar</button>
+                          <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                          <!-- <button class="btn btn-primary" type="submit">Guardar</button> -->
                         </div>
                         <div class="col-lg-5">
                           <div class="card">
@@ -58,7 +55,7 @@
                                           </thead>
                                          <tbody formControlName="modelo">
                                             <tr *ngFor="let Modelo of modeloValorRetorno;let i = index">
-                                              <td>{{Modelo.iD_Modelo}</td>
+                                              <td>{{Modelo.iD_Modelo}}</td>
                                               <td>{{Modelo.descripcion}}</td>
                                           </tr>
                                             <tr *ngFor="let Modelo of listaModelo;let i = index">
