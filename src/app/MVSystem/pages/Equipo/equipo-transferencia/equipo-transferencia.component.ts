@@ -51,7 +51,6 @@ export class EquipoTransferenciaComponent implements OnInit {
   }
   postTransferenciaEquipo(equipoToTransfer:EquipoAlmacenTransferir){
     
-    
     this.equipoService.postTransferenciaEquipo(equipoToTransfer)
     .subscribe(resp=>{
       console.log(resp);
@@ -69,9 +68,7 @@ export class EquipoTransferenciaComponent implements OnInit {
     .subscribe((equipo)=>{
       
       !equipo.length?this.toastr.error('Imei no encontrado!'):equipo; 
-      if(this.validateImei()){
-          return
-      }
+      if(this.validateImei())return
       equipo.forEach((equipoResp)=>{
         
         if (equipo[0].mensaje.length) {
@@ -89,19 +86,18 @@ export class EquipoTransferenciaComponent implements OnInit {
 
           this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
           const transfer: EquipoAlmacenTransferir={
-            id: this.idTransferencia ,
+            id: this.idTransferencia,
             imei: equipoResp.imei,
-            // almacenSalida:Number( equipoResp.almacenSalidaId),
-            // almacenDestino: this.form.get('almacen')?.value,
-            cantidadEquipos: this.cantidadEquipoATransferir
+            almacenSalida:Number( equipoResp.almacenSalidaId),
+            almacenDestino: this.form.get('almacen')?.value,
+            cantidadEquipos: this.cantidadEquipoATransferir,
+            modelo: equipoResp.modelo
           }
-          
           this.postTransferenciaEquipo(transfer);
           this.form.get('imei')?.reset();
           // this.equipoToTransfer.push(transfer)
         }
       });
-    
     });
   }
   printReportEquipoVendido(){
@@ -114,8 +110,6 @@ export class EquipoTransferenciaComponent implements OnInit {
         total: this.cantidadEquipoATransferir
       }
 
-    console.log(model);
-    
     this.equipoService.postEquipoTransferencia(model)
     .subscribe((blobResp)=>{
       this.printing = !this.printing;
@@ -128,7 +122,7 @@ export class EquipoTransferenciaComponent implements OnInit {
       iframe.contentWindow?.print();
     },(err)=>{
       this.printing = !this.printing;    
-      this.toastr.error('Error','Error al imprimir reporte');
+      this.toastr.error('Error al imprimir reporte');
     })
     this.listEquiposToTransfer =[];
     this.printing = !this.printing;
