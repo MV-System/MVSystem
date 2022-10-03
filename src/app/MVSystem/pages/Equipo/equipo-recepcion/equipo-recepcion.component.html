@@ -1,0 +1,143 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="cambiarEstatusEquipo">Cambiar estatus a Equipo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Recepcion de equipo</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recepcion de equipo</h5>
+                        <!--  Form -->
+                        <form [formGroup]="recepcionEquipoForm" class="row g-3 needs-validation" novalidate>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombres</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control"  formControlName="Nombres" 
+                                    required [ngClass]="{'is-invalid':validarCampos('Nombres')}">
+                                    <div class="validatorField" *ngIf="validarCampos('Nombres')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellidos</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control"  formControlName="Apellidos"
+                                    required [ngClass]="{'is-invalid':validarCampos('Apellidos')}">
+                                    <div class="validatorField" *ngIf="validarCampos('Apellidos')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Cedula</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control" maxlength="13" mask="000-0000000-0" formControlName="Cedula" 
+                                    required [ngClass]="{'is-invalid':validarCampos('Cedula')}">
+                                    <div class="validatorField" *ngIf="validarCampos('Cedula')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Teléfono</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control" mask="000-000-0000" formControlName="Telefono"
+                                    required [ngClass]="{'is-invalid':validarCampos('Telefono')}">
+                                    <div class="validatorField" *ngIf="validarCampos('Telefono')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Imei de cliente</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control" maxlength="30" formControlName="ImeiEntrada" 
+                                    required [ngClass]="{'is-invalid':validarCampos('ImeiEntrada')}">
+                                    <div class="validatorField" *ngIf="validarCampos('ImeiEntrada')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio Imei recibido</label>
+                                    <span class="required-field">*</span>
+                                    <input type="text" class="form-control"  formControlName="PrecioImeiEntra" maxlength="13" currencyMask placeholder="RD$"
+                                    required [ngClass]="{'is-invalid':validarCampos('PrecioImeiEntra')}">
+                                    <div class="validatorField" *ngIf="validarCampos('PrecioImeiEntra')">
+                                        {{mensajeErrorCampoPrecioImeiEntrada}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Imei de tienda</label>
+                                    <input type="text" class="form-control" maxlength="30" formControlName="ImeiSale" 
+                                     [ngClass]="{'is-invalid':validarCampos('ImeiSale')}">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div>
+                                    <label class="form-label">Nota</label>
+                                    <textarea class="form-control"   formControlName="Nota"
+                                        [ngClass]="{'is-invalid':validarCampos('Nota')}" name="w3review" rows="4" cols="50">
+                                    </textarea>
+                                </div>
+                            </div>
+
+                            <!-- --------------- DropDown condicion equipo --------------- --> 
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Condicion de equipo</label>
+                                    <span class="required-field">*</span>
+                                    <select formControlName="IDCondicion" class="form-select">
+                                        <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
+                                            {{estado?.descripcion}}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('IDCondicion')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- --------------- DropDown Modelo de equipo --------------- --> 
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Modelo de equipo</label>
+                                    <span class="required-field">*</span>
+                                    <select formControlName="IDModelo" class="form-select">
+                                        <option *ngFor="let modelo of modelosCatalogo" [value]="modelo?.iD_Modelo">
+                                            {{modelo?.descripcion}}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('IDModelo')">
+                                        Este campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="pt-2">
+                            <button class="btn btn-primary" (click)="recibirEquipo()" >Recibir</button>
+                        </div>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main> 

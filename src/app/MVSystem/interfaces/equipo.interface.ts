@@ -30,6 +30,7 @@ export interface EquipoObjRetorno {
     marca: string;
     precioPorMayor: number;
     precioDetalle: number;
+    disponible: string;
     disponible_Detalle: null;
     mensaje: string;
 }
@@ -178,4 +179,24 @@ export interface EquipoModificarEstatusSet{
     precioPorMayor: number;
     precioDetalle: number;
     estadoBloqueoId: number;
+}
+
+export interface EquipoRecepcion {
+        Nombres:  string,
+        Apellidos:  string,
+        Cedula: string,
+        Telefono: string,
+        ImeiEntrada:string,
+        PrecioImeiEntra: number,
+        IDModelo: number,
+        IDCondicion:number ,
+        ImeiSale: string,
+        Nota:  string
+}
+
+export interface EquipoEstadoUpdate{
+        Imei: string ,
+        Disponible: string ,
+        NotaAdicional: string ,
+        Usuario: string ,
 }
