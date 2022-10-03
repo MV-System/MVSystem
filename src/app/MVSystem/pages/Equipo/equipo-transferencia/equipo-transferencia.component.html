@@ -19,13 +19,14 @@
                     <div class="card-body">
                         <h5 class="card-title mb-2">Datos de equipo</h5>
                         <!--  Form -->
-                        <form [formGroup]="form"  class="row g-3 needs-validation" >
+                        <form [formGroup]="form"  class="row g-3 ">
+                            <!-- [ngClass]="{'needs-validation': !listEquiposToTransfer.length}" -->
                             <div class="row">
                                 <!-- Search by imei -->
-                                <label class="form-label mx-1">Imei a transferir</label>
+                                <label class="form-label mx-1 ">Imei a transferir</label>
                                 <div class="col-md-12">
                                   <input
-                                    class="form-control"
+                                    class="form-control "
                                     placeholder="imei"
                                     formControlName="imei"
                                     (keyup.enter)="getEquipoByImei()" />

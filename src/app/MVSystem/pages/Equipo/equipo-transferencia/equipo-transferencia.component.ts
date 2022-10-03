@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -6,13 +6,14 @@ import { EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/MVSyste
 import { EquipoService } from '../../../services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoAlmacenTransferir } from '../../../interfaces/equipo.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-equipo-transferencia',
   templateUrl: './equipo-transferencia.component.html',
   styleUrls: ['./equipo-transferencia.component.css']
 })
-export class EquipoTransferenciaComponent implements OnInit {
+export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
 
 
   constructor(
@@ -26,6 +27,14 @@ export class EquipoTransferenciaComponent implements OnInit {
     this.getAlmacenes();
     this.getTransferenciaId();
   }
+  ngOnDestroy(): void {
+    if (!this.listEquiposToTransfer.length) {
+      this.sub.unsubscribe();
+        console.log('destroy');
+        this.getTransferenciaId();
+    }
+  }
+  sub!: Subscription;
   almacenes: Almacen[]=[];
   listEquiposToTransfer:EquipoTransferencia[]=[];
   equipoToTransfer:EquipoAlmacenTransferir[]=[];
@@ -50,17 +59,23 @@ export class EquipoTransferenciaComponent implements OnInit {
     return bool;
   }
   postTransferenciaEquipo(equipoToTransfer:EquipoAlmacenTransferir){
-    
     this.equipoService.postTransferenciaEquipo(equipoToTransfer)
-    .subscribe(resp=>{
-      console.log(resp);
+    .subscribe(()=>{
+      this.toastr.success('Equipo tranferido','', {'progressBar': true,'closeButton':true,timeOut:2000});
+      console.log(this.idTransferencia);
       
     })
   }
   deleteEquipo(imei: string){
+ 
+
     this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
-   return this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
-  //  return this.listEquiposToTransfer= this.listEquiposToTransfer.filter((equipoId,index)=> index !== i);
+    this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
+    if (!this.listEquiposToTransfer.length) {
+      this.sub.unsubscribe();
+      this.cantidadEquipoATransferir =0;
+      this.ngOnDestroy();
+    }
   }
   getEquipoByImei(){
     
@@ -95,41 +110,43 @@ export class EquipoTransferenciaComponent implements OnInit {
           }
           this.postTransferenciaEquipo(transfer);
           this.form.get('imei')?.reset();
-          // this.equipoToTransfer.push(transfer)
         }
       });
     });
   }
   printReportEquipoVendido(){
-
-      const model :EquipoTransferenciaReporte = {
-        idTransferencia: this.idTransferencia,
-        equipoTransferencias: this.listEquiposToTransfer,
-        fechaTransferencia: new Date().toDateString(),
-        usuario: 'Xavier',
-        total: this.cantidadEquipoATransferir
-      }
-
+    const model :EquipoTransferenciaReporte = {
+      idTransferencia: this.idTransferencia,
+      equipoTransferencias: this.listEquiposToTransfer,
+      fechaTransferencia: new Date().toDateString(),
+      usuario: 'Xavier',
+      total: this.cantidadEquipoATransferir
+    }
     this.equipoService.postEquipoTransferencia(model)
-    .subscribe((blobResp)=>{
-      this.printing = !this.printing;
-      var blob = new Blob([blobResp], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.contentWindow?.print();
+        .subscribe((blobResp)=>{
+        this.printing = !this.printing;
+        this.getBlobForCreateIFramePDF(blobResp);
     },(err)=>{
       this.printing = !this.printing;    
       this.toastr.error('Error al imprimir reporte');
-    })
+      
+    });
+    this.cantidadEquipoATransferir = 0;
     this.listEquiposToTransfer =[];
     this.printing = !this.printing;
 
   }
+  getBlobForCreateIFramePDF(blobResp: Blob){
+    var blob = new Blob([blobResp], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(blob);
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = blobUrl;
+    document.body.appendChild(iframe);
+    iframe.contentWindow?.print();
+  }
   getTransferenciaId(){
-    this.equipoService.getTransferenciaId()
+   this.sub= this.equipoService.getTransferenciaId()
     .subscribe((id)=>{
       this.idTransferencia = id + 1;
     })
