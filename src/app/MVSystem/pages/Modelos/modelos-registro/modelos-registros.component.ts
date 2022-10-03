@@ -28,25 +28,21 @@ export class ModelosRegistrosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
-    //this.obtenerModeloLista();
+    this.formRegistro.get('descripcion')?.disable();
     this.formRegistro.get('modelo')?.disable();
   }
 
-  // btnDisable(){
-  //   return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
-  // }
+
   formRegistro: FormGroup = this.fb.group({
     descripcion: ['', Validators.required],
     marca: [, Validators.required],
     modelo: [, Validators.required]
   });
   selectoresMarcaModeloValidator() {
-    // debugger;
     this.formRegistro.get('modelo')?.setValue('');
-    //console.log(this.formRegistro.get('marca')?.value);
 
     if (this.formRegistro.get('marca')?.value) {
-      this.formRegistro.get('modelo')?.enable();
+      this.formRegistro.get('descripcion')?.enable();
       this.obtenerModeloLista();
     }
     else{
@@ -70,6 +66,7 @@ export class ModelosRegistrosComponent implements OnInit {
   modeloRegistroMarca(){
 
     const registro: ModeloEquipo = {
+      iD_Marca: this.formRegistro.get('marca')?.value,
       descripcion: this.formRegistro.get('descripcion')?.value,
       usuario: "Ventura" //       this.formRegistro.get('usuario')?.value,
       ,
@@ -78,15 +75,16 @@ export class ModelosRegistrosComponent implements OnInit {
       return registro;
   }
   validarCampos(nombreCampo: string) {
-
     return this.formRegistro.get(nombreCampo)?.invalid &&
            this.formRegistro.get(nombreCampo)?.touched
   }
-
+  btnDisable(){
+       return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
+  }
   registroModelo(){
 
     const model: ModeloEquipo = this.modeloRegistroMarca();
-
+debugger;
     if (this.formRegistro.valid) {
         this.ModeloService.postModelo(model)
             .subscribe((ModeloInsertado: ModeloObjRetorno) =>{

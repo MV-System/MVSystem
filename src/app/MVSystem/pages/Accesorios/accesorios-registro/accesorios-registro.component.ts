@@ -65,7 +65,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
   }
   selectoresMarcaModeloValidator() {
-    debugger;
+
     this.formRegistro.get('modelo')?.setValue('');
     if (this.formRegistro.get('marca')?.value) {
       this.formRegistro.get('modelo')?.enable();

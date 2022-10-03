@@ -13,6 +13,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../shared/shared.module';
+import { UtilidadesComponent } from './pages/utilidades/utilidades/utilidades.component';
 
 
 
@@ -20,7 +21,8 @@ import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    UtilidadesComponent
   ],
   imports: [
     CommonModule,

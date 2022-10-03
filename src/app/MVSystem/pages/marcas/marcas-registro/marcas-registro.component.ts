@@ -39,6 +39,7 @@ export class MarcasRegistroComponent implements OnInit {
            this.formRegistro.get(nombreCampo)?.touched
   }
   btnDisable(){
+
     return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
   }
 
