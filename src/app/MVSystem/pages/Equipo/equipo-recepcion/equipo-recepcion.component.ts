@@ -7,6 +7,7 @@ import { FormValidatorService } from 'src/app/MVSystem/services/form-validator.s
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
 import { EquipoEstadoUpdate } from '../../../interfaces/equipo.interface';
 import { LoginService } from '../../../../services/login.service';
+import { EquipoService } from '../../../services/equipo.service';
 
 @Component({
   selector: 'app-equipo-recepcion',
@@ -56,7 +57,8 @@ export class EquipoRecepcionComponent implements OnInit {
               private toastr: ToastrService,
               private mantenimientoService: MantenimientoService,
               private formValidatorsService: FormValidatorService,
-              private loginService:LoginService
+              private loginService:LoginService,
+              private equipoService: EquipoService
              ) {
               this.userName = this.loginService.getUserName()
             }
@@ -75,44 +77,44 @@ export class EquipoRecepcionComponent implements OnInit {
     return 
   }
 
-  let entranteDisponible = await this.consultaEquipoEntraDisponible();
-  if(!this.equipoEntraNoDisponible)
-  {
-    this.toastr.error('Validar que el equipo entrante existe y no este disponible', '', this.toastrDefaultConfig);
-    return;
+  let equipoEntraData = await this.consultaEquipoDisponible(this.imeiEntra?.value)
+  let equipoSaleData = {imei: '', existe: false, disponible: false}
+  if(this.imeiSale?.value){
+    equipoSaleData = await this.consultaEquipoDisponible(this.imeiSale?.value)
+    if(!equipoSaleData.existe || !equipoSaleData.disponible){
+      this.toastr.error('Debe validar que el equipo que sale existe y este disponible', '', this.toastrDefaultConfig)
+      return;
+    }
   }
 
-  let salienteDisponible = await this.consultaEquipoEntraDisponible();
-  if(!this.equipoSaleDisponible)
-  {
-    this.toastr.error('Validar que el equipo que sale existe y esta disponible', '', this.toastrDefaultConfig);
-    return;
-  }
+
 
   this.mantenimientoService.recepcionEquipo(this.recepcionEquipoForm.value)
       .subscribe( res => {
-        this.actualizarEstadoEquipo({Imei: this.imeiEntra?.value, Disponible: 'S', NotaAdicional:'Intercambiado entrante', Usuario: this.userName})
-        this.actualizarEstadoEquipo({Imei: this.imeiSale?.value, Disponible: 'N', NotaAdicional:'Intercambiado saliente', Usuario: this.userName})
+        if(equipoEntraData.existe && !equipoEntraData.disponible){
+          this.actualizarEstadoEquipo({Imei: this.imeiEntra?.value,Disponible: 'S', NotaAdicional: 'Recibido', Usuario: this.userName })
+        }else if(!equipoEntraData.existe) {
+          this.toastr.warning('Asegurese de registrar el equipo recibido','', this.toastrDefaultConfig )
+        }
+        if(this.imeiSale?.value){
+          this.actualizarEstadoEquipo({Imei: equipoSaleData.imei,Disponible: 'N', NotaAdicional: 'Vendido', Usuario: this.userName })
+        }
         this.resetForm();
         this.toastr.success('Se ha recibido el equipo')
       })
   }
 
-  consultaEquipoEntraDisponible(): Promise<boolean>{
-    return new Promise( resolve => {
-      this.mantenimientoService.buscarEquipoDisponible(this.imeiEntra?.value,'2').subscribe( ({disponible}) => {
-        resolve(disponible == 'N')
+  consultaEquipoDisponible(imei: string): Promise<{imei:string , existe: boolean, disponible: boolean}>{
+    return new Promise( (resolve, reject) => {
+      this.mantenimientoService.consultaEquipoDisponible(imei).subscribe( (res) => {
+        resolve({imei: res.imei, existe: true, disponible: res.imei.length > 0})
+      }, err => {
+        resolve({imei: '', existe: false, disponible: false})
       })
     }) 
   }
 
-  consultaEquipoSaleDisponible(): Promise<boolean>{
-    return new Promise( resolve => {
-        this.mantenimientoService.buscarEquipoDisponible(this.imeiSale?.value,'2').subscribe( ({disponible}) => {
-        resolve(disponible == 'S')
-      })
-    })
-  }
+
 
   actualizarEstadoEquipo(data: EquipoEstadoUpdate){
     this.mantenimientoService.equipoEstadoActualiza(data).subscribe( res =>{} , err => {

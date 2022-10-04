@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate } from '../interfaces/equipo.interface';
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
@@ -43,6 +43,10 @@ export class MantenimientoService {
 
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
     return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)
+  }
+
+  consultaEquipoDisponible(imei: string): Observable<EquipoTransferencia> {
+    return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=${imei}`)
   }
 
   buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<EquipoObjRetorno> {
