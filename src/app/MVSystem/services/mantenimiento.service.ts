@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet } from '../interfaces/equipo.interface';
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
@@ -31,6 +31,10 @@ export class MantenimientoService {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
   }
 
+  recepcionEquipo(data: EquipoRecepcion): Observable<void>{
+    return this.http.post<void>(APIURL.Equipo.Inserta.EquipoRecepcion, data);
+  }
+
   //Get's
 
   getEquipoNumeroRegistro(): Observable<EquipoNumeroRegistro[]> {
@@ -39,5 +43,17 @@ export class MantenimientoService {
 
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
     return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)
+  }
+
+  consultaEquipoDisponible(imei: string): Observable<EquipoTransferencia> {
+    return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=${imei}`)
+  }
+
+  buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<EquipoObjRetorno> {
+    return this.http.get<EquipoObjRetorno>(`${APIURL.Equipo.Consulta.EquipoBuscaDisponible}?Equipo=${equipo}&Id_Almacen=${Id_Almacen}`);
+  }
+
+  equipoEstadoActualiza(dataActualizar: EquipoEstadoUpdate): Observable<void> {
+    return this.http.post<void>(`${APIURL.Equipo.Modifica.EstadoActualiza}`, dataActualizar);
   }
 }

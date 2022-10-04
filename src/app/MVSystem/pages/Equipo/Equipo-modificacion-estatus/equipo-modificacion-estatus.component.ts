@@ -115,7 +115,7 @@ export class EquipoModificacionEstatusComponent implements OnInit {
           this.equipoImei = res.imei;
           this.cargarDatosEquipoEnFormulario(res);
         }, err => {
-          this.toastr.error('No se encontro ningun equipo con este Imei', '', this.toastrDefaultConfig)
+          this.toastr.error('Este Equipo no esta disponible, favor verifique que este registrado y que no este vendido.', '', this.toastrDefaultConfig)
         })
   }
 
