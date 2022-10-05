@@ -26,18 +26,21 @@ export let APIURL = {
             EquipoVendidoReporteInserta: API + 'EquipoReporte/EquipoVendidoReporte/GetEquiposVendidos',
             EquipoTransferenciaReporteInserta: API + 'EquipoReporte/EquipoTransferenciaReporte',
             EquipoTransferenciaInserta: API + 'Equipos/PostEquipoTransferencia',
+            EquipoRecepcion: API + 'Equipos/RecepcionEquipos'
         },
         Consulta: {
             EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
             EquipoDisponible: API + 'Equipos/GetEquiposDisponible',
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
+            EquipoBuscaDisponible: API + 'Equipos',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
             EquipoModificarEstatus: API + 'Equipos/GetEquipoPreciosEstatusByImei',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
         },
         Modifica: {
-            ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo'
+            ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo',
+            EstadoActualiza: API + 'Equipos/EstadoActualiza'
         }
     },
     Marca: {
