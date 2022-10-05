@@ -13,7 +13,7 @@ export class AccesoriosService{
 
   getAllAccesorios(pagination:Pagination,accesorio: string, almacen: number):Observable<AccesorioAll[]>{
     const query =
-    'PageNumber=' +
+    'PageIndex=' +
         pagination.pageIndex +
     '&PageSize=' +
         pagination.pageSize +
