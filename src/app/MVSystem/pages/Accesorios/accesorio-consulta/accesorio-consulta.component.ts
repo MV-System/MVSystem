@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
@@ -12,6 +12,7 @@ import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
   styleUrls: ['./accesorio-consulta.component.css']
 })
 export class AccesorioConsultaComponent implements OnInit {
+  accesorio: any;
 
   constructor(
     private catalogosService: CatalogosService,
@@ -20,33 +21,64 @@ export class AccesorioConsultaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllAccesorios();
+    this.obtenerAlmacenes();
   }
-  totalInventario: number = 0;
   almacenes: Almacen[] = [];
   accesorios: AccesorioAll[]=[];
-
+   currentPage:    number = 1;
+  totalInventario: number = 0;
+  totalRecord!:    number;
+  line!:           number;
+  lastLine!:       number;
+  pageIndex:       number=1;
+  pageSize:        number=10;
   form: FormGroup = this.fb.group({
     almacen: [0,],
-    accesorio:[,],
+    accesorio:['',],
     totalAccesorio: [0,],
     totalInventario: [0,]
   });
+ 
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10
   }
+  filter: any = {
+    almacen: '',
+    criterio:'',
+ 
+  };
+
+
+  pageChanged(index: number) {
+    this.currentPage = index;
+   this.paginate.pageIndex= this.pageIndex = index;
+    this.getAllAccesorios()
+  }
   getAllAccesorios(){
     let accesorio = this.form.get('accesorio')?.value;
     let almacen = this.form.get('almacen')?.value;
+    
     this.accesoriosService.getAllAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
+      if (accesorios.length) {
+        this.totalRecord = accesorios[0].totalRecord;
+        this.line = accesorios[0].line;
+        this.lastLine = accesorios[0].lastLine;
+      }
       this.accesorios= accesorios;
       accesorios.forEach(({totalInventario}) => {
         this.totalInventario = totalInventario;
       });      
     })
   }
-  obtenerAlmacenLista() {
+  getAccesorioByI(id: number){
+    id = 12	
+    this.accesorio = this.accesorios.filter(accesorio=> 12 == accesorio.id)
+    console.log(this.accesorios.filter(accesorio=> 12 == accesorio.id));
+    
+  }
+  obtenerAlmacenes() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.almacenes = almacen;
     });
