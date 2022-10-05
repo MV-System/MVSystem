@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
 import { AccesorioAll } from '../../../../interfaces/accesorio.interface';
 
 @Component({
@@ -8,28 +8,32 @@ import { AccesorioAll } from '../../../../interfaces/accesorio.interface';
 })
 export class AccesorioListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private eRef:ElementRef) { }
 
   ngOnInit(): void {
   }
-  currentPage:     number = 1;
-  totalRecord!:    number;
-
- @Input() accesorios: AccesorioAll[]=[];
+  
+  @Input() accesorios: AccesorioAll[]=[];
+  @Input() pageSize!:    number;
+  @Input() pageIndex!:   number;
+  @Input() totalRecord!: number;
+  @Input() currentPage:  number=1;
   filter: any = {
-    almacen: 0,
-    modelo: '',
-    imei: '',
-    suplidor: '',
+    almacen: '',
+    criterio:'',
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: '',
-    fechaFinal: '',
   };
+  @HostListener('document:click', ['$event']) selectAccesorio(event: Event) {
+    // console.log( this.elRef.nativeElement.contains(event.target) );
+    const tr = document.getElementById('put');
+    if(this.eRef.nativeElement.contains(event.target)) {
+      console.log(event.target);
 
+      
+    } 
+    console.log(event.target);
+  
 
-  pageChanged(index: number) {
-    this.currentPage = index;
-    this.filter.pageIndex = index;
   }
 }
