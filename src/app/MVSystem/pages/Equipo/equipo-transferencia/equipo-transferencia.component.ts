@@ -37,7 +37,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
   sub!: Subscription;
   almacenes: Almacen[]=[];
   listEquiposToTransfer:EquipoTransferencia[]=[];
-  equipoToTransfer:EquipoAlmacenTransferir[]=[];
+  equipoToTransfer!:EquipoAlmacenTransferir[];
   idTransferencia!: number;
   cantidadEquipoATransferir: number=0;
   printing: boolean = false;
@@ -81,38 +81,41 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
+      console.log(equipo);
       
-      !equipo.length?this.toastr.error('Imei no encontrado!'):equipo; 
+      !Object.keys(equipo).length?this.toastr.error('Imei no encontrado!'):equipo; 
       if(this.validateImei())return
-      equipo.forEach((equipoResp)=>{
+      
         
-        if (equipo[0].mensaje.length) {
-          this.toastr.warning(equipo[0].mensaje)
+        if (equipo.mensaje.length) {
+          this.toastr.warning(equipo.mensaje)
         }
         else{
           const model:EquipoTransferencia ={
-            imei: equipoResp.imei,
-            modelo: equipoResp.modelo,
-            almacenSalida: equipoResp.almacenSalida,
+            imei: equipo.imei,
+            modelo: equipo.modelo,
+            almacenSalida: equipo.almacenSalida,
             almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
             mensaje: '',
           }
+          console.log(model);
+          
           this.listEquiposToTransfer.unshift(model);
 
           this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
           const transfer: EquipoAlmacenTransferir={
             id: this.idTransferencia,
-            imei: equipoResp.imei,
-            almacenSalida:Number( equipoResp.almacenSalidaId),
+            imei: equipo.imei,
+            almacenSalida:Number( equipo.almacenSalidaId),
             almacenDestino: this.form.get('almacen')?.value,
             cantidadEquipos: this.cantidadEquipoATransferir,
-            modelo: equipoResp.modelo
+            modelo: equipo.modelo
           }
           this.postTransferenciaEquipo(transfer);
           this.form.get('imei')?.reset();
         }
       });
-    });
+    
   }
   printReportEquipoVendido(){
     const model :EquipoTransferenciaReporte = {

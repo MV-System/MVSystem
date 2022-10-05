@@ -71,8 +71,8 @@ export class EquipoService{
         EquipoVendido.fechaFinalFactura ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
-    getEquipoByImei(imei: string):Observable<EquipoTransferencia[]>{
-        return this.http.get<EquipoTransferencia[]>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
+    getEquipoByImei(imei: string):Observable<EquipoTransferencia>{
+        return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
     } 
     getTransferenciaId():Observable<number>{
         return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
