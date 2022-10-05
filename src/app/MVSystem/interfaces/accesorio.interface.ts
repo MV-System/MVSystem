@@ -14,4 +14,7 @@ export interface AccesorioAll {
     codBarra:             number;
     almacen:              string;
     totalInventario:      number;    
+    line: number;
+    lastLine: number;
+    totalRecord: number;
 }

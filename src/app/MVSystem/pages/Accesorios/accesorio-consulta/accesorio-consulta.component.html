@@ -75,7 +75,16 @@
                 </form>
                 <!-- end form   -->
                 <!-- list accesorios -->
-                <app-accesorio-list [accesorios]="accesorios"></app-accesorio-list>
+                <app-accesorio-list 
+                [accesorios]="accesorios" 
+                [pageIndex]="pageIndex" 
+                [pageSize]="pageSize" 
+                [totalRecord]="totalRecord"
+                [currentPage]="currentPage">
+                <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10 && accesorios.length">
+                </pagination-controls>
+              </app-accesorio-list>
+               
                 <!-- end lsit -->
               </div>
             </div>
