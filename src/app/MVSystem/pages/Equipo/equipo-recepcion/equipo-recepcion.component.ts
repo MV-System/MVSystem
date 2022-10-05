@@ -24,9 +24,9 @@ export class EquipoRecepcionComponent implements OnInit {
 
   userName: string = '';
 
-  get precioImeiEntra(){return this.recepcionEquipoForm.get('PrecioImeiEntra');} 
-  get imeiEntra(){return this.recepcionEquipoForm.get('ImeiEntrada');} 
-  get imeiSale(){return this.recepcionEquipoForm.get('ImeiSale');} 
+  get precioImeiEntra(){return this.recepcionEquipoForm.get('PrecioImeiEntra');}
+  get imeiEntra(){return this.recepcionEquipoForm.get('ImeiEntrada');}
+  get imeiSale(){return this.recepcionEquipoForm.get('ImeiSale');}
 
 
   get mensajeErrorCampoPrecioImeiEntrada() {
@@ -37,7 +37,7 @@ export class EquipoRecepcionComponent implements OnInit {
       return "Debe ser mayor a cero."
     else return ''
   }
-  
+
   recepcionEquipoForm = this.fb.group({
     Nombres: ['', Validators.required],
     Apellidos: ['', Validators.required],
@@ -74,7 +74,7 @@ export class EquipoRecepcionComponent implements OnInit {
     this.recepcionEquipoForm.markAllAsTouched();
     this.markAllFormControlAsDirty();
     this.toastr.error('El formulario contiene datos incorrectos, favor validar', '', this.toastrDefaultConfig);
-    return 
+    return
   }
 
   let equipoEntraData = await this.consultaEquipoDisponible(this.imeiEntra?.value)
@@ -111,7 +111,7 @@ export class EquipoRecepcionComponent implements OnInit {
       }, err => {
         resolve({imei: '', existe: false, disponible: false})
       })
-    }) 
+    })
   }
 
 
@@ -143,7 +143,7 @@ export class EquipoRecepcionComponent implements OnInit {
   }
 
   validarCampos(campo :string){
-    return this.recepcionEquipoForm.get(campo)?.errors 
+    return this.recepcionEquipoForm.get(campo)?.errors
         && this.recepcionEquipoForm.get(campo)?.dirty
         && this.recepcionEquipoForm.get(campo)?.touched;
   }
