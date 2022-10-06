@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
 
@@ -19,8 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private loginService: LoginService,
-    private router: Router) { }
+    private loginService: LoginService,) { }
 
   ngOnInit(): void {
 
@@ -36,8 +34,7 @@ export class LoginComponent implements OnInit {
 
       localStorage.setItem('token', res.token)
       localStorage.setItem('expires', res.expires.toString())
-      this.toastr.success('Bienvenido!!!');
-      this.router.navigateByUrl('/dashboard')
+      this.toastr.success('Bienvenido!!!')
     })
   }
 }
