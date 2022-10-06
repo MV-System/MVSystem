@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './MVSystem/pages/home/home.component';
 import { LoginModule } from './MVSystem/pages/login/login.module';
+import { LoginComponent } from './MVSystem/pages/login/login/login.component';
 
 const routerOptions: ExtraOptions = {
   useHash: true,
@@ -10,7 +11,9 @@ const routerOptions: ExtraOptions = {
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    redirectTo:'login',
+    pathMatch:'full',
+    component: LoginComponent,
   },
   {
     path: 'mv-system',
@@ -19,6 +22,10 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./MVSystem/pages/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'dashboard',
+    component: HomeComponent,
   },
 ];
 

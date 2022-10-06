@@ -1,8 +1,7 @@
 
 <!-- modal Editar accesorio -->
 
-<div class="card">
-    <div class="card-body">
+
       <!-- Basic Modal -->
       <div class="modal fade" id="editAccesorioModal" tabindex="-1">
         <div class="modal-dialog modal-lg ">
@@ -21,8 +20,7 @@
           </div>
         </div>
       </div><!-- End Basic Modal-->
-    </div>
-  </div>
+
   <!-- End modal -->
 
 <section class="section mt-4">
@@ -32,14 +30,13 @@
             <!-- <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p> -->
 
             <!-- Table with stripped rows -->
-          <p  data-bs-toggle="modal" data-bs-target="#editAccesorioModal">EDITAR</p>
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">CODIGO</th>
-                        <th scope="col">DESCRIPCIÓN</th>
-                        <th scope="col">MODELO</th>
+                        <th scope="col-2">DESCRIPCIÓN</th>
+                        <th scope="col-2">MODELO</th>
                         <th scope="col">CANTIDAD</th>
                         <th scope="col">COSTO</th>
                         <th scope="col">PRECIO DETALLE</th>
@@ -69,7 +66,7 @@
                         <td>{{ accesorio.almacen }}</td>
                         <td>{{ accesorio.codBarra }}</td>
                         {{accesorio.id == 12}}
-                        <td data-bs-toggle="modal" data-bs-target="#editAccesorioModal">EDITAR</td>
+                        <td (click)="getIdAccesorioEdit(accesorio.id)" data-bs-toggle="modal" data-bs-target="#editAccesorioModal" >EDITAR</td>
                     </tr>
                 </tbody>
             </table>

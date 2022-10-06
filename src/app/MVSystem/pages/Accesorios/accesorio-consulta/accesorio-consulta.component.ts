@@ -23,9 +23,9 @@ export class AccesorioConsultaComponent implements OnInit {
     this.getAllAccesorios();
     this.obtenerAlmacenes();
   }
-  almacenes: Almacen[] = [];
+  almacenes:  Almacen[] = [];
   accesorios: AccesorioAll[]=[];
-   currentPage:    number = 1;
+  currentPage:     number = 1;
   totalInventario: number = 0;
   totalRecord!:    number;
   line!:           number;

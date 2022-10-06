@@ -27,13 +27,13 @@ export class AccesorioListComponent implements OnInit {
   @HostListener('document:click', ['$event']) selectAccesorio(event: Event) {
     // console.log( this.elRef.nativeElement.contains(event.target) );
     const tr = document.getElementById('put');
-    if(this.eRef.nativeElement.contains(event.target)) {
+    const col = document.getElementById('col');
+    if(this.eRef.nativeElement.contains(event.target) ==col) {
       console.log(event.target);
-
-      
     } 
-    console.log(event.target);
-  
+  }
+  getIdAccesorioEdit(id: number){
+console.log(id);
 
   }
 }
