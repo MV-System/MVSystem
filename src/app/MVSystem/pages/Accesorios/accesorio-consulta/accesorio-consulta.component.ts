@@ -5,6 +5,7 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { AccesoriosService } from '../../../services/accesorios.service';
 import { Pagination } from '../../../interfaces/pagination.interfaces';
 import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accesorio-consulta',
@@ -17,15 +18,17 @@ export class AccesorioConsultaComponent implements OnInit {
   constructor(
     private catalogosService: CatalogosService,
     private accesoriosService:AccesoriosService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getAllAccesorios();
     this.obtenerAlmacenes();
+    
   }
   almacenes:  Almacen[] = [];
   accesorios: AccesorioAll[]=[];
-  currentPage:     number = 1;
+  currentPage:    number = 1;
   totalInventario: number = 0;
   totalRecord!:    number;
   line!:           number;

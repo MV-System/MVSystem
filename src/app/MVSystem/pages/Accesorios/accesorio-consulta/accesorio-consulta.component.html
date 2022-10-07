@@ -27,19 +27,21 @@
                           <div class="row mt-4">
                             <!-- Search IMEI -->
                             <div class="col-md-4">
-                              <label class="form-label">Por accesorio</label>
+                              <label class="form-label">Por descripción</label>
                               <div class="col-md-12">
                                 <input
                                   class="form-control"
-                                  placeholder="accesorio"
-                                  formControlName="accesorio" />
+                                  placeholder="Cover Iphone 14 Pro"
+                                  formControlName="accesorio" 
+                                  (keyup)="getAllAccesorios()"/>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <!-- Search by almacen -->
       
                               <label class="form-label">Almacen</label>
-                              <select class="form-select" formControlName="almacen">
+                              <select class="form-select" formControlName="almacen"
+                              (change)="getAllAccesorios()" >
                                 <option
                                   *ngFor="let almacen of almacenes"
                                   [value]="almacen.iD_Almacen" >
@@ -75,12 +77,14 @@
                 </form>
                 <!-- end form   -->
                 <!-- list accesorios -->
+                <!-- (id)="getIdAccesorio($event)" -->
+
                 <app-accesorio-list 
                 [accesorios]="accesorios" 
                 [pageIndex]="pageIndex" 
                 [pageSize]="pageSize" 
                 [totalRecord]="totalRecord"
-                [currentPage]="currentPage">
+                [currentPage]="currentPage"     >
                 <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10 && accesorios.length">
                 </pagination-controls>
               </app-accesorio-list>
