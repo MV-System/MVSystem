@@ -10,6 +10,7 @@ export let APIURL = {
         },
         Consulta: {
             AccesorioConsulta: API + 'Accesorios/GetAllAccesorios',
+            AccesorioConsultaById: API + 'Accesorios/GetAccesorioById',
 
         }
     },

@@ -10,6 +10,7 @@ import { AccesorioConsultaComponent } from './accesorio-consulta/accesorio-consu
 import { AccesorioListComponent } from './accesorio-consulta/accesorio-list/accesorio-list.component';
 import { AccesorioEditComponent } from './accesorio-consulta/accesorio-edit/accesorio-edit.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -34,7 +35,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CurrencyMaskModule,
     NgSelectModule,
     NgxPaginationModule,
-
+    SharedModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

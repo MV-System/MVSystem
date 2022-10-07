@@ -1,6 +1,8 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
-import { AccesorioAll } from '../../../../interfaces/accesorio.interface';
-
+import { Router } from '@angular/router';
+import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
+import { Accesorio, AccesorioAll } from '../../../../interfaces/accesorio.interface';
+import * as $ from 'jquery';
 @Component({
   selector: 'app-accesorio-list',
   templateUrl: './accesorio-list.component.html',
@@ -8,7 +10,9 @@ import { AccesorioAll } from '../../../../interfaces/accesorio.interface';
 })
 export class AccesorioListComponent implements OnInit {
 
-  constructor(private eRef:ElementRef) { }
+  constructor(private eRef:ElementRef,
+    private accesoriosService:AccesoriosService,
+    private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -18,22 +22,51 @@ export class AccesorioListComponent implements OnInit {
   @Input() pageIndex!:   number;
   @Input() totalRecord!: number;
   @Input() currentPage:  number=1;
+  // accesorio= new EventEmitter<Accesorio>();
+  accesorio!: Accesorio;
+
+  // @Output() id= new EventEmitter<number>();
+  isOpenModal = false;
+  title ="Editar accesorio"
   filter: any = {
     almacen: '',
     criterio:'',
     pageIndex: 1,
     pageSize: 10,
   };
-  @HostListener('document:click', ['$event']) selectAccesorio(event: Event) {
-    // console.log( this.elRef.nativeElement.contains(event.target) );
-    const tr = document.getElementById('put');
-    const col = document.getElementById('col');
-    if(this.eRef.nativeElement.contains(event.target) ==col) {
-      console.log(event.target);
-    } 
-  }
-  getIdAccesorioEdit(id: number){
-console.log(id);
+
+  // changeTable(id: number){
+  //   this.id.emit(id)
+  // }
+  putAccesorio(){
+    this.isOpenModal=!this.isOpenModal;
+    
+    // this.$accesorio.emit(this.accesorio);
 
   }
+  getIdAccesorio(id:number){
+    
+    console.log(id);
+    this.accesoriosService.getAccesorioById(id)
+    .subscribe(accesorio =>{
+      console.log(accesorio);
+      this.accesorio = accesorio;
+    });
+  }
+  onCancel() {
+    this.isOpenModal = !this.isOpenModal;
+  }
+  jQuery(function(){
+    $("#pss").trigger('click'); 
+});
+  $("#table tr").click(function(){
+    $(this).addClass('selected').siblings().removeClass('selected');    
+    var value=$(this).find('td:first').html();
+    alert(value);    
+ });
+ 
+ $('.ok').on('click', function(e){
+     alert($("#table tr.selected td:first").html());
+ });
 }
+  

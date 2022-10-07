@@ -1,38 +1,24 @@
 
 <!-- modal Editar accesorio -->
-
-
-      <!-- Basic Modal -->
-      <div class="modal fade" id="editAccesorioModal" tabindex="-1">
-        <div class="modal-dialog modal-lg ">
-          <div class="modal-content ">
-            <div class="modal-header">
-              <h5 class="modal-title">Editar accesorio</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <app-accesorio-edit></app-accesorio-edit>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
-              <button type="button" class="btn btn-primary">Guardar y seguir</button>
-            </div>
-          </div>
-        </div>
-      </div><!-- End Basic Modal-->
-
-  <!-- End modal -->
+<r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
+  <app-accesorio-edit [accesorio]="accesorio">
+    <button cancel class="btn btn-danger" (click)="onCancel()" >Cancelar</button>
+  </app-accesorio-edit>
+</r-modal>
+<!-- End modal -->
 
 <section class="section mt-4">
     <div class="row">
         <div class="col-lg-12 scroll-table">
             <h5 class="card-title">Accesorios</h5>
+            <button class="btn btn-info" (click)="putAccesorio()" >EDITAR</button>
+            <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
             <!-- <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p> -->
 
             <!-- Table with stripped rows -->
-            <table class="table">
+            <table class="table" >
                 <thead>
-                    <tr>
+                    <tr >
                         <th scope="col">ID</th>
                         <th scope="col">CODIGO</th>
                         <th scope="col-2">DESCRIPCIÓN</th>
@@ -49,11 +35,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="animate__animated animate__fadeIn" id="put" *ngFor=" let accesorio of accesorios | paginate: {
+                    <ng-container class="animate__animated animate__fadeIn"  *ngFor=" let accesorio of accesorios | paginate: {
                       itemsPerPage: pageSize,
                       currentPage: pageIndex,
                       totalItems: totalRecord  }">
-                        <td>{{ accesorio.id }}</td>
+                      <tr (click)="getIdAccesorio(accesorio.id )" id="put">
+                        <td >{{ accesorio.id }}</td>
                         <td>{{ accesorio.codigo }}</td>
                         <td>{{ accesorio.descripcionAccesorio }}</td>
                         <td>{{ accesorio.modelo }}</td>
@@ -65,16 +52,11 @@
                         <td>{{ accesorio.disponibleDetalle }}</td>
                         <td>{{ accesorio.almacen }}</td>
                         <td>{{ accesorio.codBarra }}</td>
-                        {{accesorio.id == 12}}
-                        <td (click)="getIdAccesorioEdit(accesorio.id)" data-bs-toggle="modal" data-bs-target="#editAccesorioModal" >EDITAR</td>
-                    </tr>
+                      </tr>
+                      </ng-container>
                 </tbody>
             </table>
-            <!-- End Table with stripped rows -->
-            <div class="not-data" *ngIf="!accesorios.length">
-                Datos no encontrados
             </div>
         </div>
-    </div>
 </section>
 <ng-content></ng-content>

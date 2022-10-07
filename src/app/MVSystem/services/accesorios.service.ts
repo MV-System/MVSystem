@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 import {Pagination} from "../interfaces/pagination.interfaces"
 import { Observable } from 'rxjs';
-import { AccesorioAll } from "../interfaces/accesorio.interface";
+import { Accesorio, AccesorioAll } from "../interfaces/accesorio.interface";
 import { APIURL } from '../../shared/url';
 @Injectable({
     providedIn:'root'
@@ -23,5 +23,7 @@ export class AccesoriosService{
         almacen;
         return this.http.get<AccesorioAll[]>(`${APIURL.Accesorio.Consulta.AccesorioConsulta}?` + query)
   }
-
+  getAccesorioById(id: number):Observable<Accesorio>{
+     return this.http.get<Accesorio>(APIURL.Accesorio.Consulta.AccesorioConsultaById + id)
+  }
 }
