@@ -1,5 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
 import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
 import { Accesorio, AccesorioAll } from '../../../../interfaces/accesorio.interface';
 import * as $ from 'jquery';
@@ -11,8 +10,7 @@ import * as $ from 'jquery';
 export class AccesorioListComponent implements OnInit {
 
   constructor(private eRef:ElementRef,
-    private accesoriosService:AccesoriosService,
-    private router: Router) { }
+    private accesoriosService:AccesoriosService) { }
 
   ngOnInit(): void {
   }
@@ -40,9 +38,7 @@ export class AccesorioListComponent implements OnInit {
   // }
   putAccesorio(){
     this.isOpenModal=!this.isOpenModal;
-    
-    // this.$accesorio.emit(this.accesorio);
-
+  
   }
   getIdAccesorio(id:number){
     
@@ -56,17 +52,15 @@ export class AccesorioListComponent implements OnInit {
   onCancel() {
     this.isOpenModal = !this.isOpenModal;
   }
-  jQuery(function(){
-    $("#pss").trigger('click'); 
-});
-  $("#table tr").click(function(){
-    $(this).addClass('selected').siblings().removeClass('selected');    
-    var value=$(this).find('td:first').html();
-    alert(value);    
- });
+
+//   $("#table tr").click(function(){
+//     $(this).addClass('selected').siblings().removeClass('selected');    
+//     var value=$(this).find('td:first').html();
+//     alert(value);    
+//  });
  
- $('.ok').on('click', function(e){
-     alert($("#table tr.selected td:first").html());
- });
+//  $('.ok').on('click', function(e){
+//      alert($("#table tr.selected td:first").html());
+//  });
 }
   
