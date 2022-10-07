@@ -11,6 +11,7 @@ import { AccesorioListComponent } from './accesorio-consulta/accesorio-list/acce
 import { AccesorioEditComponent } from './accesorio-consulta/accesorio-edit/accesorio-edit.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido/accesorio-vendido.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -27,6 +28,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     AccesorioConsultaComponent,
     AccesorioListComponent,
     AccesorioEditComponent,
+    AccesorioVendidoComponent,
   ],
   imports: [
     CommonModule,

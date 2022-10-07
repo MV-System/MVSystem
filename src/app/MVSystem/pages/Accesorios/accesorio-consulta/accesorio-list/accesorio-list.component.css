@@ -24,4 +24,7 @@
    text-overflow: ellipsis;
    white-space: nowrap;
   }
-  
+  .selected {
+    background-color: brown;
+    color: #FFF;
+}

@@ -12,15 +12,14 @@ export class AccesorioEditComponent implements OnInit {
   
   ngOnInit(): void {
   console.log(this.accesorio);
-  
   }
   form: FormGroup = this.fb.group({
     descripcion:[''],
   })
  @Input() accesorio!:Accesorio;
  getAccesorioForEdit(){
- let desc= this.accesorio.descripcionAccesorio;
-this.form.get('descripcion')?.setValue(desc);
+  let desc= this.accesorio.descripcionAccesorio;
+  this.form.get('descripcion')?.setValue(desc);
 
 
  }
