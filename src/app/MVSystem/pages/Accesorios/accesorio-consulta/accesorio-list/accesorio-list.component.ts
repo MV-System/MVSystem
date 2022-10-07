@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
 import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
-import { Accesorio, AccesorioAll } from '../../../../interfaces/accesorio.interface';
+import { Accesorio } from '../../../../interfaces/accesorio.interface';
 import * as $ from 'jquery';
 @Component({
   selector: 'app-accesorio-list',
@@ -15,7 +15,7 @@ export class AccesorioListComponent implements OnInit {
   ngOnInit(): void {
   }
   
-  @Input() accesorios: AccesorioAll[]=[];
+  @Input() accesorios: Accesorio[]=[];
   @Input() pageSize!:    number;
   @Input() pageIndex!:   number;
   @Input() totalRecord!: number;

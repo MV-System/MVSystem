@@ -8,7 +8,7 @@ import {MarcaObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/MVSystem/services/marca.service';
-import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
 
 @Component({
   selector: 'app-marcas-registro',

@@ -33,7 +33,7 @@
                                   class="form-control"
                                   placeholder="Cover Iphone 14 Pro"
                                   formControlName="accesorio" 
-                                  (keyup)="getAllAccesorios()"/>
+                                  (keyup)="getAccesorios()"/>
                               </div>
                             </div>
                             <div class="col-md-4">
@@ -41,7 +41,7 @@
       
                               <label class="form-label">Almacen</label>
                               <select class="form-select" formControlName="almacen"
-                              (change)="getAllAccesorios()" >
+                              (change)="getAccesorios()" >
                                 <option
                                   *ngFor="let almacen of almacenes"
                                   [value]="almacen.iD_Almacen" >

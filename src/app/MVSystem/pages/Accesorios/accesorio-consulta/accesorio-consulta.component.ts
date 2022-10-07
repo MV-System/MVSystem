@@ -4,7 +4,7 @@ import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { AccesoriosService } from '../../../services/accesorios.service';
 import { Pagination } from '../../../interfaces/pagination.interfaces';
-import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,12 +22,12 @@ export class AccesorioConsultaComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.getAllAccesorios();
+    this.getAccesorios();
     this.obtenerAlmacenes();
     
   }
   almacenes:  Almacen[] = [];
-  accesorios: AccesorioAll[]=[];
+  accesorios: Accesorio[]=[];
   currentPage:    number = 1;
   totalInventario: number = 0;
   totalRecord!:    number;
@@ -56,9 +56,9 @@ export class AccesorioConsultaComponent implements OnInit {
   pageChanged(index: number) {
     this.currentPage = index;
    this.paginate.pageIndex= this.pageIndex = index;
-    this.getAllAccesorios()
+    this.getAccesorios()
   }
-  getAllAccesorios(){
+  getAccesorios(){
     let accesorio = this.form.get('accesorio')?.value;
     let almacen = this.form.get('almacen')?.value;
     
