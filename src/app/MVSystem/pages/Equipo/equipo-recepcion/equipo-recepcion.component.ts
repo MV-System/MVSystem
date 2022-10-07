@@ -8,6 +8,7 @@ import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.se
 import { EquipoEstadoUpdate } from '../../../interfaces/equipo.interface';
 import { LoginService } from '../../../../services/login.service';
 import { EquipoService } from '../../../services/equipo.service';
+import { FormAsyncValidatorService } from 'src/app/MVSystem/services/form-async-validator.service';
 
 @Component({
   selector: 'app-equipo-recepcion',
@@ -46,8 +47,8 @@ export class EquipoRecepcionComponent implements OnInit {
     ImeiEntrada: ['', Validators.required],
     PrecioImeiEntra: [,[Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
     IDModelo: ['', Validators.required],
-    IDCondicion: ['', Validators.required],
-    ImeiSale: [''],
+    IDCondicion: ['', Validators.required], 
+    ImeiSale: ['',[],[this.imeiSaleAsyncValidatorService]],//this.imeiSaleAsyncValidatorService
     Nota: ['']
   })
 
@@ -58,7 +59,8 @@ export class EquipoRecepcionComponent implements OnInit {
               private mantenimientoService: MantenimientoService,
               private formValidatorsService: FormValidatorService,
               private loginService:LoginService,
-              private equipoService: EquipoService
+              private equipoService: EquipoService,
+              private imeiSaleAsyncValidatorService: FormAsyncValidatorService
              ) {
               this.userName = this.loginService.getUserName()
             }
@@ -70,6 +72,9 @@ export class EquipoRecepcionComponent implements OnInit {
 
 
  async recibirEquipo(){
+  if(this.recepcionEquipoForm.pending){
+    return;
+  }
   if(this.recepcionEquipoForm.invalid){
     this.recepcionEquipoForm.markAllAsTouched();
     this.markAllFormControlAsDirty();
@@ -86,8 +91,6 @@ export class EquipoRecepcionComponent implements OnInit {
       return;
     }
   }
-
-
 
   this.mantenimientoService.recepcionEquipo(this.recepcionEquipoForm.value)
       .subscribe( res => {
@@ -107,9 +110,10 @@ export class EquipoRecepcionComponent implements OnInit {
   consultaEquipoDisponible(imei: string): Promise<{imei:string , existe: boolean, disponible: boolean}>{
     return new Promise( (resolve, reject) => {
       this.mantenimientoService.consultaEquipoDisponible(imei).subscribe( (res) => {
-        resolve({imei: res.imei, existe: true, disponible: res.imei.length > 0})
-      }, err => {
-        resolve({imei: '', existe: false, disponible: false})
+        if(res.imei != null)
+          resolve({imei: res.imei, existe: true, disponible: res.imei.length > 0})
+        else
+          resolve({imei: '', existe: false, disponible: false})
       })
     })
   }

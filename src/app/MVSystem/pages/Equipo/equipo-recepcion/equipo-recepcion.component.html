@@ -87,9 +87,11 @@
                                     <label class="form-label">Imei de tienda</label>
                                     <input type="text" class="form-control" maxlength="30" formControlName="ImeiSale" 
                                      [ngClass]="{'is-invalid':validarCampos('ImeiSale')}">
+                                    <div class="validatorField" *ngIf="validarCampos('ImeiSale')">
+                                        Debe validar que el imei existe y este disponible
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="row mt-2">
                                 <div>
                                     <label class="form-label">Nota</label>
