@@ -14,7 +14,9 @@ export interface Accesorio extends paginate{
     codBarra:             number;
     almacen:              string;
     totalInventario:      number;    
-
+    totalGanancia:        number;
+    totalFacturado:       number;
+    totalItbis:           number;
 }
 interface paginate{
     line: number;
