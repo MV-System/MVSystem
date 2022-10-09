@@ -90,7 +90,7 @@ export class AccesorioConsultaComponent implements OnInit {
       this.almacenes = almacen;
     });
   }
-  onCheckboxEquipoChange(event: Event){
+  onCheckboxAccesorioChange(event: Event){
     this.accesorioTipo = Number((<HTMLInputElement>event.target).value);
   }
 }
