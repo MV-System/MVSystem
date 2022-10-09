@@ -20,8 +20,8 @@ export class AccesorioListComponent implements OnInit {
   @Input() pageIndex!:   number;
   @Input() totalRecord!: number;
   @Input() currentPage:  number=1;
-  @ViewChild('table') table!: ElementRef;
-  // accesorio= new EventEmitter<Accesorio>();
+  @Input() line!:  number;
+  @Input() lastLine!:  number;
   accesorio!: Accesorio;
   onEditButton: boolean = true;
 

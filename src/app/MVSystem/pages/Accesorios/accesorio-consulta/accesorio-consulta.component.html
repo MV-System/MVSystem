@@ -111,7 +111,9 @@
                 [pageIndex]="pageIndex" 
                 [pageSize]="pageSize" 
                 [totalRecord]="totalRecord"
-                [currentPage]="currentPage">
+                [currentPage]="currentPage"
+                [line]="line"
+                [lastLine]="lastLine">
                 <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10 && accesorios.length">
                 </pagination-controls>
               </app-accesorio-list>
