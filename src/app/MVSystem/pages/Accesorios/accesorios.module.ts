@@ -12,6 +12,8 @@ import { AccesorioEditComponent } from './accesorio-consulta/accesorio-edit/acce
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido/accesorio-vendido.component';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
+
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -28,15 +30,16 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     AccesorioConsultaComponent,
     AccesorioListComponent,
     AccesorioEditComponent,
-    AccesorioVendidoComponent,
+    AccesorioVendidoComponent
   ],
   imports: [
-    CommonModule,
     AccesoriosRoutingModule,
-    ReactiveFormsModule,
+    CommonModule,
     CurrencyMaskModule,
+    MyDateRangePickerModule,
     NgSelectModule,
     NgxPaginationModule,
+    ReactiveFormsModule,
     SharedModule
   ],
   providers: [
