@@ -9,9 +9,12 @@ export let APIURL = {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
         },
         Consulta: {
-            AccesorioConsulta: API + 'Accesorios/GetAllAccesorios',
-            AccesorioConsultaById: API + 'Accesorios/GetAccesorioById',
-
+            Accesorio: API + 'Accesorios/GetAccesorios',
+            AccesorioById: API + 'Accesorios/GetAccesorioById',
+            AccesorioVendidos: API + 'Accesorios/GetAccesoriosVendidos',
+        },
+        Edita:{
+            AccesorioEdita: API + 'Accesorios/PutAccesorio',
         }
     },
 
@@ -59,6 +62,7 @@ export let APIURL = {
         marcasLista: API + 'Catalogos/Marcas_Combo',
         modeloLista: API + 'Catalogos/Modelos_Combo',
         almacenLista: API + 'Catalogos/Almacen_Combo',
+        sucursales: API + 'Catalogos/GetSucursales',
         tipoFacturasLista: API + 'Catalogos/Tipos_Factura_Combo',
         tipoPagoLista: API + 'Catalogos/Tipos_Pagos_Combo',
         tipoComprobanteLista: API + 'Catalogos/GetComprobantes_Combo',
