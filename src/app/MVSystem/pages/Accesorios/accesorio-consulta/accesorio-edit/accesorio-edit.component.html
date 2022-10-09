@@ -7,7 +7,7 @@
                             <label class="form-label">Código
                                 <span class="required-field">*</span>
                             </label>
-                            <input type="number" required class="form-control" >
+                            <input type="text" formControlName="codigo"  class="form-control" >
                     </div>
                 </div>
 
@@ -15,7 +15,7 @@
                             <label class="form-label">Descripción
                                 <span class="required-field">*</span>
                             </label>
-                            <input type="number"formControlName="descripcion" required class="form-control" >
+                            <input type="text" required formControlName="descripcionAccesorio" class="form-control" >
                     </div>
           
                 <div class="row mb-2">
@@ -23,14 +23,14 @@
                         <label class="form-label">Costo
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required class="form-control" >
+                        <input type="number"  formControlName="costoEquipo" class="form-control" >
                     </div>
             
                     <div class="col-md-6">
                         <label class="form-label">Precio por Mayor
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required class="form-control" >
+                        <input type="number" required formControlName="precioPorMayor" class="form-control" >
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -38,14 +38,14 @@
                         <label class="form-label">Precio por Detalle
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required class="form-control" >
+                        <input type="number" required formControlName="precioDetalle" class="form-control" >
                     </div>
              
                     <div class="col-md-6">
                         <label class="form-label">Cantidad
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required class="form-control" >
+                        <input type="number" required formControlName="cantidad" class="form-control" >
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -53,15 +53,18 @@
                         <label class="form-label">Estado
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required class="form-control" >
+                        <select class="form-select" formControlName="estado" type="number">
+                            <option value="A">Activo</option>
+                            <option value="I">Inactivo</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-3">
-                        <button class="btn btn-success">Guardar</button>
+                        <button class="btn btn-success" (click)="updateAccesorio()">Guardar</button>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn btn-warning">Limpiar</button>
+                        <button class="btn btn-warning" (click)="clearForm()">Limpiar</button>
                     </div>
                     <div class="col-md-3">
                         <ng-content select="[cancel]"></ng-content>
