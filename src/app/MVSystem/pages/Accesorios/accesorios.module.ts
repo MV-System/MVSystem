@@ -13,6 +13,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido/accesorio-vendido.component';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { DirectiveModule } from '../../../directives/directives.module';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -40,7 +41,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     NgSelectModule,
     NgxPaginationModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    DirectiveModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

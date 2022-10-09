@@ -7,7 +7,7 @@ import { FacturacionRegistroComponent } from './facturacion-registro/facturacion
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NumericDirective } from 'src/app/directives/numeric.directive';
+import { DirectiveModule } from '../../../directives/directives.module';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -20,8 +20,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 };
 @NgModule({
   declarations: [
-    FacturacionRegistroComponent,
-    NumericDirective
+    FacturacionRegistroComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +29,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
     NgSelectModule,
-    FormsModule
+    FormsModule,
+    DirectiveModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
