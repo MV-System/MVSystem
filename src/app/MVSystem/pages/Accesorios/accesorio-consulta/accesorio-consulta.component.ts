@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./accesorio-consulta.component.css']
 })
 export class AccesorioConsultaComponent implements OnInit {
-  accesorio: any;
+
 
   constructor(
     private catalogosService: CatalogosService,
@@ -26,15 +26,19 @@ export class AccesorioConsultaComponent implements OnInit {
     this.obtenerAlmacenes();
     
   }
-  almacenes:  Almacen[] = [];
-  accesorios: Accesorio[]=[];
-  currentPage:    number = 1;
+  almacenes:   Almacen[] = [];
+  accesorios:  Accesorio[]=[];
+  accesorio!:  Accesorio[];
+  currentPage:     number = 1;
   totalInventario: number = 0;
   totalRecord!:    number;
   line!:           number;
   lastLine!:       number;
-  pageIndex:       number=1;
-  pageSize:        number=10;
+  pageIndex:       number = 1;
+  pageSize:        number = 10;
+  accesorioTipo:   number = 1;
+  disponible:      number = 1;
+  vendido:         number = 2;
   form: FormGroup = this.fb.group({
     almacen: [0,],
     accesorio:['',],
@@ -62,7 +66,7 @@ export class AccesorioConsultaComponent implements OnInit {
     let accesorio = this.form.get('accesorio')?.value;
     let almacen = this.form.get('almacen')?.value;
     
-    this.accesoriosService.getAllAccesorios(this.paginate,accesorio,almacen)
+    this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
       if (accesorios.length) {
         this.totalRecord = accesorios[0].totalRecord;
@@ -70,9 +74,9 @@ export class AccesorioConsultaComponent implements OnInit {
         this.lastLine = accesorios[0].lastLine;
       }
       this.accesorios= accesorios;
-      accesorios.forEach(({totalInventario}) => {
-        this.totalInventario = totalInventario;
-      });      
+      // accesorios.forEach(({totalInventario}) => {
+        this.totalInventario = accesorios[0].totalInventario;
+      // });      
     })
   }
   getAccesorioByI(id: number){
@@ -86,5 +90,7 @@ export class AccesorioConsultaComponent implements OnInit {
       this.almacenes = almacen;
     });
   }
-
+  onCheckboxEquipoChange(event: Event){
+    this.accesorioTipo = Number((<HTMLInputElement>event.target).value);
+  }
 }
