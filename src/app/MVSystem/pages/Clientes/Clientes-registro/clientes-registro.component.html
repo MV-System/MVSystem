@@ -101,7 +101,7 @@
                             <!-- --------------- límite de credito Cliente --------------- -->
                             <div class="col-md-3">
                                 <label class="form-label">Limite credito</label>
-                                <input type="text" currencyMask placeholder="RD$" class="form-control" formControlName="limiteCredito">
+                                <input type="text" appNumeric [maxlen]="9"  placeholder="RD$" class="form-control" formControlName="limiteCredito">
                             </div>
 
                             <!-- --------------- Email Cliente --------------- -->
