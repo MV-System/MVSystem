@@ -1,7 +1,7 @@
 
 <!-- modal Editar accesorio -->
 <r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
-  <app-accesorio-edit [accesorio]="accesorio">
+  <app-accesorio-edit [accesorio]="accesorio" >
     <button cancel class="btn btn-danger" (click)="onCancel()" >Cancelar</button>
   </app-accesorio-edit>
 </r-modal>
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-lg-12 scroll-table">
             <h5 class="card-title">Accesorios</h5>
-            <button class="btn btn-info" (click)="putAccesorio()" >EDITAR</button>
+            <button class="btn btn-info" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
             <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
             <!-- <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p> -->
 
