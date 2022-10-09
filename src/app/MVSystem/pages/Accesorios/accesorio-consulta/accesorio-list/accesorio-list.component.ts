@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, Output, ElementRef } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output, ElementRef, ViewChild } from '@angular/core';
 import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
 import { Accesorio } from '../../../../interfaces/accesorio.interface';
 import * as $ from 'jquery';
@@ -20,8 +20,10 @@ export class AccesorioListComponent implements OnInit {
   @Input() pageIndex!:   number;
   @Input() totalRecord!: number;
   @Input() currentPage:  number=1;
+  @ViewChild('table') table!: ElementRef;
   // accesorio= new EventEmitter<Accesorio>();
   accesorio!: Accesorio;
+  onEditButton: boolean = true;
 
   // @Output() id= new EventEmitter<number>();
   isOpenModal = false;
@@ -41,10 +43,11 @@ export class AccesorioListComponent implements OnInit {
   
   }
   getIdAccesorio(id:number){
-    console.log(id);
+    this.onSelectAccesorio();
+    if(id > 0){this.onEditButton =false;}
+    
     this.accesoriosService.getAccesorioById(id)
     .subscribe(accesorio =>{
-      console.log(accesorio);
       this.accesorio = accesorio;
     });
   }
@@ -52,7 +55,28 @@ export class AccesorioListComponent implements OnInit {
     this.isOpenModal = !this.isOpenModal;
     
   }
+  onSelectAccesorio(){
 
+ 
+    $('#table tbody').on('click', 'tr', (e)=> {
+      
+        if ($(e.currentTarget).hasClass('selected')) {
+            $(e.currentTarget).removeClass('selected');
+            $(e.currentTarget).addClass('selected');
 
+        } else {
+          var tr = document.querySelector('tr.selected');
+            $('tr.selected').removeClass('selected');
+            $(e.currentTarget).addClass('selected');
+        }
+    });
+
+  }
+  // @HostListener('document:click', ['$event']) toggleOpen(event: Event) {
+  //   let table = document.querySelector('table');
+  //   console.log(table);
+
+    
+  // }
 }
   
