@@ -1,1 +1,168 @@
-<p>accesorio-vendido works!</p>
+<r-loading *ngIf="isPrint"></r-loading>
+<div class="animate__animated animate__fadeIn">
+  <form [formGroup]="form" (ngSubmit)="getAccesoriosVendidos()" role="search">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <span class="card-title">Filtros</span>
+
+            <div class="row mt-3">
+
+              <!-- <div class="col-md-4">
+                <label class="form-label">Por descripcion</label>
+                <input
+                  class="form-control"
+                  placeholder="descripcion"
+                  formControlName="descripcion"
+                  (keyup.enter)="getAccesoriosVendidos()" />
+              </div> -->
+              <div class="col-md-4">
+                <label class="form-label">Almacen</label>
+                <ng-select
+                  formControlName="almacen"
+                  (change)="getAccesoriosVendidos()">
+                  <ng-option
+                    *ngFor="let almacen of almacenes"
+                    [value]="almacen.iD_Almacen" >
+                    {{ almacen.descripcion }}
+                  </ng-option>
+                </ng-select>
+              </div>
+
+
+            <!-- <div class="row"> -->
+              <div class="col-md-5">
+                <label class="form-label row mx-2">Fecha de registro</label>
+                <my-date-range-picker
+                  [options]="myDateRangePickerOptions"
+                  formControlName="rangeDate"
+                  (dateRangeChanged)="onDateRangeChanged($event)"
+                  placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                    rangeDatePlaceholder | date
+                  }}"  >
+                </my-date-range-picker>
+              </div>
+            <!-- </div> -->
+        </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mx-1 text-center mt-3">
+              <!-- Cuadro totales -->
+              <ng-container>
+                <div class="col-md-12">
+                  <div class="row mb-2">
+                    Total Accesorios
+                    <label class="form-control total">
+                      {{ accesorioQuantity }}
+                    </label>
+                  </div>
+                  <div class="row mb-2">
+                    Total Inventario
+                    <label class="form-control total">
+                      {{ totalInventario | currency }}
+                    </label>
+                  </div>
+                  <div class="row mb-2">
+                    Total Facturado
+
+                    <label class="form-control total">
+                      {{ totalFacturado | currency }}
+                    </label>
+                  </div>
+                  <div class="row mb-2">
+                    Total Ganancias
+                    <label class="form-control total">
+                      {{ totalGanancia | currency }}
+                    </label>
+                  </div>
+                  <div class="row mb-2">
+                    Total Itbis
+                    <label class="form-control total">
+                      {{ totalItbis | currency }}
+                    </label>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Fin Cuadro totales -->
+      
+    </div>
+  </form>
+  <section class="section mt-4">
+
+    <div class="row">
+      <div class="col-lg-12 scroll-table">
+        <h5 class="card-title">Accesorios</h5>
+        <p *ngIf="accesorios.length">
+          Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
+        </p>
+        <!-- Table with stripped rows -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Factura</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Costo</th>
+              <th scope="col">Precio</th>
+              <th scope="col">SubTotal</th>
+              <th scope="col">Descuento</th>
+              <th scope="col">Itbis</th>
+              <th scope="col">Total</th>
+              <th scope="col">Fecha Registro</th>
+              <th scope="col">Sucursal</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="animate__animated animate__fadeIn"
+              *ngFor="
+                let accesorio of accesorios
+                  | paginate
+                    : {
+                        itemsPerPage: filter.pageSize,
+                        currentPage: filter.pageIndex,
+                        totalItems: totalRecord
+                      } " >
+
+              <td>{{ accesorio.factura }}</td>
+              <td>{{ accesorio.descripcion }}</td>
+              <td>{{ accesorio.cantidad }}</td>
+              <td>{{ accesorio.costo | currency }}</td>
+              <td>{{ accesorio.precio | currency }}</td>
+              <td>{{ accesorio.subTotal | currency}}</td>
+              <td>{{ accesorio.descuento | currency }}</td>
+              <td>{{ accesorio.itbis | currency }}</td>
+              <td>{{ accesorio.total | currency }}</td>
+              <td>{{ accesorio.fechaRegistro}}</td>
+              <td>{{ accesorio.sucursal}}</td>
+
+            </tr>
+          </tbody>
+        </table>
+        <!-- End Table with stripped rows -->
+        <div class="not-data" *ngIf="!accesorios.length">
+          Datos no encontrados
+        </div>
+      </div>
+    </div>
+  </section>
+  <pagination-controls
+    (pageChange)="pageChanged($event)"
+    *ngIf="totalRecord > 5 && accesorios.length" >
+  </pagination-controls>
+</div>
+
+<!-- End #main -->

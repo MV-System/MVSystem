@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Accesorio, AccesorioVendido } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
+import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 
 @Component({
   selector: 'app-accesorio-vendido',
@@ -12,19 +15,23 @@ import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service'
 })
 export class AccesorioVendidoComponent implements OnInit, OnDestroy {
 
-  constructor(private accesoriosService:AccesoriosService,
+  constructor(
+    private accesoriosService:AccesoriosService,
+    private catalogosService: CatalogosService,
     private fb: FormBuilder,
     private toast: ToastrService) { }
 
   ngOnInit(): void {
     this.getAccesoriosVendidos();
+    this.getAlmacenes();
   }
   ngOnDestroy(): void {
     // this.subscription.unsubscribe();
   }
   subscription!: Subscription;
-  accesorios: Accesorio[]=[];
-
+  accesorios: AccesorioVendido[]=[];
+  almacenes!: Almacen[];
+  isPrint: boolean = false;
   totalFacturado:  number = 0;
   totalGanancia:   number = 0;
   totalItbis:      number = 0;
@@ -34,6 +41,7 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   totalRecord!:    number;
   line!:           number;
   lastLine!:       number;
+  rangeDatePlaceholder: Date =new Date()
 
   filter: any = {
     pageIndex: 1,
@@ -43,17 +51,14 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   };
   form: FormGroup = this.fb.group({
     almacen: [''],
-    suplidor: [''],
-    vendedor: [''],
-    modelo: [''],
+    accesorio: [''],
     rangeDate: [''],
-    rangeDateFactura: [''],
-    telefono:[''],
-    imei:['',],
   });
   getAccesoriosVendidos(){
     let almacen =Number(this.form.get('almacen')?.value);
     let accesorio =this.form.get('accesorio')?.value;
+    console.log(almacen);
+    
       this.accesoriosService.getAccesoriosVendidos(this.filter,accesorio,almacen)
       .subscribe(accesorios =>{
         console.log(accesorios);
@@ -72,6 +77,8 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
           this.line = accesorios[0].line;
           this.lastLine = accesorios[0].lastLine;
         }
+        console.log(accesorios);
+        
         this.accesorios = accesorios;
 
       })
@@ -106,5 +113,13 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
       this.filter.fechaFinal = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
     }
     this.getAccesoriosVendidos();
+  }
+  myDateRangePickerOptions: IMyDrpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
+  getAlmacenes() {
+    this.catalogosService.getSucursales().subscribe((almacen) => {
+      this.almacenes = almacen;
+    });
   }
 }
