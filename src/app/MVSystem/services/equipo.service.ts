@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import {  
-    EquipoDisponibleQuery, 
+    EquipoDisponible, 
     EquipoDisponibleReporte, 
     EquipoVendido, 
     EquipoVendidoFilter, 
@@ -20,24 +20,24 @@ export class EquipoService{
     
     constructor(private http: HttpClient) {}
     //GET'S
-    getEquipoDisponible( EquipoDisponibleQuery:EquipoDisponibleQuery):Observable<any>{
+    getEquipoDisponible( EquipoDisponible:EquipoDisponible):Observable<any>{
         const search =
         'Almacen='+
-        EquipoDisponibleQuery.almacen +
+        EquipoDisponible.almacen +
         '&suplidor='+
-        EquipoDisponibleQuery.suplidor +
+        EquipoDisponible.suplidor +
         '&imei='+
-        EquipoDisponibleQuery.imei +
+        EquipoDisponible.imei +
         '&modelo='+
-        EquipoDisponibleQuery.modelo +
+        EquipoDisponible.modelo +
         '&pageIndex='+
-        EquipoDisponibleQuery.pageIndex +
+        EquipoDisponible.pageIndex +
         '&pageSize=' +
-        EquipoDisponibleQuery.pageSize +
+        EquipoDisponible.pageSize +
         '&fechaInicio=' +
-        EquipoDisponibleQuery.fechaInicio +
+        EquipoDisponible.fechaInicio +
         '&fechaFinal='+
-        EquipoDisponibleQuery.fechaFinal ;
+        EquipoDisponible.fechaFinal ;
         
         return this.http.get<any>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
     }
