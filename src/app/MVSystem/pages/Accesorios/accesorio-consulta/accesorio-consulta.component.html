@@ -56,7 +56,7 @@
                           <span class="card-title">Filtros</span>
                           <div class="row mt-4">
                             <!-- Search IMEI -->
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <label class="form-label">Por descripción</label>
                               <div class="col-md-12">
                                 <input
@@ -70,14 +70,14 @@
                               <!-- Search by almacen -->
       
                               <label class="form-label">Almacen</label>
-                              <select class="form-select" formControlName="almacen"
+                              <ng-select  formControlName="almacen"
                               (change)="getAccesorios()" >
-                                <option
+                                <ng-option
                                   *ngFor="let almacen of almacenes"
                                   [value]="almacen.iD_Almacen" >
                                   {{ almacen.descripcion }}
-                                </option>
-                              </select>
+                                </ng-option>
+                              </ng-select>
                             </div>
                           </div>
                         </div>
@@ -90,12 +90,19 @@
                           <div class="row mx-1 text-center mt-3">
                             <ng-container>
                               <div class="col-md-12">
-                                <div class="row">
+                                  <div class="row mb-4 ">
+                                    Total Equipos
+                                    <label class="form-control total">
+                                      {{ accesorioQuantity }}
+                                    </label>
+                                  </div>
+                                  <div class="row mb-4 ">
+
                                   Total Inventario
                                   <label class="form-control total">
                                     {{ totalInventario | currency }}
                                   </label>
-                                </div>
+                                  </div>
                               </div>
                             </ng-container>
                           </div>
