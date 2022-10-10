@@ -11,12 +11,12 @@
     <div class="row">
         <div class="col-lg-12 scroll-table">
             <h5 class="card-title">Accesorios</h5>
-            <button class="btn btn-info" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
+            <button class="btn btn-info mb-3" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
             <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
             <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
 
             <!-- Table with stripped rows -->
-            <table class="table"id="table" >
+            <table class="table" >
                 <thead>
                     <tr >
                         <th scope="col">ID</th>
@@ -39,7 +39,7 @@
                       itemsPerPage: pageSize,
                       currentPage: pageIndex,
                       totalItems: totalRecord  }">
-                      <tr (click)="getIdAccesorio(accesorio.id )" id="put">
+                      <tr (click)="getIdAccesorio(accesorio.id )" id="put" tableTrselect>
                         <td >{{ accesorio.id }}</td>
                         <td>{{ accesorio.codigo }}</td>
                         <td>{{ accesorio.descripcionAccesorio }}</td>
@@ -56,6 +56,9 @@
                       </ng-container>
                 </tbody>
             </table>
+            <div class="not-data" *ngIf="!accesorios.length">
+              Datos no encontrados
+            </div>
             </div>
         </div>
 </section>
