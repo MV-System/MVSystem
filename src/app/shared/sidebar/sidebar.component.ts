@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -6,20 +6,23 @@ import { Component, HostListener, OnInit } from '@angular/core';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
+  inside: boolean = false;
 
-  constructor() { }
+  constructor(private eRef: ElementRef) { }
 
   ngOnInit(): void {
   }
-  // @HostListener('document:click', ['$event']) toggleOpen(event: Event) {
-  //   // console.log( this.elRef.nativeElement.contains(event.target) );
-  //   const toggle = document.querySelector('.toggle-sidebar-btn');
-  //   const sidebar = document.querySelector('.sidebar');
-  //   const header = document.querySelector('.header');
-  //   const li = document.querySelector('.bi.bi-chevron-down.ms-auto');
-  //   // && event.target !==toggle 
-  //   if (sidebar !== event.target  && event.target !==header && event.target !==toggle&& event.target !==li) {
-  //     $('body').addClass('toggle-sidebar')
-  //   }
-  // }
+  @HostListener('click', ['$event']) click() {
+    this.inside = true;
+  }
+  @HostListener('document:click', ['$event']) clickOutside(event: Event) {
+    const toggle = document.querySelector('.toggle-sidebar-btn');
+   
+    // if ( event.target !==toggle && !this.eRef.nativeElement.contains(event.target)  ) {
+      if ( !this.inside && event.target != toggle) {
+      $('body').addClass('toggle-sidebar')
+    }
+    this.inside = false
+
+  }
 }
