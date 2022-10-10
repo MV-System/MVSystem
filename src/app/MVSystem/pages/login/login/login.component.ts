@@ -25,6 +25,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  showPassword = false;
+  toggleShowPassword(){
+    this.showPassword = !this.showPassword;
+  }
 
   IniciarSesion() {
     this.loginService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value).subscribe(res => {

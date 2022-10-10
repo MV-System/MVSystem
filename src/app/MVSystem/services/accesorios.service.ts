@@ -19,7 +19,7 @@ export class AccesoriosService{
         pagination.pageSize +
     '&accesorio=' +
         accesorio +
-    '&almacen' +
+    '&almacen=' +
         almacen;
         return this.http.get<Accesorio[]>(`${APIURL.Accesorio.Consulta.Accesorio}?` + query)
   }
@@ -37,6 +37,7 @@ export class AccesoriosService{
        pagination.fechaInicio +
     '&fechaFinal='+
        pagination.fechaFinal ;
+       
         return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + query)
   }
   getAccesorioById(id: number):Observable<Accesorio>{
