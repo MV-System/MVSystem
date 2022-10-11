@@ -32,12 +32,11 @@ export class AccesoriosService{
     '&accesorio=' +
         accesorio +
     '&almacen=' +
-        almacen
+        almacen +
     '&fechaInicio=' +
        pagination.fechaInicio +
     '&fechaFinal='+
        pagination.fechaFinal ;
-       
         return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + query)
   }
   getAccesorioById(id: number):Observable<Accesorio>{

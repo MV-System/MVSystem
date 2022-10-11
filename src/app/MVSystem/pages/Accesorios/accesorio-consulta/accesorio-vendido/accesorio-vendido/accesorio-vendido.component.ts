@@ -57,7 +57,6 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   getAccesoriosVendidos(){
     let almacen =Number(this.form.get('almacen')?.value);
     let accesorio =this.form.get('accesorio')?.value;
-    
       this.accesoriosService.getAccesoriosVendidos(this.filter,accesorio,almacen)
       .subscribe(accesorios =>{
         let record = accesorios.length == 0?0:accesorios[0].totalRecord;
