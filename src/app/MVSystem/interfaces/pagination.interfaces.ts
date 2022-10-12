@@ -3,7 +3,7 @@ export interface Pagination extends DatePaging{
     pageSize: number;
 }
 export interface DatePaging{
-    fechaInicio?: string;
-    fechaFinal?: string;
+    fechaInicio: string;
+    fechaFinal: string;
   }
   

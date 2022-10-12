@@ -114,8 +114,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   obtenerEquiposDisponibles() {
     this.getValueFilterForm();
     this.onFilterPropHasValue();
-    this.subscription = this.equipoService
-    
+    this.subscription = this.equipoService  
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
 
@@ -140,6 +139,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.equipoService.postEquipoDisponible(model)
       .subscribe((blobResp) => {
+        console.log(blobResp);
+        
         this.printing = !this.printing;
         var blob = new Blob([blobResp], { type: 'application/pdf' });
         const blobUrl = URL.createObjectURL(blob);

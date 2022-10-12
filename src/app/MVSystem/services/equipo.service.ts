@@ -12,6 +12,7 @@ import {
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn:'root'
@@ -86,7 +87,9 @@ export class EquipoService{
     postEquipoVendido(Equipo: EquipoVendidoReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoVendidoReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
-          });   
+          }).pipe(
+            map(x=>console.log(x))
+          );   
     }
     postEquipoTransferencia(Equipo: EquipoTransferenciaReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoTransferenciaReporteInserta, Equipo,{

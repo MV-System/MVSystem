@@ -51,13 +51,14 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   };
   form: FormGroup = this.fb.group({
     almacen: [,],
-    accesorio: [''],
+    filter: [''],
     rangeDate: [''],
   });
   getAccesoriosVendidos(){
     let almacen =Number(this.form.get('almacen')?.value);
-    let accesorio =this.form.get('accesorio')?.value;
-      this.accesoriosService.getAccesoriosVendidos(this.filter,accesorio,almacen)
+    let filter =this.form.get('filter')?.value;
+    
+      this.accesoriosService.getAccesoriosVendidos(this.filter,filter,almacen)
       .subscribe(accesorios =>{
         let record = accesorios.length == 0?0:accesorios[0].totalRecord;
         let totalInventario = accesorios.length == 0?0:accesorios[0].totalInventario;

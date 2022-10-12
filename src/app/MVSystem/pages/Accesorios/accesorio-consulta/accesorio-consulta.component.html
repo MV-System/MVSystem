@@ -121,7 +121,12 @@
                 [currentPage]="currentPage"
                 [line]="line"
                 [lastLine]="lastLine">
-                <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord >= 10 && accesorios.length">
+                <pagination-controls
+                 (pageChange)="pageChanged($event)" 
+                 [responsive]="true"
+                  previousLabel="Anterior"
+                  nextLabel="Siguiente"
+                  *ngIf="totalRecord >= 10 && accesorios.length">
                 </pagination-controls>
               </app-accesorio-list>
                 <!-- end lsit -->

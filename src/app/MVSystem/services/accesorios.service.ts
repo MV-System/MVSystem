@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 import {Pagination} from "../interfaces/pagination.interfaces"
@@ -23,21 +23,17 @@ export class AccesoriosService{
         almacen;
         return this.http.get<Accesorio[]>(`${APIURL.Accesorio.Consulta.Accesorio}?` + query)
   }
-  getAccesoriosVendidos(pagination:Pagination,accesorio: string, almacen: number):Observable<AccesorioVendido[]>{
-    const query =
-    'pageIndex=' +
-        pagination.pageIndex +
-    '&pageSize=' +
-        pagination.pageSize +
-    '&accesorio=' +
-        accesorio +
-    '&almacen=' +
-        almacen +
-    '&fechaInicio=' +
-       pagination.fechaInicio +
-    '&fechaFinal='+
-       pagination.fechaFinal ;
-        return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + query)
+  getAccesoriosVendidos(pagination:Pagination,filter: string, almacen: number):Observable<AccesorioVendido[]>{
+    let params = new HttpParams();
+
+    params = params.append('pageIndex',pagination.pageIndex)
+    params = params.append('pageSize',pagination.pageSize)
+    params = params.append('filter',filter)
+    params = params.append('almacen',almacen)
+    params = params.append('fechaInicio',pagination.fechaInicio)
+    params = params.append('fechaFinal',pagination.fechaFinal)
+    
+    return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + params)
   }
   getAccesorioById(id: number):Observable<Accesorio>{
      return this.http.get<Accesorio>(APIURL.Accesorio.Consulta.AccesorioById + id)

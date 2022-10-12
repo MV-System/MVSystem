@@ -48,7 +48,9 @@ export class AccesorioConsultaComponent implements OnInit {
  
   paginate:Pagination={
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    fechaInicio: '',
+    fechaFinal: ''
   }
   filter: any = {
     almacen: '',

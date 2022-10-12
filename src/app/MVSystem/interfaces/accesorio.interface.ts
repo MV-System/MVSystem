@@ -31,7 +31,8 @@ export interface AccesorioVendido extends paginate{
     descuento:       number;
     itbis:           number;
     total:           number;
-    usuario:         null;
+    usuario:         string;
+    vendedor:        string;
     fechaRegistro:   string;
     sucursal:        string;
     totalInventario: number;
