@@ -30,14 +30,13 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     if (!this.listEquiposToTransfer.length) {
       this.sub.unsubscribe();
-        console.log('destroy');
         this.getTransferenciaId();
     }
   }
   sub!: Subscription;
   almacenes: Almacen[]=[];
   listEquiposToTransfer:EquipoTransferencia[]=[];
-  equipoToTransfer!:EquipoAlmacenTransferir[];
+  equipoToTransfer:EquipoAlmacenTransferir[]=[];
   idTransferencia!: number;
   cantidadEquipoATransferir: number=0;
   printing: boolean = false;
@@ -52,7 +51,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     {
       if(this.form.get('imei')?.value ==imeiAdded.imei){
 
-        this.toastr.info('Ya el imei esta añadido a la lista!');
+        this.toastr.info('Ya el imei esta añadido a la lista!','',{'progressBar': true,'closeButton':true,timeOut:2000});
          bool=true
       } 
     });
@@ -62,15 +61,13 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     this.equipoService.postTransferenciaEquipo(equipoToTransfer)
     .subscribe(()=>{
       this.toastr.success('Equipo tranferido','', {'progressBar': true,'closeButton':true,timeOut:2000});
-      console.log(this.idTransferencia);
-      
     })
   }
   deleteEquipo(imei: string){
  
-
     this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
     this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
+    this.cantidadEquipoATransferir = this.listEquiposToTransfer.length
     if (!this.listEquiposToTransfer.length) {
       this.sub.unsubscribe();
       this.cantidadEquipoATransferir =0;
@@ -81,14 +78,14 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
-      console.log(equipo);
-      
-      !Object.keys(equipo).length?this.toastr.error('Imei no encontrado!'):equipo; 
       if(this.validateImei())return
-      
-        
-        if (equipo.mensaje.length) {
+        if (equipo.mensaje !== null && equipo.mensaje.includes('Vendido')  ) {
           this.toastr.warning(equipo.mensaje)
+          return
+        }
+        else if(equipo.imei == null){
+          this.toastr.error('Imei no encontrado!','',{'progressBar': true,'closeButton':true,timeOut:2000})
+          return
         }
         else{
           const model:EquipoTransferencia ={
@@ -98,8 +95,6 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
             almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
             mensaje: '',
           }
-          console.log(model);
-          
           this.listEquiposToTransfer.unshift(model);
 
           this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;

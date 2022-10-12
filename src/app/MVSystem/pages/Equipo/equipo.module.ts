@@ -18,6 +18,7 @@ import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatu
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.component';
+import { DirectiveModule } from '../../../directives/directives.module';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -49,6 +50,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     NgxPaginationModule,
     ReactiveFormsModule,
     SharedModule,
+    DirectiveModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

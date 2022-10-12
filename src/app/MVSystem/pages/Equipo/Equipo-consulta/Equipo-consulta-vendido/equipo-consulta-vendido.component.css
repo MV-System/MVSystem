@@ -41,4 +41,10 @@
   .display-filter-content {
       display: flex !important;
   }
-  
+  td
+  {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+   }

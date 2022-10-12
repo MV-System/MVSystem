@@ -10,6 +10,11 @@ import { AccesorioConsultaComponent } from './accesorio-consulta/accesorio-consu
 import { AccesorioListComponent } from './accesorio-consulta/accesorio-list/accesorio-list.component';
 import { AccesorioEditComponent } from './accesorio-consulta/accesorio-edit/accesorio-edit.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido/accesorio-vendido.component';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { DirectiveModule } from '../../../directives/directives.module';
+
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -26,15 +31,18 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     AccesorioConsultaComponent,
     AccesorioListComponent,
     AccesorioEditComponent,
+    AccesorioVendidoComponent
   ],
   imports: [
-    CommonModule,
     AccesoriosRoutingModule,
-    ReactiveFormsModule,
+    CommonModule,
     CurrencyMaskModule,
+    MyDateRangePickerModule,
     NgSelectModule,
     NgxPaginationModule,
-
+    ReactiveFormsModule,
+    SharedModule,
+    DirectiveModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

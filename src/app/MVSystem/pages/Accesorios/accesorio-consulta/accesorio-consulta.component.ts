@@ -4,7 +4,8 @@ import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { AccesoriosService } from '../../../services/accesorios.service';
 import { Pagination } from '../../../interfaces/pagination.interfaces';
-import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accesorio-consulta',
@@ -12,28 +13,34 @@ import { AccesorioAll } from 'src/app/MVSystem/interfaces/accesorio.interface';
   styleUrls: ['./accesorio-consulta.component.css']
 })
 export class AccesorioConsultaComponent implements OnInit {
-  accesorio: any;
+
 
   constructor(
     private catalogosService: CatalogosService,
     private accesoriosService:AccesoriosService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.getAllAccesorios();
+    this.getAccesorios();
     this.obtenerAlmacenes();
   }
-  almacenes: Almacen[] = [];
-  accesorios: AccesorioAll[]=[];
-   currentPage:    number = 1;
+  almacenes:   Almacen[] = [];
+  accesorios:  Accesorio[]=[];
+  accesorio!:  Accesorio[];
+  currentPage:     number = 1;
   totalInventario: number = 0;
   totalRecord!:    number;
+  accesorioQuantity:number = 0;
   line!:           number;
   lastLine!:       number;
-  pageIndex:       number=1;
-  pageSize:        number=10;
+  pageIndex:       number = 1;
+  pageSize:        number = 10;
+  accesorioTipo:   number = 1;
+  disponible:      number = 1;
+  vendido:         number = 2;
   form: FormGroup = this.fb.group({
-    almacen: [0,],
+    almacen: [2,],
     accesorio:['',],
     totalAccesorio: [0,],
     totalInventario: [0,]
@@ -52,36 +59,39 @@ export class AccesorioConsultaComponent implements OnInit {
 
   pageChanged(index: number) {
     this.currentPage = index;
-   this.paginate.pageIndex= this.pageIndex = index;
-    this.getAllAccesorios()
+    this.paginate.pageIndex= this.pageIndex = index;
+    this.getAccesorios()
   }
-  getAllAccesorios(){
+  getAccesorios(){
     let accesorio = this.form.get('accesorio')?.value;
-    let almacen = this.form.get('almacen')?.value;
+    let almacen = Number( this.form.get('almacen')?.value);
     
-    this.accesoriosService.getAllAccesorios(this.paginate,accesorio,almacen)
+    this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
+      let record = accesorios.length == 0 ? 0 : accesorios[0].totalRecord;
+      let totalInventario = accesorios.length == 0 ? 0 : accesorios[0].totalInventario;
+      this.obtenerTotalAccesorio(record);
+      this.obtenerTotalInventario(totalInventario);
       if (accesorios.length) {
         this.totalRecord = accesorios[0].totalRecord;
         this.line = accesorios[0].line;
         this.lastLine = accesorios[0].lastLine;
       }
       this.accesorios= accesorios;
-      accesorios.forEach(({totalInventario}) => {
-        this.totalInventario = totalInventario;
-      });      
-    })
+    });
   }
-  getAccesorioByI(id: number){
-    id = 12	
-    this.accesorio = this.accesorios.filter(accesorio=> 12 == accesorio.id)
-    console.log(this.accesorios.filter(accesorio=> 12 == accesorio.id));
-    
+  obtenerTotalInventario(totalInventario: number) {
+    this.totalInventario = totalInventario;
+  }
+  obtenerTotalAccesorio(cantidadAccesorio: number) {
+    this.accesorioQuantity = cantidadAccesorio;
   }
   obtenerAlmacenes() {
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.almacenes = almacen;
     });
   }
-
+  onCheckboxAccesorioChange(event: Event){
+    this.accesorioTipo = Number((<HTMLInputElement>event.target).value);
+  }
 }

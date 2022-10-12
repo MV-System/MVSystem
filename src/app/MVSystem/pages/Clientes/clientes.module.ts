@@ -11,6 +11,7 @@ import { ValueArrayPipe } from '../../pipes/value-array.pipe';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 import { ClientesConsultaComponent } from './Clientes-consulta/clientes-consulta.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { DirectiveModule } from '../../../directives/directives.module';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -35,7 +36,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ReactiveFormsModule,
     CurrencyMaskModule,
     NgxPaginationModule,
-
+    DirectiveModule
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

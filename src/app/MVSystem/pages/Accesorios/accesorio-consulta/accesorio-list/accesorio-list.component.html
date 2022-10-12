@@ -1,45 +1,28 @@
 
 <!-- modal Editar accesorio -->
-
-<div class="card">
-    <div class="card-body">
-      <!-- Basic Modal -->
-      <div class="modal fade" id="editAccesorioModal" tabindex="-1">
-        <div class="modal-dialog modal-lg ">
-          <div class="modal-content ">
-            <div class="modal-header">
-              <h5 class="modal-title">Editar accesorio</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <app-accesorio-edit></app-accesorio-edit>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
-              <button type="button" class="btn btn-primary">Guardar y seguir</button>
-            </div>
-          </div>
-        </div>
-      </div><!-- End Basic Modal-->
-    </div>
-  </div>
-  <!-- End modal -->
+<r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
+  <app-accesorio-edit [accesorio]="accesorio" >
+    <button cancel class="btn btn-danger" (click)="onCancel()" >Cancelar</button>
+  </app-accesorio-edit>
+</r-modal>
+<!-- End modal -->
 
 <section class="section mt-4">
     <div class="row">
         <div class="col-lg-12 scroll-table">
             <h5 class="card-title">Accesorios</h5>
-            <!-- <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p> -->
+            <button class="btn btn-info mb-3" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
+            <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
+            <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
 
             <!-- Table with stripped rows -->
-          <p  data-bs-toggle="modal" data-bs-target="#editAccesorioModal">EDITAR</p>
-            <table class="table">
+            <table class="table" >
                 <thead>
-                    <tr>
+                    <tr >
                         <th scope="col">ID</th>
                         <th scope="col">CODIGO</th>
-                        <th scope="col">DESCRIPCIÓN</th>
-                        <th scope="col">MODELO</th>
+                        <th scope="col-2">DESCRIPCIÓN</th>
+                        <th scope="col-2">MODELO</th>
                         <th scope="col">CANTIDAD</th>
                         <th scope="col">COSTO</th>
                         <th scope="col">PRECIO DETALLE</th>
@@ -52,11 +35,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="animate__animated animate__fadeIn" id="put" *ngFor=" let accesorio of accesorios | paginate: {
+                    <ng-container class="animate__animated animate__fadeIn"  *ngFor=" let accesorio of accesorios | paginate: {
                       itemsPerPage: pageSize,
                       currentPage: pageIndex,
                       totalItems: totalRecord  }">
-                        <td>{{ accesorio.id }}</td>
+                      <tr (click)="getIdAccesorio(accesorio.id )" id="put" tableTrselect>
+                        <td >{{ accesorio.id }}</td>
                         <td>{{ accesorio.codigo }}</td>
                         <td>{{ accesorio.descripcionAccesorio }}</td>
                         <td>{{ accesorio.modelo }}</td>
@@ -68,16 +52,14 @@
                         <td>{{ accesorio.disponibleDetalle }}</td>
                         <td>{{ accesorio.almacen }}</td>
                         <td>{{ accesorio.codBarra }}</td>
-                        {{accesorio.id == 12}}
-                        <td data-bs-toggle="modal" data-bs-target="#editAccesorioModal">EDITAR</td>
-                    </tr>
+                      </tr>
+                      </ng-container>
                 </tbody>
             </table>
-            <!-- End Table with stripped rows -->
             <div class="not-data" *ngIf="!accesorios.length">
-                Datos no encontrados
+              Datos no encontrados
+            </div>
             </div>
         </div>
-    </div>
 </section>
 <ng-content></ng-content>

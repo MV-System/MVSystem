@@ -16,79 +16,118 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Datos del Accesorio</h5>
-
                         <!--  Form -->
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()" class="row g-3 needs-validation" novalidate>
-
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()"
+                            class="row g-3 needs-validation" novalidate>
                             <!-- --------------- Descripción Accesorio --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Descripción <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="descripcion" required [ngClass]="{'is-invalid':validarCampos('descripcion')}">
+                                <input type="text"
+                                        class="form-control" 
+                                        required
+                                        formControlName="descripcion" 
+                                        [ngClass]="{'is-invalid':validarCampos('descripcion')}">
                                 <div class="validatorField" *ngIf="validarCampos('descripcion')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- Cantidad Accesorio --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Cantidad <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" required formControlName="cantidad" [ngClass]="{'is-invalid':validarCampos('cantidad')}">
+                                <input type="text" 
+                                        class="form-control" 
+                                        required 
+                                        formControlName="cantidad" 
+                                        appNumeric 
+                                        [maxlen]="4"
+                                        [ngClass]="{'is-invalid':validarCampos('cantidad')}">
                                 <div class="validatorField" *ngIf="validarCampos('cantidad')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- Costo Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">
-                        Costo
-                        <span class="required-field">*</span>
-                    </label>
-                                <input class="form-control" type="text" currencyMask placeholder="RD$" required formControlName="costo" [ngClass]="{'is-invalid':validarCampos('costo')}" />
+                                    Costo
+                                    <span class="required-field">*</span>
+                                </label>
+                                <input class="form-control" 
+                                        type="text" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="costo"
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                        [ngClass]="{'is-invalid':validarCampos('costo')}" />
                                 <div class="validatorField" *ngIf="validarCampos('costo')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- Al detalle Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al detalle
-                        <span class="required-field">*</span>
-                    </label>
-                                <input type="text" currencyMask placeholder="RD$" class="form-control" required formControlName="alDetalle" [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
+                                    <span class="required-field">*</span>
+                                </label>
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="alDetalle"
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                        [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
                                 <div class="validatorField" *ngIf="validarCampos('alDetalle')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- Al Por Mayor:  Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al Por Mayor <span class="required-field">*</span></label>
-                                <input type="text" currencyMask placeholder="RD$" class="form-control" required formControlName="alPorMayor" [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
+                                <input type="text" 
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="alPorMayor"
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                    [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
                                 <div class="validatorField" *ngIf="validarCampos('alPorMayor')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- IMEI Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">IMEI Asociado</label>
-                                <input type="number" class="form-control" max="21" formControlName="IMEI">
+                                <input type="text" 
+                                        class="form-control" 
+                                        formControlName="IMEI"
+                                        appNumeric 
+                                        [maxlen]="21" >
                             </div>
-
                             <!-- --------------- Cantidad Max Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Cantidad Maxima <span class="required-field">*</span></label>
-                                <input type="number" class="form-control" required formControlName="cantidadMax" [ngClass]="{'is-invalid':validarCampos('cantidadMax')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        formControlName="cantidadMax"
+                                        appNumeric 
+                                        [maxlen]="4"
+                                        [ngClass]="{'is-invalid':validarCampos('cantidadMax')}">
                                 <div class="validatorField" *ngIf="validarCampos('cantidadMax')">
                                     Este campo es requerido.
                                 </div>
                             </div>
-
                             <!-- --------------- Cantidad Min Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Cantidad Minima <span class="required-field">*</span></label>
-                                <input type="number" class="form-control" required formControlName="cantidadMin" [ngClass]="{'is-invalid':validarCampos('cantidadMin')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        appNumeric 
+                                        formControlName="cantidadMin"
+                                        [maxlen]="4"
+                                        [ngClass]="{'is-invalid':validarCampos('cantidadMin')}">
                                 <div class="validatorField" *ngIf="validarCampos('cantidadMin')">
                                     Este campo es requerido.
                                 </div>
@@ -97,11 +136,10 @@
                             <div class="col-md-4">
                                 <label class="form-label">Almacen</label>
                                 <select formControlName="almacen" class="form-select">
-                            <option *ngFor="let almacen of almacenListado"
-                            [value]="almacen.iD_Almacen">
-                            {{almacen.descripcion}}
-                            </option>
-                        </select>
+                                    <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                                        {{almacen.descripcion}}
+                                    </option>
+                                </select>
                             </div>
                             <!-- --------------- Marca Accesorio --------------- -->
                             <div class="col-md-4">
@@ -113,7 +151,6 @@
                                 </ng-select>
                             </div>
                             <!-- --------------- Modelo Accesorio --------------- -->
-
                             <div class="col-md-4">
                                 <label class="form-label">Modelo</label>
                                 <ng-select formControlName="modelo">
@@ -122,10 +159,9 @@
                                     </ng-option>
                                 </ng-select>
                             </div>
-
-
                             <div class="text-center ">
-                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                                <button class="btn btn-primary" type="submit"
+                                    [ngClass]="{'disabled':btnDisable()}">Guardar</button>
                             </div>
                         </form>
                         <!-- End  Form -->
@@ -134,26 +170,4 @@
             </div>
         </div>
     </section>
-
 </main>
-<!--
-        <div class="right">
-            <table>
-                <tr>
-
-                    <th >descripción</th>
-                    <th>Al Por Mayor</th>
-                    <th>Al Detalle</th>
-                    <th>cantidad</th>
-
-                </tr>
-
-                <tr *ngFor="let i = index">
-                    <td>{{1 + 1}}</td>
-                    <td>{{accesoriosLista?.descripcion_Accesorio}}</td>
-                    <td>{{accesoriosLista?.precio_Por_Mayor}}</td>
-                    <td>{{accesoriosLista?.precio_Detalle}}</td>
-                    <td>{{accesoriosLista?.cantidad}}</td>
-                </tr>
-            </table>
-        </div> -->

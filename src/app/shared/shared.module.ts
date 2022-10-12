@@ -4,12 +4,14 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RLoadingComponent } from './components/r-loading/r-loading.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { RModalComponent } from './components/r-modal/r-modal.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
     RLoadingComponent,
+    RModalComponent,
     SidebarComponent
   ],
   imports: [
@@ -19,7 +21,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     HeaderComponent,
     FooterComponent,
     SidebarComponent,
-    RLoadingComponent
+    RLoadingComponent,
+    RModalComponent
   ]
 })
 export class SharedModule { }

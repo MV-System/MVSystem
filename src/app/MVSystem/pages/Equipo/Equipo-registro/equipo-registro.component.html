@@ -29,7 +29,12 @@
                             <!-- --------------- IMEI  --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">IMEI</label>
-                                <input type="text" class="form-control" formControlName="IMEI" [ngClass]="{'is-invalid':validarCampos('IMEI')}">
+                                <input type="text"
+                                        class="form-control" 
+                                        formControlName="IMEI" 
+                                        appNumeric 
+                                        [maxlen]="21"
+                                        [ngClass]="{'is-invalid':validarCampos('IMEI')}">
                                 <div class="validatorField" *ngIf="validarCampos('IMEI')">
                                     Este campo es requerido.
                                 </div>
@@ -38,7 +43,14 @@
                             <!-- --------------- Costo  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Costo</label>
-                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="costo" required [ngClass]="{'is-invalid':validarCampos('costo')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="costo" 
+                                        appNumeric 
+                                        [maxlen]="9"
+                                        [ngClass]="{'is-invalid':validarCampos('costo')}">
                                 <div class="validatorField" *ngIf="validarCampos('costo')">
                                     Este campo es requerido.
                                 </div>
@@ -47,7 +59,14 @@
                             <!-- --------------- Al detalle  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al detalle</label>
-                                <input type="text" class="form-control" placeholder="RD$" required currencyMask formControlName="alDetalle" required [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="alDetalle" 
+                                        appNumeric 
+                                        [maxlen]="9"
+                                        [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
                                 <div class="validatorField" *ngIf="validarCampos('alDetalle')">
                                     Este campo es requerido.
                                 </div>
@@ -55,7 +74,14 @@
                             <!-- --------------- Al por Mayor  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al por Mayor</label>
-                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="alPorMayor" required [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
+                                <input type="number"
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="alPorMayor"
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                        [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
                                 <div class="validatorField" *ngIf="validarCampos('alPorMayor')">
                                     Este campo es requerido.
                                 </div>
@@ -63,7 +89,14 @@
                             <!-- --------------- Comision Detalle  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Comision Detalle</label>
-                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="comisionDetalle" required [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        placeholder="RD$" 
+                                        required 
+                                        formControlName="comisionDetalle" 
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                        [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
                                 <!-- <div class="validatorField"  *ngIf="validarCampos('comisionDetalle')">
                             Este campo es requerido.
                         </div> -->
@@ -71,7 +104,14 @@
                             <!-- --------------- Comision Mayor  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Comision Mayor</label>
-                                <input type="text" class="form-control" placeholder="RD$" currencyMask formControlName="comisionMayor" required [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
+                                <input type="number" 
+                                        class="form-control" 
+                                        required 
+                                        placeholder="RD$" 
+                                        formControlName="comisionMayor"
+                                        appNumeric 
+                                        [maxlen]="9" 
+                                        [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
                                 <!-- <div class="validatorField" *ngIf="validarCampos('comisionMayor')">
                                     Este campo es requerido.
                                 </div> -->

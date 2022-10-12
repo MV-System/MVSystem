@@ -18,3 +18,13 @@
     cursor: pointer;
     color: white;
   }
+  td{
+   max-width: 100px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+  }
+  .selected {
+    background-color: #2a4f99;
+    color: #FFF;
+}

@@ -28,6 +28,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     private vendedorService: VendedorService,
     private toast: ToastrService
   ) {}
+  @Input() clearFilter:any;
+
   ngOnInit(): void {
     this.obtenerEquiposVendidos();
     this.obtenerAlmacenLista();
@@ -49,10 +51,9 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
  
   }
-  @Input() clearFilter:any;
 
   subscription!: Subscription;
-  printing: boolean = false;
+  isPrint: boolean = false;
   totalFacturado:  number = 0;
   totalGanancia:   number = 0;
   totalItbis:      number = 0;
@@ -225,7 +226,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
     this.equipoService.postEquipoVendido(model)
     .subscribe((blobResp)=>{
-      this.printing = !this.printing;
+      this.isPrint = !this.isPrint;
       var blob = new Blob([blobResp], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
       const iframe = document.createElement('iframe');
@@ -234,10 +235,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     },(err)=>{
-      this.printing = !this.printing;    
+      this.isPrint = !this.isPrint;    
       this.toast.error('Error','Error al imprimir reporte');
     })
-    this.printing = !this.printing;
+    this.isPrint = !this.isPrint;
 
   }
   obtenerAlmacenLista() {

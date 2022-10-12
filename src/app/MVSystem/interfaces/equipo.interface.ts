@@ -1,3 +1,4 @@
+import { DatePaging, Pagination } from "./pagination.interfaces";
 
 export interface Equipo {
     imei: string;
@@ -64,17 +65,13 @@ export interface EquipoDisponible {
     totalRecord: number;
     totalInventario: number;
 }
-export interface EquipoDisponibleQuery {
+export interface EquipoDisponible extends DatePaging ,Pagination{
     almacen: number;
     suplidor: string;
     imei: string;
     modelo: string;
-    pageIndex: number;
-    pageSize: number;
-    fechaInicio: string;
-    fechaFinal: string;
 }
-export interface EquipoVendidoFilter {
+export interface EquipoVendidoFilter extends DatePaging,Pagination{
     almacen:  number;
     suplidor: string;
     vendedor: string;
@@ -82,23 +79,15 @@ export interface EquipoVendidoFilter {
     telefono: number;
     fechaRegistro: string;
     modelo: string;
-    pageIndex: number;
-    pageSize: number;
-    fechaInicio: string;
-    fechaFinal: string;
     fechaInicioFactura: string;
     fechaFinalFactura: string;
 }
-export interface filterEquipos{
+export interface filterEquipos extends DatePaging,Pagination{
     almacen: number,
     modelo: string,
     suplidor: string,
     vendedor: string,
     fechaRegistro: string,
-    pageIndex: number,
-    pageSize: number,
-    fechaInicio: string,
-    fechaFinal: string,
 }
 export interface EquipoVendidoReporte{
     equipoFilter: filterEquipos;

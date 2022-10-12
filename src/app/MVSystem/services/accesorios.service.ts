@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 import {Pagination} from "../interfaces/pagination.interfaces"
 import { Observable } from 'rxjs';
-import { AccesorioAll } from "../interfaces/accesorio.interface";
+import { Accesorio, AccesorioVendido } from "../interfaces/accesorio.interface";
 import { APIURL } from '../../shared/url';
 @Injectable({
     providedIn:'root'
@@ -11,7 +11,7 @@ import { APIURL } from '../../shared/url';
 export class AccesoriosService{
   constructor(private http: HttpClient) { }
 
-  getAllAccesorios(pagination:Pagination,accesorio: string, almacen: number):Observable<AccesorioAll[]>{
+  getAccesorios(pagination:Pagination,accesorio: string, almacen: number):Observable<Accesorio[]>{
     const query =
     'PageIndex=' +
         pagination.pageIndex +
@@ -19,9 +19,30 @@ export class AccesoriosService{
         pagination.pageSize +
     '&accesorio=' +
         accesorio +
-    '&almacen' +
+    '&almacen=' +
         almacen;
-        return this.http.get<AccesorioAll[]>(`${APIURL.Accesorio.Consulta.AccesorioConsulta}?` + query)
+        return this.http.get<Accesorio[]>(`${APIURL.Accesorio.Consulta.Accesorio}?` + query)
   }
-
+  getAccesoriosVendidos(pagination:Pagination,accesorio: string, almacen: number):Observable<AccesorioVendido[]>{
+    const query =
+    'pageIndex=' +
+        pagination.pageIndex +
+    '&pageSize=' +
+        pagination.pageSize +
+    '&accesorio=' +
+        accesorio +
+    '&almacen=' +
+        almacen +
+    '&fechaInicio=' +
+       pagination.fechaInicio +
+    '&fechaFinal='+
+       pagination.fechaFinal ;
+        return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + query)
+  }
+  getAccesorioById(id: number):Observable<Accesorio>{
+     return this.http.get<Accesorio>(APIURL.Accesorio.Consulta.AccesorioById + id)
+  }
+  putAccesorio(accesorio: Accesorio):Observable<Accesorio>{
+    return this.http.put<Accesorio>(APIURL.Accesorio.Edita.AccesorioEdita , accesorio)
+ }
 }

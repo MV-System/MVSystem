@@ -1,4 +1,4 @@
-<r-loading *ngIf="printing"></r-loading>
+<r-loading *ngIf="isPrint"></r-loading>
 <div class="animate__animated animate__fadeIn">
   <form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
     <div class="row">

@@ -81,7 +81,7 @@ export interface DetalleFacturaList {
 
     itbis: number;
     total: number;
-    fechaRegistro: string;
+    fechaRegistro: Date;
     // Estado: ;
     Usuario: string;
 }
