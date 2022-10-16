@@ -19,6 +19,7 @@ import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.compo
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.component';
 import { DirectiveModule } from '../../../directives/directives.module';
+import { EquipoConsultaRecibidoComponent } from './equipo-consulta-recibido/equipo-consulta-recibido.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -37,7 +38,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoDisponibleComponent,
     EquipoModificacionEstatusComponent,
     EquipoTransferenciaComponent,
-    EquipoRecepcionComponent
+    EquipoRecepcionComponent,
+    EquipoConsultaRecibidoComponent
   ],
   imports: [
     CommonModule,

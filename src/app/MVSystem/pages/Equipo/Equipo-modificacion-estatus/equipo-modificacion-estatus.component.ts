@@ -106,10 +106,6 @@ export class EquipoModificacionEstatusComponent implements OnInit {
   }
 
   obtenerEquipoByImei(){
-    if(!this.imeiRegex.test(this.cambiarEstadoForm.get('imei')?.value)){
-      this.toastr.error('Debe escribir un imei valido', '', this.toastrDefaultConfig)
-      return;
-    }
     this.mantenimientoService.getEquipoByImei(this.cambiarEstadoForm.get('imei')?.value)
         .subscribe( res => {
           this.equipoImei = res.imei;

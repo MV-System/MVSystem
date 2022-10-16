@@ -13,6 +13,7 @@ export class EquipoConsultaComponent implements OnInit {
   equipoTipo: number = 1;
   disponible: number = 1;
   vendido:    number = 2;
+  recibido: number = 3;
 
   onCheckboxEquipoChange(event: Event){
     this.equipoTipo = Number((<HTMLInputElement>event.target).value);
@@ -20,6 +21,5 @@ export class EquipoConsultaComponent implements OnInit {
 
   clearFilters(event: Event){
     this.filter = event;
-    
   }
 }

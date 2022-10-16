@@ -12,6 +12,7 @@ import {
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
+import { EquipoRecepcionConsulta } from '../interfaces/equipo.interface';
 
 @Injectable({
     providedIn:'root'
@@ -76,6 +77,11 @@ export class EquipoService{
     } 
     getTransferenciaId():Observable<number>{
         return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
+    }
+
+    getEquiposRecibidos(criterio: string, filtro:{pageIndex: number, pageSize: number}): Observable<EquipoRecepcionConsulta[]>{
+        return this.http.get<EquipoRecepcionConsulta[]>
+        (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${filtro.pageIndex}&pageSize=${filtro.pageSize}`)
     }
     //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
