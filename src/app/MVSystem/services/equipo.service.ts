@@ -12,7 +12,7 @@ import {
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { EquipoRecepcionConsulta } from '../interfaces/equipo.interface';
 
 @Injectable({
     providedIn:'root'
@@ -78,6 +78,11 @@ export class EquipoService{
     getTransferenciaId():Observable<number>{
         return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
     }
+
+    getEquiposRecibidos(criterio: string, filtro:{pageIndex: number, pageSize: number}): Observable<EquipoRecepcionConsulta[]>{
+        return this.http.get<EquipoRecepcionConsulta[]>
+        (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${filtro.pageIndex}&pageSize=${filtro.pageSize}`)
+    }
     //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
@@ -87,9 +92,7 @@ export class EquipoService{
     postEquipoVendido(Equipo: EquipoVendidoReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoVendidoReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
-          }).pipe(
-            map(x=>console.log(x))
-          );   
+          });   
     }
     postEquipoTransferencia(Equipo: EquipoTransferenciaReporte): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoTransferenciaReporteInserta, Equipo,{

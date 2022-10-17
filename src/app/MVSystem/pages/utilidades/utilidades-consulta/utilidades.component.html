@@ -1,0 +1,112 @@
+<p>marcas works!</p>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1 id="registro">Registro de Marcas</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro Marcas</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datos de la Marca</h5>
+
+                        <!--  Form -->
+                        <form class="row g-3 needs-validation" novalidate>
+
+                            <!-- --------------- Nombre de la marca --------------- -->
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre De la Marca <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" required formControlName="descripcion" aria-describedby="inputGroupPrepend">
+
+                                <!-- <div class="validatorField" *ngIf="validarCampos('nombre')"></div> -->
+                                Este campo es requerido.
+
+                            </div>
+                            <!-- <div class="col-md-6">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                            </div> -->
+
+
+                        </form>
+                        <!-- End  Form -->
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h5 class="card-title">Marcas agregadas</h5>
+                                <div>
+                                    <!-- <table class="table table-Secondary">
+                                        <thead>
+                                            <tr>
+                                                <th>Cod.</th>
+                                                <th>Marca</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
+                                                <td>{{Marca.iD_Marca}}</td>
+                                                <td>{{Marca.descripcion}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table> -->
+                                    <table class="table table-Secondary">
+                                      <thead>
+                                          <tr>
+                                              <th>Cod.</th>
+                                              <th>Marca</th>
+                                          </tr>
+                                      </thead>
+                                      <!-- <tbody>
+                                        <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
+                                          <td>{{Marca.iD_Marca}}</td>
+                                          <td>{{Marca.descripcion}}</td>
+                                      </tr>
+                                        <tr *ngFor="let Marca of marcaListado;let i = index">
+                                          <td>{{Marca.iD_Marca}}</td>
+                                          <td>{{Marca.descripcion}}</td>
+                                      </tr>
+                                      </tbody> -->
+                                  </table>
+
+                                </div>
+                                <!-- <h5 class="card-title">Marcas existentes</h5>
+                                <div>
+                                    <table class="table table-Secondary">
+                                        <thead>
+                                            <tr>
+                                                <th>Cod.</th>
+                                                <th>Marca</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr obtenerMarcasLista()>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div> -->
+
+                                <!-- <select class="js-example-basic-multiple" name="states[]" >
+                          <option value="AL">Alabama</option>
+                            ...
+                          <option value="WY">Wyoming</option>
+                        </select> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

@@ -1,3 +1,4 @@
+import { UtilidadesModule } from './pages/utilidades/utilidades.module';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../shared/shared.module';
-import { UtilidadesComponent } from './pages/utilidades/utilidades/utilidades.component';
+//import { UtilidadesComponent } from './pages/utilidades/utilidades-consulta/utilidades.component';
 
 
 
@@ -22,7 +23,7 @@ import { UtilidadesComponent } from './pages/utilidades/utilidades/utilidades.co
 @NgModule({
   declarations: [
     HomeComponent,
-    UtilidadesComponent
+   // UtilidadesComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +43,8 @@ import { UtilidadesComponent } from './pages/utilidades/utilidades/utilidades.co
     VendedoresModule,
     AccesoriosModule,
     EquipoModule,
-    HomeComponent
+    HomeComponent,
+    UtilidadesModule
   ]
 })
 export class MvSystemModule { }

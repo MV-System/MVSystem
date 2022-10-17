@@ -1,0 +1,51 @@
+<form [formGroup]="formEquiposRecibidos" (ngSubmit)="obtenerEquiposRecibidos()" role="search">
+    <input type="search" placeholder="busqueda por telefono o cedula de cliente" required
+        formControlName="criterio" />
+    <button type="submit">Buscar</button>
+</form>
+<section class="section mt-4">
+    <div class="row">
+        <div class="col-lg-12 scroll-table">
+            <h5 class="card-title">Equipos</h5>
+            <p *ngIf="equiposRecibidos.length">Mostrando {{ index }} al {{ ultimaLinea }} de {{ totalRegistros }}
+                registros</p>
+
+            <!-- Table with stripped rows -->
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th scope="col">Imei</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Equipo cambio</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Nota</th>
+                        <th scope="col">Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate__animated animate__fadeIn" *ngFor="let equipo of equiposRecibidos | paginate: 
+                                { itemsPerPage: filtro.pageSize,
+                                    currentPage: filtro.pageIndex,
+                                    totalItems: totalRegistros}">
+                        <th scope="row">{{equipo.imeiEntrada}}</th>
+                        <td>{{equipo.modelo | titlecase}}</td>
+                        <td>{{equipo.precioImeiEntra}}</td>
+                        <td>{{equipo.imeiSale.length? equipo.imeiSale: '-'}}</td>
+                        <td>{{equipo.cliente}}</td>
+                        <td>{{equipo.telefono}}</td>
+                        <td>{{equipo.nota.length? equipo.nota : '-'}}</td>
+                        <td>{{equipo.fechaRegistro}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+            <div class="not-data" *ngIf="!equiposRecibidos.length">
+                Datos no encontrados
+            </div>
+        </div>
+    </div>
+</section>
+<pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRegistros > 8 && equiposRecibidos.length">
+</pagination-controls>

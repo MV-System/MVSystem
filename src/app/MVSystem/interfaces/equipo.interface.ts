@@ -185,6 +185,23 @@ export interface EquipoRecepcion {
         Nota:  string
 }
 
+export interface EquipoRecepcionConsulta {
+    recepcionNumero: number ,
+    cliente: string ,
+    cedula: string ,
+    telefono: string ,
+    imeiEntrada: string ,
+    precioImeiEntra: number ,
+    modelo: string ,
+    imeiSale: string ,
+    nota: string ,
+    usuario: string ,
+    fechaRegistro: Date
+    lastLine: number;
+    line: number;
+    totalRecord: number;
+}
+
 export interface EquipoEstadoUpdate{
         Imei: string ,
         Disponible: string ,

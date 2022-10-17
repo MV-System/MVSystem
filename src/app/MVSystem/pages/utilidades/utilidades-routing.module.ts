@@ -1,4 +1,4 @@
-import { UtilidadesComponent } from './utilidades/utilidades.component';
+import { UtilidadesComponent } from './utilidades-consulta/utilidades.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes : Routes = [
   {
-path : 'utilidades',
+path : 'utilidades-consulta',
 component:UtilidadesComponent
   }
 ];
