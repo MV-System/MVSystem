@@ -45,7 +45,12 @@
                         <label class="form-label">Cantidad
                             <span class="required-field">*</span>
                         </label>
-                        <input type="number" required formControlName="cantidad" class="form-control" >
+                        <input type="number"
+                                required 
+                                formControlName="cantidad" 
+                                class="form-control" 
+                                appNumeric 
+                                [maxlen]="4">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -61,10 +66,10 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-3">
-                        <button class="btn btn-success" (click)="updateAccesorio()">Guardar</button>
+                        <button save class="btn btn-primary" (click)="updateAccesorio()">Guardar</button>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn btn-warning" (click)="clearForm()">Limpiar</button>
+                        <button class="btn btn-primary" (click)="clearForm()">Limpiar <i class="ri-filter-off-line"></i></button>
                     </div>
                     <div class="col-md-3">
                         <ng-content select="[cancel]"></ng-content>
