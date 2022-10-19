@@ -143,8 +143,6 @@ code {
 .container {
   text-align: center;
   max-width: 40em;
-  padding: 2em;
-
 }
 .container > h1 {
   font-weight: 700;

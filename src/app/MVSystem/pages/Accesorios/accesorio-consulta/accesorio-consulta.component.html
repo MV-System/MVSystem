@@ -1,4 +1,4 @@
-<div class="animate__animated animate__fadeIn">
+
   <main id="main" class="main">
     <div class="pagetitle">
       <h1 id="registro">Consulta Accesorios</h1>
@@ -74,7 +74,7 @@
                               (change)="getAccesorios()" >
                                 <ng-option
                                   *ngFor="let almacen of almacenes"
-                                  [value]="almacen.iD_Almacen" >
+                                  [value]="almacen.iD_Almacen == 7? 0 : almacen.iD_Almacen" >
                                   {{ almacen.descripcion }}
                                 </ng-option>
                               </ng-select>
@@ -143,4 +143,4 @@
       </div>
     </section>
   </main>
-</div>
+
