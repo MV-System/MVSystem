@@ -24,6 +24,7 @@ export interface AccesorioVendido extends paginate{
     id:              number;
     factura:         string;
     descripcion:     string;
+    cliente:         string;
     cantidad:        number;
     costo:           number;
     precio:          number;

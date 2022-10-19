@@ -18,13 +18,13 @@
                   (keyup)="getAccesoriosVendidos()" />
               </div>
               <div class="col-md-4">
-                <label class="form-label">Almacen</label>
+                <label class="form-label">Sucursal</label>
                 <ng-select
                   formControlName="almacen"
                   (change)="getAccesoriosVendidos()">
                   <ng-option
                     *ngFor="let almacen of almacenes"
-                    [value]="almacen.iD_Almacen" >
+                    [value]="almacen.iD_Almacen == 7? 0 : almacen.iD_Almacen" >
                     {{ almacen.descripcion }}
                   </ng-option>
                 </ng-select>
@@ -112,6 +112,7 @@
           <thead>
             <tr>
               <th scope="col">Factura</th>
+              <th scope="col">Cliente</th>
               <th scope="col">Descripción</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Costo</th>
@@ -120,7 +121,7 @@
               <th scope="col">Descuento</th>
               <th scope="col">Itbis</th>
               <th scope="col">Total</th>
-              <th scope="col">Fecha Registro</th>
+              <th scope="col">Fecha Facturación</th>
               <th scope="col">Sucursal</th>
               <th scope="col">Vendedor</th>
 
@@ -139,6 +140,7 @@
                       } " >
 
               <td>{{ accesorio.factura }}</td>
+              <td>{{ accesorio.cliente }}</td>
               <td>{{ accesorio.descripcion }}</td>
               <td>{{ accesorio.cantidad }}</td>
               <td>{{ accesorio.costo | currency }}</td>
