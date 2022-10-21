@@ -1,23 +1,32 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EquipoRecepcionConsulta } from '../../../interfaces/equipo.interface';
+import { EquipoRecepcionConsulta, DefaultFilter } from '../../../interfaces/equipo.interface';
 import { EquipoService } from '../../../services/equipo.service';
+import { IMyDrpOptions } from 'mydaterangepicker';
 
 @Component({
   selector: 'app-equipo-consulta-recibido',
   templateUrl: './equipo-consulta-recibido.component.html',
   styleUrls: ['./equipo-consulta-recibido.component.css']
 })
+
 export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
   @Input() clearFilter: any;
   equiposRecibidos: EquipoRecepcionConsulta[] = [];
   index : number = 0;
   ultimaLinea : number = 0;
   totalRegistros : number = 0;
+  rangeDatePlaceholder: Date = new Date();
+  
+  myDateRangePickerOptions: IMyDrpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
 
-  filtro = {
+  filtro: DefaultFilter = {
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    fechaInicio : '',
+    fechaFinal : ''
   }
 
   constructor(private fb:FormBuilder,
@@ -37,8 +46,21 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
   }
 
   formEquiposRecibidos: FormGroup = this.fb.group({
-    criterio: ['']
+    criterio: [''],
+    rangeDate: [''],
   })
+
+  onDateRangeChanged(event: any) {
+    if (event.beginDate.year === 0) {
+      this.filtro.fechaInicio = '';
+      this.filtro.fechaFinal = '';
+    } else {
+      this.filtro.fechaInicio = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
+      this.filtro.fechaFinal = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+    }
+    this.obtenerEquiposRecibidos();
+  }
+
 
   obtenerEquiposRecibidos(){
     this.equipoService.getEquiposRecibidos(this.formEquiposRecibidos.get('criterio')?.value, this.filtro).subscribe( res => {

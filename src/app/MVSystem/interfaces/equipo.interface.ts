@@ -208,3 +208,10 @@ export interface EquipoEstadoUpdate{
         NotaAdicional: string ,
         Usuario: string ,
 }
+
+export  interface DefaultFilter{
+    pageIndex: number,
+    pageSize: number,
+    fechaInicio : string,
+    fechaFinal : string
+}
