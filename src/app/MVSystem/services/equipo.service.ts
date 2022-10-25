@@ -82,9 +82,15 @@ export class EquipoService{
     getEquiposRecibidos(criterio: string, filtro:DefaultFilter): Observable<EquipoRecepcionConsulta[]>{
         const {pageIndex,pageSize,fechaInicio,fechaFinal} = filtro;
         return this.http.get<EquipoRecepcionConsulta[]>
-        (`${APIURL.Equipo.Consulta.EquiposRecibidos}
-         ${criterio}&pageIndex=${pageIndex}&pageSize=${pageSize}
-         &fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`)
+        (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${pageIndex}&pageSize=${pageSize}&fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`)
+    }
+    
+    getEquiposRecibidosReporte(criterio: string, filtro:DefaultFilter): Observable<Blob>{
+        const {pageIndex,pageSize,fechaInicio,fechaFinal} = filtro;
+        return this.http.get<Blob>(`${APIURL.Equipo.Accion.EquipoRecibidosReporte}${criterio}&pageIndex=${pageIndex}&pageSize=${pageSize}&fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`,
+                                    {
+                                        responseType: 'blob' as 'json'
+                                    })
     }
     //POST's
     postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        

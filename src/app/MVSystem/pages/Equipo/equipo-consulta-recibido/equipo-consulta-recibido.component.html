@@ -1,3 +1,5 @@
+<r-loading *ngIf="generarReporteLoading"></r-loading>
+
 <form [formGroup]="formEquiposRecibidos" (ngSubmit)="obtenerEquiposRecibidos()" role="search">
     <div class="row">
         <div class="col-lg-8">
@@ -28,6 +30,9 @@
         formControlName="criterio" />
     <button type="submit">Buscar</button>
 </form> -->
+<button class="btn print mx-1" (click)="obtenerReporte()" *ngIf="this.equiposRecibidos.length">
+    Imprimir reporte <i class="bi bi-printer"></i>
+</button>
 <section class="section mt-4">
     <div class="row">
         <div class="col-lg-12 scroll-table">

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { EquipoRecepcionConsulta, DefaultFilter } from '../../../interfaces/equipo.interface';
 import { EquipoService } from '../../../services/equipo.service';
 import { IMyDrpOptions } from 'mydaterangepicker';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipo-consulta-recibido',
@@ -17,6 +18,7 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
   ultimaLinea : number = 0;
   totalRegistros : number = 0;
   rangeDatePlaceholder: Date = new Date();
+  generarReporteLoading: boolean = false;
   
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -29,10 +31,13 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
     fechaFinal : ''
   }
 
+  
   constructor(private fb:FormBuilder,
-              private equipoService: EquipoService) { }
+              private equipoService: EquipoService,
+              private toastr : ToastrService) { }
 
   ngOnInit(): void {
+    this.obtenerEquiposRecibidos();
   }
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,6 +78,24 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
     })
   }
 
+
+  obtenerReporte(){
+    this.generarReporteLoading = true;
+    this.equipoService.getEquiposRecibidosReporte(this.formEquiposRecibidos.get('criterio')?.value, this.filtro).subscribe( blob => {
+        this.generarReporteLoading = false;
+        var newBlob = new Blob([blob], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(newBlob);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.print();
+
+    }, (err) => {
+      this.toastr.error('Error','No se pudo generar el reporte');
+    });
+  }
+
   resetForm(){
     this.formEquiposRecibidos.reset({
       criterio: ''
@@ -80,7 +103,6 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
   }
 
   pageChanged(index: number) {
-    console.log("next page",index);
     this.filtro.pageIndex = index;
     this.obtenerEquiposRecibidos();
   }
