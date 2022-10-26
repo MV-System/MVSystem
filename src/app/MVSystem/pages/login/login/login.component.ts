@@ -25,12 +25,15 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  isPrint: boolean = false;
   showPassword = false;
   toggleShowPassword(){
     this.showPassword = !this.showPassword;
   }
 
   IniciarSesion() {
+    this.isPrint = !this.isPrint;
+
     this.loginService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value).subscribe(res => {
 
       if (!res) {
@@ -42,6 +45,8 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('expires', res.expires.toString())
       this.toastr.success('Bienvenido!!!');
       this.router.navigateByUrl('/dashboard')
+      this.isPrint = !this.isPrint;
+
     })
   }
 }
