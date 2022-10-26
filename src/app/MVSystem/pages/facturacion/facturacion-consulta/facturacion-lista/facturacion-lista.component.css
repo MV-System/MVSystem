@@ -1,0 +1,30 @@
+*::-webkit-scrollbar {
+    width: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: rgba(8, 55, 223, 0.218);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #467ff1;
+    border-radius: 20px;
+    border: 2px solid rgba(8, 55, 223, 0.218);
+  }
+  .scroll-table{
+    overflow: auto;
+    white-space: nowrap;
+  }
+  tr#put:hover {
+    background-color: #467ff1;
+    cursor: pointer;
+    color: white;
+  }
+  td{
+   max-width: 100px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+  }
+  .selected {
+    background-color: #2a4f99;
+    color: #FFF;
+}

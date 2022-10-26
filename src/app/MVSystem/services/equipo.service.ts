@@ -2,13 +2,12 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import {  
     EquipoDisponible, 
-    EquipoDisponibleReporte, 
     EquipoVendido, 
     EquipoVendidoFilter, 
-    EquipoVendidoReporte, 
     EquipoTransferencia, 
     EquipoAlmacenTransferir, 
-    EquipoTransferenciaReporte 
+    EquipoTransferenciaReporte, 
+    filterEquipos
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
@@ -84,12 +83,12 @@ export class EquipoService{
         (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${filtro.pageIndex}&pageSize=${filtro.pageSize}`)
     }
     //POST's
-    postEquipoDisponible(Equipo: EquipoDisponibleReporte): Observable<any>{        
+    postEquipoDisponible(Equipo: filterEquipos): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
           });   
     }
-    postEquipoVendido(Equipo: EquipoVendidoReporte): Observable<any>{        
+    postEquipoVendido(Equipo: EquipoVendidoFilter): Observable<any>{        
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoVendidoReporteInserta, Equipo,{
             responseType: 'blob' as 'json'
           });   
