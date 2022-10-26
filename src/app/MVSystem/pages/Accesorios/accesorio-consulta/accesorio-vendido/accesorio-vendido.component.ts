@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { Accesorio, AccesorioVendido } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { AccesorioVendido } from 'src/app/MVSystem/interfaces/accesorio.interface';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
@@ -18,17 +17,16 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   constructor(
     private accesoriosService:AccesoriosService,
     private catalogosService: CatalogosService,
-    private fb: FormBuilder,
-    private toast: ToastrService) { }
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.getAccesoriosVendidos();
     this.getAlmacenes();
   }
   ngOnDestroy(): void {
-    // this.subscription.unsubscribe();
+    this.subs.unsubscribe();
   }
-  subscription!: Subscription;
+  subs!: Subscription;
   accesorios: AccesorioVendido[]=[];
   almacenes!: Almacen[];
   isPrint: boolean = false;
@@ -58,7 +56,7 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
     let almacen =Number(this.form.get('almacen')?.value);
     let filter =this.form.get('filter')?.value;
     
-      this.accesoriosService.getAccesoriosVendidos(this.filter,filter,almacen)
+   this.subs=this.accesoriosService.getAccesoriosVendidos(this.filter,filter,almacen)
       .subscribe(accesorios =>{
         let record = accesorios.length == 0?0:accesorios[0].totalRecord;
         let totalInventario = accesorios.length == 0?0:accesorios[0].totalInventario;
