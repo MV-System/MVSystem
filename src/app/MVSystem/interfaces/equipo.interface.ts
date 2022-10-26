@@ -35,11 +35,7 @@ export interface EquipoObjRetorno {
     disponible_Detalle: null;
     mensaje: string;
 }
-export interface EquipoDisponibleReporte{
-    equipoFilter: filterEquipos;
-    equipoDisponibles: EquipoDisponible[];
-    fechaImpresion: string;
-}
+
 export interface EquipoDisponible {
     imei: string;
     descripcion: string;
@@ -89,11 +85,7 @@ export interface filterEquipos extends DatePaging,Pagination{
     vendedor: string,
     fechaRegistro: string,
 }
-export interface EquipoVendidoReporte{
-    equipoFilter: filterEquipos;
-    equipoVendidos: EquipoVendido[];
-    fechaImpresion: string;
-}
+
 export interface EquipoTransferenciaReporte{
     idTransferencia: number;
     equipoTransferencias: EquipoTransferencia[]

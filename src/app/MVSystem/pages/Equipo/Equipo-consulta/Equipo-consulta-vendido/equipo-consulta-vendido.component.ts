@@ -6,13 +6,14 @@ import {
   Almacen,
   ModeloEquipo,
 } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoVendido, EquipoVendidoReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoVendido } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { Suplidor } from '../../../../interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
+import { CreatorPDFFile } from 'src/app/shared/helper';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -219,21 +220,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
       });
   }
   printReportEquipoVendido(){
-    const model :EquipoVendidoReporte = {
-      equipoFilter:this.filter,
-      equipoVendidos : [],
-      fechaImpresion: new Date().toDateString(),
-    }
-    this.equipoService.postEquipoVendido(model)
+
+    this.equipoService.postEquipoVendido(this.filter)
     .subscribe((blobResp)=>{
       this.isPrint = !this.isPrint;
-      var blob = new Blob([blobResp], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.contentWindow?.print();
+      CreatorPDFFile(blobResp);
     },(err)=>{
       this.isPrint = !this.isPrint;    
       this.toast.error('Error','Error al imprimir reporte');

@@ -18,7 +18,7 @@
             <div class="row mt-3">
 
               <!-- <i class="bi bi-funnel"></i> -->
-              <div class="form-check ">
+              <!-- <div class="form-check ">
                 <label class="form-check-label">
                   Disponibles
                   <input type="radio" checked name="equipo" value="1" class="form-check-input"
@@ -39,13 +39,47 @@
                   <button class="btn clear-filter" (click)="clearFilters($event)">Limpiar filtros <i
                       class="ri-filter-off-line"></i></button>
                 </ng-container>
-              </div>
+              </div> -->
+              <ul class="nav nav-tabs nav-tabs-bordered"  role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active"  
+                          value="1"
+                          data-bs-toggle="tab" 
+                           type="button" 
+                           role="tab"  
+                           aria-selected="true"
+                           (click)="onCheckboxEquipoChange(1)">Disponibles</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" 
+                           value="2"
+                          data-bs-toggle="tab" 
+                          type="button" 
+                          role="tab" 
+                          aria-selected="false"
+                          (click)="onCheckboxEquipoChange(2)">Vendidos</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" 
+                          value="3"
+                          data-bs-toggle="tab" 
+                          type="button" 
+                          role="tab"  
+                          aria-selected="false"
+                          (click)="onCheckboxEquipoChange(3)">Recibidos</button>
+                </li>
+                <ng-container class="form-check-label ">
+
+                  <button class="btn clear-filter mb-2" (click)="clearFilters($event)">Limpiar filtros <i
+                      class="ri-filter-off-line"></i></button>
+                </ng-container>
+              </ul>
             </div>
             <div class="search-bar mt-3">
-              <app-equipo-disponible [clearFilter]="filter" *ngIf="equipoTipo == disponible"></app-equipo-disponible>
-              <app-equipo-consulta-vendido [clearFilter]="filter" *ngIf="equipoTipo == vendido">
+              <app-equipo-disponible [clearFilter]="filter" *ngIf="equipoTipotab == disponible"></app-equipo-disponible>
+              <app-equipo-consulta-vendido [clearFilter]="filter" *ngIf="equipoTipotab == vendido">
               </app-equipo-consulta-vendido>
-              <app-equipo-consulta-recibido [clearFilter]="filter" *ngIf="equipoTipo == recibido">
+              <app-equipo-consulta-recibido [clearFilter]="filter" *ngIf="equipoTipotab == recibido">
               </app-equipo-consulta-recibido>
             </div>
           </div>

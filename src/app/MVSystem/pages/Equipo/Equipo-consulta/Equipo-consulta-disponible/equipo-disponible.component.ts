@@ -7,12 +7,13 @@ import {
   Almacen,
   ModeloEquipo,
 } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoDisponible, EquipoDisponibleReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
+import { EquipoDisponible } from 'src/app/MVSystem/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { ToastrService } from 'ngx-toastr';
+import { CreatorPDFFile } from 'src/app/shared/helper';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -61,7 +62,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   modeloListado:  ModeloEquipo[] = [];
   listaVendedor:  VendedorLista[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
-  equiposDisponibleReporte!: EquipoDisponibleReporte[];
 
   filter: any = {
     almacen: 0,
@@ -132,23 +132,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
   printReportEquipoDisponibles() {
-    const model: EquipoDisponibleReporte = {
-      equipoFilter: this.filter,
-      equipoDisponibles: [],
-      fechaImpresion: new Date().toDateString(),
-    }
-    this.equipoService.postEquipoDisponible(model)
+
+    this.equipoService.postEquipoDisponible(this.filter)
       .subscribe((blobResp) => {
-        console.log(blobResp);
-        
         this.printing = !this.printing;
-        var blob = new Blob([blobResp], { type: 'application/pdf' });
-        const blobUrl = URL.createObjectURL(blob);
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = blobUrl;
-        document.body.appendChild(iframe);
-        iframe.contentWindow?.print();
+        CreatorPDFFile(blobResp);
       }, (err) => {
         this.printing = !this.printing;
       this.toast.error('Error','Error al imprimir reporte');
