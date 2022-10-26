@@ -10,6 +10,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectiveModule } from '../../../directives/directives.module';
 import { FacturacionConsultaComponent } from './facturacion-consulta/facturacion-consulta.component';
 import { FacturacionListaComponent } from './facturacion-consulta/facturacion-lista/facturacion-lista.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FacturacionDetailComponent } from './facturacion-consulta/facturacion-detail/facturacion-detail.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -24,17 +28,22 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   declarations: [
     FacturacionRegistroComponent,
     FacturacionConsultaComponent,
-    FacturacionListaComponent
+    FacturacionListaComponent,
+    FacturacionDetailComponent
   ],
   imports: [
     CommonModule,
-    FacturacionRoutingModule,
     CurrencyMaskModule,
-    ReactiveFormsModule,
-    NgxMaskModule.forRoot(),
-    NgSelectModule,
+    DirectiveModule,
+    FacturacionRoutingModule,
     FormsModule,
-    DirectiveModule
+    MyDateRangePickerModule,
+    NgSelectModule,
+    NgxMaskModule.forRoot(),
+    NgxPaginationModule,
+    ReactiveFormsModule,
+    SharedModule,
+
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }

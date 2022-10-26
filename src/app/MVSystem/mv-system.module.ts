@@ -13,7 +13,7 @@ import { AccesoriosModule } from './pages/Accesorios/accesorios.module';
 import { HomeComponent } from './pages/home/home.component';
 import { EquipoModule } from './pages/Equipo/equipo.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SharedModule } from '../shared/shared.module';
+
 //import { UtilidadesComponent } from './pages/utilidades/utilidades-consulta/utilidades.component';
 
 
@@ -34,8 +34,7 @@ import { SharedModule } from '../shared/shared.module';
     ClientesModule,
     VendedoresModule,
     AccesoriosModule,
-    EquipoModule,
-    SharedModule
+    EquipoModule
   ],
   exports: [
     SuplidoresModule,
