@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
+import { MantenimientoService } from '../../../services/mantenimiento.service';
+import { FacturaFilter, FacturaConsulta } from '../../../interfaces/mantenimiento';
+import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
+import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { CreatorPDFFile } from '../../../../shared/helper';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -10,24 +15,43 @@ import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
 })
 export class FacturacionConsultaComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    private mantenimientoService: MantenimientoService,
+    private catalogosService: CatalogosService) { }
+   
 
   ngOnInit(): void {
+    this.getFacturas();
+    this.getAlmacenes();
   }
   title: string = "Consulta Facturas";
   breadcrumbItem: string = "Consulta Facturas"
   breadcrumb: string = "Consulta"
-  facturas: any[]=[];
-  totalFacturado:  number = 0;
+  facturas: FacturaConsulta[]=[];
+  almacenes!: Almacen[];
+  tipoBusqueda:    number = 3;
+  totalFacturado!:  number;
   currentPage:     number = 1;
   pageIndex:       number = 1;
   pageSize:        number = 10;
   totalRecord!:    number;
   line!:           number;
   lastLine!:       number;
-  facturasQuantity:number = 0;
+  facturasCantidad:number = 0;
   rangeDatePlaceholder: Date =new Date()
 
+  tiposBusqueda =[
+    {name:"Todos",Id:3},
+    {name:"Al por Mayor",Id:2},
+    {name:"Al Detalle",Id:1},
+    {name:"Nombre Cliente",Id:4}, 
+    {name:"NO. Factura",Id:5},
+    {name:"Reparaciones",Id:6},
+    {name:"Desbloqueos",Id:7},
+    {name:"Comprobantes",Id:8},
+    {name:"Anuladas",Id:9},
+    {name:"Telefono",Id:10},
+  ]
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10,
@@ -35,23 +59,57 @@ export class FacturacionConsultaComponent implements OnInit {
     fechaFinal: ''
   }
   form: FormGroup = this.fb.group({
-    almacen: [2,],
+    almacen: [1,],
+    criterio: ['',],
     factura:['',],
     rangeDate: [''],
   });
-  filter: any = {
-    pageIndex: 1,
-    pageSize: 10,
-    fechaInicio: '',
-    fechaFinal: ''
-  };
 
 
-  getFacturas(){
-
+  modelFacturaFilter(){
+    const {criterio,almacen,vendedor} = this.form.value;
+    const model:FacturaFilter = {
+      tipoBusqueda: this.tipoBusqueda,
+      almacen: Number(almacen),
+      criterio: criterio,
+      fechaInicio: this.paginate.fechaInicio,
+      fechaFinal: this.paginate.fechaFinal,
+      pageIndex: this.paginate.pageIndex,
+      pageSize: this.paginate.pageSize
+    }
+    return model;
   }
-  printReportFactura(){
+  getFacturas(){
+    
+  this.mantenimientoService.getFacturas(this.modelFacturaFilter())
+  .subscribe(facturas=>{
+    let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
+    this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
+    this.facturasCantidad = cantidad;
+    if (facturas.length) {
+      this.totalRecord = facturas[0].totalRecord;
+      this.line = facturas[0].line;
+      this.lastLine = facturas[0].lastLine;
+    }
+    this.facturas = facturas;
+  });
+  }
 
+  printReportFactura(){
+    this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+    })
+  }
+  printFactura(numeroFactura: number){
+    this.mantenimientoService.postFacturaReport(numeroFactura)
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+    })
+  }
+  onChangeTipoBusqueda(tipo: number){
+    this.tipoBusqueda = tipo;
+    this.getFacturas();
   }
   pageChanged(index: number) {
     this.currentPage = index;
@@ -60,15 +118,21 @@ export class FacturacionConsultaComponent implements OnInit {
   }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
-      this.filter.fechaInicio = '';
-      this.filter.fechaFinal = '';
+      this.paginate.fechaInicio = '';
+      this.paginate.fechaFinal = '';
     } else {
-      this.filter.fechaInicio = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
-      this.filter.fechaFinal = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+      this.paginate.fechaInicio = `${event.beginDate.year}/${event.beginDate.month}/${event.beginDate.day}`;
+      this.paginate.fechaFinal = `${event.endDate.year}/${event.endDate.month}/${event.endDate.day}`;
     }
     this.getFacturas();
   }
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
+  getAlmacenes() {
+    this.catalogosService.getSucursales().subscribe((almacen) => {
+      this.almacenes = almacen;
+    });
+  }
+
 }

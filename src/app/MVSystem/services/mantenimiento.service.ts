@@ -1,10 +1,10 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaRegistro } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
 @Injectable({
@@ -21,12 +21,39 @@ export class MantenimientoService {
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
-  postFactura(factura: FacturaRegistro): Observable<any> {
-    return this.http.post<any>(APIURL.Factura.Inserta.FacturaInserta, factura, {
+  postFactura(factura: FacturaRegistro): Observable<Blob> {
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaInserta, factura, {
       responseType: 'blob' as 'json'
     });
   }
-
+  postFacturaConsultaReport(facturaReq: FacturaFilter): Observable<Blob> {
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporteConsulta, facturaReq, {
+      responseType: 'blob' as 'json'
+    });
+  }
+  postFacturaReport(numeroFactura: number): Observable<Blob> {
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporte, numeroFactura, {
+      responseType: 'blob' as 'json'
+    });
+  }
+  getFacturas(facturaReq: FacturaFilter){
+    let queryParams = new HttpParams();
+    // queryParams = queryParams.append("NumeroFactura", facturaReq.numeroFactura)
+    // queryParams = queryParams.append("Nombres", facturaReq.nombreCliente)
+    // queryParams = queryParams.append("Vendedor", facturaReq.vendedor)
+    // queryParams = queryParams.append("TipoFactura", facturaReq.tipoFactura )
+    // queryParams = queryParams.append("Telefono", facturaReq.telefono )
+    // queryParams = queryParams.append("TipoPago", facturaReq.tipoPago)
+    queryParams = queryParams.append("Criterio", facturaReq.criterio)
+    queryParams = queryParams.append("Almacen", facturaReq.almacen)
+    queryParams = queryParams.append("TipoBusqueda", facturaReq.tipoBusqueda)
+    queryParams = queryParams.append("PageIndex", facturaReq.pageIndex)
+    queryParams = queryParams.append("PageSize", facturaReq.pageSize)
+    queryParams = queryParams.append("FechaInicio", facturaReq.fechaInicio)
+    queryParams = queryParams.append("FechaFinal", facturaReq.fechaFinal)
+    return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
+    
+  }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
   }

@@ -34,23 +34,22 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <ng-container class="animate__animated animate__fadeIn"  *ngFor=" let factura of facturas | paginate: {
+                      <ng-container   *ngFor=" let factura of facturas | paginate: {
                         itemsPerPage: pageSize,
                         currentPage: pageIndex,
                         totalItems: totalRecord  }">
-                        <tr (click)="getIdFactura(factura.id )" id="put" tableTrselect>
-                          <td >{{ factura.id }}</td>
-                          <td>{{ factura.codigo }}</td>
-                          <td>{{ factura.descripcionAccesorio }}</td>
-                          <td>{{ factura.modelo }}</td>
-                          <td>{{ factura.cantidad }}</td>
-                          <td>{{ factura.costoEquipo }}</td>
-                          <td>{{ factura.precioDetalle }}</td>
-                          <td>{{ factura.precioPorMayor }}</td>
-                          <td>{{ factura.disponible }}</td>
-                          <td>{{ factura.disponibleDetalle }}</td>
-                          <td>{{ factura.almacen }}</td>
-                          <td>{{ factura.codBarra }}</td>
+                        <tr class="animate__animated animate__fadeIn" (click)="getIdFactura(factura.numeroFactura )" id="put" tableTrselect>
+                          <td >{{ factura.numeroFactura }}</td>
+                          <td>{{ factura.nombres }}</td>
+                          <td>{{ factura.apellidos }}</td>
+                          <td>{{ factura.tipoFactura }}</td>
+                          <td>{{ factura.vendedor }}</td>
+                          <td>{{ factura.tipoPago }}</td>
+                          <td>{{ factura.subTotal }}</td>
+                          <td>{{ factura.descuento }}</td>
+                          <td>{{ factura.total }}</td>
+                          <td>{{ factura.nota }}</td>
+                          <td>{{ factura.fechaFacturacion | date}}</td>
                         </tr>
                         </ng-container>
                   </tbody>
