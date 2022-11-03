@@ -128,12 +128,13 @@ export interface FacturaConsulta {
     line:             number;
     lastLine:         number;
     totalRecord:      number;
+    // detalleFacturaList: DetalleFacturaList[];
 }
 export interface FacturaFilter extends DatePaging ,Pagination{
     tipoBusqueda:  number;
     almacen:       number;
     // telefono:      number;
-    // numeroFactura: number;
+    numeroFactura?: number;
     // tipoPago:      number;
     // nombreCliente: string;
     // vendedor:      string;

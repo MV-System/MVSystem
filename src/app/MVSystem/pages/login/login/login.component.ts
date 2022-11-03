@@ -38,6 +38,8 @@ export class LoginComponent implements OnInit {
 
       if (!res) {
         this.toastr.error('Credenciales incorrectas')
+        this.isPrint = !this.isPrint;
+
         return
       }
 

@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../services/mantenimiento.service';
-import { FacturaFilter, FacturaConsulta } from '../../../interfaces/mantenimiento';
+import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CreatorPDFFile } from '../../../../shared/helper';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -17,7 +18,8 @@ export class FacturacionConsultaComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private mantenimientoService: MantenimientoService,
-    private catalogosService: CatalogosService) { }
+    private catalogosService: CatalogosService,
+    private toast: ToastrService) { }
    
 
   ngOnInit(): void {
@@ -37,8 +39,12 @@ export class FacturacionConsultaComponent implements OnInit {
   totalRecord!:    number;
   line!:           number;
   lastLine!:       number;
+  numerofactura!:  number;
   facturasCantidad:number = 0;
   rangeDatePlaceholder: Date =new Date()
+  onFacturaButton: boolean = false;
+  printing: boolean = false;
+
 
   tiposBusqueda =[
     {name:"Todos",Id:3},
@@ -80,31 +86,50 @@ export class FacturacionConsultaComponent implements OnInit {
     return model;
   }
   getFacturas(){
-    
   this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
-    let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
-    this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
-    this.facturasCantidad = cantidad;
-    if (facturas.length) {
-      this.totalRecord = facturas[0].totalRecord;
-      this.line = facturas[0].line;
-      this.lastLine = facturas[0].lastLine;
-    }
-    this.facturas = facturas;
-  });
+      let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
+      this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
+      this.facturasCantidad = cantidad;
+      if (facturas.length) {
+        this.totalRecord = facturas[0].totalRecord;
+        this.line = facturas[0].line;
+        this.lastLine = facturas[0].lastLine;
+      }
+      this.facturas = facturas;
+      console.log(this.facturas);
+    });
   }
+  getDetalleFactura(numeroFactura: number){
+        
+    this.numerofactura =numeroFactura;
+    console.log(this.numerofactura);
+    
+    const { almacen } = this.form.value;
+    this.mantenimientoService.getDetalleFactura(numeroFactura,almacen)
+    .subscribe(detalle => {
+      console.log(detalle);
+      
+    })
+    console.log(this.numerofactura);
 
+  }
   printReportFactura(){
     this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
     })
   }
-  printFactura(numeroFactura: number){
-    this.mantenimientoService.postFacturaReport(numeroFactura)
+  printFactura(){
+    this.printing = !this.printing;
+    this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
+      this.printing = !this.printing;
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir factura');
+
     })
   }
   onChangeTipoBusqueda(tipo: number){

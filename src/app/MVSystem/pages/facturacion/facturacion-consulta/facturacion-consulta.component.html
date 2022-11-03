@@ -1,4 +1,6 @@
 
+  <r-loading *ngIf="printing"></r-loading>
+  
   <app-main [title]="'Consulta Facturas'" 
             [breadcrumb]="'Consulta'"
             [breadcrumbItem]="'Consulta Facturas'">
@@ -7,8 +9,7 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="card">
-                <div class="card-body">                
-                    <!-- <button class="btn clear-filter" (click)="clearFilters($event)">Limpiar filtros  <i class="ri-filter-off-line"></i></button> -->
+                <div class="card-body">               
                   <div class="search-bar mt-3">
                     <!-- form -->
                     <form [formGroup]="form" role="search">
@@ -115,9 +116,19 @@
     
                       </div>
                     </form>
-                    <button class="btn print mx-1" (click)="printReportFactura()">
-                      Imprimir reporte <i class="bi bi-printer"></i>
-                    </button>
+                    <div class="row">
+                      <div class="col-md-3" >
+                        <button class="btn print" [ngClass]="{'disabled':!facturas.length}" (click)="printReportFactura()">
+                          Imprimir reporte <i class="bi bi-printer"></i>
+                        </button>
+                      </div>
+                      <div class="col-md-3">
+                        <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }"(click)="printFactura()">
+                          Imprimir factura <i class="bi bi-receipt-cutoff"></i>
+                        </button>
+                      </div>
+                    </div>
+             
                     <!-- end form   -->
                     <app-facturacion-lista 
                     [facturas]="facturas" 
@@ -126,7 +137,9 @@
                     [totalRecord]="totalRecord"
                     [currentPage]="currentPage"
                     [line]="line"
-                    [lastLine]="lastLine">
+                    [lastLine]="lastLine"
+                    (onFacturaButton)="onFacturaButton = $event"
+                    (numerofactura)="getDetalleFactura($event)">
                     <pagination-controls
                      (pageChange)="pageChanged($event)" 
                      [responsive]="true"

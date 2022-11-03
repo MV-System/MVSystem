@@ -1,19 +1,11 @@
 
-<!-- modal Editar factura -->
-<!-- <r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
-    <app-facturacion-details [factura]="factura" (closeModal)="onCancel()">
-  
-      <button cancel class="btn btn-danger" (click)="onCancel()" >Cancelar</button>
-    </app-facturacion-details>
-  </r-modal> -->
-  <!-- End modal -->
-  
+
   <section class="section mt-4">
       <div class="row">
           <div class="col-lg-12 scroll-table">
               <h5 class="card-title">Facturas</h5>
               <!-- <button class="btn btn-primary mb-3" [ngClass]="{disabled:onDetailButton}" >Ver detalle</button> -->
-              <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+              <p *ngIf="facturas.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
   
               <!-- Table with stripped rows -->
               <table class="table" >
@@ -34,11 +26,21 @@
                       </tr>
                   </thead>
                   <tbody>
+                
+                      
                       <ng-container   *ngFor=" let factura of facturas | paginate: {
                         itemsPerPage: pageSize,
                         currentPage: pageIndex,
-                        totalItems: totalRecord  }">
-                        <tr class="animate__animated animate__fadeIn" (click)="getIdFactura(factura.numeroFactura )" id="put" tableTrselect>
+                        totalItems: totalRecord  }; index as i">
+                  
+                            <!-- <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Accordion Item #1
+                          </button> -->
+
+                        <tr class="animate__animated animate__fadeIn put" 
+                        (click)="getIdFactura(factura.numeroFactura )" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"id="accordionFlushExample" [attr.aria-controls] = "'collapse-' + i" [attr.data-target]="'#collapse-' + i"tableTrselect>
                           <td >{{ factura.numeroFactura }}</td>
                           <td>{{ factura.nombres }}</td>
                           <td>{{ factura.apellidos }}</td>
@@ -51,6 +53,31 @@
                           <td>{{ factura.nota }}</td>
                           <td>{{ factura.fechaFacturacion | date}}</td>
                         </tr>
+                        <ng-container class="accordion accordion-flush" id="accordionFlushExample">
+                          <ng-container class="accordion-item">
+                        <tr >
+                          <div  id="flush-collapseOne"[attr.id]="'collapse-' + i" class="accordion-collapse collapse" 
+                          data-bs-parent="#accordionFlushExample">
+
+                         
+                          <td>Cod: </td>
+                          <td>Descripcion: prueba 1  40¨ 1080P FHD </td>
+                          <td>Cantidad: 1</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </div>
+                        </tr>
+
+                        </ng-container>
+                      </ng-container>
+
+
                         </ng-container>
                   </tbody>
               </table>

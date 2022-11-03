@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { FacturaConsulta } from '../../../../interfaces/mantenimiento';
@@ -17,21 +17,30 @@ export class FacturacionListaComponent implements OnInit {
   @Input() pageSize!:    number;
   @Input() pageIndex!:   number;
   @Input() totalRecord!: number;
-  @Input() currentPage:  number=1;
+  @Input() currentPage:  number = 1;
   @Input() line!:  number;
   @Input() lastLine!:  number;
   @Input() facturas: FacturaConsulta[]=[];
-
+  @Output() onFacturaButton =new EventEmitter<boolean>();
+  @Output() numerofactura =new EventEmitter<number>();
   vendedores: VendedorLista[] = []
-  isOpenModal:    boolean = false;
-  onDetailButton: boolean = true;
-  title ="Detalle de Factura";
-  onCancel() {
-    this.isOpenModal = !this.isOpenModal;
+
+  getIdFactura(numerofactura: number){
+    this.onSelectFactura();
+    if(numerofactura > 0){this.onFacturaButton.emit(true);}
+    this.numerofactura.emit(numerofactura);
+
   }
-
-  getIdFactura(id: number){
-
+  onSelectFactura(){
+    $('table tbody').on('click', 'tr', (e)=> {
+        if ($(e.currentTarget).hasClass('selected')) {
+            $(e.currentTarget).removeClass('selected');
+            $(e.currentTarget).addClass('selected');
+        } else {
+            $('tr.selected').removeClass('selected');
+            $(e.currentTarget).addClass('selected');
+        }
+    });
   }
   obtenerVendedor() {
     this.vendedorService.getVendedorLista()

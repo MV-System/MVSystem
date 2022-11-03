@@ -31,8 +31,9 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
-  postFacturaReport(numeroFactura: number): Observable<Blob> {
-    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporte, numeroFactura, {
+  postFacturaReport(facturaReq: FacturaFilter,numeroFactura: number): Observable<Blob> {
+    facturaReq.numeroFactura =numeroFactura;
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporte, facturaReq, {
       responseType: 'blob' as 'json'
     });
   }
@@ -53,6 +54,12 @@ export class MantenimientoService {
     queryParams = queryParams.append("FechaFinal", facturaReq.fechaFinal)
     return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
     
+  }
+  getDetalleFactura(numeroFactura: number, sucursal: number){
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("numeroFactura", numeroFactura)
+    queryParams = queryParams.append("sucursal", sucursal)
+    return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
   }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
