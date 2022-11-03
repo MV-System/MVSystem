@@ -74,7 +74,7 @@
                                     (change)="getFacturas()" >
                                       <option
                                         *ngFor="let almacen of almacenes"
-                                        [value]="almacen.iD_Almacen == 7? 0 : almacen.iD_Almacen" >
+                                        [value]="almacen.iD_Almacen == 7? 1 : almacen.iD_Almacen" >
                                         {{ almacen.descripcion }}
                                       </option>
                                     </select>

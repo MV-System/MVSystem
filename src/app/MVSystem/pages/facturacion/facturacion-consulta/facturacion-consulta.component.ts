@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
@@ -8,13 +8,14 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
 import { CreatorPDFFile } from '../../../../shared/helper';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-facturacion-consulta',
   templateUrl: './facturacion-consulta.component.html',
   styleUrls: ['./facturacion-consulta.component.css']
 })
-export class FacturacionConsultaComponent implements OnInit {
+export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   detalleFactura: DetalleFacturaList[]=[];
 
   constructor(private fb: FormBuilder,
@@ -22,11 +23,14 @@ export class FacturacionConsultaComponent implements OnInit {
     private catalogosService: CatalogosService,
     private toast: ToastrService) { }
    
-
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe())
+  }
   ngOnInit(): void {
     this.getFacturas();
     this.getAlmacenes();
   }
+  subs: Subscription[] = [];
   title: string = "Consulta Facturas";
   breadcrumbItem: string = "Consulta Facturas"
   breadcrumb: string = "Consulta"
@@ -88,7 +92,7 @@ export class FacturacionConsultaComponent implements OnInit {
     return model;
   }
   getFacturas(){
-  this.mantenimientoService.getFacturas(this.modelFacturaFilter())
+    const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
       let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
       this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
@@ -100,24 +104,28 @@ export class FacturacionConsultaComponent implements OnInit {
       }
       this.facturas = facturas;
     });
+    this.subs.push(sub);
   }
   getDetalleFactura(numeroFactura: number){
     this.numerofactura =numeroFactura;
     const { almacen } = this.form.value;
-    this.mantenimientoService.getDetalleFactura(numeroFactura,almacen)
+    const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
     .subscribe(detalle => {
       this.detalleFactura = detalle;
     })
+    this.subs.push(sub);
+
   }
   printReportFactura(){
-    this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
+    const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-    })
+    });
+    this.subs.push(sub);
   }
   printFactura(){
     this.printing = !this.printing;
-    this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
       this.printing = !this.printing;
@@ -125,7 +133,8 @@ export class FacturacionConsultaComponent implements OnInit {
       this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
 
-    })
+    });
+    this.subs.push(sub);
   }
   onChangeTipoBusqueda(tipo: number){
     this.tipoBusqueda = tipo;
@@ -150,9 +159,10 @@ export class FacturacionConsultaComponent implements OnInit {
     dateFormat: 'dd.mm.yyyy',
   };
   getAlmacenes() {
-    this.catalogosService.getSucursales().subscribe((almacen) => {
+    const sub = this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenes = almacen;
     });
+    this.subs.push(sub);
   }
 
 }

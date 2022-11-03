@@ -56,9 +56,6 @@ export class MantenimientoService {
     
   }
   getDetalleFactura(numeroFactura: number, sucursal: number){
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append("numeroFactura", numeroFactura)
-    queryParams = queryParams.append("sucursal", sucursal)
     return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
   }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
