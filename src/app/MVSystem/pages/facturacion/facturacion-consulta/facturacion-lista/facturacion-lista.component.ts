@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
-import { FacturaConsulta } from '../../../../interfaces/mantenimiento';
+import { FacturaConsulta, DetalleFacturaList } from '../../../../interfaces/mantenimiento';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -9,6 +9,7 @@ import { FacturaConsulta } from '../../../../interfaces/mantenimiento';
   styleUrls: ['./facturacion-lista.component.css']
 })
 export class FacturacionListaComponent implements OnInit {
+  index!: number;
 
   constructor(
     private vendedorService: VendedorService) { }
@@ -21,18 +22,20 @@ export class FacturacionListaComponent implements OnInit {
   @Input() line!:  number;
   @Input() lastLine!:  number;
   @Input() facturas: FacturaConsulta[]=[];
+  @Input() detalleFactura: DetalleFacturaList[]=[];
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
   vendedores: VendedorLista[] = []
 
-  getIdFactura(numerofactura: number){
+  getIdFactura(numerofactura: number,index: number){
+    this.index= index;
     this.onSelectFactura();
     if(numerofactura > 0){this.onFacturaButton.emit(true);}
     this.numerofactura.emit(numerofactura);
 
   }
   onSelectFactura(){
-    $('table tbody').on('click', 'tr', (e)=> {
+    $('table tbody').on('click', 'tr.put', (e)=> {
         if ($(e.currentTarget).hasClass('selected')) {
             $(e.currentTarget).removeClass('selected');
             $(e.currentTarget).addClass('selected');

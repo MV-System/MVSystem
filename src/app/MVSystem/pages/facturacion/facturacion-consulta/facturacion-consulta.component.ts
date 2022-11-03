@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../services/mantenimiento.service';
@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./facturacion-consulta.component.css']
 })
 export class FacturacionConsultaComponent implements OnInit {
+  detalleFactura: DetalleFacturaList[]=[];
 
   constructor(private fb: FormBuilder,
     private mantenimientoService: MantenimientoService,
@@ -32,7 +33,7 @@ export class FacturacionConsultaComponent implements OnInit {
   facturas: FacturaConsulta[]=[];
   almacenes!: Almacen[];
   tipoBusqueda:    number = 3;
-  totalFacturado!:  number;
+  totalFacturado!: number;
   currentPage:     number = 1;
   pageIndex:       number = 1;
   pageSize:        number = 10;
@@ -68,8 +69,9 @@ export class FacturacionConsultaComponent implements OnInit {
     almacen: [1,],
     criterio: ['',],
     factura:['',],
-    rangeDate: [''],
+    rangeDate: ['']
   });
+
 
 
   modelFacturaFilter(){
@@ -97,22 +99,15 @@ export class FacturacionConsultaComponent implements OnInit {
         this.lastLine = facturas[0].lastLine;
       }
       this.facturas = facturas;
-      console.log(this.facturas);
     });
   }
   getDetalleFactura(numeroFactura: number){
-        
     this.numerofactura =numeroFactura;
-    console.log(this.numerofactura);
-    
     const { almacen } = this.form.value;
     this.mantenimientoService.getDetalleFactura(numeroFactura,almacen)
     .subscribe(detalle => {
-      console.log(detalle);
-      
+      this.detalleFactura = detalle;
     })
-    console.log(this.numerofactura);
-
   }
   printReportFactura(){
     this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())

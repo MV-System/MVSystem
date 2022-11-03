@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { APIURL } from "src/app/shared/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../pages/Equipo/Equipo-registro/equipo-registro.component";
 
 @Injectable({
@@ -59,7 +59,7 @@ export class MantenimientoService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("numeroFactura", numeroFactura)
     queryParams = queryParams.append("sucursal", sucursal)
-    return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
+    return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
   }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
