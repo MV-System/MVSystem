@@ -1,4 +1,6 @@
+import { NumberValueAccessor } from "@angular/forms";
 import { ClienteRegistro } from "./cliente.interface";
+import { DatePaging, Pagination } from "./pagination.interfaces";
 
 export interface Accesorio {
     imei_Equipo?: null;
@@ -107,4 +109,35 @@ export interface EquipoObjRetorno {
     precioDetalle: number;
     disponible_Detalle: null;
     mensaje: string;
+}
+
+export interface FacturaConsulta {
+    numeroFactura:    number;
+    nombres:          string;
+    apellidos:        string;
+    vendedor:         string;
+    tipoFactura:      string;
+    tipoPago:         string;
+    subTotal:         number;
+    descuento:        number;
+    itbis:            number;
+    total:            number;
+    totalFacturado:   number;
+    nota:             string;
+    fechaFacturacion: string;
+    line:             number;
+    lastLine:         number;
+    totalRecord:      number;
+    // detalleFacturaList: DetalleFacturaList[];
+}
+export interface FacturaFilter extends DatePaging ,Pagination{
+    tipoBusqueda:  number;
+    almacen:       number;
+    // telefono:      number;
+    numeroFactura?: number;
+    // tipoPago:      number;
+    // nombreCliente: string;
+    // vendedor:      string;
+    // tipoFactura:   string;
+    criterio:   string;
 }

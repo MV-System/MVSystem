@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,19 +8,23 @@ import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 export class SidebarComponent implements OnInit {
   inside: boolean = false;
 
-  constructor(private eRef: ElementRef) { }
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit(): void {
+    
   }
+
   @HostListener('click', ['$event']) click() {
     this.inside = true;
   }
   @HostListener('document:click', ['$event']) clickOutside(event: Event) {
     const toggle = document.querySelector('.toggle-sidebar-btn');
    
-    // if ( event.target !==toggle && !this.eRef.nativeElement.contains(event.target)  ) {
       if ( !this.inside && event.target != toggle) {
       $('body').addClass('toggle-sidebar')
+    
+      console.log( this.inside);
+
     }
     this.inside = false
 

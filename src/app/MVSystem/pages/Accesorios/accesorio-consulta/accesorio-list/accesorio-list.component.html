@@ -14,7 +14,7 @@
             <h5 class="card-title">Accesorios</h5>
             <button class="btn btn-primary mb-3" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
             <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
-            <p>Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+            <p *ngIf="accesorios.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
 
             <!-- Table with stripped rows -->
             <table class="table" >

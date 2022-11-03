@@ -116,7 +116,7 @@
   </div>
 </form>
 <section class="section mt-4">
-  <button class="btn print mx-1" (click)="printReportEquipoDisponibles()">
+  <button class="btn print mx-1"[ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
     Imprimir reporte <i class="bi bi-printer"></i>
   </button>
   <div class="row">

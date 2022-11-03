@@ -1,4 +1,6 @@
 
+  <r-loading *ngIf="printing"></r-loading>
+  
   <app-main [title]="'Consulta Facturas'" 
             [breadcrumb]="'Consulta'"
             [breadcrumbItem]="'Consulta Facturas'">
@@ -7,8 +9,7 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="card">
-                <div class="card-body">                
-                    <!-- <button class="btn clear-filter" (click)="clearFilters($event)">Limpiar filtros  <i class="ri-filter-off-line"></i></button> -->
+                <div class="card-body">               
                   <div class="search-bar mt-3">
                     <!-- form -->
                     <form [formGroup]="form" role="search">
@@ -21,13 +22,18 @@
                             
                                 <div class="col-md-7 mb-3">
                                 <!-- bar search and criterios de busqueda -->
-                                 <li class="nav-item dropdown pe-3 "style="list-style-type: none;">
-                                  <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                                    <form class="search-form d-flex align-items-center">
-                                      <input type="text" class="form-control" placeholder="Search" title="Enter search keyword">
+                                 <li class="nav-item dropdown pe-3 mx-2"style="list-style-type: none;">
+                                  <button class="align-items-center" style="background: none;border: none;width: 315px;"  data-bs-toggle="dropdown">
+                                    <div class="search-form d-flex align-items-center">
+                                      <input type="text" 
+                                            class="form-control" 
+                                            formControlName="criterio" 
+                                            placeholder="Search" 
+                                            title="Enter search keyword"
+                                            (keyup)="getFacturas()">
                                       <button type="submit" title="Search"><i class="bi bi-sliders"></i></button>
-                                    </form>
-                                  </a>
+                                    </div>
+                                  </button>
                                
                   
                                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -37,94 +43,11 @@
                                       <li>
                                           <hr class="dropdown-divider">
                                       </li>
-                                      <li>
+                                      <li *ngFor="let tipo of tiposBusqueda" (click)="onChangeTipoBusqueda(tipo.Id)">
                                          <a class="dropdown-item d-flex align-items-center" >
-                                           <input class="mx-2" type="radio" name="" id="">Todos
+                                                 {{tipo.name}}
                                          </a>
                                      </li>
-                                     <li>
-                                         <hr class="dropdown-divider">
-                                     </li>
-                                      <li>
-                                          <a class="dropdown-item d-flex align-items-center" >
-                                            <input class="mx-2" type="radio" name="" id="">Por mayor
-                                          </a>
-                                      </li>
-                                      <li>
-                                          <hr class="dropdown-divider">
-                                      </li>
-                                      <li>
-                                         <a class="dropdown-item d-flex align-items-center" >
-                                           <input class="mx-2" type="radio" name="" id="">Por detalle
-                                         </a>
-                                     </li>
-                                     <li>
-                                         <hr class="dropdown-divider">
-                                     </li>
-                                      <li>
-                                            <a class="dropdown-item d-flex align-items-center" >
-                                              <input class="mx-2" type="radio" name="" id="">Nombre Cliente
-                                            </a>
-                                      </li>
-                                      <li>
-                                          <hr class="dropdown-divider">
-                                      </li>
-                  
-                                      <li>
-                                          <!-- <a class="dropdown-item d-flex align-items-center" href="pages-faq.html"> -->
-                                            <a class="dropdown-item d-flex align-items-center" >
-                                              <input class="mx-2" type="radio" name="" id="">NO. Factura
-                                            </a>
-                                      </li>
-                                      <li>
-                                          <hr class="dropdown-divider">
-                                      </li>
-                  
-                                      <li>
-                                        <a class="dropdown-item d-flex align-items-center" >
-                                          <input class="mx-2" type="radio" name="" id="">Reparaciones
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                      <li>
-                                        <!-- <input type="radio" name="" id="">Por mayor -->
-                                         <a class="dropdown-item d-flex align-items-center" >
-                                           <input class="mx-2" type="radio" name="" id="">Desbloqueos
-                                         </a>
-                                     </li>
-                                     <li>
-                                         <hr class="dropdown-divider">
-                                     </li>
-                                     
-                                     <li>
-                                      <!-- <input type="radio" name="" id="">Por mayor -->
-                                       <a class="dropdown-item d-flex align-items-center" >
-                                         <input class="mx-2" type="radio" name="" id="">Por telefono
-                                       </a>
-                                   </li>
-                                   <li>
-                                       <hr class="dropdown-divider">
-                                   </li>
-                                   
-                                   <li>
-                                    <!-- <input type="radio" name="" id="">Por mayor -->
-                                     <a class="dropdown-item d-flex align-items-center" >
-                                       <input class="mx-2" type="radio" name="" id="">Anuladas
-                                     </a>
-                                 </li>
-                                 <li>
-                                     <hr class="dropdown-divider">
-                                 </li>
-                                 
-                                 <li>
-                                  <!-- <input type="radio" name="" id="">Por mayor -->
-                                   <a class="dropdown-item d-flex align-items-center" >
-                                     <input class="mx-2" type="radio" name="" id="">Comprobantes
-                                   </a>
-                               </li>
-                         
                                   </ul>
                                   <!-- End Profile Dropdown Items -->
                               </li>
@@ -132,6 +55,7 @@
                                 <div class="row mx-2">
                                   <div class="col-md-5">
                                     <label class="form-label ">Fecha de facturación</label>
+                                    <div>
                                     <my-date-range-picker
                                       [options]="myDateRangePickerOptions"
                                       formControlName="rangeDate"
@@ -141,6 +65,7 @@
                                       }}"  >
                                     </my-date-range-picker>
                                   </div>
+                                  </div>
                                   <div class="col-md-5">
                                     <!-- Search by almacen -->
             
@@ -148,7 +73,7 @@
                                     <select class="form-select" formControlName="almacen"
                                     (change)="getFacturas()" >
                                       <option
-                                        *ngFor="let almacen of facturas"
+                                        *ngFor="let almacen of almacenes"
                                         [value]="almacen.iD_Almacen == 7? 0 : almacen.iD_Almacen" >
                                         {{ almacen.descripcion }}
                                       </option>
@@ -171,7 +96,7 @@
                                       <div class="row mb-4 ">
                                         Total de facturas
                                         <label class="form-control total">
-                                          {{ facturasQuantity }}
+                                          {{ facturasCantidad }}
                                         </label>
                                       </div>
                                       <div class="row mb-4 ">
@@ -191,18 +116,31 @@
     
                       </div>
                     </form>
-                    <button class="btn print mx-1" (click)="printReportFactura()">
-                      Imprimir reporte <i class="bi bi-printer"></i>
-                    </button>
+                    <div class="row">
+                      <div class="col-md-3" >
+                        <button class="btn print" [ngClass]="{'disabled':!facturas.length}" (click)="printReportFactura()">
+                          Imprimir reporte <i class="bi bi-printer"></i>
+                        </button>
+                      </div>
+                      <div class="col-md-3">
+                        <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }"(click)="printFactura()">
+                          Imprimir factura <i class="bi bi-receipt-cutoff"></i>
+                        </button>
+                      </div>
+                    </div>
+             
                     <!-- end form   -->
                     <app-facturacion-lista 
                     [facturas]="facturas" 
+                    [detalleFactura]="detalleFactura" 
                     [pageIndex]="pageIndex" 
                     [pageSize]="pageSize" 
                     [totalRecord]="totalRecord"
                     [currentPage]="currentPage"
                     [line]="line"
-                    [lastLine]="lastLine">
+                    [lastLine]="lastLine"
+                    (onFacturaButton)="onFacturaButton = $event"
+                    (numerofactura)="getDetalleFactura($event)">
                     <pagination-controls
                      (pageChange)="pageChanged($event)" 
                      [responsive]="true"
