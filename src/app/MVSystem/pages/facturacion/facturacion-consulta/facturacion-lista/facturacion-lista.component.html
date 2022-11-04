@@ -13,12 +13,17 @@
             <th scope="col">No. FACTURA</th>
             <th scope="col">NOMBRES</th>
             <th scope="col">APELLIDOS</th>
+            <th scope="col">TELEFONO</th>
             <th scope="col">TIPO DE FACTURA</th>
-            <th scope="col">VENDEDOR</th>
             <th scope="col">TIPO DE PAGO</th>
             <th scope="col">SUB TOTAL</th>
             <th scope="col">DESCUENTO</th>
+            <th scope="col">ITBIS</th>
             <th scope="col">TOTAL</th>
+            <th scope="col">NCF</th>
+            <th scope="col">RNC</th>
+            <th scope="col">VENDEDOR</th>
+            <th scope="col">ALMACEN</th>
             <th scope="col">NOTA</th>
             <th scope="col">FECHA FACTURACIÓN</th>
           </tr>
@@ -39,15 +44,20 @@
               aria-controls="flush-collapseOne"
               tableTrselect>
               <td>{{ factura.numeroFactura }}</td>
-              <td>{{ factura.nombres }}</td>
-              <td>{{ factura.apellidos }}</td>
+              <td>{{ factura.nombres }} </td>
+              <td>{{ factura.apellidos }} </td>
+              <td>{{ factura.telefono }} </td>
               <td>{{ factura.tipoFactura }}</td>
-              <td>{{ factura.vendedor }}</td>
               <td>{{ factura.tipoPago }}</td>
               <td>{{ factura.subTotal }}</td>
               <td>{{ factura.descuento }}</td>
+              <td>{{ factura.itbis }}</td>
               <td>{{ factura.total }}</td>
-              <td>{{ factura.nota }}</td>
+              <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
+              <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
+              <td>{{ factura.vendedor }}</td>
+              <td>{{ factura.almacen }}</td>
+              <td>{{ !factura.nota ?'*':factura.nota }}</td>
               <td>{{ factura.fechaFacturacion | date }}</td>
             </tr>
 
@@ -58,17 +68,18 @@
               <tr
                 class="animate__animated animate__fadeIn tr-collapse"
                 *ngFor="let detalle of detalleFactura; let d = index" >
-                <!-- <td col="1">Cod: {{detalle.idEquipo}}</td> -->
-                <td colspan="5">
-                  {{ d + 1 + "- " }}<b>Descripcion:</b>
-                  {{ detalle.descripcion }}
-                </td>
+                <td col="1">Cod: {{detalle.idEquipo}}</td>
+                <td colspan="5"><b>Descripcion:</b> {{ detalle.descripcion }}  </td>
                 <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
                 <td><b>Precio:</b> {{ detalle.precio }}</td>
                 <td><b>SubTotal:</b> {{ detalle.subTotal }}</td>
                 <td><b>Desc.:</b> {{ detalle.descuento }}</td>
                 <td><b>Itbs:</b> {{ detalle.itbis }}</td>
                 <td><b>Total:</b> {{ detalle.total }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             </ng-container>
           </ng-container>

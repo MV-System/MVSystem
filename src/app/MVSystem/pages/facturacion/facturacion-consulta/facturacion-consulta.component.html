@@ -19,40 +19,18 @@
                             <div class="card-body">
                               <span class="card-title">Filtros</span>
                               <div class="row">
-                            
                                 <div class="col-md-7 mb-3">
                                 <!-- bar search and criterios de busqueda -->
-                                 <li class="nav-item dropdown pe-3 mx-2"style="list-style-type: none;">
-                                  <button class="align-items-center" style="background: none;border: none;width: 315px;"  data-bs-toggle="dropdown">
                                     <div class="search-form d-flex align-items-center">
                                       <input type="text" 
                                             class="form-control" 
                                             formControlName="criterio" 
                                             placeholder="Search" 
-                                            title="Enter search keyword"
+                                            title="Busqueda"
                                             (keyup)="getFacturas()">
-                                      <button type="submit" title="Search"><i class="bi bi-sliders"></i></button>
                                     </div>
-                                  </button>
-                               
-                  
-                                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                                      <li class="dropdown-header">
-                                          <h6>Criterios de búsqueda</h6>
-                                      </li>
-                                      <li>
-                                          <hr class="dropdown-divider">
-                                      </li>
-                                      <li *ngFor="let tipo of tiposBusqueda" (click)="onChangeTipoBusqueda(tipo.Id)">
-                                         <a class="dropdown-item d-flex align-items-center" >
-                                                 {{tipo.name}}
-                                         </a>
-                                     </li>
-                                  </ul>
-                                  <!-- End Profile Dropdown Items -->
-                              </li>
                                 </div>
-                                <div class="row mx-2">
+                                <div class="row ">
                                   <div class="col-md-5">
                                     <label class="form-label ">Fecha de facturación</label>
                                     <div>

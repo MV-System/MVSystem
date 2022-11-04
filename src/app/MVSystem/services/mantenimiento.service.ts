@@ -39,15 +39,9 @@ export class MantenimientoService {
   }
   getFacturas(facturaReq: FacturaFilter){
     let queryParams = new HttpParams();
-    // queryParams = queryParams.append("NumeroFactura", facturaReq.numeroFactura)
-    // queryParams = queryParams.append("Nombres", facturaReq.nombreCliente)
-    // queryParams = queryParams.append("Vendedor", facturaReq.vendedor)
-    // queryParams = queryParams.append("TipoFactura", facturaReq.tipoFactura )
-    // queryParams = queryParams.append("Telefono", facturaReq.telefono )
-    // queryParams = queryParams.append("TipoPago", facturaReq.tipoPago)
+
     queryParams = queryParams.append("Criterio", facturaReq.criterio)
     queryParams = queryParams.append("Almacen", facturaReq.almacen)
-    queryParams = queryParams.append("TipoBusqueda", facturaReq.tipoBusqueda)
     queryParams = queryParams.append("PageIndex", facturaReq.pageIndex)
     queryParams = queryParams.append("PageSize", facturaReq.pageSize)
     queryParams = queryParams.append("FechaInicio", facturaReq.fechaInicio)

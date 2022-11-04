@@ -81,7 +81,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   modelFacturaFilter(){
     const {criterio,almacen,vendedor} = this.form.value;
     const model:FacturaFilter = {
-      tipoBusqueda: this.tipoBusqueda,
       almacen: Number(almacen),
       criterio: criterio,
       fechaInicio: this.paginate.fechaInicio,

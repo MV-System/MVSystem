@@ -3,8 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
 import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatus/equipo-modificacion-estatus.component';
-import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
+
 import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.component';
+import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 
 const routes: Routes = [
   {
