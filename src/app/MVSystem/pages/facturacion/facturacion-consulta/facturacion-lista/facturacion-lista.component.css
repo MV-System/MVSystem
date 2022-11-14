@@ -13,7 +13,7 @@
     overflow: auto;
     white-space: nowrap;
   }
-  tr.put:hover {
+  tr.tr-hover:hover {
     background-color: #467ff1;
     cursor: pointer;
     color: white;
