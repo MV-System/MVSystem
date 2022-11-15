@@ -44,6 +44,10 @@ const routes: Routes = [
    {
     path: 'utilidades',
     loadChildren: () => import('./pages/utilidades/utilidades.module').then( m => m.UtilidadesModule )
+   },   
+   {
+    path: 'cotizacion',
+    loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
    },
 ];
 

@@ -9,19 +9,19 @@ import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-tran
 
 const routes: Routes = [
   {
-    path:'equipo-registro',
+    path:'registro',
     component:EquipoRegistroComponent
   },
   {
-    path:'equipo-consulta',
+    path:'consulta',
     component:EquipoConsultaComponent
   },
   {
-    path:'equipo-transferencia',
+    path:'transferencia',
     component:EquipoTransferenciaComponent
   },
   {
-    path:'equipo-cambiar-estatus',
+    path:'cambiar-estatus',
     component:EquipoModificacionEstatusComponent
   },
   {
