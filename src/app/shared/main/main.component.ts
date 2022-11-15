@@ -2,8 +2,20 @@ import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  template: `
+    <main id="main" class="main">
+      <div class="pagetitle">
+        <h1 id="registro">{{title}}</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" *ngIf="breadcrumb">{{breadcrumb}}</li>
+            <li class="breadcrumb-item active">{{breadcrumbItem}}</li>
+          </ol>
+        </nav>
+      </div>
+  <ng-content></ng-content>
+  </main>`
 })
 export class MainComponent implements OnInit {
 
