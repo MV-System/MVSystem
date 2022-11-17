@@ -137,8 +137,8 @@ export class FacturacionRegistroComponent implements OnInit {
   addArticuloImei = (imei: string) => {
     return new Promise((resolve) => {
       this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
-        if (equipos && equipos[0].precioDetalle > 0) {
-          const equipo = equipos[0]
+        if (equipos && equipos.precioDetalle > 0) {
+          const equipo = equipos
 
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.marca}`,
