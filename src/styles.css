@@ -1,23 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~ngx-toastr/toastr';
+@import "~ngx-toastr/toastr";
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type=number] { -moz-appearance:textfield; }
-.ng-dropdown-panel 
-.ng-dropdown-panel-items 
-.ng-optgroup, 
-.ng-dropdown-panel 
-.ng-dropdown-panel-items 
-.ng-option { 
-  white-space: unset !important; 
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup,
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  white-space: unset !important;
 }
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
   background-color: rgba(13, 150, 127, 0.218);
@@ -34,7 +32,7 @@ input[type=number] { -moz-appearance:textfield; }
   --btn-width: 5rem;
   --bez: cubic-bezier(0, 0, 0.43, 1.49);
 }
-.not-data{
+.not-data {
   text-align: center;
   margin: 20px;
   font-size: larger;
@@ -46,4 +44,7 @@ input[type=number] { -moz-appearance:textfield; }
   margin-left: 11px;
   background-color: #467ff1;
   font-weight: 600;
+}
+.input-error {
+  border: 1px solid red;
 }

@@ -1,4 +1,4 @@
-:root{
+:root {
   --mvSystemGreen: rgba(13, 150, 127, 0.218);
   --mvSystemText: rgba(38, 140, 94, 0.856);
 }
@@ -8,106 +8,107 @@
   font-weight: 800;
   font-size: 18px;
 }
-.validatorField{
-    display: block;
-    font-size: 0.875em;
-    margin-top: 0.25rem;
-    color: red;
-    
-  }
-  .required-field { 
-    color: red; 
-    font-size: 15px; 
-    display: contents;
-  }
-span{
+.validatorField {
   display: block;
-  margin-bottom: 10px
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+  color: red;
 }
-select{
+.required-field {
+  color: red;
+  font-size: 15px;
+  display: contents;
+}
+
+span {
   display: block;
-  margin-bottom: 10px
+  margin-bottom: 10px;
+}
+select {
+  display: block;
+  margin-bottom: 10px;
 }
 fieldset {
-    background-color: #f7f7f7;
-    border-width: 3px;
-    border-style: solid;
-    border-color: rgba(240, 240, 240, 0.514);
+  background-color: #f7f7f7;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(240, 240, 240, 0.514);
 }
 legend {
-    background-color: rgba(211, 211, 211, 0.459);
-    color: rgb(0, 0, 0);
-    padding: 5px 10px;
+  background-color: rgba(211, 211, 211, 0.459);
+  color: rgb(0, 0, 0);
+  padding: 5px 10px;
 }
 
 input {
   display: block;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
-.container{
-    width: 100%;
-    display: grid;
-    margin: auto;
+.container {
+  width: 100%;
+  display: grid;
+  margin: auto;
 }
-.wrapper{
-    margin:0 auto;
-    margin: 50px;
+.wrapper {
+  margin: 0 auto;
+  margin: 50px;
 }
-.left{
-    padding: 1.5rem;
-    float: left;
+.left {
+  padding: 1.5rem;
+  float: left;
 }
-.right{
- 
-    padding: 1.5rem;
-    margin-right: 40px;
-    float: left;
+.right {
+  padding: 1.5rem;
+  margin-right: 40px;
+  float: left;
 }
-.table-mvsystem thead{
-  background-color:  var(--mvSystemGreen);
+.table-mvsystem thead {
+  background-color: var(--mvSystemGreen);
   border-radius: 6px;
- 
+
   /* border-color: rgb(186,227,46); */
 }
 .table-mvsystem {
   border-radius: 20px;
 }
-.box-pay{
+.box-pay {
   border: 1px solid rgb(179, 179, 179);
   font-size: 15px;
-  border-radius: 6px
+  border-radius: 6px;
 }
 table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-  .submit{
-      
-    display: inline-block;
-    padding: 15px 25px;
-    font-size: 24px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px #999;
-  }
-  .submit:hover {background-color: #3e8e41}
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.submit {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+.submit:hover {
+  background-color: #3e8e41;
+}
 
 .submit:active {
   background-color: #3e8e41;
