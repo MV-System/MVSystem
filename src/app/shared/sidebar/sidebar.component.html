@@ -4,16 +4,21 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link " href="/">
+            <a class="nav-link " routerLinkActive="active"  routerLink="/">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li>
-        <!-- End Dashboard Nav -->
         <li class="nav-item">
-            <a class="nav-link" href="/#/facturacion">
+            <a class="nav-link" [routerLink]="['/facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
                 <span>Facturación</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/cotizacion">
+                <i class="bi bi-receipt"></i>
+                <span>Cotización</span>
             </a>
         </li>
         <!-- End Dashboard Nav -->
@@ -24,47 +29,47 @@
             </a>
             <ul id="mantenimiento-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/#/accesorios/accesorios-registro">
+                    <a href="/#/accesorios/registro">
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/clientes/clientes-registro">
+                    <a href="/#/clientes/registro">
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/equipo/equipo-registro">
+                    <a href="/#/equipo/registro">
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/marcas/marcas-registro">
+                    <a href="/#/marcas/registro">
                         <i class="bi bi-circle"></i><span>Marcas</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/modelos/modelos-registro">
+                    <a href="/#/modelos/registro">
                         <i class="bi bi-circle"></i><span>Modelos</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/suplidores/suplidor-registro">
+                    <a href="/#/suplidores/registro">
                         <i class="bi bi-circle"></i><span>Suplidores</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/equipo/equipo-transferencia">
+                    <a href="/#/equipo/transferencia">
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/vendedores/vendedores-registro">
+                    <a href="/#/vendedores/registro">
                         <i class="bi bi-circle"></i><span>Vendedores</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/equipo/equipo-cambiar-estatus">
+                    <a href="/#/equipo/cambiar-estatus">
                         <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
                     </a>
                 </li>
@@ -86,27 +91,27 @@
             </a>
             <ul id="consulta-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/#/accesorios/accesorios-consulta">
+                    <a href="/#/accesorios/consulta">
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/clientes/clientes-consulta">
+                    <a href="/#/clientes/consulta">
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/#/equipo/equipo-consulta">
+                    <a href="/#/equipo/consulta">
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
                 </li>
                 <li>
-                  <a href="/#/utilidades/utilidades-consulta">
+                  <a href="/#/utilidades/consulta">
                       <i class="bi bi-circle"></i><span>Utilidades</span>
                   </a>
               </li>
               <li>
-                <a href="/#/facturacion/factura-consulta">
+                <a href="/#/facturacion/consulta">
                     <i class="bi bi-circle"></i><span>Facturas</span>
                 </a>
             </li>
