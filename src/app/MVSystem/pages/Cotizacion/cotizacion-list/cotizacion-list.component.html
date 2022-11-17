@@ -1,0 +1,90 @@
+<form [formGroup]="form">
+    <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="articulos.length">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th>Descuento</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container formArrayName="articulos">
+                <tr *ngFor="let detalleFactura of articulos.controls; let i = index">
+                    <ng-container [formGroupName]="i">
+                        <td class="col-md-12">
+                            <ng-select formControlName="articulo"  [items]="accesorios"
+                                        id="articulo" 
+                                        required
+                                        dropdownPosition="auto"
+                                        [virtualScroll]="true"
+                                        bindLabel="accesorio_Descripcion"
+                                        [ngClass]="{'error':isValidNgSelect('articulo')}" 
+                                        [addTag]="addArticuloByImei"
+                                        (keydown.enter)="cantidadInput.focus()"
+                                        (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
+                                <ng-template ng-label-tmp ng-option-tmp let-articulo="item"  >
+                                  
+                                        <span> 
+                                            {{ articulo.accesorio_Descripcion | titlecase }} |
+                                            {{ articulo.modelo | titlecase }}
+                                         </span>
+                                    <small><b>Precio: {{ calcularPrecioSegunTipofactura( articulo.precio_Detalle,
+                                        articulo.precio_Por_Mayor ) | currency }}</b></small>
+                                </ng-template >
+                            </ng-select>
+                        </td>
+                        <td class="col-md-1">
+                            <input type="text" required class="form-control" placeholder="Cantidad"
+                                formControlName="cantidad" (keydown.enter)="descuentoInput.focus()" #cantidadInput
+                                (change)="obtenerDetalleFactura(i)" 
+                                [ngClass]="{'is-invalid': validarCamposArticulo( detalleFactura,'cantidad' )}" 
+                                appNumeric 
+                                [maxlen]="4" />
+                        </td>
+                        <td>
+                            {{ detalleFactura.value.precio }}
+                        </td>
+                        <td>
+                            {{ detalleFactura.value.subTotal }}
+                        </td>
+                        <td class="col-md-1">
+                            <input formControlName="descuento" class="form-control" type="number" appNumeric
+                                [maxlen]="4" #descuentoInput [decimals]="2" (keydown.enter)="agregarArticulo()"
+                                (change)="obtenerDetalleFactura(i)" />
+                        </td>
+                        <td>
+                            {{ detalleFactura.value.total }}
+                        </td>
+                        <td>
+                            <i class="bi bi-trash" (click)="deleteArticulo(i)"
+                                style="color: rgb(205, 65, 65); cursor: pointer"></i>
+                        </td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <hr />
+    <div class="row">
+
+        <p class="col-md-8">Total artículos: {{ articulos.length - 1 }}</p>
+        <div class="col-md-4 text-end" *ngIf="articulos.length">
+            <div class="box-pay">
+                <div class="row">
+                    <p class="col-md-7">Subtotal:</p>
+                    <p class="col-md-3">{{ subTotal }}</p>
+                    <p class="col-md-7">Descuento:</p>
+                    <p class="col-md-3">{{ descuento }}</p>
+                    <p class="col-md-7">ITBIS:</p>
+                    <p class="col-md-3">{{ itbis }}</p>
+                    <p class="col-md-7">Total:</p>
+                    <p class="col-md-3">{{ total }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
