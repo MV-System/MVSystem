@@ -7,6 +7,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { RModalComponent } from './components/r-modal/r-modal.component';
 import { MainComponent } from './main/main.component';
 import { RDropdownMenuComponent } from './components/r-dropdown-menu/r-dropdown-menu.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { RDropdownMenuComponent } from './components/r-dropdown-menu/r-dropdown-
     RDropdownMenuComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule 
   ],
   exports:[
     HeaderComponent,
