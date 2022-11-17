@@ -549,25 +549,25 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #aab7cf;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 500px) { */
   #main, #footer {
     margin-left: 300px;
   }
-}
+/* } */
 @media (max-width: 199px) {
   .toggle-sidebar .sidebar {
     left: 0;
     
   }
 }
-@media (min-width: 1200px) {
+/* @media (min-width: 500px) { */
   .toggle-sidebar #main, .toggle-sidebar #footer {
     margin-left: 0;
   }
   .toggle-sidebar .sidebar {
     left: -300px;
   }
-}
+/* } */
 @media (min-width: 1200px) {
   .toggle-sidebar {
     left: -300px;
