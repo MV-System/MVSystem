@@ -8,6 +8,7 @@ import { RModalComponent } from './components/r-modal/r-modal.component';
 import { MainComponent } from './main/main.component';
 import { RDropdownMenuComponent } from './components/r-dropdown-menu/r-dropdown-menu.component';
 import { RouterModule } from '@angular/router';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { RouterModule } from '@angular/router';
     RModalComponent,
     SidebarComponent,
     MainComponent,
-    RDropdownMenuComponent
+    RDropdownMenuComponent,
+    PageNotFoundComponent
   ],
   imports: [
     CommonModule,
