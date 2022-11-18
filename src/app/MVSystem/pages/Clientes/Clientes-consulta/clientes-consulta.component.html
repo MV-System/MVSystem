@@ -14,11 +14,10 @@
         <div class="row" >
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body ">
                     <!-- <h5 class="card-title" >Clientes</h5> -->
-                    <div class="search-bar mt-3">
 
-                        <form [formGroup]="formBusqueda" (ngSubmit)="obtenerClientesPorNombreTelefono()" role="search">
+                        <form [formGroup]="formBusqueda" class="mt-3" (ngSubmit)="obtenerClientesPorNombreTelefono()" role="search">
                             <input type="search"  placeholder="Enter para buscar todos o por nombre o telefono "  required formControlName="criterio" />
                             <button type="submit">Buscar</button>    
                         </form>
@@ -60,8 +59,6 @@
                           </div>
                         </div>
                       </section>
-                      </div>
-                      <!-- End Search Bar -->
                     </div>
                 </div>
             </div>
