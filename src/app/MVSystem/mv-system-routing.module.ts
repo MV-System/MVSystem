@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 
 const routes: Routes = [
@@ -9,6 +10,10 @@ const routes: Routes = [
   //   component: HomeComponent,
   //   pathMatch:'full'
   // },
+  {
+    path: 'auth',
+    loadChildren: () => import('./pages/Auth/auth.module').then( m => m.AuthModule)
+   },
   {
     path: 'marcas',
     loadChildren: () => import('./pages/marcas/marcas.module').then( m => m.MarcasModule )
@@ -49,6 +54,7 @@ const routes: Routes = [
     path: 'cotizacion',
     loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
    },
+   {  path: 'profile', component:UserProfileComponent },
 ];
 
 @NgModule({

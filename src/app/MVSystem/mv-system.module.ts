@@ -14,11 +14,14 @@ import { VendedoresModule } from './pages/Vendedores/vendedores.module';
 import { HomeComponent } from './pages/home/home.component';
 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 //import { UtilidadesComponent } from './pages/utilidades/utilidades-consulta/utilidades.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
     HomeComponent,
+    UserProfileComponent,
    // UtilidadesComponent
   ],
   imports: [
@@ -30,7 +33,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ClientesModule,
     VendedoresModule,
     AccesoriosModule,
-    EquipoModule
+    EquipoModule,
+    SharedModule
   ],
   exports: [
     SuplidoresModule,
