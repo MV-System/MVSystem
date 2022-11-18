@@ -117,22 +117,18 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   }
   onDetectValueArticulo(articuloDesc: string) {
     const { articulo } = this.form.value;
+    console.log(articulo);
+    
     if (articuloDesc != null) {
       this.onArticuloValue.emit(true);
-      this.isValidNgSelect(articulo);
+      // this.isValidNgSelect(articulo);
     } else {
       this.onArticuloValue.emit(false);
-      this.isValidNgSelect(articulo);
+   
     }
-    console.log(this.isValidNgSelect(articulo));
+ 
   }
-  isValidNgSelect(field: string) {
-    return (
-      this.form.get(field)?.invalid &&
-      this.form.get(field)?.touched &&
-      !this.onArticuloValue
-    );
-  }
+
   getCurrentFormGroup(index: number) {
     const currentFormGroup: FormGroup = this.articulos.controls[
       index
@@ -156,16 +152,24 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       return this.isDescuentoValid ;
     }
   }
+  onClearArticuloDropdown(currentArticulo:string,index: number){
+    console.log(currentArticulo);
+    
+    if (currentArticulo== null) {
+      this.articulos.removeAt(index);
+      this.agregarArticulo();
+      this.onApplyItbis();
+
+    }
+  }
   obtenerDetalleFactura(index: number) {
-
+ 
     const currentArticulo = this.getCurrentFormGroup(index);
-
     let articulo = currentArticulo.articulo;
+  
+    this.onClearArticuloDropdown(articulo,index);
     this.onDetectValueArticulo(articulo);
-
     if (!currentArticulo || !articulo) return;
-
-    console.log(articulo);
 
     currentArticulo.idTipo = 2;
     currentArticulo.idGarantia = 1;
@@ -200,9 +204,9 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       currentArticulo.precio
     );
 
-    console.log(isValidDesc);
 
-    if (isValidDesc) {
+    if (isValidDesc ==true) {
+
       this.articulos.controls[index].setValue(currentArticulo);
 
       this.obtenerCantidadArticulo(currentArticulo);

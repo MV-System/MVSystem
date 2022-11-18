@@ -63,6 +63,7 @@ export class CotizacionComponent implements OnInit {
     codigo: [,],
     rnc: ['',],
     cantidad:[,],
+    articulo:[,],
     articulos: this.fb.array([]),
     aplicarItbis: [false,],
   });

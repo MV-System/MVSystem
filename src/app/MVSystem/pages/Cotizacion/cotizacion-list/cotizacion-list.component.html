@@ -22,7 +22,6 @@
                                         dropdownPosition="auto"
                                         [virtualScroll]="true"
                                         bindLabel="accesorio_Descripcion"
-                                        [ngClass]="{'error':isValidNgSelect('articulo')}" 
                                         [addTag]="addArticuloByImei"
                                         (keydown.enter)="cantidadInput.focus()"
                                         (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
