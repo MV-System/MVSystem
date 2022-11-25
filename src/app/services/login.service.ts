@@ -28,8 +28,6 @@ export class LoginService {
     const token = localStorage.getItem('token')
     if (!token) return ''
     let decoded = jwt_decode<LoginDTO>(token);
-    console.log(decoded.nameid);
-    
     return decoded.nameid
   }
   public getUserName(): string {

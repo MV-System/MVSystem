@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
     this.isPrint = !this.isPrint;
 
     this.loginService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value).subscribe(res => {
-      console.log(res);
       
 
       if (!res) {

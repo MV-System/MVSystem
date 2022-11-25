@@ -32,7 +32,6 @@ export class PasswordChangePageComponent implements OnInit {
 
   confirmPasswordMatch(controlName: string, matchingControlName: string) {    
     return (formGroup: FormGroup) => {
-      // console.log(controlName, matchingControlName)
         const control = formGroup.controls[controlName];
         const matchingControl = formGroup.controls[matchingControlName];
 

@@ -22,9 +22,6 @@ export class SidebarComponent implements OnInit {
    
       if ( !this.inside && event.target != toggle) {
       $('body').addClass('toggle-sidebar')
-    
-      console.log( this.inside);
-
     }
     this.inside = false
 

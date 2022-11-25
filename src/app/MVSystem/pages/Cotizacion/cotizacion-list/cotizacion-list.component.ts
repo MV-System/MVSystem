@@ -117,8 +117,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   }
   onDetectValueArticulo(articuloDesc: string) {
     const { articulo } = this.form.value;
-    console.log(articulo);
-    
     if (articuloDesc != null) {
       this.onArticuloValue.emit(true);
       // this.isValidNgSelect(articulo);
@@ -153,8 +151,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     }
   }
   onClearArticuloDropdown(currentArticulo:string,index: number){
-    console.log(currentArticulo);
-    
     if (currentArticulo== null) {
       this.articulos.removeAt(index);
       this.agregarArticulo();
