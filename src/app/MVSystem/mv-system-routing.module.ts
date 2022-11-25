@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: HomeComponent,
-  //   pathMatch:'full'
-  // },
   {
-    path: 'auth',
+    path: 'home',
+    component: HomeComponent,
+    pathMatch:'full'
+  },
+  {
+    path: '',
     loadChildren: () => import('./pages/Auth/auth.module').then( m => m.AuthModule)
    },
   {
@@ -53,8 +52,7 @@ const routes: Routes = [
    {
     path: 'cotizacion',
     loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
-   },
-   {  path: 'profile', component:UserProfileComponent },
+   }
 ];
 
 @NgModule({

@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+
 import { SharedModule } from '../../../shared/shared.module';
 import { AuthRoutingModule } from './auth-routing.module';
+
+import { LoginComponent } from './login/login.component';
 import { PasswordChangePageComponent } from './password-change-page/password-change-page.component';
+import { PasswordStrengthMeterComponent } from './password-strength-meter/password-strength-meter.component';
 
 const routes: Routes = [
   {
@@ -15,17 +18,21 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LoginComponent, PasswordChangePageComponent],
+  declarations: [
+    LoginComponent,
+    PasswordChangePageComponent,
+    PasswordStrengthMeterComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forChild(routes),
     SharedModule,
-    AuthRoutingModule
+    AuthRoutingModule,
   ],
   exports: [
-    RouterModule,
-  ]
+    RouterModule
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}
