@@ -108,7 +108,8 @@ export let APIURL = {
         }
     },
     Login: {
-        Login: API + 'login/login'
+        Login: API + 'login/login',
+        ChangePassword: API + 'login/ChangePassword',
     },
     //}
 }
