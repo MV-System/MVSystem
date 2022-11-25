@@ -209,7 +209,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
       this.articulos.controls[index].setValue(currentArticulo);
 
-      this.obtenerCantidadArticulo(currentArticulo);
       this.obtenerCantidadArticuloStock(index);
 
       this.onApplyItbis();
@@ -225,15 +224,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
         (this.tipoFactura == 2 ? precioMayor : 0)
     );
   }
-  obtenerCantidadArticulo(currentArticulo: any) {
-    let cantidadStockAccesorio = currentArticulo.articulo.cantidad;
-    let cantidadElegida = currentArticulo.cantidad;
 
-    this.calculoTotal(currentArticulo.subTotal, currentArticulo.descuento);
-    return Number(cantidadElegida) > cantidadStockAccesorio? 
-          this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}` ): 
-          Number(cantidadElegida);
-  }
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos.controls[index].value;
     const subTotal = this.calcularSubTotalArticulo(

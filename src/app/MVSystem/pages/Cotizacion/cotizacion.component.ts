@@ -67,9 +67,10 @@ export class CotizacionComponent implements OnInit {
     articulos: this.fb.array([]),
     aplicarItbis: [false,],
   });
-  tipoFactura = this.form.get('tipoFactura')?.value;
 
-
+  get tipoFactura() {
+    return this.form.get('tipoFactura')?.value;
+  }
   get articulos(): FormArray {
     return this.form.controls["articulos"] as FormArray;
   }
