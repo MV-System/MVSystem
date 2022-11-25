@@ -15,6 +15,7 @@ import { HomeComponent } from './pages/home/home.component';
 
 import { NgxPaginationModule } from 'ngx-pagination';
 //import { UtilidadesComponent } from './pages/utilidades/utilidades-consulta/utilidades.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ClientesModule,
     VendedoresModule,
     AccesoriosModule,
-    EquipoModule
+    EquipoModule,
+    SharedModule
   ],
   exports: [
     SuplidoresModule,

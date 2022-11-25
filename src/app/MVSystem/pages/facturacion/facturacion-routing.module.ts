@@ -10,7 +10,7 @@ const routes: Routes = [
     component: FacturacionRegistroComponent
   },
   {
-    path:'factura-consulta',
+    path:'consulta',
     component: FacturacionConsultaComponent
   }
 ];

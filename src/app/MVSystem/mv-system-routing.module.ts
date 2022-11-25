@@ -4,11 +4,15 @@ import { HomeComponent } from './pages/home/home.component';
 
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: HomeComponent,
-  //   pathMatch:'full'
-  // },
+  {
+    path: 'home',
+    component: HomeComponent,
+    pathMatch:'full'
+  },
+  {
+    path: '',
+    loadChildren: () => import('./pages/Auth/auth.module').then( m => m.AuthModule)
+   },
   {
     path: 'marcas',
     loadChildren: () => import('./pages/marcas/marcas.module').then( m => m.MarcasModule )
@@ -44,7 +48,11 @@ const routes: Routes = [
    {
     path: 'utilidades',
     loadChildren: () => import('./pages/utilidades/utilidades.module').then( m => m.UtilidadesModule )
-   },
+   },   
+   {
+    path: 'cotizacion',
+    loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
+   }
 ];
 
 @NgModule({

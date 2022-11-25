@@ -5,7 +5,7 @@ import { VendedorRegistroComponent } from './vendedor-registro/vendedor-registro
 
 const routes: Routes = [
   {
-    path:'vendedores-registro',
+    path:'registro',
     component: VendedorRegistroComponent
   }
 ];

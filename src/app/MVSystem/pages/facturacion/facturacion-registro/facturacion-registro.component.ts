@@ -137,8 +137,8 @@ export class FacturacionRegistroComponent implements OnInit {
   addArticuloImei = (imei: string) => {
     return new Promise((resolve) => {
       this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
-        if (equipos && equipos[0].precioDetalle > 0) {
-          const equipo = equipos[0]
+        if (equipos && equipos.precioDetalle > 0) {
+          const equipo = equipos
 
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.marca}`,
@@ -301,11 +301,11 @@ export class FacturacionRegistroComponent implements OnInit {
       garantia: this.formRegistro.get('garantia')?.value,
       nota: this.formRegistro.get('nota')?.value,
       descripcion: "",
-      itbis: 0,
-      subTotal: 0,
-      total: 0,
-      abono: 0,
-      descuento: 0,
+      itbis: this.itbis,
+      subTotal: this.subTotal,
+      total: this.total,
+      abono: this.abono,
+      descuento: this.descuento,
       cantidadArticulos: this.articulos.length,
       // detalleFacturaList: this.articulos,
       detalleFacturaList: [],

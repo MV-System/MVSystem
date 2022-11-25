@@ -7,8 +7,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes : Routes = [
   {
-path : 'utilidades-consulta',
-component:UtilidadesComponent
+    path : 'consulta',
+    component:UtilidadesComponent
   }
 ];
 

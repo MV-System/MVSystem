@@ -1,0 +1,7 @@
+/* ::ng-deep.ng-select-container.error {
+    border: 1px solid red !important;
+ } */
+
+ .ng-select.error ::ng-deep .ng-select-container  {            
+    border: 1px solid red !important;
+}

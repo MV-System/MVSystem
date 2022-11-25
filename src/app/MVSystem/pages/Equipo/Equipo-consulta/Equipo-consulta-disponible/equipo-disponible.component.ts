@@ -13,7 +13,7 @@ import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
 import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
 import { ToastrService } from 'ngx-toastr';
-import { CreatorPDFFile } from 'src/app/shared/helper';
+import { CreatorPDFFile } from 'src/app/MVSystem/helpers/helper';
 
 @Component({
   selector: 'app-equipo-disponible',

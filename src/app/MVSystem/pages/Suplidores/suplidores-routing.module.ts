@@ -8,7 +8,7 @@ const routes: Routes = [
     // component: ClientesRegistroComponent,
     children:[
       {
-        path: 'suplidor-registro',
+        path: 'registro',
         component: SuplidorRegistroComponent,
       }
      

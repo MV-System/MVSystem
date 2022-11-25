@@ -1,0 +1,246 @@
+<app-main [title]="'Cotización'" [breadcrumbItem]="'Cotización'">
+    <section class="section">
+        <!--  Form -->
+        <form [formGroup]="form">
+            <div class="row">
+                <!-- section datos del cliente -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="card-title">DATOS DEL CLIENTE</h5>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5 class="card-title">
+                                        ID Cliente:
+                                        <i class="textMv">{{ form.controls.idCliente.value }}</i>
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <!-- --------------- Nombre Cliente --------------- -->
+                            <div class="row">
+                                <ng-select formControlName="telefono" (change)="getClientesPorNombreTelefono()">
+                                    <ng-option *ngFor="let cliente of clientes" [value]="cliente.numero_Telefono">
+                                        {{ cliente.nombres }} {{ cliente.apellidos }} -
+                                        {{ cliente.numero_Telefono }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre </label>
+                                    <span class="form-control" readonly>
+                                        {{ !nombreCliente ? "-" : nombreCliente  }}
+                                    </span>
+                                </div>
+
+                                <!-- --------------- Apellido Cliente --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellido</label>
+                                    <span class="form-control" readonly>
+                                        {{ !apellidoCliente ? "-" : apellidoCliente }}
+                                    </span>
+                                </div>
+
+                                <!-- --------------- Telefono Cliente --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Teléfono:
+                                        <span class="required-field">*</span>
+                                    </label>
+                                    <input class="form-control" 
+                                           required
+                                           type="text" 
+                                           mask="000-000-0000"
+                                           formControlName="telefono" 
+                                           (input)="searchCliente()" 
+                                           [value]="form.value.telefono" 
+                                           [ngClass]="{ 'is-invalid': validarCampos('telefono') }" />
+                                    <div class="validatorField" 
+                                        [ngClass]="{   'invalid-feedback': !validarCampos('telefono')}">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End  Form -->
+                    </div>
+                </div>
+                <!-- section datos de cotizacion -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h5 class="card-title">DATOS DE COTIZACIÓN</h5>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <!-- --------------- Vendedores --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Vendedor <span class="required-field">*</span></label>
+                                    <select formControlName="vendedor"
+                                        [ngClass]="{ 'input-error': validarCampos('vendedor') }" required
+                                        class="form-select">
+                                        <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
+                                            {{ vendedor.nombres }}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('vendedor')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+
+                                <!-- --------------- Tipo factura --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo Factura</label>
+                                    <select class="form-select"
+                                        [ngClass]="{ 'input-error': validarCampos('tipoFactura') }"
+                                        formControlName="tipoFactura">
+                                        <option *ngFor="let TipoFactura of facturaTipos"
+                                            [value]="TipoFactura.iD_Tipo_Factura">
+                                            {{ TipoFactura.descripcion_Factura_Tipo }}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('tipoFactura')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                                <!-- --------------- Fecha de facturacion --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label"> Fecha de facturacion: </label>
+                                    <input class="form-control" 
+                                            type="date" 
+                                            required 
+                                            [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" 
+                                            formControlName="fechaFacturacion" />
+                                    <div class="validatorField" *ngIf="validarCampos('fechaFacturacion')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                                <!-- --------------- Fecha limite de pago --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label"> Fecha limite de pago: </label>
+                                    <input class="form-control" 
+                                            required
+                                            [ngClass]="{   'input-error': validarCampos('fechaLimitePago') }" 
+                                            formControlName="fechaLimitePago" type="date" />
+                                    <div class="validatorField" *ngIf="validarCampos('fechaLimitePago')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                                <!-- --------------- Tipo de pago --------------- -->
+                                <div class="col-md-6">
+                                    <label class="form-label"> Tipo de pago: </label>
+                                    <select formControlName="tipoPago" class="form-select"
+                                        (change)="desactivarActivarFechaLimitepago()">
+                                        <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
+                                            {{ TipoPago.descripcion_Tipo_Pagos }}
+                                        </option>
+                                    </select>
+                                    <div class="validatorField" *ngIf="validarCampos('tipoPago')">
+                                        Este campo es requerido.
+                                    </div>
+                                </div>
+                                <!-- --------------- Garantia de pago --------------- -->
+                                <div class="col-md-5">
+                                    <label class="form-label"> Garantia </label>
+                                    <select formControlName="garantia" class="form-select">
+                                        <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
+                                            {{ garantia.descripcion }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- End  Form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- section detalle de la cotizacion -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h5 class="card-title">DETALLE DE LA COTIZACIÓN</h5>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                Aplicar ITBIS
+                                                <input class="form-check-input" type="checkbox"
+                                                formControlName="aplicarItbis"
+                                                    (change)="onApplyItbis()" />
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Tipo de comprobante:  </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select formControlName="comprobante" class="form-select"
+                                            (change)="onCheckboxChangeFactura()">
+                                            <option *ngFor="let tipoComprobante of comprobanteTipos"
+                                                [value]="tipoComprobante.nfcTipoNumero">
+                                                {{ tipoComprobante.nfcTipoDescripcion }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- --------------- RNC --------------- -->
+                                    <div class="col-md-3">
+                                        <label class="form-label">RNC</label>
+                                        <input type="text" class="form-control" formControlName="rnc" />
+                                    </div>
+                                    <!-- --------------- Empresa --------------- -->
+                                    <div class="col-md-9">
+                                        <label class="form-label">Empresa</label>
+                                        <input type="text" class="form-control" formControlName="empresa" />
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="col-md-12">
+
+                                    <button type="button" class="btn btn-success" (click)="agregarArticulo()">
+                                        Agregar Artículo
+                                    </button>
+                                    <app-cotizacion-list 
+                                        [aplicarItbis]="aplicarItbis"
+                                        [articulos]="articulos" 
+                                        [tipoFactura]="tipoFactura" 
+                                        [form]="form"
+                                        (onArticuloValue)="onArticuloValue = $event">
+                                    </app-cotizacion-list>
+                                </div>
+                                <div>
+                                    <button type="button" 
+                                            class="btn btn-success" 
+                                            [disabled]="form.invalid"
+                                            (click)="imprimir()">
+                                        <i class="bi bi-printer"></i>
+                                        Imprimir
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- End detalle de la cotizacion -->
+                            <div class="col-md-3">
+                                <h5 class="card-title text-center">Vista previa</h5>
+                                <div class="card">
+                                    <!-- <img src="assets/img/product-2.jpg" class="card-img-top" alt="..."> -->
+                                </div>
+                            </div>
+                            <!-- End vista previa -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</app-main>

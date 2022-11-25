@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path:'marcas-registro',
+    path:'registro',
     component:MarcasRegistroComponent
   }
 ];

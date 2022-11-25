@@ -3,4 +3,10 @@ export interface LoginDTO {
     expires: Date,
     name: string,
     role: string,
+    nameid: string
 }
+export interface User{
+    codigo?: number,
+    password: string,
+    login?: string,
+} 

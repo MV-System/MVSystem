@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../services/mantenimiento.service';
 import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
 import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CreatorPDFFile } from '../../../../shared/helper';
+import { CreatorPDFFile } from '../../../helpers/helper';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 
@@ -50,19 +50,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   onFacturaButton: boolean = false;
   printing: boolean = false;
 
-
-  tiposBusqueda =[
-    {name:"Todos",Id:3},
-    {name:"Al por Mayor",Id:2},
-    {name:"Al Detalle",Id:1},
-    {name:"Nombre Cliente",Id:4}, 
-    {name:"NO. Factura",Id:5},
-    {name:"Reparaciones",Id:6},
-    {name:"Desbloqueos",Id:7},
-    {name:"Comprobantes",Id:8},
-    {name:"Anuladas",Id:9},
-    {name:"Telefono",Id:10},
-  ]
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10,

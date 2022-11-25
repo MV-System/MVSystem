@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes : Routes = [
   {
-path : 'modelos-registro',
+path : 'registro',
 component:ModelosRegistrosComponent
   }
 ];

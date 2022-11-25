@@ -63,7 +63,7 @@ export class CatalogosService {
     return this.http.get<Suplidor[]>(APIURL.Catalogos.suplidorComboLista);
   }
 
-  buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<Equipo[]> {
-    return this.http.get<Equipo[]>(`${APIURL.Equipo.Consulta.EquipoDisponibleFT}?Equipo=${equipo}&Id_Almacen=${Id_Almacen}`);
+  buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<Equipo> {
+    return this.http.get<Equipo>(`${APIURL.Equipo.Consulta.EquipoDisponibleFT}?Equipo=${equipo}&Id_Almacen=${Id_Almacen}`);
   }
 }

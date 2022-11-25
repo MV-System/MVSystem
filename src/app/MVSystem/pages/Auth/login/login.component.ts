@@ -35,6 +35,8 @@ export class LoginComponent implements OnInit {
     this.isPrint = !this.isPrint;
 
     this.loginService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value).subscribe(res => {
+      console.log(res);
+      
 
       if (!res) {
         this.toastr.error('Credenciales incorrectas')
@@ -46,7 +48,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', res.token)
       localStorage.setItem('expires', res.expires.toString())
       this.toastr.success('Bienvenido!!!');
-      this.router.navigateByUrl('/dashboard')
+      this.router.navigateByUrl('/home')
       this.isPrint = !this.isPrint;
 
     })
