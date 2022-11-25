@@ -1,8 +1,38 @@
+<r-loading *ngIf="generarReporteLoading"></r-loading>
+
 <form [formGroup]="formEquiposRecibidos" (ngSubmit)="obtenerEquiposRecibidos()" role="search">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <span class="card-title">Filtros</span>
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                                <label class="form-label">Teléfono ó Cédula</label>
+                                <input class="form-control" placeholder="telefono o cedula de cliente" formControlName="criterio"
+                                    (keyup.enter)="obtenerEquiposRecibidos()" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label row mx-2"> Rango de fecha</label>
+                            <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate"
+                                (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                                                        rangeDatePlaceholder | date }}">
+                            </my-date-range-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- <form [formGroup]="formEquiposRecibidos" (ngSubmit)="obtenerEquiposRecibidos()" role="search">
     <input type="search" placeholder="busqueda por telefono o cedula de cliente" required
         formControlName="criterio" />
     <button type="submit">Buscar</button>
-</form>
+</form> -->
+<button class="btn print mx-1" (click)="obtenerReporte()" *ngIf="this.equiposRecibidos.length">
+    Imprimir reporte <i class="bi bi-printer"></i>
+</button>
 <section class="section mt-4">
     <div class="row">
         <div class="col-lg-12 scroll-table">

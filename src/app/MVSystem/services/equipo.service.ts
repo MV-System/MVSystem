@@ -11,7 +11,7 @@ import {
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/shared/url";
 import { Observable } from 'rxjs';
-import { EquipoRecepcionConsulta } from '../interfaces/equipo.interface';
+import { EquipoRecepcionConsulta, DefaultFilter } from '../interfaces/equipo.interface';
 
 @Injectable({
     providedIn:'root'
@@ -78,9 +78,18 @@ export class EquipoService{
         return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);
     }
 
-    getEquiposRecibidos(criterio: string, filtro:{pageIndex: number, pageSize: number}): Observable<EquipoRecepcionConsulta[]>{
+    getEquiposRecibidos(criterio: string, filtro:DefaultFilter): Observable<EquipoRecepcionConsulta[]>{
+        const {pageIndex,pageSize,fechaInicio,fechaFinal} = filtro;
         return this.http.get<EquipoRecepcionConsulta[]>
-        (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${filtro.pageIndex}&pageSize=${filtro.pageSize}`)
+        (`${APIURL.Equipo.Consulta.EquiposRecibidos}${criterio}&pageIndex=${pageIndex}&pageSize=${pageSize}&fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`)
+    }
+    
+    getEquiposRecibidosReporte(criterio: string, filtro:DefaultFilter): Observable<Blob>{
+        const {pageIndex,pageSize,fechaInicio,fechaFinal} = filtro;
+        return this.http.get<Blob>(`${APIURL.Equipo.Accion.EquipoRecibidosReporte}${criterio}&pageIndex=${pageIndex}&pageSize=${pageSize}&fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`,
+                                    {
+                                        responseType: 'blob' as 'json'
+                                    })
     }
     //POST's
     postEquipoDisponible(Equipo: filterEquipos): Observable<any>{        

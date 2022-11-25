@@ -52,6 +52,9 @@ export let APIURL = {
         Modifica: {
             ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo',
             EstadoActualiza: API + 'Equipos/EstadoActualiza'
+        },
+        Accion: {
+            EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio='
         }
     },
     Marca: {
