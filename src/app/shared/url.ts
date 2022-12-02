@@ -23,6 +23,7 @@ export let APIURL = {
             FacturaInserta: API + 'FacturacionReporte/PostFactura',
             FacturaReporteConsulta: API + 'FacturacionReporte/ReportFacturaConsulta',
             FacturaReporte: API + 'FacturacionReporte/ReportFactura',
+            ReportCotizacion: API + 'FacturacionReporte/ReportCotizacion',
         },
         Consulta:{
             Facturas: API + 'Factura/GetFacturas',
