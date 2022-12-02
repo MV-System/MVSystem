@@ -19,14 +19,15 @@ export class PasswordChangePageComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  messageAlertPassword: string ='';
   user!:User;
   showPassword = false;
   renewPasswordInput: boolean = false;
+  isRenewPasswordError: boolean = false;
   sub!: Subscription[];
   form: FormGroup = this.fb.group({
     newPassword:['',Validators.compose([Validators.required])],
-    renewPassword:['',Validators.compose([Validators.required])],
-    validator: this.confirmPasswordMatch('password', 'confirmPassword')
+    renewPassword:['',Validators.compose([Validators.required])]
   })
 
 
@@ -38,6 +39,8 @@ export class PasswordChangePageComponent implements OnInit {
         // set error on matchingControl if validation fails
         if (control.value !== matchingControl.value) {
             matchingControl.setErrors({ confirmPasswordMatch: true });
+            console.log(matchingControl);
+            
         } else {
             matchingControl.setErrors(null);
         }
@@ -54,6 +57,19 @@ export class PasswordChangePageComponent implements OnInit {
       this.form.get(fieldName)?.touched
     );
   }
+  validateFieldRenewPassword() {
+   
+     if(this.form.get('renewPassword')?.invalid &&
+      this.form.get('renewPassword')?.touched && this.renewPasswordInput) {
+        this.messageAlertPassword ='Este campo es requerido.';
+        return true;
+      }
+      if(this.isRenewPasswordError){
+        this.messageAlertPassword ='Las contraseñas no coinciden. !Inténtalo de nuevo!';
+        return true
+      }
+    return false;
+  }
   onActiveRenewPwdInput(e: any){
     this.renewPasswordInput = e 
   }
@@ -61,13 +77,22 @@ export class PasswordChangePageComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
   changePasswordUser(){
-    const { newPassword } = this.form.value;
+    const { newPassword,renewPassword } = this.form.value;
     const model: User ={
       password: newPassword
     };
-   let sub = this.loginService.changePwdUser(model).subscribe(() =>{
-      this.toastr.success('','Contraseña cambiada con exito');
-    });
-    this.sub.push(sub);
+    if (newPassword === renewPassword) {
+      
+    let sub = this.loginService.changePwdUser(model).subscribe(() =>{
+        this.toastr.success('Tu contraseña ha sido cambiada con éxito','');
+      });
+      console.log(sub);
+      
+      this.sub.push(sub);
+    }
+    else{
+      this.isRenewPasswordError = true;
+    }
   }
+
 }
