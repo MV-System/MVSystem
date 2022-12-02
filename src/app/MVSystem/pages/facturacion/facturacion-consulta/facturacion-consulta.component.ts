@@ -102,10 +102,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
 
   }
-  printReportFactura(){
+  printReportFacturaConsulta(){
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
   }
@@ -118,7 +121,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     },err=>{
       this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
-
     });
     this.subs.push(sub);
   }
