@@ -37,6 +37,11 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
+  postCotizacionReport(facturaReq: FacturaFilter): Observable<Blob> {
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporte, facturaReq, {
+      responseType: 'blob' as 'json'
+    });
+  }
   getFacturas(facturaReq: FacturaFilter){
     let queryParams = new HttpParams();
 
