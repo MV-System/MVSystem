@@ -22,10 +22,8 @@ import { AuthInterceptorService } from './core/interceptors/auth-interceptor.ser
   imports: [
     RouterModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
     BrowserModule,
     SharedModule,
-    ReactiveFormsModule,
     HttpClientModule,
     MvSystemModule,
     ToastrModule.forRoot({

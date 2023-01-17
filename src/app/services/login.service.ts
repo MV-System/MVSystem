@@ -48,6 +48,8 @@ export class LoginService {
       return ''
 
     var decoded = jwt_decode<LoginDTO>(token);
+    console.log(decoded);
+    
     return decoded.name
   }
 }
