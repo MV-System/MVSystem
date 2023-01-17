@@ -1,19 +1,19 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 import {
   Almacen,
   ModeloEquipo,
-} from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoDisponible } from 'src/app/MVSystem/interfaces/equipo.interface';
-import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
-import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
+} from 'src/app/core/interfaces/catalogo.interface';
+import { EquipoDisponible } from 'src/app/core/interfaces/equipo.interface';
+import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { EquipoService } from 'src/app/core/services/equipo.service';
+import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { ToastrService } from 'ngx-toastr';
-import { CreatorPDFFile } from 'src/app/MVSystem/helpers/helper';
+import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -31,9 +31,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.obtenerEquiposDisponibles();
-    this.obtenerAlmacenLista();
-    this.obtenerModeloLista();
-    this.obtenerVendedor();
+    // this.obtenerAlmacenLista();
+    // this.obtenerModeloLista();
+    // this.obtenerVendedor();
+    this.loadCatalogos();
 
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -186,19 +187,34 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.pageIndex = index;
     this.obtenerEquiposDisponibles();
   }
-  obtenerAlmacenLista() {
-    this.catalogosService.getAlmaceLista().subscribe((almacen) => {
-      this.almacenListado = almacen;
-    });
-  }
-  obtenerModeloLista() {
-    this.catalogosService.getModeloLista().subscribe((modelo) => {
-      this.modeloListado = modelo;
-    });
-  }
-  obtenerVendedor() {
-    this.vendedorService.getVendedorLista().subscribe((vendedor) => {
-      this.listaVendedor = vendedor;
-    });
+  // obtenerAlmacenLista() {
+  //   this.catalogosService.getAlmaceLista().subscribe((almacen) => {
+  //     this.almacenListado = almacen;
+  //   });
+  // }
+  // obtenerModeloLista() {
+  //   this.catalogosService.getModeloLista().subscribe((modelo) => {
+  //     this.modeloListado = modelo;
+  //   });
+  // }
+  // obtenerVendedor() {
+  //   this.vendedorService.getVendedorLista().subscribe((vendedor) => {
+  //     this.listaVendedor = vendedor;
+  //   });
+  // }
+
+  loadCatalogos(){
+    forkJoin([
+      this.catalogosService.getAlmaceLista(),
+      this.catalogosService.getModeloLista(),
+      this.vendedorService.getVendedorLista()
+    ]).subscribe(resp =>{
+      console.log(resp);
+      this.almacenListado = resp[0];
+      this.modeloListado = resp[1];
+      this.listaVendedor = resp[2];
+
+      
+    })
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CondicionEquipo, Desbloqueo } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
-import { EquipoModificarEstatus } from 'src/app/MVSystem/interfaces/equipo.interface';
-import { FormValidatorService } from '../../../services/form-validator.service';
+import { CondicionEquipo, Desbloqueo } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { EquipoModificarEstatus } from 'src/app/core/interfaces/equipo.interface';
+import { FormValidatorService } from '../../../../services/form-validator.service';
 
 @Component({
   selector: 'app-equipo-modificacion-estatus',

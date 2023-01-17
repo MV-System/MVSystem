@@ -9,7 +9,7 @@ import { CotizacionComponent } from './cotizacion.component';
 import { CotizacionListComponent } from './cotizacion-list/cotizacion-list.component';
 
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DirectiveModule } from '../../directives/directives.module';
+import { DirectiveModule } from '../../../core/directives/directives.module';
 
 
 @NgModule({

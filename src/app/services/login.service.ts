@@ -2,10 +2,11 @@ import jwt_decode from "jwt-decode";
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { APIURL } from 'src/app/shared/url'
-import { LoginDTO, User } from '../MVSystem/interfaces/loginDTO.interface';
+
 import { catchError, retry, switchMap } from 'rxjs/operators';
 import { HandleErrorsResponseService } from './handle-errors-response.service';
+import { LoginDTO, User } from "../core/interfaces/loginDTO.interface";
+import { APIURL } from "../config/url";
 
 @Injectable({
   providedIn: 'root'

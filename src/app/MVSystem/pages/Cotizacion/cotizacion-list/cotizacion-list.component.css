@@ -1,7 +1,6 @@
-/* ::ng-deep.ng-select-container.error {
-    border: 1px solid red !important;
- } */
 
- .ng-select.error ::ng-deep .ng-select-container  {            
+
+ /* ::ng-deep .ng-select-container.ng-has-value {
     border: 1px solid red !important;
-}
+} */
+

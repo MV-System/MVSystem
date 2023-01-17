@@ -7,7 +7,7 @@ import { FacturacionRegistroComponent } from './facturacion-registro/facturacion
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DirectiveModule } from '../../directives/directives.module';
+import { DirectiveModule } from '../../../core/directives/directives.module';
 import { FacturacionConsultaComponent } from './facturacion-consulta/facturacion-consulta.component';
 import { FacturacionListaComponent } from './facturacion-consulta/facturacion-lista/facturacion-lista.component';
 import { NgxPaginationModule } from 'ngx-pagination';

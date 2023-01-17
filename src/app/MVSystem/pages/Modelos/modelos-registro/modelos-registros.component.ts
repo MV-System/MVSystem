@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ModeloObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { ModeloService } from 'src/app/MVSystem/services/modelo.service';
-import { MarcaEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { ModeloObjRetorno } from 'src/app/core/interfaces/mantenimiento';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { ModeloService } from 'src/app/core/services/modelo.service';
+import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-modelos-registros',

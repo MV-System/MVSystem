@@ -1,14 +1,14 @@
 import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MarcaEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from '../../../services/catalogos.service';
+import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from '../../../../core/services/catalogos.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonModule } from '@angular/common';
-import {MarcaObjRetorno } from 'src/app/MVSystem/interfaces/mantenimiento';
-import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
+import {MarcaObjRetorno } from 'src/app/core/interfaces/mantenimiento';
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
-import { MarcaService } from 'src/app/MVSystem/services/marca.service';
-import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { MarcaService } from 'src/app/core/services/marca.service';
+import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
 
 @Component({
   selector: 'app-marcas-registro',

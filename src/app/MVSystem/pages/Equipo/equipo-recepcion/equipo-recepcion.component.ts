@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CondicionEquipo, ModeloEquipo } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { FormValidatorService } from 'src/app/MVSystem/services/form-validator.service';
-import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
-import { EquipoEstadoUpdate } from '../../../interfaces/equipo.interface';
-import { LoginService } from '../../../../services/login.service';
-import { EquipoService } from '../../../services/equipo.service';
-import { FormAsyncValidatorService } from 'src/app/MVSystem/services/form-async-validator.service';
+import { CondicionEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { FormValidatorService } from 'src/app/services/form-validator.service';
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { EquipoEstadoUpdate } from '../../../../core/interfaces/equipo.interface';
+import { EquipoService } from '../../../../core/services/equipo.service';
+import { FormAsyncValidatorService } from 'src/app/services/form-async-validator.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-equipo-recepcion',

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../../../../services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { User } from '../../../interfaces/loginDTO.interface';
+import { User } from '../../core/interfaces/loginDTO.interface';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-password-change-page',

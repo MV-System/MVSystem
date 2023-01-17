@@ -1,22 +1,23 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-import { Garantia, TipoComprobante, TipoFactura, TipoPago } from '../../interfaces/catalogo.interface';
-import { ClienteConsultaCriterio } from '../../interfaces/cliente.interface';
-import { DetalleFacturaList } from '../../interfaces/mantenimiento';
-import { VendedorLista } from '../../interfaces/vendedor.interface';
-import { CatalogosService } from '../../services/catalogos.service';
-import { ClientesService } from '../../services/clientes.service';
-import { MantenimientoService } from '../../services/mantenimiento.service';
-import { VendedorService } from '../../services/vendedor.service';
+import { Subscription } from 'rxjs';
+import { CreatorPDFFile } from '../../../helpers/helper';
+import { Garantia, TipoComprobante, TipoFactura, TipoPago } from '../../../core/interfaces/catalogo.interface';
+import { ClienteConsultaCriterio } from '../../../core/interfaces/cliente.interface';
+import { DetalleFacturaList, FacturaFilter } from '../../../core/interfaces/mantenimiento';
+import { VendedorLista } from '../../../core/interfaces/vendedor.interface';
+import { CatalogosService } from '../../../core/services/catalogos.service';
+import { ClientesService } from '../../../core/services/clientes.service';
+import { MantenimientoService } from '../../../core/services/mantenimiento.service';
+import { VendedorService } from '../../../core/services/vendedor.service';
 
 @Component({
   selector: 'app-cotizacion',
   templateUrl: './cotizacion.component.html',
   styleUrls: ['./cotizacion.component.css']
 })
-export class CotizacionComponent implements OnInit {
+export class CotizacionComponent implements OnInit,OnDestroy {
   
   constructor(
     private fb: FormBuilder,
@@ -24,8 +25,11 @@ export class CotizacionComponent implements OnInit {
     private toastr: ToastrService,
     private clientesService: ClientesService,
     private vendedorService: VendedorService,
-    private mantenimientoService: MantenimientoService) { }
-
+    private mantenimientoService: MantenimientoService,
+    private toast: ToastrService) { }
+  ngOnDestroy(): void {
+      this.sub.unsubscribe()
+  }
   ngOnInit(): void {
     this.getClientes();
     this.getGarantia();
@@ -34,11 +38,13 @@ export class CotizacionComponent implements OnInit {
     this.getTipoPago();
     this.getVendedor();
     this.getDateCurrentDay();
-    this.modelArticuloInitial();
+    this.agregarArticulo();
   }
+  sub!:Subscription;
+  itbis: number = 0;
   aplicarItbis!: boolean;
   onArticuloValue: boolean = false;
-  detalleFactura: DetalleFacturaList[] = [];
+  printing: boolean = false;
   comprobanteTipos: TipoComprobante[] = [];
   clientes: ClienteConsultaCriterio[] = []
   facturaTipos: TipoFactura[] = [];
@@ -62,6 +68,7 @@ export class CotizacionComponent implements OnInit {
     empresa: [,],
     codigo: [,],
     rnc: ['',],
+    itbis: ['',],
     cantidad:[,],
     articulo:[,],
     articulos: this.fb.array([]),
@@ -92,7 +99,7 @@ export class CotizacionComponent implements OnInit {
     const { telefono } = this.form.value;
 
     if (telefono !== '' && telefono) {
-      this.clientesService.getClientesPorNombreTelefono(telefono)
+      this.sub = this.clientesService.getClientesPorNombreTelefono(telefono)
         .subscribe(cliente => {
 
           if (cliente.length > 0) {
@@ -109,43 +116,28 @@ export class CotizacionComponent implements OnInit {
     }
   }
   getClientes() {
-    this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
+    this.sub = this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
       this.clientes = clientes
     })
   }
-  imprimir() {
 
+  imprimir() {
+console.log(this.form.value);
+
+    this.sub = this.mantenimientoService.postCotizacionReport(this.form.value)
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir cotización');
+    });
   }
   validarCampos(nombreCampo: string) {
     return this.form.get(nombreCampo)?.invalid &&
       this.form.get(nombreCampo)?.touched
   }
-  modelArticuloInitial(){
-    const articulo = this.fb.group({
-      cantidad: [1],
-      descripcion: [''],
-      descuento: [0],
-      fechaRegistro: [new Date().toDateString()],
-      idEquipo: [0],
-      idGarantia: [0],
-      idTipo: [0],
-      numeroFactura: [0],
-      precio: [0],
-      subTotal: [0],
-      total: [0],
-      articulo: [''],
-      precioDetalle: [0],
-      precioMayor: [0],
-    });
 
-    this.articulos.insert(0, articulo);
-
-    setTimeout(() => {
-      document.querySelector('#articulo')?.querySelector('input')?.focus()
-    }, 200);
-  }
   agregarArticulo() {
-  if (this.onArticuloValue) {
     const articulo = this.fb.group({
       cantidad: [1],
       descripcion: [''],
@@ -158,6 +150,7 @@ export class CotizacionComponent implements OnInit {
       precio: [0],
       subTotal: [0],
       total: [0],
+      itbis: [0],
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],
@@ -168,7 +161,6 @@ export class CotizacionComponent implements OnInit {
     setTimeout(() => {
       document.querySelector('#articulo')?.querySelector('input')?.focus()
     }, 200);
-  }
 
   }
   onApplyItbis(){
@@ -207,19 +199,19 @@ export class CotizacionComponent implements OnInit {
   }
 
   getGarantia() {
-    this.catalogosService.getGarantiaLista()
+   this.sub = this.catalogosService.getGarantiaLista()
       .subscribe(garantias => {
         this.garantias = garantias;
       })
   }
   getTipoFactura() {
-    this.catalogosService.getTipoFacturaLista()
+    this.sub = this.catalogosService.getTipoFacturaLista()
       .subscribe(facturaTipos => {
         this.facturaTipos = facturaTipos;
       });
   }
   getTipoPago() {
-    this.catalogosService.getTipoPagoLista()
+    this.sub = this.catalogosService.getTipoPagoLista()
       .subscribe(pagoTipos => {
         this.pagoTipos = pagoTipos;
       });
@@ -228,13 +220,13 @@ export class CotizacionComponent implements OnInit {
   getTipoComprobante() {
     this.form.get('rnc')?.disable();
     this.form.get('empresa')?.disable();
-    this.catalogosService.getTipoComprobanteLista()
+    this.sub = this.catalogosService.getTipoComprobanteLista()
       .subscribe(comprobanteTipos => {
         this.comprobanteTipos = comprobanteTipos;
       });
   }
   getVendedor() {
-    this.vendedorService.getVendedorLista()
+    this.sub = this.vendedorService.getVendedorLista()
       .subscribe((vendedor) => {
         this.vendedores = vendedor;
       })

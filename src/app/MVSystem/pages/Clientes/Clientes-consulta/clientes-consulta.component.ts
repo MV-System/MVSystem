@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientesService } from 'src/app/MVSystem/services/clientes.service';
+import { ClientesService } from 'src/app/core/services/clientes.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ClienteConsultaCriterio } from 'src/app/MVSystem/interfaces/cliente.interface';
+import { ClienteConsultaCriterio } from 'src/app/core/interfaces/cliente.interface';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

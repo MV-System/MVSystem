@@ -11,9 +11,9 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
-            <ng-container formArrayName="articulos">
-                <tr *ngFor="let detalleFactura of articulos.controls; let i = index">
+        <ng-container formArrayName="articulos">
+        <tbody >
+                <tr *ngFor="let detalleFactura of articulos.controls; let i = index" >
                     <ng-container [formGroupName]="i">
                         <td class="col-md-12">
                             <ng-select formControlName="articulo"  [items]="accesorios"
@@ -26,13 +26,15 @@
                                         (keydown.enter)="cantidadInput.focus()"
                                         (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
                                 <ng-template ng-label-tmp ng-option-tmp let-articulo="item"  >
-                                  
+                                  <ng-container>
+
                                         <span> 
-                                            {{ articulo.accesorio_Descripcion | titlecase }} |
-                                            {{ articulo.modelo | titlecase }}
-                                         </span>
-                                    <small><b>Precio: {{ calcularPrecioSegunTipofactura( articulo.precio_Detalle,
-                                        articulo.precio_Por_Mayor ) | currency }}</b></small>
+                                          {{ articulo.accesorio_Descripcion | titlecase }} |
+                                          {{ articulo.modelo | titlecase }}
+                                        </span>
+                                        <small><b>Precio: {{ calcularPrecioSegunTipofactura( articulo.precio_Detalle,
+                                            articulo.precio_Por_Mayor ) | currency }}</b></small>
+                                        </ng-container>
                                 </ng-template >
                             </ng-select>
                         </td>
@@ -58,14 +60,14 @@
                         <td>
                             {{ detalleFactura.value.total }}
                         </td>
-                        <td>
+                        <td *ngIf="articulos.length -1"> 
                             <i class="bi bi-trash" (click)="deleteArticulo(i)"
                                 style="color: rgb(205, 65, 65); cursor: pointer"></i>
                         </td>
                     </ng-container>
                 </tr>
-            </ng-container>
-        </tbody>
+            </tbody>
+        </ng-container>
     </table>
     <hr />
     <div class="row">

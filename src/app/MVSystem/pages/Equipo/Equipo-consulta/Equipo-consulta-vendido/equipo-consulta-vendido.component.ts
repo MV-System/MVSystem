@@ -5,15 +5,15 @@ import { Subscription } from 'rxjs';
 import {
   Almacen,
   ModeloEquipo,
-} from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { EquipoVendido } from 'src/app/MVSystem/interfaces/equipo.interface';
-import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { EquipoService } from 'src/app/MVSystem/services/equipo.service';
-import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
-import { Suplidor } from '../../../../interfaces/catalogo.interface';
+} from 'src/app/core/interfaces/catalogo.interface';
+import { EquipoVendido } from 'src/app/core/interfaces/equipo.interface';
+import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { EquipoService } from 'src/app/core/services/equipo.service';
+import { VendedorService } from 'src/app/core/services/vendedor.service';
+import { Suplidor } from '../../../../../core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
-import { CreatorPDFFile } from 'src/app/MVSystem/helpers/helper';
+import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',

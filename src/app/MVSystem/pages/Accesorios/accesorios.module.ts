@@ -12,7 +12,7 @@ import { AccesorioEditComponent } from './accesorio-consulta/accesorio-edit/acce
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
-import { DirectiveModule } from '../../directives/directives.module';
+import { DirectiveModule } from '../../../core/directives/directives.module';
 import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido.component';
 
 

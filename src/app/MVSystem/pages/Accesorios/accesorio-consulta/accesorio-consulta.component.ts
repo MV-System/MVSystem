@@ -1,10 +1,10 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { AccesoriosService } from '../../../services/accesorios.service';
-import { Pagination } from '../../../interfaces/pagination.interfaces';
-import { Accesorio } from 'src/app/MVSystem/interfaces/accesorio.interface';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { AccesoriosService } from '../../../../core/services/accesorios.service';
+import { Pagination } from '../../../../core/interfaces/pagination.interfaces';
+import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
 import { Router } from '@angular/router';
 
 @Component({

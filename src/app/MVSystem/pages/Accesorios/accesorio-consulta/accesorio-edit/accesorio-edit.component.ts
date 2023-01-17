@@ -7,8 +7,8 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Accesorio } from '../../../../interfaces/accesorio.interface';
-import { AccesoriosService } from '../../../../services/accesorios.service';
+import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
+import { AccesoriosService } from '../../../../../core/services/accesorios.service';
 import { ToastrService } from 'ngx-toastr';
 import { EventEmitter } from '@angular/core';
 

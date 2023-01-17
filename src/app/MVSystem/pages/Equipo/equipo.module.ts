@@ -11,7 +11,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxPaginationModule } from 'ngx-pagination';
 
-import { DirectiveModule } from '../../directives/directives.module';
+import { DirectiveModule } from '../../../core/directives/directives.module';
 import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoConsultaRecibidoComponent } from './equipo-consulta-recibido/equipo-consulta-recibido.component';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';

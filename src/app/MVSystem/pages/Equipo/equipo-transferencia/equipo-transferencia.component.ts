@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/MVSystem/interfaces/equipo.interface';
-import { EquipoService } from '../../../services/equipo.service';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
+import { EquipoService } from '../../../../core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
-import { EquipoAlmacenTransferir } from '../../../interfaces/equipo.interface';
+import { EquipoAlmacenTransferir } from '../../../../core/interfaces/equipo.interface';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -40,9 +40,10 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
   idTransferencia!: number;
   cantidadEquipoATransferir: number=0;
   printing: boolean = false;
+  submitted: boolean = false;
 
   form: FormGroup = this.fb.group({
-    imei:[''],
+    imei:['',Validators.required],
     almacen:[2,]
   })
   validateImei():boolean{
@@ -74,7 +75,11 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
       this.ngOnDestroy();
     }
   }
+  validateInput(control:string){
+    return  (!this.form.controls[control].value && this.form.controls[control].touched ) 
+  }
   getEquipoByImei(){
+    if (this.form.get('imei')?.value) {
     
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
@@ -110,7 +115,11 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
           this.form.get('imei')?.reset();
         }
       });
-    
+    }
+    else{
+      this.submitted = true
+    }
+
   }
   printReportEquipoVendido(){
     const model :EquipoTransferenciaReporte = {

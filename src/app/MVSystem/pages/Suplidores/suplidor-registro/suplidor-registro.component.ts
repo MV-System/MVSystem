@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TipoTelefono } from '../../../interfaces/catalogo.interface';
-import { CatalogosService } from '../../../services/catalogos.service';
-import { SuplidorService } from '../../../services/suplidor.service';
+import { TipoTelefono } from '../../../../core/interfaces/catalogo.interface';
+import { CatalogosService } from '../../../../core/services/catalogos.service';
+import { SuplidorService } from '../../../../core/services/suplidor.service';
 import {
   Suplidor,
   SuplidorRegistro,
   TipoSuplidor,
-} from 'src/app/MVSystem/interfaces/suplidor.interface';
+} from 'src/app/core/interfaces/suplidor.interface';
 import * as $ from"jquery";
 
 @Component({

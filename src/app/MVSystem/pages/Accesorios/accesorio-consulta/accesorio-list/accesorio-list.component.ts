@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
-import { Accesorio } from '../../../../interfaces/accesorio.interface';
+import { AccesoriosService } from 'src/app/core/services/accesorios.service';
+import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
 @Component({
   selector: 'app-accesorio-list',
   templateUrl: './accesorio-list.component.html',

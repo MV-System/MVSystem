@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { ToastrService } from 'ngx-toastr';
-import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { ClientesService } from '../../../services/clientes.service';
-import { VendedorService } from '../../../services/vendedor.service';
-import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
-import { DetalleFacturaList, FacturaRegistro } from 'src/app/MVSystem/interfaces/mantenimiento';
-import { ModeloEquipo, AccesorioLista, Codigo } from '../../../interfaces/catalogo.interface';
-import { AccesorioFactura, Accesorio } from '../../../interfaces/mantenimiento';
-import { MantenimientoService } from '../../../services/mantenimiento.service';
+import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/core/interfaces/catalogo.interface';
+import { ClientesService } from '../../../../core/services/clientes.service';
+import { VendedorService } from '../../../../core/services/vendedor.service';
+import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
+import { DetalleFacturaList, FacturaRegistro } from 'src/app/core/interfaces/mantenimiento';
+import { ModeloEquipo, AccesorioLista, Codigo } from '../../../../core/interfaces/catalogo.interface';
+import { AccesorioFactura, Accesorio } from '../../../../core/interfaces/mantenimiento';
+import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
 import { elementAt } from 'rxjs/operators';
-import { ClienteConsultaCriterio } from 'src/app/MVSystem/interfaces/cliente.interface';
+import { ClienteConsultaCriterio } from 'src/app/core/interfaces/cliente.interface';
 
 @Component({
   selector: 'app-facturacion',

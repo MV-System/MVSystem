@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CatalogosService } from '../../../services/catalogos.service';
+import { CatalogosService } from '../../../../core/services/catalogos.service';
 import {
   Almacen,
   MarcaEquipo,
   ModeloEquipo,
-} from '../../../interfaces/catalogo.interface';
-import { Accesorio, AccesorioLista } from '../../../interfaces/mantenimiento';
-import { MantenimientoService } from 'src/app/MVSystem/services/mantenimiento.service';
+} from '../../../../core/interfaces/catalogo.interface';
+import { Accesorio, AccesorioLista } from '../../../../core/interfaces/mantenimiento';
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap, tap } from 'rxjs/operators';
 import * as $ from"jquery";

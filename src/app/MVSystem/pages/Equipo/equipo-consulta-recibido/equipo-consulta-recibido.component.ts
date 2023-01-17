@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EquipoRecepcionConsulta, DefaultFilter } from '../../../interfaces/equipo.interface';
-import { EquipoService } from '../../../services/equipo.service';
+import { EquipoRecepcionConsulta, DefaultFilter } from '../../../../core/interfaces/equipo.interface';
+import { EquipoService } from '../../../../core/services/equipo.service';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
 

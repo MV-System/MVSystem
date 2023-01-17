@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Subscription } from 'rxjs';
-import { AccesorioVendido } from 'src/app/MVSystem/interfaces/accesorio.interface';
-import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { AccesoriosService } from 'src/app/MVSystem/services/accesorios.service';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
+import { AccesorioVendido } from 'src/app/core/interfaces/accesorio.interface';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { AccesoriosService } from 'src/app/core/services/accesorios.service';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
 
 @Component({
   selector: 'app-accesorio-vendido',

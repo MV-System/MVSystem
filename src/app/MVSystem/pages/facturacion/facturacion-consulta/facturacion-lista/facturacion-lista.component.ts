@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { VendedorLista } from 'src/app/MVSystem/interfaces/vendedor.interface';
-import { VendedorService } from 'src/app/MVSystem/services/vendedor.service';
-import { FacturaConsulta, DetalleFacturaList } from '../../../../interfaces/mantenimiento';
+import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
+import { VendedorService } from 'src/app/core/services/vendedor.service';
+import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfaces/mantenimiento';
 
 @Component({
   selector: 'app-facturacion-lista',

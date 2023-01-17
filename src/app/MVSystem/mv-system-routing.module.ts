@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./pages/Auth/auth.module').then( m => m.AuthModule)
+    loadChildren: () => import('../auth/auth.module').then( m => m.AuthModule)
    },
   {
     path: 'marcas',

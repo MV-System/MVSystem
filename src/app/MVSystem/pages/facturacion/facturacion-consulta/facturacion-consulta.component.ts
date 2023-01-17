@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
-import { Pagination } from 'src/app/MVSystem/interfaces/pagination.interfaces';
-import { MantenimientoService } from '../../../services/mantenimiento.service';
-import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../interfaces/mantenimiento';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
-import { Almacen } from 'src/app/MVSystem/interfaces/catalogo.interface';
+import { Pagination } from 'src/app/core/interfaces/pagination.interfaces';
+import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
+import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../../core/interfaces/mantenimiento';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { CreatorPDFFile } from '../../../helpers/helper';
+import { CreatorPDFFile } from '../../../../helpers/helper';
 
 @Component({
   selector: 'app-facturacion-consulta',

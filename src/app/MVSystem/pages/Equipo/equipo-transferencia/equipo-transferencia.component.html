@@ -29,7 +29,9 @@
                                     class="form-control "
                                     placeholder="imei"
                                     formControlName="imei"
-                                    (keyup.enter)="getEquipoByImei()" />
+                                    required
+                                    (keyup.enter)="getEquipoByImei()"
+                                    [ngClass]="{'is-invalid':validateInput('imei') || submitted && this.form.controls.imei.errors}" />
                                 </div>
                             </div>
                             <div class="row mt-3">

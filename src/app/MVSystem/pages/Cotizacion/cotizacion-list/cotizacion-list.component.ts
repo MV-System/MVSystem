@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import {
   Component,
   Input,
@@ -13,15 +12,11 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
-  FormControl,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription } from 'rxjs';
-import {
-  AccesorioLista,
-  AsumeITBIS,
-} from 'src/app/MVSystem/interfaces/catalogo.interface';
-import { CatalogosService } from 'src/app/MVSystem/services/catalogos.service';
+import { Subscription } from 'rxjs';
+import { AccesorioLista, AsumeITBIS } from 'src/app/core/interfaces/catalogo.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
 
 @Component({
   selector: 'app-cotizacion-list',
@@ -49,13 +44,13 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   @Input() aplicarItbis!: boolean;
   @Input() tipoFactura!: number;
   @Input() form!: FormGroup;
+  @Input() itbis: number = 0;
   @Output() onArticuloValue: EventEmitter<boolean> = new EventEmitter();
   private subs!: Subscription;
   accesorios: AccesorioLista[] = [];
   subTotal: number = 0;
   descuento: number = 0;
   total: number = 0;
-  itbis: number = 0;
   asumeItbis: AsumeITBIS = null!;
   isDescuentoValid: boolean = false;
 
@@ -135,19 +130,19 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
     return currentFormGroup.getRawValue();
   }
-  validateDescuento(desc: number, precio: number) {
+  validateDescuento(desc: number, precio: number,index:number) {
     if (desc >= precio) {
       this.form.setErrors({ error: '' });
       this.toastr.error('El descuento no puede se mayor al precio', '', {
         closeButton: true,
         progressBar: true,
       });
-      this.isDescuentoValid= false
+      this.deleteArticulo(index);
       return this.isDescuentoValid;
     }
     else{
-      this.isDescuentoValid =true
-      return this.isDescuentoValid ;
+      
+      return !this.isDescuentoValid;
     }
   }
   onClearArticuloDropdown(currentArticulo:string,index: number){
@@ -158,9 +153,22 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
     }
   }
+  validateSameArticulo(articulos: FormArray,index:number,currentArticulo:any){
+    for (let articuloAddIndex in articulos.controls) {
+      if (articuloAddIndex == index.toString()) continue;
+
+      let currentArticuloList = articulos.controls[articuloAddIndex].value;
+      if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
+        this.deleteArticulo(index);
+        this.toastr.error('Este articulo ya fue registrado');
+      }
+    }
+  }
   obtenerDetalleFactura(index: number) {
  
     const currentArticulo = this.getCurrentFormGroup(index);
+    console.log(currentArticulo);
+    
     let articulo = currentArticulo.articulo;
   
     this.onClearArticuloDropdown(articulo,index);
@@ -174,16 +182,9 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       articulo.accesorio_Descripcion + '  ' + articulo.modelo;
     currentArticulo.precioDetalle = articulo.precio_Detalle;
     currentArticulo.precioMayor = articulo.precio_Por_Mayor;
+    // currentArticulo.itbis = this.itbis;
 
-    for (let articuloAddIndex in this.articulos.controls) {
-      if (articuloAddIndex == index.toString()) continue;
-
-      let currentArticuloList = this.articulos.controls[articuloAddIndex].value;
-      if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
-        this.deleteArticulo(index);
-        this.toastr.error('Este articulo ya fue registrado');
-      }
-    }
+    this.validateSameArticulo(this.articulos,index,currentArticulo);
 
       currentArticulo.precio = this.calcularPrecioSegunTipofactura(
       currentArticulo.precioDetalle,
@@ -197,12 +198,14 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
     let isValidDesc = this.validateDescuento(
       currentArticulo.descuento,
-      currentArticulo.precio
+      currentArticulo.precio,
+      index
     );
 
 
-    if (isValidDesc ==true) {
-
+    if (isValidDesc == true) {
+      console.log(isValidDesc);
+      
       this.articulos.controls[index].setValue(currentArticulo);
 
       this.obtenerCantidadArticuloStock(index);
