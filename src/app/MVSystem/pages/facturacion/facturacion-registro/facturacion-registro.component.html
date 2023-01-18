@@ -1,15 +1,179 @@
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h1 id="registro">Facturación</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Facturación</li>
-            </ol>
-        </nav>
+    <div class="main-title">
+        <h1 id="registro">Nueva Factura</h1>
     </div>
-    <!-- End Page Title -->
-    <section class="section">
+    <section>
+        <form action="" [formGroup]="formRegistro">
+            <div class="box filters">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
+                            <select class="form-select">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Tipo de Comprobante <span class="required-field">*</span></label>
+                            <select class="form-select">
+                                <option> </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Aplicar ITBIS <span class="required-field">*</span></label>
+                            <select class="form-select">
+                                <option> </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Vendedor <span class="required-field">*</span></label>
+                            <select class="form-select">
+                                <option> </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="invoice-wrapper" class="box grid">
+                <div class="leftcol">
+                    <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div>
+                    <div class="companydetail">
+                        <strong class="name">Company Name SRL</strong>
+                        <div class="info">
+                            <address>[Company Address]</address>
+                            <span class="phone">[Company Phone]</span>
+                            <span class="email">[Company Email]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rightcol">
+                    <h3 class="sub-title">Factura de venta #234</h3>
+                    <div class="grid invoice">
+                        <div class="col">
+                            <label for="client" class="form-label">Facturar a:</label>
+                            <div class="search-customer grid">
+                                <select name="" id="" class="form-select">
+                                    <option value=""></option>
+                                </select>
+                                <button class="btns icon primary"><i class="bx bx-plus"></i></button>
+                            </div>
+                            <div class="clientDetail">
+                                <span class="name">[Nombre cliente]</span>
+                                <span class="id">[Cédula]</span>
+                                <span class="phones">[Teléfono]</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="box sm-padding">
+                                <div class="grid two-cols">
+                                    <div><strong>Fecha de facturación:</strong></div>
+                                    <div> 
+                                        <span class="info">12/12/2022</span>
+                                    </div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Fecha límite de pago:</strong></div>
+                                    <div><span class="info">12/10/2022</span></div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Tipo de pago:</strong></div>
+                                    <div>
+                                        <select name="" id="" class="form-select">
+                                            <option value="" hidden>--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Núm. Confirmación:</strong></div>
+                                    <div>
+                                        <input type="number" name="" id="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Garantía:</strong></div>
+                                    <div> 
+                                        <select name="" id="" class="form-select">
+                                            <option value="" hidden>--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="separator-line"></span>
+                    <div class="DataTable">
+                        <div class="pull-right">
+                            <button class="btns secondary add-item"><i class="bx bx-plus"></i> Agregar artículo</button>
+                        </div>
+                        <table class="mv-table">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th class="align-center">Cant.</th>
+                                    <th class="align-right">Precio</th>
+                                    <th class="align-right">Subtotal</th>
+                                    <th class="align-right">Desc.</th>
+                                    <th class="align-right">Total</th>
+                                    <th class="align-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select name="" id="" class="form-select">
+                                            <option value="" hidden>ítem o accesorio</option>
+                                        </select>
+                                    </td>
+                                    <td class="align-center"><input type="number" name="" id="" class="form-control align-center" placeholder="0"></td>
+                                    <td><input type="number" name="" id="" class="form-control align-right" placeholder="0"></td>
+                                    <td><input type="number" name="" id="" class="form-control align-right" placeholder="0"></td>
+                                    <td><input type="number" name="" id="" class="form-control align-right" placeholder="0"></td>
+                                    <td><input type="number" name="" id="" class="form-control align-right" placeholder="0"></td>
+                                    <td class="align-center">
+                                        <button class="btns flat oorange"><i class="bx bx-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clear-float">
+                        <div class="pull-right totalbox">
+                            <div class="box sm-padding">
+                                <div class="grid two-cols">
+                                    <div><strong>Subtotal:</strong></div>
+                                    <div><span class="info">0</span></div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Subtotal:</strong></div>
+                                    <div><span class="info">0</span></div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Descuento:</strong></div>
+                                    <div><span class="info">0</span></div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>ITBIS:</strong></div>
+                                    <div><span class="info">0</span></div>
+                                </div>
+                                <div class="grid two-cols">
+                                    <div><strong>Total:</strong></div>
+                                    <div><span class="info">RD$ 0.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom-btns">
+                        <button class="btns primary big">Procesar factura</button>
+                        <button class="btns secondary big">Limpiar datos</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+
+
+    <section class="section" style="display: none;">
         <form [formGroup]="formRegistro">
             <div class="row">
                 <!-- ??section datos del cliente -->
@@ -440,5 +604,4 @@
             </div>
         </form>
     </section>
-
 </main>

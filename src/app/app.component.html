@@ -1,6 +1,11 @@
 
 <app-header></app-header>
-<app-sidebar></app-sidebar>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
-<a  class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div class="grid mainLayout">
+    <app-sidebar class="main-nav"></app-sidebar>
+    <div class="main-content">
+        <router-outlet></router-outlet>
+        <app-footer></app-footer>
+        <a  class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    </div>    
+</div>
