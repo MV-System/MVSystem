@@ -8,7 +8,7 @@
 
 body {
   font-family: "Open Sans", sans-serif;
-  background: #f6f9ff;
+  background: #ECF2F5;
   color: #444444;
 }
 
@@ -22,14 +22,10 @@ a:hover {
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Nunito", sans-serif;
-}
-
 /*--------------------------------------------------------------
 # Main
 --------------------------------------------------------------*/
-#main {
+/* #main {
   margin-top: 60px;
   padding: 20px 30px;
   transition: all 0.3s;
@@ -38,7 +34,7 @@ h1, h2, h3, h4, h5, h6 {
   #main {
     padding: 20px;
   }
-}
+} */
 
 /*--------------------------------------------------------------
 # Page Title
@@ -283,23 +279,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Breadcrumbs */
 .breadcrumb {
-  font-size: 14px;
+  font-size: 12px;
   font-family: "Nunito", sans-serif;
-  color: #899bbd;
+  color: #9AAEBC;
   font-weight: 600;
+  margin-bottom: 4px;
 }
 .breadcrumb a {
-  color: #899bbd;
+  color: #42B086;
   transition: 0.3s;
 }
 .breadcrumb a:hover {
-  color: #51678f;
+  opacity: .9;
+  text-decoration: underline;
 }
 .breadcrumb .breadcrumb-item::before {
-  color: #899bbd;
+  color: #9CB0A4;
 }
 .breadcrumb .active {
-  color: #51678f;
+  color: #9CB0A4;
   font-weight: 600;
 }
 
@@ -324,24 +322,23 @@ h1, h2, h3, h4, h5, h6 {
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
-.logo {
-  line-height: 1;
-}
-@media (min-width: 1200px) {
-  .logo {
+.header .logo { width: 140px; }
+.header .logo img { width: 100%; }
+/* @media (min-width: 1200px) {
+  .header .logo {
     width: 280px;
   }
-}
-.logo img {
+} */
+/* .header .logo img {
   max-height: 26px;
   margin-right: 6px;
-}
-.logo span {
+} */
+/* .logo span {
   font-size: 26px;
   font-weight: 700;
   color: #012970;
   font-family: "Nunito", sans-serif;
-}
+} */
 
 .header {
   transition: all 0.5s;
@@ -521,19 +518,17 @@ h1, h2, h3, h4, h5, h6 {
 # Sidebar
 --------------------------------------------------------------*/
 .sidebar {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  bottom: 0;
-  width: 300px;
+  position: sticky;
+  width: 240px;
+  height: 100vh;
   z-index: 996;
   transition: all 0.3s;
-  padding: 20px;
+
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: #2F4858;
 }
 @media (max-width: 199px) {
   .sidebar {
@@ -549,11 +544,11 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #aab7cf;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
   #main, #footer {
     margin-left: 300px;
   }
-}
+} */
 @media (max-width: 199px) {
   .toggle-sidebar .sidebar {
     left: 0;
@@ -599,27 +594,25 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4154f1;
+  color: white;
   transition: 0.3;
-  background: #f6f9ff;
+  opacity: .6;
   padding: 10px 15px;
   border-radius: 4px;
 }
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #4154f1;
 }
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
-  background: #fff;
+  color: white;
 }
 .sidebar-nav .nav-link.collapsed i {
   color: #899bbd;
 }
 .sidebar-nav .nav-link:hover {
   color: #4154f1;
-  background: #f6f9ff;
+  /* background: #f6f9ff; */
 }
 .sidebar-nav .nav-link:hover i {
   color: #4154f1;
