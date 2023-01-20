@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { LoginGuard } from "../core/guards/login.guard";
 import { LoginComponent } from './login/login.component';
 import { PasswordChangePageComponent } from './password-change-page/password-change-page.component';
 const routes: Routes = [
@@ -10,7 +11,8 @@ const routes: Routes = [
     },
     {
         path: 'login',
-        component:LoginComponent
+        component:LoginComponent,
+        canActivate: [LoginGuard]
     },
     {
         path: 'change-password',
