@@ -1,0 +1,13 @@
+.page-title{
+    display: grid;
+    justify-items: center;
+    font-size: 10px;
+}
+.page-title h1{
+    font-size: 25px;
+}
+.btn-footer{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

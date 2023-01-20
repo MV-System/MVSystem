@@ -14,6 +14,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FacturacionDetailComponent } from './facturacion-consulta/facturacion-detail/facturacion-detail.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { FormClienteComponent } from './facturacion-registro/form-cliente/form-cliente.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -29,7 +30,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     FacturacionRegistroComponent,
     FacturacionConsultaComponent,
     FacturacionListaComponent,
-    FacturacionDetailComponent
+    FacturacionDetailComponent,
+    FormClienteComponent
   ],
   imports: [
     CommonModule,
