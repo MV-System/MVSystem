@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio } from '../interfaces/cliente.interface';
 
 @Injectable({
@@ -10,7 +10,7 @@ import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio } from 
 export class ClientesService {
 
   constructor(private http: HttpClient) { }
-
+  isOpeningForm$: Subject<boolean>= new Subject<boolean>();
   // Get's
 
   getTipoClienteLista():Observable<TipoCliente[]>{

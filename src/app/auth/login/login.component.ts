@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
+import { LoadingService } from '../../shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +21,12 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private loginService: LoginService,
-    private router: Router) { }
+    private router: Router,
+    private loadingService:LoadingService) { }
 
   ngOnInit(): void {
 
   }
-  isPrint: boolean = false;
   showPassword = false;
   toggleShowPassword(){
     this.showPassword = !this.showPassword;
@@ -33,14 +34,14 @@ export class LoginComponent implements OnInit {
 
   iniciarSesion() {
     const {userName, password } =this.loginForm.value;
-    this.isPrint = !this.isPrint;
-
+    this.loadingService.showLoading('Iniciando sesión');
     this.loginService.login(userName, password).subscribe(res => {
       console.log(res);
       
       if (!res) {
         this.toastr.error('Credenciales incorrectas')
-        this.isPrint = !this.isPrint;
+        this.loadingService.hideLoading();
+
         return
       }
 
@@ -48,10 +49,11 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('expires', res.expires.toString())
       this.toastr.success('Bienvenido!!!');
       this.router.navigateByUrl('/home')
-      this.isPrint = !this.isPrint;
+      this.loadingService.hideLoading();
 
     }),(err: any)=>{
       console.log(err);
+      this.loadingService.hideLoading();
       
     }
   }
