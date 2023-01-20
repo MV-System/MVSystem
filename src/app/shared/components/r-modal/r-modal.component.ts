@@ -9,6 +9,7 @@ export class RModalComponent implements OnInit {
 
   @Input() super : boolean = false;
   @Input() show : boolean = true;
+  @Input() largestWidth:boolean = false;
   @Input() title! : string;
   @Output() close = new EventEmitter<void>();
 
