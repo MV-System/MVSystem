@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoadingService } from './loading.service';
 
 
 @Component({
@@ -7,14 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./r-loading.component.css']
 })
 export class RLoadingComponent implements OnInit {
-  isLoading:boolean = false;
-  constructor( ) { }
+
+  constructor(private loadingService: LoadingService ) { }
   
   ngOnInit(): void {
-    
-          this.isLoading = !this.isLoading;
-        
-      
+    this.loadingService.isLoading
+        .subscribe( loading => {
+              this.isLoading = loading;
+              this.message = this.loadingService.Message;
+          })
   }
-
+  isLoading:boolean = false;
+  message:string = "";
 }
