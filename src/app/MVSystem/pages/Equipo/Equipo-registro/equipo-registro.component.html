@@ -35,7 +35,7 @@
                                         appNumeric 
                                         [maxlen]="21"
                                         [ngClass]="{'is-invalid':validarCampos('IMEI')}">
-                                <div class="validatorField" *ngIf="validarCampos('IMEI')">
+                                <div class="required-field" *ngIf="validarCampos('IMEI')">
                                     Este campo es requerido.
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                         appNumeric 
                                         [maxlen]="9"
                                         [ngClass]="{'is-invalid':validarCampos('costo')}">
-                                <div class="validatorField" *ngIf="validarCampos('costo')">
+                                <div class="required-field" *ngIf="validarCampos('costo')">
                                     Este campo es requerido.
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                         appNumeric 
                                         [maxlen]="9"
                                         [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
-                                <div class="validatorField" *ngIf="validarCampos('alDetalle')">
+                                <div class="required-field" *ngIf="validarCampos('alDetalle')">
                                     Este campo es requerido.
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                         appNumeric 
                                         [maxlen]="9" 
                                         [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
-                                <div class="validatorField" *ngIf="validarCampos('alPorMayor')">
+                                <div class="required-field" *ngIf="validarCampos('alPorMayor')">
                                     Este campo es requerido.
                                 </div>
                             </div>
@@ -97,7 +97,7 @@
                                         appNumeric 
                                         [maxlen]="9" 
                                         [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
-                                <!-- <div class="validatorField"  *ngIf="validarCampos('comisionDetalle')">
+                                <!-- <div class="required-field"  *ngIf="validarCampos('comisionDetalle')">
                             Este campo es requerido.
                         </div> -->
                             </div>
@@ -112,7 +112,7 @@
                                         appNumeric 
                                         [maxlen]="9" 
                                         [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
-                                <!-- <div class="validatorField" *ngIf="validarCampos('comisionMayor')">
+                                <!-- <div class="required-field" *ngIf="validarCampos('comisionMayor')">
                                     Este campo es requerido.
                                 </div> -->
                             </div>
@@ -186,7 +186,7 @@
                                         {{marca.descripcion}}
                                     </ng-option>
                                 </ng-select>
-                                <div class="validatorField" *ngIf="validarCampos('marca')">
+                                <div class="required-field" *ngIf="validarCampos('marca')">
                                     Este campo es requerido.
                                 </div>
                             </div>
@@ -209,7 +209,7 @@
                         {{suplidor.descripcion}}
                         </option>
                     </select>
-                                <div class="validatorField" *ngIf="validarCampos('suplidor')">
+                                <div class="required-field" *ngIf="validarCampos('suplidor')">
                                     Este campo es requerido.
                                 </div>
                             </div>

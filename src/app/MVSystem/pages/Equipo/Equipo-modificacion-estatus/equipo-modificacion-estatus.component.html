@@ -49,7 +49,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$"
                                     required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
-                                    <div class="validatorField" *ngIf="validarCampos('costoEquipo') && existeEquipo">
+                                    <div class="required-field" *ngIf="validarCampos('costoEquipo') && existeEquipo">
                                         {{mensajeErrorCampoCosto}}
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$"
                                     required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
-                                    <div class="validatorField" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
+                                    <div class="required-field" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
                                         {{mensajeErrorCampoPrecioMayor}}
                                     </div>
                                 </div>
@@ -72,7 +72,7 @@
                                     <input type="text" class="form-control is-invalid" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$"
                                     required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
                                 </div>
-                                <div class="validatorField" *ngIf="validarCampos('precioDetalle') && existeEquipo">
+                                <div class="required-field" *ngIf="validarCampos('precioDetalle') && existeEquipo">
                                     {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
                             </div>

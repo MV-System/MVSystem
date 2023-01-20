@@ -8,12 +8,12 @@
   font-weight: 800;
   font-size: 18px;
 }
-.validatorField {
+/* .validatorField {
   display: block;
   font-size: 0.875em;
   margin-top: 0.25rem;
   color: red;
-}
+} */
 .required-field {
   color: red;
   font-size: 15px;

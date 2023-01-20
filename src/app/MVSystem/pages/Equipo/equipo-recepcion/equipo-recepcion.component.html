@@ -25,7 +25,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control"  formControlName="Nombres" 
                                     required [ngClass]="{'is-invalid':validarCampos('Nombres')}">
-                                    <div class="validatorField" *ngIf="validarCampos('Nombres')">
+                                    <div class="required-field" *ngIf="validarCampos('Nombres')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -34,7 +34,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control"  formControlName="Apellidos"
                                     required [ngClass]="{'is-invalid':validarCampos('Apellidos')}">
-                                    <div class="validatorField" *ngIf="validarCampos('Apellidos')">
+                                    <div class="required-field" *ngIf="validarCampos('Apellidos')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -46,7 +46,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control" maxlength="13" mask="000-0000000-0" formControlName="Cedula" 
                                     required [ngClass]="{'is-invalid':validarCampos('Cedula')}">
-                                    <div class="validatorField" *ngIf="validarCampos('Cedula')">
+                                    <div class="required-field" *ngIf="validarCampos('Cedula')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control" mask="000-000-0000" formControlName="Telefono"
                                     required [ngClass]="{'is-invalid':validarCampos('Telefono')}">
-                                    <div class="validatorField" *ngIf="validarCampos('Telefono')">
+                                    <div class="required-field" *ngIf="validarCampos('Telefono')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control" maxlength="30" formControlName="ImeiEntrada" 
                                     required [ngClass]="{'is-invalid':validarCampos('ImeiEntrada')}">
-                                    <div class="validatorField" *ngIf="validarCampos('ImeiEntrada')">
+                                    <div class="required-field" *ngIf="validarCampos('ImeiEntrada')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                     <span class="required-field">*</span>
                                     <input type="text" class="form-control"  formControlName="PrecioImeiEntra" maxlength="13" currencyMask placeholder="RD$"
                                     required [ngClass]="{'is-invalid':validarCampos('PrecioImeiEntra')}">
-                                    <div class="validatorField" *ngIf="validarCampos('PrecioImeiEntra')">
+                                    <div class="required-field" *ngIf="validarCampos('PrecioImeiEntra')">
                                         {{mensajeErrorCampoPrecioImeiEntrada}}
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                     <label class="form-label">Imei de tienda</label>
                                     <input type="text" class="form-control" maxlength="30" formControlName="ImeiSale" 
                                      [ngClass]="{'is-invalid':validarCampos('ImeiSale')}">
-                                    <div class="validatorField" *ngIf="validarCampos('ImeiSale')">
+                                    <div class="required-field" *ngIf="validarCampos('ImeiSale')">
                                         Debe validar que el imei existe y este disponible
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
                                             {{estado?.descripcion}}
                                         </option>
                                     </select>
-                                    <div class="validatorField" *ngIf="validarCampos('IDCondicion')">
+                                    <div class="required-field" *ngIf="validarCampos('IDCondicion')">
                                         Este campo es requerido
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@
                                             {{modelo?.descripcion}}
                                         </option>
                                     </select>
-                                    <div class="validatorField" *ngIf="validarCampos('IDModelo')">
+                                    <div class="required-field" *ngIf="validarCampos('IDModelo')">
                                         Este campo es requerido
                                     </div>
                                 </div>

@@ -46,7 +46,7 @@
                             formControlName="nombre" 
                             aria-describedby="inputGroupPrepend" required
                             [ngClass]="{'is-invalid':validarCampos('nombre')}">
-                            <div class="validatorField"  *ngIf="validarCampos('nombre')">
+                            <div class="required-field"  *ngIf="validarCampos('nombre')">
                                 Este campo es requerido.
                               </div>
                 </div>
@@ -59,7 +59,7 @@
                             required
                             formControlName="apellido"
                             [ngClass]="{'is-invalid':validarCampos('apellido')}">
-                            <div class="validatorField"  *ngIf="validarCampos('apellido')">
+                            <div class="required-field"  *ngIf="validarCampos('apellido')">
                                 Este campo es requerido.
                             </div>
                 </div>
@@ -90,7 +90,7 @@
                     mask="000-000-0000" 
                     [ngClass]="{'is-invalid':validarCampos('telefono')}"
                     />
-                    <div class="validatorField" *ngIf="validarCampos('telefono')" >
+                    <div class="required-field" *ngIf="validarCampos('telefono')" >
                         Este campo es requerido.
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                   <input type="email" 
                         class="form-control"  
                         formControlName="email">
-                        <div class="validatorField"  [ngClass]="{'invalid-feedback':!validarCampos('email')}">
+                        <div class="required-field"  [ngClass]="{'invalid-feedback':!validarCampos('email')}">
                             {{emailErrorMsg}}
                           </div>
                 </div>

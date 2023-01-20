@@ -59,7 +59,7 @@
                                            (input)="searchCliente()" 
                                            [value]="form.value.telefono" 
                                            [ngClass]="{ 'is-invalid': validarCampos('telefono') }" />
-                                    <div class="validatorField" 
+                                    <div class="required-field" 
                                         [ngClass]="{   'invalid-feedback': !validarCampos('telefono')}">
                                         Este campo es requerido.
                                     </div>
@@ -89,7 +89,7 @@
                                             {{ vendedor.nombres }}
                                         </option>
                                     </select>
-                                    <div class="validatorField" *ngIf="validarCampos('vendedor')">
+                                    <div class="required-field" *ngIf="validarCampos('vendedor')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -105,7 +105,7 @@
                                             {{ TipoFactura.descripcion_Factura_Tipo }}
                                         </option>
                                     </select>
-                                    <div class="validatorField" *ngIf="validarCampos('tipoFactura')">
+                                    <div class="required-field" *ngIf="validarCampos('tipoFactura')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@
                                             required 
                                             [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" 
                                             formControlName="fechaFacturacion" />
-                                    <div class="validatorField" *ngIf="validarCampos('fechaFacturacion')">
+                                    <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -128,7 +128,7 @@
                                             required
                                             [ngClass]="{   'input-error': validarCampos('fechaLimitePago') }" 
                                             formControlName="fechaLimitePago" type="date" />
-                                    <div class="validatorField" *ngIf="validarCampos('fechaLimitePago')">
+                                    <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                                             {{ TipoPago.descripcion_Tipo_Pagos }}
                                         </option>
                                     </select>
-                                    <div class="validatorField" *ngIf="validarCampos('tipoPago')">
+                                    <div class="required-field" *ngIf="validarCampos('tipoPago')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
