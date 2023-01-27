@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from '../../../helpers/helper';
 import { Garantia, TipoComprobante, TipoFactura, TipoPago } from '../../../core/interfaces/catalogo.interface';
-import { ClienteConsultaCriterio } from '../../../core/interfaces/cliente.interface';
+import { ClienteConsultaCriterio, Cliente } from '../../../core/interfaces/cliente.interface';
 import { DetalleFacturaList, FacturaFilter } from '../../../core/interfaces/mantenimiento';
 import { VendedorLista } from '../../../core/interfaces/vendedor.interface';
 import { CatalogosService } from '../../../core/services/catalogos.service';
@@ -46,7 +46,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   onArticuloValue: boolean = false;
   printing: boolean = false;
   comprobanteTipos: TipoComprobante[] = [];
-  clientes: ClienteConsultaCriterio[] = []
+  clientes: Cliente[] = []
   facturaTipos: TipoFactura[] = [];
   vendedores: VendedorLista[] = []
   pagoTipos: TipoPago[] = [];

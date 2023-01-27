@@ -3,7 +3,7 @@ export interface ClienteRegistro {
   nombres: string;
   apellidos: string;
   iD_Tipo_Cliente: number;
-  limite_Credito: string;
+  limite_Credito: number;
   numero_Telefono: number;
   iD_Tipo_Telefono: number;
   extencion: number;
@@ -18,6 +18,7 @@ export interface ClienteRegistro {
 }
 
 export interface Cliente {
+  id_Cliente: number;
   idContacto: number;
   nombres: string;
   apellidos: string;

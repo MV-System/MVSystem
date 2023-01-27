@@ -22,8 +22,8 @@ export class ClientesService {
     return this.http.post<Cliente>(APIURL.Clientes.Inserta.ClienteInserta, cliente);
   }
 
-  getClientesPorNombreTelefono(criterio: any):Observable<ClienteConsultaCriterio[]>{
-    return this.http.get<ClienteConsultaCriterio[]>(`${APIURL.Clientes.Consultas.ClienteLista}?criterio=${criterio}`)
+  getClientesPorNombreTelefono(criterio: any):Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(`${APIURL.Clientes.Consultas.ClienteLista}?criterio=${criterio}`)
   }
 
   getClientes(){

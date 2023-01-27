@@ -1,49 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CatalogosService } from 'src/app/core/services/catalogos.service';
+
+import { forkJoin, Subject, Observable } from 'rxjs';
+
 import { ToastrService } from 'ngx-toastr';
+
 import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/core/interfaces/catalogo.interface';
-import { ClientesService } from '../../../../core/services/clientes.service';
-import { VendedorService } from '../../../../core/services/vendedor.service';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 import { DetalleFacturaList, FacturaRegistro } from 'src/app/core/interfaces/mantenimiento';
-import { ModeloEquipo, AccesorioLista, Codigo } from '../../../../core/interfaces/catalogo.interface';
-import { AccesorioFactura, Accesorio } from '../../../../core/interfaces/mantenimiento';
-import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
-import { elementAt } from 'rxjs/operators';
+import { AccesorioLista } from '../../../../core/interfaces/catalogo.interface';
 import { ClienteConsultaCriterio } from 'src/app/core/interfaces/cliente.interface';
+
+import { ClientesService } from '../../../../core/services/clientes.service';
+import { VendedorService } from '../../../../core/services/vendedor.service';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
+import { Cliente } from '../../../../core/interfaces/cliente.interface';
+import { takeUntil } from 'rxjs/operators';
+import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { LoadingService } from '../../../../shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-facturacion',
   templateUrl: './facturacion-registro.component.html',
   styleUrls: ['./facturacion-registro.component.css']
 })
-export class FacturacionRegistroComponent implements OnInit {
-
-  get articulos(): FormArray {
-    return this.formRegistro.controls["articulos"] as FormArray;
-  }
-
-  // detalleFacturaRegistro: DetalleFacturaList[] = [];
-  detalleFacturaRegistroLista: DetalleFacturaList[] = [];
-  clientes: ClienteConsultaCriterio[] = []
-  listaTipoFactura: TipoFactura[] = [];
-  listaVendedor: VendedorLista[] = []
-  listaPagoFactura: TipoPago[] = [];
-  listaGarantia: Garantia[] = [];
-  asumeItbis: AsumeITBIS = null!;
-  listaAccesorio: AccesorioLista[] = [];
-  listaTipoComprobante: TipoComprobante[] = [];
-  loadingButtonBuscar: boolean = false;
-  btnDisabledTelefono: boolean = true;
-  btnDisabledArticulo: boolean = true;
-  clienteReadOnly: boolean = true
-
-  subTotal: number = 0;
-  descuento: number = 0;
-  total: number = 0;
-  itbis: number = 0;
-  abono: number = 0;
+export class FacturacionRegistroComponent implements OnInit,OnDestroy {
 
   constructor(
     private fb: FormBuilder,
@@ -51,32 +33,54 @@ export class FacturacionRegistroComponent implements OnInit {
     private toastr: ToastrService,
     private clientesService: ClientesService,
     private vendedorService: VendedorService,
-    private mantenimientoService: MantenimientoService) { }
+    private mantenimientoService: MantenimientoService,
+    private loading:LoadingService) { }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.btnDisableTelefono();
-    // this.btnDisableArticulo();
-    this.obtenerTipoFactura();
-    this.obtenerTipoPago();
-    this.obtenerTipoComprobante();
-    this.obtenerVendedor();
-    this.obtenetAccesorios();
+    this.loadCatalogos();
     this.deshabilitadorInputs();
-    this.obtenerFechaDiaActual();
-    this.obtenerGarantia();
     this.obtenerItbis();
     this.agregarArticulo();
     this.obtenerClientes();
+    this.loadFacturaNumero();
+   
   }
+  facturaNumber$!: Observable<number>;
 
-  obtenerItbis() {
-    this.catalogosService.getAsumeITBIS()
-      .subscribe(itbis => {
-        this.asumeItbis = itbis;
-      })
+  destroy$: Subject<any> = new Subject<any>();
+  get articulos(): FormArray {
+    return this.form.controls["articulos"] as FormArray;
   }
+  customerAdded!: Cliente;
+  customer!: Cliente;
+  detalleFacturaRegistroLista: DetalleFacturaList[] = [];
+  customers: Cliente[] = []
+  facturaTipos: TipoFactura[] = [];
+  vendedores: VendedorLista[] = []
+  pagoTipos: TipoPago[] = [];
+  garantias: Garantia[] = [];
+  asumeItbis: AsumeITBIS = null!;
+  accesorios: AccesorioLista[] = [];
+  comprobanteTipos: TipoComprobante[] = [];
+  btnDisabledTelefono: boolean = true;
+  btnDisabledArticulo: boolean = true;
+  clienteReadOnly: boolean = true
+  isOpenModal: boolean = false;
 
-  initialValues: any = {
+  subTotal: number = 0;
+  descuento: number = 0;
+  total: number = 0;
+  itbis: number = 0;
+  abono: number = 0;
+
+
+  form: FormGroup = this.fb.group({
     idCliente: [''],
     nombre: [''],
     apellido: [''],
@@ -85,58 +89,68 @@ export class FacturacionRegistroComponent implements OnInit {
     almacen: [,],
     tipoFactura: [1,],
     tipoPago: [1,],
-    fechaFacturacion: ['',],
+    fechaFacturacion: this.currentDate(),
     comprobante: [0,],
     fechaLimitePago: [,],
     garantia: [8,],
     nota: ['',],
-    // persona:[1,],
     empresa: [,],
     codigo: [,],
-    // monto:[,],
     RNC: ['',],
-
-    cantidadElegidaLista: [,],
-    articuloLista: [,],
-    descuentoLista: [,],
-
     subTotal: [,],
     subTotalArticulo: [,],
-    precioArticulo: [,],
     totalArticulo: [,],
     articulos: this.fb.array([]),
     aplicarItbis: [false,],
+  });
+
+
+   currentDate() {
+    let date = new Date();
+    let output = String(date.getFullYear()).padStart(2, '0') + '-' +
+      String(date.getMonth() + 1).padStart(2, '0') + '-' +
+      String(date.getDate()).padStart(2, '0');
+
+    // this.form.get('fechaFacturacion')?.setValue(output);
+    // this.form.get('fechaLimitePago')?.setValue(output);
+    return output;
   }
-
-  formRegistro: FormGroup = this.fb.group(this.initialValues);
-
-  criterioBusqueda: any = {
-    criterio: '',
+  isFechaLimitePago() {
+    const {tipoPago ,fechaLimitePago}=this.form.value;
+    if (tipoPago== 2)  fechaLimitePago?.enable()
+    
+    fechaLimitePago?.disable()
   }
+  obtenerItbis() {
+    this.catalogosService.getAsumeITBIS()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(itbis => {
+        this.asumeItbis = itbis;
+      })
+  }
+  onAddCustomer(customer: Cliente){
+    this.customer = customer;
+  console.log(customer);
+  this.clientesService.isOpeningForm$.next(false);
 
-  // registroFactura() {
-  //   // this.obtenerDetalleFactura();
-  //   if (this.formRegistro.invalid) {
+  }
+  onAdd(){
+    this.clientesService.isOpeningForm$.next(true);
+    this.form.get('telefono')?.reset()
+  }
+  onSubmit(){
 
-  //     this.formRegistro.markAllAsTouched();
-  //   }
-  //   else {
-
-  //     const modelo = this.modeloRegistroFacturacion();
-  //     // this.mantenimientoService.postFactura(modelo)
-  //     //                         .subscribe(factura =>{
-
-  //     //                         })
-  //   }
-  // }
+  }
   calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
-    return Number((this.formRegistro.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
-      (this.formRegistro.get('tipoFactura')?.value == 2 ? precioMayor : 0))
+    return Number((this.form.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
+      (this.form.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
 
   addArticuloImei = (imei: string) => {
     return new Promise((resolve) => {
-      this.catalogosService.buscarEquipoDisponible(imei, '2').subscribe(equipos => {
+      this.catalogosService.buscarEquipoDisponible(imei, '2')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(equipos => {
         if (equipos && equipos.precioDetalle > 0) {
           const equipo = equipos
 
@@ -152,7 +166,7 @@ export class FacturacionRegistroComponent implements OnInit {
             idTipo: 1,
           }
 
-          this.listaAccesorio.push(articulo)
+          this.accesorios.push(articulo)
           resolve(articulo.id + '/' +
             articulo.accesorio_Descripcion + '/' +
             articulo.modelo + '/' +
@@ -219,27 +233,17 @@ export class FacturacionRegistroComponent implements OnInit {
     return subTotal
   }
 
-  desactivarActivarFechaLimitepago() {
+  onFechaLimitepago() {
 
-    if (this.formRegistro.get('tipoPago')?.value == 2) {
-      this.formRegistro.get('fechaLimitePago')?.enable()
+    if (this.form.get('tipoPago')?.value == 2) {
+      this.form.get('fechaLimitePago')?.enable()
     }
     else {
-      this.formRegistro.get('fechaLimitePago')?.disable()
+      this.form.get('fechaLimitePago')?.disable()
     }
 
   }
 
-  obtenerFechaDiaActual() {
-    let date = new Date();
-    let output = String(date.getFullYear()).padStart(2, '0') + '-' +
-      String(date.getMonth() + 1).padStart(2, '0') + '-' +
-      String(date.getDate()).padStart(2, '0');
-
-    this.formRegistro.get('fechaFacturacion')?.setValue(output);
-    this.formRegistro.get('fechaLimitePago')?.setValue(output);
-    return output;
-  }
 
   agregarArticulo() {
     const articulo = this.fb.group({
@@ -289,17 +293,17 @@ export class FacturacionRegistroComponent implements OnInit {
   modeloRegistroFacturacion(): FacturaRegistro {
     const model: FacturaRegistro = {
       numeroFactura: 0,
-      idCliente: Number(this.formRegistro.get('idCliente')?.value),
-      idVendedor: Number(this.formRegistro.get('vendedor')?.value),
-      idAlmacen: 1,//Number(this.formRegistro.get('almacen')?.value),
-      idTipoFactura: Number(this.formRegistro.get('tipoFactura')?.value),
-      idTipoPago: Number(this.formRegistro.get('tipoPago')?.value),
-      fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
-      ncfTipoNumero: Number(this.formRegistro.get('comprobante')?.value),
-      RNC: this.formRegistro.get('RNC')?.value,
-      fechaLimitePago: this.formRegistro.get('fechaLimitePago')?.value,
-      garantia: this.formRegistro.get('garantia')?.value,
-      nota: this.formRegistro.get('nota')?.value,
+      idCliente: this.customer.id_Cliente,
+      idVendedor: Number(this.form.get('vendedor')?.value),
+      idAlmacen: 1,//Number(this.form.get('almacen')?.value),
+      idTipoFactura: Number(this.form.get('tipoFactura')?.value),
+      idTipoPago: Number(this.form.get('tipoPago')?.value),
+      fechaRegistro: this.form.get('fechaFacturacion')?.value,
+      ncfTipoNumero: Number(this.form.get('comprobante')?.value),
+      RNC: this.form.get('RNC')?.value,
+      fechaLimitePago: this.form.get('fechaLimitePago')?.value,
+      garantia: this.form.get('garantia')?.value,
+      nota: this.form.get('nota')?.value,
       descripcion: "",
       itbis: this.itbis,
       subTotal: this.subTotal,
@@ -313,16 +317,16 @@ export class FacturacionRegistroComponent implements OnInit {
 
     if (!this.clienteReadOnly) {
       model.Cliente = {
-        apellidos: this.formRegistro.get('apellido')?.value,
-        nombres: this.formRegistro.get('nombre')?.value,
+        apellidos: this.form.get('apellido')?.value,
+        nombres: this.form.get('nombre')?.value,
         iD_Tipo_Cliente: 1,
-        limite_Credito: '0',
-        numero_Telefono: this.formRegistro.get('telefono')?.value,
+        limite_Credito: 0,
+        numero_Telefono: this.form.get('telefono')?.value,
         iD_Tipo_Telefono: 1,
         extencion: 0,
         direccion_Detalle: '',
         email_Detalle: '',
-        usuario: this.formRegistro.get('vendedor')?.value,
+        usuario: this.form.get('vendedor')?.value,
       }
     }
 
@@ -330,11 +334,11 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   deshabilitadorInputs() {
-    // this.formRegistro.get('comprobante')?.disable();
-    this.formRegistro.get('RNC')?.disable();
-    this.formRegistro.get('empresa')?.disable();
-    // this.formRegistro.get('garantia')?.disable();
-    this.formRegistro.get('fechaLimitePago')?.disable()
+    // this.form.get('comprobante')?.disable();
+    this.form.get('RNC')?.disable();
+    this.form.get('empresa')?.disable();
+    // this.form.get('garantia')?.disable();
+    this.form.get('fechaLimitePago')?.disable()
 
   }
 
@@ -344,32 +348,19 @@ export class FacturacionRegistroComponent implements OnInit {
   //       : this.loadingButtonBuscar == false;
   //  }
   obtenerClientesPorNombreTelefono() {
-    this.formRegistro.controls.nombre.setValue('');
-    this.formRegistro.controls.apellido.setValue('');
-    this.formRegistro.controls.idCliente.setValue('');
+    const { telefono } = this.form.value;
 
+    if (telefono !== '' && telefono !== null) {
 
-    this.criterioBusqueda.criterio = this.formRegistro.controls.telefono.value;
-    if (this.criterioBusqueda.criterio !== '' && this.criterioBusqueda.criterio !== null) {
-
-      this.loadingButtonBuscar = true;
-
-      this.clientesService.getClientesPorNombreTelefono(this.criterioBusqueda.criterio)
-        .subscribe(cliente => {
-          this.clienteReadOnly = cliente.length > 0
-
+      this.clientesService.getClientesPorNombreTelefono(telefono)
+      .pipe(takeUntil(this.destroy$))
+        .subscribe(customer => {
+          console.log(customer);
+          this.customer = customer[0];
           if (this.clienteReadOnly) {
-            cliente.forEach(({ nombres, apellidos, numero_Telefono, id_Cliente }) => {
-              this.loadingButtonBuscar = false;
-
-              this.formRegistro.controls.nombre.setValue(nombres);
-              this.formRegistro.controls.apellido.setValue(apellidos);
-              this.formRegistro.controls.idCliente.setValue(id_Cliente);
-
-            });
+            this.customer = customer[0];
           }
           else {
-            this.loadingButtonBuscar = false;
             this.toastr.warning('No existe este número');
           }
         });
@@ -377,6 +368,8 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   refreshGeneralValues() {
+    console.log(this.form.get('aplicarItbis')?.value);
+    
     this.abono = this.subTotal = this.descuento = this.total = this.itbis = 0
 
     for (let a = 0; a < this.articulos.length; a++) {
@@ -389,7 +382,7 @@ export class FacturacionRegistroComponent implements OnInit {
       // abono +=articulo.abono
     }
 
-    if (this.formRegistro.get('aplicarItbis')?.value) {
+    if (this.form.get('aplicarItbis')?.value) {
       const itbis = this.asumeItbis.itbiS_Valor * 100
 
       if (this.asumeItbis.asumeITBIS == 'S') {
@@ -419,39 +412,35 @@ export class FacturacionRegistroComponent implements OnInit {
 
   onCheckboxChange(event: any, campo: any) {
     if (event.target.checked == false) {
-      this.formRegistro.get(campo)?.disable();
+      this.form.get(campo)?.disable();
     }
     else {
-      this.formRegistro.get(campo)?.enable();
+      this.form.get(campo)?.enable();
     }
   }
   onCheckboxChangeFactura(nfcTipoNumero: string) {
 
-    if (this.formRegistro.get(nfcTipoNumero)?.value !== '0') {
+    if (this.form.get(nfcTipoNumero)?.value !== '0') {
 
       // if(!event.target.checked ) {
-      // this.formRegistro.get('comprobante')?.disable();
-      this.formRegistro.get('RNC')?.enable();
-      this.formRegistro.get('empresa')?.enable();
+      // this.form.get('comprobante')?.disable();
+      this.form.get('RNC')?.enable();
+      this.form.get('empresa')?.enable();
 
     }
     else {
       this.deshabilitadorInputs();
-      // this.formRegistro.get('comprobante')?.enable();
-      // this.formRegistro.get('RNC')?.disable();
-      // this.formRegistro.get('empresa')?.disable();
+      // this.form.get('comprobante')?.enable();
+      // this.form.get('RNC')?.disable();
+      // this.form.get('empresa')?.disable();
     }
 
 
   }
-  /**
-   * If the form control is invalid and has been touched, return true. Otherwise, return false.
-   * @param {string} nombreCampo - string
-   * @returns a boolean value.
-   */
+
   validarCampos(nombreCampo: string) {
-    return this.formRegistro.get(nombreCampo)?.invalid &&
-      this.formRegistro.get(nombreCampo)?.touched
+    return this.form.get(nombreCampo)?.invalid &&
+      this.form.get(nombreCampo)?.touched
   }
 
   validarCamposArticulo(detalleFactura: any, nombreCampo: string) {
@@ -460,49 +449,37 @@ export class FacturacionRegistroComponent implements OnInit {
   }
 
   btnDisableTelefono() {
-    return (this.formRegistro.get('telefono')?.value > 9) ?
+    return (this.form.get('telefono')?.value > 9) ?
       this.btnDisabledTelefono = false :
       this.btnDisabledTelefono = true;
   }
 
   // btnDisableArticulo() {
-  //   return (this.formRegistroArticulo.get('cantidadElegida')?.value > 0) ?
+  //   return (this.formArticulo.get('cantidadElegida')?.value > 0) ?
   //     this.btnDisabledTelefono = false :
   //     this.btnDisabledTelefono = true;
   // }
-  //catalogos
-  obtenerGarantia() {
-    this.catalogosService.getGarantiaLista()
-      .subscribe(garantia => {
-        this.listaGarantia = garantia;
-      })
-  }
-  obtenerTipoFactura() {
-    this.catalogosService.getTipoFacturaLista()
-      .subscribe(TipoFactura => {
-        this.listaTipoFactura = TipoFactura;
-      });
-  }
-  obtenerTipoPago() {
-    this.catalogosService.getTipoPagoLista()
-      .subscribe(TipoPago => {
-        this.listaPagoFactura = TipoPago;
-      });
 
-  }
-  obtenerTipoComprobante() {
-    this.catalogosService.getTipoComprobanteLista()
-      .subscribe(TipoComprobante => {
-        this.listaTipoComprobante = TipoComprobante;
-      });
-  }
-  obtenerVendedor() {
-    this.vendedorService.getVendedorLista()
-      .subscribe((vendedor) => {
-        this.listaVendedor = vendedor;
-      })
-  }
+   private loadCatalogos(){
+    forkJoin([
+    this.catalogosService.getGarantiaLista(),
+    this.catalogosService.getTipoFacturaLista(),
+    this.catalogosService.getTipoComprobanteLista(),
+    this.vendedorService.getVendedorLista(),
+    this.catalogosService.getTipoPagoLista(),
+    this.catalogosService.getAccesorioLista()
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe( resp => {
+      this.garantias = resp[0];
+      this.facturaTipos = resp[1];
+      this.comprobanteTipos = resp[2];
+      this.vendedores = resp[3];
+      this.pagoTipos = resp[4];
+      this.accesorios = resp[5];
 
+    } )
+  }
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos.controls[index].value
     const subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
@@ -530,12 +507,6 @@ export class FacturacionRegistroComponent implements OnInit {
     return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`) : Number(cantidadElegida)
   }
 
-  obtenetAccesorios() {
-    this.catalogosService.getAccesorioLista()
-      .subscribe(accesorio => {
-        this.listaAccesorio = accesorio;
-      })
-  }
 
   imprimir() {
     const factura = this.modeloRegistroFacturacion()
@@ -556,14 +527,17 @@ export class FacturacionRegistroComponent implements OnInit {
         idTipoFactura: control.get('')?.value,
         itbis: 0,
         total: control.get('total')?.value,
-        fechaRegistro: this.formRegistro.get('fechaFacturacion')?.value,
+        fechaRegistro: this.form.get('fechaFacturacion')?.value,
         Usuario: 'f',
       })
     }
-
+    console.log(factura);
+    
+    this.loading.showLoading('Procesando factura...');
     this.mantenimientoService.postFactura(factura)
+    .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
-        this.formRegistro.reset({
+        this.form.reset({
           tipoFactura: 1,
           tipoPago: 1,
           comprobante: 0,
@@ -572,31 +546,34 @@ export class FacturacionRegistroComponent implements OnInit {
         })
 
         this.articulos.clear()
-        this.obtenerFechaDiaActual()
+        // this.obtenerFechaDiaActual()
         this.agregarArticulo()
 
-        var blob = new Blob([blobResponse], { type: 'application/pdf' });
-        const blobUrl = URL.createObjectURL(blob);
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = blobUrl;
-        document.body.appendChild(iframe);
-        iframe.contentWindow?.print();
+        CreatorPDFFile(blobResponse);
+        this.loading.hideLoading();
+
+      },error=>{
+        this.loading.hideLoading();
+        this.toastr.error(error)
       })
   }
-
+  loadFacturaNumero(){
+    this.facturaNumber$ =this.mantenimientoService.getFacturaNumero()
+  }
   BuscarCliente() {
-    if (this.formRegistro.get('telefono')?.value.length === 10)
+    if (this.form.get('telefono')?.value.length === 10)
       this.obtenerClientesPorNombreTelefono()
   }
 
   obtenerClientes() {
-    this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
-      this.clientes = clientes
+    this.clientesService.getClientesPorNombreTelefono('')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(clientes => {
+      this.customers = clientes
     })
   }
 
   changeNumeroTelefono() {
-    //this.formRegistro.value['telefono']
+    //this.form.value['telefono']
   }
 }

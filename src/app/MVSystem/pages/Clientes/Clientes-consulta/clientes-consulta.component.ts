@@ -3,6 +3,7 @@ import { ClientesService } from 'src/app/core/services/clientes.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ClienteConsultaCriterio } from 'src/app/core/interfaces/cliente.interface';
 import { ToastrService } from 'ngx-toastr';
+import { Cliente } from '../../../../core/interfaces/cliente.interface';
 
 @Component({
   selector: 'app-clientes-consulta',
@@ -10,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./clientes-consulta.component.css']
 })
 export class ClientesConsultaComponent implements OnInit {
-  listaClientes: ClienteConsultaCriterio[] = [];
+  listaClientes: Cliente[] = [];
 
   constructor(private clientesService: ClientesService,
     private fb: FormBuilder,

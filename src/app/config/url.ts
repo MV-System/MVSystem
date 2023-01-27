@@ -28,6 +28,7 @@ export let APIURL = {
         Consulta:{
             Facturas: API + 'Factura/GetFacturas',
             DetalleFactura: API + 'Factura/GetDetalleFactura',
+            FacturaNumero: API + 'Factura/GetFacturaNumeroUltimo',
         }
     },
     Equipo: {

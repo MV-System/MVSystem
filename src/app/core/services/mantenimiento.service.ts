@@ -67,6 +67,9 @@ export class MantenimientoService {
 
   //Get's
 
+  getFacturaNumero():Observable<number> {
+    return this.http.get<number>(APIURL.Factura.Consulta.FacturaNumero);
+  }
   getEquipoNumeroRegistro(): Observable<EquipoNumeroRegistro[]> {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }

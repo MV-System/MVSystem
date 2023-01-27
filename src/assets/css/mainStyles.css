@@ -152,7 +152,7 @@ h1, h2, h3 { color: var(--secondary); }
 .scrollable-table .desc { min-width: 240px; }
 
 /* filters */
-.filters .form-control, .filters .form-select { height: 28px; }
+/* .filters .form-control, .filters .form-select { height: 28px; } */
 .filters .form-label { font-size: 0.8em; }
 .inline-filters > div:last-child { text-align: right; }
 .filterchips { margin-bottom: 24px; }
