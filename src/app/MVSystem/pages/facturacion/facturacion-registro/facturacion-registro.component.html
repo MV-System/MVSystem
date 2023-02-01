@@ -2,9 +2,13 @@
 
 <main id="main" class="main">
     <div class="main-title">
-        <h1 id="registro">Nueva Factura</h1>
+        <h1 id="registro">Nueva {{isFactura?'Factura':'Cotización'}}</h1>
     </div>
     <section>
+        <r-toogle [dataOff]="'Facturación'" 
+                  [dataOn]="'Cotización'" 
+                  (onToogle)="onToogle($event)"></r-toogle>
+
         <form action="" [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="box filters">
                 <div class="content">
@@ -52,7 +56,7 @@
                             <select class="form-select" required formControlName="vendedor"
                                 [ngClass]="{'input-error':validarCampos('vendedor')}">
                                 <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
-                                    {{vendedor.nombres}}
+                                    {{vendedor.nombres}} {{vendedor.apellidos}}
                                 </option>
                             </select>
                             <div class="required-field" *ngIf="validarCampos('vendedor')">
@@ -178,7 +182,7 @@
                             </thead>
                             <tbody>
                                 <ng-container formArrayName="articulos">
-                                <tr *ngFor="let detalleFactura of articulos.controls; let i = index">
+                                <tr *ngFor="let detalleFactura of articulos.controls; let i = index" >
                                     <ng-container [formGroupName]="i">
                                     
                                     <td>
@@ -188,16 +192,9 @@
                                         (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
                                         required>
                                         <ng-option *ngFor="let articulo of accesorios"
-                                            [value]="articulo.id +'/'+ 
-                                                            articulo.accesorio_Descripcion +'/'+ 
-                                                            articulo.modelo +'/'+
-                                                            articulo.precio_Detalle +'/'+
-                                                            articulo.precio_Por_Mayor +'/'+
-                                                            articulo.cantidad+'/2'">
-                                            {{articulo.accesorio_Descripcion | titlecase}} |
-                                            {{articulo.modelo | titlecase}} | {{
-                                            calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor
-                                            )| currency}}
+                                            [value]="articulo">
+                                            {{articulo.accesorio_Descripcion | titlecase}} | 
+                                            {{calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor)| currency}}
                                         </ng-option>
                                     </ng-select>
                                     </td>
@@ -267,9 +264,19 @@
                                     <div><strong>ITBIS:</strong></div>
                                     <div><span class="info">{{itbis}}</span></div>
                                 </div>
-                                <div class="grid two-cols">
+                                <div class="grid two-cols" *ngIf="isFactura">
                                     <div><strong>Abono:</strong></div>
-                                    <div><span class="info">{{abono}}</span></div>
+                                    <div>
+                                        <!-- <span class="info">{{abono}}</span>  -->
+                                        <input 
+                                        class="form-control align-right"
+                                        type="number"
+                                        appNumeric 
+                                        [maxlen]="4" 
+                                        [decimals]="2" 
+                                        (keydown.enter)="agregarAbono()" />
+                                    </div>
+
                                 </div>
                                 <div class="grid two-cols">
                                     <div><strong>Total:</strong></div>
@@ -280,10 +287,10 @@
                     </div>
                     <div class="bottom-btns">
                         <button class="btns primary big" 
-                                [disabled]="form.invalid"
-                                (click)="imprimir()">Procesar factura
+                                type="submit"
+                                [disabled]="form.invalid">Procesar factura
                         </button>
-                        <button class="btns secondary big">Limpiar datos</button>
+                        <button class="btns secondary big" (click)="onClean()">Limpiar datos</button>
                     </div>
                 </div>
             </div>

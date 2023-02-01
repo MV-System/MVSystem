@@ -27,4 +27,5 @@ export interface Vendedor {
 export interface VendedorLista {
     iD_Vendedor: number;
     nombres:     string;
+    apellidos:     string;
   }
