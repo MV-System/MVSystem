@@ -5,9 +5,13 @@ import { Component, OnInit } from '@angular/core';
     template: `
     <div class="container">
         <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-            <h1>404</h1>
-            <h2>The page you are looking for doesn't exist.</h2>
-            <a class="btn" routerLink="/">Back to home</a>
+            <h1>Ooops!</h1>
+            <h2 class="mt-5"> Conexión a internet lenta o inexistente. <br />
+                Por favor verifique.
+            </h2>
+           
+           
+            <a class="btn" routerLink="/">Reintentar</a>
             <img src="assets/img/not-found.svg" class="img-fluid py-5" alt="Page Not Found">
         </section>
     </div>`,

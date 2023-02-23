@@ -7,7 +7,7 @@ import { MainComponent } from './main/main.component';
 import { RDropdownMenuComponent } from './components/r-dropdown-menu/r-dropdown-menu.component';
 import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { RToogleComponent } from './components/r-toogle/r-toogle.component';
+import { RToggleComponent } from './components/r-toggle/r-toggle.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,7 @@ import { RToogleComponent } from './components/r-toogle/r-toogle.component';
     MainComponent,
     RDropdownMenuComponent,
     PageNotFoundComponent,
-    RToogleComponent
+    RToggleComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +28,7 @@ import { RToogleComponent } from './components/r-toogle/r-toogle.component';
     RLoadingComponent,
     RModalComponent,
     MainComponent,
-    RToogleComponent
+    RToggleComponent
   ]
 })
 export class SharedModule { }
