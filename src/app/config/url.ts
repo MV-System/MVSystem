@@ -17,7 +17,12 @@ export let APIURL = {
             AccesorioEdita: API + 'Accesorios/PutAccesorio',
         }
     },
-
+    Cotizacion:{
+        Consulta:{
+            CotizacionFacturaConsulta: API + 'Cotizacion/GetCotizacionFacturaConsulta',
+            DetalleCotizacionConsulta: API + 'Cotizacion/GetDetalleCotizacionConsulta',
+        }
+    },
     Factura: {
         Inserta: {
             FacturaInserta: API + 'FacturacionReporte/PostFactura',
