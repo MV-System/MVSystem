@@ -23,3 +23,7 @@
     background : none;
     background-color : transperant;
   }
+  .btn-login{
+    background-color: var(--primary);
+    color: white;
+  }

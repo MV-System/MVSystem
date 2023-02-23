@@ -11,7 +11,7 @@ export class HeaderComponent implements OnInit {
   userName: string
 
   constructor(
-    loginService: LoginService
+   private loginService: LoginService
   ) {
     this.userName = loginService.getUserName()
   }
@@ -32,6 +32,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear()
+    this.loginService.logout();
   }
 }
