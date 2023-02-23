@@ -49,7 +49,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
   printing: boolean = false;
-
+  myDateRangePickerOptions: IMyDrpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10,
@@ -143,9 +145,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     }
     this.getFacturas();
   }
-  myDateRangePickerOptions: IMyDrpOptions = {
-    dateFormat: 'dd.mm.yyyy',
-  };
+
   getAlmacenes() {
     const sub = this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenes = almacen;

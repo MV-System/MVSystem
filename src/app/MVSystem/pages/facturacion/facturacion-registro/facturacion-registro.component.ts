@@ -9,7 +9,6 @@ import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'sr
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 import { DetalleFacturaList, FacturaRegistro } from 'src/app/core/interfaces/mantenimiento';
 import { AccesorioLista } from '../../../../core/interfaces/catalogo.interface';
-import { ClienteConsultaCriterio } from 'src/app/core/interfaces/cliente.interface';
 
 import { ClientesService } from '../../../../core/services/clientes.service';
 import { VendedorService } from '../../../../core/services/vendedor.service';
@@ -19,6 +18,8 @@ import { Cliente } from '../../../../core/interfaces/cliente.interface';
 import { takeUntil } from 'rxjs/operators';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoadingService } from '../../../../shared/components/r-loading/loading.service';
+import { CotizacionService } from '../../../../core/services/cotizacion.service';
+import { CotizacionAmount } from 'src/app/core/interfaces/cotizacion.interface';
 
 @Component({
   selector: 'app-facturacion',
@@ -26,6 +27,7 @@ import { LoadingService } from '../../../../shared/components/r-loading/loading.
   styleUrls: ['./facturacion-registro.component.css']
 })
 export class FacturacionRegistroComponent implements OnInit,OnDestroy {
+  isNcfRequire: any;
 
 
   constructor(
@@ -35,7 +37,9 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     private clientesService: ClientesService,
     private vendedorService: VendedorService,
     private mantenimientoService: MantenimientoService,
-    private loading:LoadingService) { }
+    private loading:LoadingService,
+    private cotizacionService:CotizacionService) { }
+    
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
@@ -43,11 +47,8 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.form.value);
-    
     this.btnDisableTelefono();
     this.loadCatalogos();
-    this.deshabilitadorInputs();
     this.obtenerItbis();
     this.obtenerClientes();
     this.loadFacturaNumero();
@@ -56,11 +57,8 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
   facturaNumber$!: Observable<number>;
   destroy$: Subject<any> = new Subject<any>();
 
-
-  get articulos(): FormArray {
-    return this.form.controls["articulos"] as FormArray;
-  }
   customer!: Cliente;
+  cotizaciones!:CotizacionAmount[];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
   customers: Cliente[] = []
   facturaTipos: TipoFactura[] = [];
@@ -74,6 +72,8 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
   btnDisabledArticulo: boolean = true;
   isOpenModal: boolean = false;
   isFactura: boolean = true;
+  isCredit: boolean = false;
+  isLoading: boolean = false;
 
   subTotal: number = 0;
   descuento: number = 0;
@@ -86,14 +86,14 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     idCliente: [''],
     nombre: [''],
     apellido: [''],
-    telefono: ['', Validators.required],
-    vendedor: [,],
+    telefono: ['',Validators.required],
+    vendedor: [,Validators.required],
     almacen: [,],
     tipoFactura: [1,],
     tipoPago: [1,],
     fechaFacturacion: this.currentDate(),
     comprobante: [0,],
-    fechaLimitePago: [,],
+    fechaLimitePago: this.currentDate(),
     garantia: [8,],
     nota: ['',],
     empresa: [,],
@@ -102,6 +102,8 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     subTotal: [,],
     subTotalArticulo: [,],
     totalArticulo: [,],
+    numConfirmacion:[,],
+    // articulos: this.fb.array([]),
     articulos: this.fb.array([this.fb.group({
       cantidad: [1],
       descripcion: [''],
@@ -120,11 +122,14 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     })]),
     aplicarItbis: [false,],
   });
+
+  get articulos(): FormArray {
+    return this.form.controls["articulos"] as FormArray;
+  }
   agregarAbono(){
 
   }
-  onToogle(e:boolean){
-    console.log(e);
+  onToggle(e:boolean){
     if(e == true){
       this.isFactura = !this.isFactura;
     }
@@ -145,6 +150,7 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
       vendedor:'',
       nombre:'',
       apellido:'',
+      fechaLimitePago: this.currentDate(),
       articulos: this.fb.array([this.fb.group({
         cantidad: [1],
         descripcion: [''],
@@ -168,9 +174,15 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     this.customer.apellidos ='';
     this.customer.numero_Telefono =0;
     }
-
+    this.cleanAmounts();
   }
-
+  cleanAmounts(){
+    this.abono = 
+    this.subTotal = 
+    this.descuento = 
+    this.total = 
+    this.itbis = 0
+  }
 
    currentDate() {
     let date = new Date();
@@ -201,13 +213,25 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     this.clientesService.isOpeningForm$.next(true);
     this.form.get('telefono')?.reset()
   }
+  
   onSubmit(){
+    const toast = this.toastr
+    .success('title', 'body', { closeButton: true });
+toast.onTap.subscribe((action) => console.log(action));
+    if(this.form.valid){
+
     if(this.isFactura){
-      this.printFactura()
+      this.generateFactura()
     }
     else{
-      this.printCotizacion()
+      this.generateCotizacion()
     }
+  }
+  else{
+    console.log('markAllAsTouched')
+    this.form.markAllAsTouched()
+  }
+
   }
   calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
     return Number((this.form.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
@@ -252,7 +276,10 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
   }
 
   obtenerDetalleFactura(index: number) {
+
+    
     const currentFormGroup: FormGroup = this.articulos.controls[index] as FormGroup
+    
     currentFormGroup.controls["cantidad"].enable()
 
     const currentArticulo = currentFormGroup.getRawValue()
@@ -307,19 +334,24 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     return subTotal
   }
 
-  onFechaLimitepago() {
+  onChangeTipoPago() {
 
-    if (this.form.get('tipoPago')?.value == 2) {
-      this.form.get('fechaLimitePago')?.enable()
-    }
-    else {
-      this.form.get('fechaLimitePago')?.disable()
+    if (this.form.get('tipoPago')?.value == "2") {
+      this.isCredit = true;
+    }else{
+
+      this.isCredit = false;
     }
 
   }
-
+  hasNumberConfirmation(): boolean{
+    return Number(this.form.controls.tipoPago.value) !== 1 && 
+    Number(this.form.controls.tipoPago.value) !== 2;
+  }
 
   agregarArticulo() {
+  const isItemEmpty: boolean = this.articulos.controls.some(({value})=> value.articulo == "");
+  if(!isItemEmpty){
     const articulo = this.fb.group({
       cantidad: [1],
       descripcion: [''],
@@ -338,10 +370,10 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     });
 
     this.articulos.insert(0, articulo);
-
-    setTimeout(() => {
-      document.querySelector('#articulo')?.querySelector('input')?.focus()
-    }, 200);
+  }
+    // setTimeout(() => {
+    //   document.querySelector('#articulo')?.querySelector('input')?.focus()
+    // }, 200);
   }
 
 
@@ -420,28 +452,42 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
       }
       return model;
   }
-  deshabilitadorInputs() {
-    // this.form.get('comprobante')?.disable();
-    this.form.get('RNC')?.disable();
-    this.form.get('empresa')?.disable();
-    // this.form.get('garantia')?.disable();
-    this.form.get('fechaLimitePago')?.disable()
 
-  }
 
   obtenerClientesPorNombreTelefono() {
     const { telefono } = this.form.value;
       this.clientesService.getClientesPorNombreTelefono(telefono)
       .pipe(takeUntil(this.destroy$))
-        .subscribe(customer => {
-          console.log(customer);
+        .subscribe(async customer => {
           
+         await this.loadCotizacionCliente(telefono);
           this.customer = customer[0];
         },error =>{
           this.toastr.error(error);
         });
   }
-
+  loadCotizacionCliente(telefono: string):Promise<boolean>{
+    return new Promise((resolve,reject)=>{
+      this.cotizacionService.getCotizacionFacturaConsulta(telefono)
+      .subscribe(cotizaciones =>{
+        if(cotizaciones.length){
+          resolve(true)
+          this.cotizaciones = cotizaciones;
+          this.cotizacionService.isOpeningForm$.next(true);
+          //#TODO  abrir modal con la lsita de cotizaciones
+          //#TODO despues de selccionar una buscar el detalle y asignar los datos en la pantalla
+          // this.loadDetalleCotizacion()
+        }
+        resolve(false)
+      })
+    })
+  }
+  loadDetalleCotizacion(numeroRegistro:number){
+    this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro,1).subscribe(resp=>{
+      console.log(resp);
+      
+    })
+  }
   refreshGeneralValues() {
     console.log(this.form.get('aplicarItbis')?.value);
     
@@ -493,21 +539,14 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
       this.form.get(campo)?.enable();
     }
   }
-  onCheckboxChangeFactura(nfcTipoNumero: string) {
-
-    if (this.form.get(nfcTipoNumero)?.value !== '0') {
-
-      // if(!event.target.checked ) {
-      // this.form.get('comprobante')?.disable();
-      this.form.get('RNC')?.enable();
-      this.form.get('empresa')?.enable();
-
+  onCheckboxChangeComprobante() {
+    const { comprobante } = this.form.value;
+    const typesNotRequireNCF = ['0','2']
+    if (!typesNotRequireNCF.includes(comprobante)) {
+      this.isNcfRequire = true;
     }
     else {
-      this.deshabilitadorInputs();
-      // this.form.get('comprobante')?.enable();
-      // this.form.get('RNC')?.disable();
-      // this.form.get('empresa')?.disable();
+      this.isNcfRequire = false;
     }
 
 
@@ -579,31 +618,31 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
   }
 
 
-  printFactura() {
-    const data =this.loadDataToPrint()
+  generateFactura() {
+    const data = this.loadDataToPrint()
     console.log(data);
     
-    this.loading.showLoading('Procesando factura...');
+    // this.loading.showLoading('Procesando factura...');
+    this.isLoading = !this.isLoading;
     this.mantenimientoService.postFactura(data)
     .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
-        this.form.reset({
-          tipoFactura: 1,
-          tipoPago: 1,
-          comprobante: 0,
-          garantia: 8,
-          aplicarItbis: false,
-        })
+        this.onClean();
 
-        this.articulos.clear()
+        this.articulos.clear();
         // this.obtenerFechaDiaActual()
         this.agregarArticulo()
 
         CreatorPDFFile(blobResponse);
-        this.loading.hideLoading();
+        // this.loading.hideLoading();
+        this.isLoading = !this.isLoading;
 
+        this.toastr.success('Factura generada con exito!');
+        this.loadFacturaNumero();
       },error=>{
-        this.loading.hideLoading();
+        // this.loading.hideLoading();
+        this.isLoading = !this.isLoading;
+
         this.toastr.error(error)
       })
   }
@@ -615,7 +654,7 @@ export class FacturacionRegistroComponent implements OnInit,OnDestroy {
     }
     return factura;
   }
-  printCotizacion() {
+  generateCotizacion() {
 
     const data =this.loadDataToPrint()
     console.log(data);
