@@ -13,6 +13,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptorService } from './core/interceptors/auth-interceptor.service';
+import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-interceptor';
 
 
 @NgModule({
@@ -35,11 +36,18 @@ import { AuthInterceptorService } from './core/interceptors/auth-interceptor.ser
   exports: [
     SharedModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptorService,
-    multi: true
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    },
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass: ErrorHandlerInterceptor,
+      multi:true
+    }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

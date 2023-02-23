@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { ToastrService } from 'ngx-toastr';
 import { throwError } from "rxjs";
+import { LoadingService } from '../shared/components/r-loading/loading.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HandleErrorsResponseService {
 
-    constructor(private toastr: ToastrService) {
+    constructor(private toastr: ToastrService,private router:Router,private loadingService:LoadingService) {
         
     }
     public handleErrors(response:HttpErrorResponse) {
@@ -23,9 +25,14 @@ export class HandleErrorsResponseService {
     }
     public handleError(error: HttpErrorResponse) {
         console.log(error.status);
+        if(error.status === 401){
+          this.loadingService.hideLoading();
+          console.log('boob');
+        }
         if (error.status === 0) {
           // A client-side or network error occurred. Handle it accordingly.
-          
+          this.loadingService.hideLoading();
+
           console.error('An error occurred:', error.error);
         } else {
           // The backend returned an unsuccessful response code.
