@@ -1,0 +1,42 @@
+<r-modal [show]="isOpenModal" >
+    <section class="section">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLiveLabel">
+                Cliente tiene  {{cotizaciones?.length == 1 ? 'una cotización': (cotizaciones?.length + ' cotizaciones')}}</h5>
+            </div>
+            <div class="modal-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Cliente</th>
+                                <th>Descuento</th>
+                                <th>Subtotal</th>
+                                <th>Total</th>
+                                <th>Itbis</th>
+                                <th>Abono</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="cursor:pointer" *ngFor="let cotizacion of cotizaciones;let i = index" (click)="onSelect(cotizacion)">
+                                <td>{{i+1}}</td>
+                                <td>{{cotizacion.cliente}}</td>
+                                <td>{{cotizacion.descuento | currency}}</td>
+                                <td>{{cotizacion.subTotal | currency}}</td>
+                                <td>{{cotizacion.total | currency}}</td>
+                                <td>{{cotizacion.itbis | currency}}</td>
+                                <td>{{cotizacion.abono | currency}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btns secondary big" (click)="isOpenModal  = false">
+                    Cerrar
+                </button>
+            </div>
+          </div>
+    </section>
+</r-modal>
