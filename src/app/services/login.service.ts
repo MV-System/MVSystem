@@ -1,21 +1,28 @@
 import jwt_decode from "jwt-decode";
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { catchError, retry, switchMap } from 'rxjs/operators';
 import { HandleErrorsResponseService } from './handle-errors-response.service';
 import { LoginDTO, User } from "../core/interfaces/loginDTO.interface";
 import { APIURL } from "../config/url";
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class LoginService implements OnInit{
 
   constructor(
     private httpClient: HttpClient,
-    private handleErrorsRespService: HandleErrorsResponseService) { }
+    private handleErrorsRespService: HandleErrorsResponseService,
+    private router:Router) { }
+
+  ngOnInit(): void {
+    console.log(console.log(localStorage.getItem('expires')));
+    
+  }
     
     isPrint = new Subject<boolean>();
 
@@ -51,5 +58,9 @@ export class LoginService {
     console.log(decoded);
     
     return decoded.name
+  }
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/'])
   }
 }
