@@ -11,7 +11,7 @@ import { Cliente, ClienteRegistro, TipoCliente } from 'src/app/core/interfaces/c
 
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
-import { LoginService } from 'src/app/services/login.service';
+import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from '../../../../../shared/components/r-loading/loading.service';
 
 @Component({
@@ -50,7 +50,7 @@ export class FormClienteComponent implements OnInit {
   isOpenModal: boolean = false;
 
   form: FormGroup = this.fb.group({
-    nombres: ['', [Validators.required]],
+    nombres: ['', Validators.required],
     apellidos: ['', Validators.required],
     iD_Tipo_Cliente: [1],
     tipoClienteDescripcion: [""],
@@ -180,11 +180,8 @@ export class FormClienteComponent implements OnInit {
     this.catalogosService.getTipoTelefonoLista()
 
     ]).subscribe(resp=>{
-      console.log(resp);
-      
       this.customerTypes = resp[0];
       this.phoneTypes = resp[1];
-
-    })
+    });
   }
 }

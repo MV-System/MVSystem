@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { APIURL } from '../../config/url';
 import { CotizacionAmount } from '../interfaces/cotizacion.interface';
 import { Observable, Subject } from 'rxjs';
+import { Articulo } from '../interfaces/mantenimiento';
 
 @Injectable({
     providedIn:'root'
@@ -10,8 +11,8 @@ import { Observable, Subject } from 'rxjs';
 export class CotizacionService{
     constructor(private http:HttpClient){}
     isOpeningForm$: Subject<boolean>= new Subject<boolean>();
-    getDetalleCotizacionConsulta(numeroRegistro:number, sucursal:number){
-        return this.http.get(`${APIURL.Cotizacion.Consulta.DetalleCotizacionConsulta}/${numeroRegistro}/${sucursal}`);
+    getDetalleCotizacionConsulta(numeroRegistro:number, sucursal:number):Observable<Articulo[]>{
+        return this.http.get<Articulo[]>(`${APIURL.Cotizacion.Consulta.DetalleCotizacionConsulta}/${numeroRegistro}/${sucursal}`);
     }
 
     getCotizacionFacturaConsulta(telefono:string):Observable<CotizacionAmount[]>{

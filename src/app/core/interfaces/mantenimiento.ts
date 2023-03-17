@@ -51,7 +51,7 @@ export interface FacturaRegistro {
     // accesorio: AccesorioFactura[];
     garantia: string;
     idAlmacen: number;
-    nota: string;
+    nota?: string;
     // persona: number;
     // empresa: string;
     RNC: string;
@@ -65,6 +65,7 @@ export interface FacturaRegistro {
 
     cantidadArticulos: number;
     detalleFacturaList: DetalleFacturaList[];
+    usuario: string;
 
     Cliente?: ClienteRegistro
 }
@@ -96,9 +97,9 @@ export interface MarcaObjRetorno {
 }
 
 export interface ModeloObjRetorno {
-  iD_Modelo: number;
-  descripcion: string;
-  mensaje: string;
+    iD_Modelo: number;
+    descripcion: string;
+    mensaje: string;
 }
 
 export interface EquipoObjRetorno {
@@ -112,29 +113,41 @@ export interface EquipoObjRetorno {
 }
 
 export interface FacturaConsulta {
-    numeroFactura:    number;
-    nombres:          string;
-    apellidos:        string;
-    vendedor:         string;
-    tipoFactura:      string;
-    tipoPago:         string;
-    subTotal:         number;
-    descuento:        number;
-    itbis:            number;
-    total:            number;
-    totalFacturado:   number;
-    nota:             string;
+    numeroFactura: number;
+    nombres: string;
+    apellidos: string;
+    vendedor: string;
+    tipoFactura: string;
+    tipoPago: string;
+    subTotal: number;
+    descuento: number;
+    itbis: number;
+    total: number;
+    totalFacturado: number;
+    nota: string;
     fechaFacturacion: string;
-    line:             number;
-    lastLine:         number;
-    totalRecord:      number;
-    telefono:         number; 
-    rnc:              number; 
-    ncf:              number; 
-    almacen:          string;
+    line: number;
+    lastLine: number;
+    totalRecord: number;
+    telefono: number;
+    rnc: number;
+    ncf: number;
+    almacen: string;
 }
-export interface FacturaFilter extends DatePaging ,Pagination{
-    almacen:       number;
+export interface FacturaFilter extends DatePaging, Pagination {
+    almacen: number;
     numeroFactura?: number;
-    criterio:   string;
+    criterio: string;
+}
+
+export interface Articulo {
+    cantidad: number;
+    descripcion: string
+    descuento: number;
+    iD_Equipo: string;
+    iD_Tipo: number;
+    numero_Factura: number;
+    precio: number;
+    subTotal: number;
+    total: number;
 }

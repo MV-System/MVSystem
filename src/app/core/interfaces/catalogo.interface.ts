@@ -41,7 +41,7 @@ export interface TipoComprobante {
 
 export interface AccesorioLista {
   accesorio_Descripcion: string;
-  codigo?: Codigo;
+  codigo?: string;
   id: string;
   modelo: string;
   codigo_Barra: number;
@@ -49,11 +49,6 @@ export interface AccesorioLista {
   precio_Por_Mayor: number;
   cantidad: number;
   idTipo: number;
-}
-
-export enum Codigo {
-  Empty = "",
-  W323 = "w323",
 }
 export interface Garantia {
   iD_Garantia: number;

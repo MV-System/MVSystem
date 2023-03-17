@@ -3,7 +3,7 @@ export interface CotizacionAmount{
     cliente: string,
     descuento:number,
     itbis:number
-    numeroFactura:number,
+    numero_Factura:number,
     subTotal:number,
     total:number,
 }

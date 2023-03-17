@@ -21,8 +21,11 @@ export class MantenimientoService {
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
-  postFactura(factura: FacturaRegistro): Observable<Blob> {
-    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaInserta, factura, {
+  postFactura(factura: FacturaRegistro) {
+    return this.http.post(APIURL.Factura.Inserta.FacturaInserta, factura);
+  }
+  exportFactura(factura: FacturaRegistro): Observable<Blob> {
+    return this.http.post<Blob>(APIURL.Factura.Inserta.FacturacionReporte, factura, {
       responseType: 'blob' as 'json'
     });
   }

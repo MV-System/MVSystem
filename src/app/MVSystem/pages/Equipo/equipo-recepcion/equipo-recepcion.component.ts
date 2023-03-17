@@ -8,7 +8,7 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { EquipoEstadoUpdate } from '../../../../core/interfaces/equipo.interface';
 import { EquipoService } from '../../../../core/services/equipo.service';
 import { FormAsyncValidatorService } from 'src/app/services/form-async-validator.service';
-import { LoginService } from 'src/app/services/login.service';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-equipo-recepcion',
