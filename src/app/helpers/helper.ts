@@ -7,4 +7,16 @@ export function CreatorPDFFile(blob: Blob){
     document.body.appendChild(iframe);
     iframe.contentWindow?.print();
 }
-  
+export function currentDate(){
+    const date = new Date();
+    return String(date.getFullYear()).padStart(2,'0')  + '-' +
+    String(date.getMonth() + 1).padStart(2,'0')  + '-' +
+    String(date.getDate()).padStart(2,'0');
+  }
+
+//   YYYY-mm-dd
+  export function transformDate(date : Date){
+    return String(date.getFullYear()).padStart(2,'0')  + '-' +
+    String(date.getMonth() + 1).padStart(2,'0')  + '-' +
+    String(date.getDate()).padStart(2,'0');
+  }

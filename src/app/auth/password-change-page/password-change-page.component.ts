@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../core/interfaces/loginDTO.interface';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { LoginService } from 'src/app/services/login.service';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-password-change-page',

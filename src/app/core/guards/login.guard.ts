@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LoginService } from '../../services/login.service';
+import { LoginService } from '../../auth/login.service';
 
 @Injectable({
     providedIn:'root'
@@ -15,6 +15,7 @@ export class LoginGuard implements CanActivate {
         console.log('guard');
         
         if (user) {
+            this.router.navigate(['home']);
             return false
         }
         // this.loginService.logout();

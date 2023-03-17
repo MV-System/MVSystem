@@ -3,7 +3,10 @@ export interface LoginDTO {
     expires: Date,
     name: string,
     role: string,
-    nameid: string
+    nameid: string,
+    IdSucursal:string,
+    Sucursal:string,
+    Empresa:string
 }
 export interface User{
     codigo?: number,

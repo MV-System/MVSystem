@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LoginService } from 'src/app/services/login.service';
+import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from '../../shared/components/r-loading/loading.service';
 
 @Component({
