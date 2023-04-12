@@ -1,5 +1,4 @@
 
-
 <main id="main" class="main" >
     <div class="main-title">
         <h1 id="registro">Nueva {{isFactura?'Factura':'Cotización'}}</h1>
@@ -9,13 +8,14 @@
                   [dataOn]="'Cotización'" 
                   (onToggle)="onToggle($event)"></r-toggle>
 
-        <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form  [formGroup]="form" (ngSubmit)="onSubmit()" style="display: grid">
             <div class="box filters">
                 <div class="content">
                     <div class="row">
                         <div class="col-3">
                             <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
                             <select class="form-select" formControlName="tipoFactura"
+                                    (change)="onChangeTipoFactura($event)"
                                 [ngClass]="{'input-error':validarCampos('tipoFactura')}">
                                 <option *ngFor="let TipoFactura of facturaTipos"
                                     [value]="TipoFactura.iD_Tipo_Factura">
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="rightcol">
-                    <h3 class="sub-title" >{{isFactura?'Factura':'Cotización'}} #{{facturaNumber$  | async}}</h3>
+                    <h3 class="sub-title" >{{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
                     <div class="grid invoice">
                         <div class="col">
                             <label for="client" class="form-label">{{isFactura?'Facturar':'Cotización'}} a:</label>
@@ -86,7 +86,6 @@
                                 <ng-select formControlName="telefono" 
                                             (change)="obtenerClientesPorNombreTelefono()"
                                             [clearable]="false"
-                                            focus
                                             [ngClass]="{ 'is-invalid': true}" >
                                     <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
                                         {{customer.nombres  | titlecase}} {{customer.apellidos  | titlecase}} - {{customer.numero_Telefono}}
@@ -120,7 +119,7 @@
                                     </div>
                                     </div>
                                 </div>
-                                <div class="grid two-cols">
+                                <div class="grid two-cols" *ngIf="isValidFechaFacturacion()">
                                     <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
                                     <!-- <div>
                                         <span class="info">12/12/2022</span>
@@ -158,8 +157,8 @@
                                         <input type="number" formControlName="numConfirmacion" class="form-control">
                                     </div>
                                 </div>
-                                <div class="grid two-cols">
-                                    <div><strong>Garantía:</strong></div>
+                                <div class="grid two-cols" >
+                                    <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
                                     <div>
                                         <select formControlName="garantia" class="form-select">
                                             <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
@@ -216,18 +215,20 @@
                             </thead>
                             <tbody>
                                 <ng-container formArrayName="articulos">
-                                <tr *ngFor="let detalleFactura of articulos.controls; let i = index" >
+                                <tr *ngFor="let detalleFactura of articulos().controls; let i = index" >
                                     <ng-container [formGroupName]="i">
                                     
                                     <td>
                                         <ng-select class="form-select"  formControlName="articulo" id="articulo"
                                         [addTag]="addArticuloImei"
+                                        [virtualScroll]="true"
                                         [clearable]="false"
                                         (keydown.enter)="cantidadInput.focus()"
                                         (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
+                                        (scroll)="onScroll($event)"
                                         required
                                         [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }" >
-                                        <ng-option *ngFor="let articulo of accesorios"
+                                        <ng-option *ngFor="let articulo of accesoriosBuffer"
                                             [value]="articulo">
                                             {{articulo.accesorio_Descripcion | titlecase}} | 
                                             {{calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor)| currency}}
@@ -242,7 +243,7 @@
                                                 #cantidadInput 
                                                 formControlName="cantidad"
                                                 (keydown.enter)="descuentoInput.focus()"
-                                                (change)="obtenerDetalleFactura(i)"
+                                                (keyup)="obtenerDetalleFactura(i)"
                                                 [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}"
                                                 [maxlen]="4"
                                                 appNumeric >
@@ -263,7 +264,7 @@
                                             [maxlen]="4" 
                                             [decimals]="2" 
                                             (keydown.enter)="agregarArticulo()"
-                                            (change)="obtenerDetalleFactura(i)" />
+                                            (keyup)="obtenerDetalleFactura(i)" />
                                     </td>
                                     <td class="align-center">
                                         {{detalleFactura.value.total}}
@@ -307,17 +308,18 @@
                                     <div><strong>ITBIS:</strong></div>
                                     <div><span class="info">{{itbis}}</span></div>
                                 </div>
-                                <div class="grid two-cols" *ngIf="isCredit">
+                                <div class="grid two-cols" *ngIf="isCredit && isFactura">
                                     <div><strong>Abono:</strong></div>
                                     <div>
                                         <!-- <span class="info">{{abono}}</span>  -->
                                         <input 
                                         class="form-control align-right"
                                         type="number"
+                                        formControlName="abono"
                                         appNumeric 
                                         [maxlen]="4" 
                                         [decimals]="2" 
-                                        (keydown.enter)="agregarAbono()" />
+                                        (keyup)="agregarAbono()" />
                                     </div>
 
                                 </div>
@@ -356,3 +358,26 @@
     [cotizaciones]="cotizaciones">
 
 </app-cotizacion-list>
+
+<!-- <ng-select 
+class="form-select" 
+formControlName="articulo" 
+id="articulo"
+[items]="accesoriosBuffer"
+[virtualScroll]="true"
+[loading]="isLoading"
+[addTag]="addArticuloImei"
+[clearable]="false"
+(keydown.enter)="cantidadInput.focus()"
+(change)="obtenerDetalleFactura(i); cantidadInput.focus()"
+(scroll)="onScroll($event)"
+(scrollToEnd)="onScrollToEnd()"
+required
+[ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }" >
+<ng-template ng-header-tmp>
+<small class="form-text text-muted">Cargado {{accesoriosBuffer.length}} de {{accesorios.length}}</small>
+</ng-template>
+<ng-template ng-option-tmp let-item="item" let-index="index">
+{{item.accesorio_Descripcion | titlecase}} | 
+{{calcularPrecioSegunTipofactura(item.precio_Detalle,item.precio_Por_Mayor)| currency}}
+</ng-template> -->

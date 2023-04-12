@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 import { CatalogosService } from '../core/services/catalogos.service';
 import { Almacen } from '../core/interfaces/catalogo.interface';
 import { currentDate, transformDate } from "../helpers/helper";
-interface userObj{
-  empresa:string,
+interface userToken{
+  Empresa:string,
   aud:string,
   exp:number,
   given_name:string,
@@ -37,7 +37,7 @@ export class LoginService implements OnInit{
   isPrint = new Subject<boolean>();
 
   get tokenDecoded(){
-    let token = localStorage.getItem('token');
+    let token = localStorage.getItem('token') ;
     if(!token) return '' 
 
     console.log(jwt_decode<any>(`${token}`));
