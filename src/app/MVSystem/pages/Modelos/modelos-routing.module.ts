@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ModelosRegistrosComponent } from './modelos-registro/modelos-registros.component';
 import { RouterModule, Routes } from '@angular/router';
-
+import { ModelosRegistrosComponent } from './modelos-registro/modelos-registros.component';
 
 const routes : Routes = [
   {
-path : 'registro',
-component:ModelosRegistrosComponent
+    path : 'registro',
+    component: ModelosRegistrosComponent
   }
 ];
 
