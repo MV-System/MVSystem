@@ -32,6 +32,7 @@ export class EquipoRegistroComponent implements OnInit {
 
   imeiRegistrado!: string;
   numeroRegistro!: number;
+  inputValue: string = ''; // Propiedad para el valor del input
   constructor(
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
@@ -271,7 +272,10 @@ export class EquipoRegistroComponent implements OnInit {
 
   //Catalogos
 
-
+ // Método para limpiar el input
+ limpiarInput() {
+  this.inputValue = '';
+}
   obtenerGarantia() {
 
     this.catalogosService.getGarantiaLista()
