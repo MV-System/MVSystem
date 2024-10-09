@@ -629,9 +629,9 @@ a:hover {
     transition: all 0.3s;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #242526 transparent;
+    scrollbar-color: #323130 transparent;
     box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-    background-color: #2d2727;
+    background-color: #323130;
 }
 
 @media (max-width: 199px) {
