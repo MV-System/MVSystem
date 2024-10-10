@@ -6,7 +6,7 @@ import {
   MarcaEquipo,
   ModeloEquipo,
 } from '../../../../core/interfaces/catalogo.interface';
-import { Accesorio,AccesorioLista } from '../../../../core/interfaces/mantenimiento';
+import { Accesorio, AccesorioLista} from '../../../../core/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import * as $ from"jquery";
@@ -20,12 +20,13 @@ import { LoginService } from 'src/app/auth/login.service';
 export class AccesoriosRegistroComponent implements OnInit {
   marcaListado: MarcaEquipo[] = [];
   costoMask: string = '';
-  accesoriosLista: AccesorioLista[] = [];
+  accesoriosLista:any;
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
   btnDisabled: boolean = true;
-  AccesorioValorRetorno: AccesorioLista[] = [];
+  AccesorioValorRetorno: any;
   AccesorioRegistrado!: number;
+
 
   constructor(
     private fb: FormBuilder,
@@ -162,23 +163,6 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.validarCamposFormCostoDetalle();
   }
 
-  // registroEquipos() {
-  //   const model: Accesorio = this.modeloRegistroAccesorio();
-
-  //   this.validacionesRegistro()
-  //   if (this.formRegistro.valid) {
-  //     this.mantenimientoService.postAccesorio(model)
-  //       .subscribe((equipo) => {
-  //         equipo.forEach((equipoRegistrado) => {
-
-  //           this.AccesorioValorRetorno.push(equipoRegistrado);
-  //           this.toastr.success('Equipo registrado con exito!');
-  //         });
-  //       });
-  //   }
-  // }
-
-
   registroAccesorio() {
     const model: Accesorio = this.modeloRegistroAccesorio();
 
@@ -186,28 +170,25 @@ export class AccesoriosRegistroComponent implements OnInit {
       if ( this.formRegistro.valid) {
         this.mantenimientoService.postAccesorio(model)
         .subscribe((accesorio) =>{
-        var a =  this.AccesorioValorRetorno = accesorio;
+          console.log("ver resultado ",accesorio);
+         this.AccesorioValorRetorno = accesorio;
           this.toastr.success('Accesorio registrado con exito!')
-
-          console.log(a);
-          // this.formRegistro.reset({
-          // });
-        });
-
-
-      }
-      else{
-        this.formRegistro.markAllAsTouched();
-        $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
-
-        this.toastr.error('Hay datos en el formulario incompletos', '', {
-          closeButton: true,
-          progressBar: true,
+          // console.log("ver resultado ",this.AccesorioValorRetorno);
+          this.formRegistro.reset({
+          });
         });
       }
+      // else{
+      //   this.formRegistro.markAllAsTouched();
+      //   $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
 
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  }
+      //   this.toastr.error('Hay datos en el formulario incompletos', '', {
+      //     closeButton: true,
+      //     progressBar: true,
+      //   });
+      // }
+   }
+
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,
