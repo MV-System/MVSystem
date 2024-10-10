@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 
 @Injectable({
@@ -15,7 +15,7 @@ export class MantenimientoService {
   constructor(private http: HttpClient) { }
 
   // Post's
-  postAccesorio(accesorio: Accesorio): Observable<any> {
+  postAccesorio(accesorio: AccesorioLista): Observable<any> {
     return this.http.post<any>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);
   }
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
@@ -55,7 +55,7 @@ export class MantenimientoService {
     queryParams = queryParams.append("FechaInicio", facturaReq.fechaInicio)
     queryParams = queryParams.append("FechaFinal", facturaReq.fechaFinal)
     return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
-    
+
   }
   getDetalleFactura(numeroFactura: number, sucursal: number){
     return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)

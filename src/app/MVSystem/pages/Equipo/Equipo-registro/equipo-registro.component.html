@@ -29,7 +29,14 @@
                             <!-- --------------- IMEI  --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">IMEI</label>
-                                <input type="text" class="form-control" formControlName="IMEI" ngModel maxlength="20" [ngClass]="{'is-invalid':validarCampos('IMEI')}">
+                                <input type="text" class="form-control"
+                                formControlName="IMEI"
+                                ngModel maxlength="20"
+                                #ImeiInput
+                                [ngClass]="{'is-invalid':validarCampos('IMEI')}"
+
+                                (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
+
                                 <div class="required-field" *ngIf="validarCampos('IMEI')">
                                     Este campo es requerido.
                                 </div>
@@ -173,17 +180,6 @@
                                     Este campo es requerido.
                                 </div>
                             </div>
-                            <!-- <div class="col-md-4">
-                    <label class="form-label"></label>
-                    <div class="form-check">
-                        <label >
-                            <input  class="form-check-input"
-                                    type="checkbox"
-                                    formControlName="disponible">
-                                    Disponible
-                        </label>
-                    </div>
-                </div> -->
 
                             <div class="col-md-7">
                                 <label class="form-label"></label>
@@ -202,6 +198,7 @@
                 </div>
             </div>
             <!-- Tabla equipos agregados -->
+
             <div class="col-lg-5" *ngIf="equipoValorRetorno.length">
                 <div class="card">
                     <div class="card-body">
@@ -234,6 +231,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 </main>

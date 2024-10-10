@@ -6,11 +6,11 @@ import {
   MarcaEquipo,
   ModeloEquipo,
 } from '../../../../core/interfaces/catalogo.interface';
-import { Accesorio, AccesorioLista } from '../../../../core/interfaces/mantenimiento';
+import { Accesorio,AccesorioLista } from '../../../../core/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
-import { switchMap, tap } from 'rxjs/operators';
 import * as $ from"jquery";
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-accesorios',
@@ -20,16 +20,19 @@ import * as $ from"jquery";
 export class AccesoriosRegistroComponent implements OnInit {
   marcaListado: MarcaEquipo[] = [];
   costoMask: string = '';
-  accesoriosLista!: any;
+  accesoriosLista: AccesorioLista[] = [];
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
   btnDisabled: boolean = true;
+  AccesorioValorRetorno: AccesorioLista[] = [];
+  AccesorioRegistrado!: number;
 
   constructor(
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
     private mantenimientoService: MantenimientoService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loginService: LoginService,
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +41,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.obtenerAlmacenLista();
     this.btnDisable();
     this.formRegistro.get('modelo')?.disable();
+
 
   }
   //Forms
@@ -158,18 +162,39 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.validarCamposFormCostoDetalle();
   }
 
+  // registroEquipos() {
+  //   const model: Accesorio = this.modeloRegistroAccesorio();
+
+  //   this.validacionesRegistro()
+  //   if (this.formRegistro.valid) {
+  //     this.mantenimientoService.postAccesorio(model)
+  //       .subscribe((equipo) => {
+  //         equipo.forEach((equipoRegistrado) => {
+
+  //           this.AccesorioValorRetorno.push(equipoRegistrado);
+  //           this.toastr.success('Equipo registrado con exito!');
+  //         });
+  //       });
+  //   }
+  // }
+
+
   registroAccesorio() {
     const model: Accesorio = this.modeloRegistroAccesorio();
 
     this.validacionesRegistro()
-      if ( this.formRegistro.valid   ) {
+      if ( this.formRegistro.valid) {
         this.mantenimientoService.postAccesorio(model)
-                                .subscribe((accesorio:any) =>{
-                                  this.accesoriosLista = accesorio;
-                                  this.toastr.success('Accesorio registrado con exito!')
-                                  this.formRegistro.reset({
-                                  });
-                                });
+        .subscribe((accesorio) =>{
+        var a =  this.AccesorioValorRetorno = accesorio;
+          this.toastr.success('Accesorio registrado con exito!')
+
+          console.log(a);
+          // this.formRegistro.reset({
+          // });
+        });
+
+
       }
       else{
         this.formRegistro.markAllAsTouched();
@@ -180,6 +205,8 @@ export class AccesoriosRegistroComponent implements OnInit {
           progressBar: true,
         });
       }
+
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   }
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
@@ -197,7 +224,7 @@ export class AccesoriosRegistroComponent implements OnInit {
       // cod_Barra:this.formRegistro.get('IMEI')?.value, //? preguntar //
       // disponible: this.formRegistro.get('IMEI')?.value,
       // disponible_Detalle: this.formRegistro.get('IMEI')?.value,
-      usuario: this.formRegistro.get('usuario')?.value,
+      usuario: this.loginService.getUserName(),
       // usuario: this.formRegistro.get('fechaFacturacion')?.value,
       disponible: 'S',
     };

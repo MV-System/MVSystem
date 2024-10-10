@@ -23,9 +23,9 @@
                             <div class="col-md-6">
                                 <label class="form-label">Descripción <span class="required-field">*</span></label>
                                 <input type="text"
-                                        class="form-control" 
+                                        class="form-control"
                                         required
-                                        formControlName="descripcion" 
+                                        formControlName="descripcion"
                                         [ngClass]="{'is-invalid':validarCampos('descripcion')}">
                                 <div class="required-field" *ngIf="validarCampos('descripcion')">
                                     Este campo es requerido.
@@ -34,11 +34,11 @@
                             <!-- --------------- Cantidad Accesorio --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Cantidad <span class="required-field">*</span></label>
-                                <input type="text" 
-                                        class="form-control" 
-                                        required 
-                                        formControlName="cantidad" 
-                                        appNumeric 
+                                <input type="text"
+                                        class="form-control"
+                                        required
+                                        formControlName="cantidad"
+                                        appNumeric
                                         [maxlen]="4"
                                         [ngClass]="{'is-invalid':validarCampos('cantidad')}">
                                 <div class="required-field" *ngIf="validarCampos('cantidad')">
@@ -51,13 +51,13 @@
                                     Costo
                                     <span class="required-field">*</span>
                                 </label>
-                                <input class="form-control" 
-                                        type="text" 
-                                        required 
-                                        placeholder="RD$" 
+                                <input class="form-control"
+                                        type="text"
+                                        required
+                                        placeholder="RD$"
                                         formControlName="costo"
-                                        appNumeric 
-                                        [maxlen]="9" 
+                                        appNumeric
+                                        [maxlen]="9"
                                         [ngClass]="{'is-invalid':validarCampos('costo')}" />
                                 <div class="required-field" *ngIf="validarCampos('costo')">
                                     Este campo es requerido.
@@ -68,13 +68,13 @@
                                 <label class="form-label">Al detalle
                                     <span class="required-field">*</span>
                                 </label>
-                                <input type="number" 
-                                        class="form-control" 
-                                        required 
-                                        placeholder="RD$" 
+                                <input type="number"
+                                        class="form-control"
+                                        required
+                                        placeholder="RD$"
                                         formControlName="alDetalle"
-                                        appNumeric 
-                                        [maxlen]="9" 
+                                        appNumeric
+                                        [maxlen]="9"
                                         [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
                                 <div class="required-field" *ngIf="validarCampos('alDetalle')">
                                     Este campo es requerido.
@@ -83,13 +83,13 @@
                             <!-- --------------- Al Por Mayor:  Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al Por Mayor <span class="required-field">*</span></label>
-                                <input type="text" 
-                                        class="form-control" 
-                                        required 
-                                        placeholder="RD$" 
+                                <input type="text"
+                                        class="form-control"
+                                        required
+                                        placeholder="RD$"
                                         formControlName="alPorMayor"
-                                        appNumeric 
-                                        [maxlen]="9" 
+                                        appNumeric
+                                        [maxlen]="9"
                                     [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
                                 <div class="required-field" *ngIf="validarCampos('alPorMayor')">
                                     Este campo es requerido.
@@ -98,20 +98,20 @@
                             <!-- --------------- IMEI Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">IMEI Asociado</label>
-                                <input type="text" 
-                                        class="form-control" 
+                                <input type="text"
+                                        class="form-control"
                                         formControlName="IMEI"
-                                        appNumeric 
+                                        appNumeric
                                         [maxlen]="21" >
                             </div>
                             <!-- --------------- Cantidad Max Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Cantidad Maxima <span class="required-field">*</span></label>
-                                <input type="number" 
-                                        class="form-control" 
-                                        required 
+                                <input type="number"
+                                        class="form-control"
+                                        required
                                         formControlName="cantidadMax"
-                                        appNumeric 
+                                        appNumeric
                                         [maxlen]="4"
                                         [ngClass]="{'is-invalid':validarCampos('cantidadMax')}">
                                 <div class="required-field" *ngIf="validarCampos('cantidadMax')">
@@ -121,10 +121,10 @@
                             <!-- --------------- Cantidad Min Accesorio --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Cantidad Minima <span class="required-field">*</span></label>
-                                <input type="number" 
-                                        class="form-control" 
-                                        required 
-                                        appNumeric 
+                                <input type="number"
+                                        class="form-control"
+                                        required
+                                        appNumeric
                                         formControlName="cantidadMin"
                                         [maxlen]="4"
                                         [ngClass]="{'is-invalid':validarCampos('cantidadMin')}">
@@ -168,6 +168,35 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="col-lg-5" >
+              <div class="card">
+                <div class="card-body">
+              <h5 class="card-title">Accesorios agregados</h5>
+              <div>
+              <table class="table table-Secondary">
+                <thead>
+                    <tr>
+                        <th>Descripcion.</th>
+                        <th>Precio Detalle</th>
+                        <th>Precio X Mayor</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Acc of  AccesorioValorRetorno;let i = index">
+                    <td>{{Acc.descripcion_Accesorio}}</td>
+                    <td>{{Acc.precio_Detalle}}</td>
+                    <td>{{Acc.precio_Por_Mayor}}</td>
+                    <td>{{Acc.cantidad}}</td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
