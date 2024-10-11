@@ -6,6 +6,7 @@ import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
+import { AccesorioObjRetorno } from '../interfaces/accesorio.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class MantenimientoService {
   constructor(private http: HttpClient) { }
 
   // Post's
-  postAccesorio(accesorio: AccesorioLista): Observable<any> {
-    return this.http.post<any>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);
+  postAccesorio(accesorio: Accesorio): Observable<AccesorioLista> {
+    return this.http.post<AccesorioLista>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);
   }
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
@@ -67,7 +68,6 @@ export class MantenimientoService {
   recepcionEquipo(data: EquipoRecepcion): Observable<void>{
     return this.http.post<void>(APIURL.Equipo.Inserta.EquipoRecepcion, data);
   }
-
   //Get's
 
   getFacturaNumero():Observable<number> {

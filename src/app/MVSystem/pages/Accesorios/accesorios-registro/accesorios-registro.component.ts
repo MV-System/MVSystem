@@ -24,7 +24,7 @@ export class AccesoriosRegistroComponent implements OnInit {
   almacenListado: Almacen[] = [];
   modeloListado: ModeloEquipo[] = [];
   btnDisabled: boolean = true;
-  AccesorioValorRetorno: any;
+  AccesorioValorRetorno: AccesorioLista[]=[];
   AccesorioRegistrado!: number;
 
 
@@ -167,28 +167,18 @@ export class AccesoriosRegistroComponent implements OnInit {
     const model: Accesorio = this.modeloRegistroAccesorio();
 
     this.validacionesRegistro()
-      if ( this.formRegistro.valid) {
-        this.mantenimientoService.postAccesorio(model)
-        .subscribe((accesorio) =>{
-          console.log("ver resultado ",accesorio);
-         this.AccesorioValorRetorno = accesorio;
-          this.toastr.success('Accesorio registrado con exito!')
-          // console.log("ver resultado ",this.AccesorioValorRetorno);
-          this.formRegistro.reset({
-          });
+    if (this.formRegistro.valid) {
+      this.mantenimientoService.postAccesorio(model)
+          .subscribe((accesorio: AccesorioLista) =>{
+               this.AccesorioValorRetorno.push(accesorio);
+
+            this.toastr.success('Accesorio registrado con exito!');
+
+        this.formRegistro.reset({
         });
-      }
-      // else{
-      //   this.formRegistro.markAllAsTouched();
-      //   $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
-
-      //   this.toastr.error('Hay datos en el formulario incompletos', '', {
-      //     closeButton: true,
-      //     progressBar: true,
-      //   });
-      // }
-   }
-
+    });
+  }
+}
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,

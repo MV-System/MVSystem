@@ -122,12 +122,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-5" *ngIf="AccesorioValorRetorno.length">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Accesorios agregados</h5>
                         <div>
-                            <pre>{{AccesorioValorRetorno | json}}</pre>
+                            <!-- <pre>{{AccesorioValorRetorno | json}}</pre> -->
                             <table class="table table-Secondary">
                                 <thead>
                                     <tr>
@@ -138,13 +138,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let Acc of  AccesorioValorRetorno;let i = index">
+                                    <tr *ngFor="let Acc of  AccesorioValorRetorno">
                                         <td>{{Acc.descripcion_Accesorio}}</td>
-                                        <td>{{Acc.precio_Detalle}}</td>
-                                        <td>{{Acc.precio_Por_Mayor}}</td>
+                                        <td>{{Acc.precio_Detalle | currency}}</td>
+                                        <td>{{Acc.precio_Por_Mayor |currency}}</td>
                                         <td>{{Acc.cantidad}}</td>
                                     </tr>
                                 </tbody>
+                                <!-- <pre>{{AccesorioValorRetorno | json}}</pre> -->
+
                             </table>
                         </div>
                     </div>
