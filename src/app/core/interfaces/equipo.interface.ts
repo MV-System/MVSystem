@@ -128,6 +128,7 @@ export interface EquipoTransferencia{
     almacenSalidaId?:number;
     almacenDestino:string;
     mensaje:string;
+    usuario: string;
 }
 
 export interface EquipoAlmacenTransferir {
@@ -138,6 +139,7 @@ export interface EquipoAlmacenTransferir {
     almacenSalida:   number;
     almacenDestino:  number;
     cantidadEquipos: number;
+    usuario: string;
 }
 
 export interface EquipoModificarEstatus{

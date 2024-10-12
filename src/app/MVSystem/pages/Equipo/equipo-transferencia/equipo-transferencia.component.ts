@@ -7,6 +7,7 @@ import { EquipoService } from '../../../../core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoAlmacenTransferir } from '../../../../core/interfaces/equipo.interface';
 import { Subscription } from 'rxjs';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-equipo-transferencia',
@@ -21,6 +22,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
     private toastr: ToastrService,
+    private loginService: LoginService,
     ) { }
 
   ngOnInit(): void {
@@ -54,7 +56,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
 
         this.toastr.info('Ya el imei esta añadido a la lista!','',{'progressBar': true,'closeButton':true,timeOut:2000});
          bool=true
-      } 
+      }
     });
     return bool;
   }
@@ -65,7 +67,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     })
   }
   deleteEquipo(imei: string){
- 
+
     this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
     this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
     this.cantidadEquipoATransferir = this.listEquiposToTransfer.length
@@ -76,11 +78,11 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     }
   }
   validateInput(control:string){
-    return  (!this.form.controls[control].value && this.form.controls[control].touched ) 
+    return  (!this.form.controls[control].value && this.form.controls[control].touched )
   }
   getEquipoByImei(){
     if (this.form.get('imei')?.value) {
-    
+
     this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
     .subscribe((equipo)=>{
       if(this.validateImei())return
@@ -97,8 +99,10 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
             imei: equipo.imei,
             modelo: equipo.modelo,
             almacenSalida: equipo.almacenSalida,
-            almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
+            almacenDestino: equipo.almacenDestino,
+           // almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
             mensaje: '',
+            usuario: this.loginService.getUserName(),
           }
           this.listEquiposToTransfer.unshift(model);
 
@@ -109,7 +113,8 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
             almacenSalida:Number( equipo.almacenSalidaId),
             almacenDestino: this.form.get('almacen')?.value,
             cantidadEquipos: this.cantidadEquipoATransferir,
-            modelo: equipo.modelo
+            modelo: equipo.modelo,
+            usuario:this.loginService.getUserName(),
           }
           this.postTransferenciaEquipo(transfer);
           this.form.get('imei')?.reset();
@@ -126,7 +131,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
       idTransferencia: this.idTransferencia,
       equipoTransferencias: this.listEquiposToTransfer,
       fechaTransferencia: new Date().toDateString(),
-      usuario: 'Xavier',
+      usuario: '',
       total: this.cantidadEquipoATransferir
     }
     this.equipoService.postEquipoTransferencia(model)
@@ -134,9 +139,9 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
         this.printing = !this.printing;
         this.getBlobForCreateIFramePDF(blobResp);
     },(err)=>{
-      this.printing = !this.printing;    
+      this.printing = !this.printing;
       this.toastr.error('Error al imprimir reporte');
-      
+
     });
     this.cantidadEquipoATransferir = 0;
     this.listEquiposToTransfer =[];
