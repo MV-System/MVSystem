@@ -56,14 +56,15 @@
                                 </div>
 
                               </div>
-                    
+
                         </form>
                         <!-- End  Form -->
                     </div>
                 </div>
             </div>
             <!-- Lista de Equipos agregados  -->
-            <div class="col-lg-7" *ngIf="listEquiposToTransfer.length">
+            <div class="col-lg-7" *ngIf="equipoToTransfer.length">
+              <!-- *ngIf="EquipoTransferidoValorRetorno.length" -->
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Equipo agregados</h5>
@@ -71,7 +72,7 @@
                             <table class="table table-Secondary">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>Id Transf.</th>
                                         <th>IMEI</th>
                                         <th>Modelo</th>
                                         <th>Almacen Salida</th>
@@ -79,19 +80,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let equipo of listEquiposToTransfer;let i = index">
-                                        <td>{{i + 1}}</td>
-                                        <td>{{equipo.imei}}</td>
-                                        <td>{{equipo?.modelo}}</td>
-                                        <td>{{equipo?.almacenSalida}}</td>
-                                        <td>{{equipo?.almacenDestino}}</td>
-                                        <td> <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
-                                            style="color: rgb(205, 65, 65);cursor: pointer;"></i></td>
-                                    </tr>
-                                </tbody>
+                            <tr *ngFor="let equipo of equipoToTransfer">
+                                  <td>{{ equipo.id }}</td>
+                                      <td>{{ equipo.imei }}</td>
+                                      <td>{{ equipo?.modelo }}</td>
+                                      <td>{{ equipo?.almacenSalida }}</td>
+                                      <td>{{ equipo?.almacenDestino }}</td>
+                                      <td>
+                                          <!-- <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
+                                             style="color: rgb(205, 65, 65); cursor: pointer;"></i> -->
+
+                          </tr>
+                        </tbody>
                             </table>
                             <div class="text-center ">
-                                <button class="btn btn-primary" 
+                                <button class="btn btn-primary"
                                         (click)="printReportEquipoVendido()">
                                         Imprimir reporte
                                 </button>

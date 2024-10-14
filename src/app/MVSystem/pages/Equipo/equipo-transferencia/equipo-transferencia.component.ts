@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
+import { EquipoAlmacenTransferirArrayRetorno, EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
 import { EquipoService } from '../../../../core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoAlmacenTransferir } from '../../../../core/interfaces/equipo.interface';
@@ -43,6 +43,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
   cantidadEquipoATransferir: number=0;
   printing: boolean = false;
   submitted: boolean = false;
+  EquipoTransferidoValorRetorno: EquipoAlmacenTransferirArrayRetorno[]=[];
 
   form: FormGroup = this.fb.group({
     imei:['',Validators.required],
@@ -60,22 +61,33 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     });
     return bool;
   }
+
   postTransferenciaEquipo(equipoToTransfer:EquipoAlmacenTransferir){
     this.equipoService.postTransferenciaEquipo(equipoToTransfer)
-    .subscribe(()=>{
+    .subscribe((EquipoTransfer: EquipoAlmacenTransferir)=>{
+        this.equipoToTransfer.push(EquipoTransfer);
+
       this.toastr.success('Equipo tranferido','', {'progressBar': true,'closeButton':true,timeOut:2000});
     })
   }
+
   deleteEquipo(imei: string){
 
-    this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
-    this.listEquiposToTransfer.splice(this.listEquiposToTransfer.findIndex(id=>id.imei === imei),1);
-    this.cantidadEquipoATransferir = this.listEquiposToTransfer.length
-    if (!this.listEquiposToTransfer.length) {
+    // this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
+    this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1);
+    this.cantidadEquipoATransferir = this.equipoToTransfer.length
+    console.log('Cantidad equipossss',this.cantidadEquipoATransferir);
+
+    if (!this.equipoToTransfer.length) {
       this.sub.unsubscribe();
       this.cantidadEquipoATransferir =0;
+    console.log('Cantidad equipos',this.cantidadEquipoATransferir);
+
       this.ngOnDestroy();
+    console.log('Cantidad equipos1',this.cantidadEquipoATransferir);
+
     }
+    console.log('Cantidad equipos2',this.cantidadEquipoATransferir);
   }
   validateInput(control:string){
     return  (!this.form.controls[control].value && this.form.controls[control].touched )
@@ -96,6 +108,7 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
         }
         else{
           const model:EquipoTransferencia ={
+            Id_Transferencia:equipo.Id_Transferencia,
             imei: equipo.imei,
             modelo: equipo.modelo,
             almacenSalida: equipo.almacenSalida,
@@ -106,15 +119,17 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
           }
           this.listEquiposToTransfer.unshift(model);
 
-          this.cantidadEquipoATransferir = this.listEquiposToTransfer.length;
+          this.cantidadEquipoATransferir = this.equipoToTransfer.length;
           const transfer: EquipoAlmacenTransferir={
             id: this.idTransferencia,
             imei: equipo.imei,
             almacenSalida:Number( equipo.almacenSalidaId),
             almacenDestino: this.form.get('almacen')?.value,
+            //almacenDestino:equipo.almacenDestino,
             cantidadEquipos: this.cantidadEquipoATransferir,
             modelo: equipo.modelo,
             usuario:this.loginService.getUserName(),
+            mensaje:equipo.mensaje
           }
           this.postTransferenciaEquipo(transfer);
           this.form.get('imei')?.reset();

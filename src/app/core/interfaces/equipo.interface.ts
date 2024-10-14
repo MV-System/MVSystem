@@ -122,6 +122,7 @@ export interface EquipoVendido {
 }
 
 export interface EquipoTransferencia{
+    Id_Transferencia:number;
     imei:string;
     modelo:string;
     almacenSalida:number;
@@ -134,13 +135,27 @@ export interface EquipoTransferencia{
 export interface EquipoAlmacenTransferir {
     id:              number;
     imei:            string;
-    modelo:string;
-
+    modelo:          string;
+    mensaje:         string;
     almacenSalida:   number;
     almacenDestino:  number;
+    //almacenDestinoString:  string;
     cantidadEquipos: number;
-    usuario: string;
+    usuario:         string;
 }
+
+export interface EquipoAlmacenTransferirArrayRetorno {
+  id_Transferencia:              number;
+  imei:            string;
+  modelo:          string;
+  mensaje:         string;
+  almacenSalida:   number;
+  almacenDestino:  string;
+  cantidadEquipos: number;
+  usuario:         string;
+
+}
+
 
 export interface EquipoModificarEstatus{
     imei: string;
