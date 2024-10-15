@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -169,7 +168,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.articulos().controls[index].setValue(currentArticulo)
       this.obtenerCantidadArticulo(currentArticulo);
       this.obtenerCantidadArticuloStock(index)
-  
+
       this.refreshGeneralValues();
     })
   }
@@ -246,7 +245,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         telefono: '',
         fechaLimitePago: this.currentDate(),
       });
-  
+
       this.articulos().clear();
       this.agregarArticulo()
       if (this.customer) {
@@ -260,7 +259,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     },
     () => {
-     
+
     },
     "Cancelar",
     "Si"
@@ -417,7 +416,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
     if (this.form.get('tipoPago')?.value == "2") {
       this.isCredit = true;
-   
+
     } else {
 
       this.isCredit = false;
@@ -726,7 +725,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
         console.log(blobResponse);
-        
+
         CreatorPDFFile(blobResponse);
         this.onClean();
         this.agregarArticulo();
@@ -739,11 +738,11 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   }
   generateFactura() {
     const data = this.loadDataToPrint()
- 
+
     this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
       () => {
         this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-          () => { this.onAcceptPrint(data); 
+          () => { this.onAcceptPrint(data);
           },
           () => {/*factura mini */ },
           "Mini",

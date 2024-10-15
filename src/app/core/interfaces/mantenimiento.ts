@@ -70,23 +70,22 @@ export interface FacturaRegistro {
     Cliente?: ClienteRegistro
 }
 export interface DetalleFacturaList {
-    numeroFactura: number;
-    idEquipo: number;
-    descripcion: string;
-    idTipo: number;
-    idGarantia: number;
-    subTotal: number;
-    cantidad: number;
-    precio: number;
-    descuento: number;
-    idVendedor: number;
-    idTipoFactura: number;
-
-    itbis: number;
-    total: number;
-    fechaRegistro: Date;
-    // Estado: ;
-    Usuario: string;
+  cantidad: number;
+  descripcion: string;
+  numeroFactura: number;
+  idEquipo: number;
+  idTipo: number;
+  idGarantia: number;
+  subTotal: number;
+  precio: number;
+  descuento: number;
+  total: number;
+  fechaRegistro: string;
+  //usuario: string;
+  idVendedor: number; // Propiedad faltante
+  idTipoFactura: number; // Propiedad faltante
+  itbis: number; // Propiedad faltante
+  Usuario: string; // Propiedad faltante
 }
 
 

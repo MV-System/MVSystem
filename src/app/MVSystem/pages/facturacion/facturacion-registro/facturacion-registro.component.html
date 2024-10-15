@@ -12,11 +12,11 @@
                         <div class="col-3">
                             <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
                             <select class="form-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
-                                <option *ngFor="let TipoFactura of facturaTipos"
-                                    [value]="TipoFactura.iD_Tipo_Factura">
-                                    {{TipoFactura.descripcion_Factura_Tipo}}
-                                </option>
-                            </select>
+                              <option *ngFor="let TipoFactura of facturaTipos"
+                                  [value]="TipoFactura.iD_Tipo_Factura">
+                                  {{TipoFactura.descripcion_Factura_Tipo}}
+                              </option>
+                          </select>
                             <div class="required-field" *ngIf="validarCampos('tipoFactura')">
                                 Este campo es requerido.
                             </div>
@@ -24,29 +24,29 @@
                         <div class="col-3" *ngIf="isFactura">
                             <label class="form-label">Tipo de Comprobante <span class="required-field">*</span></label>
                             <select class="form-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
-                                <option *ngFor="let tipoComprobante of comprobanteTipos;"
-                                    [value]="tipoComprobante.nfcTipoNumero">
-                                    {{tipoComprobante.nfcTipoDescripcion}}
-                                </option>
-                            </select>
+                              <option *ngFor="let tipoComprobante of comprobanteTipos;"
+                                  [value]="tipoComprobante.nfcTipoNumero">
+                                  {{tipoComprobante.nfcTipoDescripcion}}
+                              </option>
+                          </select>
 
                         </div>
                         <div class="col-3">
                             <label class="form-label">Aplicar ITBIS
-                                <!-- <span class="required-field">*</span> -->
-                            </label>
+                              <!-- <span class="required-field">*</span> -->
+                          </label>
                             <select class="form-select" formControlName="aplicarItbis" (change)="refreshGeneralValues()">
-                                <option value=true>Si</option>
-                                <option value=false>No</option>
-                            </select>
+                              <option value=true>Si</option>
+                              <option value=false>No</option>
+                          </select>
                         </div>
                         <div class="col-3">
                             <label class="form-label">Vendedor <span class="required-field">*</span></label>
                             <select class="form-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
-                                <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
-                                    {{vendedor.nombres}} {{vendedor.apellidos}}
-                                </option>
-                            </select>
+                              <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
+                                  {{vendedor.nombres}} {{vendedor.apellidos}}
+                              </option>
+                          </select>
                             <div class="required-field" *ngIf="validarCampos('vendedor')">
                                 Este campo es requerido.
                             </div>
@@ -80,8 +80,8 @@
 
                                 <button class="btns icon primary" type="button" (click)="onAdd()"><i class="bx bx-plus"></i></button>
                                 <!-- <div class="required-field" *ngIf="validarCampos('telefono')">
-                                    Este campo es requerido.
-                                </div> -->
+                                  Este campo es requerido.
+                              </div> -->
                             </div>
                             <div class="clientDetail">
                                 <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
@@ -94,10 +94,10 @@
                                     <div><strong>Tipo de pago:</strong></div>
                                     <div class="info">
                                         <select formControlName="tipoPago" class="form-select" (change)="onChangeTipoPago()">
-                                        <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
-                                            {{ TipoPago.descripcion_Tipo_Pagos }}
-                                        </option>
-                                    </select>
+                                      <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
+                                          {{ TipoPago.descripcion_Tipo_Pagos }}
+                                      </option>
+                                  </select>
                                         <div class="required-field" *ngIf="validarCampos('tipoPago')">
                                             Este campo es requerido.
                                         </div>
@@ -106,8 +106,8 @@
                                 <div class="grid two-cols" *ngIf="isValidFechaFacturacion()">
                                     <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
                                     <!-- <div>
-                                        <span class="info">12/12/2022</span>
-                                    </div> -->
+                                      <span class="info">12/12/2022</span>
+                                  </div> -->
                                     <div class="info">
                                         <input class="form-control" type="date" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
                                         <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
@@ -135,10 +135,10 @@
                                     <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
                                     <div>
                                         <select formControlName="garantia" class="form-select">
-                                            <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
-                                                {{garantia.descripcion}}
-                                            </option>
-                                        </select>
+                                          <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
+                                              {{garantia.descripcion}}
+                                          </option>
+                                      </select>
                                     </div>
                                 </div>
 
@@ -163,9 +163,9 @@
                     <div class="DataTable">
                         <div class="pull-right">
                             <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
-                                <i class="bx bx-plus"></i>
-                                Agregar artículo
-                            </button>
+                              <i class="bx bx-plus"></i>
+                              Agregar artículo
+                          </button>
                         </div>
                         <table class="mv-table">
                             <thead>
@@ -209,17 +209,17 @@
                                                 {{detalleFactura.value.total}}
                                             </td>
                                             <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                            placeholder="0"></td>
-                                    <td><input type="number" name="" id="" class="form-control align-right"
-                                            placeholder="0"></td> -->
+                                          placeholder="0"></td>
+                                  <td><input type="number" name="" id="" class="form-control align-right"
+                                          placeholder="0"></td> -->
                                             <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                            placeholder="0"></td> -->
+                                          placeholder="0"></td> -->
                                             <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                            placeholder="0"></td> -->
+                                          placeholder="0"></td> -->
                                             <td class="align-center">
                                                 <button class="btns flat oorange" (click)="borrarArticulo(i)">
-                                            <i class="bx bx-trash-alt"></i>
-                                        </button>
+                                          <i class="bx bx-trash-alt"></i>
+                                      </button>
                                             </td>
                                         </ng-container>
 
@@ -228,8 +228,8 @@
                             </tbody>
                         </table>
                         <!-- <div class="not-data" *ngIf="!articulos.length">
-                            Seleccione un accesorio
-                        </div> -->
+                          Seleccione un accesorio
+                      </div> -->
                     </div>
                     <div class="clear-float">
                         <div class="pull-right totalbox">
@@ -264,16 +264,16 @@
                     <div class="bottom-btns">
                         <!-- [disabled]="form.invalid" -->
                         <button class="btns primary big" type="submit">
-                                <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
-                                <span class="spinner-grow spinner-grow-sm m-0 x-10"
-                                     role="status"
-                                     aria-hidden="true"
-                                     *ngIf="isLoading"></span>
-                        </button>
+                              <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
+                              <span class="spinner-grow spinner-grow-sm m-0 x-10"
+                                   role="status"
+                                   aria-hidden="true"
+                                   *ngIf="isLoading"></span>
+                      </button>
 
                         <button class="btns secondary big" (click)="onClean()">
-                                Limpiar datos
-                        </button>
+                              Limpiar datos
+                      </button>
                     </div>
                 </div>
             </div>
@@ -285,26 +285,3 @@
 <app-cotizacion-list [cotizaciones]="cotizaciones">
 
 </app-cotizacion-list>
-
-<!-- <ng-select
-class="form-select"
-formControlName="articulo"
-id="articulo"
-[items]="accesoriosBuffer"
-[virtualScroll]="true"
-[loading]="isLoading"
-[addTag]="addArticuloImei"
-[clearable]="false"
-(keydown.enter)="cantidadInput.focus()"
-(change)="obtenerDetalleFactura(i); cantidadInput.focus()"
-(scroll)="onScroll($event)"
-(scrollToEnd)="onScrollToEnd()"
-required
-[ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }" >
-<ng-template ng-header-tmp>
-<small class="form-text text-muted">Cargado {{accesoriosBuffer.length}} de {{accesorios.length}}</small>
-</ng-template>
-<ng-template ng-option-tmp let-item="item" let-index="index">
-{{item.accesorio_Descripcion | titlecase}} |
-{{calcularPrecioSegunTipofactura(item.precio_Detalle,item.precio_Por_Mayor)| currency}}
-</ng-template> -->

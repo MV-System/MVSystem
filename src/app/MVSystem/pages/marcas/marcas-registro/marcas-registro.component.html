@@ -39,7 +39,7 @@
                         <!-- End  Form -->
                     </div>
 
-                    <div class="col-lg-5">
+                    <div class="col-lg-5" *ngIf="marcaValorRetorno.length>0">
                         <div class="card">
                             <div class="card-body">
 
@@ -47,23 +47,23 @@
                                 <div>
 
                                     <table class="table table-Secondary">
-                                      <thead>
-                                          <tr>
-                                              <th>Cod.</th>
-                                              <th>Marca</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
-                                          <td>{{Marca.iD_Marca}}</td>
-                                          <td>{{Marca.descripcion}}</td>
-                                      </tr>
-                                        <tr *ngFor="let Marca of marcaListado;let i = index">
-                                          <td>{{Marca.iD_Marca}}</td>
-                                          <td>{{Marca.descripcion}}</td>
-                                      </tr>
-                                      </tbody>
-                                  </table>
+                                        <thead>
+                                            <tr>
+                                                <th>Cod.</th>
+                                                <th>Marca</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
+                                                <td>{{Marca.iD_Marca}}</td>
+                                                <td>{{Marca.descripcion}}</td>
+                                                <!-- </tr>
+                                            <tr *ngFor="let Marca of marcaListado;let i = index">
+                                                <td>{{Marca.iD_Marca}}</td>
+                                                <td>{{Marca.descripcion}}</td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
 
                                 </div>
 

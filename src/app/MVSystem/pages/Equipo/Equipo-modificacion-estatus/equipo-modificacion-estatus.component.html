@@ -23,11 +23,8 @@
                                 <div class="col-md-6">
                                     <label class="form-label">IMEI</label>
                                     <span class="required-field">*</span>
-                                    <input type="text" class="form-control" maxlength="30" placeholder="Enter para realizar busqueda"
-                                        formControlName="imei"
-                                        (keyup.enter)="obtenerEquipoByImei()"
-                                        [readonly]="existeEquipo">
-                                  
+                                    <input type="text" class="form-control" maxlength="30" placeholder="Enter para realizar busqueda" formControlName="imei" (keyup.enter)="obtenerEquipoByImei()" [readonly]="existeEquipo">
+
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -42,13 +39,12 @@
                                 </div>
                             </div>
 
-                            
+
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Costo</label>
                                     <span class="required-field">*</span>
-                                    <input type="text" class="form-control" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$"
-                                    required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                    <input type="text" class="form-control" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
                                     <div class="required-field" *ngIf="validarCampos('costoEquipo') && existeEquipo">
                                         {{mensajeErrorCampoCosto}}
                                     </div>
@@ -58,8 +54,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Precio Por Mayor</label>
                                     <span class="required-field">*</span>
-                                    <input type="text" class="form-control" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$"
-                                    required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                    <input type="text" class="form-control" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
                                     <div class="required-field" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
                                         {{mensajeErrorCampoPrecioMayor}}
                                     </div>
@@ -69,14 +64,13 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Precio de Detalle</label>
                                     <span class="required-field">*</span>
-                                    <input type="text" class="form-control is-invalid" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$"
-                                    required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                    <input type="text" class="form-control is-invalid" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
                                 </div>
                                 <div class="required-field" *ngIf="validarCampos('precioDetalle') && existeEquipo">
                                     {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
                             </div>
-                            
+
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Comision Por Mayor</label>
@@ -87,12 +81,12 @@
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Comision de Detalle</label>
-                                    <input type="text" class="form-control" maxlength="13" formControlName="comisionDetalle" currencyMask placeholder="RD$"> 
+                                    <input type="text" class="form-control" maxlength="13" formControlName="comisionDetalle" currencyMask placeholder="RD$">
                                 </div>
                             </div>
-                            
-                            
-                            <!-- --------------- DropDown Desbloqueado --------------- --> 
+
+
+                            <!-- --------------- DropDown Desbloqueado --------------- -->
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Desbloqueado</label>
@@ -115,4 +109,4 @@
             </div>
         </div>
     </section>
-</main> 
+</main>

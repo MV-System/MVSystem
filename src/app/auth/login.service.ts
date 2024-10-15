@@ -38,16 +38,16 @@ export class LoginService implements OnInit{
 
   get tokenDecoded(){
     let token = localStorage.getItem('token') ;
-    if(!token) return '' 
+    if(!token) return ''
 
     console.log(jwt_decode<any>(`${token}`));
-     
+
     return jwt_decode<any>(`${token}`) ;
   }
-  
+
   get getUserIdSucursal(): string {
     return this.tokenDecoded.idSucursal
-  }  
+  }
   get getUserId(): string {
     return this.tokenDecoded.nameid
   }
@@ -67,12 +67,12 @@ export class LoginService implements OnInit{
     })
     .pipe(
       retry(2),
-      catchError(this.handleErrorsRespService.handleError) 
+      catchError(this.handleErrorsRespService.handleError)
     )
   }
   public getUserRoles(): string[] {
     return this.tokenDecoded.role
-  } 
+  }
   changePwdUser( user: User ){
     user.codigo =Number(this.getUserId);
     user.login = this.getUserName();
