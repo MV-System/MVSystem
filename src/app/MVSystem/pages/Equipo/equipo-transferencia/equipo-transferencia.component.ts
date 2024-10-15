@@ -14,157 +14,198 @@ import { LoginService } from 'src/app/auth/login.service';
   templateUrl: './equipo-transferencia.component.html',
   styleUrls: ['./equipo-transferencia.component.css']
 })
-export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
-
+export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
+  form: FormGroup;
+  almacenes: Almacen[] = [];
+  listEquiposToTransfer: EquipoTransferencia[] = [];
+  equipoToTransfer: EquipoAlmacenTransferir[] = [];
+  idTransferencia!: number;
+  cantidadEquipoATransferir: number = 0;
+  printing: boolean = false;
+  submitted: boolean = false;
+  sub!: Subscription;
 
   constructor(
-    private equipoService:EquipoService,
+    private equipoService: EquipoService,
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private loginService: LoginService,
-    ) { }
+  ) {
+    this.form = this.createForm();
+  }
 
   ngOnInit(): void {
     this.getAlmacenes();
     this.getTransferenciaId();
   }
+
   ngOnDestroy(): void {
-    if (!this.listEquiposToTransfer.length) {
-      this.sub.unsubscribe();
-        this.getTransferenciaId();
-    }
+    this.cleanupSubscriptions();
   }
-  sub!: Subscription;
-  almacenes: Almacen[]=[];
-  listEquiposToTransfer:EquipoTransferencia[]=[];
-  equipoToTransfer:EquipoAlmacenTransferir[]=[];
-  idTransferencia!: number;
-  cantidadEquipoATransferir: number=0;
-  printing: boolean = false;
-  submitted: boolean = false;
-  EquipoTransferidoValorRetorno: EquipoAlmacenTransferirArrayRetorno[]=[];
 
-  form: FormGroup = this.fb.group({
-    imei:['',Validators.required],
-    almacen:[2,]
-  })
-  validateImei():boolean{
-    let bool= false;
-    this.listEquiposToTransfer.forEach((imeiAdded)=>
-    {
-      if(this.form.get('imei')?.value ==imeiAdded.imei){
-
-        this.toastr.info('Ya el imei esta añadido a la lista!','',{'progressBar': true,'closeButton':true,timeOut:2000});
-         bool=true
-      }
+  private createForm(): FormGroup {
+    return this.fb.group({
+      imei: ['', Validators.required],
+      almacen: [2]  // Almacen por defecto: Plaza Central
     });
-    return bool;
   }
 
-  postTransferenciaEquipo(equipoToTransfer:EquipoAlmacenTransferir){
-    this.equipoService.postTransferenciaEquipo(equipoToTransfer)
-    .subscribe((EquipoTransfer: EquipoAlmacenTransferir)=>{
-        this.equipoToTransfer.push(EquipoTransfer);
-
-      this.toastr.success('Equipo tranferido','', {'progressBar': true,'closeButton':true,timeOut:2000});
-    })
-  }
-
-  deleteEquipo(imei: string){
-
-    // this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1)
-    this.equipoToTransfer.splice(this.equipoToTransfer.findIndex(id=>id.imei === imei),1);
-    this.cantidadEquipoATransferir = this.equipoToTransfer.length
-    console.log('Cantidad equipossss',this.cantidadEquipoATransferir);
-
-    if (!this.equipoToTransfer.length) {
+  private cleanupSubscriptions(): void {
+    if (this.sub) {
       this.sub.unsubscribe();
-      this.cantidadEquipoATransferir =0;
-    console.log('Cantidad equipos',this.cantidadEquipoATransferir);
-
-      this.ngOnDestroy();
-    console.log('Cantidad equipos1',this.cantidadEquipoATransferir);
-
     }
-    console.log('Cantidad equipos2',this.cantidadEquipoATransferir);
   }
-  validateInput(control:string){
-    return  (!this.form.controls[control].value && this.form.controls[control].touched )
+
+  validateImei(): boolean {
+    const imeiValue = this.form.get('imei')?.value;  // Si 'imei' es undefined, asigna una cadena vacía
+    //const exists = this.listEquiposToTransfer.some(imeiAdded => imeiAdded.imei === imeiValue);
+
+    // Verifica si imeiValue es undefined o null antes de hacer la comparación
+  if (!imeiValue) {
+    return false;
   }
-  getEquipoByImei(){
-    if (this.form.get('imei')?.value) {
 
-    this.equipoService.getEquipoByImei(this.form.get('imei')?.value)
-    .subscribe((equipo)=>{
-      if(this.validateImei())return
-        if (equipo.mensaje !== null && equipo.mensaje.includes('Vendido')  ) {
-          this.toastr.warning(equipo.mensaje)
-          return
-        }
-        else if(equipo.imei == null){
-          this.toastr.error('Imei no encontrado!','',{'progressBar': true,'closeButton':true,timeOut:2000})
-          return
-        }
-        else{
-          const model:EquipoTransferencia ={
-            Id_Transferencia:equipo.Id_Transferencia,
-            imei: equipo.imei,
-            modelo: equipo.modelo,
-            almacenSalida: equipo.almacenSalida,
-            almacenDestino: equipo.almacenDestino,
-           // almacenDestino: this.form.get('almacen')?.value == "2"?'Principal':'Garantias' ,
-            mensaje: '',
-            usuario: this.loginService.getUserName(),
-          }
-          this.listEquiposToTransfer.unshift(model);
+  const exists = this.listEquiposToTransfer.some(imeiAdded => imeiAdded.imei === imeiValue);
 
-          this.cantidadEquipoATransferir = this.equipoToTransfer.length;
-          const transfer: EquipoAlmacenTransferir={
-            id: this.idTransferencia,
-            imei: equipo.imei,
-            almacenSalida:Number( equipo.almacenSalidaId),
-            almacenDestino: this.form.get('almacen')?.value,
-            //almacenDestino:equipo.almacenDestino,
-            cantidadEquipos: this.cantidadEquipoATransferir,
-            modelo: equipo.modelo,
-            usuario:this.loginService.getUserName(),
-            mensaje:equipo.mensaje
-          }
-          this.postTransferenciaEquipo(transfer);
-          this.form.get('imei')?.reset();
-        }
+    if (exists) {
+      this.toastr.info('Ya el IMEI está añadido a la lista!', '', {
+        progressBar: true, closeButton: true, timeOut: 2000
       });
     }
-    else{
-      this.submitted = true
+
+    return exists;
+  }
+
+  postTransferenciaEquipo(equipoToTransfer: EquipoAlmacenTransferir): void {
+    this.equipoService.postTransferenciaEquipo(equipoToTransfer).subscribe({
+      next: (EquipoTransfer: EquipoAlmacenTransferir) => {
+        this.equipoToTransfer.push(EquipoTransfer);
+        this.toastr.success('Equipo transferido', '', { progressBar: true, closeButton: true, timeOut: 2000 });
+      },
+      error: () => {
+        this.toastr.error('Error al transferir el equipo');
+      }
+    });
+  }
+
+  deleteEquipo(imei: string): void {
+    const index = this.equipoToTransfer.findIndex(equipo => equipo.imei === imei);
+
+    if (index !== -1) {
+      this.equipoToTransfer.splice(index, 1);
+      this.cantidadEquipoATransferir = this.equipoToTransfer.length;
+
+    if (!this.equipoToTransfer.length) {
+        this.cleanupSubscriptions();
+        this.cantidadEquipoATransferir = 0;
+        this.getTransferenciaId();
+      }
+    }
+  }
+
+  validateInput(control: string): boolean {
+    // Verifica si el control existe y su valor
+    const controlValue = this.form.controls[control]?.value;
+    const controlTouched = this.form.controls[control]?.touched;
+
+    // Asegúrate de que siempre devuelva un booleano
+    return !controlValue && !!controlTouched;
+  }
+
+  getEquipoByImei(): void {
+    const imeiValue = this.form.get('imei')?.value;
+
+    if (!imeiValue) {
+      this.submitted = true;
+      return;
     }
 
+    // Valida si el IMEI ya está en la lista antes de hacer la llamada al servicio
+    if (this.validateImei()) return;
+
+    // Llama al servicio para obtener el equipo por IMEI
+    this.equipoService.getEquipoByImei(imeiValue).subscribe({
+      next: (equipo) => {
+        if (equipo.mensaje?.includes('Vendido')) {
+          this.toastr.warning(equipo.mensaje);
+          return;
+        }
+
+        if (!equipo.imei) {
+          this.toastr.error('IMEI no encontrado!', '', { progressBar: true, closeButton: true, timeOut: 2000 });
+          return;
+        }
+
+         // Si el equipo es válido, añadir a la lista y actualizar cantidad
+        this.addEquipoToList(equipo); // Mantener el valor del campo 'almacen' al resetear solo el 'imei'
+        const almacenValue = this.form.get('almacen')?.value;
+        this.form.reset({ imei: '', almacen: almacenValue });
+      },
+      error: () => {
+        this.toastr.error('Error al buscar el IMEI');
+      }
+    });
   }
-  printReportEquipoVendido(){
-    const model :EquipoTransferenciaReporte = {
+
+  private addEquipoToList(equipo: any): void {
+    // Crea el modelo del equipo para añadirlo a la lista
+    const model: EquipoTransferencia = {
+      Id_Transferencia: equipo.Id_Transferencia,
+      imei: equipo.imei,
+      modelo: equipo.modelo,
+      almacenSalida: equipo.almacenSalida,
+      almacenDestino: equipo.almacenDestino,
+      usuario: this.loginService.getUserName(),
+      mensaje: ''
+    };
+console.log("Cantidad de equipos ",this.equipoToTransfer.length);
+    // Añadir el equipo a la lista de transferencia
+    this.listEquiposToTransfer.unshift(model);
+    // Actualizar la cantidad de equipos a transferir
+    this.cantidadEquipoATransferir = this.equipoToTransfer.length +1;
+
+    // Crea el objeto para la transferencia
+    const transfer: EquipoAlmacenTransferir = {
+      id: this.idTransferencia,
+      imei: equipo.imei,
+      almacenSalida: Number(equipo.almacenSalidaId),
+      almacenDestino: this.form.get('almacen')?.value,
+      cantidadEquipos: this.cantidadEquipoATransferir,
+      modelo: equipo.modelo,
+      usuario: this.loginService.getUserName(),
+      mensaje: equipo.mensaje
+    };
+
+    this.postTransferenciaEquipo(transfer);
+  }
+
+  printReportEquipoVendido(): void {
+    const model: EquipoTransferenciaReporte = {
       idTransferencia: this.idTransferencia,
       equipoTransferencias: this.listEquiposToTransfer,
       fechaTransferencia: new Date().toDateString(),
-      usuario: '',
+      usuario: this.loginService.getUserName(),
       total: this.cantidadEquipoATransferir
-    }
-    this.equipoService.postEquipoTransferencia(model)
-        .subscribe((blobResp)=>{
-        this.printing = !this.printing;
+    };
+
+    this.equipoService.postEquipoTransferencia(model).subscribe({
+      next: (blobResp) => {
+        this.printing = true;
         this.getBlobForCreateIFramePDF(blobResp);
-    },(err)=>{
-      this.printing = !this.printing;
-      this.toastr.error('Error al imprimir reporte');
-
+      },
+      error: () => {
+        this.toastr.error('Error al imprimir reporte');
+        this.printing = false;
+      }
     });
-    this.cantidadEquipoATransferir = 0;
-    this.listEquiposToTransfer =[];
-    this.printing = !this.printing;
 
+    this.cantidadEquipoATransferir = 0;
+    this.listEquiposToTransfer = [];
   }
-  getBlobForCreateIFramePDF(blobResp: Blob){
-    var blob = new Blob([blobResp], { type: 'application/pdf' });
+
+  private getBlobForCreateIFramePDF(blobResp: Blob): void {
+    const blob = new Blob([blobResp], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
@@ -172,15 +213,16 @@ export class EquipoTransferenciaComponent implements OnInit,OnDestroy {
     document.body.appendChild(iframe);
     iframe.contentWindow?.print();
   }
-  getTransferenciaId(){
-   this.sub= this.equipoService.getTransferenciaId()
-    .subscribe((id)=>{
+
+  getTransferenciaId(): void {
+    this.sub = this.equipoService.getTransferenciaId().subscribe(id => {
       this.idTransferencia = id + 1;
-    })
+    });
   }
-  getAlmacenes() {
-    this.catalogosService.getAlmaceLista().subscribe((almacen) => {
-      this.almacenes = almacen;
+
+  getAlmacenes(): void {
+    this.catalogosService.getAlmaceLista().subscribe(almacenes => {
+      this.almacenes = almacenes;
     });
   }
 }
