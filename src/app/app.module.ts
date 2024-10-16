@@ -7,25 +7,24 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
 import { MvSystemModule } from './MVSystem/mv-system.module';
 import { SharedModule } from './shared/shared.module';
-
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptorService } from './core/interceptors/auth-interceptor.service';
 import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-interceptor';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { LoginService } from './auth/login.service';
 
-function initializeApp(Permisos: LoginService) {
-  //Permisos.LoadPermisos();
-}
+// export function initializeAppFactory(Permisos: LoginService) {
+//   return () => Permisos.LoadPermisos(); // Retorna una función que llame al método
+//}
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
+
     RouterModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -44,6 +43,13 @@ function initializeApp(Permisos: LoginService) {
   ],
 
   providers: [
+    LoginService, // Asegúrate de que el servicio esté aquí
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: initializeAppFactory,
+    //   deps: [LoginService], // Define las dependencias que se van a inyectar
+    //   multi: true
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
@@ -55,12 +61,6 @@ function initializeApp(Permisos: LoginService) {
       useClass: ErrorHandlerInterceptor,
       multi:true
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => initializeApp,
-      multi: true,
-      deps:[LoginService]
-     }
 
 ],
   bootstrap: [AppComponent]

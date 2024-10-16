@@ -36,31 +36,57 @@ export class LoginService implements OnInit{
     private permisosService: NgxPermissionsService) { }
 
   ngOnInit(): void {
-let a = this.tokenDecoded();
-    this.permisosService.loadPermissions(this.tokenDecoded.role);}
-
-
+    this.LoadPermisos(); // Llama a LoadPermisos cuando se inicie el componente
+  }
     LoadPermisos(): void {
-      return this.tokenDecoded.name
+      const tokenData = this.tokenDecoded;
+      if (tokenData && tokenData.role) {
+         this.permisosService.loadPermissions(tokenData.role);
+        //console.log('Permisos cargados:', this.permisosService.getPermissions());
+        //console.log('Permisos cargadoswwwww:', this.permisosService.getPermission);
+    } else {
+        console.error('No se pudo obtener el token o el rol.');
     }
+  }
 
   isPrint = new Subject<boolean>();
 
-  get tokenDecoded(){
-    let token = localStorage.getItem('token') ;
-    if(!token) return ''
+  get tokenDecoded1(){
 
-   //console.log("Ver Permisos", jwt_decode<any>(`${token}`));
+    let token = localStorage.getItem('token') ;
+
+
+    if(!token) return ''
 
     return jwt_decode<any>(`${token}`) ;
   }
-  // public LoadPermisos(): void {
-  //  return console.log("Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  //   //return this.permisosService.loadPermissions(this.tokenDecoded.role);
-  // }
+
+  get tokenDecoded(){
+
+    let token = localStorage.getItem('token') ;
+    //const token = localStorage.getItem('token');
+
+    if (!token) {
+        console.error('No se encontró el token en localStorage.');
+        return ''; // Cambia el retorno a null para evitar errores
+    }
+
+    try {
+        return jwt_decode<any>(token); // Decodifica el token correctamente
+    } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        return null; // En caso de error, devuelve null
+    }
+    // let token = localStorage.getItem('token') ;
+
+    // if(!token) return null
+
+   //console.log("Ver Permisos", jwt_decode<any>(`${token}`));
+
+   // return jwt_decode<any>(`${token}`) ;
+  }
 
   get getUserIdSucursal(): string {
-    //console.log("Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1");
     return this.tokenDecoded.idSucursal
   }
 

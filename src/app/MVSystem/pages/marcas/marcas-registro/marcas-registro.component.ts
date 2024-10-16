@@ -17,7 +17,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 })
 
 export class MarcasRegistroComponent implements OnInit {
-  [x: string]: any;
+  //[x: string]: any;
   modeloListado: ModeloEquipo[] = [];
   marcaListado: MarcaEquipo[] = [];
   marcaValorRetorno: MarcaObjRetorno[]=[];
@@ -29,13 +29,12 @@ export class MarcasRegistroComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private MarcaService: MarcaService,
-    private Permisos: LoginService,
+    private LoginPermisos: LoginService,
     private validatorPermissionService: ValidatorPermissionService
   ) { }
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
-
 
   }
   // VerFormMarca(): boolean {
@@ -47,8 +46,6 @@ export class MarcasRegistroComponent implements OnInit {
            this.formRegistro.get(nombreCampo)?.touched
   }
   btnDisable(){
-  // let a = this.Permisos.getUserIdSucursal;
-  // console.log("sdadsdasdad",a);
     return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
   }
 
@@ -60,8 +57,6 @@ export class MarcasRegistroComponent implements OnInit {
   obtenerMarcasLista() {
     this.catalogosService.getMarcasLista().subscribe((marca) => {
       this.marcaListado = marca;
-  // console.log("Ver permisos",this.Permisos.tokenDecoded.role);
-
     });
   }
 
@@ -69,11 +64,12 @@ export class MarcasRegistroComponent implements OnInit {
 
     const registro: MarcaEquipo = {
       descripcion:        this.formRegistro.get('descripcion')?.value,
-      usuario:     "Ventura"//       this.formRegistro.get('usuario')?.value,
+      usuario:  this.LoginPermisos.getUserName(),//    "Ventura"//       this.formRegistro.get('usuario')?.value,
 
     }
       return registro;
   }
+
   registroMarca(){
 
     const model: MarcaEquipo = this.modeloRegistroMarca();
