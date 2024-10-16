@@ -6,7 +6,7 @@ import { LoginService } from '../../auth/login.service';
     providedIn:'root'
 })
 export class ValidatorPermissionService{
-    
+
     constructor(private readonly loadingService:LoginService){}
 
     validateUserRole(role: string){

@@ -30,15 +30,17 @@
                                 Este campo es requerido.
 
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-6" *ngxPermissionsOnly="['MNU_MANT_MARCAS']">
                                 <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
                             </div>
+                            <!-- </ng-container> -->
 
 
                         </form>
                         <!-- End  Form -->
                     </div>
-
+                    <!-- <pre>{{ marcaListado | json }}</pre> -->
                     <div class="col-lg-5" *ngIf="marcaValorRetorno.length>0">
                         <div class="card">
                             <div class="card-body">
@@ -57,8 +59,8 @@
                                             <tr *ngFor="let Marca of marcaValorRetorno;let i = index">
                                                 <td>{{Marca.iD_Marca}}</td>
                                                 <td>{{Marca.descripcion}}</td>
-                                                <!-- </tr>
-                                            <tr *ngFor="let Marca of marcaListado;let i = index">
+                                            </tr>
+                                            <!-- <tr *ngFor="let Marca of marcaListado;let i = index">
                                                 <td>{{Marca.iD_Marca}}</td>
                                                 <td>{{Marca.descripcion}}</td>
                                             </tr> -->

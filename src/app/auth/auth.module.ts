@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { PasswordChangePageComponent } from './password-change-page/password-change-page.component';
 import { PasswordStrengthMeterComponent } from './password-strength-meter/password-strength-meter.component';
 import { SharedModule } from '../shared/shared.module';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     AuthRoutingModule,
+
   ],
   exports: [
     RouterModule

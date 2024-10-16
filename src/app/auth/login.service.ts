@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { CatalogosService } from '../core/services/catalogos.service';
 import { Almacen } from '../core/interfaces/catalogo.interface';
 import { currentDate, transformDate } from "../helpers/helper";
+import { NgxPermissionsService } from "ngx-permissions";
 interface userToken{
   Empresa:string,
   aud:string,
@@ -31,23 +32,38 @@ export class LoginService implements OnInit{
   constructor(
     private httpClient: HttpClient,
     private handleErrorsRespService: HandleErrorsResponseService,
-    private router:Router) { }
+    private router:Router,
+    private permisosService: NgxPermissionsService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+let a = this.tokenDecoded();
+    this.permisosService.loadPermissions(this.tokenDecoded.role);}
+
+
+    LoadPermisos(): void {
+      return this.tokenDecoded.name
+    }
+
   isPrint = new Subject<boolean>();
 
   get tokenDecoded(){
     let token = localStorage.getItem('token') ;
     if(!token) return ''
 
-    console.log(jwt_decode<any>(`${token}`));
+   //console.log("Ver Permisos", jwt_decode<any>(`${token}`));
 
     return jwt_decode<any>(`${token}`) ;
   }
+  // public LoadPermisos(): void {
+  //  return console.log("Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  //   //return this.permisosService.loadPermissions(this.tokenDecoded.role);
+  // }
 
   get getUserIdSucursal(): string {
+    //console.log("Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1");
     return this.tokenDecoded.idSucursal
   }
+
   get getUserId(): string {
     return this.tokenDecoded.nameid
   }
@@ -71,6 +87,8 @@ export class LoginService implements OnInit{
     )
   }
   public getUserRoles(): string[] {
+    //this.permisosService.loadPermissions(this.tokenDecoded.role)
+    //console.log("Ver Permisos", this.permisosService.loadPermissions(this.tokenDecoded.role));
     return this.tokenDecoded.role
   }
   changePwdUser( user: User ){

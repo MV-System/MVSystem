@@ -1,4 +1,4 @@
-import { Component, Input, NgModule, OnInit } from '@angular/core';
+import { Component, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
@@ -8,8 +8,8 @@ import {MarcaObjRetorno } from 'src/app/core/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/core/services/marca.service';
-import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
-
+import { LoginService } from 'src/app/auth/login.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 @Component({
   selector: 'app-marcas-registro',
   templateUrl: './marcas-registro.component.html',
@@ -17,6 +17,7 @@ import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
 })
 
 export class MarcasRegistroComponent implements OnInit {
+  [x: string]: any;
   modeloListado: ModeloEquipo[] = [];
   marcaListado: MarcaEquipo[] = [];
   marcaValorRetorno: MarcaObjRetorno[]=[];
@@ -28,20 +29,29 @@ export class MarcasRegistroComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private MarcaService: MarcaService,
+    private Permisos: LoginService,
+    private validatorPermissionService: ValidatorPermissionService
   ) { }
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
+
+
   }
+  // VerFormMarca(): boolean {
+  //   return this.validatorPermissionService.validateUserRole("MNU_MANT_MARCAS");
+  // }
 
   validarCampos(nombreCampo: string) {
     return this.formRegistro.get(nombreCampo)?.invalid &&
            this.formRegistro.get(nombreCampo)?.touched
   }
   btnDisable(){
-
+  // let a = this.Permisos.getUserIdSucursal;
+  // console.log("sdadsdasdad",a);
     return this.formRegistro.valid  ? this.btnDisabled = false: this.btnDisabled = true;
   }
+
 
   formRegistro: FormGroup = this.fb.group({
     descripcion: ['', Validators.required]
@@ -50,6 +60,8 @@ export class MarcasRegistroComponent implements OnInit {
   obtenerMarcasLista() {
     this.catalogosService.getMarcasLista().subscribe((marca) => {
       this.marcaListado = marca;
+  // console.log("Ver permisos",this.Permisos.tokenDecoded.role);
+
     });
   }
 
@@ -87,3 +99,7 @@ export class MarcasRegistroComponent implements OnInit {
   }
 
 }
+function jwt_decode<T>(arg0: string): any {
+  throw new Error('Function not implemented.');
+}
+

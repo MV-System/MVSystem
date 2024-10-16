@@ -131,7 +131,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   });
 
   isValidFechaFacturacion(): boolean {
-    return this.validatorPermissionService.validateUserRole("CAMBIAR_FECHA_FACTURA");
+    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
   }
   articulos(): FormArray {
     return this.form.controls["articulos"] as FormArray;

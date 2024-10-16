@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,10 +10,21 @@ export class SidebarComponent implements OnInit {
   inside: boolean = false;
   color: string | undefined;
 
-  constructor(private renderer: Renderer2) { }
+  constructor(private renderer: Renderer2,
+    private validatorPermissionService: ValidatorPermissionService
+  ) { }
 
   ngOnInit(): void {
 
+  }
+  VerMenuMantenimiento(): boolean {
+    return this.validatorPermissionService.validateUserRole("MNU_MANTENIMIENTO");
+  }
+  VerFormMarcas(): boolean {
+    return this.validatorPermissionService.validateUserRole("MNU_MANT_MARCAS");
+  }
+  VerFormClientes(): boolean {
+    return this.validatorPermissionService.validateUserRole("MNU_MANT_CLIENTES");
   }
 
   @HostListener('click', ['$event']) click() {

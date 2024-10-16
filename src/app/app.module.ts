@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,7 +14,12 @@ import { SharedModule } from './shared/shared.module';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptorService } from './core/interceptors/auth-interceptor.service';
 import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-interceptor';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { LoginService } from './auth/login.service';
 
+function initializeApp(Permisos: LoginService) {
+  //Permisos.LoadPermisos();
+}
 
 @NgModule({
   declarations: [
@@ -27,6 +32,7 @@ import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-inter
     SharedModule,
     HttpClientModule,
     MvSystemModule,
+    NgxPermissionsModule.forRoot(),
     ToastrModule.forRoot({
       preventDuplicates: true,
     }),
@@ -36,18 +42,27 @@ import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-inter
   exports: [
     SharedModule
   ],
+
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
+
       multi: true
     },
     {
       provide:HTTP_INTERCEPTORS,
       useClass: ErrorHandlerInterceptor,
       multi:true
-    }
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => initializeApp,
+      multi: true,
+      deps:[LoginService]
+     }
+
 ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
