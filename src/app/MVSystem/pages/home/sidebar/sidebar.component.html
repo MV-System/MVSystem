@@ -9,13 +9,13 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="VerFormFacturacion()">
             <a class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
                 <span>Facturación</span>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="VerFormcotizacion()">
             <a class="nav-link" routerLink="./cotizacion">
                 <i class="bi bi-receipt"></i>
                 <span>Cotización</span>
@@ -27,7 +27,7 @@
                 <i class="bi bi-menu-button-wide"></i><span>Mantenimiento</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="mantenimiento-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
+                <li *ngIf="VerFormAccesorios()">
                     <a routerLink="./accesorios/registro">
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
@@ -37,7 +37,7 @@
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormEquipos()">
                     <a routerLink="./equipo/registro">
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
@@ -47,32 +47,32 @@
                         <i class="bi bi-circle"></i><span>Marcas</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormModelos()">
                     <a routerLink="./modelos/registro">
                         <i class="bi bi-circle"></i><span>Modelos</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormSuplidores()">
                     <a routerLink="./suplidores/registro">
                         <i class="bi bi-circle"></i><span>Suplidores</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormTransferenciasEquipos()">
                     <a routerLink="./equipo/transferencia">
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormRegistroVendedores()">
                     <a routerLink="./vendedores/registro">
                         <i class="bi bi-circle"></i><span>Vendedores</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormCambiaEstatusEquipo()">
                     <a routerLink="./equipo/cambiar-estatus">
                         <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
                     </a>
                 </li>
-                <li>
+                <li *ngIf="VerFormRecepcionEquipo()">
                     <a routerLink="./equipo/recepcion">
                         <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
                     </a>
@@ -84,32 +84,32 @@
             </li>
             <!-- End Mantenimiento Nav -->
             <!--  Consulta Nav -->
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="VerMenuConsultas()">
                 <a class="nav-link collapsed" data-bs-target="#consulta-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-layout-text-window-reverse"></i><span>Consulta</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="consulta-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
+                    <li *ngIf="VerFormConsultaAccesorios()">
                         <a routerLink="./accesorios/consulta">
                             <i class="bi bi-circle"></i><span>Accesorios</span>
                         </a>
                     </li>
-                    <li>
+                    <li *ngIf="VerFormConsultaClientes()">
                         <a routerLink="./clientes/consulta">
                             <i class="bi bi-circle"></i><span>Clientes</span>
                         </a>
                     </li>
-                    <li>
+                    <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/consulta">
                             <i class="bi bi-circle"></i><span>Equipos</span>
                         </a>
                     </li>
-                    <li>
+                    <li *ngIf="VerFormConsultaUtilidades()">
                         <a routerLink="./utilidades/consulta">
                             <i class="bi bi-circle"></i><span>Utilidades</span>
                         </a>
                     </li>
-                    <li>
+                    <li *ngIf="VerFormConsultaFacturas()">
                         <a routerLink="./facturacion/consulta">
                             <i class="bi bi-circle"></i><span>Facturas</span>
                         </a>

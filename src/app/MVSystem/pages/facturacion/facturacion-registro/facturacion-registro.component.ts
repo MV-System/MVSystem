@@ -43,7 +43,12 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     private rDialogService: RDialogService,
     private validatorPermissionService: ValidatorPermissionService) { }
 
-
+    CambiarFechaFactura(): boolean {
+      return this.validatorPermissionService.validateUserRole("CAMBIAR_FECHA_FACTURA");
+    }
+    BotonProcesarFactura(): boolean {
+      return this.validatorPermissionService.validateUserRole("btngeneraFactura");
+    }
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();

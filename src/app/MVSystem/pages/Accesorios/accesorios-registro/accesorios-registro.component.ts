@@ -42,8 +42,6 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.obtenerAlmacenLista();
     this.btnDisable();
     this.formRegistro.get('modelo')?.disable();
-
-
   }
   //Forms
   formRegistro: FormGroup = this.fb.group({

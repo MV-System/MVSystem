@@ -61,11 +61,11 @@ export interface EquipoDisponible {
     totalRecord: number;
     totalInventario: number;
 }
-export interface EquipoDisponible extends DatePaging ,Pagination{
+export interface EquipoDisponibleParam extends DatePaging ,Pagination{
     almacen: number;
-    suplidor: string;
+    suplidor: number;
     imei: string;
-    modelo: string;
+    modelo: number;
 }
 export interface EquipoVendidoFilter extends DatePaging,Pagination{
     almacen:  number;

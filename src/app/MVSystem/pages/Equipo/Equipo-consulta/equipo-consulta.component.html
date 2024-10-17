@@ -1,234 +1,225 @@
 <main id="main" class="main">
-	<div class="main-title">
-		<nav>
-			<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
-			<li class="breadcrumb-item">Consulta</li>
-			<li class="breadcrumb-item">Consulta equipos</li>
-			</ol>
-		</nav>
+    <div class="main-title">
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
+                <li class="breadcrumb-item">Consulta</li>
+                <li class="breadcrumb-item">Consulta equipos</li>
+            </ol>
+        </nav>
         <h1>Inventario</h1>
     </div>
-	<div class="cta-btn">
-		<button class="btns primary"><i class='bx bx-plus'></i> Nuevo</button>
-	</div>
+    <div class="cta-btn">
+        <button class="btns primary"><i class='bx bx-plus'></i> Nuevo</button>
+    </div>
 
-	<div class="box">
-		<div class="grid inline-filters">
-			<div class="filterchips">
-				<div class="searchbox">
-					<input type="search" name="" id="" class="form-control" placeholder="Buscar por Descrip., IMEI o Código">
-					<button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-				</div>
-				<select class="form-select chip active">
+    <div class="box">
+        <div class="grid inline-filters">
+            <div class="filterchips">
+                <div class="searchbox">
+                    <input type="search" name="" id="" class="form-control" placeholder="Buscar por Descrip., IMEI o Código">
+                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                </div>
+                <select class="form-select chip active">
 					<option hidden>Equipos</option>
 				</select>
-				<select class="form-select chip">
-					<option hidden>Almacén</option>
-				</select>
-				<select class="form-select chip">
-					<option hidden>Suplidor</option>
-				</select>
-				<select class="form-select chip">
-					<option hidden>Modelo</option>
-				</select>
-				<!-- <input type="date" name="" id="" class="form-control chip"> -->
-				<button class="btns flat gunmetal"><i class='bx bxs-eraser'></i> Limpiar filtros</button>
-			</div>
-			<div>
-				<button class="btns secondary gunmetal">
+                <select class="form-select chip">
+          <option value="" disabled selected>Selecciona un almacén</option>
+          <option id="almacen" *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen == 7 ? 0 : almacen.iD_Almacen">
+            {{ almacen.descripcion }}
+          </option>
+        </select>
+                <select class="form-select chip">
+                  <option value="" disabled selected>Selecciona un Suplidor</option>
+          <option *ngFor="let Suplidor of Suplidores" [value]="Suplidor.iD_Suplidor == 1 ? 0 : Suplidor.iD_Suplidor">
+            {{ Suplidor.descripcion }}
+          </option>
+        </select>
+                <select class="form-select chip">
+                  <option value="" disabled selected>Selecciona un Modelo</option>
+          <option *ngFor="let modelo of Modelos" [value]="modelo.iD_Modelo == 1 ? 0 : modelo.iD_Modelo">Modelo
+            {{ modelo.descripcion }}
+          </option>
+        </select>
+                <!-- <input type="date" name="" id="" class="form-control chip"> -->
+                <button class="btns flat gunmetal"><i class='bx bxs-eraser'></i> Limpiar filtros</button>
+            </div>
+            <div>
+                <button class="btns secondary gunmetal">
 					<i class='bx bx-download'></i> Descargar
 				</button>
-			</div>
-		</div>
-		<div class="scrollable-table thinScroll">
-			<table class="mv-table">
-				<thead>
-					<tr>
-						<th class="fixed-item code">IMEI/Código</th>
-						<th class="fixed-item desc">Descripción</th>
-						<th>Tipo</th>
-						<th>Estado</th>
-						<th class="align-center">Tecnología</th>
-						<th class="align-right">Precio de Venta</th>
-						<th class="align-right">
-							Precio APM
-							<span 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Al por mayor">
+            </div>
+        </div>
+        <div class="scrollable-table thinScroll">
+            <table class="mv-table">
+                <thead>
+                    <tr>
+                        <th class="fixed-item code">IMEI/Código</th>
+                        <th class="fixed-item desc">Descripción</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th class="align-center">Tecnología</th>
+                        <th class="align-right">Precio de Venta</th>
+                        <th class="align-right">
+                            Precio APM
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Al por mayor">
 								<i class='bx bxs-info-circle'></i>
 							</span>
-						</th>
-						<th class="align-right">Costo</th>
-						<th class="align-center">Existencia</th>
-						<th class="align-center">Vendidos</th>
-						<th>Desbloqueo</th>
-						<th>Garantía</th>
-						<th>Nota</th>
-						<th class="align-right">Comisión</th>
-						<th class="align-right">Comisión APM</th>
-						<th>Almacén</th>
-						<th>Suplidor</th>
-						<th>Fecha Registro</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="fixed-item code">984651321663782</td>
-						<td class="fixed-item desc">
-							<span>Redmi Note 9S</span>
-							<button class="btns flat gunmetal" 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Editar artículo">
+                        </th>
+                        <th class="align-right">Costo</th>
+                        <th class="align-center">Existencia</th>
+                        <th class="align-center">Vendidos</th>
+                        <th>Desbloqueo</th>
+                        <th>Garantía</th>
+                        <th>Nota</th>
+                        <th class="align-right">Comisión</th>
+                        <th class="align-right">Comisión APM</th>
+                        <th>Almacén</th>
+                        <th>Suplidor</th>
+                        <th>Fecha Registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fixed-item code">984651321663782</td>
+                        <td class="fixed-item desc">
+                            <span>Redmi Note 9S</span>
+                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
-						</td>
-						<td>Equipo</td>
-						<td>Nuevo</td>
-						<td class="align-center">4G</td>
-						<td class="align-right">RD$ 10,250.00</td>
-						<td class="align-right">RD$ 7,800.00</td>
-						<td class="align-right">RD$ 10,750.26</td>
-						<td class="align-center">30</td>
-						<td class="align-center">200</td>
-						<td>Sí</td>
-						<td>3 Meses</td>
-						<td>--</td>
-						<td class="align-right">RD$ 150</td>
-						<td class="align-right">RD$ 300</td>
-						<td>Principal</td>
-						<td>Xiami</td>
-						<td>17 ene, 2023</td>
-					</tr>
-					<tr>
-						<td class="fixed-item code">984651321663782</td>
-						<td class="fixed-item desc">
-							<span>Redmi Note 9S</span>
-							<button class="btns flat gunmetal" 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Editar artículo">
+                        </td>
+                        <td>Equipo</td>
+                        <td>Nuevo</td>
+                        <td class="align-center">4G</td>
+                        <td class="align-right">RD$ 10,250.00</td>
+                        <td class="align-right">RD$ 7,800.00</td>
+                        <td class="align-right">RD$ 10,750.26</td>
+                        <td class="align-center">30</td>
+                        <td class="align-center">200</td>
+                        <td>Sí</td>
+                        <td>3 Meses</td>
+                        <td>--</td>
+                        <td class="align-right">RD$ 150</td>
+                        <td class="align-right">RD$ 300</td>
+                        <td>Principal</td>
+                        <td>Xiami</td>
+                        <td>17 ene, 2023</td>
+                    </tr>
+                    <tr>
+                        <td class="fixed-item code">984651321663782</td>
+                        <td class="fixed-item desc">
+                            <span>Redmi Note 9S</span>
+                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
-						</td>
-						<td>Equipo</td>
-						<td>Nuevo</td>
-						<td class="align-center">4G</td>
-						<td class="align-right">RD$ 10,250.00</td>
-						<td class="align-right">RD$ 7,800.00</td>
-						<td class="align-right">RD$ 10,750.26</td>
-						<td class="align-center">30</td>
-						<td class="align-center">200</td>
-						<td>Sí</td>
-						<td>3 Meses</td>
-						<td>--</td>
-						<td class="align-right">RD$ 150</td>
-						<td class="align-right">RD$ 300</td>
-						<td>Principal</td>
-						<td>Xiami</td>
-						<td>17 ene, 2023</td>
-					</tr>
-					<tr>
-						<td class="fixed-item code">984651321663782</td>
-						<td class="fixed-item desc">
-							<span>Redmi Note 9S</span>
-							<button class="btns flat gunmetal" 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Editar artículo">
+                        </td>
+                        <td>Equipo</td>
+                        <td>Nuevo</td>
+                        <td class="align-center">4G</td>
+                        <td class="align-right">RD$ 10,250.00</td>
+                        <td class="align-right">RD$ 7,800.00</td>
+                        <td class="align-right">RD$ 10,750.26</td>
+                        <td class="align-center">30</td>
+                        <td class="align-center">200</td>
+                        <td>Sí</td>
+                        <td>3 Meses</td>
+                        <td>--</td>
+                        <td class="align-right">RD$ 150</td>
+                        <td class="align-right">RD$ 300</td>
+                        <td>Principal</td>
+                        <td>Xiami</td>
+                        <td>17 ene, 2023</td>
+                    </tr>
+                    <tr>
+                        <td class="fixed-item code">984651321663782</td>
+                        <td class="fixed-item desc">
+                            <span>Redmi Note 9S</span>
+                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
-						</td>
-						<td>Equipo</td>
-						<td>Nuevo</td>
-						<td class="align-center">4G</td>
-						<td class="align-right">RD$ 10,250.00</td>
-						<td class="align-right">RD$ 7,800.00</td>
-						<td class="align-right">RD$ 10,750.26</td>
-						<td class="align-center">30</td>
-						<td class="align-center">200</td>
-						<td>Sí</td>
-						<td>3 Meses</td>
-						<td>--</td>
-						<td class="align-right">RD$ 150</td>
-						<td class="align-right">RD$ 300</td>
-						<td>Principal</td>
-						<td>Xiami</td>
-						<td>17 ene, 2023</td>
-					</tr>
-					<tr>
-						<td class="fixed-item code">984651321663782</td>
-						<td class="fixed-item desc">
-							<span>Redmi Note 9S</span>
-							<button class="btns flat gunmetal" 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Editar artículo">
+                        </td>
+                        <td>Equipo</td>
+                        <td>Nuevo</td>
+                        <td class="align-center">4G</td>
+                        <td class="align-right">RD$ 10,250.00</td>
+                        <td class="align-right">RD$ 7,800.00</td>
+                        <td class="align-right">RD$ 10,750.26</td>
+                        <td class="align-center">30</td>
+                        <td class="align-center">200</td>
+                        <td>Sí</td>
+                        <td>3 Meses</td>
+                        <td>--</td>
+                        <td class="align-right">RD$ 150</td>
+                        <td class="align-right">RD$ 300</td>
+                        <td>Principal</td>
+                        <td>Xiami</td>
+                        <td>17 ene, 2023</td>
+                    </tr>
+                    <tr>
+                        <td class="fixed-item code">984651321663782</td>
+                        <td class="fixed-item desc">
+                            <span>Redmi Note 9S</span>
+                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
-						</td>
-						<td>Equipo</td>
-						<td>Nuevo</td>
-						<td class="align-center">4G</td>
-						<td class="align-right">RD$ 10,250.00</td>
-						<td class="align-right">RD$ 7,800.00</td>
-						<td class="align-right">RD$ 10,750.26</td>
-						<td class="align-center">30</td>
-						<td class="align-center">200</td>
-						<td>Sí</td>
-						<td>3 Meses</td>
-						<td>--</td>
-						<td class="align-right">RD$ 150</td>
-						<td class="align-right">RD$ 300</td>
-						<td>Principal</td>
-						<td>Xiami</td>
-						<td>17 ene, 2023</td>
-					</tr>
-					<tr>
-						<td class="fixed-item code">984651321663782</td>
-						<td class="fixed-item desc">
-							<span>Redmi Note 9S</span>
-							<button class="btns flat gunmetal" 
-								data-bs-toggle="tooltip" 
-								data-bs-placement="top"
-								data-bs-original-title="Editar artículo">
+                        </td>
+                        <td>Equipo</td>
+                        <td>Nuevo</td>
+                        <td class="align-center">4G</td>
+                        <td class="align-right">RD$ 10,250.00</td>
+                        <td class="align-right">RD$ 7,800.00</td>
+                        <td class="align-right">RD$ 10,750.26</td>
+                        <td class="align-center">30</td>
+                        <td class="align-center">200</td>
+                        <td>Sí</td>
+                        <td>3 Meses</td>
+                        <td>--</td>
+                        <td class="align-right">RD$ 150</td>
+                        <td class="align-right">RD$ 300</td>
+                        <td>Principal</td>
+                        <td>Xiami</td>
+                        <td>17 ene, 2023</td>
+                    </tr>
+                    <tr>
+                        <td class="fixed-item code">984651321663782</td>
+                        <td class="fixed-item desc">
+                            <span>Redmi Note 9S</span>
+                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
-						</td>
-						<td>Equipo</td>
-						<td>Nuevo</td>
-						<td class="align-center">4G</td>
-						<td class="align-right">RD$ 10,250.00</td>
-						<td class="align-right">RD$ 7,800.00</td>
-						<td class="align-right">RD$ 10,750.26</td>
-						<td class="align-center">30</td>
-						<td class="align-center">200</td>
-						<td>Sí</td>
-						<td>3 Meses</td>
-						<td>--</td>
-						<td class="align-right">RD$ 150</td>
-						<td class="align-right">RD$ 300</td>
-						<td>Principal</td>
-						<td>Xiami</td>
-						<td>17 ene, 2023</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+                        </td>
+                        <td>Equipo</td>
+                        <td>Nuevo</td>
+                        <td class="align-center">4G</td>
+                        <td class="align-right">RD$ 10,250.00</td>
+                        <td class="align-right">RD$ 7,800.00</td>
+                        <td class="align-right">RD$ 10,750.26</td>
+                        <td class="align-center">30</td>
+                        <td class="align-center">200</td>
+                        <td>Sí</td>
+                        <td>3 Meses</td>
+                        <td>--</td>
+                        <td class="align-right">RD$ 150</td>
+                        <td class="align-right">RD$ 300</td>
+                        <td>Principal</td>
+                        <td>Xiami</td>
+                        <td>17 ene, 2023</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-  <!-- End Page Title -->
-  <section class="section" style="display: none;">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="row mt-3">
+    <!-- End Page Title -->
+    <section class="section" style="display: none;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mt-3">
 
-              <!-- <i class="bi bi-funnel"></i> -->
-              <!-- <div class="form-check ">
+                            <!-- <i class="bi bi-funnel"></i> -->
+                            <!-- <div class="form-check ">
                 <label class="form-check-label">
                   Disponibles
                   <input type="radio" checked name="equipo" value="1" class="form-check-input"
@@ -250,53 +241,35 @@
                       class="ri-filter-off-line"></i></button>
                 </ng-container>
               </div> -->
-              <ul class="nav nav-tabs nav-tabs-bordered"  role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active"  
-                          value="1"
-                          data-bs-toggle="tab" 
-                           type="button" 
-                           role="tab"  
-                           aria-selected="true"
-                           (click)="onCheckboxEquipoChange(1)">Disponibles</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" 
-                           value="2"
-                          data-bs-toggle="tab" 
-                          type="button" 
-                          role="tab" 
-                          aria-selected="false"
-                          (click)="onCheckboxEquipoChange(2)">Vendidos</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" 
-                          value="3"
-                          data-bs-toggle="tab" 
-                          type="button" 
-                          role="tab"  
-                          aria-selected="false"
-                          (click)="onCheckboxEquipoChange(3)">Recibidos</button>
-                </li>
-                <ng-container class="form-check-label ">
+                            <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" value="1" data-bs-toggle="tab" type="button" role="tab" aria-selected="true" (click)="onCheckboxEquipoChange(1)">Disponibles</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" value="2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" (click)="onCheckboxEquipoChange(2)">Vendidos</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" value="3" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" (click)="onCheckboxEquipoChange(3)">Recibidos</button>
+                                </li>
+                                <ng-container class="form-check-label ">
 
-                  <button class="btn clear-filter mb-2" (click)="clearFilters($event)">Limpiar filtros <i
+                                    <button class="btn clear-filter mb-2" (click)="clearFilters($event)">Limpiar filtros <i
                       class="ri-filter-off-line"></i></button>
-                </ng-container>
-              </ul>
+                                </ng-container>
+                            </ul>
+                        </div>
+                        <div class=" mt-3">
+                            <app-equipo-disponible [clearFilter]="filter" *ngIf="equipoTipotab == disponible"></app-equipo-disponible>
+                            <app-equipo-consulta-vendido [clearFilter]="filter" *ngIf="equipoTipotab == vendido">
+                            </app-equipo-consulta-vendido>
+                            <app-equipo-consulta-recibido [clearFilter]="filter" *ngIf="equipoTipotab == recibido">
+                            </app-equipo-consulta-recibido>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class=" mt-3">
-              <app-equipo-disponible [clearFilter]="filter" *ngIf="equipoTipotab == disponible"></app-equipo-disponible>
-              <app-equipo-consulta-vendido [clearFilter]="filter" *ngIf="equipoTipotab == vendido">
-              </app-equipo-consulta-vendido>
-              <app-equipo-consulta-recibido [clearFilter]="filter" *ngIf="equipoTipotab == recibido">
-              </app-equipo-consulta-recibido>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 </main>
 
 <!-- End #main -->

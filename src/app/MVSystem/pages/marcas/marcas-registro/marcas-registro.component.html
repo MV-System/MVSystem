@@ -30,13 +30,9 @@
                                 Este campo es requerido.
 
                             </div>
-                            <ng-container *ngxPermissionsOnly="['MNU_MANT_MARCAS']">
-                                <div class="col-md-6">
-                                    <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
-                                </div>
-                            </ng-container>
-
-
+                            <div class="col-md-6">
+                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
+                            </div>
                         </form>
                         <!-- End  Form -->
                     </div>

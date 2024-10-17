@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import {
-    EquipoDisponible,
+  EquipoDisponibleParam,
     EquipoVendido,
     EquipoVendidoFilter,
     EquipoTransferencia,
     EquipoAlmacenTransferir,
     EquipoTransferenciaReporte,
     filterEquipos,
-    EquipoAlmacenTransferirArrayRetorno
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/config/url";
 import { Observable } from 'rxjs';
@@ -21,7 +20,7 @@ export class EquipoService{
 
     constructor(private http: HttpClient) {}
     //GET'S
-    getEquipoDisponible( EquipoDisponible:EquipoDisponible):Observable<any>{
+    getEquipoDisponible( EquipoDisponible:EquipoDisponibleParam):Observable<any>{
         const search =
         'Almacen='+
         EquipoDisponible.almacen +
@@ -108,10 +107,6 @@ export class EquipoService{
             responseType: 'blob' as 'json'
           });
     }
-    // postTransferenciaEquipo(equipo: EquipoAlmacenTransferir):Observable<EquipoAlmacenTransferir>{
-    //     return this.http.post<EquipoAlmacenTransferir>(APIURL.Equipo.Inserta.EquipoTransferenciaInserta, equipo)
-    // }
-
     postTransferenciaEquipo(equipo: EquipoAlmacenTransferir): Observable<EquipoAlmacenTransferir> {
       return this.http.post<EquipoAlmacenTransferir>(APIURL.Equipo.Inserta.EquipoTransferenciaInserta, equipo);
     }

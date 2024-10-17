@@ -9,6 +9,7 @@ import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from '../../../../helpers/helper';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -21,8 +22,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private mantenimientoService: MantenimientoService,
     private catalogosService: CatalogosService,
-    private toast: ToastrService) { }
-   
+    private toast: ToastrService,
+  private validatorPermissionService:ValidatorPermissionService) { }
+
+    SelectSucursal(): boolean {
+      return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+    }
+
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe())
   }

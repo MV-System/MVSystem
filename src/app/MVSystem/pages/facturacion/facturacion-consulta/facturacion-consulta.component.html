@@ -1,137 +1,110 @@
+<r-loading *ngIf="printing">
+</r-loading>
 
-  <r-loading *ngIf="printing"></r-loading>
-  
-  <app-main [title]="'Consulta Facturas'" 
-            [breadcrumb]="'Consulta'"
-            [breadcrumbItem]="'Consulta Facturas'">
-        <!-- End Page Title -->
-        <section class="section">
-          <div class="row">
+<app-main [title]="'Consulta Facturas'" [breadcrumb]="'Consulta'" [breadcrumbItem]="'Consulta Facturas'">
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
             <div class="col-lg-12">
-              <div class="card">
-                <div class="card-body">               
-                    <!-- form -->
-                    <form [formGroup]="form" role="search" class="mt-3">
-                      <div class="row">
-                        <div class="col-lg-8">
-                          <div class="card">
-                            <div class="card-body">
-                              <span class="card-title">Filtros</span>
-                              <div class="row">
-                                <div class="col-md-7 mb-3">
-                                <!-- bar search and criterios de busqueda -->
-                                    <div class="search-form d-flex align-items-center">
-                                      <input type="text" 
-                                            class="form-control" 
-                                            formControlName="criterio" 
-                                            placeholder="Search" 
-                                            title="Busqueda"
-                                            (keyup)="getFacturas()">
-                                    </div>
-                                </div>
-                                <div class="row ">
-                                  <div class="col-md-5">
-                                    <label class="form-label ">Fecha de facturación</label>
-                                    <div>
-                                    <my-date-range-picker
-                                      [options]="myDateRangePickerOptions"
-                                      formControlName="rangeDate"
-                                      (dateRangeChanged)="onDateRangeChanged($event)"
-                                      placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+                <div class="card">
+                    <div class="card-body">
+                        <!-- form -->
+                        <form [formGroup]="form" role="search" class="mt-3">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <span class="card-title">Filtros</span>
+                                            <div class="row">
+                                                <div class="col-md-7 mb-3">
+                                                    <!-- bar search and criterios de busqueda -->
+                                                    <div class="search-form d-flex align-items-center">
+                                                        <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()">
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                    <div class="col-md-5">
+                                                        <label class="form-label ">Fecha de facturación</label>
+                                                        <div>
+                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
                                         rangeDatePlaceholder | date
-                                      }}"  >
-                                    </my-date-range-picker>
-                                  </div>
-                                  </div>
-                                  <div class="col-md-5">
-                                    <!-- Search by almacen -->
-            
-                                    <label class="form-label">Almacen</label>
-                                    <select class="form-select" formControlName="almacen"
-                                    (change)="getFacturas()" >
+                                      }}">
+                                                            </my-date-range-picker>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5" *ngIf="SelectSucursal()">
+                                                        <!-- Search by almacen -->
+
+                                                        <label class="form-label">Almacen</label>
+                                                        <select class="form-select" formControlName="almacen" (change)="getFacturas()">
                                       <option
                                         *ngFor="let almacen of almacenes"
                                         [value]="almacen.iD_Almacen == 7? 1 : almacen.iD_Almacen" >
                                         {{ almacen.descripcion }}
                                       </option>
                                     </select>
-                                  </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                  
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-    
-                        <div class="col-lg-3">
-                          <div class="card">
-                            <div class="card-body">
-                              <!-- Cuadro totales -->
-                              <div class="row mx-1 text-center mt-3">
-                                <ng-container>
-                                  <div class="col-md-12">
-                                      <div class="row mb-4 ">
-                                        Total de facturas
-                                        <label class="form-control total">
+
+                                <div class="col-lg-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <!-- Cuadro totales -->
+                                            <div class="row mx-1 text-center mt-3">
+                                                <ng-container>
+                                                    <div class="col-md-12">
+                                                        <div class="row mb-4 ">
+                                                            Total de facturas
+                                                            <label class="form-control total">
                                           {{ facturasCantidad }}
                                         </label>
-                                      </div>
-                                      <div class="row mb-4 ">
-    
-                                      Total facturado
-                                      <label class="form-control total">
+                                                        </div>
+                                                        <div class="row mb-4 ">
+
+                                                            Total facturado
+                                                            <label class="form-control total">
                                         {{ totalFacturado | currency }}
                                       </label>
-                                      </div>
-                                  </div>
-                                </ng-container>
-                              </div>
-                              <!-- Fin Cuadro totales -->
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                            <!-- Fin Cuadro totales -->
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                          </div>
-                        </div>
-    
-                      </div>
-                    </form>
-                    <div class="row">
-                      <div class="col-md-3" >
-                        <button class="btn print" [ngClass]="{'disabled':!facturas.length}" (click)="printReportFacturaConsulta()">
+                        </form>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button class="btn print" [ngClass]="{'disabled':!facturas.length}" (click)="printReportFacturaConsulta()">
                           Imprimir reporte <i class="bi bi-printer"></i>
                         </button>
-                      </div>
-                      <div class="col-md-3">
-                        <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }"(click)="printFactura()">
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }" (click)="printFactura()">
                           Imprimir factura <i class="bi bi-receipt-cutoff"></i>
                         </button>
-                      </div>
+                            </div>
+                        </div>
+
+                        <!-- end form   -->
+                        <app-facturacion-lista [facturas]="facturas" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" (onFacturaButton)="onFacturaButton = $event"
+                            (numerofactura)="getDetalleFactura($event)">
+                            <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 10 && facturas.length">
+                            </pagination-controls>
+                        </app-facturacion-lista>
+                        <!-- end lsit -->
+
                     </div>
-             
-                    <!-- end form   -->
-                    <app-facturacion-lista 
-                    [facturas]="facturas" 
-                    [detalleFactura]="detalleFactura" 
-                    [pageIndex]="pageIndex" 
-                    [pageSize]="pageSize" 
-                    [totalRecord]="totalRecord"
-                    [currentPage]="currentPage"
-                    [line]="line"
-                    [lastLine]="lastLine"
-                    (onFacturaButton)="onFacturaButton = $event"
-                    (numerofactura)="getDetalleFactura($event)">
-                    <pagination-controls
-                     (pageChange)="pageChanged($event)" 
-                     [responsive]="true"
-                      previousLabel="Anterior"
-                      nextLabel="Siguiente"
-                      *ngIf="totalRecord >= 10 && facturas.length">
-                    </pagination-controls>
-                  </app-facturacion-lista>
-                    <!-- end lsit -->     
-    
                 </div>
-              </div>
             </div>
-          </div>
-        </section> 
-  </app-main>
-  
+        </div>
+    </section>
+</app-main>
