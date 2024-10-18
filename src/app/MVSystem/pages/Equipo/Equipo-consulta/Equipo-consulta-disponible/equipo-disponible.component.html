@@ -1,155 +1,139 @@
 <r-loading *ngIf="printing"></r-loading>
 <div class="animate__animated animate__fadeIn">
 
-<form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
-  <div class="row">
-    
-    <div class="col-lg-8">
-      <div class="card">
-        <div class="card-body">
-          <span class="card-title">Filtros</span>
-          <div class="row mt-4">
-                
-          <!-- <i class="bi bi-funnel"></i> -->
-          <!-- Search IMEI -->
-          <div class="col-md-4">
-            <label class="form-label">Por IMEI</label>
-            <div class="col-md-12">
-              <input
-                class="form-control"
-                placeholder="IMEI"
-                formControlName="imei"
-                (keyup.enter)="obtenerEquiposDisponibles()" />
-              <!-- <button type="submit">Buscar</button> -->
-            </div>
-          </div>
+    <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
+        <div class="row">
 
-          <div class="col-md-4">
-            <!-- Search by almacen -->
-            <!-- <input type="checkbox" (change)="onCheckboxChange($event)" >  -->
-            <label class="form-label">Almacen</label>
-            <ng-select
-              formControlName="almacen"
-              (change)="obtenerEquiposDisponibles()" >
-              <ng-option
-                *ngFor="let almacen of almacenListado"
-                [value]="almacen.iD_Almacen" >
-                {{ almacen.descripcion }}
-              </ng-option>
-            </ng-select>
-          </div>
-          <div class="col-md-4">
-            <!-- --------------- Suplidores --------------- -->
-            <label class="form-label">Suplidor </label>
-            <ng-select
-              formControlName="suplidor"
-              (change)="obtenerEquiposDisponibles()" >
-              <ng-option
-                *ngFor="let vendedor of listaVendedor"
-                [value]="vendedor.nombres" >
-                {{ vendedor.nombres }}
-              </ng-option>
-            </ng-select>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <!-- Search by -->
-              <label class="form-label">Modelo</label>
-              <ng-select
-                formControlName="modelo"
-                (change)="obtenerEquiposDisponibles()" >
-                <ng-option
-                  *ngFor="let modelo of modeloListado"
-                  [value]="modelo.descripcion">
-                  {{ modelo.descripcion }}
-                </ng-option>
-              </ng-select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label row mx-2"> Rango de fecha</label>
-              <my-date-range-picker
-                name="rangoFecha"
-                [options]="myDateRangePickerOptions"
-                formControlName="rangeDate"
-                (dateRangeChanged)="onDateRangeChanged($event)"
-                placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="card-title">Filtros</span>
+                        <div class="row mt-4">
+
+                            <!-- <i class="bi bi-funnel"></i> -->
+                            <!-- Search IMEI -->
+                            <div class="col-md-4">
+                                <label class="form-label">Por IMEI</label>
+                                <div class="searchbox" formControlName="search">
+                                    <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposDisponibles()">
+                                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                                </div>
+                                <!-- <div class="col-md-12">
+                                    <input class="form-control" placeholder="IMEI" formControlName="imei" (keyup.enter)="obtenerEquiposDisponibles()" />
+                                    <button type="submit">Buscar</button>
+                                </div> -->
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Almacen</label>
+                                <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
+                                <option value="" disabled selected>Selecciona un almacén</option>
+                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen == 7 ? 0 : almacen.iD_Almacen">
+                                  {{ almacen.descripcion }}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="col-md-4">
+                                <!-- --------------- Suplidores --------------- -->
+                                <label class="form-label">Suplidor</label>
+                                <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
+                                  <option value="" disabled selected>Selecciona un Suplidor</option>
+                                  <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.iD_Suplidor == 1 ? 0 : Suplidor.iD_Suplidor">
+                                    {{ Suplidor.descripcion }}
+                                  </option>
+                        </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <!-- Search by -->
+                                    <label class="form-label">Modelo</label>
+                                    <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
+                                      <option value="" disabled selected>Selecciona un Modelo</option>
+                              <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+                                {{ modelo.descripcion }}
+                              </option>
+                            </select>
+
+                                    <!-- <ng-select formControlName="modelo" (change)="obtenerEquiposDisponibles()">
+                                        <ng-option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+                                            {{ modelo.descripcion }}
+                                        </ng-option>
+                                    </ng-select> -->
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label row mx-2"> Rango de fecha</label>
+                                    <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
                   rangeDatePlaceholder | date }}">
-              </my-date-range-picker>
+                                    </my-date-range-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
- 
-
-  
-    </div>
-    
-    <div class="col-lg-3">
-        <div class="card">
-            <div class="card-body">
-                     <!-- Cuadro totales -->
-                     <div class="row mx-1 text-center  mt-3">
-                         <ng-container>
-                           <div class="col-md-12 " >
-                             <div class="row mb-4 ">
-                               Total Equipos
-                               <label class="form-control total">
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Cuadro totales -->
+                        <div class="row mx-1 text-center  mt-3">
+                            <ng-container>
+                                <div class="col-md-12 ">
+                                    <div class="row mb-4 ">
+                                        Total Equipos
+                                        <label class="form-control total">
                                  {{ equipoQuantity }}
                                </label>
-                             </div>
-                             <div class="row">
-                               Total Inventario
-                               <label class="form-control total">
+                                    </div>
+                                    <div class="row">
+                                        Total Inventario
+                                        <label class="form-control total">
                                  {{ totalInventario | currency }}
                                </label>
-                             </div>
-                           </div>
-                         </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
 
-                     </div>
+                        </div>
 
-      <!-- Fin Cuadro totales -->
+                        <!-- Fin Cuadro totales -->
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-  </div>
-</form>
-<section class="section mt-4">
-  <button class="btn print mx-1"[ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
+    </form>
+    <section class="section mt-4">
+        <button class="btn print mx-1" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
     Imprimir reporte <i class="bi bi-printer"></i>
   </button>
-  <div class="row">
-    <div class="col-lg-12 scroll-table">
-      <h5 class="card-title">Equipos</h5>
-      <p *ngIf="equiposDisponibles.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+        <div class="row">
+            <div class="col-lg-12 scroll-table">
+                <h5 class="card-title">Equipos</h5>
+                <p *ngIf="equiposDisponibles.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
 
-      <!-- Table with stripped rows -->
-      <table >
-        <thead>
-          <tr>
-            <th scope="col">Imei</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Tecnologia</th>
-            <th scope="col">Garantia</th>
-            <th scope="col">Precio Mayor</th>
-            <th scope="col">Precio Detalle</th>
-            <th scope="col">Costo</th>
-            <th scope="col">Desbloq.</th>
-            <!-- <th scope="col">Desbloqueado</th> -->
-            <th scope="col">Disponible</th>
-            <th scope="col">Nota</th>
-            <th scope="col">Comision Detalle</th>
-            <th scope="col">Comision Por Mayor</th>
-            <th scope="col">Almacen</th>
-            <th scope="col">Suplidor</th>
-            <th scope="col">Fecha Registro</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="animate__animated animate__fadeIn"
-            *ngFor="
+                <!-- Table with stripped rows -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Imei</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Tecnologia</th>
+                            <th scope="col">Garantia</th>
+                            <th scope="col">Precio Mayor</th>
+                            <th scope="col">Precio Detalle</th>
+                            <th scope="col">Costo</th>
+                            <th scope="col">Desbloq.</th>
+                            <!-- <th scope="col">Desbloqueado</th> -->
+                            <th scope="col">Disponible</th>
+                            <th scope="col">Nota</th>
+                            <th scope="col">Comision Detalle</th>
+                            <th scope="col">Comision Por Mayor</th>
+                            <th scope="col">Almacen</th>
+                            <th scope="col">Suplidor</th>
+                            <th scope="col">Fecha Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="animate__animated animate__fadeIn" *ngFor="
               let equipo of equiposDisponibles
                 | paginate
                   : {
@@ -157,33 +141,31 @@
                       currentPage: filter.pageIndex,
                       totalItems: totalRecord
                     }">
-            <td>{{ equipo.imei }}</td>
-            <td>{{ equipo.descripcion }}</td>
-            <td>{{ equipo.tecnologia }}</td>
-            <td>{{ equipo.garantia }}</td>
-            <td>{{ equipo.precioPorMayor | currency }}</td>
-            <td>{{ equipo.precioDetalle | currency }}</td>
-            <td>{{ equipo.costoEquipo | currency }}</td>
-            <td>{{ equipo.isDesbloqueado }}</td>
-            <td>{{ equipo.isDisponible }}</td>
-            <td>{{ equipo.notaAdicional }}</td>
-            <td>{{ equipo.comisionDetalle | currency }}</td>
-            <td>{{ equipo.comisionPorMayor | currency }}</td>
-            <td>{{ equipo.descripcionAlmacen }}</td>
-            <td>{{ equipo.suplidor }}</td>
-            <td>{{ equipo.fecharegistro | date }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- End Table with stripped rows -->
-      <div class="not-data" *ngIf="!equiposDisponibles.length">
-        Datos no encontrados
-      </div>
-    </div>
-  </div>
-</section>
-<pagination-controls
-  (pageChange)="pageChanged($event)"
-  *ngIf="totalRecord > 10 && equiposDisponibles.length">
-</pagination-controls>
+                            <td>{{ equipo.imei }}</td>
+                            <td>{{ equipo.descripcion }}</td>
+                            <td>{{ equipo.tecnologia }}</td>
+                            <td>{{ equipo.garantia }}</td>
+                            <td>{{ equipo.precioPorMayor | currency }}</td>
+                            <td>{{ equipo.precioDetalle | currency }}</td>
+                            <td>{{ equipo.costoEquipo | currency }}</td>
+                            <td>{{ equipo.isDesbloqueado }}</td>
+                            <td>{{ equipo.isDisponible }}</td>
+                            <td>{{ equipo.notaAdicional }}</td>
+                            <td>{{ equipo.comisionDetalle | currency }}</td>
+                            <td>{{ equipo.comisionPorMayor | currency }}</td>
+                            <td>{{ equipo.descripcionAlmacen }}</td>
+                            <td>{{ equipo.suplidor }}</td>
+                            <td>{{ equipo.fecharegistro | date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+                <div class="not-data" *ngIf="!equiposDisponibles.length">
+                    Datos no encontrados
+                </div>
+            </div>
+        </div>
+    </section>
+    <pagination-controls (pageChange)="pageChanged($event)" *ngIf="totalRecord > 10 && equiposDisponibles.length">
+    </pagination-controls>
 </div>

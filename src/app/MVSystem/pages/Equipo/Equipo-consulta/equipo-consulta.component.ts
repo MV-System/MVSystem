@@ -72,7 +72,7 @@ export class EquipoConsultaComponent implements OnInit {
   getEquipoDisponible() {
     // Crear el objeto EquipoDisponible con los valores correctos
   const EquipoModel: EquipoDisponibleParam = {
-    almacen:13,// Number(this.formRegistro.get('almacen')?.value),
+    almacen:2,// Number(this.formRegistro.get('almacen')?.value),
     suplidor:'',//(this.formRegistro.get('suplidor')?.value),
     imei: '',//(this.formRegistro.get('search')?.value),
     modelo:'',// (this.formRegistro.get('modelo')?.value),

@@ -6,6 +6,8 @@ import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatu
 
 import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.component';
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
+import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
+import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 
 const routes: Routes = [
   {
@@ -16,6 +18,14 @@ const routes: Routes = [
     path:'consulta',
     component:EquipoConsultaComponent
   },
+  {
+  path:'Disponible',
+  component:EquipoDisponibleComponent
+},
+{
+  path:'Vendidos',
+  component:EquipoConsultaVendidoComponent
+},
   {
     path:'transferencia',
     component:EquipoTransferenciaComponent

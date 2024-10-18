@@ -24,6 +24,11 @@ export interface SuplidorRegistro {
     mensaje: string;
 
   }
+  export interface SuplidorLista{
+    iD_Suplidor: number
+    nombres:           string;
+
+  }
 
   export interface TipoSuplidor{
     iD_Tipo_Suplidor:          number;

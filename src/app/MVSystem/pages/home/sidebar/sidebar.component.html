@@ -104,6 +104,16 @@
                             <i class="bi bi-circle"></i><span>Equipos</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaEquipos()">
+                        <a routerLink="./equipo/Disponible">
+                            <i class="bi bi-circle"></i><span>Equipos disponible</span>
+                        </a>
+                    </li>
+                    <li *ngIf="VerFormConsultaEquipos()">
+                        <a routerLink="./equipo/Vendidos">
+                            <i class="bi bi-circle"></i><span>Equipos Vendidos</span>
+                        </a>
+                    </li>
                     <li *ngIf="VerFormConsultaUtilidades()">
                         <a routerLink="./utilidades/consulta">
                             <i class="bi bi-circle"></i><span>Utilidades</span>
