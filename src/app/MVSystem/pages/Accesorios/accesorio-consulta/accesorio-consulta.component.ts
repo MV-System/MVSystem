@@ -26,7 +26,7 @@ export class AccesorioConsultaComponent implements OnInit {
     this.obtenerAlmacenes();
   }
   almacenes:   Almacen[] = [];
-  accesorios:  Accesorio[]=[];
+  accesorios:  Accesorio[] = [];
   accesorio!:  Accesorio[];
   currentPage:     number = 1;
   totalInventario: number = 0;
@@ -45,7 +45,7 @@ export class AccesorioConsultaComponent implements OnInit {
     totalAccesorio: [0,],
     totalInventario: [0,]
   });
- 
+
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10,
@@ -55,7 +55,7 @@ export class AccesorioConsultaComponent implements OnInit {
   filter: any = {
     almacen: '',
     criterio:'',
- 
+
   };
 
 
@@ -67,7 +67,7 @@ export class AccesorioConsultaComponent implements OnInit {
   getAccesorios(){
     let accesorio = this.form.get('accesorio')?.value;
     let almacen = Number( this.form.get('almacen')?.value);
-    
+
     this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
       let record = accesorios.length == 0 ? 0 : accesorios[0].totalRecord;
@@ -79,7 +79,9 @@ export class AccesorioConsultaComponent implements OnInit {
         this.line = accesorios[0].line;
         this.lastLine = accesorios[0].lastLine;
       }
+
       this.accesorios= accesorios;
+
     });
   }
   obtenerTotalInventario(totalInventario: number) {

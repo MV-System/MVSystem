@@ -32,7 +32,7 @@ export class AccesoriosService{
     params = params.append('almacen',almacen)
     params = params.append('fechaInicio',pagination.fechaInicio)
     params = params.append('fechaFinal',pagination.fechaFinal)
-    
+
     return this.http.get<AccesorioVendido[]>(`${APIURL.Accesorio.Consulta.AccesorioVendidos}?` + params)
   }
   getAccesorioById(id: number):Observable<Accesorio>{

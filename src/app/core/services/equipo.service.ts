@@ -8,6 +8,7 @@ import {
     EquipoAlmacenTransferir,
     EquipoTransferenciaReporte,
     filterEquipos,
+    EquipoDisponible,
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/config/url";
 import { Observable } from 'rxjs';
@@ -20,7 +21,9 @@ export class EquipoService{
 
     constructor(private http: HttpClient) {}
     //GET'S
-    getEquipoDisponible( EquipoDisponible:EquipoDisponibleParam):Observable<any>{
+
+
+     getEquipoDisponible( EquipoDisponible:EquipoDisponibleParam):Observable<EquipoDisponible[]>{
         const search =
         'Almacen='+
         EquipoDisponible.almacen +
@@ -39,7 +42,7 @@ export class EquipoService{
         '&fechaFinal='+
         EquipoDisponible.fechaFinal ;
 
-        return this.http.get<any>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
+        return this.http.get<EquipoDisponible[]>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
     }
     getEquipoVendido( EquipoVendido: EquipoVendidoFilter):Observable<EquipoVendido[]>{
         const search =

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { stringify } from 'querystring';
 import { Almacen, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
 import { EquipoDisponible, EquipoDisponibleParam } from 'src/app/core/interfaces/equipo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
@@ -23,11 +22,11 @@ export class EquipoConsultaComponent implements OnInit {
   Suplidores:   Suplidor[] = [];
   Modelos: ModeloEquipo[]=[];
   Equipos: EquipoDisponible[]=[];
-
   ngOnInit( ): void {
     this.obtenerAlmacenes()
     this. obtenerSuplidor()
     this.obtenerModelos()
+    this.getEquipoDisponible()
   }
 
   filter !:Event;
@@ -59,49 +58,36 @@ export class EquipoConsultaComponent implements OnInit {
     });
   }
   formRegistro: FormGroup = this.fb.group({
-    almacen:[2, Validators.required], // Número del almacén
-    suplidor: [2, Validators.required],    // Nombre del suplidor
-    imei: [,Validators.max(30)],       // Número de IMEI del equipo
-    modelo: [2, Validators.required],        // Modelo del equipo
+
+    almacen:[Validators.required], // Número del almacén
+    suplidor: [Validators.required],    // Nombre del suplidor
+    imei: [Validators.max(30)],       // Número de IMEI del equipo
+    modelo: [Validators.required],        // Modelo del equipo
     pageIndex: 1,             // Índice de la página para la paginación
     pageSize: 10,             // Tamaño de la página (número de resultados)
-    fechaInicio: [,],// Fecha de inicio del filtro
-    fechaFinal: [,],// Fecha final del filtro
+    fechaInicio:'',// Fecha de inicio del filtro
+    fechaFinal: '',// Fecha final del filtro
   });
-  modeloRegistroAccesorio() {
-    // const EquipoModel: EquipoDisponibleParam = {
-    //   almacen: this.formRegistro.get('almacen')?.value,
-    //   suplidor:Number(  this.formRegistro.get('cantidad')?.value),
-    //   imei: String(this.formRegistro.get('costo')?.value),
-    //   modelo:Number( this.formRegistro.get('alDetalle')?.value),
-    //   pageIndex:Number(  this.formRegistro.get('alPorMayor')?.value),
-    //   pageSize: this.formRegistro.get('IMEI')?.value,
-    // };
-    // return EquipoModel;
-  }
+
   getEquipoDisponible() {
     // Crear el objeto EquipoDisponible con los valores correctos
   const EquipoModel: EquipoDisponibleParam = {
-    almacen: this.formRegistro.get('almacen')?.value,
-    suplidor: Number(this.formRegistro.get('cantidad')?.value),
-    imei: String(this.formRegistro.get('costo')?.value),
-    modelo: Number(this.formRegistro.get('alDetalle')?.value),
-    pageIndex: Number(this.formRegistro.get('alPorMayor')?.value),
-    pageSize: this.formRegistro.get('IMEI')?.value,
+    almacen: 2,//Number(this.formRegistro.get('almacen')?.value),
+    suplidor:'',//(this.formRegistro.get('suplidor')?.value),
+    imei: '',//(this.formRegistro.get('search')?.value),
+    modelo:'',// (this.formRegistro.get('modelo')?.value),
+    pageIndex: 1,
+    pageSize: 10,
     fechaInicio: '',
     fechaFinal: ''
   };
-    //return EquipoModel;
-    this.equiposService.getEquipoDisponible(EquipoModel).subscribe(
-      (equipoDisponibleData) => {
-        // Aquí manejas la respuesta del servidor
-        console.log(equipoDisponibleData);
-        // Puedes asignar el resultado a una variable local o procesarlo
-      },
-      (error) => {
-        // Manejando el error
-        console.error('Error al obtener el equipo disponible', error);
-      }
+  this.equiposService.getEquipoDisponible(EquipoModel).subscribe(
+    (equipoDisponibleData) => {
+        this.Equipos = equipoDisponibleData;
+    },
+    (error) => {
+        console.error("Error al obtener equipos disponibles:", error);
+    }
     );
   }
 }

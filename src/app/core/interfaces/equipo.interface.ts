@@ -63,9 +63,9 @@ export interface EquipoDisponible {
 }
 export interface EquipoDisponibleParam extends DatePaging ,Pagination{
     almacen: number;
-    suplidor: number;
+    suplidor: string;
     imei: string;
-    modelo: number;
+    modelo: string;
 }
 export interface EquipoVendidoFilter extends DatePaging,Pagination{
     almacen:  number;

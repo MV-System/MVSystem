@@ -16,26 +16,26 @@
     <div class="box">
         <div class="grid inline-filters">
             <div class="filterchips">
-                <div class="searchbox">
+                <div class="searchbox" formControlName="search">
                     <input type="search" name="" id="" class="form-control" placeholder="Buscar por Descrip., IMEI o Código">
                     <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
                 </div>
                 <select class="form-select chip active">
 					<option hidden>Equipos</option>
 				</select>
-                <select class="form-select chip">
+                <select class="form-select chip" formControlName="almacen">
           <option value="" disabled selected>Selecciona un almacén</option>
-          <option id="almacen" *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen == 7 ? 0 : almacen.iD_Almacen">
+          <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen == 7 ? 0 : almacen.iD_Almacen">
             {{ almacen.descripcion }}
           </option>
         </select>
-                <select class="form-select chip">
+                <select class="form-select chip" formControlName="suplidor">
                   <option value="" disabled selected>Selecciona un Suplidor</option>
           <option *ngFor="let Suplidor of Suplidores" [value]="Suplidor.iD_Suplidor == 1 ? 0 : Suplidor.iD_Suplidor">
             {{ Suplidor.descripcion }}
           </option>
         </select>
-                <select class="form-select chip">
+                <select class="form-select chip" formControlName="modelo">
                   <option value="" disabled selected>Selecciona un Modelo</option>
           <option *ngFor="let modelo of Modelos" [value]="modelo.iD_Modelo == 1 ? 0 : modelo.iD_Modelo">Modelo
             {{ modelo.descripcion }}
@@ -56,155 +56,56 @@
                     <tr>
                         <th class="fixed-item code">IMEI/Código</th>
                         <th class="fixed-item desc">Descripción</th>
-                        <th>Tipo</th>
+                        <!-- <th>Tipo</th> -->
                         <th>Estado</th>
                         <th class="align-center">Tecnología</th>
-                        <th class="align-right">Precio de Venta</th>
-                        <th class="align-right">
-                            Precio APM
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Al por mayor">
+                        <th class="align-right">Costo</th>
+                        <th class="align-right">Precio Detalle<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Al por mayor">
 								<i class='bx bxs-info-circle'></i>
 							</span>
                         </th>
-                        <th class="align-right">Costo</th>
-                        <th class="align-center">Existencia</th>
-                        <th class="align-center">Vendidos</th>
+                        <th class="align-right">Precio PM</th>
+                        <!-- <th class="align-center">Existencia</th> -->
+                        <!-- <th class="align-center">Vendidos</th> -->
                         <th>Desbloqueo</th>
                         <th>Garantía</th>
                         <th>Nota</th>
-                        <th class="align-right">Comisión</th>
-                        <th class="align-right">Comisión APM</th>
+                        <th class="align-right">Comisión Detalle</th>
+                        <th class="align-right">Comisión PM</th>
                         <th>Almacén</th>
                         <th>Suplidor</th>
                         <th>Fecha Registro</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="fixed-item code">984651321663782</td>
+                  <!-- <pre>{{Equipos | json}}</pre> -->
+                    <tr *ngFor="let Equipo of Equipos">
+                        <td class="fixed-item code">{{Equipo.imei}}</td>
                         <td class="fixed-item desc">
-                            <span>Redmi Note 9S</span>
+                            <span>{{Equipo.descripcion}}</span>
                             <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
 								<i class="bx bx-edit-alt"></i>
 							</button>
                         </td>
-                        <td>Equipo</td>
-                        <td>Nuevo</td>
-                        <td class="align-center">4G</td>
-                        <td class="align-right">RD$ 10,250.00</td>
-                        <td class="align-right">RD$ 7,800.00</td>
-                        <td class="align-right">RD$ 10,750.26</td>
-                        <td class="align-center">30</td>
-                        <td class="align-center">200</td>
-                        <td>Sí</td>
-                        <td>3 Meses</td>
-                        <td>--</td>
-                        <td class="align-right">RD$ 150</td>
-                        <td class="align-right">RD$ 300</td>
-                        <td>Principal</td>
-                        <td>Xiami</td>
-                        <td>17 ene, 2023</td>
+                        <!-- <td>Equipo</td> -->
+                        <td>{{Equipo.estadoBloqueo}}</td>
+                        <td class="align-center">{{Equipo.tecnologia}}</td>
+                        <td class="align-right">{{Equipo.costoEquipo|currency}}</td>
+                        <td class="align-right">{{Equipo.precioDetalle|currency}}</td>
+                        <td class="align-right">{{Equipo.precioPorMayor|currency}}</td>
+                        <!-- <td class="align-center">30</td> -->
+                        <!-- <td class="align-center">200</td> -->
+                        <td>{{Equipo.estadoBloqueo}}</td>
+                        <td>{{Equipo.garantia}}</td>
+                        <td>{{Equipo.notaAdicional}}</td>
+                        <td class="align-right">{{Equipo.comisionDetalle}}</td>
+                        <td class="align-right">{{Equipo.comisionPorMayor}}</td>
+                        <td>{{Equipo.descripcionAlmacen}}</td>
+                        <td>{{Equipo.suplidor}}</td>
+                        <td>{{Equipo.fecharegistro}}</td>
                     </tr>
-                    <tr>
-                        <td class="fixed-item code">984651321663782</td>
-                        <td class="fixed-item desc">
-                            <span>Redmi Note 9S</span>
-                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-								<i class="bx bx-edit-alt"></i>
-							</button>
-                        </td>
-                        <td>Equipo</td>
-                        <td>Nuevo</td>
-                        <td class="align-center">4G</td>
-                        <td class="align-right">RD$ 10,250.00</td>
-                        <td class="align-right">RD$ 7,800.00</td>
-                        <td class="align-right">RD$ 10,750.26</td>
-                        <td class="align-center">30</td>
-                        <td class="align-center">200</td>
-                        <td>Sí</td>
-                        <td>3 Meses</td>
-                        <td>--</td>
-                        <td class="align-right">RD$ 150</td>
-                        <td class="align-right">RD$ 300</td>
-                        <td>Principal</td>
-                        <td>Xiami</td>
-                        <td>17 ene, 2023</td>
-                    </tr>
-                    <tr>
-                        <td class="fixed-item code">984651321663782</td>
-                        <td class="fixed-item desc">
-                            <span>Redmi Note 9S</span>
-                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-								<i class="bx bx-edit-alt"></i>
-							</button>
-                        </td>
-                        <td>Equipo</td>
-                        <td>Nuevo</td>
-                        <td class="align-center">4G</td>
-                        <td class="align-right">RD$ 10,250.00</td>
-                        <td class="align-right">RD$ 7,800.00</td>
-                        <td class="align-right">RD$ 10,750.26</td>
-                        <td class="align-center">30</td>
-                        <td class="align-center">200</td>
-                        <td>Sí</td>
-                        <td>3 Meses</td>
-                        <td>--</td>
-                        <td class="align-right">RD$ 150</td>
-                        <td class="align-right">RD$ 300</td>
-                        <td>Principal</td>
-                        <td>Xiami</td>
-                        <td>17 ene, 2023</td>
-                    </tr>
-                    <tr>
-                        <td class="fixed-item code">984651321663782</td>
-                        <td class="fixed-item desc">
-                            <span>Redmi Note 9S</span>
-                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-								<i class="bx bx-edit-alt"></i>
-							</button>
-                        </td>
-                        <td>Equipo</td>
-                        <td>Nuevo</td>
-                        <td class="align-center">4G</td>
-                        <td class="align-right">RD$ 10,250.00</td>
-                        <td class="align-right">RD$ 7,800.00</td>
-                        <td class="align-right">RD$ 10,750.26</td>
-                        <td class="align-center">30</td>
-                        <td class="align-center">200</td>
-                        <td>Sí</td>
-                        <td>3 Meses</td>
-                        <td>--</td>
-                        <td class="align-right">RD$ 150</td>
-                        <td class="align-right">RD$ 300</td>
-                        <td>Principal</td>
-                        <td>Xiami</td>
-                        <td>17 ene, 2023</td>
-                    </tr>
-                    <tr>
-                        <td class="fixed-item code">984651321663782</td>
-                        <td class="fixed-item desc">
-                            <span>Redmi Note 9S</span>
-                            <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-								<i class="bx bx-edit-alt"></i>
-							</button>
-                        </td>
-                        <td>Equipo</td>
-                        <td>Nuevo</td>
-                        <td class="align-center">4G</td>
-                        <td class="align-right">RD$ 10,250.00</td>
-                        <td class="align-right">RD$ 7,800.00</td>
-                        <td class="align-right">RD$ 10,750.26</td>
-                        <td class="align-center">30</td>
-                        <td class="align-center">200</td>
-                        <td>Sí</td>
-                        <td>3 Meses</td>
-                        <td>--</td>
-                        <td class="align-right">RD$ 150</td>
-                        <td class="align-right">RD$ 300</td>
-                        <td>Principal</td>
-                        <td>Xiami</td>
-                        <td>17 ene, 2023</td>
-                    </tr>
+
+
                 </tbody>
             </table>
         </div>
