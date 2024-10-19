@@ -1,4 +1,4 @@
-  *::-webkit-scrollbar {
+  /* *::-webkit-scrollbar {
     width: 12px;
   }
   *::-webkit-scrollbar-track {
@@ -17,7 +17,7 @@
   .card-body{
     background-color: #f6f9ff;
   }
-  /* button {
+  button {
     height: var(--height);
     font-family: var(--font-fam);
     border: 0;
@@ -33,7 +33,7 @@
     font-weight: bold;
     background: var(--color-brand);
     border-radius: 0 var(--rad) var(--rad) 0;
-  } */
+  }
   .scroll-table{
     overflow: auto;
     white-space: nowrap;
@@ -47,4 +47,30 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-   }
+   } */
+
+
+
+
+
+   *::-webkit-scrollbar {
+    width: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: rgba(8, 55, 223, 0.218);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #467ff1;
+    border-radius: 20px;
+    border: 2px solid rgba(8, 55, 223, 0.218);
+  }
+  .card-body{
+      background-color: #f6f9ff;
+  }
+  .clear-filter{
+    color: #467ff1;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+

@@ -25,7 +25,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
-    private toast: ToastrService
+    private toast: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -60,6 +60,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   listaVendedor:  VendedorLista[] = [];
   listaSuplidor:  Suplidor[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
+
+
 
   filter: any = {
     almacen: 0,
@@ -112,6 +114,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   obtenerEquiposDisponibles() {
     this.getValueFilterForm();
     this.onFilterPropHasValue();
+
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
@@ -141,11 +144,13 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     });
     this.printing = !this.printing;
   }
+
   getValueFilterForm() {
     let almacenValue = this.form.get('almacen')?.value;
-    let suplidorValue = this.form.get('suplidor')?.value;
+    let suplidorValue =this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
     let imei = this.form.get('imei')?.value;
+
     this.filter.almacen = almacenValue == null ? 0 : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;

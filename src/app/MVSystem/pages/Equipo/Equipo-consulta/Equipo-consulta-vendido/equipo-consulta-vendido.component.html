@@ -8,8 +8,7 @@
             <span class="card-title">Filtros</span>
 
             <div class="row mt-3">
-              <div class="col-md-4">
-                <!-- Search by telefono (cliente) -->
+              <!-- <div class="col-md-4" >
                 <label class="form-label"> Por telefono</label>
                 <input
                   class="form-control"
@@ -17,47 +16,67 @@
                   formControlName="telefono"
                   (input)="onSearchByTelefono()"
                   (keyup.enter)="obtenerEquiposVendidos()" />
-              </div>
+              </div> -->
+
               <div class="col-md-4">
-                <!-- Search by IMEI -->
+                <label class="form-label">Por telefono</label>
+                <div class="searchbox" formControlName="telefono">
+                    <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
+                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                </div>
+            </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Por IMEI</label>
+                <div class="searchbox" formControlName="search">
+                    <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
+                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                </div>
+            </div>
+
+              <!-- <div class="col-md-4">
                 <label class="form-label">Por IMEI</label>
                 <input
                   class="form-control"
                   placeholder="IMEI"
                   formControlName="imei"
                   (keyup.enter)="obtenerEquiposVendidos()" />
-              </div>
-              <div class="col-md-4">
-                <!-- Search by almacen -->
-                <label class="form-label">Almacen</label>
-                <ng-select
-                  formControlName="almacen"
-                  (change)="obtenerEquiposVendidos()">
-                  <ng-option
-                    *ngFor="let almacen of almacenListado"
-                    [value]="almacen.iD_Almacen" >
-                    {{ almacen.descripcion }}
-                  </ng-option>
-                </ng-select>
-              </div>
+              </div> -->
+              <div >
+                <!-- --------------- Almacen --------------- -->
+                 <label class="form-label">Almacen</label>
+                 <select  class="form-select chip" formControlName="almacen" (change)="obtenerEquiposVendidos()">
+                 <option value="" selected>Selecciona un almacén</option>
+                 <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                   {{ almacen.descripcion }}
+                 </option>
+               </select>
+             </div>
 
               <div class="row">
-                <div class="col-md-4">
-                  <!-- --------------- Suplidores --------------- -->
-                  <label class="form-label">Suplidor </label>
-                  <ng-select
-                    formControlName="suplidor"
-                    (change)="obtenerEquiposVendidos()"  >
-                    <ng-option
-                      *ngFor="let suplidor of listaSuplidor"
-                      [value]="suplidor.descripcion">
-                      {{ suplidor.descripcion }}
-                    </ng-option>
-                  </ng-select>
-                </div>
+                  <div class="col-md-4">
+                                <!-- --------------- Suplidores --------------- -->
+                                <label class="form-label">Suplidor</label>
+                                <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
+                                  <option value="" selected>Selecciona un Suplidor</option>
+                                  <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
+                                    {{ Suplidor.descripcion }}
+                                  </option>
+                        </select>
+                            </div>
 
-                <div class="col-md-4">
-                  <!-- --------------- Vendedores --------------- -->
+                            <div class="col-md-4">
+                              <!-- Search by -->
+                                <!-- --------------- Vendedores --------------- -->
+                              <label class="form-label">Vendedor</label>
+                              <select class="form-select chip" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
+                                <option value="" selected>Selecciona un Vendedor</option>
+                        <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
+                          {{ vendedor.nombres }}
+                        </option>
+                      </select>
+                          </div>
+                <!-- <div class="col-md-4">
                   <label class="form-label">Vendedor </label>
                   <ng-select
                     formControlName="vendedor"
@@ -68,9 +87,19 @@
                       {{ vendedor.nombres }}
                     </ng-option>
                   </ng-select>
-                </div>
+                </div> -->
                 <div class="col-md-4">
                   <!-- Search by -->
+                    <!-- --------------- Modelos --------------- -->
+                  <label class="form-label">Modelo</label>
+                  <select class="form-select chip" formControlName="modelo" (change)="obtenerEquiposVendidos()">
+                    <option value="" selected>Selecciona un Modelo</option>
+            <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+              {{ modelo.descripcion }}
+            </option>
+          </select>
+              </div>
+                <!-- <div class="col-md-4">
                   <label class="form-label">Modelo</label>
                   <ng-select
                     formControlName="modelo"
@@ -81,7 +110,7 @@
                       {{ modelo.descripcion }}
                     </ng-option>
                   </ng-select>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="row">

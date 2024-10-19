@@ -1,3 +1,4 @@
+
 *::-webkit-scrollbar {
     width: 12px;
   }
@@ -17,13 +18,13 @@
   .card-body{
     background-color: #f6f9ff;
   }
-  td
+  /* td
   {
    max-width: 100px;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
-  }
+  } */
   .scroll-table{
     overflow: auto;
     white-space: nowrap;
@@ -33,4 +34,33 @@
   }
   label.total{
     text-align: center
+  }
+
+  .clear-filter{
+    color: #467ff1;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+
+
+
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: rgba(8, 55, 223, 0.218);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #467ff1;
+    border-radius: 20px;
+    border: 2px solid rgba(8, 55, 223, 0.218);
+  }
+  .card-body{
+      background-color: #f6f9ff;
+  }
+  .clear-filter{
+    color: #467ff1;
+    font-weight: 600;
+    text-decoration: underline;
   }

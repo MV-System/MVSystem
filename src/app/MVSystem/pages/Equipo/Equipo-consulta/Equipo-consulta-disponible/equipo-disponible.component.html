@@ -1,9 +1,15 @@
 <r-loading *ngIf="printing"></r-loading>
 <div class="animate__animated animate__fadeIn">
-
+  <nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
+        <li class="breadcrumb-item">Consulta</li>
+        <li class="breadcrumb-item">Consulta equipos Disponibles<li>
+    </ol>
+</nav>
+<h1>Equipos Disponibles</h1>
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
         <div class="row">
-
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
@@ -18,17 +24,14 @@
                                     <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposDisponibles()">
                                     <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
                                 </div>
-                                <!-- <div class="col-md-12">
-                                    <input class="form-control" placeholder="IMEI" formControlName="imei" (keyup.enter)="obtenerEquiposDisponibles()" />
-                                    <button type="submit">Buscar</button>
-                                </div> -->
                             </div>
 
                             <div class="col-md-4">
+                               <!-- --------------- Almacen --------------- -->
                                 <label class="form-label">Almacen</label>
                                 <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
-                                <option value="" disabled selected>Selecciona un almacén</option>
-                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen == 7 ? 0 : almacen.iD_Almacen">
+                                <option value="" selected>Selecciona un almacén</option>
+                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
                                   {{ almacen.descripcion }}
                                 </option>
                               </select>
@@ -37,8 +40,8 @@
                                 <!-- --------------- Suplidores --------------- -->
                                 <label class="form-label">Suplidor</label>
                                 <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
-                                  <option value="" disabled selected>Selecciona un Suplidor</option>
-                                  <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.iD_Suplidor == 1 ? 0 : Suplidor.iD_Suplidor">
+                                  <option value="" selected>Selecciona un Suplidor</option>
+                                  <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
                                     {{ Suplidor.descripcion }}
                                   </option>
                         </select>
@@ -46,19 +49,14 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <!-- Search by -->
+                                      <!-- --------------- Modelos --------------- -->
                                     <label class="form-label">Modelo</label>
-                                    <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
-                                      <option value="" disabled selected>Selecciona un Modelo</option>
+                                    <select class="form-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
+                                      <option value="" selected>Selecciona un Modelo</option>
                               <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
                                 {{ modelo.descripcion }}
                               </option>
                             </select>
-
-                                    <!-- <ng-select formControlName="modelo" (change)="obtenerEquiposDisponibles()">
-                                        <ng-option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
-                                            {{ modelo.descripcion }}
-                                        </ng-option>
-                                    </ng-select> -->
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label row mx-2"> Rango de fecha</label>
@@ -90,75 +88,76 @@
                                  {{ totalInventario | currency }}
                                </label>
                                     </div>
+
                                 </div>
+
                             </ng-container>
 
                         </div>
 
                         <!-- Fin Cuadro totales -->
                     </div>
+
                 </div>
+                <button class="btn print mx-1" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
+                  Imprimir reporte <i class="bi bi-printer"></i>
+                </button>
             </div>
         </div>
     </form>
     <section class="section mt-4">
-        <button class="btn print mx-1" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
-    Imprimir reporte <i class="bi bi-printer"></i>
-  </button>
+
         <div class="row">
             <div class="col-lg-12 scroll-table">
                 <h5 class="card-title">Equipos</h5>
                 <p *ngIf="equiposDisponibles.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
+                <div class="scrollable-table thinScroll">
+                <table class="mv-table">
+                  <thead>
+                      <tr>
+                          <th class="fixed-item code">IMEI/Código</th>
+                          <th class="fixed-item desc">Descripción</th>
+                          <th class="align-center">Costo</th>
+                          <th class="align-center">Precio Detalle</th>
+                          <th class="align-center">Precio PM</th>
+                          <th class="align-center">Almacén</th>
+                          <th class="align-center">Suplidor</th>
+                          <th class="align-center">Tecnología</th>
+                          <th class="align-center">Estado</th>
+                          <th class="align-center">Garantía</th>
+                          <th class="align-center">Nota</th>
 
-                <!-- Table with stripped rows -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Imei</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Tecnologia</th>
-                            <th scope="col">Garantia</th>
-                            <th scope="col">Precio Mayor</th>
-                            <th scope="col">Precio Detalle</th>
-                            <th scope="col">Costo</th>
-                            <th scope="col">Desbloq.</th>
-                            <!-- <th scope="col">Desbloqueado</th> -->
-                            <th scope="col">Disponible</th>
-                            <th scope="col">Nota</th>
-                            <th scope="col">Comision Detalle</th>
-                            <th scope="col">Comision Por Mayor</th>
-                            <th scope="col">Almacen</th>
-                            <th scope="col">Suplidor</th>
-                            <th scope="col">Fecha Registro</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="animate__animated animate__fadeIn" *ngFor="
-              let equipo of equiposDisponibles
-                | paginate
-                  : {
-                      itemsPerPage: filter.pageSize,
-                      currentPage: filter.pageIndex,
-                      totalItems: totalRecord
-                    }">
-                            <td>{{ equipo.imei }}</td>
-                            <td>{{ equipo.descripcion }}</td>
-                            <td>{{ equipo.tecnologia }}</td>
-                            <td>{{ equipo.garantia }}</td>
-                            <td>{{ equipo.precioPorMayor | currency }}</td>
-                            <td>{{ equipo.precioDetalle | currency }}</td>
-                            <td>{{ equipo.costoEquipo | currency }}</td>
-                            <td>{{ equipo.isDesbloqueado }}</td>
-                            <td>{{ equipo.isDisponible }}</td>
-                            <td>{{ equipo.notaAdicional }}</td>
-                            <td>{{ equipo.comisionDetalle | currency }}</td>
-                            <td>{{ equipo.comisionPorMayor | currency }}</td>
-                            <td>{{ equipo.descripcionAlmacen }}</td>
-                            <td>{{ equipo.suplidor }}</td>
-                            <td>{{ equipo.fecharegistro | date }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                          <th class="align-center">Fecha Registro</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let Equipo of equiposDisponibles | paginate
+                      : {
+                          itemsPerPage: filter.pageSize,
+                          currentPage: filter.pageIndex,
+                          totalItems: totalRecord
+                        }">
+                          <td class="fixed-item code">{{Equipo.imei}}</td>
+                          <td class="fixed-item desc">
+                              <span>{{Equipo.descripcion}}</span>
+                              <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+                  <i class="bx bx-edit-alt"></i>
+                </button>
+                          </td>
+                          <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
+                          <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
+                          <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
+                          <td class="align-center">{{Equipo.descripcionAlmacen}}</td>
+                          <td class="align-center">{{Equipo.suplidor}}</td>
+                          <td class="align-center">{{Equipo.tecnologia}}</td>
+                          <td class="align-center">{{Equipo.estadoBloqueo}}</td>
+                          <td class="align-center">{{Equipo.garantia}}</td>
+                          <td class="align-center">{{Equipo.notaAdicional}}</td>
+                          <td class="align-center">{{Equipo.fecharegistro}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+                </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposDisponibles.length">
                     Datos no encontrados
