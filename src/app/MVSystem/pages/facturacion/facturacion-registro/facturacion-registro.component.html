@@ -183,15 +183,50 @@
                                 <ng-container formArrayName="articulos">
                                     <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
                                         <ng-container [formGroupName]="i">
+                                          <!-- <div><strong>Funciona</strong></div> -->
+                                          <!-- <td>
+                                            <ng-select class="form-select"
+                                            formControlName="articulo"
+                                            id="articulo"
+                                            [addTag]="addArticuloImei"
+                                            [virtualScroll]="true"
+                                            [clearable]="false"
+                                            (keydown.enter)="$event.preventDefault();
+                                            cantidadInput.focus()"
+                                            (change)="obtenerDetalleFactura(i);
+                                            cantidadInput.focus()"
+                                            (scroll)="onScroll($event)"
+                                            required
+                                            [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
+                                              <ng-option *ngFor="let articulo of accesoriosBuffer"
+                                                 [value]="articulo">
+                                                {{articulo.accesorio_Descripcion | titlecase}} | {{
+                                                calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor
+                                              )| currency}}
+                                              </ng-option>
+                                             </ng-select>
+                                            </td> -->
+                                            <!-- <div><strong>No funciona</strong></div>-->
+                                          <td>
+                                            <ng-select
+                                              class="form-select"
+                                              formControlName="articulo"
+                                              id="articulo"
+                                              [addTag]="addArticuloImei"
+                                              [virtualScroll]="true"
+                                              [clearable]="false"
+                                              (keydown.enter)="cantidadInput.focus()"
+                                              (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
+                                              (scroll)="onScroll($event)"
+                                              required
+                                              [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
+                                              <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
+                                                {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
+                                              </ng-option>
+                                            </ng-select>
+                                          </td>
 
-                                            <td>
-                                                <ng-select class="form-select" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" (keydown.enter)="cantidadInput.focus()" (change)="obtenerDetalleFactura(i); cantidadInput.focus()" (scroll)="onScroll($event)"
-                                                    required [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
-                                                    <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
-                                                        {{articulo.accesorio_Descripcion | titlecase}} | {{calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor)| currency}}
-                                                    </ng-option>
-                                                </ng-select>
-                                            </td>
+
                                             <td class="col-md-1 align-center">
                                                 <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}"
                                                     [maxlen]="4" appNumeric>

@@ -59,6 +59,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
+    console.log("accesoriosBuffer cuando inicia el formulario ",this.accesoriosBuffer);
   }
 
   destroy$: Subject<any> = new Subject<any>();
@@ -136,7 +137,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   });
 
   isValidFechaFacturacion(): boolean {
-    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
+    return this.validatorPermissionService.validateUserRole("CAMBIAR_FECHA_FACTURA");
   }
   articulos(): FormArray {
     return this.form.controls["articulos"] as FormArray;
@@ -250,7 +251,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         telefono: '',
         fechaLimitePago: this.currentDate(),
       });
-
+////-----------------------------------------------------------------------------------------------------
       this.articulos().clear();
       this.agregarArticulo()
       if (this.customer) {
@@ -272,10 +273,10 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
   }
   cleanAmounts() {
-    this.abono =
-      this.subTotal =
-      this.descuento =
-      this.total =
+    this.abono =0
+      this.subTotal =0
+      this.descuento =0
+      this.total =0
       this.itbis = 0
   }
 
@@ -327,40 +328,84 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       (this.form.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
 
-  addArticuloImei = (imei: string) => {
-    return new Promise((resolve) => {
-      this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(equipos => {
-          console.log(equipos);
+//   addArticuloImei = (imei: string) => {
+//     return new Promise((resolve) => {
+//       this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
+//         .pipe(takeUntil(this.destroy$))
+//         .subscribe(equipos => {
+//           console.log(" Imei al presionar enter ",imei);
 
-          if (equipos) {    // && equipos.precioDetalle > 0
-            const equipo = equipos
+//           if (equipos) {    // && equipos.precioDetalle > 0
+//             const equipo = equipos
 
-            const articulo: AccesorioLista = {
-              accesorio_Descripcion: `${equipo.marca}`,
-              cantidad: 1,
-              id: equipo.imei,
-              codigo_Barra: 0,
-              modelo: equipo.modelo,
-              precio_Detalle: equipo.precioDetalle,
-              precio_Por_Mayor: equipo.precioPorMayor,
-              codigo: null!,
-              idTipo: 1,
-            }
-            console.log(articulo);
+//             const articulo: AccesorioLista = {
+//               accesorio_Descripcion: `${equipo.marca}`,
+//               cantidad: 1,
+//               id: equipo.imei,
+//               codigo_Barra: 0,
+//               modelo: equipo.modelo,
+//               precio_Detalle: equipo.precioDetalle,
+//               precio_Por_Mayor: equipo.precioPorMayor,
+//               codigo: null!,
+//               idTipo: 1,
+//             }
+//             console.log("Aqui es donde se supone que agrega el equipo(imei) a la lista de accesoeiobufer",articulo);
 
 
-            this.accesorios.push(articulo)
-            resolve(articulo)
-          }
-          else {
-            this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
-          }
+//             this.accesorios.push(articulo)
+//             resolve(articulo)
+//             const articuloControl = this.form.get('articulo');
+// if (articuloControl) {
+//   articuloControl.setValue(articulo);
+// }
+//           }
+//           else {
+//             this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
+//           }
 
-        })
-    })
-  }
+//         })
+//     })
+//   }
+
+addArticuloImei = (imei: string) => {
+  return new Promise((resolve) => {
+    this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(equipos => {
+        console.log(" Imei al presionar enter ", imei);
+
+        if (equipos) {
+          const equipo = equipos;
+
+          const articulo: AccesorioLista = {
+            accesorio_Descripcion: `${equipo.marca}`,
+            cantidad: 1,
+            id: equipo.imei,
+            codigo_Barra: 0,
+            modelo: equipo.modelo,
+            precio_Detalle: equipo.precioDetalle,
+            precio_Por_Mayor: equipo.precioPorMayor,
+            codigo: null!,
+            idTipo: 1,
+          };
+
+          console.log("en teoria este deberia ser el equipo ",articulo.accesorio_Descripcion);
+
+          this.accesorios.push(articulo);
+
+          // Aquí actualizas el control 'articulo' para mantener el IMEI
+          // const articuloControl = this.form.get('articulo');
+          // if (articuloControl) {
+          //   articuloControl.setValue(articulo);
+          // }
+
+          resolve(articulo);
+        } else {
+          this.toastr.error(`El imei ${imei} no es válido o ya se vendió`);
+        }
+      });
+  });
+};
 
   obtenerDetalleFactura(index: number) {
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
@@ -369,6 +414,8 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
     const currentArticulo = currentFormGroup.getRawValue()
     let articulo = currentArticulo.articulo;
+
+    console.log(" Articulo de las linea 371 ",articulo);
 
     if (!currentArticulo || !articulo)
       return
@@ -385,9 +432,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         continue
 
       let currentArticuloList = this.articulos().controls[articuloAddIndex].value
-      console.log({ currentArticuloList: currentArticuloList });
-      console.log({ currentArticuloidEquipo: currentArticulo.idEquipo });
-      console.log({ currentArticuloListidEquipo: currentArticuloList.idEquipo });
 
       if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
         this.borrarArticulo(index)
@@ -398,7 +442,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
 
     currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-    console.log(currentArticulo);
 
     this.articulos().controls[index].setValue(currentArticulo)
     this.obtenerCantidadArticulo(currentArticulo);
@@ -411,6 +454,56 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     if (currentArticulo.idTipo == 1)
       currentFormGroup.controls["cantidad"].disable()
   }
+
+  // obtenerDetalleFactura(index: number) {
+  //   const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
+  //   currentFormGroup.controls["cantidad"].enable();
+
+  //   const currentArticulo = currentFormGroup.getRawValue();
+  //   let articulo = currentArticulo.articulo;
+  //   console.log(" Articulo de las linea 466 ",articulo);
+  //   if (!currentArticulo || !articulo)
+  //     return;
+
+  //   // Aquí verificamos si es equipo y mantenemos el IMEI en el campo 'articulo'
+  //   if (articulo.idTipo === 1) {  // Si es un equipo
+  //     currentArticulo.descripcion = articulo.accesorio_Descripcion + ' ' + articulo.modelo;
+  //   } else {
+  //     currentArticulo.descripcion = articulo.accesorio_Descripcion;
+  //   }
+
+  //   currentArticulo.idTipo = 2;
+  //   currentArticulo.idGarantia = 1;
+  //   currentArticulo.idEquipo = articulo.id;
+  //   currentArticulo.precioDetalle = articulo.precio_Detalle;
+  //   currentArticulo.precioMayor = articulo.precio_Por_Mayor;
+
+  //   for (let articuloAddIndex in this.articulos().controls) {
+  //     if (articuloAddIndex == index.toString())
+  //       continue;
+
+  //     let currentArticuloList = this.articulos().controls[articuloAddIndex].value;
+  //      console.log("currentArticuloList: currentArticuloList",{ currentArticuloList: currentArticuloList });
+  //      console.log("currentArticuloidEquipo: currentArticulo.idEquipo",{ currentArticuloidEquipo: currentArticulo.idEquipo });
+  //      console.log("currentArticuloListidEquipo: currentArticuloList.idEquipo",{ currentArticuloListidEquipo: currentArticuloList.idEquipo });
+  //     if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
+  //       this.borrarArticulo(index);
+  //       this.toastr.error("Este articulo ya fue registrado");
+  //     }
+  //   }
+
+  //   currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+  //   currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+
+  //   this.articulos().controls[index].setValue(currentArticulo);
+  //   this.obtenerCantidadArticulo(currentArticulo);
+  //   this.obtenerCantidadArticuloStock(index);
+
+  //   this.refreshGeneralValues();
+
+  //   if (currentArticulo.idTipo == 1)
+  //     currentFormGroup.controls["cantidad"].disable();
+  // }
 
   calcularSubTotalArticulo(precio: number, cantidad: number) {
     const subTotal = precio * cantidad;
@@ -482,7 +575,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   }
 
   modeloRegistroFacturacion(): FacturaRegistro {
-
+///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {
       numeroFactura: this.facturaNumber,
       idCliente: this.customer.id_Cliente,
@@ -519,7 +612,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       email_Detalle: '',
       usuario: this.loginService.getUserName(),
     }
-    console.log(this.customer.id_Cliente);
 
     return model;
   }
@@ -557,27 +649,12 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         this.toastr.error(error);
       });
   }
-  // loadCotizacionCliente(telefono: string): Promise<boolean> {
-  //   return new Promise((resolve, reject) => {
-  //     this.cotizacionService.getCotizacionFacturaConsulta(telefono)
-  //       .pipe(takeUntil(this.destroy$))
-  //       .subscribe(cotizaciones => {
-  //         if (cotizaciones.length) {
-  //           resolve(true)
-  //           this.cotizaciones = cotizaciones;
-  //           this.cotizacionService.isOpeningForm$.next(true);
-  //         }
-  //         resolve(false)
-  //       })
-  //   })
-  // }
+
   loadDetalleCotizacion(numeroRegistro: number) {
-    console.log(Number(this.loginService.getUserIdSucursal));
 
     this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro, Number(this.loginService.getUserIdSucursal))
       .pipe(takeUntil(this.destroy$))
       .subscribe(articulos => {
-        console.log(articulos);
         articulos.forEach((articulo, index) => {
           const data = this.fb.group({
             cantidad: [articulo.cantidad],
@@ -729,7 +806,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.mantenimientoService.exportFactura(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
-        console.log(blobResponse);
+        console.log("genrando pdf ",blobResponse);
 
         CreatorPDFFile(blobResponse);
         this.onClean();
