@@ -53,7 +53,7 @@ export interface FacturaRegistro {
     idAlmacen: number;
     nota?: string;
     // persona: number;
-    // empresa: string;
+    //empresa: string;
     RNC: string;
 
     descripcion: string;
@@ -137,6 +137,7 @@ export interface FacturaFilter extends DatePaging, Pagination {
     almacen: number;
     numeroFactura?: number;
     criterio: string;
+    empresa: string;
 }
 
 export interface Articulo {

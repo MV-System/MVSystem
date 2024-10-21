@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from '../../../../helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -19,10 +20,12 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   detalleFactura: DetalleFacturaList[]=[];
 
+
   constructor(private fb: FormBuilder,
     private mantenimientoService: MantenimientoService,
     private catalogosService: CatalogosService,
     private toast: ToastrService,
+    private loginService: LoginService,
   private validatorPermissionService:ValidatorPermissionService) { }
 
     SelectSucursal(): boolean {
@@ -81,7 +84,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       fechaInicio: this.paginate.fechaInicio,
       fechaFinal: this.paginate.fechaFinal,
       pageIndex: this.paginate.pageIndex,
-      pageSize: this.paginate.pageSize
+      pageSize: this.paginate.pageSize,
+      empresa: this.loginService.getUserEmpresa,
     }
     return model;
   }

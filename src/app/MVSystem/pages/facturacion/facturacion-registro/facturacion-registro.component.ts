@@ -337,14 +337,14 @@ addArticuloImei = (imei: string) => {
         if (equipos) {
           const equipo = equipos;
           const articulo: AccesorioLista = {
-            accesorio_Descripcion: `${equipo.modelo}`,
+            accesorio_Descripcion: `${equipo.imei}`+' '+`${equipo.modelo}`,
             cantidad: 1,
-            id: equipo.imei,
+            id:equipo.imei,
             codigo_Barra: 0,
             modelo: equipo.modelo,
             precio_Detalle:equipo.precioDetalle,
             precio_Por_Mayor: equipo.precioPorMayor,
-            codigo: null!,
+            codigo: null!, //equipo.modelo,
             idTipo: 1,
           };
 
@@ -354,7 +354,9 @@ addArticuloImei = (imei: string) => {
            articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
          }
 
-         this.accesorios.push(articulo);
+         //this.accesorios.push(articulo);
+        this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer]
+        //console.log("Accesorios",articulo, this.accesoriosBuffer);
          resolve(articulo);
        } else {
          this.toastr.error(`El imei ${imei} no es válido o ya se vendió`);
@@ -507,6 +509,7 @@ else { currentArticulo.idTipo = 2;}
       cantidadArticulos: this.articulos().length,
       detalleFacturaList: [],
       usuario: this.loginService.getUserName() || "",
+
     }
 
     model.Cliente = {
