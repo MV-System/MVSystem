@@ -59,7 +59,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
-    console.log("accesoriosBuffer cuando inicia el formulario ",this.accesoriosBuffer);
   }
 
   destroy$: Subject<any> = new Subject<any>();
@@ -93,6 +92,9 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   abono: number = 0;
   bufferSize: number = 10;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
+
+  Imei: string = '';
+
 
   form: FormGroup = this.fb.group({
     idCliente: [''],
@@ -208,7 +210,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   }
 
   onSelectCotizacion(cotizacion: CotizacionAmount) {
-    console.log(cotizacion);
     this.abono = cotizacion.abono;
     this.descuento = cotizacion.descuento;
     this.itbis = cotizacion.itbis;
@@ -216,7 +217,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.total = cotizacion.total;
     this.loadDetalleCotizacion(cotizacion.numero_Factura);
   }
-
   agregarAbono() {
     const { abono } = this.form.value;
     this.abono = abono;
@@ -328,81 +328,37 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       (this.form.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
 
-//   addArticuloImei = (imei: string) => {
-//     return new Promise((resolve) => {
-//       this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
-//         .pipe(takeUntil(this.destroy$))
-//         .subscribe(equipos => {
-//           console.log(" Imei al presionar enter ",imei);
-
-//           if (equipos) {    // && equipos.precioDetalle > 0
-//             const equipo = equipos
-
-//             const articulo: AccesorioLista = {
-//               accesorio_Descripcion: `${equipo.marca}`,
-//               cantidad: 1,
-//               id: equipo.imei,
-//               codigo_Barra: 0,
-//               modelo: equipo.modelo,
-//               precio_Detalle: equipo.precioDetalle,
-//               precio_Por_Mayor: equipo.precioPorMayor,
-//               codigo: null!,
-//               idTipo: 1,
-//             }
-//             console.log("Aqui es donde se supone que agrega el equipo(imei) a la lista de accesoeiobufer",articulo);
-
-
-//             this.accesorios.push(articulo)
-//             resolve(articulo)
-//             const articuloControl = this.form.get('articulo');
-// if (articuloControl) {
-//   articuloControl.setValue(articulo);
-// }
-//           }
-//           else {
-//             this.toastr.error(`El imei ${imei} no es válido o ya se vendió`)
-//           }
-
-//         })
-//     })
-//   }
 
 addArticuloImei = (imei: string) => {
   return new Promise((resolve) => {
     this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
       .pipe(takeUntil(this.destroy$))
       .subscribe(equipos => {
-        console.log(" Imei al presionar enter ", imei);
-
         if (equipos) {
           const equipo = equipos;
-
           const articulo: AccesorioLista = {
-            accesorio_Descripcion: `${equipo.marca}`,
+            accesorio_Descripcion: `${equipo.modelo}`,
             cantidad: 1,
             id: equipo.imei,
             codigo_Barra: 0,
             modelo: equipo.modelo,
-            precio_Detalle: equipo.precioDetalle,
+            precio_Detalle:equipo.precioDetalle,
             precio_Por_Mayor: equipo.precioPorMayor,
             codigo: null!,
             idTipo: 1,
           };
 
-          console.log("en teoria este deberia ser el equipo ",articulo.accesorio_Descripcion);
+// Actualiza el valor del formControl "articulo" con el IMEI ingresado
+         const articuloControl = this.form.get('articulo');
+         if (articuloControl) {
+           articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
+         }
 
-          this.accesorios.push(articulo);
-
-          // Aquí actualizas el control 'articulo' para mantener el IMEI
-          // const articuloControl = this.form.get('articulo');
-          // if (articuloControl) {
-          //   articuloControl.setValue(articulo);
-          // }
-
-          resolve(articulo);
-        } else {
-          this.toastr.error(`El imei ${imei} no es válido o ya se vendió`);
-        }
+         this.accesorios.push(articulo);
+         resolve(articulo);
+       } else {
+         this.toastr.error(`El imei ${imei} no es válido o ya se vendió`);
+       }
       });
   });
 };
@@ -415,12 +371,15 @@ addArticuloImei = (imei: string) => {
     const currentArticulo = currentFormGroup.getRawValue()
     let articulo = currentArticulo.articulo;
 
-    console.log(" Articulo de las linea 371 ",articulo);
-
-    if (!currentArticulo || !articulo)
+if (!currentArticulo || !articulo)
       return
+if (currentArticulo && articulo.idTipo ==1)
+{
+  currentArticulo.idTipo = articulo.idTipo;
+}
+else { currentArticulo.idTipo = 2;}
 
-    currentArticulo.idTipo = 2;
+
     currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.id;
     currentArticulo.descripcion = articulo.accesorio_Descripcion + '  ' + articulo.modelo;
@@ -454,56 +413,6 @@ addArticuloImei = (imei: string) => {
     if (currentArticulo.idTipo == 1)
       currentFormGroup.controls["cantidad"].disable()
   }
-
-  // obtenerDetalleFactura(index: number) {
-  //   const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
-  //   currentFormGroup.controls["cantidad"].enable();
-
-  //   const currentArticulo = currentFormGroup.getRawValue();
-  //   let articulo = currentArticulo.articulo;
-  //   console.log(" Articulo de las linea 466 ",articulo);
-  //   if (!currentArticulo || !articulo)
-  //     return;
-
-  //   // Aquí verificamos si es equipo y mantenemos el IMEI en el campo 'articulo'
-  //   if (articulo.idTipo === 1) {  // Si es un equipo
-  //     currentArticulo.descripcion = articulo.accesorio_Descripcion + ' ' + articulo.modelo;
-  //   } else {
-  //     currentArticulo.descripcion = articulo.accesorio_Descripcion;
-  //   }
-
-  //   currentArticulo.idTipo = 2;
-  //   currentArticulo.idGarantia = 1;
-  //   currentArticulo.idEquipo = articulo.id;
-  //   currentArticulo.precioDetalle = articulo.precio_Detalle;
-  //   currentArticulo.precioMayor = articulo.precio_Por_Mayor;
-
-  //   for (let articuloAddIndex in this.articulos().controls) {
-  //     if (articuloAddIndex == index.toString())
-  //       continue;
-
-  //     let currentArticuloList = this.articulos().controls[articuloAddIndex].value;
-  //      console.log("currentArticuloList: currentArticuloList",{ currentArticuloList: currentArticuloList });
-  //      console.log("currentArticuloidEquipo: currentArticulo.idEquipo",{ currentArticuloidEquipo: currentArticulo.idEquipo });
-  //      console.log("currentArticuloListidEquipo: currentArticuloList.idEquipo",{ currentArticuloListidEquipo: currentArticuloList.idEquipo });
-  //     if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
-  //       this.borrarArticulo(index);
-  //       this.toastr.error("Este articulo ya fue registrado");
-  //     }
-  //   }
-
-  //   currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
-  //   currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-
-  //   this.articulos().controls[index].setValue(currentArticulo);
-  //   this.obtenerCantidadArticulo(currentArticulo);
-  //   this.obtenerCantidadArticuloStock(index);
-
-  //   this.refreshGeneralValues();
-
-  //   if (currentArticulo.idTipo == 1)
-  //     currentFormGroup.controls["cantidad"].disable();
-  // }
 
   calcularSubTotalArticulo(precio: number, cantidad: number) {
     const subTotal = precio * cantidad;
@@ -806,7 +715,6 @@ addArticuloImei = (imei: string) => {
     this.mantenimientoService.exportFactura(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
-        console.log("genrando pdf ",blobResponse);
 
         CreatorPDFFile(blobResponse);
         this.onClean();
@@ -837,7 +745,6 @@ addArticuloImei = (imei: string) => {
         this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
-            console.log(resp);
 
             this.onClean();
             this.agregarArticulo();
@@ -864,31 +771,29 @@ addArticuloImei = (imei: string) => {
   generateCotizacion() {
 
     const data = this.loadDataToPrint()
-    console.log(data);
+    this.loading.showLoading('Procesando cotización...');
+    this.mantenimientoService.postCotizacionReport(data)
+    .pipe(takeUntil(this.destroy$))
+      .subscribe((blobResponse) => {
+        this.form.reset({
+          tipoFactura: 1,
+          tipoPago: 1,
+          comprobante: 0,
+          garantia: 8,
+          aplicarItbis: false,
+        })
 
-    // this.loading.showLoading('Procesando cotización...');
-    // this.mantenimientoService.postCotizacionReport(data)
-    // .pipe(takeUntil(this.destroy$))
-    //   .subscribe((blobResponse) => {
-    //     this.form.reset({
-    //       tipoFactura: 1,
-    //       tipoPago: 1,
-    //       comprobante: 0,
-    //       garantia: 8,
-    //       aplicarItbis: false,
-    //     })
+        this.articulos().clear()
+        // this.obtenerFechaDiaActual()
+        this.agregarArticulo()
 
-    //     this.articulos().clear()
-    //     // this.obtenerFechaDiaActual()
-    //     this.agregarArticulo()
+        CreatorPDFFile(blobResponse);
+        this.loading.hideLoading();
 
-    //     CreatorPDFFile(blobResponse);
-    //     this.loading.hideLoading();
-
-    //   },error=>{
-    //     this.loading.hideLoading();
-    //     this.toastr.error(error)
-    //   })
+      },error=>{
+        this.loading.hideLoading();
+        this.toastr.error(error)
+      })
   }
   loadFacturaNumero() {
     this.mantenimientoService.getFacturaNumero()

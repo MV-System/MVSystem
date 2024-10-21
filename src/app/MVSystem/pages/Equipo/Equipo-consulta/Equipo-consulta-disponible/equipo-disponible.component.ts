@@ -14,6 +14,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { EquipoService } from 'src/app/core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -26,6 +27,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
     private toast: ToastrService,
+    private loginService: LoginService,
   ) { }
 
   ngOnInit(): void {
@@ -72,6 +74,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     pageSize: 10,
     fechaInicio: '',
     fechaFinal: '',
+    Empresa:'',
   };
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -155,6 +158,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
+    this.filter.empresa = this.loginService.getUserEmpresa;
   }
   setDateRange(): void {
     let date = new Date();

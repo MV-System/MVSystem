@@ -215,14 +215,17 @@
                                               [addTag]="addArticuloImei"
                                               [virtualScroll]="true"
                                               [clearable]="false"
-                                              (keydown.enter)="cantidadInput.focus()"
+                                              (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"
                                               (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
                                               (scroll)="onScroll($event)"
                                               required
                                               [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
                                               <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                 {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
+                                                <pre>{{articulo.accesorio_Descripcion  | json}}</pre>
+
                                               </ng-option>
+
                                             </ng-select>
                                           </td>
 
@@ -261,6 +264,7 @@
                                     </tr>
                                 </ng-container>
                             </tbody>
+                            <!-- <pre>{{accesoriosBuffer | json}}</pre> -->
                         </table>
                         <!-- <div class="not-data" *ngIf="!articulos.length">
                           Seleccione un accesorio
