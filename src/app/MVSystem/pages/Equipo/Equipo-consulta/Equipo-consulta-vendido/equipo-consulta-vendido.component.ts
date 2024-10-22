@@ -14,6 +14,7 @@ import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { Suplidor } from '../../../../../core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -21,13 +22,14 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
   styleUrls: ['./equipo-consulta-vendido.component.css'],
 })
 export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
- 
+
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
     private vendedorService: VendedorService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private loginService: LoginService,
   ) {}
   @Input() clearFilter:any;
 
@@ -50,7 +52,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
 
       this.clearFilters();
     }
- 
+
   }
 
   subscription!: Subscription;
@@ -84,6 +86,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     fechaFinal: '',
     fechaInicioFactura: '',
     fechaFinalFactura: '',
+    Empresa:this.loginService.getUserEmpresa,
   };
   form: FormGroup = this.fb.group({
     almacen: [''],
@@ -147,8 +150,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.filter.vendedor = nullOrEmpty(vendedor);
     this.filter.suplidor = nullOrEmpty(suplidor);
     this.filter.modelo = nullOrEmpty(modelo);
-    this.filter.telefono = nullOrEmpty(telefono);  
-    this.filter.imei = nullOrEmpty(imei);  
+    this.filter.telefono = nullOrEmpty(telefono);
+    this.filter.imei = nullOrEmpty(imei);
   }
   onSearchByTelefono(){
     let telefonoFormValue = this.form.controls.telefono.value;
@@ -186,20 +189,21 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.filter.fechaInicio !="" ||
     this.filter.fechaFinal !==""||
     this.filter.fechaInicioFactura !==""||
-    this.filter.fechaFinalFactura !=="" 
+    this.filter.fechaFinalFactura !==""
     ){
 
       this.filter.pageIndex = 1;
     }
 
   }
+
   obtenerEquiposVendidos() {
     this.getValueFilterForm();
     this.onFilterPropHasValue();
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
-        
+
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
@@ -216,17 +220,16 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
           this.lastLine = equipo[0].lastLine;
         }
         this.equiposVendidos = equipo;
-        
+
       });
   }
   printReportEquipoVendido(){
-
     this.equipoService.postEquipoVendido(this.filter)
     .subscribe((blobResp)=>{
       this.isPrint = !this.isPrint;
       CreatorPDFFile(blobResp);
     },(err)=>{
-      this.isPrint = !this.isPrint;    
+      this.isPrint = !this.isPrint;
       this.toast.error('Error','Error al imprimir reporte');
     })
     this.isPrint = !this.isPrint;

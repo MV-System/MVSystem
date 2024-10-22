@@ -33,7 +33,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit(): void {
     this.obtenerEquiposDisponibles();
     this.loadCatalogos();
-
   }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -74,7 +73,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     pageSize: 10,
     fechaInicio: '',
     fechaFinal: '',
-    Empresa:'',
+    Empresa:this.loginService.getUserEmpresa,
   };
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -158,7 +157,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
-    this.filter.empresa = this.loginService.getUserEmpresa;
+
   }
   setDateRange(): void {
     let date = new Date();

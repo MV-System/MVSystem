@@ -91,6 +91,7 @@ export interface EquipoTransferenciaReporte{
     equipoTransferencias: EquipoTransferencia[]
     fechaTransferencia: string;
     usuario: string;
+    Empresa: string;
     total: number;
 }
 export interface EquipoVendido {
@@ -130,6 +131,7 @@ export interface EquipoTransferencia{
     almacenDestino:string;
     mensaje:string;
     usuario: string;
+
 }
 
 export interface EquipoAlmacenTransferir {
@@ -139,7 +141,6 @@ export interface EquipoAlmacenTransferir {
     mensaje:         string;
     almacenSalida:   number;
     almacenDestino:  number;
-    //almacenDestinoString:  string;
     cantidadEquipos: number;
     usuario:         string;
 }

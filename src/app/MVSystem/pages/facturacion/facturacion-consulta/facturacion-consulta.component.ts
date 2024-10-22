@@ -136,6 +136,18 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     });
     this.subs.push(sub);
   }
+  printFacturaMini(){
+    this.printing = !this.printing;
+    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+      this.printing = !this.printing;
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir factura');
+    });
+    this.subs.push(sub);
+  }
   onChangeTipoBusqueda(tipo: number){
     this.tipoBusqueda = tipo;
     this.getFacturas();

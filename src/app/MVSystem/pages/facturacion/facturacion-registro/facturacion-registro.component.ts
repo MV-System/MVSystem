@@ -509,6 +509,7 @@ else { currentArticulo.idTipo = 2;}
       cantidadArticulos: this.articulos().length,
       detalleFacturaList: [],
       usuario: this.loginService.getUserName() || "",
+      empresa: this.loginService.getUserEmpresa,
 
     }
 

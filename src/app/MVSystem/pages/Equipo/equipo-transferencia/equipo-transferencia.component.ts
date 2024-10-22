@@ -157,9 +157,9 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
       almacenSalida: equipo.almacenSalida,
       almacenDestino: equipo.almacenDestino,
       usuario: this.loginService.getUserName(),
+
       mensaje: ''
     };
-console.log("Cantidad de equipos ",this.equipoToTransfer.length);
     // Añadir el equipo a la lista de transferencia
     this.listEquiposToTransfer.unshift(model);
     // Actualizar la cantidad de equipos a transferir
@@ -186,6 +186,7 @@ console.log("Cantidad de equipos ",this.equipoToTransfer.length);
       equipoTransferencias: this.listEquiposToTransfer,
       fechaTransferencia: new Date().toDateString(),
       usuario: this.loginService.getUserName(),
+      Empresa:this.loginService.getUserEmpresa,
       total: this.cantidadEquipoATransferir
     };
 

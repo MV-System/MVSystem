@@ -53,7 +53,7 @@ export interface FacturaRegistro {
     idAlmacen: number;
     nota?: string;
     // persona: number;
-    //empresa: string;
+    empresa: string;
     RNC: string;
 
     descripcion: string;

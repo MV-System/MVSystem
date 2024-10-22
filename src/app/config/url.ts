@@ -29,6 +29,7 @@ export let APIURL = {
             FacturaReporteConsulta: API + 'FacturacionReporte/ReportFacturaConsulta',
             FacturacionReporte: API + 'FacturacionReporte/RptFactura',
             FacturaReporte: API + 'FacturacionReporte/ReportFactura',
+            FacturaReporteMini: API + 'FacturacionReporte/ReportFacturaMini',
             ReportCotizacion: API + 'FacturacionReporte/ReportCotizacion',
         },
         Consulta:{
