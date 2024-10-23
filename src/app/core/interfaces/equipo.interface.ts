@@ -24,6 +24,8 @@ export interface Equipo {
     modelo: string;
     precioPorMayor: number;
     precioDetalle: number;
+    mensaje: string;
+
 }
 export interface EquipoObjRetorno {
     imei: string;

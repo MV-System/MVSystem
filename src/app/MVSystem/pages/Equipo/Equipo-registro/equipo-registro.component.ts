@@ -150,6 +150,7 @@ export class EquipoRegistroComponent implements OnInit {
       Comision_Detalle: Number(this.formRegistro.get('comisionDetalle')?.value),
       Precio_Detalle: Number(this.formRegistro.get('alDetalle')?.value),
       Precio_Por_Mayor: Number(this.formRegistro.get('alPorMayor')?.value),
+      mensaje:'',
     }
     return model;
   }

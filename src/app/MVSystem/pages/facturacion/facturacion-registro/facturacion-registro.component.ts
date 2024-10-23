@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { forkJoin, Subject } from 'rxjs';
+import { forkJoin, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 
 import { AsumeITBIS, Garantia, TipoComprobante, TipoFactura, TipoPago } from 'src/app/core/interfaces/catalogo.interface';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
-import { DetalleFacturaList, FacturaRegistro } from 'src/app/core/interfaces/mantenimiento';
+import { DetalleFacturaList, FacturaFilter, FacturaRegistro } from 'src/app/core/interfaces/mantenimiento';
 import { AccesorioLista } from '../../../../core/interfaces/catalogo.interface';
 
 import { ClientesService } from '../../../../core/services/clientes.service';
@@ -31,6 +31,8 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
   constructor(
+
+    private toast: ToastrService,
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
     private toastr: ToastrService,
@@ -60,9 +62,10 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.obtenerItbis();
     this.obtenerClientes();
   }
-
+  FacturaCreada: FacturaRegistro = null!;
+  subs: Subscription[] = [];
   destroy$: Subject<any> = new Subject<any>();
-
+  printing: boolean = false;
   customer!: Cliente;
   cotizaciones!: CotizacionAmount[];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
@@ -119,7 +122,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     aplicarItbis: [false,],
     usuario: this.loginService.getUserName(),
     btnAddArticulo:'',
-    // articulos: this.fb.array([]),
     articulos: this.fb.array([this.fb.group({
       cantidad: [1],
       descripcion: [''],
@@ -334,7 +336,7 @@ addArticuloImei = (imei: string) => {
     this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
       .pipe(takeUntil(this.destroy$))
       .subscribe(equipos => {
-        if (equipos) {
+        if (equipos.Disponible ==='S') {
           const equipo = equipos;
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.imei}`+' '+`${equipo.modelo}`,
@@ -346,20 +348,21 @@ addArticuloImei = (imei: string) => {
             precio_Por_Mayor: equipo.precioPorMayor,
             codigo: null!, //equipo.modelo,
             idTipo: 1,
+            disponible: equipo.Disponible,
+            mensaje: equipo.mensaje,
           };
-
-// Actualiza el valor del formControl "articulo" con el IMEI ingresado
+          console.log("fdfsdfdsff",equipos);
          const articuloControl = this.form.get('articulo');
          if (articuloControl) {
            articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
          }
-
          //this.accesorios.push(articulo);
         this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer]
         //console.log("Accesorios",articulo, this.accesoriosBuffer);
          resolve(articulo);
-       } else {
-         this.toastr.error(`El imei ${imei} no es válido o ya se vendió`);
+        }else
+       {
+        this.toastr.error(`El Equipo ${imei}: ${equipos.mensaje}`);
        }
       });
   });
@@ -716,11 +719,11 @@ else { currentArticulo.idTipo = 2;}
   onAcceptPrint(data: FacturaRegistro) {
     this.isLoading = !this.isLoading;
     this.submitted = true;
-    this.mantenimientoService.exportFactura(data)
+    this.mantenimientoService.postFactura(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
 
-        CreatorPDFFile(blobResponse);
+        //CreatorPDFFile(blobResponse);
         this.onClean();
         this.agregarArticulo();
         this.toastr.success('Factura generada con exito!');
@@ -730,27 +733,71 @@ else { currentArticulo.idTipo = 2;}
         this.toastr.error(error)
       })
   }
+  // onAcceptPrint(data: FacturaRegistro) {
+  //   this.isLoading = !this.isLoading;
+  //   this.submitted = true;
+  //   this.mantenimientoService.exportFactura(data)
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe((blobResponse) => {
+
+  //       CreatorPDFFile(blobResponse);
+  //       this.onClean();
+  //       this.agregarArticulo();
+  //       this.toastr.success('Factura generada con exito!');
+  //       this.loadFacturaNumero();
+  //     }, error => {
+  //       this.isLoading = !this.isLoading;
+  //       this.toastr.error(error)
+  //     })
+  // }
+  modelFacturaFilter(){
+    const {criterio,almacen} = this.form.value;
+    const model:FacturaFilter = {
+      almacen: +this.loginService.getUserIdSucursal,
+      criterio: criterio,
+      fechaInicio:'',// this.paginate.fechaInicio,
+      fechaFinal:'',// this.paginate.fechaFinal,
+      pageIndex:1,// this.paginate.pageIndex,
+      pageSize:10,// this.paginate.pageSize,
+      empresa: this.loginService.getUserEmpresa,
+    }
+    return model;
+  }
+  printFacturaNormal(){
+    this.printing = !this.printing;
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.FacturaCreada.numeroFactura)
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+      this.printing = !this.printing;
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir factura');
+    });
+    this.subs.push(sub);
+  }
+
+  printFacturaMini(){
+    this.printing = !this.printing;
+    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.FacturaCreada.numeroFactura)
+    .subscribe(blob =>{
+      CreatorPDFFile(blob);
+      this.printing = !this.printing;
+    },err=>{
+      this.printing = !this.printing;
+      this.toast.error('Error al imprimir factura');
+    });
+    this.subs.push(sub);
+  }
   generateFactura() {
     const data = this.loadDataToPrint()
+   console.log("Datos de la factura",this.FacturaCreada = data);
+    this.FacturaCreada = data;
 
-    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
-      () => {
-        this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-          () => { this.onAcceptPrint(data);
-          },
-          () => {/*factura mini */ },
-          "Mini",
-          "Normal"
-        )
-
-      },
-      () => {
-
-        this.mantenimientoService.postFactura(data)
+    this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
 
-            this.onClean();
+
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
             this.loadFacturaNumero();
@@ -758,6 +805,35 @@ else { currentArticulo.idTipo = 2;}
             this.isLoading = !this.isLoading;
             this.toastr.error(error)
           })
+
+
+
+    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+      () => {
+
+        this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
+          () => { this.printFacturaNormal();this.onClean();
+          },
+          () => {this.printFacturaMini();this.onClean();},
+          "Mini",
+          "Normal"
+        )
+
+      },
+      () => {
+        this.onClean();
+        // this.mantenimientoService.postFactura(data)
+        //   .pipe(takeUntil(this.destroy$))
+        //   .subscribe(resp => {
+
+        //     this.onClean();
+        //     this.agregarArticulo();
+        //     this.toastr.success('Factura generada con exito!');
+        //     this.loadFacturaNumero();
+        //   }, error => {
+        //     this.isLoading = !this.isLoading;
+        //     this.toastr.error(error)
+        //   })
 
       },
       "No",

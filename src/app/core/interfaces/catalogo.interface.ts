@@ -49,6 +49,8 @@ export interface AccesorioLista {
   precio_Por_Mayor: number;
   cantidad: number;
   idTipo: number;
+  disponible: string;
+  mensaje: string;
 }
 export interface Garantia {
   iD_Garantia: number;

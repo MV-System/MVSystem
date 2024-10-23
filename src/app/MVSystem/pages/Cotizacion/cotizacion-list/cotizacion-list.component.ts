@@ -77,6 +77,8 @@ export class CotizacionListComponent implements OnInit, OnChanges {
               precio_Por_Mayor: equipo.precioPorMayor,
               codigo: null!,
               idTipo: 1,
+              disponible: equipo.Disponible,
+              mensaje: equipo.mensaje,
             };
 
             this.accesorios.push(articulo);
@@ -117,9 +119,9 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       // this.isValidNgSelect(articulo);
     } else {
       this.onArticuloValue.emit(false);
-   
+
     }
- 
+
   }
 
   getCurrentFormGroup(index: number) {
@@ -141,7 +143,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       return this.isDescuentoValid;
     }
     else{
-      
+
       return !this.isDescuentoValid;
     }
   }
@@ -165,12 +167,12 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     }
   }
   obtenerDetalleFactura(index: number) {
- 
+
     const currentArticulo = this.getCurrentFormGroup(index);
     console.log(currentArticulo);
-    
+
     let articulo = currentArticulo.articulo;
-  
+
     this.onClearArticuloDropdown(articulo,index);
     this.onDetectValueArticulo(articulo);
     if (!currentArticulo || !articulo) return;
@@ -205,7 +207,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
     if (isValidDesc == true) {
       console.log(isValidDesc);
-      
+
       this.articulos.controls[index].setValue(currentArticulo);
 
       this.obtenerCantidadArticuloStock(index);
@@ -246,8 +248,8 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       subTotal,
     });
     this.onApplyItbis();
-    return Number(cantidadElegida) > cantidadStockAccesorio ? 
-           this.toastr.info(`Inventario insuficiente, cantidad disponible: ${cantidadStockAccesorio}`) : 
+    return Number(cantidadElegida) > cantidadStockAccesorio ?
+           this.toastr.info(`Inventario insuficiente, cantidad disponible: ${cantidadStockAccesorio}`) :
            Number(cantidadElegida);
   }
   calcularSubTotalArticulo(precio: number, cantidad: number) {
@@ -284,7 +286,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     }
   }
   agregarArticulo() {
-    
+
     const articulo = this.fb.group({
       cantidad: [1],
       descripcion: [''],

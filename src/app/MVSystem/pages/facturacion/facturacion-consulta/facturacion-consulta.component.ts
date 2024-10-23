@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from '../../../../helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoginService } from 'src/app/auth/login.service';
+import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -26,7 +27,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     private catalogosService: CatalogosService,
     private toast: ToastrService,
     private loginService: LoginService,
-  private validatorPermissionService:ValidatorPermissionService) { }
+  private validatorPermissionService:ValidatorPermissionService,
+  private rDialogService: RDialogService,) { }
 
     SelectSucursal(): boolean {
       return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
@@ -39,6 +41,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.getFacturas();
     this.getAlmacenes();
   }
+  isLoading: boolean = false;
   subs: Subscription[] = [];
   title: string = "Consulta Facturas";
   breadcrumbItem: string = "Consulta Facturas"
@@ -77,7 +80,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
   modelFacturaFilter(){
-    const {criterio,almacen,vendedor} = this.form.value;
+    const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
       criterio: criterio,
@@ -136,6 +139,26 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     });
     this.subs.push(sub);
   }
+  ReimprimeFactura() {
+    //this.isLoading = !this.isLoading;
+    console.log("Loading  ",this.isLoading);
+    this.rDialogService.openDialog(
+      "Aviso",
+      "¿Desea imprimir la factura mini o normal?",
+      // Si selecciona "Normal", ejecuta printFactura
+      () => {
+        this.printFactura();
+      },
+      // Si selecciona "Mini", ejecuta printFacturaMini
+      () => {
+        this.printFacturaMini();
+      },
+      "Mini", // Etiqueta del botón para la opción Mini
+      "Normal" // Etiqueta del botón para la opción Normal
+    );
+
+  }
+
   printFacturaMini(){
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)

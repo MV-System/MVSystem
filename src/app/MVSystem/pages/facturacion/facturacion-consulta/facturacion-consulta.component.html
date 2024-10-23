@@ -88,11 +88,13 @@
                         </button>
                             </div>
                             <div class="col-md-3">
-                                <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }" (click)="printFactura()">
-                          Imprimir factura <i class="bi bi-receipt-cutoff"></i>
-                        </button>
-                                <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }" (click)="printFacturaMini()">
-                          Imprimir factura Mini <i class="bi bi-receipt-cutoff"></i>
+                                <button class="btn print mx-1" [ngClass]="{'disabled':(!onFacturaButton) }" (click)="ReimprimeFactura()">
+                                  <span class="d-inline">{{isLoading?'Procesando...': 'Reimprimir Factura'}} </span>
+                                  <span class="spinner-grow spinner-grow-sm m-0 x-10"
+                                  role="status"
+                                  aria-hidden="true"
+                                  *ngIf="isLoading"></span>
+                                  <!-- Imprimir factura <i class="bi bi-receipt-cutoff"></i> -->
                         </button>
                             </div>
                         </div>
