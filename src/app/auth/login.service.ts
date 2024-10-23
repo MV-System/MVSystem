@@ -42,8 +42,6 @@ export class LoginService implements OnInit{
       const tokenData = this.tokenDecoded;
       if (tokenData && tokenData.role) {
          this.permisosService.loadPermissions(tokenData.role);
-        //console.log('Permisos cargados:', this.permisosService.getPermissions());
-        //console.log('Permisos cargadoswwwww:', this.permisosService.getPermission);
     } else {
         console.error('No se pudo obtener el token o el rol.');
     }
@@ -77,14 +75,7 @@ export class LoginService implements OnInit{
         console.error('Error al decodificar el token:', error);
         return null; // En caso de error, devuelve null
     }
-    // let token = localStorage.getItem('token') ;
-
-    // if(!token) return null
-
-   //console.log("Ver Permisos", jwt_decode<any>(`${token}`));
-
-   // return jwt_decode<any>(`${token}`) ;
-  }
+   }
 
   get getUserIdSucursal(): string {
     return this.tokenDecoded.idSucursal
@@ -95,6 +86,9 @@ export class LoginService implements OnInit{
   }
   get getUserEmpresa(): string {
     return this.tokenDecoded.Empresa
+  }
+  get getUserIdEmpresa(): string {
+    return this.tokenDecoded.IdEmpresa
   }
   public getUserName(): string {
     return this.tokenDecoded.name

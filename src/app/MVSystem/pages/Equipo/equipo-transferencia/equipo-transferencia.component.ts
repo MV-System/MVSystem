@@ -187,6 +187,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
       fechaTransferencia: new Date().toDateString(),
       usuario: this.loginService.getUserName(),
       Empresa:this.loginService.getUserEmpresa,
+      IdEmpresa:this.loginService.getUserIdEmpresa,
       total: this.cantidadEquipoATransferir
     };
 

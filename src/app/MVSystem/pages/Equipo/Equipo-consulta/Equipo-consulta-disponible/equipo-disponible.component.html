@@ -1,14 +1,16 @@
 <r-loading *ngIf="printing"></r-loading>
-<div class="animate__animated animate__fadeIn">
-  <nav>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
-        <li class="breadcrumb-item">Consulta</li>
-        <li class="breadcrumb-item">Consulta equipos Disponibles<li>
-    </ol>
-</nav>
-<h1>Equipos Disponibles</h1>
+<div class="box animate__animated animate__fadeIn">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
+            <li class="breadcrumb-item">Consulta</li>
+            <li class="breadcrumb-item">Consulta equipos Disponibles
+                <li>
+        </ol>
+    </nav>
+    <h1>Equipos Disponibles</h1>
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
+
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
@@ -27,7 +29,7 @@
                             </div>
 
                             <div class="col-md-4">
-                               <!-- --------------- Almacen --------------- -->
+                                <!-- --------------- Almacen --------------- -->
                                 <label class="form-label">Almacen</label>
                                 <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
                                 <option value="" selected>Selecciona un almacén</option>
@@ -49,7 +51,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <!-- Search by -->
-                                      <!-- --------------- Modelos --------------- -->
+                                    <!-- --------------- Modelos --------------- -->
                                     <label class="form-label">Modelo</label>
                                     <select class="form-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
                                       <option value="" selected>Selecciona un Modelo</option>
@@ -69,11 +71,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="  col-lg-3">
+
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body ">
+
                         <!-- Cuadro totales -->
-                        <div class="row mx-1 text-center  mt-3">
+                        <div class="row mx-1 text-center   mt-3">
                             <ng-container>
                                 <div class="col-md-12 ">
                                     <div class="row mb-4 ">
@@ -104,6 +108,7 @@
                 </button>
             </div>
         </div>
+
     </form>
     <section class="section mt-4">
 
@@ -112,51 +117,51 @@
                 <h5 class="card-title">Equipos</h5>
                 <p *ngIf="equiposDisponibles.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
                 <div class="scrollable-table thinScroll">
-                <table class="mv-table">
-                  <thead>
-                      <tr>
-                          <th class="fixed-item code">IMEI/Código</th>
-                          <th class="fixed-item desc">Descripción</th>
-                          <th class="align-center">Costo</th>
-                          <th class="align-center">Precio Detalle</th>
-                          <th class="align-center">Precio PM</th>
-                          <th class="align-center">Almacén</th>
-                          <th class="align-center">Suplidor</th>
-                          <th class="align-center">Tecnología</th>
-                          <th class="align-center">Estado</th>
-                          <th class="align-center">Garantía</th>
-                          <th class="align-center">Nota</th>
+                    <table class="mv-table">
+                        <thead>
+                            <tr>
+                                <th class="fixed-item code">IMEI/Código</th>
+                                <th class="fixed-item desc">Descripción</th>
+                                <th class="align-center">Costo</th>
+                                <th class="align-center">Precio Detalle</th>
+                                <th class="align-center">Precio PM</th>
+                                <th class="align-center">Almacén</th>
+                                <th class="align-center">Suplidor</th>
+                                <th class="align-center">Tecnología</th>
+                                <th class="align-center">Estado</th>
+                                <th class="align-center">Garantía</th>
+                                <th class="align-center">Nota</th>
 
-                          <th class="align-center">Fecha Registro</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let Equipo of equiposDisponibles | paginate
+                                <th class="align-center">Fecha Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let Equipo of equiposDisponibles | paginate
                       : {
                           itemsPerPage: filter.pageSize,
                           currentPage: filter.pageIndex,
                           totalItems: totalRecord
                         }">
-                          <td class="fixed-item code">{{Equipo.imei}}</td>
-                          <td class="fixed-item desc">
-                              <span>{{Equipo.descripcion}}</span>
-                              <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+                                <td class="fixed-item code">{{Equipo.imei}}</td>
+                                <td class="fixed-item desc">
+                                    <span>{{Equipo.descripcion}}</span>
+                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
                   <i class="bx bx-edit-alt"></i>
                 </button>
-                          </td>
-                          <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
-                          <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
-                          <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
-                          <td class="align-center">{{Equipo.descripcionAlmacen}}</td>
-                          <td class="align-center">{{Equipo.suplidor}}</td>
-                          <td class="align-center">{{Equipo.tecnologia}}</td>
-                          <td class="align-center">{{Equipo.estadoBloqueo}}</td>
-                          <td class="align-center">{{Equipo.garantia}}</td>
-                          <td class="align-center">{{Equipo.notaAdicional}}</td>
-                          <td class="align-center">{{Equipo.fecharegistro}}</td>
-                      </tr>
-                  </tbody>
-              </table>
+                                </td>
+                                <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
+                                <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
+                                <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
+                                <td class="align-center">{{Equipo.descripcionAlmacen}}</td>
+                                <td class="align-center">{{Equipo.suplidor}}</td>
+                                <td class="align-center">{{Equipo.tecnologia}}</td>
+                                <td class="align-center">{{Equipo.estadoBloqueo}}</td>
+                                <td class="align-center">{{Equipo.garantia}}</td>
+                                <td class="align-center">{{Equipo.notaAdicional}}</td>
+                                <td class="align-center">{{Equipo.fecharegistro}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposDisponibles.length">

@@ -183,30 +183,6 @@
                                 <ng-container formArrayName="articulos">
                                     <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
                                         <ng-container [formGroupName]="i">
-                                            <!-- <div><strong>Funciona</strong></div> -->
-                                            <!-- <td>
-                                            <ng-select class="form-select"
-                                            formControlName="articulo"
-                                            id="articulo"
-                                            [addTag]="addArticuloImei"
-                                            [virtualScroll]="true"
-                                            [clearable]="false"
-                                            (keydown.enter)="$event.preventDefault();
-                                            cantidadInput.focus()"
-                                            (change)="obtenerDetalleFactura(i);
-                                            cantidadInput.focus()"
-                                            (scroll)="onScroll($event)"
-                                            required
-                                            [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
-                                              <ng-option *ngFor="let articulo of accesoriosBuffer"
-                                                 [value]="articulo">
-                                                {{articulo.accesorio_Descripcion | titlecase}} | {{
-                                                calcularPrecioSegunTipofactura(articulo.precio_Detalle,articulo.precio_Por_Mayor
-                                              )| currency}}
-                                              </ng-option>
-                                             </ng-select>
-                                            </td> -->
-                                            <!-- <div><strong>No funciona</strong></div>-->
                                             <td>
                                                 <ng-select class="form-select" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()" (change)="obtenerDetalleFactura(i); cantidadInput.focus()"
                                                     (scroll)="onScroll($event)" required [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
@@ -218,8 +194,6 @@
 
                                                 </ng-select>
                                             </td>
-
-
                                             <td class="col-md-1 align-center">
                                                 <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}"
                                                     [maxlen]="4" appNumeric>
@@ -236,14 +210,6 @@
                                             <td class="align-center">
                                                 {{detalleFactura.value.total}}
                                             </td>
-                                            <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                          placeholder="0"></td>
-                                  <td><input type="number" name="" id="" class="form-control align-right"
-                                          placeholder="0"></td> -->
-                                            <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                          placeholder="0"></td> -->
-                                            <!-- <td><input type="number" name="" id="" class="form-control align-right"
-                                          placeholder="0"></td> -->
                                             <td class="align-center">
                                                 <button class="btns flat oorange" (click)="borrarArticulo(i)">
                                           <i class="bx bx-trash-alt"></i>
@@ -254,11 +220,7 @@
                                     </tr>
                                 </ng-container>
                             </tbody>
-                            <!-- <pre>{{accesoriosBuffer | json}}</pre> -->
                         </table>
-                        <!-- <div class="not-data" *ngIf="!articulos.length">
-                          Seleccione un accesorio
-                      </div> -->
                     </div>
                     <div class="clear-float">
                         <div class="pull-right totalbox">
@@ -278,10 +240,8 @@
                                 <div class="grid two-cols" *ngIf="isCredit && isFactura">
                                     <div><strong>Abono:</strong></div>
                                     <div>
-                                        <!-- <span class="info">{{abono}}</span>  -->
                                         <input class="form-control align-right" type="number" formControlName="abono" appNumeric [maxlen]="4" [decimals]="2" (keyup)="agregarAbono()" />
                                     </div>
-
                                 </div>
                                 <div class="grid two-cols">
                                     <div><strong>Total:</strong></div>
@@ -291,7 +251,6 @@
                         </div>
                     </div>
                     <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
-                        <!-- [disabled]="form.invalid" -->
                         <button class="btns primary big" type="submit">
                               <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
                               <span class="spinner-grow spinner-grow-sm m-0 x-10"

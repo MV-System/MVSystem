@@ -92,6 +92,7 @@ export interface EquipoTransferenciaReporte{
     fechaTransferencia: string;
     usuario: string;
     Empresa: string;
+    IdEmpresa: string;
     total: number;
 }
 export interface EquipoVendido {
