@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   ) {
     this.userName = loginService.getUserName();
     this.userGiveName = loginService.getUserGiveName();
-    this.userEmpresa = loginService.getUserEmpresa;
+    this.userEmpresa = loginService.getUserEmpresaMostrar;
   }
   ngOnDestroy(): void {
     this.destroy$.next(true);
@@ -26,10 +26,11 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
   ngOnInit(): void {
     this.loadUseSucursal();
+    console.log("Empresa nombre",this.loginService.getUserEmpresaMostrar);
   }
   destroy$: Subject<any> = new Subject<any>();
   sucursales!: Almacen[];
-  
+
   userName: string
   userGiveName: string;
   userSucursal: any;
@@ -56,6 +57,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
       .subscribe(sucursales => {
          this.userSucursal= sucursales.find(x =>x.iD_Almacen == +this.loginService.getUserIdSucursal)?.descripcion
       })
-    
+
   }
 }

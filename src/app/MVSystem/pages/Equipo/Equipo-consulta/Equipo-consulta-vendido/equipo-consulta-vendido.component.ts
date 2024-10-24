@@ -88,6 +88,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     fechaFinalFactura: '',
     Empresa:this.loginService.getUserEmpresa,
     IdEmpresa:this.loginService.getUserIdEmpresa,
+    IdSucursal:this.loginService.getUserIdSucursal,
   };
   form: FormGroup = this.fb.group({
     almacen: [''],

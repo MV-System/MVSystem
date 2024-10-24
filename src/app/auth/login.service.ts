@@ -87,6 +87,9 @@ export class LoginService implements OnInit{
   get getUserEmpresa(): string {
     return this.tokenDecoded.Empresa
   }
+  get getUserEmpresaMostrar(): string {
+    return this.tokenDecoded.NombreEmpresaMostrar
+  }
   get getUserIdEmpresa(): string {
     return this.tokenDecoded.IdEmpresa
   }
