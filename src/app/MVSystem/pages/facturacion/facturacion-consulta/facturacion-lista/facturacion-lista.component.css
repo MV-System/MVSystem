@@ -19,7 +19,7 @@
     color: white;
   }
   td{
-   max-width: 100px;
+   /* max-width: 100px; */
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
@@ -27,10 +27,26 @@
   .selected {
     background-color: #2a4f99;
     color: #FFF;
-  } 
-  
+  }
+
   .tr-collapse{
     font-style: oblique;
     background-color: #9db1da5b;
   }
-  
+
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    min-width: 200px; /* Mínimo ancho para la columna APELLIDOS */
+  }
+
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    width: auto; /* La columna TIPO DE FACTURA se expandirá según el contenido */
+  }
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: auto !important; /* La columna TELEFONO se expandirá según el contenido */
+  }
+  .table {
+    table-layout: auto; /* Permite que las columnas se expandan según el contenido */
+  }

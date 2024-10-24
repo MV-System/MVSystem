@@ -754,7 +754,7 @@ else { currentArticulo.idTipo = 2;}
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: +this.loginService.getUserIdSucursal,
-      criterio: criterio,
+      criterio: '',
       fechaInicio:'',// this.paginate.fechaInicio,
       fechaFinal:'',// this.paginate.fechaFinal,
       pageIndex:1,// this.paginate.pageIndex,
@@ -812,9 +812,9 @@ else { currentArticulo.idTipo = 2;}
       () => {
 
         this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-          () => { this.printFacturaNormal();this.onClean();
+          () => { this.printFacturaNormal(); this.onClean()
           },
-          () => {this.printFacturaMini();this.onClean();},
+          () => {this.printFacturaMini(); this.onClean()},
           "Mini",
           "Normal"
         )
@@ -822,20 +822,7 @@ else { currentArticulo.idTipo = 2;}
       },
       () => {
         this.onClean();
-        // this.mantenimientoService.postFactura(data)
-        //   .pipe(takeUntil(this.destroy$))
-        //   .subscribe(resp => {
-
-        //     this.onClean();
-        //     this.agregarArticulo();
-        //     this.toastr.success('Factura generada con exito!');
-        //     this.loadFacturaNumero();
-        //   }, error => {
-        //     this.isLoading = !this.isLoading;
-        //     this.toastr.error(error)
-        //   })
-
-      },
+       },
       "No",
       "Si"
     )

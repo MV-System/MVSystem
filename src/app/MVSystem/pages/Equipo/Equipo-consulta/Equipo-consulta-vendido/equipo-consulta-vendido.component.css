@@ -51,7 +51,13 @@
 
 
 
-
+   td
+   {
+     /* max-width: 100px; */
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+    }
 
    *::-webkit-scrollbar {
     width: 12px;
