@@ -77,7 +77,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
               precio_Por_Mayor: equipo.precioPorMayor,
               codigo: null!,
               idTipo: 1,
-              disponible: equipo.Disponible,
+              disponible: equipo.disponible,
               mensaje: equipo.mensaje,
             };
 

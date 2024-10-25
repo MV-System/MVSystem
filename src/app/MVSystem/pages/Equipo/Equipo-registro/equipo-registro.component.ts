@@ -142,7 +142,7 @@ export class EquipoRegistroComponent implements OnInit {
       precioDetalle:0,//Number(this.formRegistro.get('alDetalle')?.value),
       Costo_Equipo: Number(this.formRegistro.get('costo')?.value),
       Desbloqueado: this.formRegistro.get('desbloqueado')?.value,
-      Disponible: this.formRegistro.get('disponible')?.value,
+      disponible: this.formRegistro.get('disponible')?.value,
       Nota_Adicional: this.formRegistro.get('notaAdicional')?.value,
       Usuario: this.formRegistro.get('usuario')?.value,
       Numero_Registro: this.numeroRegistro,

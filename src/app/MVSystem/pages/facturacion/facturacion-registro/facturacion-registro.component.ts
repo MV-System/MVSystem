@@ -336,7 +336,7 @@ addArticuloImei = (imei: string) => {
     this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
       .pipe(takeUntil(this.destroy$))
       .subscribe(equipos => {
-        if (equipos.Disponible ==='S') {
+        if (equipos.disponible ==='S') {
           const equipo = equipos;
           const articulo: AccesorioLista = {
             accesorio_Descripcion: `${equipo.imei}`+' '+`${equipo.modelo}`,
@@ -348,17 +348,14 @@ addArticuloImei = (imei: string) => {
             precio_Por_Mayor: equipo.precioPorMayor,
             codigo: null!, //equipo.modelo,
             idTipo: 1,
-            disponible: equipo.Disponible,
+            disponible: equipo.disponible,
             mensaje: equipo.mensaje,
           };
-          console.log("fdfsdfdsff",equipos);
          const articuloControl = this.form.get('articulo');
          if (articuloControl) {
            articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
          }
-         //this.accesorios.push(articulo);
         this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer]
-        //console.log("Accesorios",articulo, this.accesoriosBuffer);
          resolve(articulo);
         }else
        {
@@ -366,8 +363,7 @@ addArticuloImei = (imei: string) => {
        }
       });
   });
-};
-
+}
   obtenerDetalleFactura(index: number) {
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
 
@@ -418,12 +414,10 @@ else { currentArticulo.idTipo = 2;}
     if (currentArticulo.idTipo == 1)
       currentFormGroup.controls["cantidad"].disable()
   }
-
   calcularSubTotalArticulo(precio: number, cantidad: number) {
     const subTotal = precio * cantidad;
     return subTotal
   }
-
   onChangeTipoPago() {
 
     if (this.form.get('tipoPago')?.value == "2") {
@@ -439,7 +433,6 @@ else { currentArticulo.idTipo = 2;}
     return Number(this.form.controls.tipoPago.value) !== 1 &&
       Number(this.form.controls.tipoPago.value) !== 2;
   }
-
   agregarArticulo() {
     const isItemEmpty: boolean = this.articulos().controls.some(({ value }) => value.articulo == "");
     if (!isItemEmpty) {
@@ -466,9 +459,6 @@ else { currentArticulo.idTipo = 2;}
       document.querySelector('#articulo')?.querySelector('input')?.focus()
     }, 200);
   }
-
-
-
   obtenerCantidadArticulo(currentArticulo: any) {
     let cantidadStockAccesorio = currentArticulo.articulo.cantidad;
     let cantidadElegida = currentArticulo.cantidad
@@ -476,7 +466,6 @@ else { currentArticulo.idTipo = 2;}
     this.calculoTotal(currentArticulo.subTotal, currentArticulo.descuento);
     return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  <b>${cantidadStockAccesorio}</b>`) : Number(cantidadElegida)
   }
-
   calculoTotal(subTotal: number, descuento: number) {
     if (descuento > subTotal) {
       this.toastr.warning('El descuento no puede ser mayor al subtotal!');
@@ -487,7 +476,6 @@ else { currentArticulo.idTipo = 2;}
       return subTotal - descuento
     }
   }
-
   modeloRegistroFacturacion(): FacturaRegistro {
 ///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {
@@ -551,8 +539,6 @@ else { currentArticulo.idTipo = 2;}
     }
     return model;
   }
-
-
   obtenerClientesPorNombreTelefono() {
     const { telefono } = this.form.value;
     this.clientesService.getClientesPorNombreTelefono(telefono)
@@ -565,7 +551,6 @@ else { currentArticulo.idTipo = 2;}
         this.toastr.error(error);
       });
   }
-
   loadDetalleCotizacion(numeroRegistro: number) {
 
     this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro, Number(this.loginService.getUserIdSucursal))
@@ -627,7 +612,6 @@ else { currentArticulo.idTipo = 2;}
     }
 
   }
-
   borrarArticulo(index: number) {
     this.articulos().removeAt(index)
 
@@ -636,7 +620,6 @@ else { currentArticulo.idTipo = 2;}
 
     this.refreshGeneralValues();
   }
-
   onCheckboxChange(event: any, campo: any) {
     if (event.target.checked == false) {
       this.form.get(campo)?.disable();
@@ -733,23 +716,7 @@ else { currentArticulo.idTipo = 2;}
         this.toastr.error(error)
       })
   }
-  // onAcceptPrint(data: FacturaRegistro) {
-  //   this.isLoading = !this.isLoading;
-  //   this.submitted = true;
-  //   this.mantenimientoService.exportFactura(data)
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe((blobResponse) => {
 
-  //       CreatorPDFFile(blobResponse);
-  //       this.onClean();
-  //       this.agregarArticulo();
-  //       this.toastr.success('Factura generada con exito!');
-  //       this.loadFacturaNumero();
-  //     }, error => {
-  //       this.isLoading = !this.isLoading;
-  //       this.toastr.error(error)
-  //     })
-  // }
   modelFacturaFilter(){
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {

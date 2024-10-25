@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
   ngOnInit(): void {
     this.loadUseSucursal();
-    console.log("Empresa nombre",this.loginService.getUserEmpresaMostrar);
+    //console.log("Empresa nombre",this.loginService.getUserEmpresaMostrar);
   }
   destroy$: Subject<any> = new Subject<any>();
   sucursales!: Almacen[];

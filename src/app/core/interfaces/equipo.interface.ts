@@ -14,7 +14,7 @@ export interface Equipo {
     Precio_Detalle: number;
     Costo_Equipo: number;
     Desbloqueado: string;
-    Disponible: string;
+    disponible: string;
     Nota_Adicional?: string;
     Usuario: string;
     Numero_Registro?: number;
