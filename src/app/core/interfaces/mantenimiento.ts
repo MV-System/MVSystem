@@ -38,8 +38,8 @@ export interface AccesorioFactura {
 export interface FacturaRegistro {
     numeroFactura: number;
     idCliente: number;
-    // nombre:     string;
-    // apellido:   string;
+    IdEmpresa:     string;
+    IdSucursal:   string;
     // telefono:   number;
     idVendedor: number;
     idTipoFactura: number;
@@ -138,6 +138,8 @@ export interface FacturaFilter extends DatePaging, Pagination {
     numeroFactura?: number;
     criterio: string;
     empresa: string;
+    IdEmpresa: string;
+    IdSucursal: string;
 }
 
 export interface Articulo {

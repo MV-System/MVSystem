@@ -61,6 +61,8 @@ export class MantenimientoService {
     queryParams = queryParams.append("PageSize", facturaReq.pageSize)
     queryParams = queryParams.append("FechaInicio", facturaReq.fechaInicio)
     queryParams = queryParams.append("FechaFinal", facturaReq.fechaFinal)
+    queryParams = queryParams.append("IdEmpresa", facturaReq.IdEmpresa)
+    queryParams = queryParams.append("IdSucursal", facturaReq.IdSucursal)
     return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
 
   }

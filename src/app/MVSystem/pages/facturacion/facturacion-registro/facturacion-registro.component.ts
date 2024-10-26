@@ -501,6 +501,8 @@ else { currentArticulo.idTipo = 2;}
       detalleFacturaList: [],
       usuario: this.loginService.getUserName() || "",
       empresa: this.loginService.getUserEmpresa,
+      IdEmpresa:this.loginService.getUserIdEmpresa,
+      IdSucursal:this.loginService.getUserIdSucursal,
 
     }
 
@@ -727,6 +729,8 @@ else { currentArticulo.idTipo = 2;}
       pageIndex:1,// this.paginate.pageIndex,
       pageSize:10,// this.paginate.pageSize,
       empresa: this.loginService.getUserEmpresa,
+      IdEmpresa:this.loginService.getUserIdEmpresa,
+      IdSucursal:this.loginService.getUserIdSucursal,
     }
     return model;
   }
@@ -757,7 +761,7 @@ else { currentArticulo.idTipo = 2;}
   }
   generateFactura() {
     const data = this.loadDataToPrint()
-   console.log("Datos de la factura",this.FacturaCreada = data);
+   //console.log("Datos de la factura",this.FacturaCreada = data);
     this.FacturaCreada = data;
 
     this.mantenimientoService.postFactura(data)

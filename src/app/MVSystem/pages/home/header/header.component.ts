@@ -25,6 +25,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
     this.destroy$.unsubscribe();
   }
   ngOnInit(): void {
+
+    //this.destroy$.unsubscribe();
     this.loadUseSucursal();
     //console.log("Empresa nombre",this.loginService.getUserEmpresaMostrar);
   }

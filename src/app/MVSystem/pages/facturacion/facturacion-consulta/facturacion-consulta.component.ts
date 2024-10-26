@@ -89,6 +89,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       pageIndex: this.paginate.pageIndex,
       pageSize: this.paginate.pageSize,
       empresa: this.loginService.getUserEmpresa,
+      IdEmpresa:this.loginService.getUserIdEmpresa,
+      IdSucursal:this.loginService.getUserIdSucursal,
     }
     return model;
   }
