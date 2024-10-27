@@ -616,7 +616,6 @@ else { currentArticulo.idTipo = 2;}
         this.itbis = amountNew;
         this.itbis = this.total - amountNew;
         this.total = this.total;
-        //this.total = this.total - this.abono;
         this.subTotal = amountNew;
 
       }
@@ -627,7 +626,7 @@ else { currentArticulo.idTipo = 2;}
       this.itbis = Number(this.itbis.toFixed(2))
       this.total = Number(this.total.toFixed(2))
     } else {
-      this.total = this.total - this.abono;
+     // this.total = this.total - this.abono;
     }
 
   }

@@ -13,7 +13,8 @@ import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 })
 export class UtilidadesComponent implements OnInit {
 
-  view: [number, number] = [700, 400];
+  // options
+  view: [number, number] = [900, 200];
   gradient: boolean = true;
   showLegend: boolean = true;
   showLabels: boolean = true;
@@ -33,18 +34,35 @@ export class UtilidadesComponent implements OnInit {
   ganancia_Desbloqueos:0,
   valida: 0
   }; // Inicializa data
+
+
   rangeDatePlaceholder: Date =new Date()
+  colorScheme1 = {
+    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+  };
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
-  single = [
-    { "name": "Equipos", "value": this.data.costo_Equipos },
-       { "name": "Accesorios", "value": this.data.ganancia_Accesorios },
-       { "name": "Desbloqueos", "value": this.data.ganancia_Desbloqueos },
-       { "name": "Reparaciones", "value": this.data.ganancia_Reparaciones }
+  singleVentas = [
+    { "name": "Ventas Equipos", "value": this.data.venta_Equipos },
+    { "name": "Ventas Accesorios", "value": this.data.venta_Accesorios },
+    { "name": "Ventas Desbloqueos", "value": this.data.venta_Desbloqueos },
+    { "name": "Ventas Reparaciones", "value": this.data.venta_Reparaciones }
+  ];
+  singleGanancias = [
+    { "name": "Ganacia Equipos", "value": this.data.ganancia_Equipos },
+    { "name": "Ganancia Accesorios", "value": this.data.ganancia_Accesorios },
+    { "name": "Ganancia Desbloqueos", "value": this.data.ganancia_Desbloqueos },
+    { "name": "Ganancia Reparaciones", "value": this.data.ganancia_Reparaciones }
+  ];
+  singleCostos = [
+    { "name": "Costo Equipos", "value": this.data.costo_Equipos },
+    { "name": "Costo Accesorios", "value": this.data.costo_Accesorios },
+    { "name": "Costo Desbloqueos", "value": this.data.costo_Desbloqueos },
+    { "name": "Costo Reparaciones", "value": this.data.costo_Reparaciones }
   ];
 
   constructor(
@@ -54,14 +72,20 @@ export class UtilidadesComponent implements OnInit {
     private loginService: LoginService,
   ) { }
 
+  // Obtener la fecha actual
+ fechaHoy = new Date();
+ // Crear una nueva fecha para el primer día del mes actual
+FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+
+
   ngOnInit(): void {
     this.GetUtilidades(); // Llama a la función para obtener datos
 
   }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
-      this.filter.FI = '2024-01-01';
-      this.filter.FF = '2024-12-01';
+      this.filter.FI = this.FechaInicio.toISOString().split('T')[0],
+      this.filter.FF = this.fechaHoy.toISOString().split('T')[0]
     } else {
       this.filter.FI = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
       this.filter.FF = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
@@ -76,8 +100,7 @@ export class UtilidadesComponent implements OnInit {
 
           if (equipos) {
             this.data = equipos; // Asigna el primer objeto a data
-            console.log("this.data",this.data);
-            console.log("this.data.Ganancia_Equipos",this.data.ganancia_Equipos);
+
             // Actualiza el arreglo 'single' después de obtener los datos
             this.updateSingleData();
           } else {
@@ -92,18 +115,30 @@ export class UtilidadesComponent implements OnInit {
   }
 
   private updateSingleData() {
-    this.single = [
-      { "name": "Equipos", "value": this.data.ganancia_Equipos },
-      { "name": "Accesorios", "value": this.data.ganancia_Accesorios },
-      { "name": "Desbloqueos", "value": this.data.ganancia_Desbloqueos },
-      { "name": "Reparaciones", "value": this.data.ganancia_Reparaciones }
-    ];
+   this.singleVentas = [
+    { "name": "Ventas Equipos", "value": this.data.venta_Equipos },
+    { "name": "Ventas Accesorios", "value": this.data.venta_Accesorios },
+    { "name": "Ventas Desbloqueos", "value": this.data.venta_Desbloqueos },
+    { "name": "Ventas Reparaciones", "value": this.data.venta_Reparaciones }
+  ];
+  this.singleGanancias = [
+    { "name": "Ganacia Equipos", "value": this.data.ganancia_Equipos },
+    { "name": "Ganancia Accesorios", "value": this.data.ganancia_Accesorios },
+    { "name": "Ganancia Desbloqueos", "value": this.data.ganancia_Desbloqueos },
+    { "name": "Ganancia Reparaciones", "value": this.data.ganancia_Reparaciones }
+  ];
+  this.singleCostos = [
+    { "name": "Costo Equipos", "value": this.data.costo_Equipos },
+    { "name": "Costo Accesorios", "value": this.data.costo_Accesorios },
+    { "name": "Costo Desbloqueos", "value": this.data.costo_Desbloqueos },
+    { "name": "Costo Reparaciones", "value": this.data.costo_Reparaciones }
+  ];
   }
   UtilidadesForm: FormGroup = this.fb.group({ });
 
   filter: utilidadesFiltros = {
-    FI: '2024-01-01',
-    FF: '2024-12-01',
+    FI: this.FechaInicio.toISOString().split('T')[0],
+    FF: this.fechaHoy.toISOString().split('T')[0],
     sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
 

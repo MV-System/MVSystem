@@ -38,7 +38,7 @@
                       (change)="onCheckboxAccesorioChange($event)" />
                   </label>
                   <!-- <ng-container class="form-check-label">
-                    
+
                     <button class="btn clear-filter" (click)="clearFilters($event)">Limpiar filtros  <i class="ri-filter-off-line"></i></button>
                   </ng-container> -->
                 </div>
@@ -61,23 +61,38 @@
                                 <input
                                   class="form-control"
                                   placeholder="Cover Iphone 14 Pro"
-                                  formControlName="accesorio" 
+                                  formControlName="accesorio"
                                   (keyup)="getAccesorios()"/>
                               </div>
                             </div>
-                            <div class="col-md-4">
+
+
+
+
+                            <div class="col-md-5" *ngIf="SelectSucursal()">
                               <!-- Search by almacen -->
-      
-                              <label class="form-label">Almacen</label>
+
+                              <label class="form-label">Sucursal</label>
+                              <select class="form-select" formControlName="almacen" (change)="getAccesorios()">
+                              <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen" >
+                                               {{ almacen.descripcion }}
+                              </option>
+                              </select>
+                          </div>
+
+
+
+                            <!-- <div class="col-md-4">
+                              <label class="form-label">Sucursal</label>
                               <ng-select  formControlName="almacen"
                               (change)="getAccesorios()" >
                                 <ng-option
                                   *ngFor="let almacen of almacenes"
-                                  [value]="almacen.iD_Almacen == 7? 0 : almacen.iD_Almacen" >
+                                  [value]="almacen.iD_Almacen" >
                                   {{ almacen.descripcion }}
                                 </ng-option>
                               </ng-select>
-                            </div>
+                            </div> -->
                           </div>
                         </div>
                       </div>
@@ -112,16 +127,16 @@
                   </div>
                 </form>
                 <!-- end form   -->
-                <app-accesorio-list 
-                [accesorios]="accesorios" 
-                [pageIndex]="pageIndex" 
-                [pageSize]="pageSize" 
+                <app-accesorio-list
+                [accesorios]="accesorios"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
                 [totalRecord]="totalRecord"
                 [currentPage]="currentPage"
                 [line]="line"
                 [lastLine]="lastLine">
                 <pagination-controls
-                 (pageChange)="pageChanged($event)" 
+                 (pageChange)="pageChanged($event)"
                  [responsive]="true"
                   previousLabel="Anterior"
                   nextLabel="Siguiente"

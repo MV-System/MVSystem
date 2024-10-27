@@ -6,6 +6,8 @@ import { AccesoriosService } from '../../../../core/services/accesorios.service'
 import { Pagination } from '../../../../core/interfaces/pagination.interfaces';
 import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/auth/login.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-accesorio-consulta',
@@ -16,6 +18,8 @@ export class AccesorioConsultaComponent implements OnInit {
 
 
   constructor(
+    private validatorPermissionService:ValidatorPermissionService,
+    private loginService: LoginService,
     private catalogosService: CatalogosService,
     private accesoriosService:AccesoriosService,
     private fb: FormBuilder,
@@ -40,17 +44,25 @@ export class AccesorioConsultaComponent implements OnInit {
   disponible:      number = 1;
   vendido:         number = 2;
   form: FormGroup = this.fb.group({
-    almacen: [2,],
+    almacen: [0,],
     accesorio:['',],
     totalAccesorio: [0,],
     totalInventario: [0,]
   });
+  SelectSucursal(): boolean {
+    return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+  }
+   // Obtener la fecha actual
+   fechaHoy = new Date();
+   // Crear una nueva fecha para el primer día del mes actual
+  FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+
 
   paginate:Pagination={
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: '',
-    fechaFinal: ''
+    fechaInicio: this.FechaInicio.toISOString().split('T')[0],
+    fechaFinal: this.fechaHoy.toISOString().split('T')[0],
   }
   filter: any = {
     almacen: '',

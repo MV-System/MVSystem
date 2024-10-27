@@ -11,6 +11,7 @@ import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
 import { AccesoriosService } from '../../../../../core/services/accesorios.service';
 import { ToastrService } from 'ngx-toastr';
 import { EventEmitter } from '@angular/core';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-accesorio-edit',
@@ -19,6 +20,7 @@ import { EventEmitter } from '@angular/core';
 })
 export class AccesorioEditComponent implements OnInit, OnChanges {
   constructor(
+    private loginService: LoginService,
     private fb: FormBuilder,
     private accesorioService: AccesoriosService,
     private toastr: ToastrService
@@ -41,6 +43,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
     estado: [''],
     precioDetalle: [''],
     precioPorMayor: [''],
+    Usuario :this.loginService.getUserName(),
   });
   @Input() accesorio!: Accesorio;
   @Output() closeModal = new EventEmitter<void>()

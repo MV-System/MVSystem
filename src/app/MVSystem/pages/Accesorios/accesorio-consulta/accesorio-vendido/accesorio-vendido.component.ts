@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Subscription } from 'rxjs';
+import { LoginService } from 'src/app/auth/login.service';
 import { AccesorioVendido } from 'src/app/core/interfaces/accesorio.interface';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { AccesoriosService } from 'src/app/core/services/accesorios.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-accesorio-vendido',
@@ -15,13 +17,16 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 export class AccesorioVendidoComponent implements OnInit, OnDestroy {
 
   constructor(
+    private loginService: LoginService,
+    private validatorPermissionService:ValidatorPermissionService,
     private accesoriosService:AccesoriosService,
     private catalogosService: CatalogosService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.getAccesoriosVendidos();
-    this.getAlmacenes();
+    this.getSucursales();
+    this.SelectSucursal();
   }
   ngOnDestroy(): void {
     this.subs.unsubscribe();
@@ -29,6 +34,7 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   subs!: Subscription;
   accesorios: AccesorioVendido[]=[];
   almacenes!: Almacen[];
+  //sucursales!: sucursa[];
   isPrint: boolean = false;
   totalFacturado:  number = 0;
   totalGanancia:   number = 0;
@@ -41,21 +47,31 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   lastLine!:       number;
   rangeDatePlaceholder: Date =new Date()
 
+   // Obtener la fecha actual
+ fechaHoy = new Date();
+ // Crear una nueva fecha para el primer día del mes actual
+FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+
   filter: any = {
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: '',
-    fechaFinal: ''
+    fechaInicio: this.FechaInicio.toISOString().split('T')[0],
+    fechaFinal:this.fechaHoy.toISOString().split('T')[0]
   };
   form: FormGroup = this.fb.group({
-    almacen: [,],
+    almacen: [this.loginService.getUserIdSucursal,],
     filter: [''],
     rangeDate: [''],
   });
+
+  SelectSucursal(): boolean {
+    return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+  }
+
   getAccesoriosVendidos(){
     let almacen =Number(this.form.get('almacen')?.value);
     let filter =this.form.get('filter')?.value;
-    
+
    this.subs=this.accesoriosService.getAccesoriosVendidos(this.filter,filter,almacen)
       .subscribe(accesorios =>{
         let record = accesorios.length == 0?0:accesorios[0].totalRecord;
@@ -77,7 +93,7 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
 
       })
   }
-  
+
   obtenerTotalAccesorios(cantidadAccesorio: number){
     this.accesorioQuantity = cantidadAccesorio;
   }
@@ -111,7 +127,7 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
-  getAlmacenes() {
+  getSucursales() {
     this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenes = almacen;
     });
