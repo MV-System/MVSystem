@@ -1,9 +1,8 @@
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +13,7 @@ import { AuthInterceptorService } from './core/interceptors/auth-interceptor.ser
 import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-interceptor';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { LoginService } from './auth/login.service';
+
 
 // export function initializeAppFactory(Permisos: LoginService) {
 //   return () => Permisos.LoadPermisos(); // Retorna una función que llame al método

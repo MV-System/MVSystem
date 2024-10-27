@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginGuard } from '../core/guards/login.guard';
 import { AuthenticationGuard } from '../core/guards/authentication.guard';
 
 
@@ -54,8 +53,8 @@ const routes: Routes = [
        },
        {
         path: 'utilidades',
-        loadChildren: () => import('./pages/utilidades/utilidades.module').then( m => m.UtilidadesModule )
-       },   
+       loadChildren: () => import('./pages/utilidades/utilidades.module').then( m => m.UtilidadesModule )
+       },
        {
         path: 'cotizacion',
         loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
@@ -63,7 +62,7 @@ const routes: Routes = [
     ]
   },
 
-  
+
 ];
 
 @NgModule({

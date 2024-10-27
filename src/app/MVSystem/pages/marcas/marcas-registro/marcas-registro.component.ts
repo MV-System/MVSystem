@@ -1,11 +1,8 @@
-import { Component, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { CommonModule } from '@angular/common';
 import {MarcaObjRetorno } from 'src/app/core/interfaces/mantenimiento';
-import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/core/services/marca.service';
 import { LoginService } from 'src/app/auth/login.service';
@@ -24,6 +21,8 @@ export class MarcasRegistroComponent implements OnInit {
   btnDisabled: boolean = true;
   IdMarcaReg!: number;
 
+
+
   constructor(
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
@@ -31,11 +30,11 @@ export class MarcasRegistroComponent implements OnInit {
     private MarcaService: MarcaService,
     private LoginPermisos: LoginService,
     private validatorPermissionService: ValidatorPermissionService
-  ) { }
+  ) {
+}
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
-
   }
   // VerFormMarca(): boolean {
   //   return this.validatorPermissionService.validateUserRole("MNU_MANT_MARCAS");
@@ -69,7 +68,6 @@ export class MarcasRegistroComponent implements OnInit {
     }
       return registro;
   }
-
   registroMarca(){
 
     const model: MarcaEquipo = this.modeloRegistroMarca();
@@ -93,7 +91,6 @@ export class MarcasRegistroComponent implements OnInit {
         {closeButton: true,progressBar:true});
     }
   }
-
 }
 function jwt_decode<T>(arg0: string): any {
   throw new Error('Function not implemented.');

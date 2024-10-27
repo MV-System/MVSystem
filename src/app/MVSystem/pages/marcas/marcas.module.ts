@@ -4,6 +4,7 @@ import { MarcasRoutingModule } from './marcas-routing.module';
 import { MarcasRegistroComponent } from './marcas-registro/marcas-registro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -17,6 +18,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ReactiveFormsModule,
     FormsModule,
     NgxPaginationModule,
+    NgxChartsModule,
   ]
 })
 export class MarcasModule { }

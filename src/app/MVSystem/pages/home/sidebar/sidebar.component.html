@@ -15,12 +15,20 @@
                 <span>Facturación</span>
             </a>
         </li>
-        <li class="nav-item" *ngIf="VerFormcotizacion()">
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['./utilidades/consulta']">
+              <i class="bi bi-receipt-cutoff"></i>
+              <span>Utilidades</span>
+          </a>
+      </li>
+
+        <!-- <li class="nav-item" *ngIf="VerFormcotizacion()">
             <a class="nav-link" routerLink="./cotizacion">
                 <i class="bi bi-receipt"></i>
                 <span>Cotización</span>
             </a>
-        </li>
+        </li> -->
         <!-- End Dashboard Nav -->
         <li class="nav-item">
             <a *ngIf="VerMenuMantenimiento()" class="nav-link collapsed" data-bs-target="#mantenimiento-nav" data-bs-toggle="collapse" href="#">
@@ -77,6 +85,7 @@
                         <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
                     </a>
                 </li>
+
                 <li>
 
 
@@ -114,11 +123,11 @@
                             <i class="bi bi-circle"></i><span>Equipos Vendidos</span>
                         </a>
                     </li>
-                    <li *ngIf="VerFormConsultaUtilidades()">
-                        <a routerLink="./utilidades/consulta">
-                            <i class="bi bi-circle"></i><span>Utilidades</span>
-                        </a>
-                    </li>
+                    <li>
+                      <a routerLink="./utilidades/consulta">
+                          <i class="bi bi-circle"></i><span>Utilidades</span>
+                      </a>
+                  </li>
                     <li *ngIf="VerFormConsultaFacturas()">
                         <a routerLink="./facturacion/consulta">
                             <i class="bi bi-circle"></i><span>Facturas</span>

@@ -119,6 +119,10 @@ export let APIURL = {
             vendedorInserta: API + 'Vendedores/Vendedor_Insert'
         }
     },
+    Utilidades: {
+      GetUtilidades: API + 'Utilidades/GetUtilidades',
+
+  },
     Login: {
         Login: API + 'login/login',
         ChangePassword: API + 'login/ChangePassword',
