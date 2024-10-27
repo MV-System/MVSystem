@@ -11,8 +11,8 @@
         <thead>
           <tr>
             <th scope="col">No. FACTURA</th>
-            <th scope="col">NOMBRES</th>
-            <th scope="col">APELLIDOS</th>
+            <th scope="col">CLIENTE</th>
+            <!-- <th scope="col">APELLIDOS</th> -->
             <th scope="col">TELEFONO</th>
             <th scope="col">TIPO DE FACTURA</th>
             <th scope="col">TIPO DE PAGO</th>
@@ -44,15 +44,15 @@
               aria-controls="flush-collapseOne"
               tableTrselect>
               <td>{{ factura.numeroFactura }}</td>
-              <td>{{ factura.nombres }} </td>
-              <td>{{ factura.apellidos }} </td>
+              <td>{{ factura.nombres }} {{ factura.apellidos }}</td>
+              <!-- <td>{{ factura.apellidos }} </td> -->
               <td>{{ factura.telefono }} </td>
               <td>{{ factura.tipoFactura }}</td>
               <td>{{ factura.tipoPago }}</td>
-              <td>{{ factura.subTotal }}</td>
-              <td>{{ factura.descuento }}</td>
-              <td>{{ factura.itbis }}</td>
-              <td>{{ factura.total }}</td>
+              <td>{{ factura.subTotal | currency}}</td>
+              <td>{{ factura.descuento | currency }}</td>
+              <td>{{ factura.itbis | currency}}</td>
+              <td>{{ factura.total | currency}}</td>
               <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
               <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
               <td>{{ factura.vendedor }}</td>

@@ -57,6 +57,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   line!:           number;
   lastLine!:       number;
   numerofactura!:  number;
+  IdAlmacen!:  number;
   facturasCantidad:number = 0;
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
@@ -64,14 +65,21 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
+// Obtener la fecha actual
+ fechaHoy = new Date();
+  // Crear una nueva fecha para el primer día del mes actual
+ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+
   paginate:Pagination={
+
+
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: '',
-    fechaFinal: ''
+    fechaInicio: this.FechaInicio.toISOString().split('T')[0],
+    fechaFinal: this.fechaHoy.toISOString().split('T')[0]
   }
   form: FormGroup = this.fb.group({
-    almacen: [1,],
+    almacen: [this.loginService.getUserIdSucursal,],
     criterio: ['',],
     factura:['',],
     rangeDate: ['']
@@ -80,6 +88,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
   modelFacturaFilter(){
+   // console.log("sucursal para consulta ft",this.form.value);
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
@@ -112,6 +121,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   getDetalleFactura(numeroFactura: number){
     this.numerofactura =numeroFactura;
     const { almacen } = this.form.value;
+
     const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
     .subscribe(detalle => {
       this.detalleFactura = detalle;

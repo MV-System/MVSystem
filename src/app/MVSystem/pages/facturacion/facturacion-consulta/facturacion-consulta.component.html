@@ -26,20 +26,19 @@
                                                     <div class="col-md-5">
                                                         <label class="form-label ">Fecha de facturación</label>
                                                         <div>
-                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ 01 / 01 / 2005 | date }} -  {{
-                                        rangeDatePlaceholder | date
-                                      }}">
+                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)"
+                                                            placeholder=" {{ FechaInicio | date }} -  {{fechaHoy  | date}}">
                                                             </my-date-range-picker>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-5" *ngIf="SelectSucursal()">
                                                         <!-- Search by almacen -->
 
-                                                        <label class="form-label">Almacen</label>
+                                                        <label class="form-label">Sucursal</label>
                                                         <select class="form-select" formControlName="almacen" (change)="getFacturas()">
                                       <option
                                         *ngFor="let almacen of almacenes"
-                                        [value]="almacen.iD_Almacen == 7? 1 : almacen.iD_Almacen" >
+                                        [value]="almacen.iD_Almacen" >
                                         {{ almacen.descripcion }}
                                       </option>
                                     </select>
