@@ -69,6 +69,11 @@ export interface FacturaRegistro {
 
     Cliente?: ClienteRegistro
 }
+export interface FacturaRegistroRespuesta {
+  numeroFactura: number;
+  idEmpresa:     string;
+  idSucursal:   string;
+}
 export interface DetalleFacturaList {
   cantidad: number;
   descripcion: string;

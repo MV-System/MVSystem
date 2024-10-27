@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { AccesorioObjRetorno } from '../interfaces/accesorio.interface';
 
@@ -22,8 +22,8 @@ export class MantenimientoService {
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
-  postFactura(factura: FacturaRegistro) {
-    return this.http.post(APIURL.Factura.Inserta.FacturaInserta, factura);
+  postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
+    return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
   exportFactura(factura: FacturaRegistro): Observable<Blob> {
     return this.http.post<Blob>(APIURL.Factura.Inserta.FacturacionReporte, factura, {

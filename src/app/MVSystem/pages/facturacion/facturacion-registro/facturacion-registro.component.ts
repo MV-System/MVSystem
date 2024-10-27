@@ -56,11 +56,13 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
+
   ngOnInit(): void {
     this.loadFacturaNumero();
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
+    console.log("fecha formato",Date().toString());
   }
   FacturaCreada: FacturaRegistro = null!;
   subs: Subscription[] = [];
@@ -87,6 +89,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   submitted: boolean = false;
   isNcfRequire!: boolean;
   facturaNumber!: number;
+  facturaNumberReporte!: number;
 
   subTotal: number = 0;
   descuento: number = 0;
@@ -108,9 +111,9 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     almacen: [,],
     tipoFactura: [1,],
     tipoPago: [1,],
-    fechaFacturacion: this.currentDate(),
+    fechaFacturacion: this.currentDateTime(),
     comprobante: [0,],
-    fechaLimitePago: this.currentDate(),
+    fechaLimitePago: this.currentDateTime(),
     garantia: [8,],
     nota: ['',],
     empresa: ['',],
@@ -241,7 +244,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         aplicarItbis: false,
         comprobante: 0,
-        fechaFacturacion: this.currentDate(),
+        fechaFacturacion: this.currentDateTime(),
         tipoFactura: 1,
         tipoPago: 1,
         garantia: 8,
@@ -251,7 +254,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         RNC: '',
         empresa: '',
         telefono: '',
-        fechaLimitePago: this.currentDate(),
+        fechaLimitePago: this.currentDateTime(),
       });
 ////-----------------------------------------------------------------------------------------------------
       this.articulos().clear();
@@ -281,12 +284,23 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.total =0
       this.itbis = 0
   }
+  currentDateTime(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Meses en base 0
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
 
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
   currentDate() {
     let date = new Date();
     let currrentDate = String(date.getFullYear()).padStart(2, '0') + '-' +
       String(date.getMonth() + 1).padStart(2, '0') + '-' +
-      String(date.getDate()).padStart(2, '0');
+      String(date.getDate()).padStart(2, '0'); +' ' +
+     String(date.getHours()).padStart(2, '0');+':'+
+    String(date.getMinutes()).padStart(2, '0');
     return currrentDate;
   }
   isFechaLimitePago() {
@@ -599,9 +613,12 @@ else { currentArticulo.idTipo = 2;}
       if (this.asumeItbis.asumeITBIS == 'S') {
         const amountNew = this.total / (itbis / 100 + 1);
 
+        this.itbis = amountNew;
         this.itbis = this.total - amountNew;
-        this.total = amountNew;
-        this.total = this.total - this.abono;
+        this.total = this.total;
+        //this.total = this.total - this.abono;
+        this.subTotal = amountNew;
+
       }
       else {
         this.itbis = (this.total * itbis) / 100;
@@ -736,7 +753,7 @@ else { currentArticulo.idTipo = 2;}
   }
   printFacturaNormal(){
     this.printing = !this.printing;
-    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.FacturaCreada.numeroFactura)
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
       this.printing = !this.printing;
@@ -749,7 +766,7 @@ else { currentArticulo.idTipo = 2;}
 
   printFacturaMini(){
     this.printing = !this.printing;
-    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.FacturaCreada.numeroFactura)
+    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
       this.printing = !this.printing;
@@ -767,7 +784,9 @@ else { currentArticulo.idTipo = 2;}
     this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
-
+ console.log("respuesta de crear ft",resp);
+       this.facturaNumberReporte = resp.numeroFactura
+       console.log("respuesta asigancion",this.facturaNumberReporte );
 
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');

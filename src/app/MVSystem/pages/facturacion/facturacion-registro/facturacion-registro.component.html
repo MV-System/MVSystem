@@ -109,7 +109,7 @@
                                       <span class="info">12/12/2022</span>
                                   </div> -->
                                     <div class="info">
-                                        <input class="form-control" type="date" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
+                                        <input class="form-control" type="datetime-local" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
                                         <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
                                             Este campo es requerido.
                                         </div>
@@ -119,7 +119,7 @@
                                     <div><strong>Fecha límite de pago:</strong></div>
                                     <!-- <div><span class="info">12/10/2022</span></div> -->
                                     <div class="info">
-                                        <input class="form-control" type="date" required [min]="currentDate()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
+                                        <input class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
                                         <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
                                             Este campo es requerido.
                                         </div>
