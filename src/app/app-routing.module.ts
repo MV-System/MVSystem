@@ -8,15 +8,17 @@ const routerOptions: ExtraOptions = {
 }
 
 const routes: Routes = [
-
   {
     path: '',
     redirectTo:'login' ,
     pathMatch: 'full',
   },
   {
-    path: 'mv-system',
-    loadChildren: () => import('./MVSystem/mv-system.module').then(m => m.MvSystemModule),
+    path: 'utilidades',
+    loadChildren: () => import('./MVSystem/pages/utilidades/utilidades.module').then(m => m.UtilidadesModule),
+
+    //  path: 'mv-system',
+    //  loadChildren: () => import('./MVSystem/mv-system.module').then(m => m.MvSystemModule),
   },
   {
     path:'**', component: PageNotFoundComponent

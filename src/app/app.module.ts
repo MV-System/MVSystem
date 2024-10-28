@@ -21,7 +21,8 @@ import { LoginService } from './auth/login.service';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
+
   ],
   imports: [
 
@@ -44,12 +45,6 @@ import { LoginService } from './auth/login.service';
 
   providers: [
     LoginService, // Asegúrate de que el servicio esté aquí
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: initializeAppFactory,
-    //   deps: [LoginService], // Define las dependencias que se van a inyectar
-    //   multi: true
-    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

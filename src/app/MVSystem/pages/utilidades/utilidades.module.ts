@@ -1,11 +1,9 @@
 import { UtilidadesRoutingModule } from './utilidades-routing.module';
 import { UtilidadesComponent } from './utilidades-consulta/utilidades.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
-
-
 
 
 @NgModule({
@@ -17,6 +15,6 @@ import { MyDateRangePickerModule } from 'mydaterangepicker';
     CommonModule,
     NgxChartsModule,
     MyDateRangePickerModule,
-  ]
+  ], schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UtilidadesModule { }

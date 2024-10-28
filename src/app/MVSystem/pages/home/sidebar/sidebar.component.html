@@ -2,9 +2,15 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
+        <!--
         <li class="nav-item">
             <a class="nav-link " routerLinkActive="active" routerLink="/">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li> -->
+        <li class="nav-item">
+            <a class="nav-link " routerLinkActive="active" [routerLink]="['./utilidades/consulta']">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
@@ -17,11 +23,11 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['./utilidades/consulta']">
-              <i class="bi bi-receipt-cutoff"></i>
-              <span>Utilidades</span>
-          </a>
-      </li>
+            <a class="nav-link" [routerLink]="['./utilidades/consulta']">
+                <i class="bi bi-receipt-cutoff"></i>
+                <span>Utilidades</span>
+            </a>
+        </li>
 
         <!-- <li class="nav-item" *ngIf="VerFormcotizacion()">
             <a class="nav-link" routerLink="./cotizacion">
@@ -124,10 +130,10 @@
                         </a>
                     </li>
                     <li>
-                      <a routerLink="./utilidades/consulta">
-                          <i class="bi bi-circle"></i><span>Utilidades</span>
-                      </a>
-                  </li>
+                        <a routerLink="./utilidades/consulta">
+                            <i class="bi bi-circle"></i><span>Utilidades</span>
+                        </a>
+                    </li>
                     <li *ngIf="VerFormConsultaFacturas()">
                         <a routerLink="./facturacion/consulta">
                             <i class="bi bi-circle"></i><span>Facturas</span>
