@@ -72,6 +72,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   listaSuplidor:   Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
   rangeDatePlaceholder: Date =new Date()
+ // Obtener la fecha actual
+ fechaHoy = new Date();
+ // Crear una nueva fecha para el primer día del mes actual
+FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
 
   filter: any = {
     almacen: '',
@@ -84,8 +88,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     pageSize: 10,
     fechaInicio: '',
     fechaFinal: '',
-    fechaInicioFactura: '',
-    fechaFinalFactura: '',
+    fechaInicioFactura: this.FechaInicio.toISOString().split('T')[0],
+    fechaFinalFactura: this.fechaHoy.toISOString().split('T')[0],
     Empresa:this.loginService.getUserEmpresa,
     IdEmpresa:this.loginService.getUserIdEmpresa,
     IdSucursal:this.loginService.getUserIdSucursal,
@@ -103,6 +107,9 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
+
+
+
   clearFilters(){
     this.form.reset();
     this.filter.fechaInicio = '';
