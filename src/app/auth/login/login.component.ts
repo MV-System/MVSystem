@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     this.isLoading =true;
     this.isAlert =false;
     this.loginService.login(userName, password).subscribe(res => {
-      console.log(res);
+     // console.log(res);
 
       if (!res) {
         // this.toastr.error('Credenciales incorrectas')
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       this.router.navigateByUrl('/home')
       this.isLoading =false;
     }),(err: any)=>{
-      console.log(err);
+      //console.log(err);
       this.isLoading =false;
     }
   }

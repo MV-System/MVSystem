@@ -5,10 +5,37 @@
 </main>
 <app-header></app-header>
 
+
+
+
 <div class="grid mainLayout">
     <app-sidebar class="main-nav"></app-sidebar>
     <div class="main-content">
         <router-outlet></router-outlet>
+        <span>DashBoard</span>
+        <main id="main" class="main box">
+            <div class="row">
+
+                <div>
+                    <label class="form-label ">Ventas Del Dia</label>
+
+                    <ngx-charts-advanced-pie-chart [view]="view" scheme="cool" [results]="singleVentasDia" (select)="onSelect($event)">
+                    </ngx-charts-advanced-pie-chart>
+
+                    <label class="form-label ">Ventas De la Semana</label>
+
+                    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Neon" [results]="singleVentasSemana" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                    </ngx-charts-advanced-pie-chart>
+
+
+
+                    <label class="form-label ">Ventas Del Mes</label>
+
+                    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Ordinal" [results]="singleVentasMes" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                    </ngx-charts-advanced-pie-chart>
+                </div>
+            </div>
+        </main>
         <app-footer></app-footer>
         <a class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     </div>

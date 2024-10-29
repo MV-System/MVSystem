@@ -2,19 +2,19 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-        <!--
+
         <li class="nav-item">
-            <a class="nav-link " routerLinkActive="active" routerLink="/">
+            <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard/DashBoard']">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard/DashBoard']">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li> -->
-        <li class="nav-item">
-          <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard/DashBoard']">
-              <i class="bi bi-grid"></i>
-              <span>Dashboard</span>
-          </a>
-      </li>
         <li class="nav-item" *ngIf="VerFormFacturacion()">
             <a class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
