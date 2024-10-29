@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FacturacionRoutingModule } from './facturacion-routing.module';
@@ -49,6 +49,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     SharedModule,
 
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],

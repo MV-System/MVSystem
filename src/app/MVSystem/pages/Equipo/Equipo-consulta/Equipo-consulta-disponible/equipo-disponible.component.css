@@ -1,66 +1,106 @@
-
 *::-webkit-scrollbar {
     width: 12px;
-  }
-  *::-webkit-scrollbar-track {
+}
+
+*::-webkit-scrollbar-track {
     background: rgba(8, 55, 223, 0.218);
-  }
-  *::-webkit-scrollbar-thumb {
+}
+
+*::-webkit-scrollbar-thumb {
     background-color: #467ff1;
     border-radius: 20px;
     border: 2px solid rgba(8, 55, 223, 0.218);
-  }
-  *,
-  *::before,
-  *::after {
+}
+
+*,
+*::before,
+*::after {
     box-sizing: inherit;
-  }
-  .card-body{
+}
+
+.card-body {
     background-color: #f6f9ff;
-  }
-  /* td
+}
+
+
+/* td
   {
    max-width: 100px;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
   } */
-  .scroll-table{
+
+.scroll-table {
     overflow: auto;
     white-space: nowrap;
-  }
-  .display-filter-content {
-      display: flex !important;
-  }
-  label.total{
-    text-align: center
-  }
+}
 
-  .clear-filter{
+.display-filter-content {
+    display: flex !important;
+}
+
+label.total {
+    text-align: center
+}
+
+.clear-filter {
     color: #467ff1;
     font-weight: 600;
     text-decoration: underline;
-  }
+}
 
-
-
-
-  *::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 12px;
-  }
-  *::-webkit-scrollbar-track {
+}
+
+*::-webkit-scrollbar-track {
     background: rgba(8, 55, 223, 0.218);
-  }
-  *::-webkit-scrollbar-thumb {
+}
+
+*::-webkit-scrollbar-thumb {
     background-color: #467ff1;
     border-radius: 20px;
     border: 2px solid rgba(8, 55, 223, 0.218);
-  }
-  .card-body{
-      background-color: #f6f9ff;
-  }
-  .clear-filter{
+}
+
+.card-body {
+    background-color: #f6f9ff;
+}
+
+.clear-filter {
     color: #467ff1;
     font-weight: 600;
     text-decoration: underline;
-  }
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    /* Altura del contenedor */
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    /* Color de fondo */
+    border-top: 8px solid #3498db;
+    /* Color de la parte superior */
+    border-radius: 50%;
+    width: 50px;
+    /* Tamaño del spinner */
+    height: 50px;
+    /* Tamaño del spinner */
+    animation: spin 1s linear infinite;
+    /* Animación */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -63,7 +63,7 @@ const routes: Routes = [
         path: 'cotizacion',
         loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
        },
-       { path: '**', redirectTo: 'dashboard' }
+       { path: '', redirectTo: 'dashboard' }
     ]
   },
 

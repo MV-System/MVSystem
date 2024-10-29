@@ -41,7 +41,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.getFacturas();
     this.getAlmacenes();
   }
-  isLoading: boolean = false;
+  isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   title: string = "Consulta Facturas";
   breadcrumbItem: string = "Consulta Facturas"
@@ -104,8 +104,10 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     return model;
   }
   getFacturas(){
+    this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
+    this.isLoading = false; // Terminar carga
       let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
       this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
       this.facturasCantidad = cantidad;
@@ -117,8 +119,10 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.facturas = facturas;
     });
     this.subs.push(sub);
+
   }
   getDetalleFactura(numeroFactura: number){
+    //this.isLoading = true; // Iniciar carga
     this.numerofactura =numeroFactura;
     const { almacen } = this.form.value;
 
@@ -127,12 +131,14 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.detalleFactura = detalle;
     })
     this.subs.push(sub);
-
+    //this.isLoading = false; // Terminar carga
   }
   printReportFacturaConsulta(){
+    this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
+      this.isLoading = false; // Terminar carga
     },err=>{
       this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
@@ -140,20 +146,19 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
   printFactura(){
-    this.printing = !this.printing;
+    this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      this.printing = !this.printing;
+      this.isLoading = false; // Terminar carga
     },err=>{
-      this.printing = !this.printing;
+
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
+
   }
   ReimprimeFactura() {
-    //this.isLoading = !this.isLoading;
-    console.log("Loading  ",this.isLoading);
     this.rDialogService.openDialog(
       "Aviso",
       "¿Desea imprimir la factura mini o normal?",
@@ -172,13 +177,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   printFacturaMini(){
+    this.isLoading = true; // Iniciar carga
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      this.printing = !this.printing;
+      this.isLoading = false; // Terminar carga
     },err=>{
-      this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);

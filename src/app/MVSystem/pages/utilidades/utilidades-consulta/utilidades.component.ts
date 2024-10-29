@@ -2,9 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { Pagination } from 'src/app/core/interfaces/pagination.interfaces';
 import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-utilidades',
@@ -13,6 +18,8 @@ import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 })
 export class UtilidadesComponent implements OnInit {
 
+  almacenes!: Almacen[];
+  subs: Subscription[] = [];
   // options
   view: [number, number] = [900, 200];
   gradient: boolean = true;
@@ -66,26 +73,46 @@ export class UtilidadesComponent implements OnInit {
   ];
 
   constructor(
+    private catalogosService: CatalogosService,
     private UtilidadesServices: UtilidadesService,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private loginService: LoginService,
+    private validatorPermissionService:ValidatorPermissionService,
   ) { }
 
   // Obtener la fecha actual
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
 FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
-
-
+SelectSucursal(): boolean {
+  return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+}
+getSucursales() {
+  const sub = this.catalogosService.getSucursales().subscribe((almacen) => {
+    this.almacenes = almacen;
+  });
+}
+paginate:Pagination={
+  pageIndex: 1,
+  pageSize: 10,
+  fechaInicio: this.FechaInicio.toISOString().split('T')[0],
+  fechaFinal: this.fechaHoy.toISOString().split('T')[0]
+}
+// form: FormGroup = this.fb.group({
+//   fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
+//   fechafin: [this.fechaHoy.toISOString().split('T')[0]],
+//   isucursal:[ this.loginService.getUserIdSucursal],
+// });
   ngOnInit(): void {
     this.GetUtilidades(); // Llama a la función para obtener datos
-
+this.getSucursales();
   }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.filter.FI = this.FechaInicio.toISOString().split('T')[0],
       this.filter.FF = this.fechaHoy.toISOString().split('T')[0]
+
     } else {
       this.filter.FI = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
       this.filter.FF = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
@@ -134,14 +161,23 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     { "name": "Costo Reparaciones", "value": this.data.costo_Reparaciones }
   ];
   }
-  UtilidadesForm: FormGroup = this.fb.group({ });
+  // UtilidadesForm: FormGroup = this.fb.group({ });
 
   filter: utilidadesFiltros = {
     FI: this.FechaInicio.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
     sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
-
+  // getValueFilterForm() {
+  //   const nullOrEmpty =(data: null)=>{return data== null ? '':data}
+  //     const {
+  //       sucursal,
+  //       rangeDate
+  //     } = this.form.value;
+  //     this.filter.FI = nullOrEmpty(rangeDate);
+  //     this.filter.FF = nullOrEmpty();
+  //     this.filter.sucursal = nullOrEmpty(sucursal);
+  //   }
   onSelect(data: any): void { }
 
   onActivate(data: any): void { }

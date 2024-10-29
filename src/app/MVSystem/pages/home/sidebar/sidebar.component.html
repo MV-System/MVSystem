@@ -9,12 +9,6 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <!-- <li class="nav-item">
-            <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard/DashBoard']">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li> -->
         <li class="nav-item" *ngIf="VerFormFacturacion()">
             <a class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
@@ -28,19 +22,6 @@
                 <span>Utilidades</span>
             </a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" [routerLink]="['./dashboard/DashBoard']">
-              <i class="bi bi-receipt-cutoff"></i>
-              <span>DashBoardNuevo</span>
-          </a>
-      </li> -->
-
-        <!-- <li class="nav-item" *ngIf="VerFormcotizacion()">
-            <a class="nav-link" routerLink="./cotizacion">
-                <i class="bi bi-receipt"></i>
-                <span>Cotización</span>
-            </a>
-        </li> -->
         <!-- End Dashboard Nav -->
         <li class="nav-item">
             <a *ngIf="VerMenuMantenimiento()" class="nav-link collapsed" data-bs-target="#mantenimiento-nav" data-bs-toggle="collapse" href="#">
@@ -120,11 +101,11 @@
                             <i class="bi bi-circle"></i><span>Clientes</span>
                         </a>
                     </li>
-                    <li *ngIf="VerFormConsultaEquipos()">
+                    <!-- <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/consulta">
                             <i class="bi bi-circle"></i><span>Equipos</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/Disponible">
                             <i class="bi bi-circle"></i><span>Equipos disponible</span>

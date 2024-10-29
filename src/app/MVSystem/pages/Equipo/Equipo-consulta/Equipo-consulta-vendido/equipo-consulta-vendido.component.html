@@ -163,43 +163,49 @@
             </div>
         </div>
     </form>
+    <mat-spinner *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <span>Cargando datos, por favor espere...</span>
+    </mat-spinner>
+
     <section class="section mt-4">
         <button class="btn print mx-1" [ngClass]="{'disabled':!equiposVendidos.length}" (click)="printReportEquipoVendido()">
       Imprimir reporte <i class="bi bi-printer"></i>
     </button>
-        <div class="row">
+        <div *ngIf="!isLoading" class="row">
             <div class="col-lg-12 scroll-table">
                 <h5 class="card-title">Equipos</h5>
                 <p *ngIf="equiposVendidos.length">
                     Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
                 </p>
+
                 <!-- Table with stripped rows -->
                 <div class="scrollable-table thinScroll">
-                <table class="mv-table">
-                    <thead>
-                        <tr>
-                            <th class="fixed-item code" scope="col">Imei</th>
-                            <th class="fixed-item desc" scope="col">Descripción</th>
-                            <th scope="col">Precio Mayor</th>
-                            <th scope="col">Precio Detalle</th>
-                            <th scope="col">Costo</th>
-                            <th scope="col">Itbis</th>
-                            <th scope="col">Precio Vendido</th>
-                            <th scope="col">Tipo Factura</th>
-                            <th scope="col">Desbloq.</th>
-                            <th scope="col">Nota</th>
-                            <th scope="col">Almacen</th>
-                            <th scope="col">Suplidor</th>
-                            <th scope="col">Vendedor</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Fecha facturado</th>
-                            <th scope="col">Fecha Registro</th>
-                            <th scope="col">Comision Detalle</th>
-                            <th scope="col">Comision Por Mayor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="animate__animated animate__fadeIn" *ngFor="
+                    <table class="mv-table">
+                        <thead>
+                            <tr>
+                                <th class="fixed-item code" scope="col">Imei</th>
+                                <th class="fixed-item desc" scope="col">Descripción</th>
+                                <th scope="col">Precio Mayor</th>
+                                <th scope="col">Precio Detalle</th>
+                                <th scope="col">Costo</th>
+                                <th scope="col">Itbis</th>
+                                <th scope="col">Precio Vendido</th>
+                                <th scope="col">Tipo Factura</th>
+                                <th scope="col">Desbloq.</th>
+                                <th scope="col">Nota</th>
+                                <th scope="col">Almacen</th>
+                                <th scope="col">Suplidor</th>
+                                <th scope="col">Vendedor</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Fecha facturado</th>
+                                <th scope="col">Fecha Registro</th>
+                                <th scope="col">Comision Detalle</th>
+                                <th scope="col">Comision Por Mayor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="animate__animated animate__fadeIn" *ngFor="
                 let equipo of equiposVendidos
                   | paginate
                     : {
@@ -207,34 +213,34 @@
                         currentPage: filter.pageIndex,
                         totalItems: totalRecord
                       } ">
-                       <td class="fixed-item code">{{equipo.imei}}</td>
-                       <td class="fixed-item desc">
-                           <span>{{equipo.descripcion}}</span>
-                           <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+                                <td class="fixed-item code">{{equipo.imei}}</td>
+                                <td class="fixed-item desc">
+                                    <span>{{equipo.descripcion}}</span>
+                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
          <i class="bx bx-edit-alt"></i>
        </button>
-                       </td>
-                            <!-- <td>{{ equipo.imei }}</td>
+                                </td>
+                                <!-- <td>{{ equipo.imei }}</td>
                             <td>{{ equipo.descripcion }}</td> -->
-                            <td>{{ equipo.precioPorMayor | currency }}</td>
-                            <td>{{ equipo.precioDetalle | currency }}</td>
-                            <td>{{ equipo.costoEquipo | currency }}</td>
-                            <td>{{ equipo.itbis | currency }}</td>
-                            <td>{{ equipo.precioVendido | currency }}</td>
-                            <td>{{ equipo.tipoFactura }}</td>
-                            <td>{{ equipo.isDesbloqueado }}</td>
-                            <td>{{ equipo.notaAdicional }}</td>
-                            <td>{{ equipo.descripcionAlmacen }}</td>
-                            <td>{{ equipo.suplidor }}</td>
-                            <td>{{ equipo.vendedor }}</td>
-                            <td>{{ equipo.cliente }}</td>
-                            <td>{{ equipo.fechaFacturado | date }}</td>
-                            <td>{{ equipo.fechaRegistro | date }}</td>
-                            <td>{{ equipo.comisionDetalle | currency }}</td>
-                            <td>{{ equipo.comisionPorMayor | currency }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <td>{{ equipo.precioPorMayor | currency }}</td>
+                                <td>{{ equipo.precioDetalle | currency }}</td>
+                                <td>{{ equipo.costoEquipo | currency }}</td>
+                                <td>{{ equipo.itbis | currency }}</td>
+                                <td>{{ equipo.precioVendido | currency }}</td>
+                                <td>{{ equipo.tipoFactura }}</td>
+                                <td>{{ equipo.isDesbloqueado }}</td>
+                                <td>{{ equipo.notaAdicional }}</td>
+                                <td>{{ equipo.descripcionAlmacen }}</td>
+                                <td>{{ equipo.suplidor }}</td>
+                                <td>{{ equipo.vendedor }}</td>
+                                <td>{{ equipo.cliente }}</td>
+                                <td>{{ equipo.fechaFacturado | date }}</td>
+                                <td>{{ equipo.fechaRegistro | date }}</td>
+                                <td>{{ equipo.comisionDetalle | currency }}</td>
+                                <td>{{ equipo.comisionPorMayor | currency }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposVendidos.length">

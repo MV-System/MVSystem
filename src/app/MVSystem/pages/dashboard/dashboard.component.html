@@ -1,8 +1,11 @@
 <span>DashBoard</span>
 <main id="main" class="main box">
     <div class="row">
-
-        <div>
+        <mat-spinner *ngIf="isLoading" class="loading">
+            <div class="spinner"></div>
+            <span>Cargando Dashboard, por favor espere...</span>
+        </mat-spinner>
+        <div *ngIf="!isLoading">
             <label class="form-label ">Ventas Del Dia</label>
 
             <ngx-charts-advanced-pie-chart [view]="view" scheme="cool" [results]="singleVentasDia" (select)="onSelect($event)">

@@ -9,6 +9,7 @@
         </ol>
     </nav>
     <h1>Equipos Disponibles</h1>
+
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
 
         <div class="row">
@@ -110,9 +111,12 @@
         </div>
 
     </form>
+    <mat-spinner *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <span>Cargando datos, por favor espere...</span>
+    </mat-spinner>
     <section class="section mt-4">
-
-        <div class="row">
+        <div *ngIf="!isLoading" class="row">
             <div class="col-lg-12 scroll-table">
                 <h5 class="card-title">Equipos</h5>
                 <p *ngIf="equiposDisponibles.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>

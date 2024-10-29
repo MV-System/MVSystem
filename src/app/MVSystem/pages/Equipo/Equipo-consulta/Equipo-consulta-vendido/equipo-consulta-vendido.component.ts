@@ -54,7 +54,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     }
 
   }
-
+  isLoading: boolean = false; // Variable para controlar el estado de carga
   subscription!: Subscription;
   isPrint: boolean = false;
   totalFacturado:  number = 0;
@@ -207,6 +207,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
 
   obtenerEquiposVendidos() {
+    this.isLoading = true; // Iniciar carga
     this.getValueFilterForm();
     this.onFilterPropHasValue();
     this.subscription = this.equipoService
@@ -223,6 +224,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
         this.obtenerTotalFacturado(totalFacturado);
         this.obtenerTotalGanancia(totalGanancia);
         this.obtenerTotalItbis(totalItbis);
+        this.isLoading = false; // Terminar carga
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;
@@ -233,9 +235,11 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       });
   }
   printReportEquipoVendido(){
+    this.isLoading = true; // Iniciar carga
     this.equipoService.postEquipoVendido(this.filter)
     .subscribe((blobResp)=>{
       this.isPrint = !this.isPrint;
+      this.isLoading = false; // Terminar carga
       CreatorPDFFile(blobResp);
     },(err)=>{
       this.isPrint = !this.isPrint;

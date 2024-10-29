@@ -36,8 +36,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
     const change = changes["clearFilter"];
     if (change && change.previousValue != change.currentValue) {
       this.clearFilters();
@@ -62,7 +60,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   listaVendedor:  VendedorLista[] = [];
   listaSuplidor:  Suplidor[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
-
+  isLoading: boolean = false; // Variable para controlar el estado de carga
 
 
   filter: any = {
@@ -117,6 +115,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   obtenerEquiposDisponibles() {
+    this.isLoading = true; // Iniciar carga
     this.getValueFilterForm();
     this.onFilterPropHasValue();
 
@@ -128,6 +127,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
         this.obtenerTotalInventario(totalInventario);
+        this.isLoading = false; // Terminar carga
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;
@@ -138,10 +138,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
   printReportEquipoDisponibles() {
-
+    this.isLoading = true; // Iniciar carga
     this.equipoService.postEquipoDisponible(this.filter)
       .subscribe((blobResp) => {
         this.printing = !this.printing;
+        this.isLoading = false; // Terminar carga
         CreatorPDFFile(blobResp);
       }, (err) => {
         this.printing = !this.printing;

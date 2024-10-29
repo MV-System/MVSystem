@@ -34,7 +34,7 @@ data: Utilidades = {
   ganancia_Desbloqueos: 0,
   valida: 0
 }; // Inicializa data
-
+isLoading: boolean = false; // Variable para controlar el estado de carga
 rangeDatePlaceholder: Date = new Date();
 
 colorScheme = { domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']};
@@ -102,7 +102,7 @@ fechaHoy.setHours(fechaHoy.getHours() - 4); // Restar 4 horas
 const filterDia: utilidadesFiltros = {
     FI: fechaHoy.toISOString().split('T')[0],
     FF: fechaHoy.toISOString().split('T')[0],
-    sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal:'4'// this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 };
  // Calcular el inicio de la semana (lunes)
 const diaActual = fechaHoy.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
@@ -114,12 +114,12 @@ fechaInicioSemana.setHours(fechaInicioSemana.getHours() - 4); // Restar 4 horas
 const filterSemana: utilidadesFiltros = {
     FI: fechaInicioSemana.toISOString().split('T')[0],
     FF: fechaHoy.toISOString().split('T')[0],
-    sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal: '4'//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 };
   const filterMes: utilidadesFiltros = {
     FI: this.FechaInicioMes.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
-    sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal: '4'//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
 
   // Cargar utilidades
@@ -128,11 +128,13 @@ const filterSemana: utilidadesFiltros = {
   this.GetUtilidadesMes(filterMes);
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
+  this.isLoading = true; // Iniciar carga
   console.log("dia",filterDia);
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
       (equipos: Utilidades) => {
+        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasDia = [
@@ -146,17 +148,20 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         }
       },
       (error) => {
+        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
+  this.isLoading = true; // Iniciar carga
   console.log("semana",filterSemana);
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
       (equipos: Utilidades) => {
+        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasSemana = [
@@ -170,6 +175,7 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         }
       },
       (error) => {
+        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }
@@ -177,11 +183,12 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
 }
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
-
+  this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterMes)
     .subscribe(
       (equipos: Utilidades) => {
+        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasMes = [
@@ -195,6 +202,7 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
         }
       },
       (error) => {
+        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }
