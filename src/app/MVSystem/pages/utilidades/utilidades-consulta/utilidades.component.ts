@@ -34,7 +34,7 @@ export class UtilidadesComponent implements OnInit {
   ganancia_Desbloqueos:0,
   valida: 0
   }; // Inicializa data
-
+  isLoading: boolean = false; // Variable para controlar el estado de carga
 
   rangeDatePlaceholder: Date =new Date()
   colorScheme1 = {
@@ -93,21 +93,21 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.GetUtilidades();
   }
   GetUtilidades() {
+    this.isLoading = true; // Iniciar carga
     this.UtilidadesServices
       .GetUtilidades(this.filter)
       .subscribe(
         (equipos: Utilidades) => {
-
+          this.isLoading = false; // Terminar carga
           if (equipos) {
             this.data = equipos; // Asigna el primer objeto a data
-
-            // Actualiza el arreglo 'single' después de obtener los datos
             this.updateSingleData();
           } else {
             this.toastr.warning('No se encontraron utilidades.');
           }
         },
         (error) => {
+          this.isLoading = false; // Terminar carga
           console.error('Error al obtener utilidades:', error);
           this.toastr.error('Error al cargar datos de utilidades');
         }

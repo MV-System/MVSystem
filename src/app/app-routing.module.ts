@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './MVSystem/pages/home/home.component';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
+import { DashboardModule } from './MVSystem/pages/dashboard/dashboard/dashboard.module';
 
 const routerOptions: ExtraOptions = {
   useHash: true,
@@ -14,8 +14,8 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'utilidades',
-    loadChildren: () => import('./MVSystem/pages/utilidades/utilidades.module').then(m => m.UtilidadesModule),
+    path: 'dashboard',
+    loadChildren: () => import('./MVSystem/pages/dashboard/dashboard/dashboard.module').then(m => m.DashboardModule),
 
     //  path: 'mv-system',
     //  loadChildren: () => import('./MVSystem/mv-system.module').then(m => m.MvSystemModule),

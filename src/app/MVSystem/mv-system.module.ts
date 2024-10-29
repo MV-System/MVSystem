@@ -11,6 +11,7 @@ import { HeaderComponent } from './pages/home/header/header.component';
 import { FooterComponent } from './pages/home/footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { DashboardModule } from './pages/dashboard/dashboard/dashboard.module';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { MyDateRangePickerModule } from 'mydaterangepicker';
     MvSystemRoutingModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    RouterModule
+    RouterModule,
+    DashboardModule
   ],
   exports: [
     HomeComponent,

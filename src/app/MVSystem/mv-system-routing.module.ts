@@ -56,6 +56,10 @@ const routes: Routes = [
        loadChildren: () => import('./pages/utilidades/utilidades.module').then( m => m.UtilidadesModule )
        },
        {
+        path: 'dashboard',
+       loadChildren: () => import('./pages/dashboard/dashboard/dashboard.module').then( m => m.DashboardModule )
+       },
+       {
         path: 'cotizacion',
         loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
        }

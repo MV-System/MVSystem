@@ -10,11 +10,11 @@
             </a>
         </li> -->
         <li class="nav-item">
-            <a class="nav-link " routerLinkActive="active" [routerLink]="['./utilidades/consulta']">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+          <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard/DashBoard']">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+          </a>
+      </li>
         <li class="nav-item" *ngIf="VerFormFacturacion()">
             <a class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
@@ -28,6 +28,12 @@
                 <span>Utilidades</span>
             </a>
         </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" [routerLink]="['./dashboard/DashBoard']">
+              <i class="bi bi-receipt-cutoff"></i>
+              <span>DashBoardNuevo</span>
+          </a>
+      </li> -->
 
         <!-- <li class="nav-item" *ngIf="VerFormcotizacion()">
             <a class="nav-link" routerLink="./cotizacion">

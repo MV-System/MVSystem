@@ -10,9 +10,8 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // this.chart();
-    // this.chartPie();
-    
+
+
   }
   // chart() {
   //   document.addEventListener("DOMContentLoaded", () => {

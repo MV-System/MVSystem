@@ -13,6 +13,7 @@ import { AuthInterceptorService } from './core/interceptors/auth-interceptor.ser
 import { ErrorHandlerInterceptor } from './core/interceptors/error-handler-interceptor';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { LoginService } from './auth/login.service';
+import { DashboardComponent } from './MVSystem/pages/dashboard/dashboard.component';
 
 
 // export function initializeAppFactory(Permisos: LoginService) {
@@ -21,7 +22,8 @@ import { LoginService } from './auth/login.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    //DashboardComponent
 
   ],
   imports: [

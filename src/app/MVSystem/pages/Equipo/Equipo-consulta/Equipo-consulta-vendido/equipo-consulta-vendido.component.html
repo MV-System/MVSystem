@@ -174,11 +174,12 @@
                     Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
                 </p>
                 <!-- Table with stripped rows -->
-                <table class="table">
+                <div class="scrollable-table thinScroll">
+                <table class="mv-table">
                     <thead>
                         <tr>
-                            <th scope="col">Imei</th>
-                            <th scope="col">Descripción</th>
+                            <th class="fixed-item code" scope="col">Imei</th>
+                            <th class="fixed-item desc" scope="col">Descripción</th>
                             <th scope="col">Precio Mayor</th>
                             <th scope="col">Precio Detalle</th>
                             <th scope="col">Costo</th>
@@ -206,8 +207,15 @@
                         currentPage: filter.pageIndex,
                         totalItems: totalRecord
                       } ">
-                            <td>{{ equipo.imei }}</td>
-                            <td>{{ equipo.descripcion }}</td>
+                       <td class="fixed-item code">{{equipo.imei}}</td>
+                       <td class="fixed-item desc">
+                           <span>{{equipo.descripcion}}</span>
+                           <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+         <i class="bx bx-edit-alt"></i>
+       </button>
+                       </td>
+                            <!-- <td>{{ equipo.imei }}</td>
+                            <td>{{ equipo.descripcion }}</td> -->
                             <td>{{ equipo.precioPorMayor | currency }}</td>
                             <td>{{ equipo.precioDetalle | currency }}</td>
                             <td>{{ equipo.costoEquipo | currency }}</td>
@@ -227,6 +235,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposVendidos.length">
                     Datos no encontrados

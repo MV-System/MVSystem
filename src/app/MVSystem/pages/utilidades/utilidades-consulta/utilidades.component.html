@@ -1,24 +1,55 @@
 <main id="main" class="main box">
-    <div class="row">
-        <div>
-            <label class="form-label ">Consulta Utilidades</label>
-        </div>
-        <div class="col-md-5">
-            <label class="form-label row mx-2">Fecha de registro</label>
-            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio | date }} -  {{fechaHoy | date}}">
-            </my-date-range-picker>
-        </div>
-    </div>
-    <label class="form-label ">Ventas</label>
+  <div class="row">
+      <div>
+          <label class="form-label">Consulta Utilidades</label>
+      </div>
+      <div class="col-md-5">
+          <label class="form-label row mx-2">Fecha de registro</label>
+          <my-date-range-picker
+              [options]="myDateRangePickerOptions"
+              formControlName="rangeDate"
+              (dateRangeChanged)="onDateRangeChanged($event)"
+              placeholder="{{ FechaInicio | date }} -  {{fechaHoy | date}}">
+          </my-date-range-picker>
+      </div>
+  </div>
 
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" (select)="onSelect($event)">
-    </ngx-charts-advanced-pie-chart>
-    <!-- ngx-charts-pie-grid -->
-    <label class="form-label ">Ganancias</label>
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </ngx-charts-advanced-pie-chart>
+  <mat-spinner *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <span>Cargando datos, por favor espere...</span>
+  </mat-spinner>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div *ngIf="!isLoading">
+      <label class="form-label">Ventas</label>
+      <ngx-charts-advanced-pie-chart
 
-    <label class="form-label ">Costos</label>
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </ngx-charts-advanced-pie-chart>
+          [view]="view"
+          [scheme]="colorScheme1"
+          [results]="singleVentas"
+          (select)="onSelect($event)">
+</ngx-charts-advanced-pie-chart>
+
+
+      <label class="form-label">Ganancias</label>
+      <ngx-charts-advanced-pie-chart
+          [view]="view"
+          [scheme]="colorScheme1"
+          [results]="singleGanancias"
+          [gradient]="gradient"
+          (select)="onSelect($event)"
+          (activate)="onActivate($event)"
+          (deactivate)="onDeactivate($event)">
+      </ngx-charts-advanced-pie-chart>
+
+      <label class="form-label">Costos</label>
+      <ngx-charts-advanced-pie-chart
+          [view]="view"
+          [scheme]="colorScheme1"
+          [results]="singleCostos"
+          [gradient]="gradient"
+          (select)="onSelect($event)"
+          (activate)="onActivate($event)"
+          (deactivate)="onDeactivate($event)">
+      </ngx-charts-advanced-pie-chart>
+  </div>
 </main>
