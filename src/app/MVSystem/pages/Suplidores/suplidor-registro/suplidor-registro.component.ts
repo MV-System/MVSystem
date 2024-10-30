@@ -25,23 +25,8 @@ export class SuplidorRegistroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //    this.formRegistro.reset({
-    //     nombre: 'Xavier suplidor',
-    //     apellido: 'Mejia',
-    //     tipoSuplidor: 1,
-    //     tipoTelefono: 1,
-    //     telefono: 8099728439,
-    //     extensionNumero: '',
-    //     email: '',
-    //     // criterio:     [''],
-    //     usuario: 'Xmejia',
-    //     provincia: 'Santo Domingo',
-    //     sector: 'Buena Vista',
-    //     calle: 'Primera',
-    //     casaNumero: '#18',
-    // });
-    this.formRegistro.controls.extensionNumero.disable();
 
+    this.formRegistro.controls.extensionNumero.disable();
     this.obtenerTipoSuplidor();
     this.obtenerTipoTelefonos();
   }
@@ -101,7 +86,7 @@ export class SuplidorRegistroComponent implements OnInit {
  * @param {any} event - any
  */
   onCheckboxChange(event: any) {
-    
+
     if (event.target.checked == false) {
       this.formRegistro.controls.extensionNumero.disable();
       this.formRegistro.get('extensionNumero')?.setValue('');
@@ -155,7 +140,7 @@ export class SuplidorRegistroComponent implements OnInit {
       this.suplidorService
         .postSuplidor(model)
         .subscribe((suplidorInsertado: any) => {
-    
+
 
           this.suplidorListar = suplidorInsertado;
 

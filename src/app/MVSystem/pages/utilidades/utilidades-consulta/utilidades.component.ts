@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
@@ -93,31 +93,43 @@ getSucursales() {
     this.almacenes = almacen;
   });
 }
-paginate:Pagination={
-  pageIndex: 1,
-  pageSize: 10,
-  fechaInicio: this.FechaInicio.toISOString().split('T')[0],
-  fechaFinal: this.fechaHoy.toISOString().split('T')[0]
+
+
+form!: FormGroup;
+createForm(){
+  //const IdSucursal = Number(this.loginService.getUserIdSucursal)
+  this.form = this.fb.group({
+    fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
+    fechafin: [this.fechaHoy.toISOString().split('T')[0]],
+    almacen:[Number(this.loginService.getUserIdSucursal)]
+  });
 }
-// form: FormGroup = this.fb.group({
-//   fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
-//   fechafin: [this.fechaHoy.toISOString().split('T')[0]],
-//   isucursal:[ this.loginService.getUserIdSucursal],
-// });
   ngOnInit(): void {
+    this.getSucursales();
     this.GetUtilidades(); // Llama a la función para obtener datos
-this.getSucursales();
+    this.createForm();
+    this.sucursalOnChange();
+    console.log("Sucursal seleccionada:", this.form.get('almacen')?.value);
   }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.filter.FI = this.FechaInicio.toISOString().split('T')[0],
       this.filter.FF = this.fechaHoy.toISOString().split('T')[0]
+      this.filter.sucursal = this.form.get('almacen')?.value
 
     } else {
       this.filter.FI = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
       this.filter.FF = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+      this.filter.sucursal = this.form.get('almacen')?.value
     }
     this.GetUtilidades();
+  }
+  sucursalOnChange() {
+    this.form.get('almacen')?.valueChanges.subscribe((value) => {
+      this.filter.sucursal = value;
+      //console.log("Sucursal seleccionada:", value);
+      this.GetUtilidades(); // Llama a la función de consulta al cambiar la sucursal
+    });
   }
   GetUtilidades() {
     this.isLoading = true; // Iniciar carga
