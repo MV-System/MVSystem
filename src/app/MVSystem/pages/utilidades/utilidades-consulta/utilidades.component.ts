@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -93,30 +93,49 @@ getSucursales() {
     this.almacenes = almacen;
   });
 }
-paginate:Pagination={
-  pageIndex: 1,
-  pageSize: 10,
-  fechaInicio: this.FechaInicio.toISOString().split('T')[0],
-  fechaFinal: this.fechaHoy.toISOString().split('T')[0]
+UtilidadesForm: FormGroup = this.fb.group({
+  sucursal: [ '4'], // Asegúrate de que el control exista
+
+});
+
+selectsucursal() {
+  this.UtilidadesForm.get('sucursalId')?.setValue('');
+
+  if (this.UtilidadesForm.get('sucursalId')?.value) {
+    let idMarca = this.UtilidadesForm.get('sucursalId')?.value;
+    console.log("marcaaaaaa",idMarca);
+    this.UtilidadesForm.get('descripcion')?.enable();
+
+  }
+  else{
+    this.UtilidadesForm.controls.modelo.disable();
+
+  }
 }
-// form: FormGroup = this.fb.group({
-//   fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
-//   fechafin: [this.fechaHoy.toISOString().split('T')[0]],
-//   isucursal:[ this.loginService.getUserIdSucursal],
-// });
+
   ngOnInit(): void {
-    this.GetUtilidades(); // Llama a la función para obtener datos
+    let sucursalId = this.UtilidadesForm.get('sucursalId')?.value;
+    console.log('Sucursal seleccionada:', sucursalId); // Log para verificar
 this.getSucursales();
+this.GetUtilidades(); // Llama a la función para obtener datos
+
   }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
-      this.filter.FI = this.FechaInicio.toISOString().split('T')[0],
-      this.filter.FF = this.fechaHoy.toISOString().split('T')[0]
-
+      this.filter.FI = this.FechaInicio.toISOString().split('T')[0];
+      this.filter.FF = this.fechaHoy.toISOString().split('T')[0];
+      this.filter.sucursal =this.loginService.getUserIdSucursal;
     } else {
       this.filter.FI = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
       this.filter.FF = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+
+      // Captura el valor de sucursal directamente del formulario
+      this.filter.sucursal =this.UtilidadesForm.get('sucursal')?.value;
+
+      //console.log('Sucursal seleccionada:', this.filter); // Log para verificar
     }
+
+    // Llama a GetUtilidades después de actualizar los filtros
     this.GetUtilidades();
   }
   GetUtilidades() {
@@ -135,7 +154,7 @@ this.getSucursales();
         },
         (error) => {
           this.isLoading = false; // Terminar carga
-          console.error('Error al obtener utilidades:', error);
+         // console.error('Error al obtener utilidades:', error);
           this.toastr.error('Error al cargar datos de utilidades');
         }
       );
@@ -166,7 +185,7 @@ this.getSucursales();
   filter: utilidadesFiltros = {
     FI: this.FechaInicio.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
-    sucursal: this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal:this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
   // getValueFilterForm() {
   //   const nullOrEmpty =(data: null)=>{return data== null ? '':data}
