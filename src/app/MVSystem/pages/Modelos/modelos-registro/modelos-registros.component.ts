@@ -28,6 +28,8 @@ export class ModelosRegistrosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
+    let idMarca = this.formRegistro.get('marca')?.value;
+    console.log("marcaaaaaa",idMarca);
     this.formRegistro.get('descripcion')?.disable();
     this.formRegistro.get('modelo')?.disable();
   }
@@ -42,6 +44,8 @@ export class ModelosRegistrosComponent implements OnInit {
     this.formRegistro.get('modelo')?.setValue('');
 
     if (this.formRegistro.get('marca')?.value) {
+      let idMarca = this.formRegistro.get('marca')?.value;
+      console.log("marcaaaaaa",idMarca);
       this.formRegistro.get('descripcion')?.enable();
       this.obtenerModeloLista();
     }
@@ -58,7 +62,6 @@ export class ModelosRegistrosComponent implements OnInit {
   obtenerModeloLista() {
 
     let idMarca = this.formRegistro.get('marca')?.value;
-    //let idMarca = 9;
     this.catalogosService.getModeloByMarcaLista(idMarca).subscribe((modelo) => {
       this.listaModelo = modelo;
     });

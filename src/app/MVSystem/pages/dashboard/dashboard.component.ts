@@ -129,7 +129,7 @@ const filterSemana: utilidadesFiltros = {
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
   this.isLoading = true; // Iniciar carga
-  console.log("dia",filterDia);
+ // console.log("dia",filterDia);
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
@@ -156,7 +156,7 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
   this.isLoading = true; // Iniciar carga
-  console.log("semana",filterSemana);
+  //console.log("semana",filterSemana);
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
