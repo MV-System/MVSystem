@@ -18,7 +18,7 @@ import { VendedorService } from '../../../core/services/vendedor.service';
   styleUrls: ['./cotizacion.component.css']
 })
 export class CotizacionComponent implements OnInit,OnDestroy {
-  
+
   constructor(
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
@@ -122,8 +122,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   }
 
   imprimir() {
-console.log(this.form.value);
-
     this.sub = this.mantenimientoService.postCotizacionReport(this.form.value)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
@@ -167,7 +165,7 @@ console.log(this.form.value);
     const {aplicarItbis} = this.form.value;
     return this.aplicarItbis = aplicarItbis
   }
-  
+
   onCheckboxChangeFactura() {
     if (this.form.get('comprobante')?.value !== '0') {
       this.form.get('rnc')?.enable();
@@ -186,11 +184,11 @@ console.log(this.form.value);
       this.form.get('fechaLimitePago')?.disable()
     }
   }
-  
+
   getDateCurrentDay() {
     this.form.get('fechaLimitePago')?.disable();
     let date = new Date();
-    let fullDate = 
+    let fullDate =
       String(date.getFullYear() ).padStart(2, '0') + '-' +
       String(date.getMonth() + 1).padStart(2, '0') + '-' +
       String(date.getDate()).padStart(2, '0');

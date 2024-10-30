@@ -88,7 +88,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
   modelFacturaFilter(){
-   // console.log("sucursal para consulta ft",this.form.value);
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),

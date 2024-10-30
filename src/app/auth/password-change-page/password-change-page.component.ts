@@ -31,7 +31,7 @@ export class PasswordChangePageComponent implements OnInit {
   })
 
 
-  confirmPasswordMatch(controlName: string, matchingControlName: string) {    
+  confirmPasswordMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
         const control = formGroup.controls[controlName];
         const matchingControl = formGroup.controls[matchingControlName];
@@ -40,15 +40,15 @@ export class PasswordChangePageComponent implements OnInit {
         if (control.value !== matchingControl.value) {
             matchingControl.setErrors({ confirmPasswordMatch: true });
             console.log(matchingControl);
-            
+
         } else {
             matchingControl.setErrors(null);
         }
     }
-  } 
+  }
   onStrengthChange(strength: any) {
 
-    
+
     console.log(strength)
   }
   validateFields(fieldName: string) {
@@ -58,7 +58,7 @@ export class PasswordChangePageComponent implements OnInit {
     );
   }
   validateFieldRenewPassword() {
-   
+
      if(this.form.get('renewPassword')?.invalid &&
       this.form.get('renewPassword')?.touched && this.renewPasswordInput) {
         this.messageAlertPassword ='Este campo es requerido.';
@@ -71,7 +71,7 @@ export class PasswordChangePageComponent implements OnInit {
     return false;
   }
   onActiveRenewPwdInput(e: any){
-    this.renewPasswordInput = e 
+    this.renewPasswordInput = e
   }
   toggleShowPassword(){
     this.showPassword = !this.showPassword;
@@ -82,12 +82,12 @@ export class PasswordChangePageComponent implements OnInit {
       password: newPassword
     };
     if (newPassword === renewPassword) {
-      
+
     let sub = this.loginService.changePwdUser(model).subscribe(() =>{
         this.toastr.success('Tu contraseña ha sido cambiada con éxito','');
       });
       console.log(sub);
-      
+
       this.sub.push(sub);
     }
     else{

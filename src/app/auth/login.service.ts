@@ -110,8 +110,6 @@ export class LoginService implements OnInit{
     )
   }
   public getUserRoles(): string[] {
-    //this.permisosService.loadPermissions(this.tokenDecoded.role)
-    //console.log("Ver Permisos", this.permisosService.loadPermissions(this.tokenDecoded.role));
     return this.tokenDecoded.role
   }
   changePwdUser( user: User ){

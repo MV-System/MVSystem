@@ -1,241 +1,212 @@
 /**
-* Template Name: NiceAdmin - v2.2.2
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-$(document).ready(function(){
-  "use strict";
+ * Template Name: NiceAdmin - v2.2.2
+ * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+ * Author: BootstrapMade.com
+ * License: https://bootstrapmade.com/license/
+ */
+$(document).ready(function() {
+    "use strict";
 
-  /**
-   * Easy selector helper function
-   */
-  const select = (el, all = false) => {
-    el = el.trim()
-    if (all) {
-      return [...document.querySelectorAll(el)]
-    } else {
-      return document.querySelector(el)
-    }
-  }
-
-  /**
-   * Easy event listener function
-   */
-  const on = (type, el, listener, all = false) => {
-    if (all) {
-      select(el, all).forEach(e => e.addEventListener(type, listener))
-    } else {
-      select(el, all).addEventListener(type, listener)
-    }
-  }
-
-  /**
-   * Easy on scroll event listener 
-   */
-  const onscroll = (el, listener) => {
-    el.addEventListener('scroll', listener)
-  }
-
-  /**
-   * Sidebar toggle
-   */
-  //  $("body").on('click','.toggle-sidebar-btn', function(e) {
-  
-  //   const  documents =  document.querySelector('.toggle-sidebar');
-  //   if (documents) {
-      
-  //     $('body').removeClass('toggle-sidebar')
-  //     console.log('remove');
-  //     e.stopPropagation();
-  //   }
-  // });
-  
-  //  $('body').on('click', '.toggle-sidebar-btn', function(e){
-  //   const  documents =  document.querySelector('.toggle-sidebar');
-  //   if(!documents){
-  //     e.stopPropagation();
-  //     console.log('add');
-  //     $('body').addClass('toggle-sidebar')
-  //   }
-  //   });
-
-    //*BACK-TO-TOP */
-
-    $("body").on('click','.back-to-top', function(e) {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    });
-
-  
-
-  /**
-   * Search bar toggle
-   */
-  if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function(e) {
-      select('.search-bar').classList.toggle('search-bar-show')
-    })
-  }
-
-  /**
-   * Navbar links active state on scroll
-   */
-  let navbarlinks = select('#navbar .scrollto', true)
-  const navbarlinksActive = () => {
-    let position = window.scrollY + 200
-    navbarlinks.forEach(navbarlink => {
-      if (!navbarlink.hash) return
-      let section = select(navbarlink.hash)
-      if (!section) return
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
-        navbarlink.classList.add('active')
-      } else {
-        navbarlink.classList.remove('active')
-      }
-    })
-  }
-  window.addEventListener('load', navbarlinksActive)
-  onscroll(document, navbarlinksActive)
-
-  /**
-   * Toggle .header-scrolled class to #header when page is scrolled
-   */
-  let selectHeader = select('#header')
-  if (selectHeader) {
-    const headerScrolled = () => {
-      if (window.scrollY > 100) {
-        selectHeader.classList.add('header-scrolled')
-      } else {
-        selectHeader.classList.remove('header-scrolled')
-      }
-    }
-    window.addEventListener('load', headerScrolled)
-    onscroll(document, headerScrolled)
-  }
-
-  /**
-   * Back to top button
-   */
-  
-  let backtotop = select('.back-to-top')
-  if (backtotop) {
-    const toggleBacktotop = () => {
-      if (window.scrollY > 100) {
-        backtotop.classList.add('active')
-      } else {
-        backtotop.classList.remove('active')
-      }
-    }
-    window.addEventListener('load', toggleBacktotop)
-    onscroll(document, toggleBacktotop)
-  }
-
-  /**
-   * Initiate tooltips
-   */
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-
-  /**
-   * Initiate quill editors
-   */
-  if (select('.quill-editor-default')) {
-    new Quill('.quill-editor-default', {
-      theme: 'snow'
-    });
-  }
-
-  if (select('.quill-editor-bubble')) {
-    new Quill('.quill-editor-bubble', {
-      theme: 'bubble'
-    });
-  }
-
-  if (select('.quill-editor-full')) {
-    new Quill(".quill-editor-full", {
-      modules: {
-        toolbar: [
-          [{
-            font: []
-          }, {
-            size: []
-          }],
-          ["bold", "italic", "underline", "strike"],
-          [{
-              color: []
-            },
-            {
-              background: []
-            }
-          ],
-          [{
-              script: "super"
-            },
-            {
-              script: "sub"
-            }
-          ],
-          [{
-              list: "ordered"
-            },
-            {
-              list: "bullet"
-            },
-            {
-              indent: "-1"
-            },
-            {
-              indent: "+1"
-            }
-          ],
-          ["direction", {
-            align: []
-          }],
-          ["link", "image", "video"],
-          ["clean"]
-        ]
-      },
-      theme: "snow"
-    });
-  }
-
-  /**
-   * Initiate TinyMCE Editor
-   */
-
-  /**
-   * Initiate Bootstrap validation check
-   */
-  var needsValidation = document.querySelectorAll('.needs-validation')
-  $("body").on('submit','.needs-validation', function(e) {
-    
-      Array.prototype.slice.call(needsValidation)
-    .forEach(function(form) {
-
-        if (!form.checkValidity()) {
-          e.preventDefault()
-          e.stopPropagation()
+    /**
+     * Easy selector helper function
+     */
+    const select = (el, all = false) => {
+        el = el.trim()
+        if (all) {
+            return [...document.querySelectorAll(el)]
+        } else {
+            return document.querySelector(el)
         }
+    }
 
-        form.classList.add('was-validated')
+    /**
+     * Easy event listener function
+     */
+    const on = (type, el, listener, all = false) => {
+        if (all) {
+            select(el, all).forEach(e => e.addEventListener(type, listener))
+        } else {
+            select(el, all).addEventListener(type, listener)
+        }
+    }
 
+    /**
+     * Easy on scroll event listener
+     */
+    const onscroll = (el, listener) => {
+        el.addEventListener('scroll', listener)
+    }
+    $("body").on('click', '.back-to-top', function(e) {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    /**
+     * Search bar toggle
+     */
+    if (select('.search-bar-toggle')) {
+        on('click', '.search-bar-toggle', function(e) {
+            select('.search-bar').classList.toggle('search-bar-show')
+        })
+    }
+    /**
+     * Navbar links active state on scroll
+     */
+    let navbarlinks = select('#navbar .scrollto', true)
+    const navbarlinksActive = () => {
+        let position = window.scrollY + 200
+        navbarlinks.forEach(navbarlink => {
+            if (!navbarlink.hash) return
+            let section = select(navbarlink.hash)
+            if (!section) return
+            if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+                navbarlink.classList.add('active')
+            } else {
+                navbarlink.classList.remove('active')
+            }
+        })
+    }
+    window.addEventListener('load', navbarlinksActive)
+    onscroll(document, navbarlinksActive)
+
+    /**
+     * Toggle .header-scrolled class to #header when page is scrolled
+     */
+    let selectHeader = select('#header')
+    if (selectHeader) {
+        const headerScrolled = () => {
+            if (window.scrollY > 100) {
+                selectHeader.classList.add('header-scrolled')
+            } else {
+                selectHeader.classList.remove('header-scrolled')
+            }
+        }
+        window.addEventListener('load', headerScrolled)
+        onscroll(document, headerScrolled)
+    }
+
+    /**
+     * Back to top button
+     */
+
+    let backtotop = select('.back-to-top')
+    if (backtotop) {
+        const toggleBacktotop = () => {
+            if (window.scrollY > 100) {
+                backtotop.classList.add('active')
+            } else {
+                backtotop.classList.remove('active')
+            }
+        }
+        window.addEventListener('load', toggleBacktotop)
+        onscroll(document, toggleBacktotop)
+    }
+
+    /**
+     * Initiate tooltips
+     */
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
-  })
-  // Array.prototype.slice.call(needsValidation)
-  //   .forEach(function(form) {
-  //     form.addEventListener('submit', function(event) {
-  //       if (!form.checkValidity()) {
-  //         event.preventDefault()
-  //         event.stopPropagation()
-  //       }
+    /**
+     * Initiate quill editors
+     */
+    if (select('.quill-editor-default')) {
+        new Quill('.quill-editor-default', {
+            theme: 'snow'
+        });
+    }
 
-  //       form.classList.add('was-validated')
-  //     }, false)
-  //   })
+    if (select('.quill-editor-bubble')) {
+        new Quill('.quill-editor-bubble', {
+            theme: 'bubble'
+        });
+    }
+
+    if (select('.quill-editor-full')) {
+        new Quill(".quill-editor-full", {
+            modules: {
+                toolbar: [
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
+                    ["bold", "italic", "underline", "strike"],
+                    [{
+                            color: []
+                        },
+                        {
+                            background: []
+                        }
+                    ],
+                    [{
+                            script: "super"
+                        },
+                        {
+                            script: "sub"
+                        }
+                    ],
+                    [{
+                            list: "ordered"
+                        },
+                        {
+                            list: "bullet"
+                        },
+                        {
+                            indent: "-1"
+                        },
+                        {
+                            indent: "+1"
+                        }
+                    ],
+                    ["direction", {
+                        align: []
+                    }],
+                    ["link", "image", "video"],
+                    ["clean"]
+                ]
+            },
+            theme: "snow"
+        });
+    }
+
+    /**
+     * Initiate TinyMCE Editor
+     */
+
+    /**
+     * Initiate Bootstrap validation check
+     */
+    var needsValidation = document.querySelectorAll('.needs-validation')
+    $("body").on('submit', '.needs-validation', function(e) {
+
+            Array.prototype.slice.call(needsValidation)
+                .forEach(function(form) {
+
+                    if (!form.checkValidity()) {
+                        e.preventDefault()
+                        e.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+
+                })
+
+        })
+        // Array.prototype.slice.call(needsValidation)
+        //   .forEach(function(form) {
+        //     form.addEventListener('submit', function(event) {
+        //       if (!form.checkValidity()) {
+        //         event.preventDefault()
+        //         event.stopPropagation()
+        //       }
+
+    //       form.classList.add('was-validated')
+    //     }, false)
+    //   })
 
 
 

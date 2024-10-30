@@ -169,14 +169,10 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   obtenerDetalleFactura(index: number) {
 
     const currentArticulo = this.getCurrentFormGroup(index);
-    console.log(currentArticulo);
-
     let articulo = currentArticulo.articulo;
-
     this.onClearArticuloDropdown(articulo,index);
     this.onDetectValueArticulo(articulo);
     if (!currentArticulo || !articulo) return;
-
     currentArticulo.idTipo = 2;
     currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.id;
@@ -184,7 +180,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       articulo.accesorio_Descripcion + '  ' + articulo.modelo;
     currentArticulo.precioDetalle = articulo.precio_Detalle;
     currentArticulo.precioMayor = articulo.precio_Por_Mayor;
-    // currentArticulo.itbis = this.itbis;
 
     this.validateSameArticulo(this.articulos,index,currentArticulo);
 
@@ -206,7 +201,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
 
     if (isValidDesc == true) {
-      console.log(isValidDesc);
 
       this.articulos.controls[index].setValue(currentArticulo);
 
@@ -215,9 +209,6 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       this.onApplyItbis();
     }
 
-    //Tiene que estar al final. EnmaJim note
-    // if (currentArticulo.idTipo == 1)
-    //   currentFormGroup.controls["cantidad"].disable()
   }
   calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
     return Number(

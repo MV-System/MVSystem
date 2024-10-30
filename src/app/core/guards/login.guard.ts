@@ -12,13 +12,10 @@ export class LoginGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
         let user = this.loginService.getUserName();
-        console.log('guard');
-        
         if (user) {
             this.router.navigate(['home']);
             return false
         }
-        // this.loginService.logout();
         return true
     }
 

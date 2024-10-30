@@ -16,15 +16,12 @@ export class HandleErrorsResponseService {
             private router:Router,
             private loadingService:LoadingService,
             private loginService:LoginService) {
-        
+
     }
     public handleErrors(response:HttpErrorResponse) {
             // Server error
-            console.log(response.status);
-            
         if( response.status == 500) {
             this.toastr.error("Server Error", "Contactar al Administrador");
-            // console.log(response.error.errors)
             return;
         }
     }

@@ -8,8 +8,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
     constructor(private handleErrorsResponseService:HandleErrorsResponseService){}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        
-        // console.log(req.url);
+
         return next.handle(req).pipe(
             retry(2),
             catchError((error : HttpErrorResponse)=>this.handleErrorsResponseService.handleError(error))

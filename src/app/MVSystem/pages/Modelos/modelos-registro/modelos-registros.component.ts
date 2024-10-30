@@ -28,13 +28,9 @@ export class ModelosRegistrosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
-    let idMarca = this.formRegistro.get('marca')?.value;
-    console.log("marcaaaaaa",idMarca);
     this.formRegistro.get('descripcion')?.disable();
     this.formRegistro.get('modelo')?.disable();
   }
-
-
   formRegistro: FormGroup = this.fb.group({
     descripcion: ['', Validators.required],
     marca: [, Validators.required],
@@ -44,14 +40,11 @@ export class ModelosRegistrosComponent implements OnInit {
     this.formRegistro.get('modelo')?.setValue('');
 
     if (this.formRegistro.get('marca')?.value) {
-      let idMarca = this.formRegistro.get('marca')?.value;
-      console.log("marcaaaaaa",idMarca);
       this.formRegistro.get('descripcion')?.enable();
       this.obtenerModeloLista();
     }
     else{
       this.formRegistro.controls.modelo.disable();
-
     }
   }
   obtenerMarcasLista() {

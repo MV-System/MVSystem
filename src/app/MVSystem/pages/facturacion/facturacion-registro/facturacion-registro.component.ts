@@ -62,7 +62,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
-    console.log("fecha formato",Date().toString());
   }
   FacturaCreada: FacturaRegistro = null!;
   subs: Subscription[] = [];
@@ -777,7 +776,6 @@ else { currentArticulo.idTipo = 2;}
   }
   generateFactura() {
     const data = this.loadDataToPrint()
-   //console.log("Datos de la factura",this.FacturaCreada = data);
     this.FacturaCreada = data;
 
     this.mantenimientoService.postFactura(data)

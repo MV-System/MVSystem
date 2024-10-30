@@ -28,7 +28,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
     //this.destroy$.unsubscribe();
     this.loadUseSucursal();
-    //console.log("Empresa nombre",this.loginService.getUserEmpresaMostrar);
   }
   destroy$: Subject<any> = new Subject<any>();
   sucursales!: Almacen[];
