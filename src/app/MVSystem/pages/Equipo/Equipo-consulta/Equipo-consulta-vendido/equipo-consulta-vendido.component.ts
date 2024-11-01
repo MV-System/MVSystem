@@ -141,6 +141,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   pageChanged(index: number) {
     this.currentPage = index;
     this.filter.pageIndex = index;
+    console.log("Index",index);
     this.obtenerEquiposVendidos();
   }
   getValueFilterForm() {
@@ -213,7 +214,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
-
+        console.log("Filtros",this.filter);
         let record = equipo.length == 0?0:equipo[0].totalRecord;
         let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
         let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
@@ -268,4 +269,5 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       this.listaSuplidor = suplidor;
     });
   }
+
 }
