@@ -194,6 +194,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   pageChanged(index: number) {
     this.currentPage = index;
     this.filter.pageIndex = index;
+    console.log("PageIndex",this.filter.PageIndex);
+
     this.obtenerEquiposDisponibles();
   }
 

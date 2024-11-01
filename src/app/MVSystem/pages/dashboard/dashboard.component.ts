@@ -122,6 +122,7 @@ const filterSemana: utilidadesFiltros = {
     FI: this.FechaInicioMes.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
     sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+
   };
 
   // Cargar utilidades
@@ -183,6 +184,7 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
 }
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
+  console.log("Filtros del mes",filterMes);
   this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterMes)
