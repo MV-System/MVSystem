@@ -120,7 +120,7 @@ export let APIURL = {
         }
     },
     Utilidades: {
-      GetUtilidades: API + 'Utilidades/GetUtilidades',
+      GetUtilidades: API + 'Utilidades/GetUtilidadesAsync',
 
   },
     Login: {

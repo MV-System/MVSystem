@@ -177,7 +177,7 @@ createForm(){
   filter: utilidadesFiltros = {
     FI: this.FechaInicio.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
-    sucursal:this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal:+this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
   // getValueFilterForm() {
   //   const nullOrEmpty =(data: null)=>{return data== null ? '':data}

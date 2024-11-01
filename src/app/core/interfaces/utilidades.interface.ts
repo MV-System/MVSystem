@@ -1,5 +1,5 @@
 export interface utilidadesFiltros{
-    sucursal:string;
+    sucursal:number;
     FI:      string;
     FF:      string;
 }
