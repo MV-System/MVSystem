@@ -99,27 +99,29 @@ ngOnInit(): void {
   const fechaHoy = new Date();
 fechaHoy.setHours(fechaHoy.getHours() - 4); // Restar 4 horas
 
-const filterDia: utilidadesFiltros = {
-    FI: fechaHoy.toISOString().split('T')[0],
-    FF: fechaHoy.toISOString().split('T')[0],
-    sucursal:'4'// this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
-};
- // Calcular el inicio de la semana (lunes)
+// Calcular el inicio de la semana (lunes)
 const diaActual = fechaHoy.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
 const diferencia = diaActual === 0 ? -6 : 1 - diaActual; // Si hoy es domingo, retrocede 6 días
 const fechaInicioSemana = new Date(fechaHoy);
 fechaInicioSemana.setDate(fechaHoy.getDate() + diferencia);
 fechaInicioSemana.setHours(fechaInicioSemana.getHours() - 4); // Restar 4 horas
 
+
+const filterDia: utilidadesFiltros = {
+    FI: fechaHoy.toISOString().split('T')[0],
+    FF: fechaHoy.toISOString().split('T')[0],
+    sucursal:4// this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+};
+
 const filterSemana: utilidadesFiltros = {
     FI: fechaInicioSemana.toISOString().split('T')[0],
     FF: fechaHoy.toISOString().split('T')[0],
-    sucursal: '4'//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 };
   const filterMes: utilidadesFiltros = {
     FI: this.FechaInicioMes.toISOString().split('T')[0],
     FF: this.fechaHoy.toISOString().split('T')[0],
-    sucursal: '4'//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
+    sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
 
   // Cargar utilidades
