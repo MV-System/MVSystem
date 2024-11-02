@@ -41,6 +41,16 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
+  postAnlaFactura(NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+    const body = {
+      NumeroFactura,
+      IDsucursal,
+      Usuario
+  };
+    return this.http.post<Blob>(APIURL.Factura.Inserta.AnulaFactura,body,{
+      responseType: 'blob' as 'json'
+    });
+  }
   postFacturaMiniReport(facturaReq: FacturaFilter,numeroFactura: number): Observable<Blob> {
     facturaReq.numeroFactura =numeroFactura;
     return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporteMini, facturaReq, {

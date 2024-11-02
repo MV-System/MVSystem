@@ -50,9 +50,10 @@
               <td class="fixed-item ft">{{factura.numeroFactura}}</td>
 <td class="fixed-item cli">
     <span>{{factura.nombres}} {{factura.apellidos}}</span>
-    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-<i class="bx bx-edit-alt"></i>
-</button>
+
+    <button (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
+      <i class="bx bx-trash-alt"></i>
+  </button>
 </td>
               <!-- <td>{{ factura.numeroFactura }}</td>
               <td>{{ factura.nombres }} {{ factura.apellidos }}</td> -->
@@ -87,7 +88,6 @@
                 <td><b>Desc.:</b> {{ detalle.descuento }}</td>
                 <td><b>Itbs:</b> {{ detalle.itbis }}</td>
                 <td><b>Total:</b> {{ detalle.total }}</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

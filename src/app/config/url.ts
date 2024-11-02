@@ -31,6 +31,7 @@ export let APIURL = {
             FacturaReporte: API + 'FacturacionReporte/ReportFactura',
             FacturaReporteMini: API + 'FacturacionReporte/ReportFacturaMini',
             ReportCotizacion: API + 'FacturacionReporte/ReportCotizacion',
+            AnulaFactura: API + 'Factura/PostAnulaFactura',
         },
         Consulta:{
             Facturas: API + 'Factura/GetFacturas',

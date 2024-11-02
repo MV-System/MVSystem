@@ -14,7 +14,7 @@
     white-space: nowrap;
   }
   tr.tr-hover:hover {
-    background-color: white;
+    background-color: blue;
     cursor: pointer;
     color: #467ff1;
   }
@@ -26,13 +26,13 @@
   }
   /* .selected {
     background-color: #2a4f99;
-    color: #FFF;
+    color: yellow;
   } */
 
-  .tr-collapse{
+  /* .tr-collapse{
     font-style: oblique;
     background-color: white;
-  }
+  } */
 
   .table th:nth-child(3),
   .table td:nth-child(3) {
@@ -72,6 +72,6 @@
     border-radius: 20px;
     border: 2px solid rgba(8, 55, 223, 0.218);
   }
-  .selected-row {
-    background-color:black; /* Cambia este color según tu preferencia */
-  }
+  /* .selected-row {
+    background-color:black;
+  } */

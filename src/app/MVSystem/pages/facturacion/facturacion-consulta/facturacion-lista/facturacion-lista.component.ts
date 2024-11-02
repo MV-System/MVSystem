@@ -2,6 +2,11 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfaces/mantenimiento';
+import { ToastrService } from 'ngx-toastr';
+import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { Subscription } from 'rxjs';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -10,8 +15,14 @@ import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfa
 })
 export class FacturacionListaComponent implements OnInit {
   index!: number;
-
+  numeroFactura!: number;
+  isLoading: boolean = false; // Variable para controlar el estado de carga
+  subs: Subscription[] = [];
   constructor(
+    private loginService: LoginService,
+    private mantenimientoService: MantenimientoService,
+    private rDialogService: RDialogService,
+    private toast: ToastrService,
     private vendedorService: VendedorService) { }
   ngOnInit(): void {
   }
@@ -53,6 +64,39 @@ export class FacturacionListaComponent implements OnInit {
       .subscribe((vendedor) => {
         this.vendedores = vendedor;
       });
+  }
+  anulaFactura(numeroFactura: number){
+    this.rDialogService.openDialog(
+      "Aviso",
+      "¿Desea Anular esta factura?",
+      () => {
+        this.toast.info("no se anula la factura");
+      },
+      () => {
+
+          numeroFactura = +(`${numeroFactura}`);
+        // aqui va la logica para anular la factura
+        this.isLoading = true; // Iniciar carga
+    const sub = this.mantenimientoService.postAnlaFactura(numeroFactura,this.loginService.getUserIdSucursal,this.loginService.getUserName())
+    .subscribe(blob =>{
+       this.isLoading = false; // Terminar carga
+       this.toast.info(`Se anuló la factura #${numeroFactura}`);
+       setTimeout(() => {
+        window.location.reload(); // Recarga la página después de 2 segundos
+      }, 2000);
+      // console.log("factura seleccionada",numeroFactura);
+    },err=>{
+
+      this.toast.error('Error al Anular la factura');
+    });
+    this.subs.push(sub);
+
+
+      },
+      "Si", // Etiqueta del botón para Anular la factura
+      "No, Fue un error" // fue un error
+    );
+
   }
   onShowVendedorFactura(vendedorId: number){
 
