@@ -14,9 +14,9 @@
     white-space: nowrap;
   }
   tr.tr-hover:hover {
-    background-color: #467ff1;
+    background-color: white;
     cursor: pointer;
-    color: white;
+    color: #467ff1;
   }
   td{
    /* max-width: 100px; */
@@ -24,14 +24,14 @@
    text-overflow: ellipsis;
    white-space: nowrap;
   }
-  .selected {
+  /* .selected {
     background-color: #2a4f99;
     color: #FFF;
-  }
+  } */
 
   .tr-collapse{
     font-style: oblique;
-    background-color: #9db1da5b;
+    background-color: white;
   }
 
   .table th:nth-child(3),
@@ -49,4 +49,29 @@
   }
   .table {
     table-layout: auto; /* Permite que las columnas se expandan según el contenido */
+  }
+  .scroll-table {
+    overflow: auto;
+    white-space: nowrap;
+  }
+  .display-filter-content {
+    display: flex !important;
+
+  }
+
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(8, 55, 223, 0.218);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #467ff1;
+    border-radius: 20px;
+    border: 2px solid rgba(8, 55, 223, 0.218);
+  }
+  .selected-row {
+    background-color:black; /* Cambia este color según tu preferencia */
   }

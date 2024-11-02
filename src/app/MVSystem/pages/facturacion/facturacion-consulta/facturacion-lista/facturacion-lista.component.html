@@ -5,13 +5,13 @@
       <p *ngIf="facturas.length">
         Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
       </p>
-
+<div class="scrollable-table thinScroll">
       <!-- Table with stripped rows -->
-      <table class="table">
+      <table class="mv-table">
         <thead>
           <tr>
-            <th scope="col">No. FACTURA</th>
-            <th scope="col">CLIENTE</th>
+            <th scope="fixed-item ft col">No. FACTURA</th>
+            <th scope="fixed-item cli col">CLIENTE</th>
             <!-- <th scope="col">APELLIDOS</th> -->
             <th scope="col">TELEFONO</th>
             <th scope="col">TIPO DE FACTURA</th>
@@ -35,16 +35,28 @@
                       currentPage: pageIndex,
                       totalItems: totalRecord
                     }; let i = index  "  >
+
+
+
             <tr
               class="animate__animated animate__fadeIn tr-hover"
+              [ngClass]="{'selected-row': selectedRowIndex === i}"
               (click)="getIdFactura(factura.numeroFactura, i)"
               data-bs-toggle="collapse"
               data-bs-target="#flush-collapseOne"
               aria-expanded="false"
               aria-controls="flush-collapseOne"
               tableTrselect>
-              <td>{{ factura.numeroFactura }}</td>
-              <td>{{ factura.nombres }} {{ factura.apellidos }}</td>
+
+              <td class="fixed-item ft">{{factura.numeroFactura}}</td>
+<td class="fixed-item cli">
+    <span>{{factura.nombres}} {{factura.apellidos}}</span>
+    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+<i class="bx bx-edit-alt"></i>
+</button>
+</td>
+              <!-- <td>{{ factura.numeroFactura }}</td>
+              <td>{{ factura.nombres }} {{ factura.apellidos }}</td> -->
               <!-- <td>{{ factura.apellidos }} </td> -->
               <td>{{ factura.telefono }} </td>
               <td>{{ factura.tipoFactura }}</td>
@@ -85,8 +97,8 @@
           </ng-container>
         </tbody>
       </table>
+</div>
       <div class="not-data" *ngIf="!facturas.length">Datos no encontrados</div>
     </div>
   </div>
 </section>
-<ng-content></ng-content>

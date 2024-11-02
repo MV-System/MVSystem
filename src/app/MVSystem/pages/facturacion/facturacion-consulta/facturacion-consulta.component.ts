@@ -65,6 +65,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
+
+
 // Obtener la fecha actual
  fechaHoy = new Date();
   // Crear una nueva fecha para el primer día del mes actual

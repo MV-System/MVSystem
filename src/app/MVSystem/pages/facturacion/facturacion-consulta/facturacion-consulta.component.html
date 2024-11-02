@@ -109,7 +109,7 @@
                         <!-- end form   -->
                         <app-facturacion-lista [facturas]="facturas" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" (onFacturaButton)="onFacturaButton = $event"
                             (numerofactura)="getDetalleFactura($event)">
-                            <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 10 && facturas.length">
+                            <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 5 && facturas.length">
                             </pagination-controls>
                         </app-facturacion-lista>
                         <!-- end lsit -->

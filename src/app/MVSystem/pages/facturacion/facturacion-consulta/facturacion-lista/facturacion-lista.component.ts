@@ -27,7 +27,10 @@ export class FacturacionListaComponent implements OnInit {
   @Output() numerofactura =new EventEmitter<number>();
   vendedores: VendedorLista[] = []
 
+  selectedRowIndex: number | null = null;
+
   getIdFactura(numerofactura: number,index: number){
+    this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada
     this.index= index;
     this.onSelectFactura();
     if(numerofactura > 0){this.onFacturaButton.emit(true);}
