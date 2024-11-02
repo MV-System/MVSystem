@@ -51,7 +51,7 @@
 <td class="fixed-item cli">
     <span>{{factura.nombres}} {{factura.apellidos}}</span>
 
-    <button (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
+    <button  *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
       <i class="bx bx-trash-alt"></i>
   </button>
 </td>

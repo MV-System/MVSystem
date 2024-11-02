@@ -7,6 +7,7 @@ import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.serv
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -19,6 +20,7 @@ export class FacturacionListaComponent implements OnInit {
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   constructor(
+    private validatorPermissionService: ValidatorPermissionService,
     private loginService: LoginService,
     private mantenimientoService: MantenimientoService,
     private rDialogService: RDialogService,
@@ -39,6 +41,11 @@ export class FacturacionListaComponent implements OnInit {
   vendedores: VendedorLista[] = []
 
   selectedRowIndex: number | null = null;
+
+  btnAnulaFactura(): boolean {
+    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
+  }
+
 
   getIdFactura(numerofactura: number,index: number){
     this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada
