@@ -1,0 +1,27 @@
+/* Contenedor del formulario */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  width: 100vw; /* Ocupa todo el ancho de la ventana */
+  padding: 20px; /* Espacio interior */
+  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+}
+
+/* Formulario */
+.form {
+  width: 100%; /* Ancho del formulario */
+  max-width: 1024px; /* Ancho máximo */
+  background: #f9f9f9; /* Color de fondo */
+  border-radius: 8px; /* Esquinas redondeadas */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+  padding: 20px; /* Espacio interno */
+}
+
+/* Media queries */
+@media (max-width: 600px) {
+  .form {
+    padding: 10px; /* Menos padding en pantallas pequeñas */
+  }
+}

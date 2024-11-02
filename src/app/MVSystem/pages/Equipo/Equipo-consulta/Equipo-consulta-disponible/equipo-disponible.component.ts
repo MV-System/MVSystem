@@ -15,6 +15,7 @@ import { EquipoService } from 'src/app/core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -23,6 +24,7 @@ import { LoginService } from 'src/app/auth/login.service';
 })
 export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
+    private loading: LoadingService,
     private fb: FormBuilder,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
@@ -31,9 +33,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   ) { }
 
   ngOnInit(): void {
+    //this.loading.showLoading();
     this.obtenerEquiposDisponibles();
     this.loadCatalogos();
-
+//this.loading.hideLoading();
   }
   ngOnChanges(changes: SimpleChanges): void {
     const change = changes["clearFilter"];
@@ -89,11 +92,13 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     totalInventario: [0,]
   });
   clearFilters() {
+   // this.loading.showLoading();
     this.form.reset();
     this.filter.imei = '';
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
     this.obtenerEquiposDisponibles()
+    //this.loading.hideLoading();
   }
   obtenerTotalEquipos(cantidadEquipo: number) {
     this.equipoQuantity = cantidadEquipo;
@@ -115,13 +120,16 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   obtenerEquiposDisponibles() {
-    this.isLoading = true; // Iniciar carga
+   this.loading.showLoading();
+   this.isLoading = true;
     this.getValueFilterForm();
     this.onFilterPropHasValue();
 
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
+        this.loading.hideLoading();
+
 
         let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
         let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
@@ -136,22 +144,23 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         this.equiposDisponibles = equipo;
 
       });
+
   }
   printReportEquipoDisponibles() {
-    this.isLoading = true; // Iniciar carga
+    this.loading.showLoading();
     this.equipoService.postEquipoDisponible(this.filter)
       .subscribe((blobResp) => {
         this.printing = !this.printing;
-        this.isLoading = false; // Terminar carga
+
         CreatorPDFFile(blobResp);
       }, (err) => {
-        this.printing = !this.printing;
       this.toast.error('Error','Error al imprimir reporte');
     });
-    this.printing = !this.printing;
+    this.loading.hideLoading();
   }
 
   getValueFilterForm() {
+    this.loading.showLoading();
     let almacenValue = this.form.get('almacen')?.value;
     let suplidorValue =this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
@@ -161,9 +170,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
-
+    this.loading.hideLoading();
   }
   setDateRange(): void {
+    this.loading.showLoading();
     let date = new Date();
     this.form.patchValue({
       rangoFecha: {
@@ -179,8 +189,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         },
       },
     });
+    this.loading.hideLoading();
   }
   onDateRangeChanged(event: any) {
+    this.loading.showLoading();
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
       this.filter.fechaFinal = '';
@@ -190,6 +202,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     this.obtenerEquiposDisponibles();
+    this.loading.hideLoading();
   }
   pageChanged(index: number) {
     this.currentPage = index;
@@ -200,6 +213,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   loadCatalogos(){
+    this.loading.showLoading();
     forkJoin([
       this.catalogosService.getAlmaceLista(),
       this.catalogosService.getModeloLista(),
@@ -211,5 +225,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
 
     })
+    this.loading.hideLoading();
   }
 }

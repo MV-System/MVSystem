@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -74,6 +75,7 @@ FechaInicioMes: Date = new Date();
 UtilidadesForm: FormGroup = this.fb.group({});
 
 constructor(
+  private loading: LoadingService,
   private UtilidadesServices: UtilidadesService,
   private fb: FormBuilder,
   private toastr: ToastrService,
@@ -124,11 +126,12 @@ const filterSemana: utilidadesFiltros = {
     sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 
   };
-
+  this.loading.showLoading();
   // Cargar utilidades
   this.GetUtilidadesDia(filterDia);
   this.GetUtilidadesSemana(filterSemana);
   this.GetUtilidadesMes(filterMes);
+  this.loading.hideLoading();
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
   this.isLoading = true; // Iniciar carga
