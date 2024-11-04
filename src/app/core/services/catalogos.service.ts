@@ -41,8 +41,8 @@ export class CatalogosService {
   getTipoComprobanteLista(): Observable<TipoComprobante[]> {
     return this.http.get<TipoComprobante[]>(APIURL.Catalogos.tipoComprobanteLista);
   }
-  getAccesorioLista(): Observable<AccesorioLista[]> {
-    return this.http.get<AccesorioLista[]>(APIURL.Catalogos.accesorioLista);
+  getAccesorioLista(sucu?: number): Observable<AccesorioLista[]> {
+    return this.http.get<AccesorioLista[]>(`${APIURL.Catalogos.accesorioLista}?id_sucu=` + sucu);
   }
   getAsumeITBIS(): Observable<AsumeITBIS> {
     return this.http.get<AsumeITBIS>(APIURL.Catalogos.AsumeITBIS);

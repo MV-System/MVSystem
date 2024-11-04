@@ -238,8 +238,8 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   }
   onClean() {
     if(this.form.dirty)
-    this.rDialogService.openDialog("¡Atención!", `Está seguro que quiere limpiar el formulario?`,
-    () => {
+    // this.rDialogService.openDialog("¡Atención!", `Está seguro que quiere limpiar el formulario?`,
+    // () => {
       this.form.patchValue({
         aplicarItbis: false,
         comprobante: 0,
@@ -267,13 +267,13 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.isCredit = false;
       this.isNcfRequire = false;
       this.isLoading = false;
-    },
-    () => {
+   // },
+  //   () => {
 
-    },
-    "Cancelar",
-    "Si"
-  )
+  //   },
+  //   "Cancelar",
+  //   "Si"
+  // )
 
   }
   cleanAmounts() {
@@ -352,7 +352,7 @@ addArticuloImei = (imei: string) => {
         if (equipos.disponible ==='S') {
           const equipo = equipos;
           const articulo: AccesorioLista = {
-            accesorio_Descripcion: `${equipo.imei}`+' '+`${equipo.modelo}`,
+            accesorio_Descripcion: `${equipo.imei}`,
             cantidad: 1,
             id:equipo.imei,
             codigo_Barra: 0,
@@ -676,7 +676,7 @@ else { currentArticulo.idTipo = 2;}
       this.catalogosService.getTipoComprobanteLista(),
       this.vendedorService.getVendedorLista(),
       this.catalogosService.getTipoPagoLista(),
-      this.catalogosService.getAccesorioLista()
+      this.catalogosService.getAccesorioLista(+this.loginService.getUserIdSucursal)
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(resp => {
@@ -750,6 +750,7 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   printFacturaNormal(){
+    this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
@@ -760,9 +761,11 @@ else { currentArticulo.idTipo = 2;}
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
+    this.loading.hideLoading();
   }
 
   printFacturaMini(){
+    this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
@@ -773,6 +776,7 @@ else { currentArticulo.idTipo = 2;}
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
+    this.loading.hideLoading();
   }
   generateFactura() {
     const data = this.loadDataToPrint()

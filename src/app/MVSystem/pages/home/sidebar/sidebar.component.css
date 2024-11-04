@@ -15,7 +15,7 @@
   max-width: 1024px; /* Ancho máximo */
   background: #f9f9f9; /* Color de fondo */
   border-radius: 8px; /* Esquinas redondeadas */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+ /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
   padding: 20px; /* Espacio interno */
 }
 

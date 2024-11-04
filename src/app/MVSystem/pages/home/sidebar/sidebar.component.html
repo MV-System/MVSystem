@@ -102,11 +102,7 @@
                             <i class="bi bi-circle"></i><span>Accesorios</span>
                         </a>
                     </li>
-                    <li *ngIf="VerFormConsultaClientes()">
-                        <a routerLink="./clientes/consulta">
-                            <i class="bi bi-circle"></i><span>Clientes</span>
-                        </a>
-                    </li>
+
                     <!-- <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/consulta">
                             <i class="bi bi-circle"></i><span>Equipos</span>
@@ -132,6 +128,11 @@
                             <i class="bi bi-circle"></i><span>Facturas</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaClientes()">
+                      <a routerLink="./clientes/consulta">
+                          <i class="bi bi-circle"></i><span>Clientes</span>
+                      </a>
+                  </li>
                 </ul>
             </li>
             <!-- End Consulta Nav -->

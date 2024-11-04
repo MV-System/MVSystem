@@ -6,12 +6,11 @@
         Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
       </p>
 <div class="scrollable-table thinScroll">
-      <!-- Table with stripped rows -->
       <table class="mv-table">
         <thead>
           <tr>
-            <th scope="fixed-item ft col">No. FACTURA</th>
-            <th scope="fixed-item cli col">CLIENTE</th>
+            <th scope="fixed-item ft">No. FACTURA</th>
+            <th scope="fixed-item cli">CLIENTE</th>
             <!-- <th scope="col">APELLIDOS</th> -->
             <th scope="col">TELEFONO</th>
             <th scope="col">TIPO DE FACTURA</th>
@@ -48,7 +47,7 @@
               tableTrselect>
 
               <td class="fixed-item ft">{{factura.numeroFactura}}</td>
-<td class="fixed-item cli">
+              <td class="fixed-item cli">
     <span>{{factura.nombres}} {{factura.apellidos}}</span>
 
     <button  *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
