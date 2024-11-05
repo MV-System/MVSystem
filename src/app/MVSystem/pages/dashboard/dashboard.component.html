@@ -1,5 +1,5 @@
 <span>DashBoard</span>
-<main id="main" class="main box">
+<main id="main" class="main box" *ngIf="VerFormConsultaUtilidades()">
     <div class="row">
         <mat-spinner *ngIf="isLoading" class="loading">
             <div class="spinner"></div>

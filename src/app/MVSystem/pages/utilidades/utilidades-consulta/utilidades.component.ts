@@ -89,6 +89,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 SelectSucursal(): boolean {
   return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
 }
+
 getSucursales() {
   this.loading.showLoading();
   const sub = this.catalogosService.getSucursales().subscribe((almacen) => {

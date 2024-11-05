@@ -3,12 +3,13 @@
 
 
     <ul class="sidebar-nav" id="sidebar-nav" [ngClass]="{'collapsed': isCollapsed}">
-        <button class="btn btn-toggle" (click)="toggleSidebar()">
+        <!-- <button class="btn btn-toggle" (click)="toggleSidebar()">
       <i class="bi bi-list"></i>
-  </button>
+  </button> -->
+        <span>.</span>
+        <span>.</span>
 
-
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="VerFormConsultaUtilidades()">
             <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard']">
                 <i class="bi bi-grid"></i>
                 <span></span>
@@ -22,7 +23,7 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="VerFormConsultaUtilidades()">
             <a class="nav-link" [routerLink]="['./utilidades/consulta']">
                 <i class="bi bi-receipt-cutoff"></i>
                 <span>Ver Utilidades</span>
