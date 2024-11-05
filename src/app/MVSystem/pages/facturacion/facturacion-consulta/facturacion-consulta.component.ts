@@ -12,6 +12,7 @@ import { CreatorPDFFile } from '../../../../helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -23,6 +24,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
   constructor(private fb: FormBuilder,
+    private loading: LoadingService,
     private mantenimientoService: MantenimientoService,
     private catalogosService: CatalogosService,
     private toast: ToastrService,
@@ -105,6 +107,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     return model;
   }
   getFacturas(){
+    this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
@@ -120,7 +123,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.facturas = facturas;
     });
     this.subs.push(sub);
-
+this.loading.hideLoading();
   }
   getDetalleFactura(numeroFactura: number){
     //this.isLoading = true; // Iniciar carga
@@ -135,6 +138,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     //this.isLoading = false; // Terminar carga
   }
   printReportFacturaConsulta(){
+    this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
@@ -145,6 +149,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
+    this.loading.hideLoading();
   }
   printFactura(){
     this.isLoading = true; // Iniciar carga

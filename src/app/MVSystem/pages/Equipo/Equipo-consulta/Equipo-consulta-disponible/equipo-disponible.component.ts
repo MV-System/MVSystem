@@ -120,7 +120,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   obtenerEquiposDisponibles() {
-   this.loading.showLoading();
+    this.loading.showLoading();
    this.isLoading = true;
     this.getValueFilterForm();
     this.onFilterPropHasValue();
@@ -128,7 +128,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        this.loading.hideLoading();
+
 
 
         let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
@@ -144,7 +144,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         this.equiposDisponibles = equipo;
 
       });
-
+      this.loading.hideLoading();
+      this.isLoading = false;
   }
   printReportEquipoDisponibles() {
     this.loading.showLoading();
@@ -160,7 +161,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getValueFilterForm() {
-    this.loading.showLoading();
+    //this.loading.showLoading();
     let almacenValue = this.form.get('almacen')?.value;
     let suplidorValue =this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
@@ -170,10 +171,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
   }
   setDateRange(): void {
-    this.loading.showLoading();
+    //this.loading.showLoading();
     let date = new Date();
     this.form.patchValue({
       rangoFecha: {
@@ -189,10 +190,10 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         },
       },
     });
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
   }
   onDateRangeChanged(event: any) {
-    this.loading.showLoading();
+    //this.loading.showLoading();
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
       this.filter.fechaFinal = '';
@@ -202,7 +203,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     this.obtenerEquiposDisponibles();
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
   }
   pageChanged(index: number) {
     this.currentPage = index;

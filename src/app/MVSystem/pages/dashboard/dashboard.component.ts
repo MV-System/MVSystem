@@ -126,15 +126,16 @@ const filterSemana: utilidadesFiltros = {
     sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 
   };
-  this.loading.showLoading();
+  //this.loading.showLoading();
   // Cargar utilidades
   this.GetUtilidadesDia(filterDia);
   this.GetUtilidadesSemana(filterSemana);
   this.GetUtilidadesMes(filterMes);
-  this.loading.hideLoading();
+  //this.loading.hideLoading();
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+  //this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
@@ -158,9 +159,11 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+  //this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
@@ -184,11 +187,12 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
-  console.log("Filtros del mes",filterMes);
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+//  this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterMes)
     .subscribe(
@@ -212,6 +216,7 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 
 onSelect(data: any): void {}

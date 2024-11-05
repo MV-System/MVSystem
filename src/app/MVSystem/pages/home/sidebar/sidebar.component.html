@@ -2,8 +2,8 @@
 <aside id="sidebar" class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
 
 
-  <ul class="sidebar-nav" id="sidebar-nav" [ngClass]="{'collapsed': isCollapsed}">
-    <button class="btn btn-toggle" (click)="toggleSidebar()">
+    <ul class="sidebar-nav" id="sidebar-nav" [ngClass]="{'collapsed': isCollapsed}">
+        <button class="btn btn-toggle" (click)="toggleSidebar()">
       <i class="bi bi-list"></i>
   </button>
 
@@ -29,11 +29,11 @@
             </a>
         </li>
         <li *ngIf="VerFormConsultaFacturas()" class="nav-item">
-          <a class="nav-link " routerLinkActive="active" [routerLink]="['./facturacion/consulta']">
-              <i class="bi bi-grid"></i>
-              <span>Consultar Facturas</span>
-          </a>
-      </li>
+            <a class="nav-link " routerLinkActive="active" [routerLink]="['./facturacion/consulta']">
+                <i class="bi bi-grid"></i>
+                <span>Consultar Facturas</span>
+            </a>
+        </li>
         <!-- End Dashboard Nav -->
         <li class="nav-item">
             <a *ngIf="VerMenuMantenimiento()" class="nav-link collapsed" data-bs-target="#mantenimiento-nav" data-bs-toggle="collapse" href="#">
@@ -135,10 +135,10 @@
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaClientes()">
-                      <a routerLink="./clientes/consulta">
-                          <i class="bi bi-circle"></i><span>Clientes</span>
-                      </a>
-                  </li>
+                        <a routerLink="./clientes/consulta">
+                            <i class="bi bi-circle"></i><span>Clientes</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <!-- End Consulta Nav -->
