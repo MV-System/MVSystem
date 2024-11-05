@@ -15,6 +15,24 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
   styleUrls: ['./facturacion-lista.component.css']
 })
 export class FacturacionListaComponent implements OnInit {
+  // Aquí seguimos teniendo la propiedad facturaVisibility
+  facturaVisibility: { [key: number]: boolean } = {};
+
+  // La función para manejar ambos clics
+  handleClick(facturaId: number, index: number) {
+    // Primero, llama a la función que obtiene la factura
+    this.getIdFactura(facturaId, index);
+
+    // Luego, alterna la visibilidad de los detalles
+    this.toggleDetalleFactura(facturaId);
+
+    // Cambia el índice de la fila seleccionada para aplicar el color de fondo
+    if (this.selectedRowIndex === index) {
+      this.selectedRowIndex = null; // Si la misma fila se vuelve a hacer clic, la deselecciona
+    } else {
+      this.selectedRowIndex = index; // Selecciona la fila al hacer clic
+    }
+  }
   index!: number;
   numeroFactura!: number;
   isLoading: boolean = false; // Variable para controlar el estado de carga
@@ -46,6 +64,10 @@ export class FacturacionListaComponent implements OnInit {
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
   }
 
+  toggleDetalleFactura(facturaId: number) {
+    // Cambia el estado de visibilidad de los detalles de la factura
+    this.facturaVisibility[facturaId] = !this.facturaVisibility[facturaId];
+  }
 
   getIdFactura(numerofactura: number,index: number){
     this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada

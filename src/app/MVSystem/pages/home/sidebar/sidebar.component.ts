@@ -51,7 +51,7 @@ export class SidebarComponent implements OnInit {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_MODELOS");
   }
   VerFormTransferenciasEquipos(): boolean {
-    return this.validatorPermissionService.validateUserRole("MNU_MANT_TRANSFERIR");
+    return this.validatorPermissionService.validateUserRole("MNTransfiereEquipos");
   }
   VerFormRegistroVendedores(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_VENDEDORES");

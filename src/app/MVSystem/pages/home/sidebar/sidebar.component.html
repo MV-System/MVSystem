@@ -2,12 +2,9 @@
 <aside id="sidebar" class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
 
 
-    <ul class="sidebar-nav" id="sidebar-nav" [ngClass]="{'collapsed': isCollapsed}">
-        <!-- <button class="btn btn-toggle" (click)="toggleSidebar()">
-      <i class="bi bi-list"></i>
-  </button> -->
-        <span>.</span>
-        <span>.</span>
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
 
         <li class="nav-item" *ngIf="VerFormConsultaUtilidades()">
             <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard']">
@@ -15,7 +12,10 @@
                 <span></span>
             </a>
         </li>
-
+        <span>.</span>
+        <button class="btn btn-toggle" (click)="toggleSidebar()">
+      <i class="bi bi-list"></i>
+  </button>
         <li class="nav-item" *ngIf="VerFormFacturacion()">
             <a class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
