@@ -3,7 +3,7 @@
         <h1 id="registro">Nueva {{isFactura?'Factura':'Cotización'}}</h1>
     </div>
     <section>
-        <r-toggle [dataOff]="'Facturación'" [dataOn]="'Cotización'" (onToggle)="onToggle($event)"></r-toggle>
+        <!-- <r-toggle [dataOff]="'Facturación'" [dataOn]="'Cotización'" (onToggle)="onToggle($event)"></r-toggle> -->
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" style="display: grid">
             <div class="box filters">
@@ -56,15 +56,15 @@
             </div>
             <div id="invoice-wrapper" class="box grid">
                 <div class="leftcol">
-                    <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div>
-                    <div class="companydetail">
+                    <!-- <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div> -->
+                    <!-- <div class="companydetail">
                         <strong class="name">Company Name SRL</strong>
                         <div class="info">
                             <address>[Company Address]</address>
                             <span class="phone">[Company Phone]</span>
                             <span class="email">[Company Email]</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="rightcol">
                     <h3 class="sub-title">{{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>

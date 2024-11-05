@@ -25,3 +25,25 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem; /* Espacio entre los elementos */
+}
+
+.flex-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+}
+
+select.form-select {
+  width: auto; /* El select se ajusta al contenido */
+  min-width: 265px; /* Puedes poner un mínimo para evitar que el select se haga demasiado pequeño */
+}

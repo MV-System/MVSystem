@@ -20,7 +20,7 @@ export class UtilidadesComponent implements OnInit {
   almacenes!: Almacen[];
   subs: Subscription[] = [];
   // options
-  view: [number, number] = [900, 200];
+  view: [number, number] = [1000, 200];
   gradient: boolean = true;
   showLegend: boolean = true;
   showLabels: boolean = true;

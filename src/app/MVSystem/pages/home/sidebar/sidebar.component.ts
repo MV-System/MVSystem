@@ -7,6 +7,12 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
+  isCollapsed = false; // Estado del sidebar
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed; // Cambia el estado
+  }
+
   inside: boolean = false;
   color: string | undefined;
 

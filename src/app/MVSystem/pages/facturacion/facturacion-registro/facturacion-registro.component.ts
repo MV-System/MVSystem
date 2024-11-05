@@ -785,9 +785,9 @@ else { currentArticulo.idTipo = 2;}
     this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
- console.log("respuesta de crear ft",resp);
+// console.log("respuesta de crear ft",resp);
        this.facturaNumberReporte = resp.numeroFactura
-       console.log("respuesta asigancion",this.facturaNumberReporte );
+    //   console.log("respuesta asigancion",this.facturaNumberReporte );
 
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');

@@ -1,10 +1,44 @@
+.sidebar {
+  width: 250px; /* Ancho normal */
+  transition: width 0.3s; /* Transición suave */
+}
+
+.sidebar.collapsed {
+  width: 80px; /* Ancho colapsado */
+}
+
+.sidebar .nav-link span {
+  display: inline; /* Muestra el texto normalmente */
+  transition: opacity 0.3s; /* Transición suave para la opacidad */
+}
+
+.sidebar.collapsed .nav-link span {
+  display: none; /* Oculta el texto cuando está colapsado */
+}
+
+.btn-toggle {
+  background: white;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+
+
+
+
+
+
 /* Contenedor del formulario */
 .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ocupa toda la altura de la ventana */
-  width: 100vw; /* Ocupa todo el ancho de la ventana */
+  /*height: 100vh; /* Ocupa toda la altura de la ventana */
+  /*width: 100vw; /* Ocupa todo el ancho de la ventana */
   padding: 20px; /* Espacio interior */
   box-sizing: border-box; /* Incluye el padding en el tamaño total */
 }
