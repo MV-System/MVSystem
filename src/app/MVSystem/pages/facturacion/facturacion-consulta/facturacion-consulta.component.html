@@ -26,16 +26,17 @@
                                                     <div class="search-form d-flex align-items-center">
                                                         <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()">
                                                     </div>
+                                                    <label class="form-check-label mx-5">
+                                                      Comprobantes
+                                                      <input
+                                                        type="radio"
+                                                        name="accesorio"
+                                                        value="2"
+                                                        class="form-check-input"
+                                                        (change)="($event)" />
+                                                    </label>
                                                 </div>
-                                                <label class="form-check-label mx-5">
-                                                  Vendidos
-                                                  <input
-                                                    type="radio"
-                                                    name="accesorio"
-                                                    value="2"
-                                                    class="form-check-input"
-                                                    (change)="($event)" />
-                                                </label>
+
                                                 <div class="row ">
                                                     <div class="col-md-5">
                                                         <label class="form-label ">Fecha de facturación</label>
