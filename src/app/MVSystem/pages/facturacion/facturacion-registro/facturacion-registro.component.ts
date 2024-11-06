@@ -746,7 +746,7 @@ else { currentArticulo.idTipo = 2;}
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
-
+      ComprobanteCheck:1
     }
     return model;
   }

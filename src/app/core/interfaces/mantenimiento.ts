@@ -145,6 +145,7 @@ export interface FacturaFilter extends DatePaging, Pagination {
     empresa: string;
     IdEmpresa: string;
     IdSucursal: string;
+    ComprobanteCheck: number;
 
 }
 

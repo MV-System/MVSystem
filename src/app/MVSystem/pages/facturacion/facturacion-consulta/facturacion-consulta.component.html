@@ -19,23 +19,16 @@
                                 <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
-                                          <span class="card-title">Filtros</span>
-                                          <div class="row">
-                                            <div class="col-md-7 mb-3">
-                                              <!-- barra de búsqueda y criterios de búsqueda -->
-                                              <div class="d-flex align-items-center">
-                                                <!-- Input de búsqueda -->
-                                                <input
-                                                  type="text"
-                                                  class="form-control"
-                                                  formControlName="criterio"
-                                                  placeholder="Search"
-                                                  title="Busqueda"
-                                                  (keyup)="getFacturas()"
-                                                />
+                                            <span class="card-title">Filtros</span>
+                                            <div class="row">
+                                                <div class="col-md-7 mb-3">
+                                                    <!-- barra de búsqueda y criterios de búsqueda -->
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- Input de búsqueda -->
+                                                        <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()" />
 
-                                                <!-- Comprobante (input radio) al lado del input de búsqueda -->
-                                                <label  class="form-check-label mx-3 d-flex align-items-center">
+                                                        <!-- Comprobante (input radio) al lado del input de búsqueda -->
+                                                        <label *ngIf="CheckComprobante()" class="form-check-label mx-3 d-flex align-items-center">
 
                                                   <input
                                                     type="radio"
@@ -46,32 +39,27 @@
                                                   />
                                                   Comprobantes
                                                 </label>
-                                              </div>
-                                            </div>
-
-                                            <div class="row">
-                                              <div class="col-md-5">
-                                                <label class="form-label">Fecha de facturación</label>
-                                                <div>
-                                                  <my-date-range-picker
-                                                    [options]="myDateRangePickerOptions"
-                                                    formControlName="rangeDate"
-                                                    (dateRangeChanged)="onDateRangeChanged($event)"
-                                                    placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}"
-                                                  >
-                                                  </my-date-range-picker>
+                                                    </div>
                                                 </div>
-                                              </div>
-                                              <div class="col-md-5" *ngIf="SelectSucursal()">
-                                                <label class="form-label">Sucursal</label>
-                                                <select class="form-select" formControlName="almacen" (change)="getFacturas()">
+
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <label class="form-label">Fecha de facturación</label>
+                                                        <div>
+                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                                            </my-date-range-picker>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5" *ngIf="SelectSucursal()">
+                                                        <label class="form-label">Sucursal</label>
+                                                        <select class="form-select" formControlName="almacen" (change)="getFacturas()">
                                                   <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                                                     {{ almacen.descripcion }}
                                                   </option>
                                                 </select>
-                                              </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                          </div>
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +117,7 @@
                         </div>
 
                         <!-- end form   -->
-                       <app-facturacion-lista [facturas]="facturas" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" (onFacturaButton)="onFacturaButton = $event"
+                        <app-facturacion-lista [facturas]="facturas" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" (onFacturaButton)="onFacturaButton = $event"
                             (numerofactura)="getDetalleFactura($event)">
                             <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 10 && facturas.length">
                             </pagination-controls>
