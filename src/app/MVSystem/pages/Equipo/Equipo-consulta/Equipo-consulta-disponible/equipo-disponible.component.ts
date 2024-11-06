@@ -120,7 +120,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   obtenerEquiposDisponibles() {
-   this.loading.showLoading();
+    this.loading.showLoading();
    this.isLoading = true;
     this.getValueFilterForm();
     this.onFilterPropHasValue();
@@ -128,14 +128,15 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription = this.equipoService
       .getEquipoDisponible(this.filter)
       .subscribe((equipo) => {
-        this.loading.hideLoading();
+
 
 
         let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
         let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
         this.obtenerTotalEquipos(record);
         this.obtenerTotalInventario(totalInventario);
-        this.isLoading = false; // Terminar carga
+        this.loading.hideLoading();
+        this.isLoading = false;
         if (equipo.length) {
           this.totalRecord = equipo[0].totalRecord;
           this.line = equipo[0].line;
@@ -153,14 +154,14 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         this.printing = !this.printing;
 
         CreatorPDFFile(blobResp);
+        this.loading.hideLoading();
       }, (err) => {
       this.toast.error('Error','Error al imprimir reporte');
     });
-    this.loading.hideLoading();
+
   }
 
   getValueFilterForm() {
-    this.loading.showLoading();
     let almacenValue = this.form.get('almacen')?.value;
     let suplidorValue =this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
@@ -170,10 +171,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? '' : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
-    this.loading.hideLoading();
   }
   setDateRange(): void {
-    this.loading.showLoading();
     let date = new Date();
     this.form.patchValue({
       rangoFecha: {
@@ -189,10 +188,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
         },
       },
     });
-    this.loading.hideLoading();
   }
   onDateRangeChanged(event: any) {
-    this.loading.showLoading();
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
       this.filter.fechaFinal = '';
@@ -202,7 +199,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     this.obtenerEquiposDisponibles();
-    this.loading.hideLoading();
   }
   pageChanged(index: number) {
     this.currentPage = index;

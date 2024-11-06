@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
@@ -75,6 +76,7 @@ FechaInicioMes: Date = new Date();
 UtilidadesForm: FormGroup = this.fb.group({});
 
 constructor(
+  private validatorPermissionService:ValidatorPermissionService,
   private loading: LoadingService,
   private UtilidadesServices: UtilidadesService,
   private fb: FormBuilder,
@@ -93,6 +95,11 @@ this.FechaInicioSemana.setDate(this.fechaHoy.getDate() - diasDesdeLunes);
 // Primer día del mes actual
 this.FechaInicioMes = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
 }
+
+VerFormConsultaUtilidades(): boolean {
+  return this.validatorPermissionService.validateUserRole("verUtilidadesToolStripMenuItem");
+}
+
 ngOnInit(): void {
   // Calcular el inicio de la semana y el mes actual
   this.calcularFechas();
@@ -126,15 +133,16 @@ const filterSemana: utilidadesFiltros = {
     sucursal: 4//this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
 
   };
-  this.loading.showLoading();
+  //this.loading.showLoading();
   // Cargar utilidades
   this.GetUtilidadesDia(filterDia);
   this.GetUtilidadesSemana(filterSemana);
   this.GetUtilidadesMes(filterMes);
-  this.loading.hideLoading();
+  //this.loading.hideLoading();
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+  //this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
@@ -158,9 +166,11 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+  //this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
@@ -184,11 +194,12 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
-  console.log("Filtros del mes",filterMes);
-  this.isLoading = true; // Iniciar carga
+  this.loading.showLoading();
+//  this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterMes)
     .subscribe(
@@ -212,6 +223,7 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
+    this.loading.hideLoading();
 }
 
 onSelect(data: any): void {}

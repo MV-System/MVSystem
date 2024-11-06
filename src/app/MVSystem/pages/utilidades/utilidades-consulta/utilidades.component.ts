@@ -9,6 +9,7 @@ import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidade
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-utilidades',
@@ -72,6 +73,7 @@ export class UtilidadesComponent implements OnInit {
   ];
 
   constructor(
+    private loading: LoadingService,
     private catalogosService: CatalogosService,
     private UtilidadesServices: UtilidadesService,
     private fb: FormBuilder,
@@ -87,16 +89,18 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 SelectSucursal(): boolean {
   return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
 }
+
 getSucursales() {
+  this.loading.showLoading();
   const sub = this.catalogosService.getSucursales().subscribe((almacen) => {
     this.almacenes = almacen;
   });
+  this.loading.hideLoading();
 }
 
 
 form!: FormGroup;
 createForm(){
-  //const IdSucursal = Number(this.loginService.getUserIdSucursal)
   this.form = this.fb.group({
     fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
     fechafin: [this.fechaHoy.toISOString().split('T')[0]],
@@ -131,6 +135,7 @@ createForm(){
     });
   }
   GetUtilidades() {
+    this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
     this.UtilidadesServices
       .GetUtilidades(this.filter)
@@ -150,6 +155,7 @@ createForm(){
           this.toastr.error('Error al cargar datos de utilidades');
         }
       );
+      this.loading.hideLoading();
   }
 
   private updateSingleData() {

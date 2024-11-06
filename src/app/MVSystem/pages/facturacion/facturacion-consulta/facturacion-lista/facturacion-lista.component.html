@@ -1,103 +1,91 @@
 <section class="section mt-4">
-  <div class="row">
-    <div class="col-lg-12 scroll-table">
-      <h5 class="card-title">Facturas</h5>
-      <p *ngIf="facturas.length">
-        Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
-      </p>
-<div class="scrollable-table thinScroll">
-      <table class="mv-table">
-        <thead>
-          <tr>
-            <th scope="fixed-item ft">No. FACTURA</th>
-            <th scope="fixed-item cli">CLIENTE</th>
-            <!-- <th scope="col">APELLIDOS</th> -->
-            <th scope="col">TELEFONO</th>
-            <th scope="col">TIPO DE FACTURA</th>
-            <th scope="col">TIPO DE PAGO</th>
-            <th scope="col">SUB TOTAL</th>
-            <th scope="col">DESCUENTO</th>
-            <th scope="col">ITBIS</th>
-            <th scope="col">TOTAL</th>
-            <th scope="col">NCF</th>
-            <th scope="col">RNC</th>
-            <th scope="col">VENDEDOR</th>
-            <th scope="col">ALMACEN</th>
-            <th scope="col">NOTA</th>
-            <th scope="col">FECHA FACTURACIÓN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container
-            *ngFor=" let factura of facturas | paginate  : {
+    <div class="row">
+        <div class="col-lg-12 scroll-table">
+            <h5 class="card-title">Facturas</h5>
+            <p *ngIf="facturas.length">
+                Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
+            </p>
+            <div class="scrollable-table thinScroll">
+                <table class="mv-table">
+                    <thead>
+                        <tr>
+                            <th scope="fixed-item ft">No. FACTURA</th>
+                            <th scope="fixed-item cli">CLIENTE</th>
+                            <!-- <th scope="col">APELLIDOS</th> -->
+                            <th scope="col">TELEFONO</th>
+                            <th scope="col">TIPO DE FACTURA</th>
+                            <th scope="col">TIPO DE PAGO</th>
+                            <th scope="col">SUB TOTAL</th>
+                            <th scope="col">DESCUENTO</th>
+                            <th scope="col">ITBIS</th>
+                            <th scope="col">TOTAL</th>
+                            <th scope="col">NCF</th>
+                            <th scope="col">RNC</th>
+                            <th scope="col">VENDEDOR</th>
+                            <th scope="col">ALMACEN</th>
+                            <th scope="col">NOTA</th>
+                            <th scope="col">FECHA FACTURACIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor=" let factura of facturas | paginate  : {
                       itemsPerPage: pageSize,
                       currentPage: pageIndex,
                       totalItems: totalRecord
-                    }; let i = index  "  >
+                    }; let i = index  ">
 
 
-            <tr
-              class="animate__animated animate__fadeIn tr-hover"
-              [ngClass]="{'selected-row': selectedRowIndex === i}"
-              (click)="getIdFactura(factura.numeroFactura, i)"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseOne"
-              aria-expanded="false"
-              aria-controls="flush-collapseOne"
-              tableTrselect>
+                            <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i,
+                                       'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
+                                tableTrselect>
 
-              <td class="fixed-item ft">{{factura.numeroFactura}}</td>
-              <td class="fixed-item cli">
-    <span>{{factura.nombres}} {{factura.apellidos}}</span>
+                                <td class="fixed-item ft">{{factura.numeroFactura}}</td>
+                                <td class="fixed-item cli">
+                                    <span>{{factura.nombres}} {{factura.apellidos}}</span>
 
-    <button  *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
+                                    <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
       <i class="bx bx-trash-alt"></i>
   </button>
-</td>
-              <!-- <td>{{ factura.numeroFactura }}</td>
+                                </td>
+                                <!-- <td>{{ factura.numeroFactura }}</td>
               <td>{{ factura.nombres }} {{ factura.apellidos }}</td> -->
-              <!-- <td>{{ factura.apellidos }} </td> -->
-              <td>{{ factura.telefono }} </td>
-              <td>{{ factura.tipoFactura }}</td>
-              <td>{{ factura.tipoPago }}</td>
-              <td>{{ factura.subTotal | currency}}</td>
-              <td>{{ factura.descuento | currency }}</td>
-              <td>{{ factura.itbis | currency}}</td>
-              <td>{{ factura.total | currency}}</td>
-              <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
-              <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
-              <td>{{ factura.vendedor }}</td>
-              <td>{{ factura.almacen }}</td>
-              <td>{{ !factura.nota ?'*':factura.nota }}</td>
-              <td>{{ factura.fechaFacturacion | date }}</td>
-            </tr>
+                                <!-- <td>{{ factura.apellidos }} </td> -->
+                                <td>{{ factura.telefono }} </td>
+                                <td>{{ factura.tipoFactura }}</td>
+                                <td>{{ factura.tipoPago }}</td>
+                                <td>{{ factura.subTotal | currency}}</td>
+                                <td>{{ factura.descuento | currency }}</td>
+                                <td>{{ factura.itbis | currency}}</td>
+                                <td>{{ factura.total | currency}}</td>
+                                <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
+                                <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
+                                <td>{{ factura.vendedor }}</td>
+                                <td>{{ factura.almacen }}</td>
+                                <td>{{ !factura.nota ?'*':factura.nota }}</td>
+                                <td>{{ factura.fechaFacturacion | date }}</td>
+                            </tr>
 
-            <ng-container
-              *ngIf="i == index"
-              id="flush-collapseOne"
-              class="accordion-collapse collapse tr-collapse" >
-              <tr
-                class="animate__animated animate__fadeIn tr-collapse"
-                *ngFor="let detalle of detalleFactura; let d = index" >
-                <td col="1">Cod: {{detalle.idEquipo}}</td>
-                <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }}  </td>
-                <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
-                <td><b>Precio:</b> {{ detalle.precio }}</td>
-                <td colspan="2"><b>SubTotal:</b> {{ detalle.subTotal }}</td>
-                <td><b>Desc.:</b> {{ detalle.descuento }}</td>
-                <td><b>Itbs:</b> {{ detalle.itbis }}</td>
-                <td><b>Total:</b> {{ detalle.total }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </ng-container>
-          </ng-container>
-        </tbody>
-      </table>
-</div>
-      <div class="not-data" *ngIf="!facturas.length">Datos no encontrados</div>
+                            <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index" id="flush-collapseOne" class="accordion-collapse collapse tr-collapse">
+                                <tr class="animate__animated animate__fadeIn tr-collapse" *ngFor="let detalle of detalleFactura; let d = index">
+                                    <td col="1">Cod: {{detalle.idEquipo}}</td>
+                                    <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
+                                    <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
+                                    <td><b>Precio:</b> {{ detalle.precio }}</td>
+                                    <td colspan="2"><b>SubTotal:</b> {{ detalle.subTotal }}</td>
+                                    <td><b>Desc.:</b> {{ detalle.descuento }}</td>
+                                    <td><b>Itbs:</b> {{ detalle.itbis }}</td>
+                                    <td><b>Total:</b> {{ detalle.total }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+            <div class="not-data" *ngIf="!facturas.length">Datos no encontrados</div>
+        </div>
     </div>
-  </div>
 </section>
 <ng-content></ng-content>

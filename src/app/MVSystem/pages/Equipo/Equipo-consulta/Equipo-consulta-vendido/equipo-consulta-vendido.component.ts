@@ -15,6 +15,7 @@ import { Suplidor } from '../../../../../core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -30,6 +31,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     private vendedorService: VendedorService,
     private toast: ToastrService,
     private loginService: LoginService,
+    private loading: LoadingService,
   ) {}
   @Input() clearFilter:any;
 
@@ -210,7 +212,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
 
   obtenerEquiposVendidos() {
-    console.log("Fitltro en el metodo",this.filter);
     this.isLoading = true; // Iniciar carga
     this.getValueFilterForm();
     this.onFilterPropHasValue();
@@ -253,24 +254,32 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   }
   obtenerAlmacenLista() {
+    this.loading.showLoading();
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.almacenListado = almacen;
     });
+    this.loading.hideLoading();
   }
   obtenerModeloLista() {
+    this.loading.showLoading();
     this.catalogosService.getModeloLista().subscribe((modelo) => {
       this.modeloListado = modelo;
     });
+    this.loading.hideLoading();
   }
   obtenerVendedor() {
+    this.loading.showLoading();
     this.vendedorService.getVendedorLista().subscribe((vendedor) => {
       this.listaVendedor = vendedor;
     });
+    this.loading.hideLoading();
   }
   obtenerSuplidor() {
+    this.loading.showLoading();
     this.catalogosService.getSuplidorLista().subscribe((suplidor) => {
       this.listaSuplidor = suplidor;
     });
+    this.loading.hideLoading();
   }
 
 }

@@ -750,7 +750,7 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   printFacturaNormal(){
-    this.loading.showLoading();
+    //this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
@@ -761,11 +761,11 @@ else { currentArticulo.idTipo = 2;}
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
   }
 
   printFacturaMini(){
-    this.loading.showLoading();
+    //this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.facturaNumberReporte)
     .subscribe(blob =>{
@@ -776,7 +776,7 @@ else { currentArticulo.idTipo = 2;}
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
   }
   generateFactura() {
     const data = this.loadDataToPrint()
@@ -846,10 +846,10 @@ else { currentArticulo.idTipo = 2;}
         this.agregarArticulo()
 
         CreatorPDFFile(blobResponse);
-        this.loading.hideLoading();
+        //this.loading.hideLoading();
 
       },error=>{
-        this.loading.hideLoading();
+        //this.loading.hideLoading();
         this.toastr.error(error)
       })
   }
