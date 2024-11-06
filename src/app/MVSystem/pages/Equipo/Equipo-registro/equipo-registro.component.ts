@@ -84,6 +84,7 @@ export class EquipoRegistroComponent implements OnInit {
   })
 
   registroEquipos() {
+
     const model: Equipo = this.modeloRegistroEquipo();
 
     this.validacionesRegistro()
@@ -102,12 +103,17 @@ export class EquipoRegistroComponent implements OnInit {
 
               return
             }
+            else if(equipoRegistrado.existe == 'S'){
+              this.toastr.info(equipoRegistrado.mensaje);
+              return
+            }
             else {
               this.equipoValorRetorno.push(equipoRegistrado);
-              this.toastr.success('Equipo registrado con exito!');
+              this.toastr.success(equipoRegistrado.mensaje);
             }
           });
         });
+        console.log("Form Registro Valores",this.formRegistro);
     }
     else {
       this.formRegistro.markAllAsTouched();

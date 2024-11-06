@@ -195,12 +195,18 @@
                                                 </ng-select>
                                             </td>
                                             <td class="col-md-1 align-center">
-                                                <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}"
-                                                    [maxlen]="4" appNumeric>
+                                                <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
+                                                descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
                                             </td>
                                             <td class="align-center">
                                                 {{detalleFactura.value.precio}}
                                             </td>
+                                            <!-- <td class="align-center">
+
+                                                <input type="text" class="form-control align-center" formControlName="Precio" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()" [maxlen]="6" appNumeric [ngModel]="detalleFactura.value.precio" (ngModelChange)="detalleFactura.value.precio = $event"
+                                                {{detalle}}
+                                                />
+                                            </td> -->
                                             <td class="align-center">
                                                 {{detalleFactura.value.subTotal}}
                                             </td>

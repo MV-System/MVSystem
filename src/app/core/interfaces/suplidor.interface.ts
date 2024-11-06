@@ -7,7 +7,7 @@ export interface SuplidorRegistro {
     extencion?:         null;
     email_Detalle?:     string;
     direccion_Detalle?: string;
-    usuario?:           string;
+    Usuario:           string;
   }
 
   export interface Suplidor{

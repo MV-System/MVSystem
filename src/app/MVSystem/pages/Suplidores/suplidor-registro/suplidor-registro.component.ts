@@ -10,6 +10,7 @@ import {
   TipoSuplidor,
 } from 'src/app/core/interfaces/suplidor.interface';
 import * as $ from"jquery";
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-suplidor-registro',
@@ -18,6 +19,7 @@ import * as $ from"jquery";
 })
 export class SuplidorRegistroComponent implements OnInit {
   constructor(
+    private loginService: LoginService,
     private fb: FormBuilder,
     private suplidorService: SuplidorService,
     private catalogosService: CatalogosService,
@@ -25,7 +27,6 @@ export class SuplidorRegistroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.formRegistro.controls.extensionNumero.disable();
     this.obtenerTipoSuplidor();
     this.obtenerTipoTelefonos();
@@ -46,7 +47,7 @@ export class SuplidorRegistroComponent implements OnInit {
     extensionNumero: [,],
     email: [''],
     // criterio:     [''],
-    usuario: [''],
+    usuario: [this.loginService.getUserName()],
     provincia: [''],
     sector: [''],
     calle: [''],
@@ -68,7 +69,7 @@ export class SuplidorRegistroComponent implements OnInit {
       iD_Tipo_Suplidor: Number(this.formRegistro.get('tipoSuplidor')?.value),
       extencion: this.formRegistro.get('extencion')?.value,
       email_Detalle: this.formRegistro.get('email')?.value,
-      usuario: this.formRegistro.get('usuario')?.value,
+      Usuario: this.loginService.getUserName(),
       direccion_Detalle: direccion.toString(),
     };
     return registro;

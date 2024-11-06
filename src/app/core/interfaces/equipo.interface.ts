@@ -36,6 +36,7 @@ export interface EquipoObjRetorno {
     disponible: string;
     disponible_Detalle: null;
     mensaje: string;
+    existe:string;
 }
 
 export interface EquipoDisponible {
