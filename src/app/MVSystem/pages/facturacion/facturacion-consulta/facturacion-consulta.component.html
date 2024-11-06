@@ -19,47 +19,59 @@
                                 <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
-                                            <span class="card-title">Filtros</span>
-                                            <div class="row">
-                                                <div class="col-md-7 mb-3">
-                                                    <!-- bar search and criterios de busqueda -->
-                                                    <div class="search-form d-flex align-items-center">
-                                                        <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()">
-                                                    </div>
-                                                    <label class="form-check-label mx-5">
-                                                      Comprobantes
-                                                      <input
-                                                        type="radio"
-                                                        name="accesorio"
-                                                        value="2"
-                                                        class="form-check-input"
-                                                        (change)="($event)" />
-                                                    </label>
-                                                </div>
+                                          <span class="card-title">Filtros</span>
+                                          <div class="row">
+                                            <div class="col-md-7 mb-3">
+                                              <!-- barra de búsqueda y criterios de búsqueda -->
+                                              <div class="d-flex align-items-center">
+                                                <!-- Input de búsqueda -->
+                                                <input
+                                                  type="text"
+                                                  class="form-control"
+                                                  formControlName="criterio"
+                                                  placeholder="Search"
+                                                  title="Busqueda"
+                                                  (keyup)="getFacturas()"
+                                                />
 
-                                                <div class="row ">
-                                                    <div class="col-md-5">
-                                                        <label class="form-label ">Fecha de facturación</label>
-                                                        <div>
-                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio | date }} -  {{fechaHoy  | date}}">
-                                                            </my-date-range-picker>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-5" *ngIf="SelectSucursal()">
-                                                        <!-- Search by almacen -->
+                                                <!-- Comprobante (input radio) al lado del input de búsqueda -->
+                                                <label  class="form-check-label mx-3 d-flex align-items-center">
 
-                                                        <label class="form-label">Sucursal</label>
-                                                        <select class="form-select" formControlName="almacen" (change)="getFacturas()">
-                                      <option
-                                        *ngFor="let almacen of almacenes"
-                                        [value]="almacen.iD_Almacen" >
-                                        {{ almacen.descripcion }}
-                                      </option>
-                                    </select>
-                                                    </div>
-                                                </div>
-
+                                                  <input
+                                                    type="radio"
+                                                    name="accesorio"
+                                                    value="1"
+                                                    class="form-check-input"
+                                                    (change)="onCheckboxComprobanteChange($event)"
+                                                  />
+                                                  Comprobantes
+                                                </label>
+                                              </div>
                                             </div>
+
+                                            <div class="row">
+                                              <div class="col-md-5">
+                                                <label class="form-label">Fecha de facturación</label>
+                                                <div>
+                                                  <my-date-range-picker
+                                                    [options]="myDateRangePickerOptions"
+                                                    formControlName="rangeDate"
+                                                    (dateRangeChanged)="onDateRangeChanged($event)"
+                                                    placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}"
+                                                  >
+                                                  </my-date-range-picker>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-5" *ngIf="SelectSucursal()">
+                                                <label class="form-label">Sucursal</label>
+                                                <select class="form-select" formControlName="almacen" (change)="getFacturas()">
+                                                  <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                                                    {{ almacen.descripcion }}
+                                                  </option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
                                     </div>
                                 </div>

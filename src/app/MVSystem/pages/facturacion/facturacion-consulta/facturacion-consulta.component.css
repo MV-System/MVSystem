@@ -28,3 +28,13 @@
         transform: rotate(360deg);
     }
 }
+
+/* Opcional: Si necesitas ajustar la separación o alineación, agrega esto a tu archivo CSS */
+.d-flex .form-check-label {
+  display: flex;
+  align-items: center; /* Alinea verticalmente el radio button con el texto */
+}
+
+.d-flex .form-control {
+  flex: 1; /* Hace que el input de búsqueda ocupe todo el espacio disponible */
+}

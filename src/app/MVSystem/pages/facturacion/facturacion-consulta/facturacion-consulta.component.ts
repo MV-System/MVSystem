@@ -42,7 +42,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getFacturas();
     this.getAlmacenes();
+
   }
+  ComprobanteCheck: string='';
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   title: string = "Consulta Facturas";
@@ -103,12 +105,14 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
+
     }
     return model;
   }
   getFacturas(){
     this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
+    console.log('Valor seleccionado en getfactura:', this.ComprobanteCheck);
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
     this.isLoading = false; // Terminar carga
@@ -120,6 +124,17 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
         this.line = facturas[0].line;
         this.lastLine = facturas[0].lastLine;
       }
+
+      // Filtrar las facturas si el radio button de comprobantes está activado
+      // if (this.ComprobanteCheck === 2) {
+      //   this.facturas = facturas.filter(factura => {
+      //     const ncf = String(factura.ncf); // Convertir NCF a string
+      //     return ncf && ncf.trim() !== ''; // Comprobar si NCF no es vacío
+      //   });
+      // } else {
+      //   this.facturas = facturas; // Si no, mostrar todas las facturas
+      // }
+
       this.facturas = facturas;
     });
     this.subs.push(sub);
@@ -219,6 +234,15 @@ this.loading.hideLoading();
       this.almacenes = almacen;
     });
     this.subs.push(sub);
+  }
+  onCheckboxComprobanteChange(event: Event) {
+   // Obtener el valor del radio button usando event.target
+   const selectedRadio = (<HTMLInputElement>event.target);
+   this.ComprobanteCheck = (selectedRadio.value);
+   console.log('Valor seleccionado:', this.ComprobanteCheck);
+
+    // Volver a obtener las facturas, aplicando el filtro según el valor de ComprobanteCheck
+    this.getFacturas();
   }
 
 }
