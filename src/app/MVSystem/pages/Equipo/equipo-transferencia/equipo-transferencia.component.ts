@@ -2,12 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EquipoAlmacenTransferirArrayRetorno, EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
+import {  EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
 import { EquipoService } from '../../../../core/services/equipo.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoAlmacenTransferir } from '../../../../core/interfaces/equipo.interface';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-equipo-transferencia',
@@ -26,6 +27,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   sub!: Subscription;
 
   constructor(
+    private loading: LoadingService,
     private equipoService: EquipoService,
     private catalogosService: CatalogosService,
     private fb: FormBuilder,
@@ -59,7 +61,6 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
 
   validateImei(): boolean {
     const imeiValue = this.form.get('imei')?.value;  // Si 'imei' es undefined, asigna una cadena vacía
-    //const exists = this.listEquiposToTransfer.some(imeiAdded => imeiAdded.imei === imeiValue);
 
     // Verifica si imeiValue es undefined o null antes de hacer la comparación
   if (!imeiValue) {
@@ -181,6 +182,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   }
 
   printReportEquipoVendido(): void {
+    this.loading.showLoading();
     const model: EquipoTransferenciaReporte = {
       idTransferencia: this.idTransferencia,
       equipoTransferencias: this.listEquiposToTransfer,
@@ -201,7 +203,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
         this.printing = false;
       }
     });
-
+this.loading.hideLoading();
     this.cantidadEquipoATransferir = 0;
     this.listEquiposToTransfer = [];
   }
@@ -223,8 +225,10 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   }
 
   getAlmacenes(): void {
+    this.loading.showLoading();
     this.catalogosService.getAlmaceLista().subscribe(almacenes => {
       this.almacenes = almacenes;
     });
+    this.loading.hideLoading();
   }
 }

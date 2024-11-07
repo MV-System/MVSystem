@@ -171,6 +171,27 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.accesoriosBuffer = this.accesoriosBuffer.concat(more);
     }, 200)
   }
+  onPrecioChange(newPrecio: number, index: number) {
+    // Accedemos al FormGroup del artículo seleccionado
+    const currentFormGroup = this.articulos().controls[index] as FormGroup;
+
+    // Actualizamos el precio manualmente
+    currentFormGroup.get('precio')?.setValue(newPrecio);
+
+    // Recalculamos el subtotal con el nuevo precio
+    const cantidad = currentFormGroup.get('cantidad')?.value;
+    const subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
+
+    // Actualizamos el subtotal en el formulario
+    currentFormGroup.get('subTotal')?.setValue(subTotal);
+
+    // También puedes hacer otros cálculos si es necesario
+    this.obtenerCantidadArticulo(currentFormGroup.getRawValue());
+    this.obtenerCantidadArticuloStock(index);
+
+    // Finalmente, actualizamos los valores generales si es necesario
+    this.refreshGeneralValues();
+}
   private updatePriceArticulos(){
     this.articulos().controls.forEach((v,index)=>{
       const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
@@ -344,39 +365,56 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   }
 
 
-addArticuloImei = (imei: string) => {
-  return new Promise((resolve) => {
-    this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(equipos => {
-        if (equipos.disponible ==='S') {
-          const equipo = equipos;
-          const articulo: AccesorioLista = {
-            accesorio_Descripcion: `${equipo.imei}`,
-            cantidad: 1,
-            id:equipo.imei,
-            codigo_Barra: 0,
-            modelo: equipo.modelo,
-            precio_Detalle:equipo.precioDetalle,
-            precio_Por_Mayor: equipo.precioPorMayor,
-            codigo: null!, //equipo.modelo,
-            idTipo: 1,
-            disponible: equipo.disponible,
-            mensaje: equipo.mensaje,
-          };
-         const articuloControl = this.form.get('articulo');
-         if (articuloControl) {
-           articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
-         }
-        this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer]
-         resolve(articulo);
-        }else
-       {
-        this.toastr.error(`El Equipo ${imei}: ${equipos.mensaje}`);
-       }
-      });
-  });
-}
+  addArticuloImei = (imei: string) => {
+    return new Promise((resolve) => {
+      this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(equipos => {
+          // Verificar si el equipo está disponible
+          if (equipos.disponible === 'S') {
+            const equipo = equipos;
+
+            // Crear el artículo con la información del equipo
+            const articulo: AccesorioLista = {
+              accesorio_Descripcion: `${equipo.imei}`,
+              cantidad: 1,
+              id: equipo.imei,
+              codigo_Barra: 0,
+              modelo: equipo.modelo,
+              precio_Detalle: equipo.precioDetalle,
+              precio_Por_Mayor: equipo.precioPorMayor,
+              codigo: null!, // Esto podría ser modificado para tener un código real si es necesario
+              idTipo: 1,
+              disponible: equipo.disponible,
+              mensaje: equipo.mensaje,
+            };
+
+            // Actualizar el campo 'articulo' en el formulario
+            const articuloControl = this.form.get('articulo');
+            if (articuloControl) {
+              articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
+            }
+
+            // Agregar el artículo a la lista de accesorios, evitando duplicados
+            const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
+            if (!articuloExistente) {
+              this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer];  // Agregar al principio
+            } else {
+              this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
+            }
+
+            resolve(articulo);  // Resuelve la promesa con el artículo creado
+
+          } else {
+            // Si el equipo no está disponible, mostrar un mensaje de error
+            this.toastr.error(`El Equipo ${imei}: ${equipos.mensaje}`);
+          }
+        }, error => {
+          // Manejar errores de la llamada HTTP
+          this.toastr.error('Error al buscar el equipo.');
+        });
+    });
+  };
   obtenerDetalleFactura(index: number) {
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
 
@@ -489,6 +527,7 @@ else { currentArticulo.idTipo = 2;}
       return subTotal - descuento
     }
   }
+
   modeloRegistroFacturacion(): FacturaRegistro {
 ///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {

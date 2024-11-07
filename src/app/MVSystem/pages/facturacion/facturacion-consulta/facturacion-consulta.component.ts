@@ -113,14 +113,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
     }
-    console.log("Modelo factura",model)
     return model;
   }
   getFacturas(){
-    console.log(this.modelFacturaFilter());
     this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
-    console.log('Valor seleccionado en getfactura:', this.ComprobanteCheck);
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
     this.isLoading = false; // Terminar carga

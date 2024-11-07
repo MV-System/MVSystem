@@ -1,10 +1,9 @@
-
 <!-- modal Editar accesorio -->
 <r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
-  <app-accesorio-edit [accesorio]="accesorio" (closeModal)="onCancel()">
+    <app-accesorio-edit [accesorio]="accesorio" (closeModal)="onCancel()">
 
-    <button cancel class="btn btn-danger" (click)="onCancel()" >Cancelar</button>
-  </app-accesorio-edit>
+        <button cancel class="btn btn-danger" (click)="onCancel()">Cancelar</button>
+    </app-accesorio-edit>
 </r-modal>
 <!-- End modal -->
 
@@ -12,14 +11,14 @@
     <div class="row">
         <div class="col-lg-12 scroll-table">
             <h5 class="card-title">Accesorios</h5>
-            <button class="btn btn-primary mb-3" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()" >EDITAR</button>
+            <button class="btn btn-primary mb-3" [ngClass]="{disabled:onEditButton}" (click)="putAccesorio()">EDITAR</button>
             <!-- data-bs-toggle="modal" data-bs-target="#editAccesorioModal"  -->
             <p *ngIf="accesorios.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
 
             <!-- Table with stripped rows -->
-            <table class="table" >
+            <table class="table">
                 <thead>
-                    <tr >
+                    <tr>
                         <th scope="col">ID</th>
                         <th scope="col">CODIGO</th>
                         <th scope="col-2">DESCRIPCIÓN</th>
@@ -36,31 +35,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-container class="animate__animated animate__fadeIn"  *ngFor=" let accesorio of accesorios | paginate: {
+                    <ng-container class="animate__animated animate__fadeIn" *ngFor=" let accesorio of accesorios | paginate: {
                       itemsPerPage: pageSize,
                       currentPage: pageIndex,
                       totalItems: totalRecord  }">
-                      <tr (click)="getIdAccesorio(accesorio.id )" id="put" tableTrselect>
-                        <td >{{ accesorio.id }}</td>
-                        <td>{{ accesorio.codigo }}</td>
-                        <td>{{ accesorio.descripcionAccesorio }}</td>
-                        <td>{{ accesorio.modelo }}</td>
-                        <td>{{ accesorio.cantidad }}</td>
-                        <td>{{ accesorio.costoEquipo }}</td>
-                        <td>{{ accesorio.precioDetalle }}</td>
-                        <td>{{ accesorio.precioPorMayor }}</td>
-                        <td>{{ accesorio.disponible }}</td>
-                        <td>{{ accesorio.disponibleDetalle }}</td>
-                        <td>{{ accesorio.almacen }}</td>
-                        <td>{{ accesorio.codBarra }}</td>
-                      </tr>
-                      </ng-container>
+                        <tr (click)="getIdAccesorio(accesorio.id )" id="put" tableTrselect>
+                            <td>{{ accesorio.id }}</td>
+                            <td>{{ accesorio.codigo }}</td>
+                            <td>{{ accesorio.descripcionAccesorio }}</td>
+                            <td>{{ accesorio.modelo }}</td>
+                            <td>{{ accesorio.cantidad }}</td>
+                            <td>{{ accesorio.costoEquipo | currency }}</td>
+                            <td>{{ accesorio.precioDetalle | currency}}</td>
+                            <td>{{ accesorio.precioPorMayor| currency }}</td>
+                            <td>{{ accesorio.disponible }}</td>
+                            <td>{{ accesorio.disponibleDetalle }}</td>
+                            <td>{{ accesorio.almacen }}</td>
+                            <td>{{ accesorio.codBarra }}</td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
             <div class="not-data" *ngIf="!accesorios.length">
-              Datos no encontrados
-            </div>
+                Datos no encontrados
             </div>
         </div>
+    </div>
 </section>
 <ng-content></ng-content>

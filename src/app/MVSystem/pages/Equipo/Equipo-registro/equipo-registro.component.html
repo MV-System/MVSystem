@@ -29,13 +29,7 @@
                             <!-- --------------- IMEI  --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">IMEI</label>
-                                <input type="text" class="form-control"
-                                formControlName="IMEI"
-                                ngModel maxlength="20"
-                                #ImeiInput
-                                [ngClass]="{'is-invalid':validarCampos('IMEI')}"
-
-                                (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
+                                <input type="text" class="form-control" formControlName="IMEI" ngModel maxlength="20" #ImeiInput [ngClass]="{'is-invalid':validarCampos('IMEI')}" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
 
                                 <div class="required-field" *ngIf="validarCampos('IMEI')">
                                     Este campo es requerido.
@@ -50,15 +44,6 @@
                                     Este campo es requerido.
                                 </div>
                             </div>
-
-                            <!-- --------------- Al detalle  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Al detalle</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
-                                <div class="required-field" *ngIf="validarCampos('alDetalle')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
                             <!-- --------------- Al por Mayor  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Al por Mayor</label>
@@ -67,6 +52,15 @@
                                     Este campo es requerido.
                                 </div>
                             </div>
+                            <!-- --------------- Al detalle  --------------- -->
+                            <div class="col-md-4">
+                                <label class="form-label">Al detalle</label>
+                                <input type="number" class="form-control" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
+                                <div class="required-field" *ngIf="validarCampos('alDetalle')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
                             <!-- --------------- Comision Detalle  --------------- -->
                             <div class="col-md-4">
                                 <label class="form-label">Comision Detalle</label>

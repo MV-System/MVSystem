@@ -93,10 +93,10 @@ export class EquipoRegistroComponent implements OnInit {
         .subscribe((equipo) => {
           equipo.forEach((equipoRegistrado) => {
 
-            this.equipoValorRetorno.forEach(({ imei }) => {
-              this.imeiRegistrado = imei;
+            // this.equipoValorRetorno.forEach(({ imei }) => {
+            //   this.imeiRegistrado = imei;
 
-            });
+            // });
 
             if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
               this.toastr.error('El IMEI del Equipo debe ser diferente!');
@@ -113,7 +113,6 @@ export class EquipoRegistroComponent implements OnInit {
             }
           });
         });
-        console.log("Form Registro Valores",this.formRegistro);
     }
     else {
       this.formRegistro.markAllAsTouched();
