@@ -199,10 +199,9 @@
                                                 descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
                                             </td>
 
-
                                             <td class="align-center">
                                                 <input type="text" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
-                                                descuentoInput.focus()" [maxlen]="6" appNumeric [(ngModel)]="detalleFactura.value.precio" (ngModelChange)="onPrecioChange($event, i)">
+                                                descuentoInput.focus()" [maxlen]="6" appNumeric (keyup)="obtenerDetalleFactura(i)">
                                             </td>
 
 
@@ -210,7 +209,7 @@
                                                 {{detalleFactura.value.subTotal}}
                                             </td>
                                             <td class="col-md-1">
-                                                <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo()" (keyup)="obtenerDetalleFactura(i)" />
+                                                <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
                                             </td>
                                             <td class="align-center">
                                                 {{detalleFactura.value.total}}

@@ -456,6 +456,7 @@ else { currentArticulo.idTipo = 2;}
       if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
         this.borrarArticulo(index)
         this.toastr.error("Este articulo ya fue registrado")
+        return
       }
     }
 
