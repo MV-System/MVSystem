@@ -177,6 +177,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
     // Actualizamos el precio manualmente
     currentFormGroup.get('precio')?.setValue(newPrecio);
+    console.log("Nuevo precio", newPrecio);
 
     // Recalculamos el subtotal con el nuevo precio
     const cantidad = currentFormGroup.get('cantidad')?.value;
@@ -185,12 +186,20 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     // Actualizamos el subtotal en el formulario
     currentFormGroup.get('subTotal')?.setValue(subTotal);
 
-    // También puedes hacer otros cálculos si es necesario
-    this.obtenerCantidadArticulo(currentFormGroup.getRawValue());
-    this.obtenerCantidadArticuloStock(index);
+    // Recalculamos el total (Subtotal - Descuento)
+    const descuento = currentFormGroup.get('descuento')?.value || 0; // Si no hay descuento, 0
+    const total = subTotal - descuento;
 
-    // Finalmente, actualizamos los valores generales si es necesario
+    // Actualizamos el total en el formulario
+    currentFormGroup.get('total')?.setValue(total);
+
+    // Actualizamos los valores generales si es necesario
     this.refreshGeneralValues();
+}
+
+calcularSubTotalArticulo(precio: number, cantidad: number) {
+  const subTotal = precio * cantidad;
+  return subTotal
 }
   private updatePriceArticulos(){
     this.articulos().controls.forEach((v,index)=>{
@@ -465,10 +474,7 @@ else { currentArticulo.idTipo = 2;}
     if (currentArticulo.idTipo == 1)
       currentFormGroup.controls["cantidad"].disable()
   }
-  calcularSubTotalArticulo(precio: number, cantidad: number) {
-    const subTotal = precio * cantidad;
-    return subTotal
-  }
+
   onChangeTipoPago() {
 
     if (this.form.get('tipoPago')?.value == "2") {
