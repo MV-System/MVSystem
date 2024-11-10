@@ -8,6 +8,7 @@ import { CatalogosService } from '../../../../core/services/catalogos.service';
 import { ClientesService } from '../../../../core/services/clientes.service';
 import * as $ from "jquery";
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LoginService } from 'src/app/auth/login.service';
 @Component({
   selector: 'app-clientes-registro',
   templateUrl: './clientes-registro.component.html',
@@ -15,6 +16,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 })
 export class ClientesRegistroComponent implements OnInit {
   constructor(
+    private loginService: LoginService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
     private catalogosService: CatalogosService,
@@ -75,7 +77,7 @@ export class ClientesRegistroComponent implements OnInit {
       iD_Tipo_Telefono: Number(this.formRegistro.get('tipoTelefono')?.value),
       extencion: this.formRegistro.get('extencion')?.value,
       email_Detalle: this.formRegistro.get('email')?.value,
-      usuario: "Jon Doe",
+      usuario: this.loginService.getUserName(),
       // usuario:      this.formRegistro.get('usuario')?.value,
       direccion_Detalle: direccion.toString(),
     }
