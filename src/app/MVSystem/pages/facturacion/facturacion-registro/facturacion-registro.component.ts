@@ -19,7 +19,7 @@ import { CotizacionService } from '../../../../core/services/cotizacion.service'
 import { LoginService } from '../../../../auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { ValidatorPermissionService } from '../../../../core/services/validator-permission.service';
-import { Cliente } from '../../../../core/interfaces/cliente.interface';
+import { Cliente, ClienteConsultaCriterio } from '../../../../core/interfaces/cliente.interface';
 import { CotizacionAmount } from 'src/app/core/interfaces/cotizacion.interface';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 
@@ -347,12 +347,19 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   onAddCustomer(customer: Cliente) {
     this.customer = customer;
     this.clientesService.isOpeningForm$.next(false);
+    if (customer) {
+      // Agregar el nuevo cliente a la lista de 'customers'
+      this.customers = [customer, ...this.customers];
+      this.form.get('telefono')?.setValue(this.customer.numero_Telefono);
+      // Mostrar mensaje de éxito
+    } else {
+      // Si el campo 'telefono' está vacío, mostramos una advertencia
+      this.toastr.warning('Por favor ingrese un número de teléfono.');
+    }
 
   }
-  onAdd() {
-    this.clientesService.isOpeningForm$.next(true);
-    this.form.get('telefono')?.reset()
-  }
+
+
 
   onSubmit() {
     if (this.form.valid) {
@@ -424,6 +431,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         });
     });
   };
+
   obtenerDetalleFactura(index: number) {
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
 
@@ -443,7 +451,7 @@ else { currentArticulo.idTipo = 2;}
 
     currentArticulo.idGarantia = 1;
     currentArticulo.idEquipo = articulo.id;
-    currentArticulo.descripcion = articulo.accesorio_Descripcion + '  ' + articulo.modelo;
+    currentArticulo.descripcion =  articulo.modelo;
     currentArticulo.precioDetalle = articulo.precio_Detalle;
     currentArticulo.precioMayor = articulo.precio_Por_Mayor;
 
@@ -601,16 +609,16 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   obtenerClientesPorNombreTelefono() {
-    const { telefono } = this.form.value;
-    this.clientesService.getClientesPorNombreTelefono(telefono)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async customer => {
+      const { telefono } = this.form.value;
+      this.clientesService.getClientesPorNombreTelefono(telefono)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(async customer => {
 
-        // await this.loadCotizacionCliente(telefono);
-        this.customer = customer[0];
-      }, error => {
-        this.toastr.error(error);
-      });
+          // await this.loadCotizacionCliente(telefono);
+          this.customer = customer[0];
+        }, error => {
+          this.toastr.error(error);
+        });
   }
   loadDetalleCotizacion(numeroRegistro: number) {
 
@@ -916,6 +924,11 @@ else { currentArticulo.idTipo = 2;}
       .subscribe(clientes => {
         this.customers = clientes
       })
+  }
+
+  onAdd() {
+    // Indicar que el formulario está siendo abierto
+    this.clientesService.isOpeningForm$.next(true);
   }
 
 }
