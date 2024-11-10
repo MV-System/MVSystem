@@ -350,7 +350,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     if (customer) {
       // Agregar el nuevo cliente a la lista de 'customers'
       this.customers = [customer, ...this.customers];
-      this.form.get('telefono')?.setValue(this.customer.numero_Telefono);
+     this.form.get('telefono')?.setValue(this.customer.numero_Telefono);
+
+      this.obtenerClientesPorNombreTelefono(this.customer.numero_Telefono);
       // Mostrar mensaje de éxito
     } else {
       // Si el campo 'telefono' está vacío, mostramos una advertencia
@@ -608,7 +610,20 @@ else { currentArticulo.idTipo = 2;}
     }
     return model;
   }
-  obtenerClientesPorNombreTelefono() {
+  obtenerClientesPorNombreTelefono(tel?: number) {
+
+    if(tel){
+      this.clientesService.getClientesPorNombreTelefono(tel)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async customer => {
+
+        // await this.loadCotizacionCliente(telefono);
+        this.customer = customer[0];
+      }, error => {
+        this.toastr.error(error);
+      });
+    }
+    else{
       const { telefono } = this.form.value;
       this.clientesService.getClientesPorNombreTelefono(telefono)
         .pipe(takeUntil(this.destroy$))
@@ -619,6 +634,7 @@ else { currentArticulo.idTipo = 2;}
         }, error => {
           this.toastr.error(error);
         });
+    }
   }
   loadDetalleCotizacion(numeroRegistro: number) {
 
