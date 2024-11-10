@@ -68,6 +68,11 @@
                             <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index" id="flush-collapseOne" class="accordion-collapse collapse tr-collapse">
                                 <tr class="animate__animated animate__fadeIn tr-collapse" *ngFor="let detalle of detalleFactura; let d = index">
                                     <td col="1">Cod: {{detalle.idEquipo}}</td>
+                                    <!-- <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
+                  <i class="bx bx-edit-alt"></i>
+                </button> -->
+                <td col="1">Tipo: {{detalle}}</td>
+
                                     <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
                                     <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
                                     <td><b>Precio:</b> {{ detalle.precio }}</td>
@@ -78,6 +83,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    
                                 </tr>
                             </ng-container>
                         </ng-container>
