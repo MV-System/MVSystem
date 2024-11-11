@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia } from '../interfaces/equipo.interface';
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { AccesorioObjRetorno } from '../interfaces/accesorio.interface';
@@ -110,10 +110,10 @@ export class MantenimientoService {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }
 
-  PostEquipo_Delete(imei: string): Observable<string> {
+  PostEquipo_Delete(imei: string): Observable<EquipoEliminadoResponse> {
     const url = `${APIURL.Equipo.Accion.PostEquipo_Delete}?imei=${imei}`;  // Pasar el IMEI como parámetro en la URL
 
-    return this.http.post<string>(url, null);  // El tipo de respuesta ahora es string, no Blob
+    return this.http.post<EquipoEliminadoResponse>(url, null);  // Cambiar a la interfaz adecuada
   }
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
     return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)

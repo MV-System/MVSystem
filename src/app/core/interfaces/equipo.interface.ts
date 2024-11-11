@@ -160,7 +160,9 @@ export interface EquipoAlmacenTransferirArrayRetorno {
   usuario:         string;
 
 }
-
+export interface EquipoEliminadoResponse {
+  mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
+}
 
 export interface EquipoModificarEstatus{
     imei: string;

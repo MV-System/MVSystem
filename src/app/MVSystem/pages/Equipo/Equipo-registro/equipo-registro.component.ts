@@ -136,9 +136,13 @@ export class EquipoRegistroComponent implements OnInit {
 
     this.mantenimientoService.PostEquipo_Delete(imei).subscribe({
       next: (response) => {
-        // Aquí, response es un string con el mensaje que viene del API
         this.isLoading = false;  // Terminar carga
-        this.toastr.info(response);  // Mostrar el mensaje de éxito o error
+
+        // Asegúrate de acceder a la propiedad 'mensaje' del objeto 'response'
+        const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+
+        // Mostrar el mensaje en el toast
+        this.toastr.info(mensaje);
 
         // Eliminar el equipo de la lista localmente
         this.equipoValorRetorno = this.equipoValorRetorno.filter(equipo => equipo.imei !== imei);
@@ -150,7 +154,6 @@ export class EquipoRegistroComponent implements OnInit {
       }
     });
   }
-
   modeloRegistroEquipo() {
      const model: Equipo = {
       imei: this.formRegistro.get('IMEI')?.value,

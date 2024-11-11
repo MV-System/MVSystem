@@ -47,7 +47,7 @@ export class EquipoRecepcionComponent implements OnInit {
     ImeiEntrada: ['', Validators.required],
     PrecioImeiEntra: [,[Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
     IDModelo: ['', Validators.required],
-    IDCondicion: ['', Validators.required], 
+    IDCondicion: ['', Validators.required],
     ImeiSale: ['',[],[this.imeiSaleAsyncValidatorService]],//this.imeiSaleAsyncValidatorService
     Nota: ['']
   })
