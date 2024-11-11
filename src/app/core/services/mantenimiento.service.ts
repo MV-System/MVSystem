@@ -110,6 +110,11 @@ export class MantenimientoService {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }
 
+  PostEquipo_Delete(imei: string): Observable<string> {
+    const url = `${APIURL.Equipo.Accion.PostEquipo_Delete}?imei=${imei}`;  // Pasar el IMEI como parámetro en la URL
+
+    return this.http.post<string>(url, null);  // El tipo de respuesta ahora es string, no Blob
+  }
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
     return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)
   }

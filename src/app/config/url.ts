@@ -67,7 +67,8 @@ export let APIURL = {
             EstadoActualiza: API + 'Equipos/EstadoActualiza'
         },
         Accion: {
-            EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio='
+          EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio=',
+          PostEquipo_Delete:  API + 'Equipos/PostEquipo_Delete'
         }
     },
     Marca: {

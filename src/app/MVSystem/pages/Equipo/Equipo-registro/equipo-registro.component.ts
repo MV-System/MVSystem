@@ -57,7 +57,7 @@ export class EquipoRegistroComponent implements OnInit {
   }
 
   btnDisabled: boolean = true;
-
+  isLoading: boolean = false; // Variable para controlar el estado de carga
   formRegistro: FormGroup = this.fb.group({
     factura: ["",],
     IMEI: ["",],
@@ -130,8 +130,29 @@ export class EquipoRegistroComponent implements OnInit {
     this.msgValidacionesCamposFormNumericos();
 
   }
+  EliminaEquipoDeRegistro(imei: string) {
+    this.isLoading = true;  // Iniciar carga
+    console.log("Imei", imei);
+
+    this.mantenimientoService.PostEquipo_Delete(imei).subscribe({
+      next: (response) => {
+        // Aquí, response es un string con el mensaje que viene del API
+        this.isLoading = false;  // Terminar carga
+        this.toastr.info(response);  // Mostrar el mensaje de éxito o error
+
+        // Eliminar el equipo de la lista localmente
+        this.equipoValorRetorno = this.equipoValorRetorno.filter(equipo => equipo.imei !== imei);
+      },
+      error: (err) => {
+        this.isLoading = false;  // Terminar carga en caso de error
+        this.toastr.error('Ocurrió un error al eliminar el equipo.');
+        console.error('Error eliminando el equipo:', err);
+      }
+    });
+  }
+
   modeloRegistroEquipo() {
-    const model: Equipo = {
+     const model: Equipo = {
       imei: this.formRegistro.get('IMEI')?.value,
       marca: '',
       modelo: '',

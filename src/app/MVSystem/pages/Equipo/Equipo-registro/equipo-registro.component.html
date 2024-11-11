@@ -209,19 +209,19 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
+
                                         <td>{{i + 1}}</td>
                                         <td>{{equipo.imei}}</td>
                                         <td>{{equipo?.marca}}</td>
                                         <td>{{equipo?.modelo}}</td>
+                                        <td> <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Elimina Equipo">
+                                          <i class="bx bx-trash-alt"></i>
+                                      </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- <select class="js-example-basic-multiple" name="states[]" >
-                    <option value="AL">Alabama</option>
-                      ...
-                    <option value="WY">Wyoming</option>
-                  </select> -->
                     </div>
                 </div>
             </div>
