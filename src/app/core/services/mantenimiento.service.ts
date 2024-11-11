@@ -47,7 +47,21 @@ export class MantenimientoService {
       IDsucursal,
       Usuario
   };
+
     return this.http.post<Blob>(APIURL.Factura.Inserta.AnulaFactura,body,{
+      responseType: 'blob' as 'json'
+    });
+  }
+  EditaDetalleFactura(EquipoActual: string,EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+    const body = {
+      NumeroFactura,
+      IDsucursal,
+      EquipoActual,
+      EquipoNuevo,
+      Usuario
+  };
+
+    return this.http.post<Blob>(APIURL.Factura.Actualiza.DetalleFactura,body,{
       responseType: 'blob' as 'json'
     });
   }

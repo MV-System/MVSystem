@@ -5,9 +5,11 @@ import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfa
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -33,11 +35,13 @@ export class FacturacionListaComponent implements OnInit {
       this.selectedRowIndex = index; // Selecciona la fila al hacer clic
     }
   }
+  destroy$: Subject<any> = new Subject<any>();
   index!: number;
   numeroFactura!: number;
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   constructor(
+    private catalogosService: CatalogosService,
     private validatorPermissionService: ValidatorPermissionService,
     private loginService: LoginService,
     private mantenimientoService: MantenimientoService,
@@ -68,6 +72,61 @@ export class FacturacionListaComponent implements OnInit {
     // Cambia el estado de visibilidad de los detalles de la factura
     this.facturaVisibility[facturaId] = !this.facturaVisibility[facturaId];
   }
+ // Método para manejar la edición de un código
+ onEdit(detalle: DetalleFacturaList) {
+  // Guardar el valor original antes de editarlo
+  detalle.EquipoActual = detalle.idEquipo;
+  console.log("Equipo Capturado",detalle.EquipoActual);
+  detalle.editMode = true;
+}
+
+// Método para guardar el cambio del código
+DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
+  this.isLoading = true;
+  detalle.EquipoNuevo =  `${detalle.idEquipo}`
+  this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
+  .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente cuando se destruya el componente
+  .subscribe({
+    next: (equipos) => {
+      // Verificar si el equipo está disponible
+      if (equipos.disponible === 'S') {
+          this.mantenimientoService.EditaDetalleFactura(detalle.EquipoActual,
+          detalle.EquipoNuevo,
+          detalle.numeroFactura,
+          this.loginService.getUserIdSucursal,
+          this.loginService.getUserName())
+.subscribe(blob =>{
+this.isLoading = false; // Terminar carga
+this.toast.success('Factura actualizada con el nuevo equipo');
+setTimeout(() => {
+window.location.reload(); // Recarga la página después de 2 segundos
+}, 1000);
+},err=>{
+this.toast.error('Error al Editar la Factura');
+});
+
+      } else {
+        // Si el equipo no está disponible, muestra el mensaje de error
+        this.toast.error(`El Equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${equipos.mensaje}`);
+      }
+    },
+    error: (error) => {
+      // Si ocurre un error en la llamada, manejarlo adecuadamente
+      this.toast.error('Hubo un problema al verificar la disponibilidad del equipo.');
+    }
+  });
+  // Aquí puedes realizar cualquier acción de guardado en tu backend o lógica adicional
+  console.log(`Nuevo código guardado: ${detalle.idEquipo}`);
+  detalle.editMode = false;
+}
+
+// Método para cancelar la edición y restaurar el valor original
+onCancel(detalle: DetalleFacturaList) {
+  // Restaurar el valor original si el usuario cancela la edición
+  detalle.idEquipo = detalle.EquipoActual;
+  detalle.editMode = false;
+}
+
 
   getIdFactura(numerofactura: number,index: number){
     this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada

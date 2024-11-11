@@ -78,7 +78,7 @@ export interface DetalleFacturaList {
   cantidad: number;
   descripcion: string;
   numeroFactura: number;
-  idEquipo: number;
+  idEquipo: string;
   idTipo: number;
   idGarantia: number;
   subTotal: number;
@@ -91,6 +91,9 @@ export interface DetalleFacturaList {
   idTipoFactura: number; // Propiedad faltante
   itbis: number; // Propiedad faltante
   Usuario: string; // Propiedad faltante
+  editMode: boolean // Agregar la propiedad editMode aquí
+  EquipoActual: string // Variable para almacenar el valor original
+  EquipoNuevo: string // Variable para almacenar el valor nuevo
 }
 
 

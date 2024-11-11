@@ -67,12 +67,31 @@
 
                             <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index" id="flush-collapseOne" class="accordion-collapse collapse tr-collapse">
                                 <tr class="animate__animated animate__fadeIn tr-collapse" *ngFor="let detalle of detalleFactura; let d = index">
-                                    <td col="1">Cod: {{detalle.idEquipo}}</td>
-                                    <!-- <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-                  <i class="bx bx-edit-alt"></i>
-                </button> -->
-                <td col="1">Tipo: {{detalle}}</td>
+                                    <!-- Celda de Cod que será editable -->
+                                    <td col="1">
+                                        <ng-container *ngIf="!detalle.editMode">
+                                            <!-- Si no está en modo edición, muestra el código -->
+                                            Cod: {{ detalle.idEquipo }}
 
+                                            <!-- Solo mostrar el botón de editar si idTipo es igual a 1 -->
+                                            <button *ngIf="detalle.idTipo === 1" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
+                                              <i class="bx bx-edit-alt"></i>
+                                          </button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="detalle.editMode">
+                                            <!-- Si está en modo edición, muestra un input para editar el código -->
+                                            <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control" placeholder="Ingrese el código" />
+                                            <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar">
+                                              <i class="bx bx-save"></i>
+                                          </button>
+                                            <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar">
+                                              <i class="bx bx-x"></i>
+                                          </button>
+                                        </ng-container>
+                                    </td>
+
+                                    <!-- Resto de las celdas (sin cambios) -->
                                     <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
                                     <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
                                     <td><b>Precio:</b> {{ detalle.precio }}</td>
@@ -83,7 +102,6 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    
                                 </tr>
                             </ng-container>
                         </ng-container>

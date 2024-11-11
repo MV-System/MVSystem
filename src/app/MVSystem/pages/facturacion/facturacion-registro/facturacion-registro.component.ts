@@ -139,6 +139,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],
+      editMode: false // Agregar la propiedad editMode aquí
     })]),
   });
 
@@ -607,6 +608,9 @@ else { currentArticulo.idTipo = 2;}
       total: control.get('total')?.value,
       fechaRegistro: this.form.get('fechaFacturacion')?.value,
       Usuario: this.loginService.getUserName(),
+      editMode:false,
+      EquipoActual: '',
+      EquipoNuevo: '',
     }
     return model;
   }

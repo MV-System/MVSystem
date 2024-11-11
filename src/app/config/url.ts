@@ -37,7 +37,10 @@ export let APIURL = {
             Facturas: API + 'Factura/GetFacturas',
             DetalleFactura: API + 'Factura/GetDetalleFactura',
             FacturaNumero: API + 'Factura/GetFacturaNumeroUltimo',
-        }
+        },
+        Actualiza:{
+          DetalleFactura: API + 'Factura/EditaDetalleFactura',
+      }
     },
     Equipo: {
         Inserta: {
