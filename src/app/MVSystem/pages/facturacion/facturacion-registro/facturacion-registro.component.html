@@ -212,14 +212,14 @@
                                                 descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
                                             </td>
 
-                                            <td class="align-center">
-                                                {{detalleFactura.value.precio}}
-                                            </td>
-
                                             <!-- <td class="align-center">
-                                              <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
+                                                {{detalleFactura.value.precio}}
+                                            </td> -->
+
+                                            <td class="align-center">
+                                                <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
                                               descuentoInput.focus()" [maxlen]="6" appNumeric>
-                                          </td> -->
+                                            </td>
 
 
                                             <td class="align-center">

@@ -171,29 +171,35 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     }, 200)
   }
   onPrecioChange(index: number): void {
-debugger;
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;
 // Accedemos al valor del precio usando 'get'
   const newPrecio = currentFormGroup.get('precio')?.value;
     // Actualizamos el precio manualmente
     currentFormGroup.get('precio')?.setValue(newPrecio);
-    console.log("Nuevo precio", newPrecio);
 
-    // Recalculamos el subtotal con el nuevo precio
+    // Verificar si el valor del precio ha sido modificado
+  const precioOriginal = currentFormGroup.get('articulo')?.value?.precio_Detalle || 0; // Precio original del artículo seleccionado
+
+  // Si el precio ha sido modificado, lo dejamos tal cual, sino lo mantenemos como estaba
+  if (newPrecio !== precioOriginal) {
+    // Recalcular el subtotal con el nuevo precio
     const cantidad = currentFormGroup.get('cantidad')?.value;
     const subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
 
     // Actualizamos el subtotal en el formulario
     currentFormGroup.get('subTotal')?.setValue(subTotal);
 
-    // Recalculamos el total (Subtotal - Descuento)
-    const descuento = currentFormGroup.get('descuento')?.value || 0; // Si no hay descuento, 0
+    // Recalcular el total (Subtotal - Descuento)
+    const descuento = currentFormGroup.get('descuento')?.value || 0;
     const total = subTotal - descuento;
 
     // Actualizamos el total en el formulario
     currentFormGroup.get('total')?.setValue(total);
-
+  } else {
+    // Si el precio no ha sido modificado, no hacemos nada
+    console.log("El precio no ha sido modificado, se mantiene el valor original");
+  }
     // Actualizamos los valores generales si es necesario
     this.refreshGeneralValues();
 }
@@ -273,7 +279,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         tipoFactura: 1,
         tipoPago: 1,
         garantia: 8,
-        vendedor: '',
+       //vendedor: '',
         nombre: '',
         apellido: '',
         RNC: '',
@@ -453,7 +459,21 @@ else { currentArticulo.idTipo = 2;}
       }
     }
 
-    currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+    // Accedemos al valor del precio usando 'get'
+  var newPrecio = currentFormGroup.get('precio')?.value;
+  if(currentArticulo.precio == 0)
+  {
+    newPrecio = currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+  }
+  if(newPrecio != currentArticulo.precioDetalle && newPrecio !=currentArticulo.precioMayor)
+    {
+
+      currentArticulo.precio = newPrecio;
+    }
+    else
+    {
+      currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+    }
 
     currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
 
