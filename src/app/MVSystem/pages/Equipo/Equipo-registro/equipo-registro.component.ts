@@ -138,10 +138,7 @@ export class EquipoRegistroComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;  // Terminar carga
 
-        // Asegúrate de acceder a la propiedad 'mensaje' del objeto 'response'
         const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
-
-        // Mostrar el mensaje en el toast
         this.toastr.info(mensaje);
 
         // Eliminar el equipo de la lista localmente

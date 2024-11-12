@@ -72,31 +72,29 @@
                         <div class="col">
                             <label for="client" class="form-label">{{isFactura?'Facturar':'Cotización'}} a:</label>
                             <div class="search-customer grid">
-                              <!-- ng-select para buscar un cliente por teléfono -->
-                              <ng-select formControlName="telefono"
-                                         (change)="obtenerClientesPorNombreTelefono()"
-                                         [clearable]="false"
-                                         [ngClass]="{ 'is-invalid': true }">     <!-- Clases condicionales, puedes cambiar 'true' por una condición real -->
+                                <!-- ng-select para buscar un cliente por teléfono -->
+                                <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">
+                                    <!-- Clases condicionales, puedes cambiar 'true' por una condición real -->
 
-                                  <!-- Aquí se muestran las opciones del cliente, por cada cliente en la lista 'customers' -->
-                                  <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
-                                      {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
-                                  </ng-option>
-                              </ng-select>
+                                    <!-- Aquí se muestran las opciones del cliente, por cada cliente en la lista 'customers' -->
+                                    <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
+                                        {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                                    </ng-option>
+                                </ng-select>
 
-                              <!-- Botón para agregar un nuevo cliente -->
-                              <button class="btns icon primary" type="button" (click)="onAdd()">
+                                <!-- Botón para agregar un nuevo cliente -->
+                                <button class="btns icon primary" type="button" (click)="onAdd()">
                                   <i class="bx bx-plus"></i>
                               </button>
 
-                              <!-- Mensaje de validación de teléfono si es requerido -->
-                              <!-- Se mantiene comentado, pero sería bueno habilitarlo si es necesario -->
-                              <!--
+                                <!-- Mensaje de validación de teléfono si es requerido -->
+                                <!-- Se mantiene comentado, pero sería bueno habilitarlo si es necesario -->
+                                <!--
                               <div class="required-field" *ngIf="validarCampos('telefono')">
                                   Este campo es requerido.
                               </div>
                               -->
-                          </div>
+                            </div>
 
                             <div class="clientDetail">
                                 <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
@@ -215,9 +213,13 @@
                                             </td>
 
                                             <td class="align-center">
-                                                <input type="text" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
-                                                descuentoInput.focus()" [maxlen]="6" appNumeric (keyup)="obtenerDetalleFactura(i)">
+                                                {{detalleFactura.value.precio}}
                                             </td>
+
+                                            <!-- <td class="align-center">
+                                              <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
+                                              descuentoInput.focus()" [maxlen]="6" appNumeric>
+                                          </td> -->
 
 
                                             <td class="align-center">

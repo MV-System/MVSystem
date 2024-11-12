@@ -153,7 +153,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   onScrollToEnd() {
     this.fetchMore();
   }
-
   onScroll(e: { start: number, end: number }) {
     let end = e.end;
     if (this.isLoading || this.accesorios.length <= this.accesoriosBuffer.length) {
@@ -163,7 +162,6 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.fetchMore();
     }
   }
-
   private fetchMore() {
     const len = this.accesoriosBuffer.length;
     const more = this.accesorios.slice(len, this.bufferSize + len);
@@ -172,10 +170,12 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.accesoriosBuffer = this.accesoriosBuffer.concat(more);
     }, 200)
   }
-  onPrecioChange(newPrecio: number, index: number) {
+  onPrecioChange(index: number): void {
+debugger;
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;
-
+// Accedemos al valor del precio usando 'get'
+  const newPrecio = currentFormGroup.get('precio')?.value;
     // Actualizamos el precio manualmente
     currentFormGroup.get('precio')?.setValue(newPrecio);
     console.log("Nuevo precio", newPrecio);
@@ -243,7 +243,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         )
     }
   }
-
   onSelectCotizacion(cotizacion: CotizacionAmount) {
     this.abono = cotizacion.abono;
     this.descuento = cotizacion.descuento;
@@ -263,14 +262,10 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     }
     else {
       this.isFactura = !this.isFactura;
-
     }
-
   }
   onClean() {
     if(this.form.dirty)
-    // this.rDialogService.openDialog("¡Atención!", `Está seguro que quiere limpiar el formulario?`,
-    // () => {
       this.form.patchValue({
         aplicarItbis: false,
         comprobante: 0,
@@ -298,13 +293,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       this.isCredit = false;
       this.isNcfRequire = false;
       this.isLoading = false;
-   // },
-  //   () => {
-
-  //   },
-  //   "Cancelar",
-  //   "Si"
-  // )
 
   }
   cleanAmounts() {
@@ -361,9 +349,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     }
 
   }
-
-
-
   onSubmit() {
     if (this.form.valid) {
       if (this.isFactura) {
@@ -382,8 +367,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     return Number((this.form.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
       (this.form.get('tipoFactura')?.value == 2 ? precioMayor : 0))
   }
-
-
   addArticuloImei = (imei: string) => {
     return new Promise((resolve) => {
       this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
@@ -433,8 +416,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
           this.toastr.error('Error al buscar el equipo.');
         });
     });
-  };
-
+  }
   obtenerDetalleFactura(index: number) {
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
 
@@ -730,18 +712,14 @@ else { currentArticulo.idTipo = 2;}
     }
 
   }
-
   validarCampos(nombreCampo: string) {
     return this.form.get(nombreCampo)?.invalid &&
       this.form.get(nombreCampo)?.touched
   }
-
   validarCamposArticulo(detalleFactura: AbstractControl, nombreCampo: string) {
     const campo = detalleFactura.get(nombreCampo)
     return campo?.invalid && campo?.touched
   }
-
-
   private loadCatalogos() {
     this.loading.showLoading();
     forkJoin([
