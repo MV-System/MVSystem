@@ -395,7 +395,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
 
             // Crear el artículo con la información del equipo
             const articulo: AccesorioLista = {
-              accesorio_Descripcion: `${equipo.imei}`,
+              accesorio_Descripcion: `${equipo.modelo}`,
               cantidad: 1,
               id: equipo.imei,
               codigo_Barra: 0,
