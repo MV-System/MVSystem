@@ -20,6 +20,7 @@ import { EquipoModificacionEstatusComponent } from './Equipo-modificacion-estatu
 import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.component';
 import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.component';
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
+import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -39,7 +40,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquipoModificacionEstatusComponent,
     EquipoTransferenciaComponent,
     EquipoRecepcionComponent,
-    EquipoConsultaRecibidoComponent
+    EquipoConsultaRecibidoComponent,
+    EquiposConsultaTransferenciasComponent
   ],
   imports: [
     CommonModule,

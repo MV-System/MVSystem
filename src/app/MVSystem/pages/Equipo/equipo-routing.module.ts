@@ -8,6 +8,7 @@ import { EquipoRecepcionComponent } from './equipo-recepcion/equipo-recepcion.co
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
+import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path:'recepcion',
     component:EquipoRecepcionComponent
+  },
+  {
+    path:'ConsultaTransferencia',
+    component:EquiposConsultaTransferenciasComponent
   }
 ];
 

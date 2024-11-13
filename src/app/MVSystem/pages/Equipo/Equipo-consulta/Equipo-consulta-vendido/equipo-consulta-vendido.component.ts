@@ -151,8 +151,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.currentPage = index;
     this.filter.PageIndex = index;
     this.filter.pageIndex = index;
-    console.log("Index",index);
-    console.log("PageIndex",this.filter.PageIndex);
     this.obtenerEquiposVendidos();
   }
   getValueFilterForm() {

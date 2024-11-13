@@ -80,6 +80,9 @@ export class SidebarComponent implements OnInit {
   VerFormConsultaFacturas(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_CONS_FACTURAS");
   }
+  VerFormConsultaTransferencias(): boolean {
+    return this.validatorPermissionService.validateUserRole("Menu_Consulta_Transferencias");
+  }
 
 
   @HostListener('click', ['$event']) click() {

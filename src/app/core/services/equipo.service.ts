@@ -9,6 +9,7 @@ import {
     EquipoTransferenciaReporte,
     filterEquipos,
     EquipoDisponible,
+    EquipoAlmacenTransferirArrayRetorno,
 } from '../interfaces/equipo.interface';
 import { APIURL } from "src/app/config/url";
 import { Observable } from 'rxjs';
@@ -74,6 +75,19 @@ export class EquipoService{
         EquipoVendido.fechaFinalFactura ;
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
+    GetTransferenciaEquipos(Sucursal_Salida: number,Sucursal_Destino: number,FechaInicio: string,FechaFinal: string):Observable<EquipoAlmacenTransferirArrayRetorno[]>{
+      const search =
+      'Sucursal_Salida='+
+     Sucursal_Salida +
+      '&Sucursal_Destino='+
+      Sucursal_Destino +
+      '&FechaInicio='+
+      FechaInicio +
+      '&FechaFinal='+
+      FechaFinal
+
+      return this.http.get<EquipoAlmacenTransferirArrayRetorno[]>(`${APIURL.Equipo.Consulta.EquipoTransferenciasConsulta}?`+ search)
+  }
     getEquipoByImei(imei: string):Observable<EquipoTransferencia>{
         return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
     }

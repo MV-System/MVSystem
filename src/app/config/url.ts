@@ -57,6 +57,7 @@ export let APIURL = {
             EquipoDisponibleFT: API + 'Equipos/Equipo_Busca_Disponible',
             EquipoBuscaDisponible: API + 'Equipos',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
+            EquipoTransferenciasConsulta: API + 'Equipos/GetTransferenciaEquipos',
             EquipoModificarEstatus: API + 'Equipos/GetEquipoPreciosEstatusByImei',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',

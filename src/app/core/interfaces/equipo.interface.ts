@@ -150,14 +150,15 @@ export interface EquipoAlmacenTransferir {
 }
 
 export interface EquipoAlmacenTransferirArrayRetorno {
-  id_Transferencia:              number;
-  imei:            string;
-  modelo:          string;
-  mensaje:         string;
-  almacenSalida:   number;
-  almacenDestino:  string;
-  cantidadEquipos: number;
-  usuario:         string;
+  idTransferencia:   number;
+  imei:               string;
+  modelo:             string;
+  mensaje:            string;
+  almacenSalida:      number;
+  almacenDestino:     string;
+  cantidadEquipos:    number;
+  fechaTransferencia: string;
+  usuario:            string;
 
 }
 export interface EquipoEliminadoResponse {

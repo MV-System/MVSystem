@@ -135,6 +135,11 @@
                             <i class="bi bi-circle"></i><span>Facturas</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaTransferencias()">
+                        <a routerLink="./equipo/ConsultaTransferencia">
+                            <i class="bi bi-circle"></i><span>Transferencias de Equipos</span>
+                        </a>
+                    </li>
                     <li *ngIf="VerFormConsultaClientes()">
                         <a routerLink="./clientes/consulta">
                             <i class="bi bi-circle"></i><span>Clientes</span>
