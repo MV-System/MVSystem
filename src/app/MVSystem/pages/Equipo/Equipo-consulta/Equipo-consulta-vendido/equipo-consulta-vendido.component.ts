@@ -45,9 +45,16 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  // Este método se llama cuando cambia el número de elementos por página
+  onPageSizeChange() {
+   // Si se selecciona "Todos", mostramos todos los registros
+   if (this.filter.pageSize === this.totalRecord) {
+     this.filter.pageIndex = 1;  // Restablecer a la primera página
+   }
+   this.obtenerEquiposVendidos();  // Rehacer la consulta para actualizar los datos
+ }
+
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
     const change =  changes["clearFilter"];
 
     if(change && change.previousValue != change.currentValue){
@@ -205,8 +212,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.filter.fechaInicioFactura !==""||
     this.filter.fechaFinalFactura !==""
     ){
-      //this.pageChanged(1);
-      //this.filter.pageIndex = 4;
+
     }
 
   }

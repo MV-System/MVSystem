@@ -32,6 +32,17 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private loginService: LoginService,
   ) { }
 
+  // Este método se llama cuando cambia el número de elementos por página
+  onPageSizeChange() {
+     console.log("total registros",this.totalRecord);
+   //  debugger;
+    // Si se selecciona "Todos", mostramos todos los registros
+    if (this.filter.pageSize === this.totalRecord) {
+      this.filter.pageIndex = 1;  // Restablecer a la primera página
+    }
+    this.obtenerEquiposDisponibles();  // Rehacer la consulta para actualizar los datos
+  }
+
   ngOnInit(): void {
     //this.loading.showLoading();
     this.obtenerEquiposDisponibles();
@@ -201,6 +212,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.obtenerEquiposDisponibles();
   }
   pageChanged(index: number) {
+    console.log("index",index);
     this.currentPage = index;
     this.filter.pageIndex = index;
     console.log("PageIndex",this.filter.PageIndex);

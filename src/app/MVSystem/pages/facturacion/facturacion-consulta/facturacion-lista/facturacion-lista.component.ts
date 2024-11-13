@@ -17,8 +17,16 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./facturacion-lista.component.css']
 })
 export class FacturacionListaComponent implements OnInit {
+  @Output() pageSizeChanged = new EventEmitter<number>(); // Emitir evento para el cambio de pageSize
+
   // Aquí seguimos teniendo la propiedad facturaVisibility
   facturaVisibility: { [key: number]: boolean } = {};
+
+  // Este método se ejecuta cuando el select cambia
+  onPageSizeChange() {
+    // Emitimos el nuevo tamaño de página para que el componente padre lo maneje
+    this.pageSizeChanged.emit(this.pageSize);
+  }
 
   // La función para manejar ambos clics
   handleClick(facturaId: number, index: number) {
@@ -186,7 +194,7 @@ onCancel(detalle: DetalleFacturaList) {
     );
 
   }
-  onShowVendedorFactura(vendedorId: number){
+  // Este método se llama cuando cambia el número de elementos por página
 
-  }
+
 }

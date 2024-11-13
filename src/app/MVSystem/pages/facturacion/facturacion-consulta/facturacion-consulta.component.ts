@@ -22,7 +22,6 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   detalleFactura: DetalleFacturaList[]=[];
 
-
   constructor(private fb: FormBuilder,
     private loading: LoadingService,
     private mantenimientoService: MantenimientoService,
@@ -32,6 +31,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   private validatorPermissionService:ValidatorPermissionService,
   private rDialogService: RDialogService,) { }
 
+   // Método que se llama cuando cambia el tamaño de la página
+
+   onPageSizeChange(newPageSize: number) {
+    this.paginate.pageSize = newPageSize;
+    console.log('Nuevo tamaño de página:', this.pageSize);
+    // Llamar a la función que maneja la paginación y carga de datos
+    this.getFacturas();
+  }
+
     SelectSucursal(): boolean {
       return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
     }
@@ -39,7 +47,17 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       return this.validatorPermissionService.validateUserRole("ComprobanteCheck");
     }
 
-
+// Método para manejar el cambio de número de registros por página
+// onPageSizeChange() {
+//   this.paginate.pageSize = this.totalRecord;
+//   this.pageSize = Number(this.pageSize);
+//   this.totalRecord = Number(this.totalRecord);
+//   this.getFacturas();  // Llamada para obtener las facturas con el nuevo pageSize
+// }
+/**
+ * Cleanup logic that is executed when the component is destroyed.
+ * Unsubscribes from all subscriptions to prevent memory leaks.
+ */
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe())
   }
@@ -98,6 +116,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
 
   modelFacturaFilter(){
+    console.log("pageSize en los filtros",this.paginate.pageSize);
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
@@ -116,6 +135,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     return model;
   }
   getFacturas(){
+    console.log("pageSize en getFacturas",this.paginate.pageSize);
     this.loading.showLoading();
     this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
@@ -204,10 +224,10 @@ this.loading.hideLoading();
     this.subs.push(sub);
   }
   pageChanged(index: number) {
-    this.currentPage = index;
-    this.paginate.pageIndex= this.pageIndex = index;
-    this.getFacturas()
-  }
+  this.pageIndex = index;
+  this.paginate.pageIndex = this.pageIndex;
+  this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
+}
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.paginate.fechaInicio = '';

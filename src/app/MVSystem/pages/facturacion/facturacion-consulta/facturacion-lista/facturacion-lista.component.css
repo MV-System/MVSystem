@@ -109,3 +109,10 @@ td {
     background-color: #dcdcdc;
     /* Cambio de color cuando pasas el mouse sobre la fila seleccionada */
 }
+
+.form-select.chippagin {
+  width: 100px; /* Ajusta el ancho a lo que necesites */
+  height: 35px; /* Ajusta la altura del select */
+  padding: 5px 10px; /* Ajusta el padding si es necesario */
+  font-size: 14px; /* Cambia el tamaño de la fuente si lo deseas */
+}
