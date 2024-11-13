@@ -271,6 +271,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     }
   }
   onClean() {
+    //  setTimeout(() => {
+    //   window.location.reload(); // Recarga la página después de 2 segundos
+    //   }, 3000);
     if(this.form.dirty)
       this.form.patchValue({
         aplicarItbis: false,
@@ -299,7 +302,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       this.isCredit = false;
       this.isNcfRequire = false;
       this.isLoading = false;
-
+//  setTimeout(() => {
+//       window.location.reload(); // Recarga la página después de 2 segundos
+//       }, 2000);
   }
   cleanAmounts() {
     this.abono =0
@@ -403,13 +408,21 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
               articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
             }
 
+            // // Agregar el artículo a la lista de accesorios, evitando duplicados
+            // const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
+            // if (!articuloExistente) {
+            //   this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer];  // Agregar al principio
+            // } else {
+            //   this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
+            // }
+
             // Agregar el artículo a la lista de accesorios, evitando duplicados
-            const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
-            if (!articuloExistente) {
-              this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer];  // Agregar al principio
-            } else {
-              this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
-            }
+const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
+if (!articuloExistente) {
+  this.accesoriosBuffer.push(articulo);  // Agregar al final de la lista
+} else {
+  this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
+}
 
             resolve(articulo);  // Resuelve la promesa con el artículo creado
 
