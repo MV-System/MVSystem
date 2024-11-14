@@ -46,14 +46,24 @@
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
                 </li>
-                <li *ngIf="VerFormClientes()">
-                    <a routerLink="./clientes/registro">
-                        <i class="bi bi-circle"></i><span>Clientes</span>
-                    </a>
-                </li>
                 <li *ngIf="VerFormEquipos()">
                     <a routerLink="./equipo/registro">
                         <i class="bi bi-circle"></i><span>Equipos</span>
+                    </a>
+                </li>
+                <li *ngIf="VerFormTransferenciasEquipos()">
+                    <a routerLink="./equipo/transferencia">
+                        <i class="bi bi-circle"></i><span>Transferir equipo</span>
+                    </a>
+                </li>
+                <li *ngIf="VerFormReparacionEquipo()">
+                    <a routerLink="./equipo/RegistraReparacion">
+                        <i class="bi bi-circle"></i><span>Reparacion de equipo</span>
+                    </a>
+                </li>
+                <li *ngIf="VerFormClientes()">
+                    <a routerLink="./clientes/registro">
+                        <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormMarcas()">
@@ -71,11 +81,7 @@
                         <i class="bi bi-circle"></i><span>Suplidores</span>
                     </a>
                 </li>
-                <li *ngIf="VerFormTransferenciasEquipos()">
-                    <a routerLink="./equipo/transferencia">
-                        <i class="bi bi-circle"></i><span>Transferir equipo</span>
-                    </a>
-                </li>
+
                 <li *ngIf="VerFormRegistroVendedores()">
                     <a routerLink="./vendedores/registro">
                         <i class="bi bi-circle"></i><span>Vendedores</span>
@@ -91,10 +97,7 @@
                         <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
                     </a>
                 </li>
-
                 <li>
-
-
             </ul>
             </li>
             <!-- End Mantenimiento Nav -->
@@ -103,18 +106,13 @@
                 <a class="nav-link collapsed" data-bs-target="#consulta-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-layout-text-window-reverse"></i><span>Consultas y reportes</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
+
                 <ul id="consulta-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li *ngIf="VerFormConsultaAccesorios()">
                         <a routerLink="./accesorios/consulta">
                             <i class="bi bi-circle"></i><span>Accesorios</span>
                         </a>
                     </li>
-
-                    <!-- <li *ngIf="VerFormConsultaEquipos()">
-                        <a routerLink="./equipo/consulta">
-                            <i class="bi bi-circle"></i><span>Equipos</span>
-                        </a>
-                    </li> -->
                     <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/Disponible">
                             <i class="bi bi-circle"></i><span>Equipos disponible</span>

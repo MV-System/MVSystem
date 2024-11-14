@@ -12,6 +12,7 @@ import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng
 import { ClientesConsultaComponent } from './Clientes-consulta/clientes-consulta.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DirectiveModule } from '../../../core/directives/directives.module';
+import { FormClienteComponent } from '../facturacion/facturacion-registro/form-cliente/form-cliente.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",

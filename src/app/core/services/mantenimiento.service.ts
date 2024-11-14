@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { MarcaEquipo } from "../interfaces/catalogo.interface";
-import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse } from '../interfaces/equipo.interface';
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, RegistroReparaciones } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { AccesorioObjRetorno } from '../interfaces/accesorio.interface';
@@ -21,6 +21,9 @@ export class MantenimientoService {
   }
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
+  }
+  postReparacion(Reparacion: RegistroReparaciones): Observable<any[]> {
+    return this.http.post<any[]>(APIURL.Equipo.Inserta.EquipoInsertaReparacion, Reparacion);
   }
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);

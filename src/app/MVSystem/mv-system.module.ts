@@ -19,7 +19,7 @@ import { DashboardModule } from './pages/dashboard/dashboard/dashboard.module';
     HomeComponent,
     HeaderComponent,
     SidebarComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     MyDateRangePickerModule,

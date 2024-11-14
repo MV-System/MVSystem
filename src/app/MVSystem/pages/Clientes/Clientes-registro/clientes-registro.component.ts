@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TipoTelefono } from '../../../../core/interfaces/catalogo.interface';
 
@@ -7,7 +7,6 @@ import { Cliente, ClienteRegistro, TipoCliente } from '../../../../core/interfac
 import { CatalogosService } from '../../../../core/services/catalogos.service';
 import { ClientesService } from '../../../../core/services/clientes.service';
 import * as $ from "jquery";
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { LoginService } from 'src/app/auth/login.service';
 @Component({
   selector: 'app-clientes-registro',
@@ -15,6 +14,7 @@ import { LoginService } from 'src/app/auth/login.service';
   styleUrls: ['./clientes-registro.component.css']
 })
 export class ClientesRegistroComponent implements OnInit {
+    @Output() customer = new EventEmitter<Cliente>();
   constructor(
     private loginService: LoginService,
     private fb: FormBuilder,
