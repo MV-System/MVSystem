@@ -8,3 +8,24 @@
     font-size: 14px;
     /* Cambia el tamaño de la fuente si lo deseas */
 }
+button.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.selected {
+  background-color: #007bff !important;  /* Color azul */
+  color: blue;               /* Texto blanco para contraste */
+  cursor: pointer;            /* Cambiar el cursor para indicar que es seleccionable */
+}
+
+/* Estilo opcional para el cursor cuando no se está seleccionando una fila */
+tr {
+  cursor: pointer; /* Cambia el cursor cuando se pasa por encima de una fila */
+}
+.mv-table tr:not(.selected):hover {
+  background-color: yellow; /* Color suave para las filas al pasar el ratón */
+}
+.mv-table tr.selected {
+  background-color: #007bff !important;  /* Uso de !important para asegurar la aplicación */
+  color: blue !important;               /* Aseguramos que el color del texto sea blanco */
+}

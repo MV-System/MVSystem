@@ -48,17 +48,16 @@
                                        'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
                                 tableTrselect>
 
-                                <td class="fixed-item ft">{{factura.numeroFactura}}</td>
+                                <td class="fixed-item ft"><button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange"  data-bs-original-title="Anular Factura">
+                                  <i class="bx bx-trash-alt"></i>
+                                </button>{{factura.numeroFactura}}</td>
                                 <td class="fixed-item cli">
                                     <span>{{factura.nombres}} {{factura.apellidos}}</span>
 
-                                    <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
+                                    <!-- <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Anular Factura">
       <i class="bx bx-trash-alt"></i>
-  </button>
+  </button> -->
                                 </td>
-                                <!-- <td>{{ factura.numeroFactura }}</td>
-              <td>{{ factura.nombres }} {{ factura.apellidos }}</td> -->
-                                <!-- <td>{{ factura.apellidos }} </td> -->
                                 <td>{{ factura.telefono }} </td>
                                 <td>{{ factura.tipoFactura }}</td>
                                 <td>{{ factura.tipoPago }}</td>

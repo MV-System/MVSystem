@@ -190,6 +190,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
       usuario: this.loginService.getUserName(),
       Empresa:this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
+      IdSucursal:this.loginService.getUserIdSucursal,
       total: this.cantidadEquipoATransferir
     };
 

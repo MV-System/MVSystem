@@ -52,6 +52,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="  col-lg-3">
 
                 <div class="card">
@@ -68,6 +69,7 @@
                                </label>
                                     </div>
                                 </div>
+
                             </ng-container>
 
                         </div>
@@ -76,6 +78,16 @@
                     </div>
 
                 </div>
+                <div class="col-md-9">
+                  <button class="btn print mx-1" [ngClass]="{'disabled':(!idTransferenciaSeleccionada) }" (click)="printReportTransferencia()">
+                    <span class="d-inline">{{isLoading?'Procesando...': 'Reimprimir Transferencia'}} </span>
+                    <span class="spinner-grow spinner-grow-sm m-0 x-10"
+                    role="status"
+                    aria-hidden="true"
+                    *ngIf="isLoading"></span>
+                    <!-- Imprimir factura <i class="bi bi-receipt-cutoff"></i> -->
+          </button>
+              </div>
                 <!-- <button class="btn print mx-1" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
                   Imprimir reporte <i class="bi bi-printer"></i>
                 </button> -->
@@ -110,8 +122,8 @@
                         <thead>
                             <tr>
                                 <th class="fixed-item desc">ID Transferencia</th>
-                                <th class="fixed-item code">IMEI/Código</th>
-                                <th class="align-center">Modelo</th>
+                                <!-- <th class="fixed-item code">IMEI/Código</th> -->
+                                <!-- <th class="align-center">Modelo</th> -->
                                 <th class="align-center">Almacén Salida</th>
                                 <th class="align-center">Almacén Destino</th>
                                 <th class="align-center">Cantidad Equipos</th>
@@ -124,15 +136,16 @@
                           itemsPerPage: filter.pageSize,
                           currentPage: filter.pageIndex,
                           totalItems: totalRecord
-                        }">
+                        }"
+
+                        (click)="seleccionarFila(Equipo)"
+                        [ngClass]="{'selected': Equipo.idTransferencia === idTransferenciaSeleccionada}">
                                 <td class="fixed-item code">{{Equipo.idTransferencia}}</td>
-                                <td class="fixed-item desc">
+                                <!-- <td class="fixed-item desc">
                                     <span>{{Equipo.imei}}</span>
-                                    <!-- <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-                  <i class="bx bx-edit-alt"></i>
-                </button> -->
-                                </td>
-                                <td class="align-center">{{Equipo.modelo}}</td>
+
+                                </td> -->
+                                <!-- <td class="align-center">{{Equipo.modelo}}</td> -->
                                 <td class="align-center">{{Equipo.almacenSalida}}</td>
                                 <td class="align-center">{{Equipo.almacenDestino}}</td>
                                 <td class="align-center">{{Equipo.cantidadEquipos}}</td>

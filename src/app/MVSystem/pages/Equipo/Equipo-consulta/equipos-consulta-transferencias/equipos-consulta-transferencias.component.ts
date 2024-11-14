@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { LoginService } from 'src/app/auth/login.service';
-import { EquipoAlmacenTransferirArrayRetorno } from 'src/app/core/interfaces/equipo.interface';
+import { EquipoAlmacenTransferirArrayRetorno, EquipoTransferencia, EquipoTransferenciaReporte } from 'src/app/core/interfaces/equipo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { EquipoService } from 'src/app/core/services/equipo.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-equipos-consulta-transferencias',
@@ -14,6 +15,7 @@ import { EquipoService } from 'src/app/core/services/equipo.service';
 export class EquiposConsultaTransferenciasComponent implements OnInit {
 
   constructor(
+    private loading: LoadingService,
     private catalogosService: CatalogosService,
     private equiposService: EquipoService,
     private fb: FormBuilder,
@@ -37,7 +39,8 @@ export class EquiposConsultaTransferenciasComponent implements OnInit {
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
 FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
-
+listEquiposToTransfer: EquipoTransferencia[] = [];
+cantidadEquipoATransferir: number = 0;
   rangeDatePlaceholder: Date = new Date();
   equiposTransferencias: EquipoAlmacenTransferirArrayRetorno[] = [];
   currentPage:     number = 1;
@@ -46,7 +49,10 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   lastLine!:       number;
   equipoQuantity:  number = 0;
   totalInventario: number = 0;
+  idTransferencia: number = 0;
+  idTransferenciaSeleccionada: number | null = null; // Variable para almacenar el id de la transferencia seleccionada
 
+  onFacturaButton: boolean = false;
   isLoading: boolean = false; // Variable para controlar el estado de carga
   filter: any = {
     pageIndex: 1,
@@ -95,7 +101,7 @@ this.obtenerAlmacen();
    this.obtenerTransferencias();  // Rehacer la consulta para actualizar los datos
  }
  obtenerTransferencias() {
-  this.isLoading = true;
+  this.loading.showLoading();
   const almacenSalida = this.form.get('almacenSalida')?.value || 0;
   const almacenEntrada = this.form.get('almacenEntrada')?.value || 0;
   const fechaInicio = this.filter.fechaInicio;
@@ -105,7 +111,6 @@ this.obtenerAlmacen();
     (Trans) => {
       this.isLoading = false;
       this.equiposTransferencias = Trans;
-      console.log("Transferencias", this.equiposTransferencias);
     },
     (error) => {
       this.isLoading = false;
@@ -114,20 +119,57 @@ this.obtenerAlmacen();
       this.showErrorNotification("Error al cargar las transferencias.");
     }
   );
+  this.loading.hideLoading();
 }
+ // Esta función se llama al hacer click en una fila de la tabla
+ seleccionarFila(equipo: EquipoAlmacenTransferirArrayRetorno) {
+  this.idTransferenciaSeleccionada =equipo.idTransferencia;
+  this.onFacturaButton = true; // Activar el botón Reimprimir Factura
+}
+printReportTransferencia(): void {
+  this.loading.showLoading();
+  if (this.idTransferenciaSeleccionada === null) {
+    // Si no hay ninguna transferencia seleccionada, no hacemos nada
+    console.error("No se ha seleccionado ninguna transferencia.");
+    return;
+  }
 
+  const model: EquipoTransferenciaReporte = {
+    idTransferencia: this.idTransferencia,
+    equipoTransferencias: this.listEquiposToTransfer,
+    fechaTransferencia: new Date().toDateString(),
+    usuario: this.loginService.getUserName(),
+    Empresa:this.loginService.getUserEmpresa,
+    IdEmpresa:this.loginService.getUserIdEmpresa,
+    IdSucursal:this.loginService.getUserIdSucursal,
+    total: this.cantidadEquipoATransferir
+  };
+
+
+  this.equiposService.postEquipoTransferencia(model).subscribe({
+    next: (blobResp) => {
+    // Aquí puedes manejar la respuesta cuando el reporte sea generado
+  },
+  error: () => {
+    console.error("Error al generar el reporte.");
+  }
+  });
+this.loading.hideLoading();
+  //this.cantidadEquipoATransferir = 0;
+  //this.listEquiposToTransfer = [];
+}
 showErrorNotification(message: string) {
   // Usa tu servicio de notificación aquí, por ejemplo:
   //this.notificationService.showError(message);
 }
   obtenerAlmacen() {
 
-   //this.loading.showLoading();
+   this.loading.showLoading();
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.filter.almacenSalida = almacen;
       this.filter.almacenEntrada = almacen;
     });
-    //this.loading.hideLoading();
+   this.loading.hideLoading();
   }
 
 }
