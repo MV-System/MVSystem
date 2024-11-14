@@ -62,6 +62,9 @@ export class SidebarComponent implements OnInit {
   VerFormRecepcionEquipo(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_RECEPCION_EQUIPOS");
   }
+  VerFormReparacionEquipo(): boolean {
+    return this.validatorPermissionService.validateUserRole("MNU_MANT_EET_REPARACION");
+  }
   VerMenuConsultas(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_CONSULTA");
   }

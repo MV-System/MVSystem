@@ -345,6 +345,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       })
   }
   onAddCustomer(customer: Cliente) {
+    debugger;
     this.customer = customer;
     this.clientesService.isOpeningForm$.next(false);
     if (customer) {
@@ -630,7 +631,7 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   obtenerClientesPorNombreTelefono(tel?: number) {
-
+debugger;
     if(tel){
       this.clientesService.getClientesPorNombreTelefono(tel)
       .pipe(takeUntil(this.destroy$))

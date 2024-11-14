@@ -1,4 +1,5 @@
 import { DatePaging, Pagination } from "./pagination.interfaces";
+import { ReparacionesComponent } from '../../MVSystem/pages/Equipo/taller/reparaciones/reparaciones.component';
 
 export interface Equipo {
     imei: string;
@@ -26,6 +27,16 @@ export interface Equipo {
     precioDetalle: number;
     mensaje: string;
 
+}
+export interface RegistroReparaciones{
+    IMEI:string;
+    ID_Cliente:number;
+    Detalle_Reparacion:string;
+    Costo:number;
+    Precio: number;
+    Fecha_Entrega: string;
+    ID_Modelo:number;
+    usuario:string;
 }
 export interface EquipoObjRetorno {
     imei: string;

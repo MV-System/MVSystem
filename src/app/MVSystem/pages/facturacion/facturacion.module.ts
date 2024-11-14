@@ -33,7 +33,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     FacturacionListaComponent,
     FacturacionDetailComponent,
     FormClienteComponent,
-    CotizacionListComponent
+    CotizacionListComponent,
+    FormClienteComponent
   ],
   imports: [
     CommonModule,
@@ -53,5 +54,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],
+  exports: [
+    FormClienteComponent,  // Exporta FormClienteComponent si necesitas usarlo en otros módulos
+  ]
 })
 export class FacturacionModule { }
