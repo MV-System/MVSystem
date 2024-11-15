@@ -204,7 +204,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
         this.printing = false;
       }
     });
-this.loading.hideLoading();
+    this.loading.hideLoading();
     this.cantidadEquipoATransferir = 0;
     this.listEquiposToTransfer = [];
   }

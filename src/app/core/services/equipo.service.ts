@@ -88,6 +88,13 @@ export class EquipoService{
 
       return this.http.get<EquipoAlmacenTransferirArrayRetorno[]>(`${APIURL.Equipo.Consulta.EquipoTransferenciasConsulta}?`+ search)
   }
+  GetDetalleTransferenciaEquipos(IDTransferencia: number):Observable<EquipoAlmacenTransferirArrayRetorno[]>{
+    const search =
+    '&IdTransferencia='+
+    IDTransferencia
+
+    return this.http.get<EquipoAlmacenTransferirArrayRetorno[]>(`${APIURL.Equipo.Consulta.EquipoTransferenciasDetalleConsulta}?`+ search)
+}
     getEquipoByImei(imei: string):Observable<EquipoTransferencia>{
         return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
     }

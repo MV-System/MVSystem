@@ -36,7 +36,8 @@ export interface RegistroReparaciones{
     Precio: number;
     Fecha_Entrega: string;
     ID_Modelo:number;
-    usuario:string;
+    Usuario:string;
+    mensajeSalida: string;
 }
 export interface EquipoObjRetorno {
     imei: string;

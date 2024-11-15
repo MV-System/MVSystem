@@ -14,6 +14,9 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 })
 export class EquiposConsultaTransferenciasComponent implements OnInit {
 
+   // Aquí seguimos teniendo la propiedad facturaVisibility
+   facturaVisibility: { [key: number]: boolean } = {};
+
   constructor(
     private loading: LoadingService,
     private catalogosService: CatalogosService,
@@ -43,6 +46,7 @@ listEquiposToTransfer: EquipoTransferencia[] = [];
 cantidadEquipoATransferir: number = 0;
   rangeDatePlaceholder: Date = new Date();
   equiposTransferencias: EquipoAlmacenTransferirArrayRetorno[] = [];
+  equiposDetalles: EquipoAlmacenTransferirArrayRetorno[] = [];
   currentPage:     number = 1;
   totalRecord!:    number;
   line!:           number;
@@ -72,14 +76,19 @@ this.obtenerAlmacen();
 
   }
   pageChanged(index: number) {
-    console.log("index",index);
+    this.idTransferenciaSeleccionada = null;
+    this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
     this.currentPage = index;
     this.filter.pageIndex = index;
-    console.log("PageIndex",this.filter.PageIndex);
 
     this.obtenerTransferencias();
   }
   onDateRangeChanged(event: any) {
+    console.log("this.filter.pageIndex entrando",this.filter.pageIndex);
+    this.filter.pageIndex = 1;
+    this.idTransferenciaSeleccionada = null;
+    this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+
     if (event.beginDate.year !== 0) {
       const startDate = new Date(event.beginDate.year, event.beginDate.month - 1, event.beginDate.day);
       const endDate = new Date(event.endDate.year, event.endDate.month - 1, event.endDate.day);
@@ -94,13 +103,20 @@ this.obtenerAlmacen();
   }
   // Este método se llama cuando cambia el número de elementos por página
   onPageSizeChange() {
+
+    this.idTransferenciaSeleccionada = null;
+    this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+    this.isLoading = true;
    // Si se selecciona "Todos", mostramos todos los registros
    if (this.filter.pageSize === this.totalRecord) {
      this.filter.pageIndex = 1;  // Restablecer a la primera página
    }
    this.obtenerTransferencias();  // Rehacer la consulta para actualizar los datos
+   this.isLoading = false;
  }
  obtenerTransferencias() {
+  this.idTransferenciaSeleccionada = null;
+  this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
   this.loading.showLoading();
   const almacenSalida = this.form.get('almacenSalida')?.value || 0;
   const almacenEntrada = this.form.get('almacenEntrada')?.value || 0;
@@ -111,6 +127,7 @@ this.obtenerAlmacen();
     (Trans) => {
       this.isLoading = false;
       this.equiposTransferencias = Trans;
+
     },
     (error) => {
       this.isLoading = false;
@@ -121,13 +138,43 @@ this.obtenerAlmacen();
   );
   this.loading.hideLoading();
 }
+obtenerDetalleTransferencias(Idtransferencia: number) {
+  this.idTransferenciaSeleccionada = null;
+  this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+  this.isLoading = true; // Activamos el estado de carga antes de hacer la solicitud
+
+  this.equiposService.GetDetalleTransferenciaEquipos(Idtransferencia).subscribe(
+    (Trans) => {
+      this.isLoading = false; // Desactivamos el estado de carga
+      this.equiposDetalles = Trans; // Asignamos los detalles obtenidos
+    },
+    (error) => {
+      console.error("Error al obtener los detalles de la transferencia:", error);
+      this.showErrorNotification("Error al cargar los detalles de la transferencia.");
+    }
+  );
+
+}
  // Esta función se llama al hacer click en una fila de la tabla
  seleccionarFila(equipo: EquipoAlmacenTransferirArrayRetorno) {
-  this.idTransferenciaSeleccionada =equipo.idTransferencia;
-  this.onFacturaButton = true; // Activar el botón Reimprimir Factura
+  if (this.idTransferenciaSeleccionada === equipo.idTransferencia) {
+    // Si ya está seleccionada, la deseleccionamos
+    this.idTransferenciaSeleccionada = null;
+    this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+  } else {
+    // Si no está seleccionada, la seleccionamos
+    this.idTransferenciaSeleccionada = equipo.idTransferencia;
+    this.isLoading = true;
+    this.obtenerDetalleTransferencias(this.idTransferenciaSeleccionada);
+    this.isLoading = false;
+
+  }
+  this.onFacturaButton = true; // Activar el botón Reimprimir Factura si alguna transferencia está seleccionada
 }
 printReportTransferencia(): void {
-  this.loading.showLoading();
+  this.idTransferenciaSeleccionada = null;
+  this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+  this.isLoading = true;
   if (this.idTransferenciaSeleccionada === null) {
     // Si no hay ninguna transferencia seleccionada, no hacemos nada
     console.error("No se ha seleccionado ninguna transferencia.");
@@ -147,14 +194,16 @@ printReportTransferencia(): void {
 
 
   this.equiposService.postEquipoTransferencia(model).subscribe({
+
     next: (blobResp) => {
-    // Aquí puedes manejar la respuesta cuando el reporte sea generado
+      this.isLoading = false;
   },
+
   error: () => {
     console.error("Error al generar el reporte.");
   }
   });
-this.loading.hideLoading();
+
   //this.cantidadEquipoATransferir = 0;
   //this.listEquiposToTransfer = [];
 }
@@ -164,12 +213,12 @@ showErrorNotification(message: string) {
 }
   obtenerAlmacen() {
 
-   this.loading.showLoading();
+    this.isLoading = true;
     this.catalogosService.getAlmaceLista().subscribe((almacen) => {
       this.filter.almacenSalida = almacen;
       this.filter.almacenEntrada = almacen;
     });
-   this.loading.hideLoading();
+    this.isLoading = false;
   }
 
 }

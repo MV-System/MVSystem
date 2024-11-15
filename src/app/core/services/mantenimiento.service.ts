@@ -22,8 +22,8 @@ export class MantenimientoService {
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);
   }
-  postReparacion(Reparacion: RegistroReparaciones): Observable<any[]> {
-    return this.http.post<any[]>(APIURL.Equipo.Inserta.EquipoInsertaReparacion, Reparacion);
+  postReparacion(Reparacion: RegistroReparaciones): Observable<RegistroReparaciones[]> {
+    return this.http.post<RegistroReparaciones[]>(APIURL.Equipo.Inserta.EquipoInsertaReparacion, Reparacion);
   }
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);

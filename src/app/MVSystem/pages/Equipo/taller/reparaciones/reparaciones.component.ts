@@ -10,6 +10,7 @@ import { RegistroReparaciones } from 'src/app/core/interfaces/equipo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 
 @Component({
   selector: 'app-reparaciones',
@@ -17,6 +18,9 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
   styleUrls: ['./reparaciones.component.css']
 })
 export class ReparacionesComponent implements OnInit {
+
+// Obtener la fecha actual
+ fechaHoy = new Date();
   listaMarca: MarcaEquipo[] = [];
   listaModelo: ModeloEquipo[] = [];
   subs: Subscription[] = [];
@@ -24,21 +28,24 @@ export class ReparacionesComponent implements OnInit {
   customer!: Cliente;
   customers: Cliente[] = []
   btnDisabled: boolean = true;
+
   formRegistroReparaciones: FormGroup = this.fb.group({
     IMEI: ["",],
-    costo: [, [Validators.required]],
+    Costo: [, [Validators.required]],
     Detalle_Reparacion: ["",],
-    usuario: [this.loginService.getUserName(),],
+    Usuario: [this.loginService.getUserName(),],
     ID_Cliente:[],
     Precio:  [, [Validators.required]],
-    Fecha_Entrega: ["",],
+    Fecha_Entrega: [this.fechaHoy],
     telefono:'',
     ID_Modelo:[],
     marca:[],
     modelo:[],
 
+
   })
   constructor(
+    private rDialogService: RDialogService,
     private catalogosService: CatalogosService,
     private clientesService: ClientesService,
     private mantenimientoService: MantenimientoService,
@@ -67,15 +74,16 @@ export class ReparacionesComponent implements OnInit {
   modeloRegistroReparacion() {
     const model: RegistroReparaciones = {
      IMEI: this.formRegistroReparaciones.get('IMEI')?.value,
-     ID_Cliente: Number(this.formRegistroReparaciones.get('ID_Cliente')?.value),
+     ID_Cliente:this.customer.id_Cliente,// Number(this.formRegistroReparaciones.get('ID_Cliente')?.value),
      Detalle_Reparacion: String(this.formRegistroReparaciones.get('Detalle_Reparacion')?.value),
      Costo: Number(this.formRegistroReparaciones.get('Costo')?.value),
      Precio: Number(this.formRegistroReparaciones.get('Precio')?.value),
      Fecha_Entrega: String(this.formRegistroReparaciones.get('Fecha_Entrega')?.value),
      ID_Modelo: Number(this.formRegistroReparaciones.get('modelo')?.value),
-     usuario: String(this.loginService.getUserName()),
+     Usuario: this.loginService.getUserName(),
+     mensajeSalida:''
    }
-   return model;
+      return model;
  }
  onAddCustomer(customer: Cliente) {
   this.customer = customer;
@@ -109,12 +117,8 @@ export class ReparacionesComponent implements OnInit {
 }
 msgValidacionesCamposFormNumericos() {
   let camposNumerico: string[] = [
-    'cantidad',
-    'costo',
-    'alDetalle',
-    'alPorMayor',
-    // 'comisionDetalle',
-    // 'comisionMayor',
+    'Costo',
+    'Precio',
   ];
   camposNumerico.forEach((campo) => {
     if (
@@ -139,7 +143,7 @@ btnDisable() {
 
 }
 obtenerClientesPorNombreTelefono(tel?: number) {
-  debugger;
+
       if(tel){
         this.clientesService.getClientesPorNombreTelefono(tel)
         .pipe(takeUntil(this.destroy$))
@@ -165,7 +169,7 @@ obtenerClientesPorNombreTelefono(tel?: number) {
       }
     }
 selectoresMarcaModeloValidator() {
-  debugger;
+
   this.formRegistroReparaciones.get('modelo')?.setValue('');
   if (this.formRegistroReparaciones.get('marca')?.value) {
     this.formRegistroReparaciones.controls.modelo.enable();
@@ -178,7 +182,7 @@ selectoresMarcaModeloValidator() {
   }
 }
 obtenerModeloLista() {
-  debugger;
+
   let idMarca = this.formRegistroReparaciones.get('marca')?.value;
   this.catalogosService.getModeloByMarcaLista(idMarca).subscribe((modelo) => {
     this.listaModelo = modelo;
@@ -197,13 +201,32 @@ validarCampos(nombreCampo: string) {
   registroReparacion() {
     const model: RegistroReparaciones = this.modeloRegistroReparacion();
 
+
     this.validacionesRegistro()
     if (this.formRegistroReparaciones.valid) {
       this.mantenimientoService.postReparacion(model)
         .subscribe((Reparacion) => {
-          Reparacion.forEach((equipoRegistrado) => {
+          Reparacion.forEach((Respuesta) => {
+           this.toastr.info(Respuesta.mensajeSalida);
           });
         });
+
+
+    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+      () => {
+
+        this.toastr.info("Imprimir reparacion");
+        this.formRegistroReparaciones.reset({
+        });
+      },
+      () => {
+        this.toastr.info("no hacer nada");
+        this.formRegistroReparaciones.reset({
+        });
+       },
+      "No",
+      "Si"
+    )
     }
     else {
       this.formRegistroReparaciones.markAllAsTouched();

@@ -50,7 +50,7 @@ export let APIURL = {
             EquipoTransferenciaReporteInserta: API + 'EquipoReporte/EquipoTransferenciaReporte',
             EquipoTransferenciaInserta: API + 'Equipos/PostEquipoTransferencia',
             EquipoRecepcion: API + 'Equipos/RecepcionEquipos',
-            EquipoInsertaReparacion: API + 'Equipos/EquipoInsertaReparacion'
+            EquipoInsertaReparacion: API + 'Equipos/PostReparacionEquipo'
         },
         Consulta: {
             EquipoNumeroRegistro: API + 'Equipos/Numero_Registro',
@@ -59,6 +59,7 @@ export let APIURL = {
             EquipoBuscaDisponible: API + 'Equipos',
             EquipoVendido: API + 'Equipos/GetEquiposVendidos',
             EquipoTransferenciasConsulta: API + 'Equipos/GetTransferenciaEquipos',
+            EquipoTransferenciasDetalleConsulta: API + 'Equipos/GetDetalleTransferenciaEquipos',
             EquipoModificarEstatus: API + 'Equipos/GetEquipoPreciosEstatusByImei',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',

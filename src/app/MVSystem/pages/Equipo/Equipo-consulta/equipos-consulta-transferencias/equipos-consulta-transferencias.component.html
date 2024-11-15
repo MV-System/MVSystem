@@ -1,169 +1,165 @@
 <p>equipos-consulta-transferencias works!</p>
-<!-- <r-loading *ngIf="printing"></r-loading> -->
+
 <div class="box animate__animated animate__fadeIn">
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt-2'></i> Home</a></li>
+            <li class="breadcrumb-item">
+                <a href="/"><i class='bx bx-home-alt-2'></i> Home</a>
+            </li>
             <li class="breadcrumb-item">Consulta</li>
-            <li class="breadcrumb-item">Consulta equipos Tranferidos
-                <li>
+            <li class="breadcrumb-item">Consulta equipos Transferidos</li>
         </ol>
     </nav>
     <h1>Equipos Transferidos</h1>
 
     <form [formGroup]="form" (ngSubmit)="obtenerTransferencias()" role="search">
-
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title">Filtros</span>
                         <div class="row mt-4">
-
-                            <!-- <i class="bi bi-funnel"></i> -->
-                            <!-- Search IMEI -->
-                            <div class="row">
-
-                                <div class="col-md-4">
-                                    <label class="form-label row mx-2"> Rango de fecha</label>
-                                    <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
-                                    </my-date-range-picker>
-                                </div>
+                            <div class="col-md-4">
+                                <label class="form-label row mx-2"> Rango de fecha</label>
+                                <my-date-range-picker
+                                    name="rangoFecha"
+                                    [options]="myDateRangePickerOptions"
+                                    formControlName="rangeDate"
+                                    (dateRangeChanged)="onDateRangeChanged($event)"
+                                    placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                </my-date-range-picker>
                             </div>
                             <div class="col-md-4">
-                                <!-- --------------- Almacen --------------- -->
                                 <label class="form-label">Almacen Salida</label>
                                 <select class="form-select chip" formControlName="almacenSalida" (change)="obtenerTransferencias()">
-                                  <option *ngFor="let almacen of this.filter.almacenSalida" [value]="almacen.iD_Almacen">
-                                    {{ almacen.descripcion }}
-                                  </option>
-                               </select>
+                                    <option *ngFor="let almacen of this.filter.almacenSalida" [value]="almacen.iD_Almacen">
+                                        {{ almacen.descripcion }}
+                                    </option>
+                                </select>
                             </div>
                             <div class="col-md-4">
-                                <!-- --------------- Almacen --------------- -->
                                 <label class="form-label">Almacen Destino</label>
                                 <select class="form-select chip" formControlName="almacenEntrada" (change)="obtenerTransferencias()">
-                                  <option *ngFor="let almacen of this.filter.almacenEntrada" [value]="almacen.iD_Almacen">
-                                    {{ almacen.descripcion }}
-                                  </option>
-                               </select>
+                                    <option *ngFor="let almacen of this.filter.almacenEntrada" [value]="almacen.iD_Almacen">
+                                        {{ almacen.descripcion }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="  col-lg-3">
-
+            <!-- <div class="col-lg-3">
                 <div class="card">
-                    <div class="card-body ">
-
-                        <!-- Cuadro totales -->
-                        <div class="row mx-1 text-center   mt-3">
-                            <ng-container>
-                                <div class="col-md-12 ">
-                                    <div class="row mb-4 ">
-                                        Total Equipos
-                                        <label class="form-control total">
-                                 {{ equipoQuantity }}
-                               </label>
-                                    </div>
+                    <div class="card-body">
+                        <div class="row mx-1 text-center mt-3">
+                            <div class="col-md-12">
+                                <div class="row mb-4">
+                                    Total Equipos
+                                    <label class="form-control total">
+                                        {{ equipoQuantity }}
+                                    </label>
                                 </div>
-
-                            </ng-container>
-
+                            </div>
                         </div>
-
-                        <!-- Fin Cuadro totales -->
                     </div>
-
                 </div>
-                <div class="col-md-9">
-                  <button class="btn print mx-1" [ngClass]="{'disabled':(!idTransferenciaSeleccionada) }" (click)="printReportTransferencia()">
-                    <span class="d-inline">{{isLoading?'Procesando...': 'Reimprimir Transferencia'}} </span>
-                    <span class="spinner-grow spinner-grow-sm m-0 x-10"
-                    role="status"
-                    aria-hidden="true"
-                    *ngIf="isLoading"></span>
-                    <!-- Imprimir factura <i class="bi bi-receipt-cutoff"></i> -->
-          </button>
-              </div>
-                <!-- <button class="btn print mx-1" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
-                  Imprimir reporte <i class="bi bi-printer"></i>
-                </button> -->
-            </div>
-        </div>
+            </div> -->
 
+            <!-- <div class="col-md-9">
+                <button class="btn print mx-1" [ngClass]="{'disabled': (!idTransferenciaSeleccionada)}" (click)="printReportTransferencia()">
+                    <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Reimprimir Transferencia' }}</span>
+                    <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
+                </button>
+            </div> -->
+        </div>
     </form>
+
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
         <span>Cargando datos, por favor espere...</span>
     </mat-spinner>
-    <section class="section mt-4">
-        <div *ngIf="!isLoading" class="row">
-            <div class="col-lg-12 scroll-table">
-                <h5 class="card-title">Equipos</h5>
+<!-- Sección de Equipos -->
+<section class="section mt-4">
+  <div class="row">
+      <div class="col-lg-12 scroll-table">
+          <h5 class="card-title">Equipos</h5>
 
-                <!-- Selector para elegir la cantidad de registros por página -->
-                <div class="pagination-options">
-                    <label for="pageSize">Registros por página:</label>
+          <!-- Paginación -->
+          <div class="pagination-options">
+              <label for="pageSize">Registros por página:</label>
+              <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
+                  <option [value]="5">5</option>
+                  <option [value]="10">10</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                  <option [value]="totalRecord">Todos</option>
+              </select>
+          </div>
 
-                    <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="50">50</option>
-        <option [value]="100">100</option>
-          <option [value]="totalRecord">Todos</option>
-      </select>
-                </div>
-                <p *ngIf="equiposTransferencias.length">Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros</p>
-                <div class="scrollable-table thinScroll">
-                    <table class="mv-table">
-                        <thead>
-                            <tr>
-                                <th class="fixed-item desc">ID Transferencia</th>
-                                <!-- <th class="fixed-item code">IMEI/Código</th> -->
-                                <!-- <th class="align-center">Modelo</th> -->
-                                <th class="align-center">Almacén Salida</th>
-                                <th class="align-center">Almacén Destino</th>
-                                <th class="align-center">Cantidad Equipos</th>
-                                <th class="align-center">Fecha Transferencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let Equipo of equiposTransferencias | paginate
-                      : {
-                          itemsPerPage: filter.pageSize,
-                          currentPage: filter.pageIndex,
-                          totalItems: totalRecord
-                        }"
+          <p *ngIf="equiposTransferencias.length">
+              Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
+          </p>
 
+          <!-- Tabla de Equipos Transferidos -->
+          <div class="scrollable-table thinScroll">
+              <table class="mv-table tr.selected">
+                  <thead>
+                      <tr>
+                          <th class="fixed-item desc">ID Transferencia</th>
+                          <th class="align-center">Almacén Salida</th>
+                          <th class="align-center">Almacén Destino</th>
+                          <th class="align-center">Cantidad Equipos</th>
+                          <th class="align-center">Fecha Transferencia</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Filas de equipos transferidos -->
+                    <tr class="animate__animated animate__fadeIn tr-hover"
+                        *ngFor="let Equipo of equiposTransferencias | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }"
                         (click)="seleccionarFila(Equipo)"
-                        [ngClass]="{'selected': Equipo.idTransferencia === idTransferenciaSeleccionada}">
-                                <td class="fixed-item code">{{Equipo.idTransferencia}}</td>
-                                <!-- <td class="fixed-item desc">
-                                    <span>{{Equipo.imei}}</span>
+                        [ngClass]="{'selected': Equipo.idTransferencia === idTransferenciaSeleccionada}"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseOne"
+                        aria-expanded="false"
+                        aria-controls="flush-collapseOne"
+                        tableTrselect>
 
-                                </td> -->
-                                <!-- <td class="align-center">{{Equipo.modelo}}</td> -->
-                                <td class="align-center">{{Equipo.almacenSalida}}</td>
-                                <td class="align-center">{{Equipo.almacenDestino}}</td>
-                                <td class="align-center">{{Equipo.cantidadEquipos}}</td>
-                                <td class="align-center">{{Equipo.fechaTransferencia}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- End Table with stripped rows -->
-                <div class="not-data" *ngIf="!equiposTransferencias.length">
-                    Datos no encontrados
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Controles de Paginación -->
+                      <td class="fixed-item code">{{ Equipo.idTransferencia }}</td>
+                      <td class="align-center">{{ Equipo.almacenSalida }}</td>
+                      <td class="align-center">{{ Equipo.almacenDestino }}</td>
+                      <td class="align-center">{{ Equipo.cantidadEquipos }}</td>
+                      <td class="align-center">{{ Equipo.fechaTransferencia }}</td>
+                    </tr>
+
+                    <!-- Fila de detalles de la transferencia -->
+                    <ng-container >
+                      <tr class="animate__animated animate__fadeIn tr-collapse">
+                        <td colspan="5">
+                          <div *ngIf="equiposDetalles && equiposDetalles.length">
+                            <h6>Detalles de la Transferencia</h6>
+                            <div *ngFor="let detalle of equiposDetalles">
+                              <p><strong>ID Transferencia:</strong> {{ detalle.idTransferencia }} | <strong>Equipo ID:</strong> {{ detalle.imei }} | <strong>Modelo:</strong> {{ detalle.modelo }}</p>
+                              <!-- Agregar más detalles según lo que recibas -->
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- Mensaje cuando no hay datos -->
+          <div class="not-data" *ngIf="!equiposTransferencias.length">
+              Datos no encontrados
+          </div>
+      </div>
+  </div>
+</section>
+<ng-content></ng-content>
     <div *ngIf="equiposTransferencias.length > 0">
-        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
-        </pagination-controls>
+        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize"></pagination-controls>
     </div>
 </div>
