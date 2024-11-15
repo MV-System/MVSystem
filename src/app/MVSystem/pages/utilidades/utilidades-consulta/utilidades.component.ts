@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -102,12 +102,13 @@ getSucursales() {
 form!: FormGroup;
 createForm(){
   this.form = this.fb.group({
-    fechainicio: [this.FechaInicio.toISOString().split('T')[0]],
-    fechafin: [this.fechaHoy.toISOString().split('T')[0]],
-    almacen:[Number(this.loginService.getUserIdSucursal)]
+    fechainicio: [this.FechaInicio.toISOString().split('T')[0], Validators.required],
+    fechafin: [this.fechaHoy.toISOString().split('T')[0], Validators.required],
+    almacen: [Number(this.loginService.getUserIdSucursal), Validators.required]
   });
 }
   ngOnInit(): void {
+    this.createForm();
     this.getSucursales();
     this.GetUtilidades(); // Llama a la función para obtener datos
     this.createForm();
@@ -130,8 +131,10 @@ createForm(){
   }
   sucursalOnChange() {
     this.form.get('almacen')?.valueChanges.subscribe((value) => {
-      this.filter.sucursal = value;
-      this.GetUtilidades(); // Llama a la función de consulta al cambiar la sucursal
+      if (value) { // Verificar que 'value' tiene un valor válido
+        this.filter.sucursal = value;
+        this.GetUtilidades(); // Llama a la función de consulta al cambiar la sucursal
+      }
     });
   }
   GetUtilidades() {
@@ -185,16 +188,7 @@ createForm(){
     FF: this.fechaHoy.toISOString().split('T')[0],
     sucursal:+this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
-  // getValueFilterForm() {
-  //   const nullOrEmpty =(data: null)=>{return data== null ? '':data}
-  //     const {
-  //       sucursal,
-  //       rangeDate
-  //     } = this.form.value;
-  //     this.filter.FI = nullOrEmpty(rangeDate);
-  //     this.filter.FF = nullOrEmpty();
-  //     this.filter.sucursal = nullOrEmpty(sucursal);
-  //   }
+
   onSelect(data: any): void { }
 
   onActivate(data: any): void { }

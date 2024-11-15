@@ -1,45 +1,41 @@
 <form class="row box" [formGroup]="form">
-  <div class="row justify-content-center">
-    <div class="col-md-5">
-    <!-- Fecha de Registro -->
-    <div class="col-md-5">
-      <label class="form-label row mx-2">Fecha de registro</label>
-      <my-date-range-picker
-        [options]="myDateRangePickerOptions"
-        formControlName="rangeDate"
-        (dateRangeChanged)="onDateRangeChanged($event)"
-        placeholder="{{ FechaInicio | date }} -  {{fechaHoy | date}}">
-      </my-date-range-picker>
-    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <!-- Fecha de Registro -->
+            <div class="col-md-5">
+                <label class="form-label row mx-2">Fecha de registro</label>
+                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} -  {{fechaHoy | date}}">
+                </my-date-range-picker>
+            </div>
 
-    <!-- Sucursal -->
-    <div class="col-md-5" *ngIf="SelectSucursal()">
-      <label class="form-label">Sucursal</label>
-      <select class="form-select" formControlName="almacen" (change)="GetUtilidades()">
+            <!-- Sucursal -->
+            <div class="col-md-5" *ngIf="SelectSucursal()">
+                <label class="form-label">Sucursal</label>
+                <select class="form-select" formControlName="almacen" (change)="GetUtilidades()">
         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
           {{ almacen.descripcion }}
         </option>
       </select>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
-  <!-- El resto del formulario y los gráficos -->
-  <mat-spinner *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <span>Cargando datos, por favor espere...</span>
-  </mat-spinner>
+    <!-- El resto del formulario y los gráficos -->
+    <mat-spinner *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <span>Cargando datos, por favor espere...</span>
+    </mat-spinner>
 
-  <div class="col-md-5 ms-" *ngIf="!isLoading">
-    <label class="form-label">Ventas</label>
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
-    </ngx-charts-advanced-pie-chart>
+    <div class="col-md-5 ms-" *ngIf="!isLoading">
+        <label class="form-label">Ventas</label>
+        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
+        </ngx-charts-advanced-pie-chart>
 
-    <label class="form-label">Ganancias</label>
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </ngx-charts-advanced-pie-chart>
+        <label class="form-label">Ganancias</label>
+        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+        </ngx-charts-advanced-pie-chart>
 
-    <label class="form-label">Costos</label>
-    <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </ngx-charts-advanced-pie-chart>
-  </div>
+        <label class="form-label">Costos</label>
+        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+        </ngx-charts-advanced-pie-chart>
+    </div>
 </form>

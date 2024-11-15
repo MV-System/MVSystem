@@ -73,7 +73,7 @@ fechaHoy: Date = new Date();
 FechaInicioSemana: Date = new Date();
 FechaInicioMes: Date = new Date();
 
-UtilidadesForm: FormGroup = this.fb.group({});
+//UtilidadesForm: FormGroup = this.fb.group({});
 
 constructor(
   private validatorPermissionService:ValidatorPermissionService,
@@ -81,7 +81,6 @@ constructor(
   private UtilidadesServices: UtilidadesService,
   private fb: FormBuilder,
   private toastr: ToastrService,
-  private loginService: LoginService,
 ) {}
 // Calcular las fechas de inicio de la semana y del mes actual
 private calcularFechas() {

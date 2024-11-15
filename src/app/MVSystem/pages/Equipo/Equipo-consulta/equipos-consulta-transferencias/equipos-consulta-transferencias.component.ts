@@ -126,6 +126,11 @@ this.obtenerAlmacen();
   this.equiposService.GetTransferenciaEquipos(almacenSalida, almacenEntrada, fechaInicio, fechaFinal).subscribe(
     (Trans) => {
       this.isLoading = false;
+      if (Trans.length) {
+        // this.totalRecord = Trans[0].totalRecord;
+        // this.line = Trans[0].line;
+        // this.lastLine = Trans[0].lastLine;
+      }
       this.equiposTransferencias = Trans;
 
     },
@@ -139,8 +144,6 @@ this.obtenerAlmacen();
   this.loading.hideLoading();
 }
 obtenerDetalleTransferencias(Idtransferencia: number) {
-  this.idTransferenciaSeleccionada = null;
-  this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
   this.isLoading = true; // Activamos el estado de carga antes de hacer la solicitud
 
   this.equiposService.GetDetalleTransferenciaEquipos(Idtransferencia).subscribe(
@@ -157,11 +160,12 @@ obtenerDetalleTransferencias(Idtransferencia: number) {
 }
  // Esta función se llama al hacer click en una fila de la tabla
  seleccionarFila(equipo: EquipoAlmacenTransferirArrayRetorno) {
-  if (this.idTransferenciaSeleccionada === equipo.idTransferencia) {
+  if (this.idTransferenciaSeleccionada === equipo.idTransferencia)
+    {
     // Si ya está seleccionada, la deseleccionamos
     this.idTransferenciaSeleccionada = null;
     this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
-  } else {
+    }else {
     // Si no está seleccionada, la seleccionamos
     this.idTransferenciaSeleccionada = equipo.idTransferencia;
     this.isLoading = true;
@@ -172,8 +176,6 @@ obtenerDetalleTransferencias(Idtransferencia: number) {
   this.onFacturaButton = true; // Activar el botón Reimprimir Factura si alguna transferencia está seleccionada
 }
 printReportTransferencia(): void {
-  this.idTransferenciaSeleccionada = null;
-  this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
   this.isLoading = true;
   if (this.idTransferenciaSeleccionada === null) {
     // Si no hay ninguna transferencia seleccionada, no hacemos nada
@@ -182,7 +184,7 @@ printReportTransferencia(): void {
   }
 
   const model: EquipoTransferenciaReporte = {
-    idTransferencia: this.idTransferencia,
+    idTransferencia: this.idTransferenciaSeleccionada,
     equipoTransferencias: this.listEquiposToTransfer,
     fechaTransferencia: new Date().toDateString(),
     usuario: this.loginService.getUserName(),
@@ -197,6 +199,7 @@ printReportTransferencia(): void {
 
     next: (blobResp) => {
       this.isLoading = false;
+      this.getBlobForCreateIFramePDF(blobResp);
   },
 
   error: () => {
@@ -204,12 +207,17 @@ printReportTransferencia(): void {
   }
   });
 
-  //this.cantidadEquipoATransferir = 0;
-  //this.listEquiposToTransfer = [];
+}
+private getBlobForCreateIFramePDF(blobResp: Blob): void {
+  const blob = new Blob([blobResp], { type: 'application/pdf' });
+  const blobUrl = URL.createObjectURL(blob);
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = blobUrl;
+  document.body.appendChild(iframe);
+  iframe.contentWindow?.print();
 }
 showErrorNotification(message: string) {
-  // Usa tu servicio de notificación aquí, por ejemplo:
-  //this.notificationService.showError(message);
 }
   obtenerAlmacen() {
 

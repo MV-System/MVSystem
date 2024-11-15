@@ -224,6 +224,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   onChangeTipoFactura(e: Event) {
     const alDetalle = 1;
     const alPorMayor = 2;
+    const Reparacion = 4;
     let idTipoFactura = +(<HTMLInputElement>e.target).value;
     let hasValue = this.articulos().controls[0].status;
     let tipoFactura =
@@ -247,6 +248,12 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
           "Cancelar",
           "Continuar"
         )
+        // Si el tipo de factura es igual a 4 (Reparación), mostramos un mensaje específico
+
+    }
+    else if (idTipoFactura === Reparacion) {
+      // busca las reparaciones corerspondientes al cliente
+      this.toast.success("Mensaje");
     }
   }
   onSelectCotizacion(cotizacion: CotizacionAmount) {
@@ -345,7 +352,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       })
   }
   onAddCustomer(customer: Cliente) {
-    debugger;
     this.customer = customer;
     this.clientesService.isOpeningForm$.next(false);
     if (customer) {
@@ -438,6 +444,12 @@ if (!articuloExistente) {
     });
   }
   obtenerDetalleFactura(index: number) {
+    let hasValue = this.articulos().controls[0].status;
+    if(hasValue){
+this.form.get('tipoFactura')?.disable();  // Deshabilita el FormControl 'tipoFactura'
+this.form.get('tipoPago')?.disable();  // Deshabilita el FormControl 'tipoPago'
+    }
+
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
 
     currentFormGroup.controls["cantidad"].enable()
@@ -631,7 +643,7 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   obtenerClientesPorNombreTelefono(tel?: number) {
-debugger;
+
     if(tel){
       this.clientesService.getClientesPorNombreTelefono(tel)
       .pipe(takeUntil(this.destroy$))
@@ -720,12 +732,18 @@ debugger;
 
   }
   borrarArticulo(index: number) {
+
     this.articulos().removeAt(index)
 
     if (this.articulos().length === 0)
+
       this.agregarArticulo()
 
     this.refreshGeneralValues();
+    if(this.total==0){
+      this.form.get('tipoFactura')?.enable();  // Deshabilita el FormControl 'tipoFactura'
+      this.form.get('tipoPago')?.enable();
+    }
   }
   onCheckboxChange(event: any, campo: any) {
     if (event.target.checked == false) {
@@ -733,6 +751,7 @@ debugger;
     }
     else {
       this.form.get(campo)?.enable();
+      // Deshabilita el FormControl 'tipoPago'
     }
   }
   onCheckboxChangeComprobante() {
@@ -872,10 +891,7 @@ debugger;
     this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
-// console.log("respuesta de crear ft",resp);
        this.facturaNumberReporte = resp.numeroFactura
-    //   console.log("respuesta asigancion",this.facturaNumberReporte );
-
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
             this.loadFacturaNumero();

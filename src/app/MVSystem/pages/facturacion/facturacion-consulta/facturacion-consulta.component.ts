@@ -45,11 +45,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     CheckComprobante(): boolean {
       return this.validatorPermissionService.validateUserRole("ComprobanteCheck");
     }
-
-/**
- * Cleanup logic that is executed when the component is destroyed.
- * Unsubscribes from all subscriptions to prevent memory leaks.
- */
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe())
   }
@@ -105,7 +100,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     rangeDate: ['']
   });
   modelFacturaFilter(){
-    console.log("pageSize en los filtros",this.paginate.pageSize);
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),

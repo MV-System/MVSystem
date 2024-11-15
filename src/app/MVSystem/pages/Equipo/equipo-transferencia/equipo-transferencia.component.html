@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Transferencia  del equipo</li>
+                <li class="breadcrumb-item active">Transferencia del equipo</li>
             </ol>
         </nav>
     </div>
@@ -19,34 +19,28 @@
                     <div class="card-body">
                         <h5 class="card-title mb-2">Datos de equipo</h5>
                         <!--  Form -->
-                        <form [formGroup]="form"  class="row g-3 ">
+                        <form [formGroup]="form" class="row g-3 ">
                             <!-- [ngClass]="{'needs-validation': !listEquiposToTransfer.length}" -->
                             <div class="row">
                                 <!-- Search by imei -->
                                 <label class="form-label mx-1 ">Imei a transferir</label>
                                 <div class="col-md-12">
-                                  <input
-                                    class="form-control "
-                                    placeholder="imei"
-                                    formControlName="imei"
-                                    required
-                                    (keyup.enter)="getEquipoByImei()"
-                                    [ngClass]="{'is-invalid':validateInput('imei') || submitted && this.form.controls.imei.errors}" />
+                                    <input class="form-control " placeholder="imei" formControlName="imei" required (keyup.enter)="getEquipoByImei()" [ngClass]="{'is-invalid':validateInput('imei') || submitted && this.form.controls.imei.errors}" />
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <label class="form-label mx-1">Almacen destino</label>
                                 <div class="col-md-7 ">
-                                <select class="form-select" formControlName="almacen">
+                                    <select class="form-select" formControlName="almacen">
                                   <option
                                     *ngFor="let almacen of almacenes"
                                     [value]="almacen.iD_Almacen" >
                                     {{ almacen.descripcion }}
                                   </option>
                                 </select>
-                              </div>
+                                </div>
                             </div>
-                              <div class="row mt-3">
+                            <div class="row mt-3">
                                 <div class="col-md-6">
 
                                     Total articulos
@@ -55,7 +49,7 @@
                                     </label>
                                 </div>
 
-                              </div>
+                            </div>
 
                         </form>
                         <!-- End  Form -->
@@ -64,7 +58,7 @@
             </div>
             <!-- Lista de Equipos agregados  -->
             <div class="col-lg-7" *ngIf="equipoToTransfer.length">
-              <!-- *ngIf="EquipoTransferidoValorRetorno.length" -->
+                <!-- *ngIf="EquipoTransferidoValorRetorno.length" -->
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Equipo agregados</h5>
@@ -80,24 +74,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                            <tr *ngFor="let equipo of equipoToTransfer">
-                                  <td>{{ equipo.id }}</td>
-                                      <td>{{ equipo.imei }}</td>
-                                      <td>{{ equipo?.modelo }}</td>
-                                      <td>{{ equipo?.almacenSalida }}</td>
-                                      <td>{{ equipo?.almacenDestino }}</td>
-                                      <td>
-                                          <!-- <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
+                                    <tr *ngFor="let equipo of equipoToTransfer">
+                                        <td>{{ equipo.id }}</td>
+                                        <td>{{ equipo.imei }}</td>
+                                        <td>{{ equipo?.modelo }}</td>
+                                        <td>{{ equipo?.almacenSalida }}</td>
+                                        <td>{{ equipo?.almacenDestino }}</td>
+                                        <td>
+                                            <!-- <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
                                              style="color: rgb(205, 65, 65); cursor: pointer;"></i> -->
 
-                          </tr>
-                        </tbody>
+                                    </tr>
+                                </tbody>
                             </table>
                             <div class="text-center ">
-                                <!-- <button class="btn btn-primary"
-                                        (click)="printReportEquipoVendido()">
+                                <button class="btn btn-primary" (click)="printReportEquipoVendido()">
                                         Imprimir reporte
-                                </button> -->
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -172,6 +172,9 @@ export interface EquipoAlmacenTransferirArrayRetorno {
   cantidadEquipos:    number;
   fechaTransferencia: string;
   usuario:            string;
+  // lastLine:           number;
+  // line:               number;
+  // totalRecord:        number;
 
 }
 export interface EquipoEliminadoResponse {
