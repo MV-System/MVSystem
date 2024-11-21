@@ -47,3 +47,20 @@ export interface ClienteConsultaCriterio {
   numero_Telefono:  number;
   id_Cliente:         string;
 }
+export interface ClientesConFacturasPendientesFiltros {
+  FechaInicio:    string;
+  FechaFin:       string;
+  NombreCliente:  string;
+  NumeroTelefono: string;
+}
+export interface ClientesConFacturasPendientesRetorn {
+  id_Cliente:     number;
+  cliente:        string;
+  montoPendiente: string;
+}
+export interface FacturasPorClienteRetorn {
+  numeroFactura:  number;
+  totalFactura:   string;
+  montoPendiente: string;
+  fechaFactura:   string;
+}

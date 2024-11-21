@@ -143,6 +143,11 @@
                             <i class="bi bi-circle"></i><span>Clientes</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaClientes()">
+                        <a routerLink="./clientes/cuentasPorCobrar">
+                            <i class="bi bi-circle"></i><span>Cuentas Por Cobrar</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <!-- End Consulta Nav -->

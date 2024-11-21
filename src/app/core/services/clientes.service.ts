@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
 import { Observable, Subject } from 'rxjs';
-import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio } from '../interfaces/cliente.interface';
+import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn } from '../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +28,24 @@ export class ClientesService {
 
   getClientes(){
     return this.http.get(`${APIURL.Clientes.Consultas.ClienteLista}`)
+  }
+  getClientesConFacturasPendientes(FechaInicio: string,FechaFinal: string,NombreCliente: string, NumeroTelefono: string):Observable<ClientesConFacturasPendientesRetorn[]>{
+const filtros =
+'FechaInicio='+
+FechaInicio +
+ '&Sucursal_Destino='+
+ FechaFinal +
+ '&NombreCliente='+
+ NombreCliente +
+ '&NumeroTelefono='+
+ NumeroTelefono
+    return this.http.get<ClientesConFacturasPendientesRetorn[]>(`${APIURL.Clientes.Consultas.ClientesConFacturasPendientes}?`+filtros)
+  }
+
+  getFacturasPendientesPorCliente(cliente: number):Observable<FacturasPorClienteRetorn[]>{
+    const search =
+    '&cliente='+
+    cliente
+    return this.http.get<FacturasPorClienteRetorn[]>(`${APIURL.Clientes.Consultas.FacturasPendientesPorCliente}?`+search)
   }
 }
