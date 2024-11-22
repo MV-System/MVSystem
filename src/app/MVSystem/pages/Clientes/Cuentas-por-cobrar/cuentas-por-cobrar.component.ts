@@ -74,7 +74,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.obtenerClientes()
   }
   procesarAbono(detalle: any): void {
-debugger;
     if(this.filterParam.MontoAbono ===0)
     {
 this.filterParam.MontoAbono = detalle.montoAbono;
