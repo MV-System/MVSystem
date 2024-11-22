@@ -29,7 +29,7 @@
                             <!-- --------------- IMEI  --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">IMEI</label>
-                                <input type="text" class="form-control" formControlName="IMEI" ngModel maxlength="20" #ImeiInput [ngClass]="{'is-invalid':validarCampos('IMEI')}" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
+                                <input type="text" class="form-control" formControlName="IMEI" ngModel maxlength="30" #ImeiInput [ngClass]="{'is-invalid':validarCampos('IMEI')}" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
 
                                 <div class="required-field" *ngIf="validarCampos('IMEI')">
                                     Este campo es requerido.

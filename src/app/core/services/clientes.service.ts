@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
 import { Observable, Subject } from 'rxjs';
-import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn } from '../interfaces/cliente.interface';
+import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse } from '../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,10 @@ export class ClientesService {
   // Post's
   postCliente(cliente : ClienteRegistro):Observable<Cliente>{
     return this.http.post<Cliente>(APIURL.Clientes.Inserta.ClienteInserta, cliente);
+  }
+  // Post's
+  postAbonoFactura(Param : AbonoFacturaParam):Observable<AbonoFacturaResponse>{
+    return this.http.post<AbonoFacturaResponse>(APIURL.Clientes.Inserta.AbonoFactura, Param);
   }
 
   getClientesPorNombreTelefono(criterio: any):Observable<Cliente[]>{

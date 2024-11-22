@@ -65,9 +65,9 @@
                     <table class="mv-table tr.selected">
                         <thead>
                             <tr>
-                                <th class="fixed-item desc">ID Cliente</th>
-                                <th class="align-center">Cliente</th>
-                                <th class="align-center">Monto Total Pendiente de pago</th>
+                                <th class="fixed-item desc" style="width: 1%">ID Cliente</th>
+                                <th style="width: 5%">Cliente</th>
+                                <th>Monto Total Pendiente de pago</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,8 +76,12 @@
                               currentPage: filter.pageIndex, totalItems: totalRecord }" (click)="seleccionarFila(Cliente)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" tableTrselect>
 
                                 <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
-                                <td class="align-center">{{ Cliente.cliente }}</td>
-                                <td class="align-center">{{ Cliente.montoPendiente | currency}}</td>
+                                <td>{{ Cliente.cliente }}</td>
+                                <td style="width: 40%">{{Cliente.montoPendiente}}
+                                    <!-- Input que se muestra solo si el cliente seleccionado coincide -->
+
+
+                                </td>
                             </tr>
 
                             <!-- Fila de detalles de la transferencia -->
@@ -86,9 +90,39 @@
                                     <td colspan="5">
                                         <div *ngIf="FacturasPorClientes && FacturasPorClientes.length">
                                             <h6>Detalles de la Transferencia</h6>
-                                            <div *ngFor="let detalle of FacturasPorClientes">
-                                                <p><strong># Factura:</strong> {{ detalle.numeroFactura }} | <strong>Total Factura:</strong> {{ detalle.totalFactura | currency}} | <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency}} |
-                                                   <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }} | <strong>Fecha Limite pago:</strong> {{ detalle.fechaLimitePagoFactura }}</p>
+                                            <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura">
+                                                <div class="detalle-columna" style="width: 15%;">
+                                                    <strong># Factura:</strong> {{ detalle.numeroFactura }}
+                                                </div>
+                                                <div class="detalle-columna" style="width: 20%;">
+                                                    <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }}
+                                                </div>
+                                                <div class="detalle-columna" style="width: 50%;">
+                                                    <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency }}
+                                                    <!-- Input para el abono -->
+                                                    <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="Ingresa el monto" (click)="$event.stopPropagation()" style="width: 70%; display: inline-block;" />
+                                                    <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
+                                                <i class="bx bx-check"></i> Procesar Abono
+                                              </button>
+
+                                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
+                                                      <i class="bx bx-edit-alt"></i>
+                                                    </button>
+                                                    <!-- Botón para Saldar Factura -->
+                                                    <button (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
+                                           <i class="bx bx-money"></i>
+                                         </button>
+                                                    <!-- Botón para Hacer Abono -->
+
+                                                </div>
+                                                <!-- Mensaje de advertencia si el monto del abono es mayor que el monto pendiente -->
+
+                                                <div class="detalle-columna" style="width: 30%;">
+                                                    <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}
+                                                </div>
+                                                <div class="detalle-columna acciones" style="width: 25%;">
+
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
