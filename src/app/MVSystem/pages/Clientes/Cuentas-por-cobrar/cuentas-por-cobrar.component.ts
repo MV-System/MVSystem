@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
+import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
-import { ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn } from 'src/app/core/interfaces/cliente.interface';
+import { AbonoFacturaParam, AbonoFacturaResponse, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn } from 'src/app/core/interfaces/cliente.interface';
 import { ClientesService } from 'src/app/core/services/clientes.service';
+import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
@@ -12,13 +14,15 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
   styleUrls: ['./cuentas-por-cobrar.component.css']
 })
 export class CuentasPorCobrarComponent implements OnInit {
-  idClienteSeleccionado: number| null = 0; // Variable para almacenar el id de la transferencia seleccionada
+  idClienteSeleccionado: number = 0; // Variable para almacenar el id de la transferencia seleccionada
   CLientesPorCobrar: ClientesConFacturasPendientesRetorn[] = [];
   FacturasPorClientes: FacturasPorClienteRetorn[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
+  editMode: boolean =  false;// Agregar la propiedad editMode aquí
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
+  AbonoValorRetorno: AbonoFacturaResponse[] = [];
    // Obtener la fecha actual
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
@@ -43,23 +47,120 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     IdSucursal:this.loginService.getUserIdSucursal,
   };
 
+
+
   form: FormGroup = this.fb.group({
     rangeDate: [''],
   });
 
+   filterParam: AbonoFacturaParam = {
+    Id_Cliente:0,
+    NumeroFactura:0,
+    MontoAbono: 0,
+    IdSucursal:+this.loginService.getUserIdSucursal,
+    Usuario: this.loginService.getUserName()
+  };
   constructor(
     private loading: LoadingService,
     private fb: FormBuilder,
     private loginService: LoginService,
     private ClienteService: ClientesService,
+    private toastr: ToastrService,
+    private rDialogService: RDialogService,
 
   ) { }
 
   ngOnInit(): void {
     this.obtenerClientes()
   }
+  procesarAbono(detalle: any): void {
+debugger;
+    if(this.filterParam.MontoAbono ===0)
+    {
+this.filterParam.MontoAbono = detalle.montoAbono;
+this.filterParam.NumeroFactura = detalle.numeroFactura;
+    }
+   const filterParam: AbonoFacturaParam = {
+      Id_Cliente:this.idClienteSeleccionado,
+      NumeroFactura:this.filterParam.NumeroFactura,
+      MontoAbono:this.filterParam.MontoAbono,
+      IdSucursal:+this.loginService.getUserIdSucursal,
+      Usuario: this.loginService.getUserName()
+    };
+
+    const monto = this.filterParam.MontoAbono;
+
+    if (monto > detalle.montoPendiente) {
+     this.toastr.info('El abono no puede ser mayor al monto pendiente.');
+      return;
+    }
+
+    if (monto) {
+     this.ClienteService.postAbonoFactura(filterParam).subscribe({
+      next: (response) => {
+        this.isLoading = false;  // Terminar carga
+
+        const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+        this.toastr.info(mensaje);
+      },
+      error: (err) => {
+        this.isLoading = false;  // Terminar carga en caso de error
+        console.error('Error Procesando el Abono:', err);
+      }
+    });
+
+      // Aquí puedes añadir la lógica para procesar el abono, enviar datos al backend, etc.
+    } else {
+      console.error('No se ha ingresado un monto para el abono.');
+    }
+    // setTimeout(() => {
+    //   window.location.reload(); // Recarga la página después de 2 segundos
+    //   }, 2000);
+  }
+  toggleDetalleInput(detalle: any, event: Event): void {
+    // Evitar que la acción del clic afecte la selección de filas
+    event.stopPropagation();
+
+    // Alternar la propiedad `showInput` para mostrar/ocultar el input
+    detalle.showInput = !detalle.showInput;
+  }
+
+  SaldarFactura(detalle: any): void {
+
+
+
+    this.rDialogService.openDialog(
+      "Aviso",
+      "¿Esta seguro de saldar esta factura?",
+      () => {
+        this.toastr.info("no se procesa la Accion");
+      },
+      () => {
+
+this.filterParam.MontoAbono = detalle.montoPendiente;
+this.filterParam.NumeroFactura = detalle.numeroFactura;
+    const filterParam: AbonoFacturaParam = {
+      Id_Cliente:this.idClienteSeleccionado,
+      NumeroFactura:detalle.numeroFactura,
+      MontoAbono: detalle.montoPendiente,
+      IdSucursal:+this.loginService.getUserIdSucursal,
+      Usuario: this.loginService.getUserName()
+    };
+this.procesarAbono(filterParam);
+
+
+      },
+      "Si", // Etiqueta del botón para Anular la factura
+      "No, Fue un error" // fue un error
+    );
+
+
+
+
+
+  }
   pageChanged(index: number) {
-    this.idClienteSeleccionado = null;
+    this.idClienteSeleccionado = 0;
     //this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
     this.currentPage = index;
     this.filter.pageIndex = index;
@@ -68,15 +169,22 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
   seleccionarFila(cliente: ClientesConFacturasPendientesRetorn): void {
     if (this.idClienteSeleccionado === cliente.id_Cliente) {
-      this.idClienteSeleccionado = null;
+      this.idClienteSeleccionado = 0;
       this.FacturasPorClientes = [];
     } else {
       this.obtenerFacturasPorCLiente(cliente.id_Cliente);
+
     }
+  }
+  onEdit(detalle: FacturasPorClienteRetorn) {
+    // Guardar el valor original antes de editarlo
+    detalle.montoPendiente = detalle.montoPendiente;
+    console.log("Equipo Capturado",detalle.montoPendiente);
+    detalle.editMode = true;
   }
   obtenerFacturasPorCLiente(idClienteSeleccionado: number) {
     this.isLoading = true; // Activamos el estado de carga antes de hacer la solicitud
-
+this.idClienteSeleccionado = idClienteSeleccionado;
     this.ClienteService.getFacturasPendientesPorCliente(idClienteSeleccionado).subscribe(
       (Trans) => {
         this.isLoading = false; // Desactivamos el estado de carga
@@ -90,7 +198,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   }
   onPageSizeChange() {
-    this.idClienteSeleccionado = null;
+    this.idClienteSeleccionado = 0;
     this.isLoading = true;
 
     // Si se selecciona "Todos", mostramos todos los registros
@@ -161,7 +269,7 @@ onDateRangeChanged(event: any) {
 }
 
   obtenerClientes() {
-    this.idClienteSeleccionado = null;
+    this.idClienteSeleccionado = 0;
     this.CLientesPorCobrar = []; // Limpiar los detalles cuando se deselecciona
     this.loading.showLoading();
     const fechaInicio = this.filter.fechaInicio;

@@ -16,7 +16,18 @@ export interface ClienteRegistro {
   calle?: string;
   casaNumero?: string;
 }
+export interface AbonoFacturaParam {
 
+  Id_Cliente: number;
+  NumeroFactura: number;
+  MontoAbono: number;
+  IdSucursal: number;
+  Usuario: string;
+
+}
+export interface AbonoFacturaResponse {
+  mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
+}
 export interface Cliente {
   id_Cliente: number;
   idContacto: number;
@@ -63,4 +74,7 @@ export interface FacturasPorClienteRetorn {
   totalFactura:   string;
   montoPendiente: string;
   fechaFactura:   string;
+  editMode:       boolean;// Agregar la propiedad editMode aquí
+  montoAbono:     number;
+  showInput:      number;
 }

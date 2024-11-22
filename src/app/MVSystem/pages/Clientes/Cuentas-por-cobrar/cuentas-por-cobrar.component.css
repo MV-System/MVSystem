@@ -79,6 +79,12 @@ td {
     /* Cambio de color cuando pasas el mouse sobre la fila seleccionada */
 }
 
+.abono-input {
+    width: 100px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
 .form-select.chippagin {
     width: 100px;
     /* Ajusta el ancho a lo que necesites */
@@ -98,4 +104,42 @@ td {
     /* Fondo azul */
     color: white;
     /* Texto blanco */
+}
+
+
+/* Estilo para organizar las columnas de detalles */
+
+.detalle-factura {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+}
+
+
+/* Estilo individual para cada columna */
+
+.detalle-columna {
+    padding: 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* Estilo para la columna de acciones */
+
+.detalle-columna.acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* Ajuste adicional para el botón y el input */
+
+.abono-input {
+    margin-right: 5px;
+    max-width: 100px;
 }

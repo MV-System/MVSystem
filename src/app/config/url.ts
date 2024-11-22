@@ -109,7 +109,8 @@ export let APIURL = {
             FacturasPendientesPorCliente: API + 'Clientes/GetFacturasPendientesPorCliente',
         },
         Inserta: {
-            ClienteInserta: API + 'Clientes/Cliente_Insert',
+          ClienteInserta: API + 'Clientes/Cliente_Insert',
+          AbonoFactura: API + 'Clientes/AbonoAfactura',
         }
     },
     Suplidor: {
