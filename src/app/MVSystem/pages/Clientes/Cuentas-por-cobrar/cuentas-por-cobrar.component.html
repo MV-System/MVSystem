@@ -88,7 +88,7 @@
                                             <h6>Detalles de la Transferencia</h6>
                                             <div *ngFor="let detalle of FacturasPorClientes">
                                                 <p><strong># Factura:</strong> {{ detalle.numeroFactura }} | <strong>Total Factura:</strong> {{ detalle.totalFactura | currency}} | <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency}} |
-                                                    <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}</p>
+                                                   <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }} | <strong>Fecha Limite pago:</strong> {{ detalle.fechaLimitePagoFactura }}</p>
                                             </div>
                                         </div>
                                     </td>

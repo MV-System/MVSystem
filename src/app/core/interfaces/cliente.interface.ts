@@ -63,4 +63,5 @@ export interface FacturasPorClienteRetorn {
   totalFactura:   string;
   montoPendiente: string;
   fechaFactura:   string;
+  fechaLimitePagoFactura: string;
 }
