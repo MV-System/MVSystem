@@ -38,6 +38,7 @@ export interface RegistroReparaciones{
     ID_Modelo:number;
     Usuario:string;
     mensajeSalida: string;
+    idReparacion: number;
 }
 export interface EquipoObjRetorno {
     imei: string;

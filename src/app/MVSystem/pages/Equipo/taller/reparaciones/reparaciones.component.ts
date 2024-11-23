@@ -28,7 +28,7 @@ export class ReparacionesComponent implements OnInit {
   customer!: Cliente;
   customers: Cliente[] = []
   btnDisabled: boolean = true;
-
+  IdReparacion : number = 0;
   formRegistroReparaciones: FormGroup = this.fb.group({
     IMEI: ["",],
     Costo: [, [Validators.required]],
