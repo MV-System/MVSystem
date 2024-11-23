@@ -81,7 +81,8 @@ export class ReparacionesComponent implements OnInit {
      Fecha_Entrega: String(this.formRegistroReparaciones.get('Fecha_Entrega')?.value),
      ID_Modelo: Number(this.formRegistroReparaciones.get('modelo')?.value),
      Usuario: this.loginService.getUserName(),
-     mensajeSalida:''
+     mensajeSalida:'',
+     idReparacion: 0
    }
       return model;
  }
