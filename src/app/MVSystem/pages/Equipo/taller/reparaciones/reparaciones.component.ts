@@ -209,6 +209,9 @@ validarCampos(nombreCampo: string) {
         .subscribe((Reparacion) => {
           Reparacion.forEach((Respuesta) => {
            this.toastr.info(Respuesta.mensajeSalida);
+           this.IdReparacion = Respuesta.idReparacion;
+console.log("idreparacion",Respuesta.idReparacion);
+
           });
         });
 
