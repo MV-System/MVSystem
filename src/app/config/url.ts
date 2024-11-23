@@ -105,9 +105,12 @@ export let APIURL = {
         Consultas: {
             tipoClienteLista: API + 'Catalogos/Tipo_Cliente_Combo',
             ClienteLista: API + 'Clientes/Get_Cliente',
+            ClientesConFacturasPendientes: API + 'Clientes/GetClientesConFacturasPendientes',
+            FacturasPendientesPorCliente: API + 'Clientes/GetFacturasPendientesPorCliente',
         },
         Inserta: {
-            ClienteInserta: API + 'Clientes/Cliente_Insert',
+          ClienteInserta: API + 'Clientes/Cliente_Insert',
+          AbonoFactura: API + 'Clientes/AbonoAfactura',
         }
     },
     Suplidor: {

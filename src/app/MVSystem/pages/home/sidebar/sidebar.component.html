@@ -92,11 +92,11 @@
                         <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
                     </a>
                 </li>
-                <li *ngIf="VerFormRecepcionEquipo()">
+                <!-- <li *ngIf="VerFormRecepcionEquipo()">
                     <a routerLink="./equipo/recepcion">
                         <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
                     </a>
-                </li>
+                </li> -->
                 <li>
             </ul>
             </li>
@@ -139,10 +139,16 @@
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaClientes()">
+                        <a routerLink="./clientes/cuentasPorCobrar">
+                            <i class="bi bi-circle"></i><span>Cuentas Por Cobrar</span>
+                        </a>
+                    </li>
+                    <li *ngIf="VerFormConsultaClientes()">
                         <a routerLink="./clientes/consulta">
                             <i class="bi bi-circle"></i><span>Clientes</span>
                         </a>
                     </li>
+
                 </ul>
             </li>
             <!-- End Consulta Nav -->

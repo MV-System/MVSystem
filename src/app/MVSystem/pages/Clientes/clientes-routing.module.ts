@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientesRegistroComponent } from './Clientes-registro/clientes-registro.component';
 import { ClientesConsultaComponent } from './Clientes-consulta/clientes-consulta.component';
+import { CuentasPorCobrarComponent } from './Cuentas-por-cobrar/cuentas-por-cobrar.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
       {
         path: 'consulta',
         component: ClientesConsultaComponent,
+      },
+
+      {
+        path: 'cuentasPorCobrar',
+        component: CuentasPorCobrarComponent,
       },
     ]
   }

@@ -1,0 +1,152 @@
+<div class="box animate__animated animate__fadeIn">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/"><i class='bx bx-home-alt-2'></i> Home</a>
+            </li>
+            <li class="breadcrumb-item">Consulta</li>
+            <li class="breadcrumb-item">Consulta Clientes Con Facturas Pendientes</li>
+        </ol>
+    </nav>
+    <h1>Clientes</h1>
+
+    <form [formGroup]="form" (ngSubmit)="obtenerClientes()" role="search">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="card-title">Filtros</span>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <label class="form-label row mx-2"> Rango de fecha</label>
+                                <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                </my-date-range-picker>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="obtenerClientes()" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <button class="btn print mx-1" [ngClass]="{'disabled': (!idClienteSeleccionado)}" (click)="printReportTransferencia()">
+                    <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Imprimir Reporte de clientes' }}</span>
+                    <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- <mat-spinner *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <span>Cargando datos, por favor espere...</span>
+    </mat-spinner> -->
+    <!-- Sección de Clientes -->
+    <section class="section mt-4">
+        <div class="row">
+            <div class="col-lg-12 scroll-table">
+                <h5 class="card-title">Clientes</h5>
+
+                <!-- Paginación -->
+                <div class="pagination-options">
+                    <label for="pageSize">Registros por página:</label>
+                    <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
+                <option [value]="5">5</option>
+                <option [value]="10">10</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+                <option [value]="totalRecord">Todos</option>
+            </select>
+                </div>
+                <!-- Tabla de Clientes con facturas pendientes -->
+                <div class="scrollable-table thinScroll">
+                    <table class="mv-table tr.selected">
+                        <thead>
+                            <tr>
+                                <th class="fixed-item desc" style="width: 1%">ID Cliente</th>
+                                <th style="width: 5%">Cliente</th>
+                                <th>Monto Total Pendiente de pago</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filas de equipos transferidos -->
+                            <tr class="animate__animated animate__fadeIn tr-hover" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize,
+                              currentPage: filter.pageIndex, totalItems: totalRecord }" (click)="seleccionarFila(Cliente)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" tableTrselect>
+
+                                <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
+                                <td>{{ Cliente.cliente }}</td>
+                                <td style="width: 40%">{{Cliente.montoPendiente}}
+                                    <!-- Input que se muestra solo si el cliente seleccionado coincide -->
+
+
+                                </td>
+                            </tr>
+
+                            <!-- Fila de detalles de la transferencia -->
+                            <ng-container>
+                                <tr class="animate__animated animate__fadeIn tr-collapse">
+                                    <td colspan="5">
+                                        <div *ngIf="FacturasPorClientes && FacturasPorClientes.length">
+                                            <h6>Detalles de la Transferencia</h6>
+                                            <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura">
+                                                <div class="detalle-columna" style="width: 15%;">
+                                                    <strong># Factura:</strong> {{ detalle.numeroFactura }}
+                                                </div>
+                                                <div class="detalle-columna" style="width: 20%;">
+                                                    <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }}
+                                                </div>
+                                                <div class="detalle-columna" style="width: 50%;">
+                                                    <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency }}
+                                                    <!-- Input para el abono -->
+                                                    <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="Ingresa el monto" (click)="$event.stopPropagation()" style="width: 70%; display: inline-block;" />
+                                                    <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
+                                                <i class="bx bx-check"></i> Procesar Abono
+                                              </button>
+
+                                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
+                                                      <i class="bx bx-edit-alt"></i>
+                                                    </button>
+                                                    <!-- Botón para Saldar Factura -->
+                                                    <button (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
+                                           <i class="bx bx-money"></i>
+                                         </button>
+                                                    <!-- Botón para Hacer Abono -->
+
+                                                </div>
+                                                <!-- Mensaje de advertencia si el monto del abono es mayor que el monto pendiente -->
+
+                                                <div class="detalle-columna" style="width: 30%;">
+                                                    <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}
+                                                </div>
+                                                <div class="detalle-columna acciones" style="width: 25%;">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mensaje cuando no hay datos -->
+                <div class="not-data" *ngIf="!CLientesPorCobrar.length">
+                    Datos no encontrados
+                </div>
+            </div>
+        </div>
+    </section>
+    <div *ngIf="obtenerClientes.length > 0">
+        <!-- Controles de paginación -->
+        <!-- <pagination-controls
+  (pageChange)="pageChanged($event)"
+  [itemsPerPage]="filter.pageSize"
+  [currentPage]="currentPage"
+  [totalItems]="totalRecord">
+</pagination-controls> -->
+
+    </div>
+</div>

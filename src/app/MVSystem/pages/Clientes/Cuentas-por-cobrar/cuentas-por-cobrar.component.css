@@ -1,0 +1,145 @@
+.scroll-table {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+tr.tr-hover:hover {
+    background-color: blue;
+    cursor: pointer;
+    color: #467ff1;
+}
+
+td {
+    /* max-width: 100px; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* .selected {
+  background-color: #2a4f99;
+  color: yellow;
+} */
+
+
+/* .tr-collapse{
+  font-style: oblique;
+  background-color: white;
+} */
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    min-width: 200px;
+    /* Mínimo ancho para la columna APELLIDOS */
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    width: auto;
+    /* La columna TIPO DE FACTURA se expandirá según el contenido */
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: auto !important;
+    /* La columna TELEFONO se expandirá según el contenido */
+}
+
+.table {
+    table-layout: auto;
+    /* Permite que las columnas se expandan según el contenido */
+}
+
+.scroll-table {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.display-filter-content {
+    display: flex !important;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(8, 55, 223, 0.218);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: yellow;
+    border-radius: 20px;
+    border: 2px solid rgba(8, 55, 223, 0.218);
+}
+
+.selected-row:hover {
+    background-color: #dcdcdc;
+    /* Cambio de color cuando pasas el mouse sobre la fila seleccionada */
+}
+
+.abono-input {
+    width: 100px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.form-select.chippagin {
+    width: 100px;
+    /* Ajusta el ancho a lo que necesites */
+    height: 35px;
+    /* Ajusta la altura del select */
+    padding: 5px 10px;
+    /* Ajusta el padding si es necesario */
+    font-size: 14px;
+    /* Cambia el tamaño de la fuente si lo deseas */
+}
+
+
+/* Estilo para la fila seleccionada */
+
+.selected {
+    background-color: #007bff;
+    /* Fondo azul */
+    color: white;
+    /* Texto blanco */
+}
+
+
+/* Estilo para organizar las columnas de detalles */
+
+.detalle-factura {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+}
+
+
+/* Estilo individual para cada columna */
+
+.detalle-columna {
+    padding: 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* Estilo para la columna de acciones */
+
+.detalle-columna.acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* Ajuste adicional para el botón y el input */
+
+.abono-input {
+    margin-right: 5px;
+    max-width: 100px;
+}

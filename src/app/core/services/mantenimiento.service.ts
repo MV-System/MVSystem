@@ -55,7 +55,7 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
-  EditaDetalleFactura(EquipoActual: string,EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+  EditaDetalleFactura(EquipoActual: string, EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
     const body = {
       NumeroFactura,
       IDsucursal,

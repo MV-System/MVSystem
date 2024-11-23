@@ -149,6 +149,7 @@
     </section>
     <ng-content></ng-content>
     <div *ngIf="equiposTransferencias.length > 0">
-        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize"></pagination-controls>
+        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
+        </pagination-controls>
     </div>
 </div>
