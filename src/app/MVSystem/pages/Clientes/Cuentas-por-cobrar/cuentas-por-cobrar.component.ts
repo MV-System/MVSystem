@@ -73,6 +73,18 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   ngOnInit(): void {
     this.obtenerClientes()
   }
+  // Función para determinar si la factura está vencida
+  isFacturaVencida(fechaLimite: string): boolean {
+    const fechaLimiteFactura = new Date(fechaLimite);
+    const fechaHoy = new Date();
+
+    // Comparar fechas: si la fecha de vencimiento es menor a la fecha actual, es una factura vencida
+    return fechaLimiteFactura < fechaHoy;
+  }
+  isClienteSelect(clienteId: number): boolean {
+    this.idClienteSeleccionado == clienteId;
+    return true;
+  }
   procesarAbono(detalle: any): void {
     if(this.filterParam.MontoAbono ===0)
     {

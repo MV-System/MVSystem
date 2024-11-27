@@ -95,7 +95,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   total: number = 0;
   itbis: number = 0;
   abono: number = 0;
-  bufferSize: number = 10;
+  bufferSize: number = 1000;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
 
   Imei: string = '';
@@ -154,6 +154,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.fetchMore();
   }
   onScroll(e: { start: number, end: number }) {
+
     let end = e.end;
     if (this.isLoading || this.accesorios.length <= this.accesoriosBuffer.length) {
       return;
@@ -170,6 +171,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
       this.accesoriosBuffer = this.accesoriosBuffer.concat(more);
     }, 200)
   }
+
   onPrecioChange(index: number): void {
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;

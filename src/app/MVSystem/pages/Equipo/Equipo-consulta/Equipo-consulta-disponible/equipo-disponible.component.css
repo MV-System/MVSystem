@@ -22,15 +22,6 @@
     background-color: #f6f9ff;
 }
 
-
-/* td
-  {
-   max-width: 100px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-  } */
-
 .scroll-table {
     overflow: auto;
     white-space: nowrap;
@@ -62,10 +53,6 @@ label.total {
     background-color: #467ff1;
     border-radius: 20px;
     border: 2px solid rgba(8, 55, 223, 0.218);
-}
-
-.card-body {
-    background-color: #f6f9ff;
 }
 
 .clear-filter {
@@ -106,8 +93,12 @@ label.total {
 }
 
 .form-select.chippagin {
-  width: 100px; /* Ajusta el ancho a lo que necesites */
-  height: 35px; /* Ajusta la altura del select */
-  padding: 5px 10px; /* Ajusta el padding si es necesario */
-  font-size: 14px; /* Cambia el tamaño de la fuente si lo deseas */
+    width: 100px;
+    /* Ajusta el ancho a lo que necesites */
+    height: 35px;
+    /* Ajusta la altura del select */
+    padding: 5px 10px;
+    /* Ajusta el padding si es necesario */
+    font-size: 14px;
+    /* Cambia el tamaño de la fuente si lo deseas */
 }

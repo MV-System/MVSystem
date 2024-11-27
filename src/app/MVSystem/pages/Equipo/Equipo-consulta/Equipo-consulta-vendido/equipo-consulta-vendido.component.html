@@ -24,16 +24,7 @@
                                     <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
                                 </div>
                             </div>
-
-                            <!-- <div class="col-md-4">
-                <label class="form-label">Por IMEI</label>
-                <input
-                  class="form-control"
-                  placeholder="IMEI"
-                  formControlName="imei"
-                  (keyup.enter)="obtenerEquiposVendidos()" />
-              </div> -->
-                            <div>
+                            <div class="col-md-4">
                                 <!-- --------------- Almacen --------------- -->
                                 <label class="form-label">Almacen</label>
                                 <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposVendidos()">
@@ -67,18 +58,6 @@
                         </option>
                       </select>
                                 </div>
-                                <!-- <div class="col-md-4">
-                  <label class="form-label">Vendedor </label>
-                  <ng-select
-                    formControlName="vendedor"
-                    (change)="obtenerEquiposVendidos()">
-                    <ng-option
-                      *ngFor="let vendedor of listaVendedor"
-                      [value]="vendedor.nombres" >
-                      {{ vendedor.nombres }}
-                    </ng-option>
-                  </ng-select>
-                </div> -->
                                 <div class="col-md-4">
                                     <!-- Search by -->
                                     <!-- --------------- Modelos --------------- -->
@@ -104,15 +83,14 @@
                                 <label class="form-label row mx-2">Fecha de facturación</label>
                                 <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
                                 </my-date-range-picker>
-                                <!-- <input
-                type="date"
-                class="form-control"
-                formControlName="fechaRegistro"
-                (change)="obtenerEquiposVendidos()"  /> -->
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Botón Imprimir -->
+                <button class="btn print" [ngClass]="{'disabled':!equiposVendidos.length}" (click)="printReportEquipoVendido()">
+                  Imprimir reporte <i class="bi bi-printer"></i>
+              </button>
             </div>
             <div class="col-lg-3">
                 <div class="card">
@@ -124,9 +102,9 @@
                                     <div class="row mb-2">
                                         Total Equipos
                                         <label class="form-control total">
-                      {{ equipoQuantity }}
-                      <!-- {{equipoQuantity | async}} -->
-                    </label>
+                                        {{ equipoQuantity }}
+
+                                        </label>
                                     </div>
                                     <div class="row mb-2">
                                         Total Inventario
@@ -169,25 +147,27 @@
     </mat-spinner>
 
     <section class="section mt-4">
-        <button class="btn print mx-1" [ngClass]="{'disabled':!equiposVendidos.length}" (click)="printReportEquipoVendido()">
-      Imprimir reporte <i class="bi bi-printer"></i>
-    </button>
+
         <div *ngIf="!isLoading" class="row">
             <div class="col-lg-12 scroll-table">
-                <h5 class="card-title">Equipos</h5>
+                <!-- <h5 class="card-title">Equipos</h5> -->
+                <div class="col-md-12 d-flex align-items-center">
+                    <!-- Selector de página -->
+                    <div class="mx-1">
+                        <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
+                          <option [value]="5">5</option>
+                          <option [value]="10">10</option>
+                          <option [value]="50">50</option>
+                          <option [value]="100">100</option>
+                          <option [value]="totalRecord">Todos</option>
+                      </select>
+                    </div>
 
-                <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
-                  <option [value]="5">5</option>
-                  <option [value]="10">10</option>
-                  <option [value]="50">50</option>
-                  <option [value]="100">100</option>
-                    <option [value]="totalRecord">Todos</option>
-                </select>
-
-                <p *ngIf="equiposVendidos.length">
-                    Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
-                </p>
-
+                    <!-- Texto de registro -->
+                    <div *ngIf="equiposVendidos.length" class="mx-2">
+                        <p>Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros</p>
+                    </div>
+                </div>
                 <!-- Table with stripped rows -->
                 <div class="scrollable-table thinScroll">
                     <table class="mv-table">
@@ -195,19 +175,19 @@
                             <tr>
                                 <th class="fixed-item code" scope="col">Imei</th>
                                 <th class="fixed-item desc" scope="col">Descripción</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Precio Vendido</th>
+                                <th scope="col">Fecha facturado</th>
                                 <th scope="col">Precio Mayor</th>
                                 <th scope="col">Precio Detalle</th>
                                 <th scope="col">Costo</th>
                                 <th scope="col">Itbis</th>
-                                <th scope="col">Precio Vendido</th>
-                                <th scope="col">Tipo Factura</th>
+                                <th scope="col">Tipo Pago</th>
                                 <th scope="col">Desbloq.</th>
                                 <th scope="col">Nota</th>
                                 <th scope="col">Almacen</th>
                                 <th scope="col">Suplidor</th>
                                 <th scope="col">Vendedor</th>
-                                <th scope="col">Cliente</th>
-                                <th scope="col">Fecha facturado</th>
                                 <th scope="col">Fecha Registro</th>
                                 <th scope="col">Comision Detalle</th>
                                 <th scope="col">Comision Por Mayor</th>
@@ -223,27 +203,23 @@
                         totalItems: totalRecord
                       } ">
                                 <td class="fixed-item code">{{equipo.imei}}</td>
-                                <td class="fixed-item desc">
-                                    <span>{{equipo.descripcion}}</span>
-                                    <!-- <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-         <i class="bx bx-edit-alt"></i>
-       </button> -->
-                                </td>
-                                <!-- <td>{{ equipo.imei }}</td>
-                            <td>{{ equipo.descripcion }}</td> -->
+                                <td class="fixed-item desc">{{equipo.descripcion}}</td>
+                                <td>{{ equipo.cliente }}</td>
+                                <td>{{ equipo.precioVendido | currency }}</td>
+                                <td>{{ equipo.fechaFacturado}}</td>
                                 <td>{{ equipo.precioPorMayor | currency }}</td>
                                 <td>{{ equipo.precioDetalle | currency }}</td>
                                 <td>{{ equipo.costoEquipo | currency }}</td>
                                 <td>{{ equipo.itbis | currency }}</td>
-                                <td>{{ equipo.precioVendido | currency }}</td>
+
                                 <td>{{ equipo.tipoFactura }}</td>
                                 <td>{{ equipo.isDesbloqueado }}</td>
                                 <td>{{ equipo.notaAdicional }}</td>
                                 <td>{{ equipo.descripcionAlmacen }}</td>
                                 <td>{{ equipo.suplidor }}</td>
                                 <td>{{ equipo.vendedor }}</td>
-                                <td>{{ equipo.cliente }}</td>
-                                <td>{{ equipo.fechaFacturado}}</td>
+
+
                                 <td>{{ equipo.fechaRegistro}}</td>
                                 <td>{{ equipo.comisionDetalle | currency }}</td>
                                 <td>{{ equipo.comisionPorMayor | currency }}</td>
@@ -259,14 +235,10 @@
         </div>
     </section>
     <!-- Controles de Paginación -->
-  <div *ngIf="equiposVendidos.length > 0">
-    <pagination-controls
-        (pageChange)="pageChanged($event)"
-        [currentPage]="currentPage"
-        [totalItems]="totalRecord"
-        [itemsPerPage]="filter.pageSize">
-    </pagination-controls>
-</div>
+    <div *ngIf="equiposVendidos.length > 0">
+        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
+        </pagination-controls>
+    </div>
 </div>
 
 <!-- End #main -->

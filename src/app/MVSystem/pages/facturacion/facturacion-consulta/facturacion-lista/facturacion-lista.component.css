@@ -1,17 +1,6 @@
-/* *::-webkit-scrollbar {
-    width: 12px;
+.card-body {
+    background-color: #f6f9ff;
 }
-
-*::-webkit-scrollbar-track {
-    background: rgba(8, 55, 223, 0.218);
-} */
-
-
-/* *::-webkit-scrollbar-thumb {
-    background-color: #467ff1;
-    border-radius: 20px;
-    border: 2px solid rgba(8, 55, 223, 0.218);
-} */
 
 .scroll-table {
     overflow: auto;
@@ -31,17 +20,19 @@ td {
     white-space: nowrap;
 }
 
-
-/* .selected {
-    background-color: #2a4f99;
-    color: yellow;
-  } */
-
-
-/* .tr-collapse{
-    font-style: oblique;
-    background-color: white;
-  } */
+.spinner {
+    border: 8px solid #f3f3f3;
+    /* Color de fondo */
+    border-top: 8px solid #3498db;
+    /* Color de la parte superior */
+    border-radius: 50%;
+    width: 50px;
+    /* Tamaño del spinner */
+    height: 50px;
+    /* Tamaño del spinner */
+    animation: spin 1s linear infinite;
+    /* Animación */
+}
 
 .table th:nth-child(3),
 .table td:nth-child(3) {
@@ -111,8 +102,12 @@ td {
 }
 
 .form-select.chippagin {
-  width: 100px; /* Ajusta el ancho a lo que necesites */
-  height: 35px; /* Ajusta la altura del select */
-  padding: 5px 10px; /* Ajusta el padding si es necesario */
-  font-size: 14px; /* Cambia el tamaño de la fuente si lo deseas */
+    width: 100px;
+    /* Ajusta el ancho a lo que necesites */
+    height: 35px;
+    /* Ajusta la altura del select */
+    padding: 5px 10px;
+    /* Ajusta el padding si es necesario */
+    font-size: 14px;
+    /* Cambia el tamaño de la fuente si lo deseas */
 }

@@ -100,7 +100,7 @@ td {
 /* Estilo para la fila seleccionada */
 
 .selected {
-    background-color: #007bff;
+    background-color: black;
     /* Fondo azul */
     color: white;
     /* Texto blanco */
@@ -125,6 +125,20 @@ td {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.factura-no-vencida {
+    background-color: #d4edda;
+    /* Verde claro */
+    color: #155724;
+    /* Texto verde oscuro */
+}
+
+.factura-vencida {
+    background-color: #f8d7da;
+    /* Color rojo claro de advertencia */
+    color: #721c24;
+    /* Texto rojo oscuro */
 }
 
 

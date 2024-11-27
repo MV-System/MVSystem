@@ -72,8 +72,8 @@
                         </thead>
                         <tbody>
                             <!-- Filas de equipos transferidos -->
-                            <tr class="animate__animated animate__fadeIn tr-hover" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize,
-                              currentPage: filter.pageIndex, totalItems: totalRecord }" (click)="seleccionarFila(Cliente)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" tableTrselect>
+                            <tr [ngClass]="{'selected': isClienteSelect(Cliente.id_Cliente)}" class="animate__animated animate__fadeIn tr-hover" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize,
+                              currentPage: filter.pageIndex, totalItems: totalRecord }" (click)="seleccionarFila(Cliente)" aria-expanded="false" tableTrselect>
 
                                 <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
                                 <td>{{ Cliente.cliente }}</td>
@@ -84,17 +84,21 @@
                                 </td>
                             </tr>
 
+
                             <!-- Fila de detalles de la transferencia -->
                             <ng-container>
                                 <tr class="animate__animated animate__fadeIn tr-collapse">
                                     <td colspan="5">
                                         <div *ngIf="FacturasPorClientes && FacturasPorClientes.length">
-                                            <h6>Detalles de la Transferencia</h6>
-                                            <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura">
-                                                <div class="detalle-columna" style="width: 15%;">
+                                            <h6>Facturas Del cliente {{idClienteSeleccionado}}</h6>
+                                            <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura" [ngClass]="{
+                                              'factura-vencida': isFacturaVencida(detalle.fechaLimitePagoFactura),
+                                              'factura-no-vencida': !isFacturaVencida(detalle.fechaLimitePagoFactura)
+                                          }">
+                                                <div class="detalle-columna" style="width: 20%;">
                                                     <strong># Factura:</strong> {{ detalle.numeroFactura }}
                                                 </div>
-                                                <div class="detalle-columna" style="width: 20%;">
+                                                <div class="detalle-columna" style="width: 30%;">
                                                     <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }}
                                                 </div>
                                                 <div class="detalle-columna" style="width: 50%;">
@@ -102,32 +106,31 @@
                                                     <!-- Input para el abono -->
                                                     <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="Ingresa el monto" (click)="$event.stopPropagation()" style="width: 70%; display: inline-block;" />
                                                     <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
-                                                <i class="bx bx-check"></i> Procesar Abono
-                                              </button>
+                          <i class="bx bx-check"></i> Procesar Abono
+                      </button>
 
                                                     <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
-                                                      <i class="bx bx-edit-alt"></i>
-                                                    </button>
+                          <i class="bx bx-edit-alt"></i>
+                      </button>
                                                     <!-- Botón para Saldar Factura -->
                                                     <button (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
-                                           <i class="bx bx-money"></i>
-                                         </button>
-                                                    <!-- Botón para Hacer Abono -->
-
+                          <i class="bx bx-money"></i>
+                      </button>
                                                 </div>
                                                 <!-- Mensaje de advertencia si el monto del abono es mayor que el monto pendiente -->
 
-                                                <div class="detalle-columna" style="width: 30%;">
+                                                <div class="detalle-columna" style="width: 40%;">
                                                     <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}
                                                 </div>
-                                                <div class="detalle-columna acciones" style="width: 25%;">
-
+                                                <div class="detalle-columna" style="width: 50%;">
+                                                    <strong>Fecha Vencimiento:</strong> {{ detalle.fechaLimitePagoFactura }}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                             </ng-container>
+
                         </tbody>
                     </table>
                 </div>
