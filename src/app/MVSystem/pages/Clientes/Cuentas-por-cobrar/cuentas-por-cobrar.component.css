@@ -102,7 +102,7 @@ td {
 .selected {
     background-color: black;
     /* Fondo azul */
-    color: white;
+    color: rgb(19, 18, 18);
     /* Texto blanco */
 }
 
