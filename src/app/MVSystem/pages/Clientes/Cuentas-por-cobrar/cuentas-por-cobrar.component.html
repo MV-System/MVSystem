@@ -101,12 +101,12 @@
                                                 <div class="detalle-columna" style="width: 30%;">
                                                     <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }}
                                                 </div>
-                                                <div class="detalle-columna" style="width: 50%;">
+                                                <div class="detalle-columna" style="width: 80%;">
                                                     <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency }}
                                                     <!-- Input para el abono -->
-                                                    <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="Ingresa el monto" (click)="$event.stopPropagation()" style="width: 70%; display: inline-block;" />
+                                                    <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="monto" (click)="$event.stopPropagation()" style="width: 15%; display: inline-block;" />
                                                     <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
-                          <i class="bx bx-check"></i> Procesar Abono
+                          <i class="bx bx-check"></i> Procesar
                       </button>
 
                                                     <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
@@ -142,11 +142,11 @@
             </div>
         </div>
     </section>
-    <!-- <div *ngIf="obtenerClientes.length > 0">
-        <div *ngIf="equiposTransferencias.length > 0">
+    <div>
+        <div *ngIf="CLientesPorCobrar.length > 0">
             <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
             </pagination-controls>
         </div>
 
-    </div> -->
+    </div>
 </div>

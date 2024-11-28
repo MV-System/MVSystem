@@ -49,7 +49,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   ],
   providers: [
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
 
 })

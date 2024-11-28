@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
-import { AbonoFacturaParam, AbonoFacturaResponse, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn } from 'src/app/core/interfaces/cliente.interface';
+import { AbonoFacturaParam, AbonoFacturaResponse, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, Cliente } from 'src/app/core/interfaces/cliente.interface';
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
@@ -15,6 +15,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 })
 export class CuentasPorCobrarComponent implements OnInit {
   idClienteSeleccionado: number = 0; // Variable para almacenar el id de la transferencia seleccionada
+  NombreClienteSeleccionado: string = ''; // Variable para almacenar el id de la transferencia seleccionada
   CLientesPorCobrar: ClientesConFacturasPendientesRetorn[] = [];
   FacturasPorClientes: FacturasPorClienteRetorn[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
@@ -113,6 +114,9 @@ this.filterParam.NumeroFactura = detalle.numeroFactura;
 
         const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
         this.toastr.info(mensaje);
+        this.idClienteSeleccionado = 0;
+        this.FacturasPorClientes = [];
+
       },
       error: (err) => {
         this.isLoading = false;  // Terminar carga en caso de error
@@ -172,7 +176,7 @@ this.procesarAbono(filterParam);
   }
   pageChanged(index: number) {
     this.idClienteSeleccionado = 0;
-    //this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
+    this.FacturasPorClientes = [];
     this.currentPage = index;
     this.filter.pageIndex = index;
 
@@ -200,6 +204,7 @@ this.idClienteSeleccionado = idClienteSeleccionado;
       (Trans) => {
         this.isLoading = false; // Desactivamos el estado de carga
         this.FacturasPorClientes = Trans; // Asignamos los detalles obtenidos
+
       },
       (error) => {
         console.error("Error al obtener los detalles de la transferencia:", error);
@@ -296,7 +301,6 @@ onDateRangeChanged(event: any) {
           // this.lastLine = Trans[0].lastLine;
         }
         this.CLientesPorCobrar = data;
-
       },
       (error) => {
         //this.isLoading = false;

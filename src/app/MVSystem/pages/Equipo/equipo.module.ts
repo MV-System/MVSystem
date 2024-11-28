@@ -22,9 +22,7 @@ import { EquipoRegistroComponent } from './Equipo-registro/equipo-registro.compo
 import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-transferencia.component';
 import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 import { ReparacionesComponent } from './taller/reparaciones/reparaciones.component';
-import { FormClienteComponent } from '../facturacion/facturacion-registro/form-cliente/form-cliente.component';
 import { FacturacionModule } from '../facturacion/facturacion.module';
-import { FacturacionRegistroComponent } from '../facturacion/facturacion-registro/facturacion-registro.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
