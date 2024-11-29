@@ -37,7 +37,7 @@ export class ClientesService {
 const filtros =
 'FechaInicio='+
 FechaInicio +
- '&Sucursal_Destino='+
+ '&FechaFin='+
  FechaFinal +
  '&NombreCliente='+
  NombreCliente +

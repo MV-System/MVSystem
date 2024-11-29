@@ -99,9 +99,7 @@ this.filterParam.NumeroFactura = detalle.numeroFactura;
       IdSucursal:+this.loginService.getUserIdSucursal,
       Usuario: this.loginService.getUserName()
     };
-
     const monto = this.filterParam.MontoAbono;
-
     if (monto > detalle.montoPendiente) {
      this.toastr.info('El abono no puede ser mayor al monto pendiente.');
       return;
@@ -141,9 +139,6 @@ this.filterParam.NumeroFactura = detalle.numeroFactura;
   }
 
   SaldarFactura(detalle: any): void {
-
-
-
     this.rDialogService.openDialog(
       "Aviso",
       "¿Esta seguro de saldar esta factura?",
@@ -162,17 +157,10 @@ this.filterParam.NumeroFactura = detalle.numeroFactura;
       Usuario: this.loginService.getUserName()
     };
 this.procesarAbono(filterParam);
-
-
       },
       "Si", // Etiqueta del botón para Anular la factura
       "No, Fue un error" // fue un error
     );
-
-
-
-
-
   }
   pageChanged(index: number) {
     this.idClienteSeleccionado = 0;
@@ -322,7 +310,7 @@ onDateRangeChanged(event: any) {
     const criterio = this.form.get('Search')?.value || '';
 
 
-    this.ClienteService.getClientesConFacturasPendientes('','',criterio,criterio).subscribe(
+    this.ClienteService.getClientesConFacturasPendientes(fechaInicio,fechaFinal,criterio,criterio).subscribe(
       (data) => {
         if (data.length) {
           // this.totalRecord = Trans[0].totalRecord;
