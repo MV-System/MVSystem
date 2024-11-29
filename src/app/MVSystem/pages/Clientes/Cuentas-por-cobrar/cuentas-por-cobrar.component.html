@@ -22,20 +22,20 @@
                                 <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
                                 </my-date-range-picker>
                             </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="obtenerClientes()" />
-                            </div>
+                            <!-- <div class="col-md-4">
+                              <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keydown)="onEnter($event)" />
+                            </div> -->
 
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <!-- <div class="col-md-9">
                 <button class="btn print mx-1" [ngClass]="{'disabled': (!idClienteSeleccionado)}" (click)="printReportTransferencia()">
                     <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Imprimir Reporte de clientes' }}</span>
                     <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
                 </button>
-            </div>
+            </div> -->
         </div>
     </form>
 
@@ -77,7 +77,7 @@
 
                                 <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
                                 <td>{{ Cliente.cliente }}</td>
-                                <td style="width: 40%">{{Cliente.montoPendiente}}
+                                <td style="width: 40%">{{Cliente.montoPendiente |currency}}
                                     <!-- Input que se muestra solo si el cliente seleccionado coincide -->
 
 

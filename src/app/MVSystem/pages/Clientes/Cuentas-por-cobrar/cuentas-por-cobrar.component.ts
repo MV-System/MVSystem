@@ -265,6 +265,33 @@ this.idClienteSeleccionado = idClienteSeleccionado;
 
 }
 
+onEnter(event: KeyboardEvent) {
+
+  if (event.key === 'Enter') {  // Verifica si la tecla presionada es 'Enter'
+    debugger;
+    const criterio = this.form.get('criterio')?.value || '';
+
+
+    this.ClienteService.getClientesConFacturasPendientes('','',criterio,criterio).subscribe(
+      (data) => {
+        if (data.length) {
+          // this.totalRecord = Trans[0].totalRecord;
+          // this.line = Trans[0].line;
+          // this.lastLine = Trans[0].lastLine;
+        }
+        this.CLientesPorCobrar = data;
+      },
+      (error) => {
+        //this.isLoading = false;
+        console.error("Error al obtener equipos disponibles:", error);
+        // Mostrar una notificación de error
+        //this.showErrorNotification("Error al cargar las transferencias.");
+      }
+    );
+
+    //this.obtenerClientes();  // Llama al método para obtener los clientes
+  }
+}
 onDateRangeChanged(event: any) {
   console.log("this.filter.pageIndex entrando",this.filter.pageIndex);
   this.filter.pageIndex = 1;
@@ -283,6 +310,8 @@ onDateRangeChanged(event: any) {
 
   this.obtenerClientes();
 }
+
+
 
   obtenerClientes() {
     this.idClienteSeleccionado = 0;
