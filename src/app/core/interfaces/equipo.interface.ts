@@ -217,6 +217,7 @@ export interface EquipoRecepcion {
         IDCondicion:number ,
         ImeiSale: string,
         Nota:  string
+        Usuario:  string
 }
 
 export interface EquipoRecepcionConsulta {
