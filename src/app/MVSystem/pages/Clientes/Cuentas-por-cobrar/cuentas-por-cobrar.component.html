@@ -16,15 +16,16 @@
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title">Filtros</span>
+                        <div class="col-md-4">
+                          <input type="text" class="form-control" formControlName="criterio" placeholder="Nombre o teléfono del cliente" title="Busqueda" (keydown)="onEnter($event)" />
+                        </div>
                         <div class="row mt-4">
                             <div class="col-md-4">
                                 <label class="form-label row mx-2"> Rango de fecha</label>
                                 <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
                                 </my-date-range-picker>
                             </div>
-                            <!-- <div class="col-md-4">
-                              <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keydown)="onEnter($event)" />
-                            </div> -->
+
 
                         </div>
                     </div>
@@ -39,10 +40,10 @@
         </div>
     </form>
 
-    <!-- <mat-spinner *ngIf="isLoading" class="loading">
+    <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
         <span>Cargando datos, por favor espere...</span>
-    </mat-spinner> -->
+    </mat-spinner>
     <!-- Sección de Clientes -->
     <section class="section mt-4">
         <div class="row">

@@ -52,6 +52,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   form: FormGroup = this.fb.group({
     rangeDate: [''],
+    criterio:['']
   });
 
    filterParam: AbonoFacturaParam = {
@@ -163,12 +164,27 @@ this.procesarAbono(filterParam);
     );
   }
   pageChanged(index: number) {
+
     this.idClienteSeleccionado = 0;
     this.FacturasPorClientes = [];
     this.currentPage = index;
     this.filter.pageIndex = index;
 
-    this.obtenerClientes();
+    this.ClienteService.getClientesConFacturasPendientes('','','').subscribe(
+      (data) => {
+        if (data.length) {
+        }
+        this.CLientesPorCobrar = data;
+      },
+      (error) => {
+        console.error("Error al obtener equipos disponibles:", error);
+      }
+    );
+
+
+
+
+    //this.obtenerClientes();
   }
   seleccionarFila(cliente: ClientesConFacturasPendientesRetorn): void {
     if (this.idClienteSeleccionado === cliente.id_Cliente) {
@@ -214,8 +230,20 @@ this.idClienteSeleccionado = idClienteSeleccionado;
     this.currentPage = 1;
     this.filter.pageIndex = 1;
 
+    this.ClienteService.getClientesConFacturasPendientes('','','').subscribe(
+      (data) => {
+        if (data.length) {
+        }
+        this.CLientesPorCobrar = data;
+      },
+      (error) => {
+        console.error("Error al obtener equipos disponibles:", error);
+      }
+    );
+
+
     // Rehacer la consulta para actualizar los datos
-    this.obtenerClientes();
+    //this.obtenerClientes();
     this.isLoading = false;
   }
 
@@ -256,11 +284,11 @@ this.idClienteSeleccionado = idClienteSeleccionado;
 onEnter(event: KeyboardEvent) {
 
   if (event.key === 'Enter') {  // Verifica si la tecla presionada es 'Enter'
-    debugger;
-    const criterio = this.form.get('criterio')?.value || '';
+
+    const criterio = this.form.get('criterio')?.value;
 
 
-    this.ClienteService.getClientesConFacturasPendientes('','',criterio,criterio).subscribe(
+    this.ClienteService.getClientesConFacturasPendientes('','',criterio).subscribe(
       (data) => {
         if (data.length) {
           // this.totalRecord = Trans[0].totalRecord;
@@ -281,7 +309,6 @@ onEnter(event: KeyboardEvent) {
   }
 }
 onDateRangeChanged(event: any) {
-  console.log("this.filter.pageIndex entrando",this.filter.pageIndex);
   this.filter.pageIndex = 1;
   //this.idTransferenciaSeleccionada = null;
   //this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona
@@ -302,15 +329,16 @@ onDateRangeChanged(event: any) {
 
 
   obtenerClientes() {
+    debugger;
     this.idClienteSeleccionado = 0;
     this.CLientesPorCobrar = []; // Limpiar los detalles cuando se deselecciona
     this.loading.showLoading();
     const fechaInicio = this.filter.fechaInicio;
     const fechaFinal = this.filter.fechaFinal;
-    const criterio = this.form.get('Search')?.value || '';
+    const criterio = this.form.get('criterio')?.value;
 
 
-    this.ClienteService.getClientesConFacturasPendientes(fechaInicio,fechaFinal,criterio,criterio).subscribe(
+    this.ClienteService.getClientesConFacturasPendientes(fechaInicio,fechaFinal,criterio).subscribe(
       (data) => {
         if (data.length) {
           // this.totalRecord = Trans[0].totalRecord;

@@ -23,7 +23,7 @@ export class EquipoRecepcionComponent implements OnInit {
   equipoEntraNoDisponible: boolean = false;
   equipoSaleDisponible: boolean = false;
 
-  userName: string = '';
+  Usuario: string = this.loginService.getUserName();
 
   get precioImeiEntra(){return this.recepcionEquipoForm.get('PrecioImeiEntra');}
   get imeiEntra(){return this.recepcionEquipoForm.get('ImeiEntrada');}
@@ -49,7 +49,8 @@ export class EquipoRecepcionComponent implements OnInit {
     IDModelo: ['', Validators.required],
     IDCondicion: ['', Validators.required],
     ImeiSale: ['',[],[this.imeiSaleAsyncValidatorService]],//this.imeiSaleAsyncValidatorService
-    Nota: ['']
+    Nota: [''],
+    Usuario: this.loginService.getUserName()
   })
 
 
@@ -62,7 +63,7 @@ export class EquipoRecepcionComponent implements OnInit {
               private equipoService: EquipoService,
               private imeiSaleAsyncValidatorService: FormAsyncValidatorService
              ) {
-              this.userName = this.loginService.getUserName()
+              this.Usuario = this.loginService.getUserName()
             }
 
   ngOnInit(): void {
@@ -95,12 +96,12 @@ export class EquipoRecepcionComponent implements OnInit {
   this.mantenimientoService.recepcionEquipo(this.recepcionEquipoForm.value)
       .subscribe( res => {
         if(equipoEntraData.existe && !equipoEntraData.disponible){
-          this.actualizarEstadoEquipo({Imei: this.imeiEntra?.value,Disponible: 'S', NotaAdicional: 'Recibido', Usuario: this.userName })
+          this.actualizarEstadoEquipo({Imei: this.imeiEntra?.value,Disponible: 'S', NotaAdicional: 'Recibido', Usuario: this.Usuario })
         }else if(!equipoEntraData.existe) {
           this.toastr.warning('Asegurese de registrar el equipo recibido','', this.toastrDefaultConfig )
         }
         if(this.imeiSale?.value){
-          this.actualizarEstadoEquipo({Imei: equipoSaleData.imei,Disponible: 'N', NotaAdicional: 'Vendido', Usuario: this.userName })
+          this.actualizarEstadoEquipo({Imei: equipoSaleData.imei,Disponible: 'N', NotaAdicional: 'Vendido', Usuario: this.Usuario })
         }
         this.resetForm();
         this.toastr.success('Se ha recibido el equipo')

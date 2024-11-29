@@ -33,17 +33,16 @@ export class ClientesService {
   getClientes(){
     return this.http.get(`${APIURL.Clientes.Consultas.ClienteLista}`)
   }
-  getClientesConFacturasPendientes(FechaInicio: string,FechaFinal: string,NombreCliente: string, NumeroTelefono: string):Observable<ClientesConFacturasPendientesRetorn[]>{
-const filtros =
+  getClientesConFacturasPendientes(FechaInicio: string, FechaFinal: string, Criterio: string):Observable<ClientesConFacturasPendientesRetorn[]>{
+
+const criterio =
 'FechaInicio='+
 FechaInicio +
  '&FechaFin='+
  FechaFinal +
- '&NombreCliente='+
- NombreCliente +
- '&NumeroTelefono='+
- NumeroTelefono
-    return this.http.get<ClientesConFacturasPendientesRetorn[]>(`${APIURL.Clientes.Consultas.ClientesConFacturasPendientes}?`+filtros)
+ '&Criterio='+
+ Criterio
+    return this.http.get<ClientesConFacturasPendientesRetorn[]>(`${APIURL.Clientes.Consultas.ClientesConFacturasPendientes}?`+criterio)
   }
 
   getFacturasPendientesPorCliente(cliente: number):Observable<FacturasPorClienteRetorn[]>{
