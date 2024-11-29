@@ -25,7 +25,7 @@ const routes: Routes = [
     //  loadChildren: () => import('./MVSystem/mv-system.module').then(m => m.MvSystemModule),
   },
   {
-     path:'**', component: PageNotFoundComponent
+     path:'', component: PageNotFoundComponent
     //path:'auth/login', component: PageNotFoundComponent
   }
 ];

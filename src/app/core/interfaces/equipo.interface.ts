@@ -204,6 +204,7 @@ export interface EquipoModificarEstatusSet{
     precioPorMayor: number;
     precioDetalle: number;
     estadoBloqueoId: number;
+    Usuario: string;
 }
 
 export interface EquipoRecepcion {

@@ -17,49 +17,79 @@
                         <form [formGroup]="form" role="search" class="mt-3">
                             <div class="row">
                                 <div class="col-lg-8">
+
                                     <div class="card">
-                                        <div class="card-body">
-                                            <span class="card-title">Filtros</span>
+                                        <span class="card-title">Filtros</span>
+                                        <div class="card-body p-2">
+                                            <!-- Reducir padding en el card-body -->
+
                                             <div class="row">
-                                                <div class="col-md-7 mb-3">
-                                                    <!-- barra de búsqueda y criterios de búsqueda -->
-                                                    <div class="d-flex align-items-center">
-                                                        <!-- Input de búsqueda -->
-                                                        <input type="text" class="form-control" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()" />
+                                                <!-- Filtro de fecha y Sucursal -->
+                                                <div class="col-md-4 mb-2" style="padding-top: 0;">
+                                                    <!-- Eliminar padding superior aquí -->
+                                                    <div class="row">
 
-                                                        <!-- Comprobante (input radio) al lado del input de búsqueda -->
-                                                        <label *ngIf="CheckComprobante()" class="form-check-label mx-3 d-flex align-items-center">
 
-                                                  <input
-                                                    type="radio"
-                                                    name="accesorio"
-                                                    value="1"
-                                                    class="form-check-input"
-                                                    (change)="onCheckboxComprobanteChange($event)"
-                                                  />
-                                                  Comprobantes
-                                                </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <label class="form-label">Fecha de facturación</label>
-                                                        <div>
-                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
-                                                            </my-date-range-picker>
+                                                        <!-- Filtro de Sucursal -->
+                                                        <div class="col-md-12" *ngIf="SelectSucursal()" style="padding-top: 0;">
+                                                            <!-- Eliminar padding superior aquí -->
+                                                            <label class="form-label mb-1">Sucursal</label>
+                                                            <select class="form-select" formControlName="almacen" (change)="getFacturas()">
+                                                        <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                                                            {{ almacen.descripcion }}
+                                                        </option>
+                                                    </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-5" *ngIf="SelectSucursal()">
-                                                        <label class="form-label">Sucursal</label>
-                                                        <select class="form-select" formControlName="almacen" (change)="getFacturas()">
-                                                  <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
-                                                    {{ almacen.descripcion }}
-                                                  </option>
-                                                </select>
+                                                        <!-- Filtro de Fecha -->
+                                                        <div class="col-md-12 mb-2" style="padding-top: 0;">
+                                                            <!-- Eliminar padding superior aquí -->
+                                                            <label class="form-label mt-2">Fecha de facturación</label>
+                                                            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio | date }} - {{ fechaHoy | date }}"></my-date-range-picker>
+                                                        </div>
+
                                                     </div>
                                                 </div>
+                                                <!-- Barra de búsqueda y Comprobante -->
+                                                <div class="col-md-8 mb-2">
+                                                    <!-- Barra de búsqueda -->
+                                                    <div class="d-flex flex-column">
+
+                                                        <label class="form-label mb-6">Caja de Búsqueda</label>
+                                                        <input type="text" class="form-control mb-1" formControlName="criterio" placeholder="Search" title="Busqueda" (keyup)="getFacturas()" />
+
+                                                        <!-- Comprobante (input radio) debajo del input de búsqueda -->
+                                                        <label *ngIf="CheckComprobante()" class="form-check-label d-flex align-items-center mt-4">
+  <input
+      type="radio"
+      name="accesorio"
+      value="1"
+      class="form-check-input"
+      (change)="onCheckboxComprobanteChange($event)"
+  />
+  Comprobantes
+</label>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button class="btn print" [ngClass]="{'disabled': !facturas.length}" (click)="printReportFacturaConsulta()">
+                                              Imprimir reporte <i class="bi bi-printer"></i>
+                                          </button>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <button class="btn print" [ngClass]="{'disabled': (!onFacturaButton)}" (click)="ReimprimeFactura()">
+                                              <span class="d-inline">{{isLoading ? 'Procesando...' : 'Reimprimir Factura'}}</span>
+                                              <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
+                                          </button>
                                         </div>
                                     </div>
                                 </div>
@@ -85,6 +115,8 @@
                                       </label>
                                                         </div>
                                                     </div>
+
+
                                                 </ng-container>
                                             </div>
                                             <!-- Fin Cuadro totales -->
@@ -97,7 +129,7 @@
 
                         <div *ngIf="!isLoading" class="row">
 
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <button class="btn print" [ngClass]="{'disabled':!facturas.length}" (click)="printReportFacturaConsulta()">
                           Imprimir reporte <i class="bi bi-printer"></i>
                         </button>
@@ -111,30 +143,16 @@
                                   role="status"
                                   aria-hidden="true"
                                   *ngIf="isLoading"></span>
-                                  <!-- Imprimir factura <i class="bi bi-receipt-cutoff"></i> -->
                         </button>
-                            </div>
+                            </div> -->
                         </div>
 
-                         <!-- Controles de Paginación -->
-                         <!-- end form   -->
-                        <app-facturacion-lista
-                        (pageSizeChanged)="onPageSizeChange($event)"
-                        [facturas]="facturas"
-                        [detalleFactura]="detalleFactura"
-                        [pageIndex]="pageIndex"
-                        [pageSize]="pageSize"
-                        [totalRecord]="totalRecord"
-                        [currentPage]="currentPage"
-                        [line]="line"
-                        [lastLine]="lastLine" (onFacturaButton)="onFacturaButton = $event"
-                            (numerofactura)="getDetalleFactura($event)">
+                        <!-- Controles de Paginación -->
+                        <!-- end form   -->
+                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturas" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine"
+                            (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)">
                             <!-- <div *ngIf="equiposVendidos.length > 0"> -->
-                              <pagination-controls
-                              (pageChange)="pageChanged($event)"
-                              [currentPage]="pageIndex"
-                              [totalItems]="totalRecord"
-                              [itemsPerPage]="pageSize">
+                            <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="pageIndex" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
                             </pagination-controls>
 
                             <!-- <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 10 && facturas.length">

@@ -6,6 +6,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { EquipoModificarEstatus } from 'src/app/core/interfaces/equipo.interface';
 import { FormValidatorService } from '../../../../services/form-validator.service';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-equipo-modificacion-estatus',
@@ -17,14 +18,14 @@ export class EquipoModificacionEstatusComponent implements OnInit {
   equipoCondicionCatalogo: CondicionEquipo[] = [];
   equipoEstadosBloqueoCatalogo: Desbloqueo[] = [];
   imeiRegex  = new RegExp('^[0-9]+$');
-  equipoImei: string = ""; 
+  equipoImei: string = "";
   toastrDefaultConfig: any = {progressBar: true, closeButton: true}
 
-  get existeEquipo(){return this.equipoImei;} 
-  get campoCosto(){return this.cambiarEstadoForm.get('costoEquipo');} 
-  get campoPrecioMayor(){return this.cambiarEstadoForm.get('precioPorMayor');} 
-  get campoPrecioDetalle(){return this.cambiarEstadoForm.get('precioDetalle');} 
-  get campoComisionDetalle(){return this.cambiarEstadoForm.get('comisionDetalle');} 
+  get existeEquipo(){return this.equipoImei;}
+  get campoCosto(){return this.cambiarEstadoForm.get('costoEquipo');}
+  get campoPrecioMayor(){return this.cambiarEstadoForm.get('precioPorMayor');}
+  get campoPrecioDetalle(){return this.cambiarEstadoForm.get('precioDetalle');}
+  get campoComisionDetalle(){return this.cambiarEstadoForm.get('comisionDetalle');}
   get campoComisionMayor(){return this.cambiarEstadoForm.get('comisionMayor');}
 
 
@@ -64,7 +65,8 @@ export class EquipoModificacionEstatusComponent implements OnInit {
               private catalogosService: CatalogosService,
               private toastr: ToastrService,
               private mantenimientoService: MantenimientoService,
-              private formValidatorsService: FormValidatorService
+              private formValidatorsService: FormValidatorService,
+              private loginService: LoginService
              ) { }
 
   ngOnInit(): void {
@@ -80,7 +82,8 @@ export class EquipoModificacionEstatusComponent implements OnInit {
       comisionMayor: [''],
       precioPorMayor: ['', [Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
       precioDetalle: ['', [Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
-      estadoBloqueoId: [, Validators.required]
+      estadoBloqueoId: [, Validators.required],
+      Usuario:[this.loginService.getUserName()]
   }, {
     validators: [
                   this.formValidatorsService.validarPrecio('costoEquipo', 'precioPorMayor'),
@@ -146,7 +149,7 @@ export class EquipoModificacionEstatusComponent implements OnInit {
   }
 
   validarCampos(campo :string){
-    return this.cambiarEstadoForm.get(campo)?.errors 
+    return this.cambiarEstadoForm.get(campo)?.errors
         && this.cambiarEstadoForm.get(campo)?.dirty
         && this.cambiarEstadoForm.get(campo)?.touched;
   }
