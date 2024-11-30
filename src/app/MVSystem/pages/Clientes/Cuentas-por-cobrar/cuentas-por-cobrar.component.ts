@@ -62,6 +62,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     IdSucursal:+this.loginService.getUserIdSucursal,
     Usuario: this.loginService.getUserName()
   };
+  totalMontoPendiente: number =0;
   constructor(
     private loading: LoadingService,
     private fb: FormBuilder,
@@ -88,49 +89,63 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     return true;
   }
   procesarAbono(detalle: any): void {
-    if(this.filterParam.MontoAbono ===0)
-    {
-this.filterParam.MontoAbono = detalle.montoAbono;
-this.filterParam.NumeroFactura = detalle.numeroFactura;
+    if (this.filterParam.MontoAbono === 0) {
+      this.filterParam.MontoAbono = detalle.montoAbono;
+      this.filterParam.NumeroFactura = detalle.numeroFactura;
     }
-   const filterParam: AbonoFacturaParam = {
-      Id_Cliente:this.idClienteSeleccionado,
-      NumeroFactura:this.filterParam.NumeroFactura,
-      MontoAbono:this.filterParam.MontoAbono,
-      IdSucursal:+this.loginService.getUserIdSucursal,
-      Usuario: this.loginService.getUserName()
+
+    // Asegúrate de que la propiedad Usuario esté correctamente asignada
+    const filterParam: AbonoFacturaParam = {
+      Id_Cliente: this.idClienteSeleccionado,
+      NumeroFactura: this.filterParam.NumeroFactura,
+      MontoAbono: this.filterParam.MontoAbono,
+      IdSucursal: +this.loginService.getUserIdSucursal,
+      Usuario: this.loginService.getUserName(),  // Aquí asignamos Usuario correctamente
     };
     const monto = this.filterParam.MontoAbono;
+
     if (monto > detalle.montoPendiente) {
-     this.toastr.info('El abono no puede ser mayor al monto pendiente.');
+      this.toastr.info('El abono no puede ser mayor al monto pendiente.');
       return;
     }
 
     if (monto) {
-     this.ClienteService.postAbonoFactura(filterParam).subscribe({
-      next: (response) => {
-        this.isLoading = false;  // Terminar carga
+      this.ClienteService.postAbonoFactura(filterParam).subscribe({
+        next: (response) => {
+          this.isLoading = false;  // Terminar carga
 
-        const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
-        this.toastr.info(mensaje);
-        this.idClienteSeleccionado = 0;
-        this.FacturasPorClientes = [];
+          const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+          this.toastr.info(mensaje);
+          this.idClienteSeleccionado = 0;
+          this.FacturasPorClientes = [];
 
-      },
-      error: (err) => {
-        this.isLoading = false;  // Terminar carga en caso de error
-        console.error('Error Procesando el Abono:', err);
-      }
-    });
-
-      // Aquí puedes añadir la lógica para procesar el abono, enviar datos al backend, etc.
+          // Limpiar filterParam después de procesar el abono
+          this.resetFilterParam(); // Llamamos a la función que limpia el filterParam
+           // Recargar la página para actualizar los datos
+        window.location.reload();
+        },
+        error: (err) => {
+          this.isLoading = false;  // Terminar carga en caso de error
+          console.error('Error Procesando el Abono:', err);
+        },
+      });
     } else {
       console.error('No se ha ingresado un monto para el abono.');
     }
-    // setTimeout(() => {
-    //   window.location.reload(); // Recarga la página después de 2 segundos
-    //   }, 2000);
   }
+
+  // Función para reiniciar el filterParam
+  resetFilterParam(): void {
+    this.filterParam = {
+      MontoAbono: 0,
+      NumeroFactura: 0,
+      Usuario: '', // Reestablecemos la propiedad Usuario si es necesario
+      Id_Cliente: 0,
+      IdSucursal: 0
+      // Puedes reiniciar las demás propiedades según sea necesario
+    };
+  }
+
   toggleDetalleInput(detalle: any, event: Event): void {
     // Evitar que la acción del clic afecte la selección de filas
     event.stopPropagation();
@@ -286,26 +301,18 @@ onEnter(event: KeyboardEvent) {
   if (event.key === 'Enter') {  // Verifica si la tecla presionada es 'Enter'
 
     const criterio = this.form.get('criterio')?.value;
+    this.filter.fechaInicio =''; // Fecha en formato yyyy-mm-dd
+    this.filter.fechaFinal = '';
 
 
-    this.ClienteService.getClientesConFacturasPendientes('','',criterio).subscribe(
-      (data) => {
-        if (data.length) {
-          // this.totalRecord = Trans[0].totalRecord;
-          // this.line = Trans[0].line;
-          // this.lastLine = Trans[0].lastLine;
-        }
-        this.CLientesPorCobrar = data;
-      },
-      (error) => {
-        //this.isLoading = false;
-        console.error("Error al obtener equipos disponibles:", error);
-        // Mostrar una notificación de error
-        //this.showErrorNotification("Error al cargar las transferencias.");
-      }
-    );
-
-    //this.obtenerClientes();  // Llama al método para obtener los clientes
+    this.obtenerClientes();  // Llama al método para obtener los clientes
+  }
+}
+onEnterAbono(event: KeyboardEvent, detalle: any) {
+  // Verificar si la tecla presionada es Enter
+  if (event.key === 'Enter') {
+    // Llamar a la misma función que el botón de "Procesar"
+    this.procesarAbono(detalle);
   }
 }
 onDateRangeChanged(event: any) {
@@ -328,33 +335,58 @@ onDateRangeChanged(event: any) {
 
 
 
-  obtenerClientes() {
-    debugger;
-    this.idClienteSeleccionado = 0;
-    this.CLientesPorCobrar = []; // Limpiar los detalles cuando se deselecciona
-    this.loading.showLoading();
-    const fechaInicio = this.filter.fechaInicio;
-    const fechaFinal = this.filter.fechaFinal;
-    const criterio = this.form.get('criterio')?.value;
+obtenerClientes() {
+  this.idClienteSeleccionado = 0;
+  this.CLientesPorCobrar = []; // Limpiar los detalles cuando se deselecciona
+  this.loading.showLoading();  // Mostrar el cargando
 
+  const fechaInicio = this.filter.fechaInicio;
+  const fechaFinal = this.filter.fechaFinal;
+  const criterio = this.form.get('criterio')?.value;
 
-    this.ClienteService.getClientesConFacturasPendientes(fechaInicio,fechaFinal,criterio).subscribe(
-      (data) => {
-        if (data.length) {
-          // this.totalRecord = Trans[0].totalRecord;
-          // this.line = Trans[0].line;
-          // this.lastLine = Trans[0].lastLine;
-        }
+  // Validar el criterio, evitar enviar una búsqueda vacía
+  // if (!criterio) {
+  //   console.log("Criterio de búsqueda vacío");
+  //   this.loading.hideLoading();  // Detener el cargando si no hay criterio
+  //   return;  // No hacer la solicitud si no hay criterio
+  // }
+
+  // Llamar al servicio para obtener los clientes con facturas pendientes
+  this.ClienteService.getClientesConFacturasPendientes(fechaInicio, fechaFinal, criterio).subscribe(
+    (data) => {
+      if (data.length) {
         this.CLientesPorCobrar = data;
-      },
-      (error) => {
-        //this.isLoading = false;
-        console.error("Error al obtener equipos disponibles:", error);
-        // Mostrar una notificación de error
-        //this.showErrorNotification("Error al cargar las transferencias.");
-      }
-    );
-    this.loading.hideLoading();
-  }
 
+        // Sumar los montos pendientes de todos los clientes, asegurándose de convertir `montoPendiente` a número
+        const totalMontoPendiente = this.CLientesPorCobrar.reduce((total, cliente) => {
+          // Convertir montoPendiente de string a number
+          const monto = parseFloat(cliente.montoPendiente);
+          return total + (isNaN(monto) ? 0 : monto); // Si `monto` no es un número, agregar 0
+        }, 0);
+
+        // Aquí puedes almacenar el total en una variable para mostrarlo en un label
+        this.totalMontoPendiente = totalMontoPendiente;
+
+        console.log("Total Monto Pendiente: ", this.totalMontoPendiente);  // Mostrar el total en consola (opcional)
+
+      } else {
+        console.log("No se encontraron clientes con facturas pendientes.");
+        this.CLientesPorCobrar = [];  // Limpiar la lista si no se encuentran datos
+        this.totalMontoPendiente = 0; // Si no hay clientes, el total es 0
+      }
+
+      this.loading.hideLoading();  // Detener el cargando después de recibir los datos
+    },
+    (error) => {
+      console.error("Error al obtener clientes con facturas pendientes:", error);
+      this.loading.hideLoading();  // Detener el cargando si ocurre un error
+      // Mostrar una notificación de error
+      this.showErrorNotification("Error al cargar los clientes con facturas pendientes.");
+    }
+  );
+}
+  showErrorNotification(message: string) {
+    // Puedes usar una librería como ngx-toastr, o tu propio componente de notificación
+    this.toastr.error(message, 'Error');
+  }
 }

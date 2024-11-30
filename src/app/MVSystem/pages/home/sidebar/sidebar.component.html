@@ -56,6 +56,11 @@
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormCambiaEstatusEquipo()">
+                  <a routerLink="./equipo/cambiar-estatus">
+                      <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
+                  </a>
+              </li>
                 <li *ngIf="VerFormReparacionEquipo()">
                     <a routerLink="./equipo/RegistraReparacion">
                         <i class="bi bi-circle"></i><span>Reparacion de equipo</span>
@@ -66,6 +71,11 @@
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormRecepcionEquipo()">
+                  <a routerLink="./equipo/recepcion">
+                      <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
+                  </a>
+              </li>
                 <li *ngIf="VerFormMarcas()">
                     <a routerLink="./marcas/registro">
                         <i class="bi bi-circle"></i><span>Marcas</span>
@@ -87,16 +97,8 @@
                         <i class="bi bi-circle"></i><span>Vendedores</span>
                     </a>
                 </li>
-                <li *ngIf="VerFormCambiaEstatusEquipo()">
-                    <a routerLink="./equipo/cambiar-estatus">
-                        <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
-                    </a>
-                </li>
-                <li *ngIf="VerFormRecepcionEquipo()">
-                    <a routerLink="./equipo/recepcion">
-                        <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
-                    </a>
-                </li>
+
+
                 <li>
             </ul>
             </li>
@@ -108,11 +110,7 @@
                 </a>
 
                 <ul id="consulta-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li *ngIf="VerFormConsultaAccesorios()">
-                        <a routerLink="./accesorios/consulta">
-                            <i class="bi bi-circle"></i><span>Accesorios</span>
-                        </a>
-                    </li>
+
                     <li *ngIf="VerFormConsultaEquipos()">
                         <a routerLink="./equipo/Disponible">
                             <i class="bi bi-circle"></i><span>Equipos disponible</span>
@@ -123,16 +121,17 @@
                             <i class="bi bi-circle"></i><span>Equipos Vendidos</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaAccesorios()">
+                      <a routerLink="./accesorios/consulta">
+                          <i class="bi bi-circle"></i><span>Accesorios</span>
+                      </a>
+                  </li>
                     <li>
                         <a routerLink="./utilidades/consulta">
                             <i class="bi bi-circle"></i><span>Utilidades</span>
                         </a>
                     </li>
-                    <li *ngIf="VerFormConsultaFacturas()">
-                        <a routerLink="./facturacion/consulta">
-                            <i class="bi bi-circle"></i><span>Facturas</span>
-                        </a>
-                    </li>
+
                     <li *ngIf="VerFormConsultaTransferencias()">
                         <a routerLink="./equipo/ConsultaTransferencia">
                             <i class="bi bi-circle"></i><span>Transferencias de Equipos</span>
@@ -143,6 +142,11 @@
                             <i class="bi bi-circle"></i><span>Cuentas Por Cobrar</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaFacturas()">
+                      <a routerLink="./facturacion/consulta">
+                          <i class="bi bi-circle"></i><span>Facturas</span>
+                      </a>
+                  </li>
                     <li *ngIf="VerFormConsultaClientes()">
                         <a routerLink="./clientes/consulta">
                             <i class="bi bi-circle"></i><span>Clientes</span>

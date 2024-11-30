@@ -11,33 +11,52 @@
     <h1>Cliente Con Facturas a Credito</h1>
 
     <form [formGroup]="form" (ngSubmit)="obtenerClientes()" role="search">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <span class="card-title">Filtros</span>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" formControlName="criterio" placeholder="Nombre o teléfono del cliente" title="Busqueda" (keydown)="onEnter($event)" />
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <label class="form-label row mx-2"> Rango de fecha</label>
-                                <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
-                                </my-date-range-picker>
-                            </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-8 mb-4">
+          <!-- Tarjeta Única para Todo el Formulario -->
+          <div class="card">
+            <div class="card-body">
+              <span class="card-title">Filtros</span>
 
+              <!-- Campo de Búsqueda por Nombre o Teléfono -->
+              <div class="form-group mb-4">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="criterio"
+                  placeholder="Nombre o teléfono del cliente"
+                  title="Busqueda"
+                  (keydown)="onEnter($event)"
+                  style="max-width: 260px; width: 100%;"/>
+              </div>
 
-                        </div>
-                    </div>
-                </div>
+              <!-- Filtro de Fecha -->
+              <div class="form-group mb-4">
+                <label class="form-label">Rango de Fecha</label>
+                <my-date-range-picker
+                  name="rangoFecha"
+                  [options]="myDateRangePickerOptions"
+                  formControlName="rangeDate"
+                  (dateRangeChanged)="onDateRangeChanged($event)"
+                  placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"
+                ></my-date-range-picker>
+              </div>
+
+              <!-- Monto Pendiente -->
+              <div class="form-group mb-4" >
+                <label class="form-label">Mira Cuánto te deben Tus Clientes</label>
+                <label class="font-weight-bold" style="max-width: 260px; width: 100%; background-color: #e8f5e9; padding: 10px; border-radius: 5px;">{{ totalMontoPendiente | currency }}</label>
+              </div>
+
+              <!-- Botón de Búsqueda (opcional) -->
+              <!-- <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100"
+                style="max-width: 200px; width: 100%;" (click)="onEnter($event)">Buscar todos</button>
+              </div> -->
             </div>
-            <!-- <div class="col-md-9">
-                <button class="btn print mx-1" [ngClass]="{'disabled': (!idClienteSeleccionado)}" (click)="printReportTransferencia()">
-                    <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Imprimir Reporte de clientes' }}</span>
-                    <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
-                </button>
-            </div> -->
+          </div>
         </div>
+      </div>
     </form>
 
     <mat-spinner *ngIf="isLoading" class="loading">
@@ -94,39 +113,67 @@
                                             <h6>Facturas Del cliente {{idClienteSeleccionado}}</h6>
                                             <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura" [ngClass]="{
                                               'factura-vencida': isFacturaVencida(detalle.fechaLimitePagoFactura),
-                                              'factura-no-vencida': !isFacturaVencida(detalle.fechaLimitePagoFactura)
-                                          }">
-                                                <div class="detalle-columna" style="width: 20%;">
-                                                    <strong># Factura:</strong> {{ detalle.numeroFactura }}
-                                                </div>
-                                                <div class="detalle-columna" style="width: 30%;">
-                                                    <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }}
-                                                </div>
-                                                <div class="detalle-columna" style="width: 80%;">
-                                                    <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency }}
-                                                    <!-- Input para el abono -->
-                                                    <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="monto" (click)="$event.stopPropagation()" style="width: 15%; display: inline-block;" />
-                                                    <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
-                          <i class="bx bx-check"></i> Procesar
-                      </button>
+                                              'factura-no-vencida': !isFacturaVencida(detalle.fechaLimitePagoFactura)}">
 
-                                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
-                          <i class="bx bx-edit-alt"></i>
-                      </button>
-                                                    <!-- Botón para Saldar Factura -->
-                                                    <button (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
-                          <i class="bx bx-money"></i>
-                      </button>
-                                                </div>
-                                                <!-- Mensaje de advertencia si el monto del abono es mayor que el monto pendiente -->
-
-                                                <div class="detalle-columna" style="width: 40%;">
-                                                    <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}
-                                                </div>
-                                                <div class="detalle-columna" style="width: 50%;">
-                                                    <strong>Fecha Vencimiento:</strong> {{ detalle.fechaLimitePagoFactura }}
-                                                </div>
+                                            <div class="d-flex" style="min-width: 100px; padding-right: 10px; align-items: center;">
+                                              <strong>Factura #:</strong> {{ detalle.numeroFactura }}
                                             </div>
+
+                                            <div class="d-flex" style="min-width: 150px; padding-right: 10px; align-items: center;">
+                                              <strong>Total Factura:</strong> {{ detalle.totalFactura | currency }} |
+                                            </div>
+
+                                            <div class="d-flex" style="min-width: 200px; padding-right: 10px; align-items: center;">
+                                              <strong>Monto Pendiente:</strong> {{ detalle.montoPendiente | currency }}
+
+                                              <!-- Input para el abono -->
+                                              <input *ngIf="detalle.showInput"
+                                                     type="number"
+                                                     class="form-control abono-input"
+                                                     [(ngModel)]="detalle.montoAbono"
+                                                     placeholder="monto"
+                                                     (keydown)="onEnterAbono($event, detalle)"
+                                                     (click)="$event.stopPropagation()"
+                                                     style="min-width: 100px; width: 15%; display: inline-block;" />
+
+                                              <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0"
+                                                      class="btns flat gunmetal"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      title="Procesar Abono"
+                                                      (click)="procesarAbono(detalle)">
+                                                <i class="bx bx-check"></i> Procesar
+                                              </button>
+
+                                              <button class="btns flat gunmetal"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      title="Hacer Abono"
+                                                      (click)="toggleDetalleInput(detalle, $event)"
+                                                      style="display: inline-block;">
+                                                <i class="bx bx-edit-alt"></i>
+                                              </button>
+
+                                              <!-- Botón para Saldar Factura -->
+                                              <button (click)="SaldarFactura(detalle)"
+                                                      class="btns flat gunmetal"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      title="Saldar Factura"
+                                                      style="display: inline-block;">
+                                                <i class="bx bx-money"></i>
+                                              </button>
+                                            </div>
+
+                                            <div class="d-flex" style="min-width: 150px; padding-right: 20px; align-items: center;">
+                                              <strong>Fecha Factura:</strong> {{ detalle.fechaFactura }}
+                                            </div>
+
+                                            <div class="d-flex" style="min-width: 150px; align-items: center;">
+                                              <strong>Fecha Vencimiento:</strong> {{ detalle.fechaLimitePagoFactura }}
+                                            </div>
+                                          </div>
+
                                         </div>
                                     </td>
                                 </tr>
