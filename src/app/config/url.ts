@@ -111,6 +111,7 @@ export let APIURL = {
         Inserta: {
           ClienteInserta: API + 'Clientes/Cliente_Insert',
           AbonoFactura: API + 'Clientes/AbonoAfactura',
+          AbonoGeneral: API + 'Clientes/AbonoGeneral',
         }
     },
     Suplidor: {

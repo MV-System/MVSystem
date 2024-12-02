@@ -90,8 +90,10 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
   procesarAbono(detalle: any): void {
     if (this.filterParam.MontoAbono === 0) {
+
       this.filterParam.MontoAbono = detalle.montoAbono;
       this.filterParam.NumeroFactura = detalle.numeroFactura;
+
     }
 
     // Asegúrate de que la propiedad Usuario esté correctamente asignada
@@ -133,6 +135,55 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       console.error('No se ha ingresado un monto para el abono.');
     }
   }
+  procesarAbonoGeneral(Abono: any): void {
+    if (this.filterParam.MontoAbono === 0) {
+
+      this.filterParam.MontoAbono = Abono.montoAbonoGeneral;
+      this.filterParam.Id_Cliente = Abono.id_Cliente;
+
+    }
+
+    // Asegúrate de que la propiedad Usuario esté correctamente asignada
+    const filterParam: AbonoFacturaParam = {
+      Id_Cliente: this.filterParam.Id_Cliente,
+      NumeroFactura: 0,
+      MontoAbono: this.filterParam.MontoAbono,
+      IdSucursal: +this.loginService.getUserIdSucursal,
+      Usuario: this.loginService.getUserName(),  // Aquí asignamos Usuario correctamente
+    };
+    const monto = this.filterParam.MontoAbono;
+
+    if (monto > Abono.montoPendiente) {
+      this.toastr.info('El abono no puede ser mayor al monto pendiente.');
+      return;
+    }
+
+    if (monto) {
+      this.ClienteService.postAbonoGeneral(filterParam).subscribe({
+        next: (response) => {
+          this.isLoading = false;  // Terminar carga
+
+          const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+          this.toastr.info(mensaje);
+          this.idClienteSeleccionado = 0;
+          this.FacturasPorClientes = [];
+
+          // Limpiar filterParam después de procesar el abono
+          this.resetFilterParam(); // Llamamos a la función que limpia el filterParam
+           // Recargar la página para actualizar los datos
+           setTimeout(() => {
+            window.location.reload(); // Recarga la página después de 2 segundos
+            }, 2000);
+        },
+        error: (err) => {
+          this.isLoading = false;  // Terminar carga en caso de error
+          console.error('Error Procesando el Abono:', err);
+        },
+      });
+    } else {
+      console.error('No se ha ingresado un monto para el abono.');
+    }
+  }
 
   // Función para reiniciar el filterParam
   resetFilterParam(): void {
@@ -157,22 +208,50 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   SaldarFactura(detalle: any): void {
     this.rDialogService.openDialog(
       "Aviso",
-      "¿Esta seguro de saldar esta factura?",
+      `Esta acción saldará la factura #${detalle.numeroFactura}. ¿Está seguro de proceder con esta acción?`,
       () => {
-        this.toastr.info("no se procesa la Accion");
+        this.toastr.info("No se procesa la acción."); // Acción para el botón "No"
       },
       () => {
+        // Configuramos los parámetros del abono
+        this.filterParam.MontoAbono = detalle.montoPendiente;
+        this.filterParam.NumeroFactura = detalle.numeroFactura;
 
-this.filterParam.MontoAbono = detalle.montoPendiente;
-this.filterParam.NumeroFactura = detalle.numeroFactura;
-    const filterParam: AbonoFacturaParam = {
+        const filterParam: AbonoFacturaParam = {
+          Id_Cliente: this.idClienteSeleccionado,
+          NumeroFactura: detalle.numeroFactura,
+          MontoAbono: detalle.montoPendiente,
+          IdSucursal: +this.loginService.getUserIdSucursal, // Asegúrate de llamar al método con paréntesis
+          Usuario: this.loginService.getUserName()
+        };
+
+        // Procesamos el abono
+        this.procesarAbono(filterParam);
+      },
+      "Sí", // Etiqueta del botón para confirmar la acción
+      "No, fue un error" // Etiqueta del botón para cancelar
+    );
+}
+
+  SaldarCuentaTotal(Saldar: any): void {
+    this.rDialogService.openDialog(
+      "Aviso",
+      `Esta acción saldará todas las facturas del cliente: ${Saldar.cliente}. ¿Está seguro de proceder con esta acción?`,
+      () => {
+        this.toastr.info("No se procesa la acción.");
+      },
+      () => {
+        this.filterParam.MontoAbono = Saldar.montoPendiente;
+        this.filterParam.Id_Cliente = Saldar.id_Cliente;
+
+        const filterParam: AbonoFacturaParam = {
       Id_Cliente:this.idClienteSeleccionado,
-      NumeroFactura:detalle.numeroFactura,
-      MontoAbono: detalle.montoPendiente,
+      NumeroFactura:0,
+      MontoAbono: Saldar.montoPendiente,
       IdSucursal:+this.loginService.getUserIdSucursal,
       Usuario: this.loginService.getUserName()
     };
-this.procesarAbono(filterParam);
+this.procesarAbonoGeneral(filterParam);
       },
       "Si", // Etiqueta del botón para Anular la factura
       "No, Fue un error" // fue un error
@@ -313,6 +392,13 @@ onEnterAbono(event: KeyboardEvent, detalle: any) {
   if (event.key === 'Enter') {
     // Llamar a la misma función que el botón de "Procesar"
     this.procesarAbono(detalle);
+  }
+}
+onEnterAbonoGeneral(event: KeyboardEvent, detalle: any) {
+  // Verificar si la tecla presionada es Enter
+  if (event.key === 'Enter') {
+    // Llamar a la misma función que el botón de "Procesar"
+    this.procesarAbonoGeneral(detalle);
   }
 }
 onDateRangeChanged(event: any) {

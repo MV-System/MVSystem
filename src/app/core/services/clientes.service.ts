@@ -25,6 +25,10 @@ export class ClientesService {
   postAbonoFactura(Param : AbonoFacturaParam):Observable<AbonoFacturaResponse>{
     return this.http.post<AbonoFacturaResponse>(APIURL.Clientes.Inserta.AbonoFactura, Param);
   }
+  // Post's
+  postAbonoGeneral(Param : AbonoFacturaParam):Observable<AbonoFacturaResponse>{
+    return this.http.post<AbonoFacturaResponse>(APIURL.Clientes.Inserta.AbonoGeneral, Param);
+  }
 
   getClientesPorNombreTelefono(criterio: any):Observable<Cliente[]>{
     return this.http.get<Cliente[]>(`${APIURL.Clientes.Consultas.ClienteLista}?criterio=${criterio}`)

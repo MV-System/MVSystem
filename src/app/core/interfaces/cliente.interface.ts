@@ -65,9 +65,11 @@ export interface ClientesConFacturasPendientesFiltros {
   NumeroTelefono: string;
 }
 export interface ClientesConFacturasPendientesRetorn {
-  id_Cliente:     number;
-  cliente:        string;
-  montoPendiente: string;
+  id_Cliente:        number;
+  cliente:           string;
+  montoPendiente:    string;
+  montoAbonoGeneral: number;
+  showInput:         number;
 }
 export interface FacturasPorClienteRetorn {
   numeroFactura:  number;

@@ -132,9 +132,8 @@ export class EquipoRegistroComponent implements OnInit {
   }
   EliminaEquipoDeRegistro(imei: string) {
     this.isLoading = true;  // Iniciar carga
-    console.log("Imei", imei);
 
-    this.mantenimientoService.PostEquipo_Delete(imei).subscribe({
+    this.mantenimientoService.PostEquipo_Delete(imei,this.loginService.getUserName()).subscribe({
       next: (response) => {
         this.isLoading = false;  // Terminar carga
 

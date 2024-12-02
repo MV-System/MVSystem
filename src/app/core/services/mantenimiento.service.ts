@@ -113,8 +113,8 @@ export class MantenimientoService {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }
 
-  PostEquipo_Delete(imei: string): Observable<EquipoEliminadoResponse> {
-    const url = `${APIURL.Equipo.Accion.PostEquipo_Delete}?imei=${imei}`;  // Pasar el IMEI como parámetro en la URL
+  PostEquipo_Delete(imei: string, Usuario:string): Observable<EquipoEliminadoResponse> {
+    const url = `${APIURL.Equipo.Accion.PostEquipo_Delete}?imei=${imei}&Usuario=${Usuario}`;  // Pasar el IMEI como parámetro en la URL
 
     return this.http.post<EquipoEliminadoResponse>(url, null);  // Cambiar a la interfaz adecuada
   }
