@@ -110,7 +110,7 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
               //this.isLoading = false; // Finalizar la carga
               const mensaje = respuesta.mensaje; // Captura el mensaje del backend
              console.log(respuesta);
-              this.toast.success(mensaje); // Muestra un mensaje de éxito
+              this.toast.info(mensaje); // Muestra un mensaje de éxito
             },
             error: (err) => {
               this.isLoading = false; // Finalizar la carga en caso de error
