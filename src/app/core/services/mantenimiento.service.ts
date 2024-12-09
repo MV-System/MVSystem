@@ -2,11 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
-import { MarcaEquipo } from "../interfaces/catalogo.interface";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, RegistroReparaciones } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
-import { AccesorioObjRetorno } from '../interfaces/accesorio.interface';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +54,20 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
-  EditaDetalleFactura(EquipoActual: string, EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+  // EditaDetalleFactura(EquipoActual: string, EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+  //   const body = {
+  //     NumeroFactura,
+  //     IDsucursal,
+  //     EquipoActual,
+  //     EquipoNuevo,
+  //     Usuario
+  // };
+
+  //   return this.http.post<Blob>(APIURL.Factura.Actualiza.DetalleFactura,body,{
+  //     responseType: 'blob' as 'json'
+  //   });
+  // }
+  EditaDetalleFactura(EquipoActual: string, EquipoNuevo:string ,NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<FacturaEditaResponse> {
     const body = {
       NumeroFactura,
       IDsucursal,
@@ -64,10 +76,30 @@ export class MantenimientoService {
       Usuario
   };
 
-    return this.http.post<Blob>(APIURL.Factura.Actualiza.DetalleFactura,body,{
-      responseType: 'blob' as 'json'
-    });
-  }
+  return this.http.post<Blob>(APIURL.Factura.Actualiza.DetalleFactura, body, {
+    responseType: 'blob' as 'json'
+  }).pipe(
+    // Transformar el blob a JSON
+    switchMap((response: Blob) => {
+      return new Observable<FacturaEditaResponse>((observer) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const jsonResponse = JSON.parse(reader.result as string);
+            observer.next(jsonResponse);
+            observer.complete();
+          } catch (err) {
+            observer.error('Error al procesar la respuesta del servidor.');
+          }
+        };
+        reader.onerror = () => {
+          observer.error('Error al leer la respuesta del servidor.');
+        };
+        reader.readAsText(response);
+      });
+    })
+  );
+}
   postFacturaMiniReport(facturaReq: FacturaFilter,numeroFactura: number): Observable<Blob> {
     facturaReq.numeroFactura =numeroFactura;
     return this.http.post<Blob>(APIURL.Factura.Inserta.FacturaReporteMini, facturaReq, {

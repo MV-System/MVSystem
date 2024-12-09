@@ -88,45 +88,88 @@ export class FacturacionListaComponent implements OnInit {
   detalle.editMode = true;
 }
 
-// Método para guardar el cambio del código
 DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
-  this.isLoading = true;
-  detalle.EquipoNuevo =  `${detalle.idEquipo}`
-  this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
-  .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente cuando se destruya el componente
-  .subscribe({
-    next: (equipos) => {
-      // Verificar si el equipo está disponible
-      if (equipos.disponible === 'S') {
-          this.mantenimientoService.EditaDetalleFactura(detalle.EquipoActual,
-          detalle.EquipoNuevo,
-          detalle.numeroFactura,
-          this.loginService.getUserIdSucursal,
-          this.loginService.getUserName())
-.subscribe(blob =>{
-this.isLoading = false; // Terminar carga
-this.toast.success('Factura actualizada con el nuevo equipo');
-setTimeout(() => {
-window.location.reload(); // Recarga la página después de 2 segundos
-}, 1000);
-},err=>{
-this.toast.error('Error al Editar la Factura');
-});
+  this.isLoading = true; // Indica que el proceso está cargando
+  detalle.EquipoNuevo = `${detalle.idEquipo}`;
 
-      } else {
-        // Si el equipo no está disponible, muestra el mensaje de error
-        this.toast.error(`El Equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${equipos.mensaje}`);
+  // Verificar disponibilidad del equipo
+  this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
+    .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente al destruir el componente
+    .subscribe({
+      next: (response) => {
+        if (response.disponible === 'S') {
+          // El equipo está disponible, proceder a la actualización
+          this.mantenimientoService.EditaDetalleFactura(
+            detalle.EquipoActual,
+            detalle.EquipoNuevo,
+            detalle.numeroFactura,
+            this.loginService.getUserIdSucursal,
+            this.loginService.getUserName()
+          ).subscribe({
+            next: (respuesta) => {
+              //this.isLoading = false; // Finalizar la carga
+              const mensaje = respuesta.mensaje; // Captura el mensaje del backend
+             console.log(respuesta);
+              this.toast.success(mensaje); // Muestra un mensaje de éxito
+            },
+            error: (err) => {
+              this.isLoading = false; // Finalizar la carga en caso de error
+              this.toast.error('Error al editar la factura. Intente nuevamente.'); // Mostrar mensaje de error
+            }
+          });
+        } else {
+          // Si el equipo no está disponible, muestra el mensaje de error
+          this.isLoading = false; // Finalizar la carga
+          this.toast.error(`El equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${response.mensaje}`);
+        }
+      },
+      error: (error) => {
+        // Manejar errores en la verificación de disponibilidad
+        this.isLoading = false; // Finalizar la carga
+        this.toast.error('Hubo un problema al verificar la disponibilidad del equipo.');
       }
-    },
-    error: (error) => {
-      // Si ocurre un error en la llamada, manejarlo adecuadamente
-      this.toast.error('Hubo un problema al verificar la disponibilidad del equipo.');
-    }
-  });
-  // Aquí puedes realizar cualquier acción de guardado en tu backend o lógica adicional
-  console.log(`Nuevo código guardado: ${detalle.idEquipo}`);
-  detalle.editMode = false;
+    });
 }
+
+
+// Método para guardar el cambio del código
+// DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
+//   this.isLoading = true;
+//   detalle.EquipoNuevo =  `${detalle.idEquipo}`
+//   this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
+//   .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente cuando se destruya el componente
+//   .subscribe({
+//     next: (equipos) => {
+//       // Verificar si el equipo está disponible
+//       if (equipos.disponible === 'S') {
+//           this.mantenimientoService.EditaDetalleFactura(detalle.EquipoActual,
+//           detalle.EquipoNuevo,
+//           detalle.numeroFactura,
+//           this.loginService.getUserIdSucursal,
+//           this.loginService.getUserName())
+// .subscribe(blob =>{
+// this.isLoading = false; // Terminar carga
+// this.toast.success('Factura actualizada con el nuevo equipo');
+// setTimeout(() => {
+// window.location.reload(); // Recarga la página después de 2 segundos
+// }, 1000);
+// },err=>{
+// this.toast.error('Error al Editar la Factura');
+// });
+
+//       } else {
+//         // Si el equipo no está disponible, muestra el mensaje de error
+//         this.toast.error(`El Equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${equipos.mensaje}`);
+//       }
+//     },
+//     error: (error) => {
+//       // Si ocurre un error en la llamada, manejarlo adecuadamente
+//       this.toast.error('Hubo un problema al verificar la disponibilidad del equipo.');
+//     }
+//   });
+//   // Aquí puedes realizar cualquier acción de guardado en tu backend o lógica adicional
+//   detalle.editMode = false;
+// }
 
 // Método para cancelar la edición y restaurar el valor original
 onCancel(detalle: DetalleFacturaList) {

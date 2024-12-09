@@ -96,6 +96,9 @@ export interface DetalleFacturaList {
   EquipoNuevo: string // Variable para almacenar el valor nuevo
 }
 
+export interface FacturaEditaResponse {
+  mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
+}
 
 export interface MarcaObjRetorno {
     iD_Marca: number;
