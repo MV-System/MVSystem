@@ -174,12 +174,21 @@
                     </div>
                     <span class="separator-line"></span>
                     <div class="DataTable">
-                        <div class="pull-right">
-                            <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
-                              <i class="bx bx-plus"></i>
-                              Agregar artículo
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!-- Caja de texto -->
+                            <div class="flex-grow-1 me-3">
+                                <input type="text" class="form-control" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
+                            </div>
+
+                            <!-- Botón -->
+                            <div class="pull-right">
+                                <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
+                            <i class="bx bx-plus"></i>
+                            Agregar artículo
                           </button>
+                            </div>
                         </div>
+
                         <table class="mv-table">
                             <thead>
                                 <tr>
@@ -216,9 +225,9 @@
                                                 {{detalleFactura.value.precio}}
                                             </td> -->
 
-                                            <td class="align-center">
+                                            <td class="col-md-1 align-center">
                                                 <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
-                                              descuentoInput.focus()" [maxlen]="6" appNumeric>
+                                              descuentoInput.focus()" [maxlen]="7" appNumeric>
                                             </td>
 
 
