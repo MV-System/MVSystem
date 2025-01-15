@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -30,7 +31,12 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private catalogosService: CatalogosService,
     private toast: ToastrService,
     private loginService: LoginService,
+    private validatorPermissionService:ValidatorPermissionService,
   ) { }
+
+  SelectSucursal(): boolean {
+    return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+  }
 
   // Este método se llama cuando cambia el número de elementos por página
   onPageSizeChange() {
@@ -118,6 +124,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.totalInventario = totalInventario;
   }
   onFilterPropHasValue(){
+    debugger;
     if(
     this.filter.imei !=="" ||
     this.filter.fechaInicio !="" ||
@@ -173,7 +180,17 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getValueFilterForm() {
-    let almacenValue = this.form.get('almacen')?.value;
+
+    let almacenValue;
+    if(this.form.get('almacen')?.value !="")
+  {
+     almacenValue =this.form.get('almacen')?.value;
+  }
+  else
+  {
+     almacenValue =this.loginService.getUserIdSucursal; //this.form.get('almacen')?.value;
+  }
+  //let  almacenValue =this.form.get('almacen')?.value;
     let suplidorValue =this.form.get('suplidor')?.value;
     let modeloValue = this.form.get('modelo')?.value;
     let imei = this.form.get('imei')?.value;
@@ -212,18 +229,17 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.obtenerEquiposDisponibles();
   }
   pageChanged(index: number) {
-    console.log("index",index);
     this.currentPage = index;
     this.filter.pageIndex = index;
-    console.log("PageIndex",this.filter.PageIndex);
-
+debugger;
     this.obtenerEquiposDisponibles();
   }
 
   loadCatalogos(){
     this.loading.showLoading();
     forkJoin([
-      this.catalogosService.getAlmaceLista(),
+      this.catalogosService.getSucursales(),
+      //this.catalogosService.getAlmaceLista(),
       this.catalogosService.getModeloLista(),
       this.catalogosService.getSuplidorLista(),
     ]).subscribe(resp =>{
