@@ -28,10 +28,9 @@
                                     <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
                                 </div>
                             </div>
-
-                            <!-- --------------- Almacen --------------- -->
+                            
+                                <!-- --------------- Almacen --------------- -->
                              <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
-                              <!-- Eliminar padding superior aquí -->
                               <label class="form-label mb-1">Sucursal</label>
                               <select class="form-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
                           <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
@@ -39,6 +38,8 @@
                           </option>
                       </select>
                           </div>
+
+
                             <!-- <div class="col-md-4">
                                 <label class="form-label">Almacen</label>
                                 <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
