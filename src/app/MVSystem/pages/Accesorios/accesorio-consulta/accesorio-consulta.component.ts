@@ -78,7 +78,18 @@ export class AccesorioConsultaComponent implements OnInit {
   }
   getAccesorios(){
     let accesorio = this.form.get('accesorio')?.value;
-    let almacen = Number( this.form.get('almacen')?.value);
+
+    let almacen;
+    if(this.form.get('almacen')?.value !="")
+  {
+    almacen =this.form.get('almacen')?.value;
+  }
+  else
+  {
+    almacen =this.loginService.getUserIdSucursal; //this.form.get('almacen')?.value;
+  }
+
+   // let almacen = Number( this.form.get('almacen')?.value);
 
     this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
@@ -103,7 +114,7 @@ export class AccesorioConsultaComponent implements OnInit {
     this.accesorioQuantity = cantidadAccesorio;
   }
   obtenerAlmacenes() {
-    this.catalogosService.getAlmaceLista().subscribe((almacen) => {
+    this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenes = almacen;
     });
   }
