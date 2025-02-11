@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-equipo-consulta-vendido',
@@ -32,8 +33,14 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     private toast: ToastrService,
     private loginService: LoginService,
     private loading: LoadingService,
+    private validatorPermissionService:ValidatorPermissionService,
   ) {}
   @Input() clearFilter:any;
+
+
+  SelectSucursal(): boolean {
+    return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+  }
 
   ngOnInit(): void {
     this.obtenerEquiposVendidos();
@@ -171,6 +178,17 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.filter.modelo = nullOrEmpty(modelo);
     this.filter.telefono = nullOrEmpty(telefono);
     this.filter.imei = nullOrEmpty(imei);
+
+    let almacenValue;
+    if(this.form.get('almacen')?.value !="")
+  {
+     this.filter.almacen =this.form.get('almacen')?.value;
+  }
+  else
+  {
+     this.filter.almacen =this.loginService.getUserIdSucursal; //this.form.get('almacen')?.value;
+  }
+
   }
   onSearchByTelefono(){
     let telefonoFormValue = this.form.controls.telefono.value;
@@ -259,7 +277,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
   obtenerAlmacenLista() {
     this.loading.showLoading();
-    this.catalogosService.getAlmaceLista().subscribe((almacen) => {
+    this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenListado = almacen;
     });
     this.loading.hideLoading();
