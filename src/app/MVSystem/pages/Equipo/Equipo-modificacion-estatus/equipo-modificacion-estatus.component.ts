@@ -14,7 +14,7 @@ import { LoginService } from 'src/app/auth/login.service';
   styleUrls: ['./equipo-modificacion-estatus.component.css']
 })
 export class EquipoModificacionEstatusComponent implements OnInit {
-
+ usuario: string =  this.loginService.getUserName();
   equipoCondicionCatalogo: CondicionEquipo[] = [];
   equipoEstadosBloqueoCatalogo: Desbloqueo[] = [];
   imeiRegex  = new RegExp('^[0-9]+$');
@@ -75,6 +75,7 @@ export class EquipoModificacionEstatusComponent implements OnInit {
   }
 
   cambiarEstadoForm = this.fb.group({
+
       imei: ['', Validators.required],
       condicionId: [, Validators.required],
       costoEquipo: ['', [Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
@@ -102,7 +103,7 @@ export class EquipoModificacionEstatusComponent implements OnInit {
 
     this.mantenimientoService.modificarEstatusEquipo(this.cambiarEstadoForm.value).subscribe(res => {
       this.toastr.success('Modificacion de estado del equipo exitosa', '',this.toastrDefaultConfig)
-      this.resetForm();
+      window.location.reload();
     }, err => {
       console.log(err);
     })
