@@ -95,7 +95,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
   total: number = 0;
   itbis: number = 0;
   abono: number = 0;
-  bufferSize: number = 1000;
+  bufferSize: number = 5000;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
 
   Imei: string = '';
@@ -154,7 +154,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.fetchMore();
   }
   onScroll(e: { start: number, end: number }) {
-
+debugger;
     let end = e.end;
     if (this.isLoading || this.accesorios.length <= this.accesoriosBuffer.length) {
       return;
@@ -164,6 +164,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     }
   }
   private fetchMore() {
+    debugger;
     const len = this.accesoriosBuffer.length;
     const more = this.accesorios.slice(len, this.bufferSize + len);
     // using timeout here to simulate backend API delay
@@ -448,8 +449,8 @@ if (!articuloExistente) {
   obtenerDetalleFactura(index: number) {
     let hasValue = this.articulos().controls[0].status;
     if(hasValue){
-this.form.get('tipoFactura')?.disable();  // Deshabilita el FormControl 'tipoFactura'
-this.form.get('tipoPago')?.disable();  // Deshabilita el FormControl 'tipoPago'
+//this.form.get('tipoFactura')?.disable();  // Deshabilita el FormControl 'tipoFactura'
+//this.form.get('tipoPago')?.disable();  // Deshabilita el FormControl 'tipoPago'
     }
 
     const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
