@@ -58,6 +58,8 @@ export class EquipoRegistroComponent implements OnInit {
 
   btnDisabled: boolean = true;
   isLoading: boolean = false; // Variable para controlar el estado de carga
+  // Formulario de registro de equipos
+  // Definición del formulario reactivo
   formRegistro: FormGroup = this.fb.group({
     factura: ["",],
     IMEI: ["",],
@@ -71,62 +73,91 @@ export class EquipoRegistroComponent implements OnInit {
     idEstadoBloqueo: [1,],
     notaAdicional: ['',],
     tecnologia: [1,],
-    garantia: [8,],
+    garantia: ['',[Validators.required]],
     estado: [,],
-    almacen: [,],
-    marca: [,],
-    modelo: [,],
-    suplidor: [,],
+    almacen: ['', [Validators.required]],
+    marca: ['',[Validators.required]],
+    modelo: ['',[Validators.required]],
+    suplidor: ['',[Validators.required]],
     disponible: ['S',],
     desbloqueado: ['S',],
     numeroRegistro: [,],
     usuario: [this.loginService.getUserName(),]
   })
 
-  registroEquipos() {
-
-    const model: Equipo = this.modeloRegistroEquipo();
-
-    this.validacionesRegistro()
-    if (this.formRegistro.valid) {
-      this.mantenimientoService.postEquipo(model)
-        .subscribe((equipo) => {
-          equipo.forEach((equipoRegistrado) => {
-
-            // this.equipoValorRetorno.forEach(({ imei }) => {
-            //   this.imeiRegistrado = imei;
-
-            // });
-
-            if (this.formRegistro.get('IMEI')?.value == this.imeiRegistrado) {
-              this.toastr.error('El IMEI del Equipo debe ser diferente!');
-
-              return
-            }
-            else if(equipoRegistrado.existe == 'S'){
-              this.toastr.info(equipoRegistrado.mensaje);
-              return
-            }
-            else {
-              this.equipoValorRetorno.push(equipoRegistrado);
-              this.toastr.success(equipoRegistrado.mensaje);
-            }
-          });
-        });
-    }
-    else {
-      this.formRegistro.markAllAsTouched();
-      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
-      this.toastr.error('Hay datos en el formulario incompletos', '',
-        { closeButton: true, progressBar: true });
-    }
-
+ registroEquipos() {
+  // Validar que el IMEI no sea vacío ni null antes de continuar
+  const imei = this.formRegistro.get('IMEI')?.value;
+  // 1. Validar si está vacío o null
+  if (!imei || imei.trim() === '') {
+    this.toastr.error('El campo IMEI no puede estar vacío.', '', {
+      closeButton: true,
+      progressBar: true,
+    });
+    this.formRegistro.get('IMEI')?.markAsTouched();
+    return;
   }
+  // 2. Validar si ya existe en la lista
+  if (this.equipoValorRetorno.some(e => e.imei && e.imei === imei)) {
+    this.toastr.error('El IMEI del Equipo ya está en la lista de registro!', '', {
+      closeButton: true,
+      progressBar: true,
+    });
+    return;
+  
+  }
+
+  const model: Equipo = this.modeloRegistroEquipo();
+
+  this.validacionesRegistro();
+
+  if (this.formRegistro.valid) {
+     this.isLoading = true; // Mostrar spinner
+    this.mantenimientoService.postEquipo(model)
+      .subscribe((equipo) => {
+        equipo.forEach((equipoRegistrado) => {
+          if (equipoRegistrado.existe == 'S') {
+            this.toastr.info(equipoRegistrado.mensaje);
+            return;
+          } else {
+            this.equipoValorRetorno.push(equipoRegistrado);
+            this.toastr.success(equipoRegistrado.mensaje);
+            this.formRegistro.get('IMEI')?.setValue('');
+          }
+        });
+           this.isLoading = false; // Ocultar spinner
+      }
+      , (error) => {
+        this.isLoading = false; // Ocultar spinner en caso de error
+        this.toastr.error('Ocurrió un error al registrar el equipo. Por favor, intente nuevamente.', '', {
+          closeButton: true,
+          progressBar: true,
+        });
+        console.error('Error al registrar el equipo:', error);
+      });
+  } else {
+    // Marcar todos los campos como tocados para mostrar los errores en rojo
+    Object.keys(this.formRegistro.controls).forEach(campo => {
+      this.formRegistro.get(campo)?.markAsTouched();
+    });
+
+    // Notificar al usuario que hay campos vacíos o incompletos
+    this.toastr.error('Hay campos vacíos o incompletos en el formulario. Por favor, verifique los campos resaltados en rojo.', '', {
+      closeButton: true,
+      progressBar: true,
+    });
+
+    // Scroll al formulario (opcional)
+    //$("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
+    const registroElement = document.getElementById('registro');
+if (registroElement) {
+  registroElement.scrollIntoView({ behavior: 'smooth' });
+}
+  }
+}
 
   validacionesRegistro() {
     this.validarCamposFormCostoDetalle();
-    //this.msgValidacionesCamposFormComisionDetallePorMayor();
-    //this.msgValidacionesCamposFormDetallePorMayor();
     this.msgValidacionesCamposFormNumericos();
 
   }
