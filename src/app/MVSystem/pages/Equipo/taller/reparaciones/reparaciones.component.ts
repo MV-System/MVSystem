@@ -6,11 +6,13 @@ import { takeUntil } from 'rxjs/operators';
 import { LoginService } from 'src/app/auth/login.service';
 import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
 import { Cliente } from 'src/app/core/interfaces/cliente.interface';
-import { RegistroReparaciones } from 'src/app/core/interfaces/equipo.interface';
+import { DefaultFilter, RegistroReparaciones } from 'src/app/core/interfaces/equipo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { ClientesService } from 'src/app/core/services/clientes.service';
+import { EquipoService } from 'src/app/core/services/equipo.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-reparaciones',
@@ -19,6 +21,20 @@ import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.serv
 })
 export class ReparacionesComponent implements OnInit {
 
+   generarReporteLoading: boolean = false;
+
+    formEquipoReparado: FormGroup = this.fb.group({
+    criterio: [''],
+    rangeDate: [''],
+  })
+
+  filtro: DefaultFilter = {
+    pageIndex: 1,
+    pageSize: 10,
+    fechaInicio : '',
+    fechaFinal : ''
+  }
+  
 // Obtener la fecha actual
  fechaHoy = new Date();
   listaMarca: MarcaEquipo[] = [];
@@ -45,6 +61,8 @@ export class ReparacionesComponent implements OnInit {
 
   })
   constructor(
+    private loading: LoadingService,
+     private equipoService: EquipoService,
     private rDialogService: RDialogService,
     private catalogosService: CatalogosService,
     private clientesService: ClientesService,
@@ -199,46 +217,61 @@ validarCampos(nombreCampo: string) {
     this.formRegistroReparaciones.get(nombreCampo)?.touched
   );
 }
-  registroReparacion() {
-    const model: RegistroReparaciones = this.modeloRegistroReparacion();
-
-
-    this.validacionesRegistro()
-    if (this.formRegistroReparaciones.valid) {
-      this.mantenimientoService.postReparacion(model)
-        .subscribe((Reparacion) => {
-          Reparacion.forEach((Respuesta) => {
-           this.toastr.info(Respuesta.mensajeSalida);
-           this.IdReparacion = Respuesta.idReparacion;
-console.log("idreparacion",Respuesta.idReparacion);
-
-          });
+registroReparacion() {
+  console.log('registroReparacion llamado');
+  const model: RegistroReparaciones = this.modeloRegistroReparacion();
+  this.validacionesRegistro();
+  if (this.formRegistroReparaciones.valid) {
+     this.loading.showLoading();
+    this.mantenimientoService.postReparacion(model)
+      .subscribe((Reparacion) => {
+        Reparacion.forEach((Respuesta) => {
+          this.toastr.info(Respuesta.mensajeSalida);
+          this.IdReparacion = Respuesta.idReparacion;
         });
-
-
-    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
-      () => {
-
-        this.toastr.info("Imprimir reparacion");
-        this.formRegistroReparaciones.reset({
-        });
-      },
-      () => {
-        this.toastr.info("no hacer nada");
-        this.formRegistroReparaciones.reset({
-        });
-       },
-      "No",
-      "Si"
-    )
+        this.loading.hideLoading();
+        this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+          () => {
+            this.obtenerReporte(this.IdReparacion);
+            this.toastr.success("Reparación registrada correctamente");
+            this.formRegistroReparaciones.reset({});
+          },
+          () => {
+            this.toastr.info("no hacer nada");
+            this.formRegistroReparaciones.reset({});
+          },
+          "No",
+          "Si"
+        );
+      }, error => {
+      //  this.isLoading = false;
+        this.toastr.error('Error al registrar la reparación');
+      });
+  } else {
+    this.formRegistroReparaciones.markAllAsTouched();
+    const registroElement = document.getElementById('registro');
+    if (registroElement) {
+      registroElement.scrollIntoView({ behavior: 'smooth' });
     }
-    else {
-      this.formRegistroReparaciones.markAllAsTouched();
-      $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
-      this.toastr.error('Hay datos en el formulario incompletos', '',
-        { closeButton: true, progressBar: true });
-    }
-
+    this.toastr.error('Hay datos en el formulario incompletos', '', { closeButton: true, progressBar: true });
   }
-
+}
+ 
+ obtenerReporte(id_reparacion: number) {
+  this.generarReporteLoading = true;
+  this.equipoService.getEquipoReparadoReporte(
+    id_reparacion,
+    this.loginService.getUserIdEmpresa,
+    this.loginService.getUserIdSucursal
+  ).subscribe(blob => {
+    this.generarReporteLoading = false;
+    const newBlob = new Blob([blob], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(newBlob);
+    window.open(blobUrl, '_blank'); // Esto muestra el PDF en una nueva pestaña
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000); // Libera el recurso después de 10s
+  }, (err) => {
+    this.generarReporteLoading = false;
+    this.toastr.error('Error', 'No se pudo generar el reporte');
+  });
+}
 }

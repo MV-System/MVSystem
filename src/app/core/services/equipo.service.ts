@@ -115,6 +115,9 @@ export class EquipoService{
                                         responseType: 'blob' as 'json'
                                     })
     }
+    getEquipoReparadoReporte(idReparacion: number, idEmpresa: string, idSucursal: string): Observable<Blob> {
+  return this.http.get(`${APIURL.Equipo.Accion.EquipoReparadoReporte}?idReparacion=${idReparacion}&idEmpresa=${idEmpresa}&idSucursal=${idSucursal}`, { responseType: 'blob' });
+}
     //POST's
     postEquipoDisponible(Equipo: filterEquipos): Observable<any>{
         return this.http.post<any>(APIURL.Equipo.Inserta.EquipoDisponibleReporteInserta, Equipo,{
