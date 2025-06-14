@@ -34,7 +34,7 @@ export class ReparacionesComponent implements OnInit {
     fechaInicio : '',
     fechaFinal : ''
   }
-  
+
 // Obtener la fecha actual
  fechaHoy = new Date();
   listaMarca: MarcaEquipo[] = [];
@@ -230,7 +230,7 @@ registroReparacion() {
           this.IdReparacion = Respuesta.idReparacion;
         });
         this.loading.hideLoading();
-        this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+        this.rDialogService.openDialog("Aviso", 'Desea imprimir el Recibo?',
           () => {
             this.obtenerReporte(this.IdReparacion);
             this.toastr.success("Reparación registrada correctamente");
@@ -256,7 +256,17 @@ registroReparacion() {
     this.toastr.error('Hay datos en el formulario incompletos', '', { closeButton: true, progressBar: true });
   }
 }
- 
+
+private getBlobForCreateIFramePDF(blobResp: Blob): void {
+    const blob = new Blob([blobResp], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(blob);
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = blobUrl;
+    document.body.appendChild(iframe);
+    iframe.contentWindow?.print();
+  }
+
  obtenerReporte(id_reparacion: number) {
   this.generarReporteLoading = true;
   this.equipoService.getEquipoReparadoReporte(
@@ -267,7 +277,14 @@ registroReparacion() {
     this.generarReporteLoading = false;
     const newBlob = new Blob([blob], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(newBlob);
-    window.open(blobUrl, '_blank'); // Esto muestra el PDF en una nueva pestaña
+
+     const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = blobUrl;
+    document.body.appendChild(iframe);
+    iframe.contentWindow?.print();
+
+    //window.open(blobUrl, '_blank'); // Esto muestra el PDF en una nueva pestaña
     setTimeout(() => URL.revokeObjectURL(blobUrl), 10000); // Libera el recurso después de 10s
   }, (err) => {
     this.generarReporteLoading = false;
