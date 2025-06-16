@@ -556,11 +556,11 @@ if (!articuloExistente) {
     if (notaControl) {
       notaControl.setValue(articulo.mensaje || 'Sin detalles');
     }
-  currentArticulo.idGarantia = 1;
+    currentArticulo.idGarantia = 1;
     currentArticulo.descripcion = articulo.accesorio_Descripcion ?? `Reparación #${articulo.id}`;
     currentArticulo.precio = articulo.precio_Detalle ?? 0;
   } else { // Accesorio/Equipo
-    currentArticulo.descripcion = articulo.modelo ?? articulo.accesorio_Descripcion ?? '';
+    currentArticulo.descripcion = articulo.accesorio_Descripcion ?? '';
     currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
   }
 
@@ -692,6 +692,7 @@ if (!articuloExistente) {
     return model;
   }
   modeloArticulos(control: AbstractControl) {
+    debugger;
     const model = {
       cantidad: Number(control.get('cantidad')?.value),
       descripcion: control.get('descripcion')?.value,
