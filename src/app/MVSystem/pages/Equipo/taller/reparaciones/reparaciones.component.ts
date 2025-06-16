@@ -237,7 +237,7 @@ registroReparacion() {
             this.formRegistroReparaciones.reset({});
           },
           () => {
-            this.toastr.info("no hacer nada");
+            //this.toastr.info("no hacer nada");
             this.formRegistroReparaciones.reset({});
           },
           "No",

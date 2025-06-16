@@ -30,8 +30,16 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 })
 export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
-  constructor(
+  tipoFactura: string = '';
+clienteSeleccionado: any = null;
+reparacionesPendientes: any[] = [];
+mostrarReparacionesPendientes: boolean = false;
+reparacionSeleccionada: any = null;
+modalVisible = false;
+reparaciones: any[] = [];
 
+  constructor(
+    //private dialog: MatDialog,
     private toast: ToastrService,
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
@@ -56,6 +64,78 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
+////-----------metodos agregados para facturar reparaciones---------------------------------
+
+
+
+// ...existing code...
+// ...existing code...
+buscarReparacionesPendientes(clienteId: number) {
+  this.mantenimientoService.getReparacionesPendientes({ IdCliente: clienteId })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(
+      (response: any) => {
+        // Espera que la respuesta tenga la forma { message: string, data: any[] }
+        const reparaciones = response?.data;
+
+        if (Array.isArray(reparaciones) && reparaciones.length > 0) {
+          const reparacion = reparaciones[0];
+
+          // // Asignar la nota al control del formulario
+          // const notaControl = this.form.get('nota');
+          // if (notaControl) {
+          //   notaControl.setValue(reparacion.detalle_Reparacion || 'Sin detalles');
+          // }
+
+          // Crear el objeto visual para el buffer
+          const articuloVisual = {
+            accesorio_Descripcion: `Reparación #${reparacion.idReparacion}`,
+            precio_Detalle: reparacion.precio,
+            precio_Por_Mayor: reparacion.precio,
+            cantidad: 1,
+            id: reparacion.idReparacion,
+            codigo_Barra: 0,
+            modelo: reparacion.modelo || '',
+            codigo: '',
+            idTipo: 4,
+            disponible: reparacion.disponible || 1,
+            mensaje: reparacion.detalle_Reparacion || '',
+            descuento: 0
+          };
+
+          // Evitar duplicados en el buffer usando id
+          const articuloExistente = this.accesoriosBuffer.find(a => a.id === reparacion.idReparacion);
+          if (!articuloExistente) {
+            this.accesoriosBuffer.unshift(articuloVisual); // Agrega al inicio del buffer
+          } else {
+            this.toastr.warning(`La reparación con ID ${reparacion.idReparacion} ya está en la lista.`);
+          }
+
+        } else {
+          // Si no hay reparaciones, muestra mensaje informativo
+          this.toastr.info('Este cliente no tiene reparaciones pendientes.');
+        }
+      },
+      error => {
+        // Solo muestra error si falla la petición, no por ausencia de reparaciones
+        this.toastr.error('Error al buscar reparaciones pendientes.');
+      }
+    );
+}
+// ...existing
+onModalClose(rep: any) {
+  this.modalVisible = false;
+  if (rep) {
+    // Aquí puedes manejar la reparación seleccionada
+    // Por ejemplo, agregar la reparación a la factura
+    console.log('Reparación seleccionada:', rep);
+  }
+}
+// ...existing code...
+
+
+
+///----------------------------------------------------------------------------------------------
 
   ngOnInit(): void {
     this.loadFacturaNumero();
@@ -124,6 +204,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     aplicarItbis: [false,],
     usuario: this.loginService.getUserName(),
     btnAddArticulo:'',
+     articulo: [null],
     articulos: this.fb.array([this.fb.group({
       cantidad: [1],
       descripcion: [''],
@@ -154,7 +235,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     this.fetchMore();
   }
   onScroll(e: { start: number, end: number }) {
-debugger;
+
     let end = e.end;
     if (this.isLoading || this.accesorios.length <= this.accesoriosBuffer.length) {
       return;
@@ -164,7 +245,7 @@ debugger;
     }
   }
   private fetchMore() {
-    debugger;
+
     const len = this.accesoriosBuffer.length;
     const more = this.accesorios.slice(len, this.bufferSize + len);
     // using timeout here to simulate backend API delay
@@ -212,6 +293,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   return subTotal
 }
   private updatePriceArticulos(){
+    debugger;
     this.articulos().controls.forEach((v,index)=>{
       const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
       const currentArticulo = currentFormGroup.getRawValue()
@@ -225,6 +307,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     })
   }
   onChangeTipoFactura(e: Event) {
+
     const alDetalle = 1;
     const alPorMayor = 2;
     const Reparacion = 4;
@@ -255,8 +338,12 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
 
     }
     else if (idTipoFactura === Reparacion) {
-      // busca las reparaciones corerspondientes al cliente
-      this.toast.success("Mensaje");
+      // Si hay cliente seleccionado, busca reparaciones pendientes
+    if (this.customer?.id_Cliente) {
+      this.buscarReparacionesPendientes(this.customer.id_Cliente);
+    } else {
+      this.toast.info("Seleccione un cliente para buscar reparaciones pendientes.");
+    }
     }
   }
   onSelectCotizacion(cotizacion: CotizacionAmount) {
@@ -383,11 +470,21 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       this.form.markAllAsTouched()
     }
   }
-  calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
+calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
 
-    return Number((this.form.get('tipoFactura')?.value == 1 ? precioDetalle : 0) ||
-      (this.form.get('tipoFactura')?.value == 2 ? precioMayor : 0))
-  }
+  const tipoFactura = this.form.get('tipoFactura')?.value;
+  const precio = Number((tipoFactura == 1 ? precioDetalle : 0) ||
+    (tipoFactura == 2 ? precioMayor : 0 || tipoFactura == 4 ? precioDetalle : 0));
+  console.log(
+    '[ng-option] Descripción:',
+    this.accesoriosBuffer.find(a => a.precio_Detalle === precioDetalle && a.precio_Por_Mayor === precioMayor)?.accesorio_Descripcion,
+    '| Precio:',
+    precio,
+    '| tipoFactura:',
+    tipoFactura
+  );
+  return precio;
+}
   addArticuloImei = (imei: string) => {
     return new Promise((resolve) => {
       this.catalogosService.buscarEquipoDisponible(imei, this.loginService.getUserIdSucursal)
@@ -417,17 +514,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
             if (articuloControl) {
               articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
             }
-
-            // // Agregar el artículo a la lista de accesorios, evitando duplicados
-            // const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
-            // if (!articuloExistente) {
-            //   this.accesoriosBuffer = [articulo, ...this.accesoriosBuffer];  // Agregar al principio
-            // } else {
-            //   this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
-            // }
-
             // Agregar el artículo a la lista de accesorios, evitando duplicados
 const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
+
 if (!articuloExistente) {
   this.accesoriosBuffer.push(articulo);  // Agregar al final de la lista
 } else {
@@ -447,77 +536,57 @@ if (!articuloExistente) {
     });
   }
   obtenerDetalleFactura(index: number) {
-    let hasValue = this.articulos().controls[0].status;
-    if(hasValue){
-//this.form.get('tipoFactura')?.disable();  // Deshabilita el FormControl 'tipoFactura'
-//this.form.get('tipoPago')?.disable();  // Deshabilita el FormControl 'tipoPago'
+  const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
+  currentFormGroup.controls["cantidad"].enable();
+  const currentArticulo = currentFormGroup.getRawValue();
+  const articulo = currentArticulo.articulo;
+  if (!currentArticulo || !articulo) return;
+  // Asignar tipo
+  currentArticulo.idTipo = articulo.idTipo ?? 2;
+  // Asignar campos comunes
+  currentArticulo.idGarantia = 1;
+  currentArticulo.idEquipo = articulo.id ?? articulo.idEquipo ?? 0;
+  currentArticulo.precioDetalle = articulo.precio_Detalle ?? articulo.precioDetalle ?? 0;
+  currentArticulo.precioMayor = articulo.precio_Por_Mayor ?? articulo.precioMayor ?? 0;
+  currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+
+  // Asignar descripción según tipo
+  if (articulo.idTipo === 4) { // Reparación
+    const notaControl = this.form.get('nota');
+    if (notaControl) {
+      notaControl.setValue(articulo.mensaje || 'Sin detalles');
     }
+  currentArticulo.idGarantia = 1;
+    currentArticulo.descripcion = articulo.accesorio_Descripcion ?? `Reparación #${articulo.id}`;
+    currentArticulo.precio = articulo.precio_Detalle ?? 0;
+  } else { // Accesorio/Equipo
+    currentArticulo.descripcion = articulo.modelo ?? articulo.accesorio_Descripcion ?? '';
+    currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+  }
 
-    const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
+  currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
 
-    currentFormGroup.controls["cantidad"].enable()
+  currentArticulo.total = currentArticulo.subTotal - (currentArticulo.descuento || 0);
 
-    const currentArticulo = currentFormGroup.getRawValue()
-    let articulo = currentArticulo.articulo;
+  // Validar duplicados
+  for (let articuloAddIndex in this.articulos().controls) {
+    if (articuloAddIndex == index.toString()) continue;
+    let currentArticuloList = this.articulos().controls[articuloAddIndex].value;
+    if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
+      this.borrarArticulo(index);
+      this.toastr.error("Este articulo ya fue registrado");
+      return;
+    }
+  }
+  // Actualizar el FormGroup
+  currentFormGroup.setValue(currentArticulo);
+  this.obtenerCantidadArticulo(currentArticulo);
+  this.obtenerCantidadArticuloStock(index);
+  this.refreshGeneralValues();
 
-if (!currentArticulo || !articulo)
-      return
-if (currentArticulo && articulo.idTipo ==1)
-{
-  currentArticulo.idTipo = articulo.idTipo;
+  // Deshabilitar cantidad si es equipo
+  if (currentArticulo.idTipo == 1) currentFormGroup.controls["cantidad"].disable();
 }
-else { currentArticulo.idTipo = 2;}
-
-
-    currentArticulo.idGarantia = 1;
-    currentArticulo.idEquipo = articulo.id;
-    currentArticulo.descripcion =  articulo.modelo;
-    currentArticulo.precioDetalle = articulo.precio_Detalle;
-    currentArticulo.precioMayor = articulo.precio_Por_Mayor;
-
-    for (let articuloAddIndex in this.articulos().controls) {
-      if (articuloAddIndex == index.toString())
-        continue
-
-      let currentArticuloList = this.articulos().controls[articuloAddIndex].value
-
-      if (currentArticulo.idEquipo == currentArticuloList.idEquipo) {
-        this.borrarArticulo(index)
-        this.toastr.error("Este articulo ya fue registrado")
-        return
-      }
-    }
-
-    // Accedemos al valor del precio usando 'get'
-  var newPrecio = currentFormGroup.get('precio')?.value;
-  if(currentArticulo.precio == 0)
-  {
-    newPrecio = currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
-  }
-  if(newPrecio != currentArticulo.precioDetalle && newPrecio !=currentArticulo.precioMayor)
-    {
-
-      currentArticulo.precio = newPrecio;
-    }
-    else
-    {
-      currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
-    }
-
-    currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-
-    this.articulos().controls[index].setValue(currentArticulo)
-    this.obtenerCantidadArticulo(currentArticulo);
-    this.obtenerCantidadArticuloStock(index)
-
-    this.refreshGeneralValues();
-
-
-    //Tiene que estar al final. EnmaJim note
-    if (currentArticulo.idTipo == 1)
-      currentFormGroup.controls["cantidad"].disable()
-  }
-
   onChangeTipoPago() {
 
     if (this.form.get('tipoPago')?.value == "2") {
@@ -646,31 +715,42 @@ else { currentArticulo.idTipo = 2;}
     return model;
   }
   obtenerClientesPorNombreTelefono(tel?: number) {
+  // ID de "Reparaciones". Cambia este valor si el ID es diferente.
+  const idReparacion = 4;
 
-    if(tel){
-      this.clientesService.getClientesPorNombreTelefono(tel)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async customer => {
+  // Si se proporciona el teléfono como argumento, úsalo; si no, toma el del formulario.
+  const telefono = tel ?? this.form.value.telefono;
 
-        // await this.loadCotizacionCliente(telefono);
+  this.clientesService.getClientesPorNombreTelefono(telefono)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(
+      customer => {
+        // Asigna el primer cliente encontrado.
         this.customer = customer[0];
-      }, error => {
-        this.toastr.error(error);
-      });
-    }
-    else{
-      const { telefono } = this.form.value;
-      this.clientesService.getClientesPorNombreTelefono(telefono)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(async customer => {
 
-          // await this.loadCotizacionCliente(telefono);
-          this.customer = customer[0];
-        }, error => {
-          this.toastr.error(error);
-        });
-    }
-  }
+        // Busca el tipo de factura por ID.
+        const tipoReparaciones = this.facturaTipos.find(
+          t => t.iD_Tipo_Factura === idReparacion
+        );
+
+        // Obtiene el valor del tipo de factura seleccionado en el formulario.
+        const tipoFacturaForm = Number(this.form.get('tipoFactura')?.value);
+
+        // Si el tipo de factura es "Reparaciones" y hay un cliente seleccionado, busca reparaciones pendientes.
+        if (
+          tipoReparaciones?.iD_Tipo_Factura &&
+          tipoFacturaForm === idReparacion &&
+          this.customer?.id_Cliente
+        ) {
+          this.buscarReparacionesPendientes(this.customer.id_Cliente);
+        }
+      },
+      error => {
+        // Muestra un mensaje de error si ocurre algún problema.
+        this.toastr.error(error);
+      }
+    );
+}
   loadDetalleCotizacion(numeroRegistro: number) {
 
     this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro, Number(this.loginService.getUserIdSucursal))
@@ -794,7 +874,7 @@ else { currentArticulo.idTipo = 2;}
         this.vendedores = resp[3];
         this.pagoTipos = resp[4];
         this.accesorios = resp[5];
-        // this.accesoriosBuffer = this.accesorios.slice(0, this.bufferSize);
+
         this.loading.hideLoading();
 
       })
@@ -898,6 +978,10 @@ else { currentArticulo.idTipo = 2;}
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
             this.loadFacturaNumero();
+            // Recargar el buffer de accesorios para limpiar reparaciones facturadas
+            this.accesoriosBuffer = [];
+            this.loadCatalogos();
+
           }, error => {
             this.isLoading = !this.isLoading;
             this.toastr.error(error)

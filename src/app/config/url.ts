@@ -63,7 +63,8 @@ export let APIURL = {
             EquipoModificarEstatus: API + 'Equipos/GetEquipoPreciosEstatusByImei',
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
-            EquiposRecibidos: API + 'Equipos/RecepcionEquipos?criterio='
+            EquiposRecibidos: API + 'Equipos/RecepcionEquipos?criterio=',
+            EquiposReparaciones: API + 'Equipos/GetReparaciones?'
         },
         Modifica: {
             ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo',

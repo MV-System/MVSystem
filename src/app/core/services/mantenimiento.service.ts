@@ -24,6 +24,15 @@ export class MantenimientoService {
   postReparacion(Reparacion: RegistroReparaciones): Observable<RegistroReparaciones[]> {
     return this.http.post<RegistroReparaciones[]>(APIURL.Equipo.Inserta.EquipoInsertaReparacion, Reparacion);
   }
+   //-- para buscar las reparaciones de un cliente y poder facturarla -------
+  getReparacionesPendientes(filtro: { IdCliente?: number }) {
+    // Solo agrega el parámetro si tiene valor
+    const params: any = {};
+    if (filtro.IdCliente) {
+      params.IdCliente = filtro.IdCliente;
+    }
+    return this.http.get<any[]>(APIURL.Equipo.Consulta.EquiposReparaciones, { params });
+  }
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
