@@ -1,114 +1,117 @@
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h1 id="registro">Reparación Equipos</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Reparación de Equipos</li>
-            </ol>
-        </nav>
-    </div>
-    <!-- End Page Title -->
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-7">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Datos de la Reparación</h5>
-                        <!--  Form -->
-                        <form [formGroup]="formRegistroReparaciones" (ngSubmit)="registroReparacion()" class="row g-3 needs-validation" novalidate>
-                            <label class="form-label">Cliente</label>
-                            <div class="search-customer grid">
-                                <!-- ng-select para buscar un cliente por teléfono -->
-                                <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">
-                                    <!-- Clases condicionales, puedes cambiar 'true' por una condición real -->
+  <div class="pagetitle mb-4">
+    <h1 id="registro">Reparación de Equipos</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Mantenimiento</li>
+        <li class="breadcrumb-item active">Reparación de Equipos</li>
+      </ol>
+    </nav>
+  </div>
 
-                                    <!-- Aquí se muestran las opciones del cliente, por cada cliente en la lista 'customers' -->
-                                    <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
-                                        {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
-                                    </ng-option>
-                                </ng-select>
-
-                                <!-- Botón para agregar un nuevo cliente -->
-                                <button class="btns icon primary" type="button" (click)="onAdd()">
-                                <i class="bx bx-plus"></i>
-                            </button>
-                            </div>
-                            <div class="clientDetail">
-                                <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
-                                <span class="phones"> {{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
-                            </div>
-
-                            <!-- --------------- IMEI  ----------------->
-                            <div class="col-md-6">
-                                <label class="form-label">IMEI</label>
-                                <input type="text" class="form-control" formControlName="IMEI" ngModel maxlength="20" #ImeiInput [ngClass]="{'is-invalid':validarCampos('IMEI')}" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
-
-                                <div class="required-field" *ngIf="validarCampos('IMEI')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-
-                            <!-- --------------- Costo  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Costo</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="Costo" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('Costo')}">
-                                <div class="required-field" *ngIf="validarCampos('Costo')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <!-- --------------- Precio  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Precio</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="Precio" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('Precio')}">
-                                <div class="required-field" *ngIf="validarCampos('Precio')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <label class="form-label"></label>
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" placeholder="Leave a comment here" formControlName="Detalle_Reparacion" rows="3">
-                        </textarea>
-                                    <label for="floatingTextarea">Detalle de Reparación</label>
-                                </div>
-                            </div>
-
-
-                            <!-- --------------- Marca  --------------- -->
-                            <div class="col-md-5">
-                                <label class="form-label">Marca</label>
-                                <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required>
-                                    <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
-                                        {{marca.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                                <div class="required-field" *ngIf="validarCampos('marca')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <!-- --------------- Modelo  --------------- -->
-
-                            <div class="col-md-7">
-                                <label class="form-label">Modelo</label>
-                                <ng-select formControlName="modelo">
-                                    <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
-                                        {{modelo.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                            <div class="text-end">
-                                <button class="btn btn-primary" type="submit">Añadir</button>
-                            </div>
-                        </form>
-                        <!-- End  Form -->
-                    </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Datos de la Reparación</h5>
+            <!-- Formulario de Reparación -->
+            <form [formGroup]="formRegistroReparaciones" (ngSubmit)="registroReparacion()" class="needs-validation" novalidate>
+              
+              <!-- Cliente -->
+              <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <div class="d-flex align-items-center gap-2">
+                  <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': validarCampos('telefono') }" class="flex-grow-1">
+                    <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
+                      {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                    </ng-option>
+                  </ng-select>
+                  <button class="btn btn-outline-primary" type="button" (click)="onAdd()" title="Agregar cliente">
+                    <i class="bx bx-plus"></i>
+                  </button>
                 </div>
-            </div>
-            <!-- Tabla equipos agregados -->
+                <div class="clientDetail mt-2">
+                  <span class="fw-bold">{{ customer?.nombres ? (customer.nombres + ' ' + customer.apellidos) : '[Nombre cliente]' }}</span>
+                  <span class="ms-2 text-muted">{{ customer?.numero_Telefono || '[Teléfono]' }}</span>
+                </div>
+              </div>
+
+              <!-- Primera fila: IMEI, Costo, Precio -->
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label class="form-label">IMEI</label>
+                  <input type="text" class="form-control" formControlName="IMEI" maxlength="20"
+                    [ngClass]="{'is-invalid': validarCampos('IMEI')}" #ImeiInput
+                    (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
+                  <div class="required-field" *ngIf="validarCampos('IMEI')">Este campo es requerido.</div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Costo</label>
+                  <input type="number" class="form-control" required placeholder="RD$" formControlName="Costo"
+                    appNumeric [maxlen]="9" [ngClass]="{'is-invalid': validarCampos('Costo')}">
+                  <div class="required-field" *ngIf="validarCampos('Costo')">Este campo es requerido.</div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Precio</label>
+                  <input type="number" class="form-control" required placeholder="RD$" formControlName="Precio"
+                    appNumeric [maxlen]="9" [ngClass]="{'is-invalid': validarCampos('Precio')}">
+                  <div class="required-field" *ngIf="validarCampos('Precio')">Este campo es requerido.</div>
+                </div>
+              </div>
+
+              <!-- Detalle de Reparación -->
+              <div class="mb-3">
+                <label for="detalleReparacion" class="form-label">Detalle de Reparación</label>
+                <textarea id="detalleReparacion" class="form-control" placeholder="Detalle de la reparación"
+                  formControlName="Detalle_Reparacion" rows="3"></textarea>
+                
+                  <label for="observacion" class="form-label">Obserbaciones</label>
+                <textarea id="observacion" class="form-control" placeholder="Obserbaciones"
+                  formControlName="Observaciones" rows="3"></textarea>
+              </div>
+
+              <!-- Segunda fila: Marca y Modelo -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label">Marca</label>
+                  <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required
+                    [ngClass]="{'is-invalid': validarCampos('marca')}">
+                    <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
+                      {{ marca.descripcion }}
+                    </ng-option>
+                  </ng-select>
+                  <div class="required-field" *ngIf="validarCampos('marca')">Este campo es requerido.</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Modelo</label>
+                  <ng-select formControlName="modelo" [ngClass]="{'is-invalid': validarCampos('modelo')}">
+                    <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
+                      {{ modelo.descripcion }}
+                    </ng-option>
+                  </ng-select>
+                  <div class="required-field" *ngIf="validarCampos('modelo')">Este campo es requerido.</div>
+                </div>
+              </div>
+
+              <!-- Botón de enviar -->
+              <div class="text-end">
+                <button class="btn btn-primary px-4" type="submit">
+                  <span *ngIf="!isLoading">Añadir</span>
+                  <span *ngIf="isLoading">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Procesando...
+                  </span>
+                </button>
+              </div>
+            </form>
+            <!-- End Form -->
+          </div>
         </div>
-    </section>
+      </div>
+      <!-- Tabla equipos agregados -->
+    </div>
+  </section>
 </main>
-<form-cliente (customer)="onAddCustomer($event)">
-</form-cliente>
+<form-cliente (customer)="onAddCustomer($event)"></form-cliente>

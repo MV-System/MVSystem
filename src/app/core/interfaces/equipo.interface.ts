@@ -32,6 +32,7 @@ export interface RegistroReparaciones{
     IMEI:string;
     ID_Cliente:number;
     Detalle_Reparacion:string;
+    Observaciones:string;
     Costo:number;
     Precio: number;
     Fecha_Entrega: string;

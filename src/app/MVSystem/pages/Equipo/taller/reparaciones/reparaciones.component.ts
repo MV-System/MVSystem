@@ -20,7 +20,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
   styleUrls: ['./reparaciones.component.css']
 })
 export class ReparacionesComponent implements OnInit {
-
+ isLoading = false;
    generarReporteLoading: boolean = false;
 
     formEquipoReparado: FormGroup = this.fb.group({
@@ -49,6 +49,7 @@ export class ReparacionesComponent implements OnInit {
     IMEI: ["",],
     Costo: [, [Validators.required]],
     Detalle_Reparacion: ["",],
+    Observaciones: ["",],
     Usuario: [this.loginService.getUserName(),],
     ID_Cliente:[],
     Precio:  [, [Validators.required]],
@@ -94,6 +95,7 @@ export class ReparacionesComponent implements OnInit {
      IMEI: this.formRegistroReparaciones.get('IMEI')?.value,
      ID_Cliente:this.customer.id_Cliente,// Number(this.formRegistroReparaciones.get('ID_Cliente')?.value),
      Detalle_Reparacion: String(this.formRegistroReparaciones.get('Detalle_Reparacion')?.value),
+     Observaciones: String(this.formRegistroReparaciones.get('Observaciones')?.value),
      Costo: Number(this.formRegistroReparaciones.get('Costo')?.value),
      Precio: Number(this.formRegistroReparaciones.get('Precio')?.value),
      Fecha_Entrega: String(this.formRegistroReparaciones.get('Fecha_Entrega')?.value),
