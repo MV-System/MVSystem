@@ -10,6 +10,7 @@ import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { takeUntil } from 'rxjs/operators';
+import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -49,6 +50,7 @@ export class FacturacionListaComponent implements OnInit {
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   constructor(
+     private loading: LoadingService,
     private catalogosService: CatalogosService,
     private validatorPermissionService: ValidatorPermissionService,
     private loginService: LoginService,
@@ -119,7 +121,8 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
           });
         } else {
           // Si el equipo no está disponible, muestra el mensaje de error
-          this.isLoading = false; // Finalizar la carga
+           // this.loading.showLoading();
+
           this.toast.error(`El equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${response.mensaje}`);
         }
       },

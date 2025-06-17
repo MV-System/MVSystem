@@ -144,13 +144,11 @@ const filterSemana: utilidadesFiltros = {
   //this.loading.hideLoading();
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
-  this.loading.showLoading();
-  //this.isLoading = true; // Iniciar carga
+  //this.loading.showLoading();
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
       (equipos: Utilidades) => {
-        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasDia = [
@@ -159,6 +157,7 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
   { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
   { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
+          //this.loading.hideLoading(); // Terminar carga
         } else {
           this.toastr.warning('No se encontraron utilidades.');
         }
@@ -169,16 +168,13 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
-    this.loading.hideLoading();
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
-  this.loading.showLoading();
-  //this.isLoading = true; // Iniciar carga
+  //this.loading.showLoading();
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
       (equipos: Utilidades) => {
-        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasSemana = [
@@ -187,6 +183,7 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
   { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
   { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
+         // this.loading.hideLoading(); // Terminar carga
         } else {
           this.toastr.warning('No se encontraron utilidades.');
         }
@@ -197,17 +194,15 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
-    this.loading.hideLoading();
+    //this.loading.hideLoading();
 }
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
   this.loading.showLoading();
-//  this.isLoading = true; // Iniciar carga
   this.UtilidadesServices
     .GetUtilidades(filterMes)
     .subscribe(
       (equipos: Utilidades) => {
-        this.isLoading = false; // Terminar carga
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasMes = [
@@ -216,17 +211,16 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
   { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
   { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
+          this.loading.hideLoading();  
         } else {
           this.toastr.warning('No se encontraron utilidades.');
         }
       },
       (error) => {
-        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }
     );
-    this.loading.hideLoading();
 }
 
 onSelect(data: any): void {}

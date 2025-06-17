@@ -117,10 +117,10 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
   getFacturas(){
     this.loading.showLoading();
-    this.isLoading = true; // Iniciar carga
+    //this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
-    this.isLoading = false; // Terminar carga
+   // this.isLoading = false; // Terminar carga
       let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
       this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
       this.facturasCantidad = cantidad;
@@ -148,11 +148,11 @@ this.loading.hideLoading();
   }
   printReportFacturaConsulta(){
     this.loading.showLoading();
-    this.isLoading = true; // Iniciar carga
+    //this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      this.isLoading = false; // Terminar carga
+      //this.isLoading = false; // Terminar carga
     },err=>{
       this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
@@ -161,11 +161,13 @@ this.loading.hideLoading();
     this.loading.hideLoading();
   }
   printFactura(){
-    this.isLoading = true; // Iniciar carga
+     this.loading.showLoading();
+   // this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      this.isLoading = false; // Terminar carga
+       this.loading.hideLoading();
+     // this.isLoading = false; // Terminar carga
     },err=>{
 
       this.toast.error('Error al imprimir factura');
@@ -192,13 +194,13 @@ this.loading.hideLoading();
   }
 
   printFacturaMini(){
-    this.isLoading = true; // Iniciar carga
+     this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      this.isLoading = false; // Terminar carga
-    },err=>{
+   this.loading.hideLoading();  
+  },err=>{
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);

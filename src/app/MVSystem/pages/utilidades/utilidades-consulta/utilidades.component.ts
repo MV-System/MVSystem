@@ -120,6 +120,7 @@ createForm(){
     this.GetUtilidades(); // Llama a la función para obtener datos
     this.createForm();
     this.sucursalOnChange();
+    // this.loading.hideLoading();
   }
 setResponsiveView() {
   const width = Math.min(window.innerWidth - 80, 900); // 80px de margen, máximo 900px
@@ -149,27 +150,23 @@ setResponsiveView() {
     });
   }
   GetUtilidades() {
-    this.loading.showLoading();
-    this.isLoading = true; // Iniciar carga
+       this.loading.showLoading();
     this.UtilidadesServices
       .GetUtilidades(this.filter)
       .subscribe(
         (equipos: Utilidades) => {
-          this.isLoading = false; // Terminar carga
           if (equipos) {
             this.data = equipos; // Asigna el primer objeto a data
             this.updateSingleData();
+            this.loading.hideLoading();
           } else {
             this.toastr.warning('No se encontraron utilidades.');
           }
         },
         (error) => {
-          this.isLoading = false; // Terminar carga
-         // console.error('Error al obtener utilidades:', error);
           this.toastr.error('Error al cargar datos de utilidades');
         }
       );
-      this.loading.hideLoading();
   }
 
   private updateSingleData() {
@@ -192,7 +189,6 @@ setResponsiveView() {
     { "name": "Costo Reps.", "value": this.data.costo_Reparaciones }
   ];
   }
-  // UtilidadesForm: FormGroup = this.fb.group({ });
 
   filter: utilidadesFiltros = {
     FI: this.FechaInicio.toISOString().split('T')[0],
