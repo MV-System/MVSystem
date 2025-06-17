@@ -1,16 +1,19 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
 
-    <div class="d-flex align-items-center justify-content-between">
+    <!-- Botón hamburguesa SIEMPRE visible para pruebas, luego vuelve a poner d-lg-none -->
+    <button class="btn btn-outline-secondary me-2" (click)="onSidebarToggle()" aria-label="Mostrar/Ocultar menú">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="d-flex align-items-center justify-content-between flex-grow-1">
         <a routerLink="/" class="logo d-flex align-items-center">
             <img src="assets/img/mv_logo.svg" alt="MvSystem">
         </a>
         <div class="d-flex p-5">
             <p class="px-3"><b>Empresa:</b> {{userEmpresa}}</p>
             <p> <b>Sucursal:</b> {{userSucursal}}</p>
-            <!-- <p style="font-size: 40px; margin-left: 250px;"><b>Versión BETA</b></p> -->
         </div>
-        <!-- <i class="bi bi-list toggle-sidebar-btn"  (click)="onSidebarToggle()"></i> -->
     </div>
     <!-- End Logo -->
 

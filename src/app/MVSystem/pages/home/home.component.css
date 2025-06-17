@@ -1,9 +1,26 @@
-.my-element {
-    display: inline-block;
-    margin: 0 0.5rem;
-    color: #f8f8f8;
-    animation: wobble infinite;
-    /* referring directly to the animation's @keyframe declaration */
-    animation-duration: 2s;
-    /* don't forget to set a duration! */
+.grid.mainLayout {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1 1 auto;
+  transition: margin-left 0.3s;
+  margin-left: 0;
+}
+
+.sidebar-open {
+  margin-left: 250px; /* Debe coincidir con el ancho del sidebar */
+}
+
+@media (max-width: 991.98px) {
+  .sidebar-open {
+    margin-left: 0 !important;
+  }
+}
+.main-content {
+  flex: 1 1 auto;
+  transition: margin-left 0.3s;
+  margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
+  padding-left: 0 !important; /* Elimina cualquier padding izquierdo */
 }

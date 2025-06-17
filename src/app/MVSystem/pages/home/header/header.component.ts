@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { LoginService } from 'src/app/auth/login.service';
@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 })
 export class HeaderComponent implements OnInit,OnDestroy {
 
+   @Output() toggleSidebar = new EventEmitter<void>();
+   
   constructor(
    private loginService: LoginService,
    private catalogosService:CatalogosService
@@ -36,17 +38,11 @@ export class HeaderComponent implements OnInit,OnDestroy {
   userGiveName: string;
   userSucursal: any;
   userEmpresa: string;
-  @ViewChild('toggleSidebarBtn') toggleSidebar!: ElementRef;
+  //@ViewChild('toggleSidebarBtn') toggleSidebar!: ElementRef;
 
 
-  onSidebarToggle = () => {
-    const toggle = document.querySelector('.toggle-sidebar');
-    if (!toggle) {
-      $('body').addClass('toggle-sidebar')
-    }
-    else {
-      $('body').removeClass('toggle-sidebar')
-    }
+  onSidebarToggle() {
+    this.toggleSidebar.emit();
   }
 
   logout() {

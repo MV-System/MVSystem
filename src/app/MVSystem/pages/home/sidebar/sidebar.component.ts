@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
@@ -7,14 +7,10 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  isCollapsed = false; // Estado del sidebar
+ @Input() isCollapsed = false; // Recibe el estado desde el padre
 
-  toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed; // Cambia el estado
-  }
-
-  inside: boolean = false;
-  color: string | undefined;
+  // inside: boolean = false;
+  // color: string | undefined;
 
   constructor(private renderer: Renderer2,
     private validatorPermissionService: ValidatorPermissionService
@@ -89,28 +85,5 @@ export class SidebarComponent implements OnInit {
   VerFormConsultaTransferencias(): boolean {
     return this.validatorPermissionService.validateUserRole("Menu_Consulta_Transferencias");
   }
-
-
-  @HostListener('click', ['$event']) click() {
-    this.inside = true;
-
-  }
-  @HostListener('document:click', ['$event']) clickOutside(event: Event) {
-    const toggle = document.querySelector('.toggle-sidebar-btn');
-
-
-      if ( !this.inside && event.target != toggle) {
-      $('body').addClass('toggle-sidebar')
-    }
-    this.inside = false
-
-  }
-  // onMouseEnter() {
-  //   this.color = 'white'; // Cambia el color al pasar el mouse
-  // }
-
-  // onMouseLeave() {
-  //   this.color = 'white'; // Vuelve al color original al salir
-  // }
 
 }

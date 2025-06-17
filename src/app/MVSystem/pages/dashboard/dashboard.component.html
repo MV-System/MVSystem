@@ -1,27 +1,53 @@
 <span>DashBoard</span>
 <main id="main" class="main box" *ngIf="VerFormConsultaUtilidades()">
-    <div class="row">
-        <mat-spinner *ngIf="isLoading" class="loading">
-            <div class="spinner"></div>
-            <span>Cargando Dashboard, por favor espere...</span>
-        </mat-spinner>
-        <div *ngIf="!isLoading">
-            <label class="form-label ">Ventas Del Dia</label>
-
-            <ngx-charts-advanced-pie-chart [view]="view" scheme="cool" [results]="singleVentasDia" (select)="onSelect($event)">
+  <div class="row">
+    <mat-spinner *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <span>Cargando Dashboard, por favor espere...</span>
+    </mat-spinner>
+    <div *ngIf="!isLoading" class="col-12">
+      <div class="dashboard-card p-3">
+        <div class="grafico-seccion mb-4">
+          <label class="form-label">Ventas Del Día</label>
+          <div class="grafico-responsive">
+            <ngx-charts-advanced-pie-chart
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="singleVentasDia"
+              [gradient]="gradient"
+              (select)="onSelect($event)">
             </ngx-charts-advanced-pie-chart>
-
-            <label class="form-label ">Ventas De la Semana</label>
-
-            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Neon" [results]="singleVentasSemana" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-
-
-
-            <label class="form-label ">Ventas Del Mes</label>
-
-            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Ordinal" [results]="singleVentasMes" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
+          </div>
         </div>
+        <div class="grafico-seccion mb-4">
+          <label class="form-label">Ventas De la Semana</label>
+          <div class="grafico-responsive">
+            <ngx-charts-advanced-pie-chart
+              [view]="view"
+              [scheme]="Neon"
+              [results]="singleVentasSemana"
+              [gradient]="gradient"
+              (select)="onSelect($event)"
+              (activate)="onActivate($event)"
+              (deactivate)="onDeactivate($event)">
+            </ngx-charts-advanced-pie-chart>
+          </div>
+        </div>
+        <div class="grafico-seccion">
+          <label class="form-label">Ventas Del Mes</label>
+          <div class="grafico-responsive">
+            <ngx-charts-advanced-pie-chart
+              [view]="view"
+              [scheme]="Ordinal"
+              [results]="singleVentasMes"
+              [gradient]="gradient"
+              (select)="onSelect($event)"
+              (activate)="onActivate($event)"
+              (deactivate)="onDeactivate($event)">
+            </ngx-charts-advanced-pie-chart>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </main>

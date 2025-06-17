@@ -18,10 +18,14 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 })
 export class UtilidadesComponent implements OnInit {
 
+  get rangoFechas(): string {
+  return `${this.FechaInicio.toLocaleDateString()} - ${this.fechaHoy.toLocaleDateString()}`;
+}
+
   almacenes!: Almacen[];
   subs: Subscription[] = [];
   // options
-  view: [number, number] = [1000, 200];
+ view: [number, number] = [400, 200]; // ancho, alto
   gradient: boolean = true;
   showLegend: boolean = true;
   showLabels: boolean = true;
@@ -107,13 +111,20 @@ createForm(){
     almacen: [Number(this.loginService.getUserIdSucursal), Validators.required]
   });
 }
+
   ngOnInit(): void {
+     this.setResponsiveView();
+     window.addEventListener('resize', () => this.setResponsiveView());
     this.createForm();
     this.getSucursales();
     this.GetUtilidades(); // Llama a la función para obtener datos
     this.createForm();
     this.sucursalOnChange();
   }
+setResponsiveView() {
+  const width = Math.min(window.innerWidth - 80, 900); // 80px de margen, máximo 900px
+  this.view = [width, 180];
+}
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.filter.FI = this.FechaInicio.toISOString().split('T')[0],

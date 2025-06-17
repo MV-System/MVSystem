@@ -16,7 +16,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 export class DashboardComponent implements OnInit {
 
 // Options
-view: [number, number] = [900, 200];
+view: [number, number] = [600, 180];
 gradient: boolean = true;
 showLegend: boolean = true;
 showLabels: boolean = true;
@@ -98,8 +98,12 @@ this.FechaInicioMes = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMon
 VerFormConsultaUtilidades(): boolean {
   return this.validatorPermissionService.validateUserRole("verUtilidadesToolStripMenuItem");
 }
-
+setResponsiveView() {
+  const width = Math.min(window.innerWidth - 80, 900); // 80px de margen, máximo 900px
+  this.view = [width, 180];
+}
 ngOnInit(): void {
+   this.setResponsiveView();
   // Calcular el inicio de la semana y el mes actual
   this.calcularFechas();
 

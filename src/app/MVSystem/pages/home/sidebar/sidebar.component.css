@@ -1,61 +1,60 @@
+/* Sidebar styles */
 .sidebar {
-  width: 250px; /* Ancho normal */
-  transition: width 0.3s; /* Transición suave */
+  width: 250px;
+  min-width: 250px;
+  transition: width 0.3s;
+  overflow: auto;
+  background: #222;
+  color: #fff;
+  height: 100vh;
+  position: relative;
+  z-index: 1000; /* Sidebar z-index */
 }
 
 .sidebar.collapsed {
-  width: 80px; /* Ancho colapsado */
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden;
 }
 
-.sidebar .nav-link span {
-  display: inline; /* Muestra el texto normalmente */
-  transition: opacity 0.3s; /* Transición suave para la opacidad */
+/* Header styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2000; /* Header z-index higher than sidebar */
 }
 
-.sidebar.collapsed .nav-link span {
-  display: none; /* Oculta el texto cuando está colapsado */
+/* Responsive: Sidebar floats over content in mobile, but stays below header */
+@media (max-width: 991.98px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 56px; /* Altura del header */
+    height: calc(100vh - 56px);
+    z-index: 1050; /* Lower than header */
+  }
 }
-
-.btn-toggle {
-  background: white;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-}
-
-
-
-
-
-
-/* Contenedor del formulario */
-.form-container {
+.grid.mainLayout {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  /*height: 100vh; /* Ocupa toda la altura de la ventana */
-  /*width: 100vw; /* Ocupa todo el ancho de la ventana */
-  padding: 20px; /* Espacio interior */
-  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  height: 100vh;
 }
 
-/* Formulario */
-.form {
-  width: 100%; /* Ancho del formulario */
-  max-width: 1024px; /* Ancho máximo */
-  background: #f9f9f9; /* Color de fondo */
-  border-radius: 8px; /* Esquinas redondeadas */
- /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
-  padding: 20px; /* Espacio interno */
+.main-content {
+  flex: 1 1 auto;
+  transition: margin-left 0.3s;
+  margin-left: 250px; /* Por defecto, margen igual al sidebar */
 }
 
-/* Media queries */
-@media (max-width: 600px) {
-  .form {
-    padding: 10px; /* Menos padding en pantallas pequeñas */
+.sidebar-open {
+  margin-left: 250px;
+}
+
+/* En móviles, el contenido ocupa todo el ancho y el sidebar flota encima */
+@media (max-width: 991.98px) {
+  .main-content,
+  .sidebar-open {
+    margin-left: 0 !important;
   }
 }

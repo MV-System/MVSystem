@@ -1,30 +1,43 @@
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    /* Altura del contenedor */
+:host {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 8px 4px 0 4px;
+  box-sizing: border-box;
 }
 
-.spinner {
-    border: 8px solid #f3f3f3;
-    /* Color de fondo */
-    border-top: 8px solid #3498db;
-    /* Color de la parte superior */
-    border-radius: 50%;
-    width: 50px;
-    /* Tamaño del spinner */
-    height: 50px;
-    /* Tamaño del spinner */
-    animation: spin 1s linear infinite;
-    /* Animación */
+.dashboard-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1rem 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  background: #fff;
+  box-sizing: border-box;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+.grafico-responsive {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-x: auto;
+}
+ngx-charts-advanced-pie-chart {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .dashboard-card {
+    padding: 1rem 0.2rem;
+  }
+  ngx-charts-advanced-pie-chart {
+    min-width: 120px;
+  }
 }

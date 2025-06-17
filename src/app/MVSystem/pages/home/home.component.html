@@ -1,14 +1,9 @@
-<main id="main" class="main">
-    <section class="section">
-    </section>
 
-</main>
-<app-header></app-header>
+<app-header (toggleSidebar)="onToggleSidebar()"></app-header>
 <div class="grid mainLayout">
-    <app-sidebar class="main-nav"></app-sidebar>
-    <div class="main-content">
+    <app-sidebar class="main-nav" [isCollapsed]="!sidebarVisible"></app-sidebar>
+    <div class="main-content" [class.sidebar-open]="sidebarVisible">
         <router-outlet></router-outlet>
-
         <app-footer></app-footer>
         <a class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     </div>
