@@ -56,21 +56,21 @@
             </div>
             <div id="invoice-wrapper" class="box grid">
                 <div class="leftcol">
-                    <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div>
+                    <!-- <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div>
                     <div class="companydetail">
-                        <strong class="name">Company Name SRL</strong>
+                        <strong class="name"></strong>
                         <div class="info">
-                            <address>[Company Address]</address>
-                            <span class="phone">[Company Phone]</span>
-                            <span class="email">[Company Email]</span>
+                            <address></address>
+                            <span class="phone"></span>
+                            <span class="email"></span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="rightcol">
                     <h3 class="sub-title">{{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
                     <div class="grid invoice">
                         <div class="col">
-                            <label for="client" class="form-label">{{isFactura?'Facturar':'Cotización'}} a:</label>
+                            <label for="client" class="form-label">{{isFactura?'Facturar':'Cotización'}} a:<span class="required-field">*</span></label>
                             <div class="search-customer grid">
                                 <!-- ng-select para buscar un cliente por teléfono -->
                                 <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">

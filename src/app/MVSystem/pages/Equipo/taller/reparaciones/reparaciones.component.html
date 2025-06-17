@@ -18,7 +18,7 @@
             <h5 class="card-title mb-4">Datos de la Reparación</h5>
             <!-- Formulario de Reparación -->
             <form [formGroup]="formRegistroReparaciones" (ngSubmit)="registroReparacion()" class="needs-validation" novalidate>
-              
+
               <!-- Cliente -->
               <div class="mb-3">
                 <label class="form-label">Cliente</label>
@@ -48,13 +48,13 @@
                   <div class="required-field" *ngIf="validarCampos('IMEI')">Este campo es requerido.</div>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label">Costo</label>
+                  <label class="form-label">Costo <span class="required-field">*</span></label>
                   <input type="number" class="form-control" required placeholder="RD$" formControlName="Costo"
                     appNumeric [maxlen]="9" [ngClass]="{'is-invalid': validarCampos('Costo')}">
                   <div class="required-field" *ngIf="validarCampos('Costo')">Este campo es requerido.</div>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label">Precio</label>
+                  <label class="form-label">Precio<span class="required-field">*</span></label>
                   <input type="number" class="form-control" required placeholder="RD$" formControlName="Precio"
                     appNumeric [maxlen]="9" [ngClass]="{'is-invalid': validarCampos('Precio')}">
                   <div class="required-field" *ngIf="validarCampos('Precio')">Este campo es requerido.</div>
@@ -63,11 +63,11 @@
 
               <!-- Detalle de Reparación -->
               <div class="mb-3">
-                <label for="detalleReparacion" class="form-label">Detalle de Reparación</label>
+                <label for="detalleReparacion" class="form-label">Detalle de Reparación <span class="required-field">*</span></label>
                 <textarea id="detalleReparacion" class="form-control" placeholder="Detalle de la reparación"
                   formControlName="Detalle_Reparacion" rows="3"></textarea>
-                
-                  <label for="observacion" class="form-label">Obserbaciones</label>
+
+                  <label for="observacion" class="form-label">Observaciones</label>
                 <textarea id="observacion" class="form-control" placeholder="Obserbaciones"
                   formControlName="Observaciones" rows="3"></textarea>
               </div>
@@ -75,7 +75,7 @@
               <!-- Segunda fila: Marca y Modelo -->
               <div class="row mb-4">
                 <div class="col-md-6">
-                  <label class="form-label">Marca</label>
+                  <label class="form-label">Marca<span class="required-field">*</span></label>
                   <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required
                     [ngClass]="{'is-invalid': validarCampos('marca')}">
                     <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
@@ -85,7 +85,7 @@
                   <div class="required-field" *ngIf="validarCampos('marca')">Este campo es requerido.</div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Modelo</label>
+                  <label class="form-label">Modelo<span class="required-field">*</span></label>
                   <ng-select formControlName="modelo" [ngClass]="{'is-invalid': validarCampos('modelo')}">
                     <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
                       {{ modelo.descripcion }}
