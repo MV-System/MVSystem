@@ -27,7 +27,7 @@ export class CuentasPorCobrarComponent implements OnInit {
    // Obtener la fecha actual
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
-FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
 
   currentPage:     number = 1;
   totalRecord!:    number;
@@ -39,7 +39,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   filter: any = {
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio:this.FechaInicio.toISOString().split('T')[0],
+    fechaInicio: '',//this.FechaInicio.toISOString().split('T')[0],
     fechaFinal: this.fechaHoy.toISOString().split('T')[0],
     NombreCliente: '',
     NumeroTelefono: '',
@@ -342,36 +342,6 @@ this.idClienteSeleccionado = idClienteSeleccionado;
   }
 
  printReportTransferencia(): void {
-  // this.isLoading = true;
-  // if (this.idTransferenciaSeleccionada === null) {
-  //   // Si no hay ninguna transferencia seleccionada, no hacemos nada
-  //   console.error("No se ha seleccionado ninguna transferencia.");
-  //   return;
-  // }
-
-  // const model: EquipoTransferenciaReporte = {
-  //   idTransferencia: this.idTransferenciaSeleccionada,
-  //   equipoTransferencias: this.listEquiposToTransfer,
-  //   fechaTransferencia: new Date().toDateString(),
-  //   usuario: this.loginService.getUserName(),
-  //   Empresa:this.loginService.getUserEmpresa,
-  //   IdEmpresa:this.loginService.getUserIdEmpresa,
-  //   IdSucursal:this.loginService.getUserIdSucursal,
-  //   total: this.cantidadEquipoATransferir
-  // };
-
-
-  // this.equiposService.postEquipoTransferencia(model).subscribe({
-
-  //   next: (blobResp) => {
-  //     this.isLoading = false;
-  //     this.getBlobForCreateIFramePDF(blobResp);
-  // },
-
-  // error: () => {
-  //   console.error("Error al generar el reporte.");
-  // }
-  // });
 
 }
 
