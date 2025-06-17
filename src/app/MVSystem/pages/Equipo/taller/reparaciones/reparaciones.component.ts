@@ -276,18 +276,24 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
     this.loginService.getUserIdEmpresa,
     this.loginService.getUserIdSucursal
   ).subscribe(blob => {
-    this.generarReporteLoading = false;
     const newBlob = new Blob([blob], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(newBlob);
 
-     const iframe = document.createElement('iframe');
+    const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.src = blobUrl;
-    document.body.appendChild(iframe);
-    iframe.contentWindow?.print();
 
-    //window.open(blobUrl, '_blank'); // Esto muestra el PDF en una nueva pestaña
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000); // Libera el recurso después de 10s
+    // Espera a que el PDF se cargue en el iframe antes de quitar el loading
+    iframe.onload = () => {
+      this.generarReporteLoading = false; // Oculta el loading solo cuando el PDF está listo
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(iframe);
+      }, 10000);
+    };
+
+    document.body.appendChild(iframe);
   }, (err) => {
     this.generarReporteLoading = false;
     this.toastr.error('Error', 'No se pudo generar el reporte');
