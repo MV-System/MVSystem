@@ -59,21 +59,21 @@ export class UtilidadesComponent implements OnInit {
   };
   singleVentas = [
     { "name": "Ventas Equipos", "value": this.data.venta_Equipos },
-    { "name": "Ventas Accesorios", "value": this.data.venta_Accesorios },
-    { "name": "Ventas Desbloqueos", "value": this.data.venta_Desbloqueos },
-    { "name": "Ventas Reparaciones", "value": this.data.venta_Reparaciones }
+    { "name": "Ventas Acc.", "value": this.data.venta_Accesorios },
+    { "name": "Ventas Desblq.", "value": this.data.venta_Desbloqueos },
+    { "name": "Ventas Reps.", "value": this.data.venta_Reparaciones }
   ];
   singleGanancias = [
-    { "name": "Ganacia Equipos", "value": this.data.ganancia_Equipos },
-    { "name": "Ganancia Accesorios", "value": this.data.ganancia_Accesorios },
-    { "name": "Ganancia Desbloqueos", "value": this.data.ganancia_Desbloqueos },
-    { "name": "Ganancia Reparaciones", "value": this.data.ganancia_Reparaciones }
+    { "name": "Ganancia Equipos", "value": this.data.ganancia_Equipos },
+    { "name": "Ganancia Acc.", "value": this.data.ganancia_Accesorios },
+    { "name": "Ganancia Desblq.", "value": this.data.ganancia_Desbloqueos },
+    { "name": "Ganancia Reps.", "value": this.data.ganancia_Reparaciones }
   ];
   singleCostos = [
     { "name": "Costo Equipos", "value": this.data.costo_Equipos },
-    { "name": "Costo Accesorios", "value": this.data.costo_Accesorios },
-    { "name": "Costo Desbloqueos", "value": this.data.costo_Desbloqueos },
-    { "name": "Costo Reparaciones", "value": this.data.costo_Reparaciones }
+    { "name": "Costo Acc.", "value": this.data.costo_Accesorios },
+    { "name": "Costo Desblq.", "value": this.data.costo_Desbloqueos },
+    { "name": "Costo Reps.", "value": this.data.costo_Reparaciones }
   ];
 
   constructor(
@@ -175,21 +175,21 @@ setResponsiveView() {
   private updateSingleData() {
    this.singleVentas = [
     { "name": "Ventas Equipos", "value": this.data.venta_Equipos },
-    { "name": "Ventas Accesorios", "value": this.data.venta_Accesorios },
-    { "name": "Ventas Desbloqueos", "value": this.data.venta_Desbloqueos },
-    { "name": "Ventas Reparaciones", "value": this.data.venta_Reparaciones }
+    { "name": "Ventas Acc.", "value": this.data.venta_Accesorios },
+    { "name": "Ventas Desblq.", "value": this.data.venta_Desbloqueos },
+    { "name": "Ventas Reps.", "value": this.data.venta_Reparaciones }
   ];
   this.singleGanancias = [
-    { "name": "Ganacia Equipos", "value": this.data.ganancia_Equipos },
-    { "name": "Ganancia Accesorios", "value": this.data.ganancia_Accesorios },
-    { "name": "Ganancia Desbloqueos", "value": this.data.ganancia_Desbloqueos },
-    { "name": "Ganancia Reparaciones", "value": this.data.ganancia_Reparaciones }
+    { "name": "Ganancia Equipos", "value": this.data.ganancia_Equipos },
+    { "name": "Ganancia Acc.", "value": this.data.ganancia_Accesorios },
+    { "name": "Ganancia Desblq.", "value": this.data.ganancia_Desbloqueos },
+    { "name": "Ganancia Reps.", "value": this.data.ganancia_Reparaciones }
   ];
   this.singleCostos = [
     { "name": "Costo Equipos", "value": this.data.costo_Equipos },
-    { "name": "Costo Accesorios", "value": this.data.costo_Accesorios },
-    { "name": "Costo Desbloqueos", "value": this.data.costo_Desbloqueos },
-    { "name": "Costo Reparaciones", "value": this.data.costo_Reparaciones }
+    { "name": "Costo Acc.", "value": this.data.costo_Accesorios },
+    { "name": "Costo Desblq.", "value": this.data.costo_Desbloqueos },
+    { "name": "Costo Reps.", "value": this.data.costo_Reparaciones }
   ];
   }
   // UtilidadesForm: FormGroup = this.fb.group({ });

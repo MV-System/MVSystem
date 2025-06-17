@@ -51,21 +51,21 @@ myDateRangePickerOptions: IMyDrpOptions = {
 };
 singleVentasDia = [
   { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Accesorios", "value": this.data.venta_Accesorios },
-  { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-  { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
 ];
 singleVentasSemana = [
   { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Accesorios", "value": this.data.venta_Accesorios },
-  { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-  { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
 ];
 singleVentasMes = [
   { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Accesorios", "value": this.data.venta_Accesorios },
-  { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-  { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
 ];
 
 // Declaración de fechas
@@ -155,9 +155,9 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasDia = [
             { "name": "Equipos", "value": this.data.venta_Equipos },
-            { "name": "Accesorios", "value": this.data.venta_Accesorios },
-            { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-            { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
         } else {
           this.toastr.warning('No se encontraron utilidades.');
@@ -183,9 +183,9 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasSemana = [
             { "name": "Equipos", "value": this.data.venta_Equipos },
-            { "name": "Accesorios", "value": this.data.venta_Accesorios },
-            { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-            { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
         } else {
           this.toastr.warning('No se encontraron utilidades.');
@@ -211,10 +211,10 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasMes = [
-            { "name": "Equipos", "value": this.data.venta_Equipos },
-            { "name": "Accesorios", "value": this.data.venta_Accesorios },
-            { "name": "Desbloqueos", "value": this.data.venta_Desbloqueos },
-            { "name": "Reparaciones", "value": this.data.venta_Reparaciones }
+          { "name": "Equipos", "value": this.data.venta_Equipos },
+  { "name": "Acc.", "value": this.data.venta_Accesorios },
+  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
+  { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
         } else {
           this.toastr.warning('No se encontraron utilidades.');
