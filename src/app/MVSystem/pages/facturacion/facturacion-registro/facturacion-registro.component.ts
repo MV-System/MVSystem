@@ -692,7 +692,6 @@ if (!articuloExistente) {
     return model;
   }
   modeloArticulos(control: AbstractControl) {
-    debugger;
     const model = {
       cantidad: Number(control.get('cantidad')?.value),
       descripcion: control.get('descripcion')?.value,
@@ -939,35 +938,54 @@ if (!articuloExistente) {
     }
     return model;
   }
-  printFacturaNormal(){
-    //this.loading.showLoading();
-    this.printing = !this.printing;
-    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.facturaNumberReporte)
-    .subscribe(blob =>{
-      CreatorPDFFile(blob);
-      this.printing = !this.printing;
-    },err=>{
-      this.printing = !this.printing;
-      this.toast.error('Error al imprimir factura');
-    });
-    this.subs.push(sub);
-    //this.loading.hideLoading();
-  }
+  printFacturaNormal() {
+  this.loading.showLoading();
+  const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(), this.facturaNumberReporte)
+    .subscribe(blob => {
+      const newBlob = new Blob([blob], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(newBlob);
 
-  printFacturaMini(){
-    //this.loading.showLoading();
-    this.printing = !this.printing;
-    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.facturaNumberReporte)
-    .subscribe(blob =>{
-      CreatorPDFFile(blob);
-      this.printing = !this.printing;
-    },err=>{
-      this.printing = !this.printing;
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+
+      iframe.onload = () => {
+        this.loading.hideLoading(); // Oculta el loading justo cuando el PDF está listo
+        iframe.contentWindow?.print();
+      };
+
+      document.body.appendChild(iframe);
+    }, err => {
+      this.loading.hideLoading();
       this.toast.error('Error al imprimir factura');
     });
-    this.subs.push(sub);
-    //this.loading.hideLoading();
-  }
+  this.subs.push(sub);
+}
+
+printFacturaMini() {
+  this.loading.showLoading();
+  const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(), this.facturaNumberReporte)
+    .subscribe(blob => {
+      const newBlob = new Blob([blob], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(newBlob);
+
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+
+      iframe.onload = () => {
+        this.loading.hideLoading(); // Oculta el loading cuando el PDF esté listo
+        iframe.contentWindow?.print();
+        // Ya no se elimina el iframe ni se revoca el blob automáticamente
+      };
+
+      document.body.appendChild(iframe);
+    }, err => {
+      this.loading.hideLoading();
+      this.toast.error('Error al imprimir factura');
+    });
+  this.subs.push(sub);
+}
   generateFactura() {
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
@@ -984,17 +1002,16 @@ if (!articuloExistente) {
             this.loadCatalogos();
 
           }, error => {
-            this.isLoading = !this.isLoading;
+           // this.isLoading = !this.isLoading;
             this.toastr.error(error)
           })
-
-
-
     this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
       () => {
 
         this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-          () => { this.printFacturaNormal(); this.onClean()
+          
+          () => {
+            this.printFacturaNormal(); this.onClean()
           },
           () => {this.printFacturaMini(); this.onClean()},
           "Mini",
@@ -1033,14 +1050,11 @@ if (!articuloExistente) {
         })
 
         this.articulos().clear()
-        // this.obtenerFechaDiaActual()
         this.agregarArticulo()
 
         CreatorPDFFile(blobResponse);
-        //this.loading.hideLoading();
 
       },error=>{
-        //this.loading.hideLoading();
         this.toastr.error(error)
       })
   }

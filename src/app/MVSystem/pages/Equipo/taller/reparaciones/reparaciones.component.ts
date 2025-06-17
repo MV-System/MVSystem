@@ -20,6 +20,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
   styleUrls: ['./reparaciones.component.css']
 })
 export class ReparacionesComponent implements OnInit {
+   printing: boolean = false;
  isLoading = false;
    generarReporteLoading: boolean = false;
 
@@ -220,7 +221,6 @@ validarCampos(nombreCampo: string) {
   );
 }
 registroReparacion() {
-  console.log('registroReparacion llamado');
   const model: RegistroReparaciones = this.modeloRegistroReparacion();
   this.validacionesRegistro();
   if (this.formRegistroReparaciones.valid) {
@@ -234,6 +234,7 @@ registroReparacion() {
         this.loading.hideLoading();
         this.rDialogService.openDialog("Aviso", 'Desea imprimir el Recibo?',
           () => {
+             this.printing = true; 
             this.obtenerReporte(this.IdReparacion);
             this.toastr.success("Reparación registrada correctamente");
             this.formRegistroReparaciones.reset({});
@@ -270,7 +271,7 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
   }
 
  obtenerReporte(id_reparacion: number) {
-  this.generarReporteLoading = true;
+    this.loading.showLoading();
   this.equipoService.getEquipoReparadoReporte(
     id_reparacion,
     this.loginService.getUserIdEmpresa,
@@ -285,8 +286,9 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
 
     // Espera a que el PDF se cargue en el iframe antes de quitar el loading
     iframe.onload = () => {
-      this.generarReporteLoading = false; // Oculta el loading solo cuando el PDF está listo
-      iframe.contentWindow?.print();
+     // this.generarReporteLoading = false; // Oculta el loading solo cuando el PDF está listo
+    this.loading.hideLoading();
+     iframe.contentWindow?.print();
       setTimeout(() => {
         URL.revokeObjectURL(blobUrl);
         document.body.removeChild(iframe);
@@ -294,8 +296,9 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
     };
 
     document.body.appendChild(iframe);
+     this.isLoading = false; // Terminar carga
   }, (err) => {
-    this.generarReporteLoading = false;
+   // this.generarReporteLoading = false;
     this.toastr.error('Error', 'No se pudo generar el reporte');
   });
 }
