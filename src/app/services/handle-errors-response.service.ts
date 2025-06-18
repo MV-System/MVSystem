@@ -5,19 +5,19 @@ import { ToastrService } from 'ngx-toastr';
 import { throwError } from "rxjs";
 import { LoadingService } from '../shared/components/r-loading/loading.service';
 import { LoginService } from '../auth/login.service';
-import { RDialogService } from '../shared/components/r-dialog/r-dialog.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HandleErrorsResponseService {
 
-    constructor(private toastr: ToastrService,
-            private router:Router,
-            private loadingService:LoadingService,
-            private loginService:LoginService) {
+    constructor(
+      private toastr: ToastrService,
+      private router:Router,
+      private loadingService:LoadingService,
+      private loginService:LoginService
+    ) {}
 
-    }
     public handleErrors(response:HttpErrorResponse) {
             // Server error
         if( response.status == 500) {
@@ -25,25 +25,36 @@ export class HandleErrorsResponseService {
             return;
         }
     }
-    public handleError(error: HttpErrorResponse) {
-        if(error.status === 401){
-          localStorage.clear();
-          this.router.navigate(['/'])
-          this.loadingService.hideLoading();
-        }
+   public handleError(error: HttpErrorResponse) {
+        this.loadingService.hideLoading();
+
         if (error.status === 0) {
-          // A client-side or network error occurred. Handle it accordingly.
-          this.loadingService.hideLoading();
-          console.error('An error occurred:', error.error);
-          this.router.navigate(['**']);
+            // Error de red o no se pudo conectar al API
+            console.error('No se pudo conectar al API:', error.error);
+            this.toastr.error('Error: Por favor verifique su conexión a internet, inténtelo de nuevo más tarde.', '');
+            this.router.navigate(['**']);
+        } else if (error.status === 401) {
+            // No autorizado, sesión expirada o token inválido
+            localStorage.clear();
+            this.toastr.error('Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
+            this.router.navigate(['/']);
+        } else if (error.status === 404) {
+            // No encontrado
+            this.toastr.error('Recurso no encontrado.', '');
+        } else if (error.status === 500) {
+            // Error interno del servidor
+            this.toastr.error('Error interno del servidor. Contacte al administrador.', '');
+        } else if (error.status === 403) {
+            // Prohibido
+            this.toastr.error('No tiene permisos para realizar esta acción.', '');
         } else {
-          // The backend returned an unsuccessful response code.
-          // The response body may contain clues as to what went wrong.
-          // this.router.navigate(['**']);
-          console.error(`Backend returned code ${error.status}, body was: `, error.error);
+            // Otros errores
+            this.toastr.error('Ocurrió un error inesperado. Inténtelo de nuevo más tarde.', '');
         }
-        // Return an observable with a user-facing error message.
-        this.toastr.error('Algo malo sucedio; Por favor, inténtelo de nuevo más tarde.','')
-        return throwError('Algo malo sucedio; Por favor, inténtelo de nuevo más tarde.');
-      }
+
+        console.error(`Backend returned code ${error.status}, body was: `, error.error);
+
+        // Devuelve un observable con un mensaje de error para el usuario
+        return throwError(() => new Error('Algo malo sucedió; por favor, inténtelo de nuevo más tarde.'));
+    }
 }

@@ -123,8 +123,11 @@ createForm(){
     // this.loading.hideLoading();
   }
 setResponsiveView() {
-  const width = Math.min(window.innerWidth - 80, 900); // 80px de margen, máximo 900px
-  this.view = [width, 180];
+  if (window.innerWidth < 600) {
+    this.view = [300, 200]; // Más pequeño para móvil
+  } else {
+    this.view = [600, 180]; // Tamaño normal para escritorio
+  }
 }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
