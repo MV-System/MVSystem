@@ -94,11 +94,10 @@ label.total {
 
 .form-select.chippagin {
     width: 100px;
-    /* Ajusta el ancho a lo que necesites */
     height: 35px;
-    /* Ajusta la altura del select */
     padding: 5px 10px;
-    /* Ajusta el padding si es necesario */
     font-size: 14px;
-    /* Cambia el tamaño de la fuente si lo deseas */
+    border-radius: 6px;
+    border: 1px solid #b3c6ff;
+    background: #f6f9ff;
 }

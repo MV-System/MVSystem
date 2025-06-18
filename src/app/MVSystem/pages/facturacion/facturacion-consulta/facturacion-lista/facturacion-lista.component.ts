@@ -19,7 +19,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 })
 export class FacturacionListaComponent implements OnInit {
   @Output() pageSizeChanged = new EventEmitter<number>(); // Emitir evento para el cambio de pageSize
-
+selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
   facturaVisibility: { [key: number]: boolean } = {};
 
@@ -38,11 +38,7 @@ export class FacturacionListaComponent implements OnInit {
     this.toggleDetalleFactura(facturaId);
 
     // Cambia el índice de la fila seleccionada para aplicar el color de fondo
-    if (this.selectedRowIndex === index) {
-      this.selectedRowIndex = null; // Si la misma fila se vuelve a hacer clic, la deselecciona
-    } else {
-      this.selectedRowIndex = index; // Selecciona la fila al hacer clic
-    }
+    this.selectedRowIndex = index;
   }
   destroy$: Subject<any> = new Subject<any>();
   index!: number;
@@ -71,8 +67,6 @@ export class FacturacionListaComponent implements OnInit {
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
   vendedores: VendedorLista[] = []
-
-  selectedRowIndex: number | null = null;
 
   btnAnulaFactura(): boolean {
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
@@ -134,46 +128,6 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
     });
 }
 
-
-// Método para guardar el cambio del código
-// DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
-//   this.isLoading = true;
-//   detalle.EquipoNuevo =  `${detalle.idEquipo}`
-//   this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
-//   .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente cuando se destruya el componente
-//   .subscribe({
-//     next: (equipos) => {
-//       // Verificar si el equipo está disponible
-//       if (equipos.disponible === 'S') {
-//           this.mantenimientoService.EditaDetalleFactura(detalle.EquipoActual,
-//           detalle.EquipoNuevo,
-//           detalle.numeroFactura,
-//           this.loginService.getUserIdSucursal,
-//           this.loginService.getUserName())
-// .subscribe(blob =>{
-// this.isLoading = false; // Terminar carga
-// this.toast.success('Factura actualizada con el nuevo equipo');
-// setTimeout(() => {
-// window.location.reload(); // Recarga la página después de 2 segundos
-// }, 1000);
-// },err=>{
-// this.toast.error('Error al Editar la Factura');
-// });
-
-//       } else {
-//         // Si el equipo no está disponible, muestra el mensaje de error
-//         this.toast.error(`El Equipo con IMEI ${detalle.EquipoNuevo} no está disponible: ${equipos.mensaje}`);
-//       }
-//     },
-//     error: (error) => {
-//       // Si ocurre un error en la llamada, manejarlo adecuadamente
-//       this.toast.error('Hubo un problema al verificar la disponibilidad del equipo.');
-//     }
-//   });
-//   // Aquí puedes realizar cualquier acción de guardado en tu backend o lógica adicional
-//   detalle.editMode = false;
-// }
-
 // Método para cancelar la edición y restaurar el valor original
 onCancel(detalle: DetalleFacturaList) {
   // Restaurar el valor original si el usuario cancela la edición
@@ -185,22 +139,14 @@ onCancel(detalle: DetalleFacturaList) {
   getIdFactura(numerofactura: number,index: number){
     this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada
     this.index= index;
-    this.onSelectFactura();
+    //this.onSelectFactura();
     if(numerofactura > 0){this.onFacturaButton.emit(true);}
     this.numerofactura.emit(numerofactura);
 
   }
-  onSelectFactura(){
-    $('table tbody').on('click', 'tr.put', (e)=> {
-        if ($(e.currentTarget).hasClass('selected')) {
-            $(e.currentTarget).removeClass('selected');
-            $(e.currentTarget).addClass('selected');
-        } else {
-            $('tr.selected').removeClass('selected');
-            $(e.currentTarget).addClass('selected');
-        }
-    });
-  }
+isMobileScreen(): boolean {
+  return window.innerWidth < 600;
+}
   obtenerVendedor() {
     this.vendedorService.getVendedorLista()
       .subscribe((vendedor) => {
