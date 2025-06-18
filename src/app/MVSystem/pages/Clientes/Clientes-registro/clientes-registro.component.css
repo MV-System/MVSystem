@@ -1,0 +1,14 @@
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Fija el footer del modal (donde está el botón cancelar) */
+.modal-footer {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  z-index: 2;
+  padding-top: 1rem;
+}
