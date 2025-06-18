@@ -1,11 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import * as ApexCharts from 'apexcharts'
-import { IMyDrpOptions } from 'mydaterangepicker';
-import { ToastrService } from 'ngx-toastr';
-import { LoginService } from 'src/app/auth/login.service';
-import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
-import { UtilidadesService } from 'src/app/core/services/utilidades.service';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +8,8 @@ import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 export class HomeComponent implements OnInit {
 
   sidebarVisible = true;
+ @ViewChild('sidebarContainer', { static: false }) sidebarContainer!: ElementRef;
+
 
   ngOnInit(): void {
     // Oculta el sidebar por defecto en pantallas pequeñas
@@ -22,13 +17,26 @@ export class HomeComponent implements OnInit {
       this.sidebarVisible = false;
     }
   }
-
+isMobileScreen(): boolean {
+  return window.innerWidth < 992;
+}
   onToggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }
 
   onSidebarMenuSelected() {
     if (window.innerWidth < 992) { // Solo en móvil/tablet
+      this.sidebarVisible = false;
+    }
+  }
+   
+  onDocumentClick(event: MouseEvent) {
+    if (
+      window.innerWidth < 992 &&
+      this.sidebarVisible &&
+      this.sidebarContainer &&
+      !this.sidebarContainer.nativeElement.contains(event.target)
+    ) {
       this.sidebarVisible = false;
     }
   }

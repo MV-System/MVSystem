@@ -1,3 +1,9 @@
 .is-invalid {
   border: 1px solid red !important;
 }
+.form-center {
+  display: flex;
+  justify-content: center;   /* Centra horizontalmente */
+  align-items: center;       /* Centra verticalmente */
+  min-height: 100vh;         /* Ocupa toda la altura de la ventana */
+}
