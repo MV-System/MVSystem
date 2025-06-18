@@ -1,103 +1,102 @@
 <r-loading *ngIf="printing"></r-loading>
 
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h1 id="registro">Transferencia de equipo</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Transferencia del equipo</li>
-            </ol>
-        </nav>
-    </div>
-    <!-- End Page Title -->
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-2">Datos de equipo</h5>
-                        <!--  Form -->
-                        <form [formGroup]="form" class="row g-3 ">
-                            <!-- [ngClass]="{'needs-validation': !listEquiposToTransfer.length}" -->
-                            <div class="row">
-                                <!-- Search by imei -->
-                                <label class="form-label mx-1 ">Imei a transferir</label>
-                                <div class="col-md-12">
-                                    <input class="form-control " placeholder="imei" formControlName="imei" required (keyup.enter)="getEquipoByImei()" [ngClass]="{'is-invalid':validateInput('imei') || submitted && this.form.controls.imei.errors}" />
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <label class="form-label mx-1">Almacen destino</label>
-                                <div class="col-md-7 ">
-                                    <select class="form-select" formControlName="almacen">
-                                  <option
-                                    *ngFor="let almacen of almacenes"
-                                    [value]="almacen.iD_Almacen" >
-                                    {{ almacen.descripcion }}
-                                  </option>
-                                </select>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
+  <div class="pagetitle">
+    <h1 id="registro">Transferencia de equipo</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Mantenimiento</li>
+        <li class="breadcrumb-item active">Transferencia del equipo</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
 
-                                    Total articulos
-                                    <label class="form-control text-center">
-                                      {{ cantidadEquipoATransferir }}
-                                    </label>
-                                </div>
-
-                            </div>
-
-                        </form>
-                        <!-- End  Form -->
-                    </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <!-- Formulario de transferencia -->
+      <div class="col-12 col-md-8 col-lg-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Datos de equipo</h5>
+            <form [formGroup]="form" class="row g-3">
+              <!-- IMEI -->
+              <div class="col-12">
+                <label class="form-label" for="imeiInput">IMEI a transferir</label>
+                <input
+                  id="imeiInput"
+                  class="form-control"
+                  placeholder="IMEI"
+                  formControlName="imei"
+                  required
+                  (keyup.enter)="getEquipoByImei()"
+                  [ngClass]="{'is-invalid': validateInput('imei') || (submitted && form.controls.imei.errors)}"
+                />
+              </div>
+              <!-- Almacén destino -->
+              <div class="col-12">
+                <label class="form-label" for="almacenSelect">Almacén destino</label>
+                <select
+                  id="almacenSelect"
+                  class="form-select"
+                  formControlName="almacen"
+                >
+                  <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                    {{ almacen.descripcion }}
+                  </option>
+                </select>
+              </div>
+              <!-- Total artículos -->
+              <div class="col-12">
+                <label class="form-label">Total artículos</label>
+                <div>
+                  <span class="form-control text-center bg-light">
+                    {{ cantidadEquipoATransferir }}
+                  </span>
                 </div>
-            </div>
-            <!-- Lista de Equipos agregados  -->
-            <div class="col-lg-7" *ngIf="equipoToTransfer.length">
-                <!-- *ngIf="EquipoTransferidoValorRetorno.length" -->
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Equipo agregados</h5>
-                        <div>
-                            <table class="table table-Secondary">
-                                <thead>
-                                    <tr>
-                                        <th>Id Transf.</th>
-                                        <th>IMEI</th>
-                                        <th>Modelo</th>
-                                        <th>Almacen Salida</th>
-                                        <th>Almacen Destino</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let equipo of equipoToTransfer">
-                                        <td>{{ equipo.id }}</td>
-                                        <td>{{ equipo.imei }}</td>
-                                        <td>{{ equipo?.modelo }}</td>
-                                        <td>{{ equipo?.almacenSalida }}</td>
-                                        <td>{{ equipo?.almacenDestino }}</td>
-                                        <td>
-                                            <!-- <i class="bi bi-trash" (click)="deleteEquipo(equipo.imei)"
-                                             style="color: rgb(205, 65, 65); cursor: pointer;"></i> -->
-
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="text-center ">
-                                <button class="btn btn-primary" (click)="printReportEquipoVendido()">
-                                        Imprimir reporte
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Lista end -->
+              </div>
+            </form>
+          </div>
         </div>
-    </section>
+      </div>
+      <!-- Lista de equipos agregados -->
+      <div class="col-12 col-md-10 col-lg-8" *ngIf="equipoToTransfer.length">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Equipos agregados</h5>
+            <div class="table-responsive">
+              <table class="table table-secondary align-middle">
+                <thead>
+                  <tr>
+                    <th>Id Transf.</th>
+                    <th>IMEI</th>
+                    <th>Modelo</th>
+                    <th>Almacén Salida</th>
+                    <th>Almacén Destino</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let equipo of equipoToTransfer">
+                    <td>{{ equipo.id }}</td>
+                    <td>{{ equipo.imei }}</td>
+                    <td>{{ equipo?.modelo }}</td>
+                    <td>{{ equipo?.almacenSalida }}</td>
+                    <td>{{ equipo?.almacenDestino }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-center mt-4">
+              <button class="btn btn-primary" (click)="printReportEquipoVendido()">
+                Imprimir reporte
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Lista end -->
+    </div>
+  </section>
 </main>
 <!-- End #main -->

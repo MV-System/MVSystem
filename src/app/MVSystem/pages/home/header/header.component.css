@@ -36,47 +36,96 @@ body {
   cursor: pointer;
 }
 
-
 .dropdown {
-    position: relative;
-    display: inline-block;
-  }
+  position: relative;
+  display: inline-block;
+}
 
-  .liSeparado{
-    width: 200px;
-    border: 2px solid #a3c93e;
-    border-radius: 10px;
-    margin-top: 10px;
-    box-shadow: 0px 8px 16px 0px rgba(46, 45, 45, 0.322);
-
-  }
-  .liSeparado a{
-    margin: 10px;
-    }
-  li{
-    list-style:none;
-    cursor: pointer;
-  }
-  a{
-    text-decoration: none;
-color: #000;
-
-  }
-  a:hover{
-    color: #a3c93e;
-  }
-  .dropdown-content {
-      color: white;
-    display: none;
-    position: absolute;
-    /* background-color: #c9c9c9b2; */
-    min-width: 160px;
-    padding: 12px 16px;
-    z-index: 1;
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block;
+.liSeparado {
+  width: 200px;
+  border: 2px solid #a3c93e;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0px 8px 16px 0px rgba(46, 45, 45, 0.322);
+}
+.liSeparado a {
+  margin: 10px;
+}
+li {
+  list-style: none;
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+a:hover {
+  color: #a3c93e;
+}
+.dropdown-content {
+  color: white;
+  display: none;
+  position: absolute;
+  /* background-color: #c9c9c9b2; */
+  min-width: 160px;
+  padding: 12px 16px;
+  z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
   font-size: 1.1em;
+}
 
+/* Oculta el icono de notificaciones (campana) y su menú en todas las pantallas */
+.header-nav .nav-item.dropdown .nav-link.nav-icon {
+  display: none !important;
+}
+.header-nav .nav-item.dropdown .dropdown-menu.notifications {
+  display: none !important;
+}
+
+/* Ajustes para el header en pantallas pequeñas */
+@media (max-width: 600px) {
+  /* Oculta el logo completo */
+  .header .logo {
+    display: none !important;
   }
+
+  /* Oculta solo la empresa */
+  .header .d-flex.p-5 p:first-child {
+    display: none !important;
+  }
+
+  /* Sucursal: alineada a la izquierda, sin margen */
+  .header .d-flex.p-5 p:last-child {
+    margin-left: 0 !important;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-align: left !important;
+  }
+
+  /* Alinea la info a la izquierda */
+  .header .d-flex.p-5 {
+    flex-direction: column;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  /* Menú de usuario a la derecha */
+  .header-nav {
+    margin-left: auto !important;
+    margin-top: 8px;
+    width: auto;
+    justify-content: flex-end !important;
+    display: flex !important;
+  }
+  .header-nav ul {
+    flex-direction: row;
+    justify-content: flex-end !important;
+    width: auto;
+    margin-left: auto !important;
+  }
+}

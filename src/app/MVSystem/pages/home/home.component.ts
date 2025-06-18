@@ -17,7 +17,10 @@ export class HomeComponent implements OnInit {
   sidebarVisible = true;
 
   ngOnInit(): void {
-    // Calcular el inicio de la semana y el mes actual
+    // Oculta el sidebar por defecto en pantallas pequeñas
+    if (window.innerWidth < 992) {
+      this.sidebarVisible = false;
+    }
   }
 
   onToggleSidebar() {
