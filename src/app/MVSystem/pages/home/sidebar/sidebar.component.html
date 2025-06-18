@@ -5,32 +5,23 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
 
-
-        <li class="nav-item" *ngIf="VerFormConsultaUtilidades()">
-            <a class="nav-link " routerLinkActive="active" [routerLink]="['./dashboard']">
-                <i class="bi bi-grid"></i>
-                <span></span>
-            </a>
-        </li>
         <span>.</span>
-        <!-- <button class="btn btn-toggle" (click)="toggleSidebar()">
-      <i class="bi bi-list"></i>
-  </button> -->
-        <li class="nav-item" *ngIf="VerFormFacturacion()">
-            <a class="nav-link" [routerLink]="['./facturacion']">
+    
+        <li (click)="onMenuClick()" class="nav-item" *ngIf="VerFormFacturacion()">
+            <a (click)="onMenuClick()" class="nav-link" [routerLink]="['./facturacion']">
                 <i class="bi bi-receipt-cutoff"></i>
                 <span>Crear Factura</span>
             </a>
         </li>
 
-        <li class="nav-item" *ngIf="VerFormConsultaUtilidades()">
-            <a class="nav-link" [routerLink]="['./utilidades/consulta']">
+        <li (click)="onMenuClick()"class="nav-item" *ngIf="VerFormConsultaUtilidades()">
+            <a (click)="onMenuClick()" class="nav-link" [routerLink]="['./utilidades/consulta']">
                 <i class="bi bi-receipt-cutoff"></i>
                 <span>Ver Utilidades</span>
             </a>
         </li>
         <li *ngIf="VerFormConsultaFacturas()" class="nav-item">
-            <a class="nav-link " routerLinkActive="active" [routerLink]="['./facturacion/consulta']">
+            <a (click)="onMenuClick()" class="nav-link " routerLinkActive="active" [routerLink]="['./facturacion/consulta']">
                 <i class="bi bi-grid"></i>
                 <span>Consultar Facturas</span>
             </a>
@@ -42,58 +33,58 @@
             </a>
             <ul id="mantenimiento-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li *ngIf="VerFormAccesorios()">
-                    <a routerLink="./accesorios/registro">
+                    <a (click)="onMenuClick()" routerLink="./accesorios/registro">
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormEquipos()">
-                    <a routerLink="./equipo/registro">
+                    <a (click)="onMenuClick()" routerLink="./equipo/registro">
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormTransferenciasEquipos()">
-                    <a routerLink="./equipo/transferencia">
+                    <a (click)="onMenuClick()" routerLink="./equipo/transferencia">
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormCambiaEstatusEquipo()">
-                    <a routerLink="./equipo/cambiar-estatus">
+                    <a (click)="onMenuClick()" routerLink="./equipo/cambiar-estatus">
                         <i class="bi bi-circle"></i><span>Cambiar estatus de equipo</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormReparacionEquipo()">
-                    <a routerLink="./equipo/RegistraReparacion">
+                    <a (click)="onMenuClick()" routerLink="./equipo/RegistraReparacion">
                         <i class="bi bi-circle"></i><span>Reparacion de equipo</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormClientes()">
-                    <a routerLink="./clientes/registro">
+                    <a (click)="onMenuClick()" routerLink="./clientes/registro">
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormRecepcionEquipo()">
-                    <a routerLink="./equipo/recepcion">
+                    <a (click)="onMenuClick()" routerLink="./equipo/recepcion">
                         <i class="bi bi-circle"></i><span>Recepcion de equipo</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormMarcas()">
-                    <a routerLink="./marcas/registro">
+                    <a (click)="onMenuClick()" routerLink="./marcas/registro">
                         <i class="bi bi-circle"></i><span>Marcas</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormModelos()">
-                    <a routerLink="./modelos/registro">
+                    <a (click)="onMenuClick()" routerLink="./modelos/registro">
                         <i class="bi bi-circle"></i><span>Modelos</span>
                     </a>
                 </li>
                 <li *ngIf="VerFormSuplidores()">
-                    <a routerLink="./suplidores/registro">
+                    <a (click)="onMenuClick()" routerLink="./suplidores/registro">
                         <i class="bi bi-circle"></i><span>Suplidores</span>
                     </a>
                 </li>
 
                 <li *ngIf="VerFormRegistroVendedores()">
-                    <a routerLink="./vendedores/registro">
+                    <a (click)="onMenuClick()" routerLink="./vendedores/registro">
                         <i class="bi bi-circle"></i><span>Vendedores</span>
                     </a>
                 </li>
@@ -112,43 +103,43 @@
                 <ul id="consulta-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
 
                     <li *ngIf="VerFormConsultaEquipos()">
-                        <a routerLink="./equipo/Disponible">
+                        <a (click)="onMenuClick()" routerLink="./equipo/Disponible">
                             <i class="bi bi-circle"></i><span>Equipos disponible</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaEquipos()">
-                        <a routerLink="./equipo/Vendidos">
+                        <a (click)="onMenuClick()" routerLink="./equipo/Vendidos">
                             <i class="bi bi-circle"></i><span>Equipos Vendidos</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaAccesorios()">
-                        <a routerLink="./accesorios/consulta">
+                        <a (click)="onMenuClick()" routerLink="./accesorios/consulta">
                             <i class="bi bi-circle"></i><span>Accesorios</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaUtilidades()">
-                        <a routerLink="./utilidades/consulta">
+                        <a (click)="onMenuClick()" routerLink="./utilidades/consulta">
                             <i class="bi bi-circle"></i><span>Utilidades</span>
                         </a>
                     </li>
 
                     <li *ngIf="VerFormConsultaTransferencias()">
-                        <a routerLink="./equipo/ConsultaTransferencia">
+                        <a (click)="onMenuClick()" routerLink="./equipo/ConsultaTransferencia">
                             <i class="bi bi-circle"></i><span>Transferencias de Equipos</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaClientesPorCobrar()">
-                        <a routerLink="./clientes/cuentasPorCobrar">
+                        <a (click)="onMenuClick()" routerLink="./clientes/cuentasPorCobrar">
                             <i class="bi bi-circle"></i><span>Cuentas Por Cobrar</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaFacturas()">
-                        <a routerLink="./facturacion/consulta">
+                        <a (click)="onMenuClick()" routerLink="./facturacion/consulta">
                             <i class="bi bi-circle"></i><span>Facturas</span>
                         </a>
                     </li>
                     <li *ngIf="VerFormConsultaClientes()">
-                        <a routerLink="./clientes/consulta">
+                        <a (click)="onMenuClick()" routerLink="./clientes/consulta">
                             <i class="bi bi-circle"></i><span>Clientes</span>
                         </a>
                     </li>

@@ -8,3 +8,7 @@
         <a class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     </div>
 </div>
+<app-sidebar
+  [isCollapsed]="!sidebarVisible"
+  (menuSelected)="onSidebarMenuSelected()">
+</app-sidebar>
