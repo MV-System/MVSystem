@@ -11,7 +11,7 @@
     </div>
 
     <section class="section">
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="card">
                     <div class="card-body">
@@ -21,8 +21,8 @@
                             
                             <div class="row mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label">Nombres</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Nombres  <span class="required-field">*</span></label>
+                                   
                                     <input type="text" class="form-control"  formControlName="Nombres" 
                                     required [ngClass]="{'is-invalid':validarCampos('Nombres')}">
                                     <div class="required-field" *ngIf="validarCampos('Nombres')">
@@ -30,8 +30,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Apellidos</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Apellidos  <span class="required-field">*</span></label>
+                                   
                                     <input type="text" class="form-control"  formControlName="Apellidos"
                                     required [ngClass]="{'is-invalid':validarCampos('Apellidos')}">
                                     <div class="required-field" *ngIf="validarCampos('Apellidos')">
@@ -42,8 +42,8 @@
 
                             <div class="row mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label">Cedula</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Cedula <span class="required-field">*</span></label>
+                                    
                                     <input type="text" class="form-control" maxlength="13" mask="000-0000000-0" formControlName="Cedula" 
                                     required [ngClass]="{'is-invalid':validarCampos('Cedula')}">
                                     <div class="required-field" *ngIf="validarCampos('Cedula')">
@@ -51,8 +51,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Teléfono</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Teléfono  <span class="required-field">*</span></label>
+                                   
                                     <input type="text" class="form-control" mask="000-000-0000" formControlName="Telefono"
                                     required [ngClass]="{'is-invalid':validarCampos('Telefono')}">
                                     <div class="required-field" *ngIf="validarCampos('Telefono')">
@@ -63,8 +63,8 @@
 
                             <div class="row mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label">Imei de cliente</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Imei de cliente <span class="required-field">*</span></label>
+                                    
                                     <input type="text" class="form-control" maxlength="30" formControlName="ImeiEntrada" 
                                     required [ngClass]="{'is-invalid':validarCampos('ImeiEntrada')}">
                                     <div class="required-field" *ngIf="validarCampos('ImeiEntrada')">
@@ -72,8 +72,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Precio Imei recibido</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Precio Imei recibido <span class="required-field">*</span></label>
+                                    
                                     <input type="text" class="form-control"  formControlName="PrecioImeiEntra" maxlength="13" currencyMask placeholder="RD$"
                                     required [ngClass]="{'is-invalid':validarCampos('PrecioImeiEntra')}">
                                     <div class="required-field" *ngIf="validarCampos('PrecioImeiEntra')">
@@ -104,8 +104,8 @@
                             <!-- --------------- DropDown condicion equipo --------------- --> 
                             <div class="row mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label">Condicion de equipo</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Condicion de equipo  <span class="required-field">*</span></label>
+                                   
                                     <select formControlName="IDCondicion" class="form-select">
                                         <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
                                             {{estado?.descripcion}}
@@ -120,8 +120,8 @@
                             <!-- --------------- DropDown Modelo de equipo --------------- --> 
                             <div class="row mt-2">
                                 <div class="col-md-6">
-                                    <label class="form-label">Modelo de equipo</label>
-                                    <span class="required-field">*</span>
+                                    <label class="form-label">Modelo de equipo   <span class="required-field">*</span></label>
+                                  
                                     <select formControlName="IDModelo" class="form-select">
                                         <option *ngFor="let modelo of modelosCatalogo" [value]="modelo?.iD_Modelo">
                                             {{modelo?.descripcion}}

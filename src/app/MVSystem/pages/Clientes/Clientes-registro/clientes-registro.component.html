@@ -1,39 +1,39 @@
 <main id="main" class="main">
-  <div class="pagetitle">
-    <h1 id="registro">Registro Clientes</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item">Mantenimiento</li>
-        <li class="breadcrumb-item active">Registro clientes</li>
-      </ol>
-    </nav>
-  </div>
-  <!-- End Page Title -->
-  <section class="section">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-lg-8">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Datos del cliente</h5>
-              <!--  Form -->
-              <form [formGroup]="formRegistro" (ngSubmit)="registroCliente()" class="needs-validation" novalidate>
-                <div class="row g-3">
-                  <!-- Grupo: Tipo Cliente y Límite de crédito -->
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Tipo cliente</label>
-                    <select formControlName="tipoCliente" class="form-select">
-                      <option *ngFor="let tipoCliente of listaTipoClientes"
-                        [value]="tipoCliente.iD_Tipo_Cliente">
-                        {{tipoCliente.tipo_Cliente_Descripcion}}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Límite crédito</label>
-                    <input type="text" appNumeric [maxlen]="9" placeholder="RD$" class="form-control" formControlName="limiteCredito">
-                  </div>
+    <div class="pagetitle">
+        <h1 id="registro">Registro Clientes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Registro clientes</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datos del cliente</h5>
+
+                        <!--  Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroCliente()" class="row g-3 needs-validation" novalidate>
+                            <!-- --------------- DropDown Tipo Cliente --------------- -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Tipo cliente</label>
+                                    <select formControlName="tipoCliente" class="form-select">
+                                <!-- <option selected>Choose...</option>
+                                <option>...</option> -->
+                                <option *ngFor="let tipoCliente of listaTipoClientes"
+                                        [value]="tipoCliente.iD_Tipo_Cliente">
+                                {{tipoCliente.tipo_Cliente_Descripcion}}
+                                </option>
+                            </select>
+                                </div>
+                                <div class="col-md-8"></div>
+                            </div>
 
                   <!-- Grupo: Nombre y Apellido -->
                   <div class="col-12 col-md-6 mb-3">

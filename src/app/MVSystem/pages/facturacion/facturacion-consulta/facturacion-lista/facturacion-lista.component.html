@@ -1,25 +1,24 @@
 <section class="section mt-4">
     <div class="row">
         <div class="col-lg-12 scroll-table">
-            <!-- <h5 class="card-title">Facturas</h5> -->
+            <!-- Filtros y paginación -->
             <div class="col-md-12 d-flex align-items-center">
                 <div class="mx-1">
                     <select class="form-select chippagin" id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-              <option [value]="5">5</option>
-              <option [value]="10">10</option>
-              <option [value]="50">50</option>
-              <option [value]="100">100</option>
-              <option [value]="totalRecord">Todos</option>
-          </select>
+                        <option [value]="5">5</option>
+                        <option [value]="10">10</option>
+                        <option [value]="50">50</option>
+                        <option [value]="100">100</option>
+                        <option [value]="totalRecord">Todos</option>
+                    </select>
                 </div>
                 <div *ngIf="facturas.length" class="mx-2">
                     <p>Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros</p>
                 </div>
-                <div *ngIf="facturas.length" class="mx-2">
-
-                </div>
             </div>
-            <div class="scrollable-table thinScroll">
+
+            <!-- Vista de tabla para escritorio y tablet -->
+            <div class="scrollable-table thinScroll" *ngIf="!isMobileScreen()">
                 <table class="mv-table">
                     <thead>
                         <tr>
@@ -41,21 +40,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor=" let factura of facturas | paginate  : {
-                      itemsPerPage: pageSize,
-                      currentPage: pageIndex,
-                      totalItems: totalRecord
-                    }; let i = index  ">
-
-
-                            <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i,
-                                       'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
-                                tableTrselect>
-
-                                <td class="fixed-item"><button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
-                                  <i class="bx bx-trash-alt"></i>
-                                </button>{{factura.numeroFactura}}</td>
-
+                        <ng-container *ngFor="let factura of facturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }; let i = index">
+                            <tr class="animate__animated animate__fadeIn tr-hover"
+                                [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}"
+                                (click)="handleClick(factura.numeroFactura, i)">
+                                <td class="fixed-item">
+                                    <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
+                                        <i class="bx bx-trash-alt"></i>
+                                    </button>{{factura.numeroFactura}}
+                                </td>
                                 <td class="fixed-item">{{factura.nombres}} {{factura.apellidos}}</td>
                                 <td>{{ factura.telefono }} </td>
                                 <td>{{ factura.tipoFactura }}</td>
@@ -71,33 +64,27 @@
                                 <td>{{ !factura.nota ?'*':factura.nota }}</td>
                                 <td>{{ factura.fechaFacturacion | date }}</td>
                             </tr>
-
-                            <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index" id="flush-collapseOne" class="accordion-collapse collapse tr-collapse">
-                                <tr class="animate__animated animate__fadeIn tr-collapse" *ngFor="let detalle of detalleFactura; let d = index">
-                                    <!-- Celda de Cod que será editable -->
+                            <!-- Detalle de factura con fondo diferenciado -->
+                            <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index">
+                                <tr class="animate__animated animate__fadeIn tr-collapse detalle-row"
+                                    *ngFor="let detalle of detalleFactura; let d = index">
                                     <td col="1">
                                         <ng-container *ngIf="!detalle.editMode">
-                                            <!-- Si no está en modo edición, muestra el código -->
                                             Cod: {{ detalle.idEquipo }}
-                                            <!-- Solo mostrar el botón de editar si idTipo es igual a 1 -->
                                             <button *ngIf="detalle.idTipo === 1" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
-                                              <i class="bx bx-edit-alt"></i>
-                                          </button>
+                                                <i class="bx bx-edit-alt"></i>
+                                            </button>
                                         </ng-container>
-
                                         <ng-container *ngIf="detalle.editMode">
-                                            <!-- Si está en modo edición, muestra un input para editar el código -->
                                             <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control" placeholder="Ingrese el código" />
                                             <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar">
-                                              <i class="bx bx-save"></i>
-                                          </button>
+                                                <i class="bx bx-save"></i>
+                                            </button>
                                             <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar">
-                                              <i class="bx bx-x"></i>
-                                          </button>
+                                                <i class="bx bx-x"></i>
+                                            </button>
                                         </ng-container>
                                     </td>
-
-                                    <!-- Resto de las celdas (sin cambios) -->
                                     <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
                                     <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
                                     <td><b>Precio:</b> {{ detalle.precio }}</td>
@@ -114,6 +101,34 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Vista tipo tarjeta para móvil -->
+            <div class="factura-cards" *ngIf="isMobileScreen()">
+                <div class="factura-card" *ngFor="let factura of facturas; let i = index">
+                    <div><b>No. FACTURA:</b> {{factura.numeroFactura}}</div>
+                    <div><b>Cliente:</b> {{factura.nombres}} {{factura.apellidos}}</div>
+                    <div><b>Teléfono:</b> {{factura.telefono}}</div>
+                    <div><b>Total:</b> {{factura.total | currency}}</div>
+                    <div><b>Fecha:</b> {{factura.fechaFacturacion | date}}</div>
+                    <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange">
+                        <i class="bx bx-trash-alt"></i> Anular
+                    </button>
+                    <!-- Detalle de factura en tarjeta -->
+                    <div class="detalle-card" *ngIf="facturaVisibility[factura.numeroFactura]">
+                        <div *ngFor="let detalle of detalleFactura">
+                            <div><b>Cod:</b> {{detalle.idEquipo}}</div>
+                            <div><b>Descripción:</b> {{detalle.descripcion}}</div>
+                            <div><b>Cantidad:</b> {{detalle.cantidad}}</div>
+                            <div><b>Precio:</b> {{detalle.precio}}</div>
+                            <div><b>SubTotal:</b> {{detalle.subTotal}}</div>
+                            <div><b>Desc.:</b> {{detalle.descuento}}</div>
+                            <div><b>Itbs:</b> {{detalle.itbis}}</div>
+                            <div><b>Total:</b> {{detalle.total}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="not-data" *ngIf="!facturas.length">Datos no encontrados</div>
         </div>
     </div>

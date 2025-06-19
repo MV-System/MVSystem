@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
@@ -7,10 +7,8 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
- @Input() isCollapsed = false; // Recibe el estado desde el padre
-
-  // inside: boolean = false;
-  // color: string | undefined;
+  @Input() isCollapsed = false; // Recibe el estado desde el padre
+  @Output() menuSelected = new EventEmitter<void>(); // <-- DEBE IR AQUÍ
 
   constructor(private renderer: Renderer2,
     private validatorPermissionService: ValidatorPermissionService
@@ -19,6 +17,9 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  onMenuClick() {
+  this.menuSelected.emit();
+}
   VerFormFacturacion(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_FACTURACION");
   }

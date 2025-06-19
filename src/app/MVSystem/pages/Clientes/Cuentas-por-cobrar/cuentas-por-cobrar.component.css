@@ -94,6 +94,8 @@ td {
     /* Ajusta el padding si es necesario */
     font-size: 14px;
     /* Cambia el tamaño de la fuente si lo deseas */
+     border: 1px solid #b3c6ff;
+    background: #f6f9ff;
 }
 
 

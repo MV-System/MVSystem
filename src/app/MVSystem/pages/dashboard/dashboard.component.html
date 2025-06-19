@@ -1,5 +1,6 @@
 <span>DashBoard</span>
 <main id="main" class="main box" *ngIf="VerFormConsultaUtilidades()">
+  <label class="form-label">Ventas</label>
   <div class="row">
     <mat-spinner *ngIf="isLoading" class="loading">
       <div class="spinner"></div>
@@ -8,7 +9,7 @@
     <div *ngIf="!isLoading" class="col-12">
       <div class="dashboard-card p-3">
         <div class="grafico-seccion mb-4">
-          <label class="form-label">Ventas Del Día</label>
+          <label class="form-label">Este Día</label>
           <div class="grafico-responsive">
             <ngx-charts-advanced-pie-chart
               [view]="view"
@@ -20,7 +21,7 @@
           </div>
         </div>
         <div class="grafico-seccion mb-4">
-          <label class="form-label">Ventas De la Semana</label>
+          <label class="form-label">Esta Semana</label>
           <div class="grafico-responsive">
             <ngx-charts-advanced-pie-chart
               [view]="view"
@@ -34,7 +35,7 @@
           </div>
         </div>
         <div class="grafico-seccion">
-          <label class="form-label">Ventas Del Mes</label>
+          <label class="form-label">Este Mes</label>
           <div class="grafico-responsive">
             <ngx-charts-advanced-pie-chart
               [view]="view"

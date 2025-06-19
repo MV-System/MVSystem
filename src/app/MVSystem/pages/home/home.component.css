@@ -24,3 +24,12 @@
   margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
   padding-left: 0 !important; /* Elimina cualquier padding izquierdo */
 }
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.1); /* Puedes aumentar la opacidad si quieres */
+  z-index: 1040; /* Asegúrate que esté por encima del contenido pero debajo del sidebar */
+}

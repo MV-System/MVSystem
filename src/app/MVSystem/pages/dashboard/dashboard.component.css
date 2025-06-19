@@ -11,10 +11,12 @@
   max-width: none;
   margin: 0;
   padding: 1rem 0.5rem;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.05);
   background: #fff;
   box-sizing: border-box;
+   /* max-height: 350px; */
+  overflow-y: auto;
 }
 
 .grafico-responsive {
@@ -23,7 +25,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 ngx-charts-advanced-pie-chart {
   width: 100% !important;
@@ -39,5 +41,11 @@ ngx-charts-advanced-pie-chart {
   }
   ngx-charts-advanced-pie-chart {
     min-width: 120px;
+  }
+}
+@media (min-width: 992px) {
+  .dashboard-card {
+    max-height: none;
+    overflow-y: visible;
   }
 }
