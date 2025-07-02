@@ -48,8 +48,10 @@ export class ReparacionesComponent implements OnInit {
   IdReparacion : number = 0;
   formRegistroReparaciones: FormGroup = this.fb.group({
     IMEI: ["",],
+    Nom: ["",],
+    Tel: ["",],
     Costo: [, [Validators.required]],
-    Detalle_Reparacion: ["",],
+    Detalle_Reparacion: ["",[Validators.required]],
     Observaciones: ["",],
     Usuario: [this.loginService.getUserName(),],
     ID_Cliente:[],
@@ -234,20 +236,18 @@ registroReparacion() {
         this.loading.hideLoading();
         this.rDialogService.openDialog("Aviso", 'Desea imprimir el Recibo?',
           () => {
-             this.printing = true; 
+             this.printing = true;
             this.obtenerReporte(this.IdReparacion);
             this.toastr.success("Reparación registrada correctamente");
             this.formRegistroReparaciones.reset({});
           },
           () => {
-            //this.toastr.info("no hacer nada");
             this.formRegistroReparaciones.reset({});
           },
           "No",
           "Si"
         );
       }, error => {
-      //  this.isLoading = false;
         this.toastr.error('Error al registrar la reparación');
       });
   } else {
@@ -289,10 +289,6 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
      // this.generarReporteLoading = false; // Oculta el loading solo cuando el PDF está listo
     this.loading.hideLoading();
      iframe.contentWindow?.print();
-      setTimeout(() => {
-        URL.revokeObjectURL(blobUrl);
-        document.body.removeChild(iframe);
-      }, 10000);
     };
 
     document.body.appendChild(iframe);
