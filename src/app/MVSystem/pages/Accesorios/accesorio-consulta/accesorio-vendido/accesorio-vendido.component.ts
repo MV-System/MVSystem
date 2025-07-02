@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Subscription } from 'rxjs';
@@ -131,5 +131,14 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.catalogosService.getSucursales().subscribe((almacen) => {
       this.almacenes = almacen;
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // Trigger mobile screen detection on window resize
+  }
+
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 768;
   }
 }
