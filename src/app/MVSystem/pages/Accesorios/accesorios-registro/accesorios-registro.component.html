@@ -1,128 +1,352 @@
 <main id="main" class="main">
-    <div class="pagetitle mb-4">
-        <h1 id="registro">Registro Accesorios</h1>
+    <div class="pagetitle">
+        <h1 id="registro">Registro de Accesorios</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Registro Accesorios</li>
+                <li class="breadcrumb-item">Accesorios</li>
+                <li class="breadcrumb-item active">Registro de accesorios</li>
             </ol>
         </nav>
     </div>
+    <!-- End Page Title -->
+    
     <section class="section">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-7 mb-4">
-                <div class="card shadow">
+            <div class="col-lg-8">
+                <div class="card modern-card">
                     <div class="card-body">
-                        <h5 class="card-title">Datos del Accesorio</h5>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()" class="row g-3 needs-validation" novalidate>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label">Descripción <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" required formControlName="descripcion" [ngClass]="{'is-invalid':validarCampos('descripcion')}">
-                                <div class="required-field" *ngIf="validarCampos('descripcion')">
-                                    Este campo es requerido.
+                        <!-- Header moderno -->
+                        <div class="form-header mb-4">
+                            <h5 class="form-title">
+                                <i class="bi bi-gear-fill me-2 text-primary"></i>
+                                Datos del Accesorio
+                            </h5>
+                            <p class="form-subtitle">Complete la información del nuevo accesorio</p>
+                        </div>
+                        <!-- Modern Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroAccesorio()" class="modern-form" novalidate>
+                            
+                            <!-- Sección: Información Básica -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Información Básica
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Descripción -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-card-text me-1"></i>
+                                            Descripción
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control modern-input" 
+                                               formControlName="descripcion" 
+                                               placeholder="Descripción del accesorio"
+                                               [class.is-invalid]="validarCampos('descripcion')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('descripcion')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Cantidad -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-123 me-1"></i>
+                                            Cantidad
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control modern-input" 
+                                               formControlName="cantidad" 
+                                               appNumeric 
+                                               [maxlen]="4"
+                                               placeholder="Cantidad disponible"
+                                               [class.is-invalid]="validarCampos('cantidad')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('cantidad')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- IMEI Asociado -->
+                                    <div class="col-md-12">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-upc me-1"></i>
+                                            IMEI Asociado
+                                            <span class="optional-text">(Opcional)</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control modern-input" 
+                                               formControlName="IMEI" 
+                                               appNumeric 
+                                               [maxlen]="21"
+                                               placeholder="IMEI del equipo asociado">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label">Cantidad <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" required formControlName="cantidad" appNumeric [maxlen]="4" [ngClass]="{'is-invalid':validarCampos('cantidad')}">
-                                <div class="required-field" *ngIf="validarCampos('cantidad')">
-                                    Este campo es requerido.
+
+                            <!-- Sección: Precios y Costos -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-currency-dollar me-2"></i>
+                                        Precios y Costos
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Costo -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-tag me-1"></i>
+                                            Costo
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input class="form-control modern-input" 
+                                               type="text" 
+                                               formControlName="costo" 
+                                               appNumeric 
+                                               [maxlen]="9"
+                                               placeholder="RD$ 0.00"
+                                               [class.is-invalid]="validarCampos('costo')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('costo')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Al Por Mayor -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-bag-check me-1"></i>
+                                            Al Por Mayor
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control modern-input" 
+                                               formControlName="alPorMayor" 
+                                               appNumeric 
+                                               [maxlen]="9"
+                                               placeholder="RD$ 0.00"
+                                               [class.is-invalid]="validarCampos('alPorMayor')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('alPorMayor')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Al Detalle -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cart me-1"></i>
+                                            Al Detalle
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control modern-input" 
+                                               formControlName="alDetalle" 
+                                               appNumeric 
+                                               [maxlen]="9"
+                                               placeholder="RD$ 0.00"
+                                               [class.is-invalid]="validarCampos('alDetalle')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('alDetalle')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Costo <span class="required-field">*</span></label>
-                                <input class="form-control" type="text" required placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('costo')}" />
-                                <div class="required-field" *ngIf="validarCampos('costo')">
-                                    Este campo es requerido.
+
+                            <!-- Sección: Control de Inventario -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-boxes me-2"></i>
+                                        Control de Inventario
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Cantidad Mínima -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-arrow-down-circle me-1"></i>
+                                            Cantidad Mínima
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control modern-input" 
+                                               formControlName="cantidadMin" 
+                                               appNumeric 
+                                               [maxlen]="4"
+                                               placeholder="Mínimo en stock"
+                                               [class.is-invalid]="validarCampos('cantidadMin')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('cantidadMin')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Cantidad Máxima -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-arrow-up-circle me-1"></i>
+                                            Cantidad Máxima
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control modern-input" 
+                                               formControlName="cantidadMax" 
+                                               appNumeric 
+                                               [maxlen]="4"
+                                               placeholder="Máximo en stock"
+                                               [class.is-invalid]="validarCampos('cantidadMax')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('cantidadMax')">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Almacén -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-building me-1"></i>
+                                            Almacén
+                                        </label>
+                                        <select formControlName="almacen" class="form-select modern-select">
+                                            <option value="" disabled>Seleccione un almacén</option>
+                                            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                                                {{almacen.descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Al Por Mayor <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" required placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
-                                <div class="required-field" *ngIf="validarCampos('alPorMayor')">
-                                    Este campo es requerido.
+
+                            <!-- Sección: Marca y Modelo -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-bookmark me-2"></i>
+                                        Marca y Modelo
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Marca -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-award me-1"></i>
+                                            Marca
+                                        </label>
+                                        <ng-select formControlName="marca" 
+                                                   class="modern-select-ng"
+                                                   placeholder="Seleccione una marca"
+                                                   (change)="selectoresMarcaModeloValidator()">
+                                            <ng-option *ngFor="let marca of marcaListado" [value]="marca.iD_Marca">
+                                                {{marca.descripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+
+                                    <!-- Modelo -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cpu me-1"></i>
+                                            Modelo
+                                        </label>
+                                        <ng-select formControlName="modelo" 
+                                                   class="modern-select-ng"
+                                                   placeholder="Seleccione un modelo">
+                                            <ng-option *ngFor="let modelo of modeloListado" [value]="modelo.iD_Modelo">
+                                                {{modelo.descripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Al detalle <span class="required-field">*</span></label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
-                                <div class="required-field" *ngIf="validarCampos('alDetalle')">
-                                    Este campo es requerido.
+
+                            <!-- Botones de Acción -->
+                            <div class="form-actions">
+                                <div class="d-flex justify-content-center gap-3">
+                                    <button type="submit" 
+                                            class="btn btn-primary btn-lg modern-btn-primary"
+                                            [disabled]="btnDisable()">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        Guardar Accesorio
+                                    </button>
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary btn-lg modern-btn-secondary"
+                                            (click)="limpiarFormulario()">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>
+                                        Limpiar
+                                    </button>
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">IMEI Asociado</label>
-                                <input type="text" class="form-control" formControlName="IMEI" appNumeric [maxlen]="21">
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Cantidad Minima <span class="required-field">*</span></label>
-                                <input type="number" class="form-control" required appNumeric formControlName="cantidadMin" [maxlen]="4" [ngClass]="{'is-invalid':validarCampos('cantidadMin')}">
-                                <div class="required-field" *ngIf="validarCampos('cantidadMin')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Cantidad Maxima <span class="required-field">*</span></label>
-                                <input type="number" class="form-control" required formControlName="cantidadMax" appNumeric [maxlen]="4" [ngClass]="{'is-invalid':validarCampos('cantidadMax')}">
-                                <div class="required-field" *ngIf="validarCampos('cantidadMax')">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Almacen</label>
-                                <select formControlName="almacen" class="form-select">
-                                    <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
-                                        {{almacen.descripcion}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Marca</label>
-                                <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()">
-                                    <ng-option *ngFor="let marca of marcaListado" [value]="marca.iD_Marca">
-                                        {{marca.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label">Modelo</label>
-                                <ng-select formControlName="modelo">
-                                    <ng-option *ngFor="let modelo of modeloListado" [value]="modelo.iD_Modelo">
-                                        {{modelo.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                            <div class="col-12 text-center">
-                                <button class="btn btn-primary px-4" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-5" *ngIf="AccesorioValorRetorno.length">
-                <div class="card shadow">
+        </div>
+
+        <!-- Panel de Accesorios Agregados (Mejorado) -->
+        <div class="row mt-4" *ngIf="AccesorioValorRetorno.length">
+            <div class="col-12">
+                <div class="card modern-card results-card">
                     <div class="card-body">
-                        <h5 class="card-title">Accesorios agregados</h5>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Descripción</th>
-                                        <th>Precio Detalle</th>
-                                        <th>Precio X Mayor</th>
-                                        <th>Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let Acc of  AccesorioValorRetorno">
-                                        <td>{{Acc.descripcion_Accesorio}}</td>
-                                        <td>{{Acc.precio_Detalle | currency}}</td>
-                                        <td>{{Acc.precio_Por_Mayor | currency}}</td>
-                                        <td>{{Acc.cantidad}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="results-header mb-4">
+                            <h5 class="results-title">
+                                <i class="bi bi-list-check me-2 text-success"></i>
+                                Accesorios Registrados
+                                <span class="badge bg-success ms-2 count-badge">
+                                    {{AccesorioValorRetorno.length}} registrado{{AccesorioValorRetorno.length !== 1 ? 's' : ''}}
+                                </span>
+                            </h5>
+                        </div>
+
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover modern-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col">
+                                                <i class="bi bi-card-text me-1"></i>Descripción
+                                            </th>
+                                            <th scope="col" class="text-center">
+                                                <i class="bi bi-currency-dollar me-1"></i>Precio Detalle
+                                            </th>
+                                            <th scope="col" class="text-center">
+                                                <i class="bi bi-bag-check me-1"></i>Precio X Mayor
+                                            </th>
+                                            <th scope="col" class="text-center">
+                                                <i class="bi bi-123 me-1"></i>Cantidad
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let Acc of AccesorioValorRetorno" class="table-row">
+                                            <td class="name-cell">
+                                                <span class="accesorio-name">{{Acc.descripcion_Accesorio | titlecase}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-precio-detalle">
+                                                    {{Acc.precio_Detalle | currency:'RD$':'symbol':'1.2-2'}}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-precio-mayor">
+                                                    {{Acc.precio_Por_Mayor | currency:'RD$':'symbol':'1.2-2'}}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-cantidad">
+                                                    {{Acc.cantidad}} unidades
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

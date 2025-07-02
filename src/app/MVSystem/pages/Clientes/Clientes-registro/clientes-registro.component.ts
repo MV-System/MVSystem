@@ -80,6 +80,15 @@ export class ClientesRegistroComponent implements OnInit {
   });
   limpiarFormulario(): void {
     this.formRegistro.reset();
+    this.formRegistro.controls.extensionNumero.disable();
+    
+    // Reset to default values
+    this.formRegistro.patchValue({
+      tipoTelefono: '', // Reset phone type
+      // Add any other default values if needed
+    });
+    
+    this.toastr.info('Formulario limpiado correctamente', 'Información');
   }
 
   modeloRegistroCliente() {

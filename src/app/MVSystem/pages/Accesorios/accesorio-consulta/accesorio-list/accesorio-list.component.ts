@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccesoriosService } from 'src/app/core/services/accesorios.service';
 import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-accesorio-list',
   templateUrl: './accesorio-list.component.html',
@@ -8,7 +11,11 @@ import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
 })
 export class AccesorioListComponent implements OnInit {
 
-  constructor(private accesoriosService:AccesoriosService) { }
+  constructor(
+    private accesoriosService: AccesoriosService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -63,5 +70,44 @@ export class AccesorioListComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigate to accessory registration page
+   */
+  navigateToRegistro() {
+    this.router.navigate(['/mvSystem/home/accesorios/registro']).then(
+      (success) => {
+        if (success) {
+          this.toastr.success('Navegando al formulario de registro', 'Éxito');
+        } else {
+          this.toastr.error('No se pudo navegar a la página de registro', 'Error');
+        }
+      }
+    );
+  }
+
+  /**
+   * Edit accessory
+   */
+  editarAccesorio(accesorioId: number) {
+    console.log('Editando accesorio:', accesorioId);
+    this.getIdAccesorio(accesorioId);
+    this.putAccesorio();
+  }
+
+  /**
+   * View accessory details
+   */
+  verDetalle(accesorioId: number) {
+    console.log('Viendo detalle del accesorio:', accesorioId);
+    this.toastr.info('Funcionalidad de detalle en desarrollo', 'Información');
+  }
+
+  /**
+   * Detect if the current screen is mobile
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 768;
+  }
+
 }
-  
+

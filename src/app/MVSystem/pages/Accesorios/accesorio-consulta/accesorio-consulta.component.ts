@@ -121,4 +121,16 @@ export class AccesorioConsultaComponent implements OnInit {
   onCheckboxAccesorioChange(event: Event){
     this.accesorioTipo = Number((<HTMLInputElement>event.target).value);
   }
+  /**
+   * Navigate to accessories registration page
+   */
+  navigateToRegistro() {
+    this.router.navigate(['/mvSystem/home/accesorios/registro']).then(
+      (success) => {
+        if (!success) {
+          console.error('Error navigating to accessories registration');
+        }
+      }
+    );
+  }
 }
