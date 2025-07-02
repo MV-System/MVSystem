@@ -1,10 +1,196 @@
 <!-- Modal Editar accesorio -->
 <r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
-    <app-accesorio-edit [accesorio]="accesorio" (closeModal)="onCancel()">
-        <button cancel class="btn btn-danger" (click)="onCancel()">Cancelar</button>
-    </app-accesorio-edit>
+    <app-accesorio-edit [accesorio]="accesorio" (closeModal)="putAccesorio()"></app-accesorio-edit>
 </r-modal>
-<!-- End modal -->
+
+<!-- Modal Ver Detalles del accesorio -->
+<r-modal [show]="isOpenDetalleModal" (close)="closeDetalleModal()" [title]="'Detalles del Accesorio'">
+    <div class="modal-content-wrapper">
+        <div class="accesorio-detalle-modal" *ngIf="accesorioDetalle">
+            <!-- Header con información principal -->
+            <div class="detalle-header">
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center">
+                            <div class="accesorio-icon me-3">
+                                <i class="bi bi-gear-fill text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <div>
+                                <h4 class="accesorio-title mb-1">{{ accesorioDetalle.descripcionAccesorio | titlecase }}</h4>
+                                <p class="accesorio-subtitle text-muted mb-0">
+                                    <i class="bi bi-hash me-1"></i>
+                                    ID: {{ accesorioDetalle.id }}
+                                    <span *ngIf="isValidValue(accesorioDetalle.modelo)" class="ms-3">
+                                        <i class="bi bi-cpu me-1"></i>
+                                        Modelo: {{ accesorioDetalle.modelo }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="stock-indicator">
+                            <span class="badge badge-stock-large"
+                                  [class.badge-sin-stock-large]="accesorioDetalle.cantidad === 0"
+                                  [class.badge-con-stock-large]="accesorioDetalle.cantidad > 0">
+                                <i class="bi bi-boxes me-2"></i>
+                                {{ accesorioDetalle.cantidad }} unidades
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información detallada en cards -->
+            <div class="detalle-content">
+                <div class="row g-4">
+                    <!-- Card de Información Básica -->
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                Información Básica
+                            </div>
+                            <div class="info-card-body">
+                                <div class="info-row">
+                                    <span class="info-label">ID:</span>
+                                    <span class="info-value">#{{ accesorioDetalle.id }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Modelo:</span>
+                                    <span class="info-value">{{ isValidValue(accesorioDetalle.modelo) ? accesorioDetalle.modelo : 'No especificado' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Código:</span>
+                                    <span class="info-value">{{ isValidValue(accesorioDetalle.codigo) ? accesorioDetalle.codigo : 'No especificado' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Código de Barra:</span>
+                                    <span class="info-value">{{ accesorioDetalle.codBarra ? accesorioDetalle.codBarra : 'No especificado' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Almacén:</span>
+                                    <span class="badge badge-almacen-detail" *ngIf="accesorioDetalle.almacen; else noAlmacen">
+                                        <i class="bi bi-building-fill me-1"></i>
+                                        {{ accesorioDetalle.almacen }}
+                                    </span>
+                                    <ng-template #noAlmacen>
+                                        <span class="text-muted">No especificado</span>
+                                    </ng-template>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Disponible:</span>
+                                    <span class="badge"
+                                          [class.badge-disponible-si]="isAvailable(accesorioDetalle.disponible)"
+                                          [class.badge-disponible-no]="!isAvailable(accesorioDetalle.disponible)">
+                                        <i class="bi me-1" 
+                                           [class.bi-check-circle-fill]="isAvailable(accesorioDetalle.disponible)"
+                                           [class.bi-x-circle-fill]="!isAvailable(accesorioDetalle.disponible)"></i>
+                                        {{ getAvailabilityStatus(accesorioDetalle.disponible) }}
+                                    </span>
+                                </div>
+                                <div class="info-row" *ngIf="isValidValue(accesorioDetalle.disponibleDetalle)">
+                                    <span class="info-label">Detalle Disponible:</span>
+                                    <span class="info-value">{{ accesorioDetalle.disponibleDetalle }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card de Precios -->
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="bi bi-currency-dollar me-2"></i>
+                                Información de Precios
+                            </div>
+                            <div class="info-card-body">
+                                <div class="info-row">
+                                    <span class="info-label">Costo:</span>
+                                    <span class="badge badge-costo-detail" *ngIf="isValidValue(accesorioDetalle.costoEquipo); else noCosto">
+                                        {{ accesorioDetalle.costoEquipo | currency:'RD$':'symbol':'1.2-2' }}
+                                    </span>
+                                    <ng-template #noCosto>
+                                        <span class="text-muted">No especificado</span>
+                                    </ng-template>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Precio Detalle:</span>
+                                    <span class="badge badge-precio-detalle-detail" *ngIf="isValidValue(accesorioDetalle.precioDetalle); else noPrecioDetalle">
+                                        {{ accesorioDetalle.precioDetalle | currency:'RD$':'symbol':'1.2-2' }}
+                                    </span>
+                                    <ng-template #noPrecioDetalle>
+                                        <span class="text-muted">No especificado</span>
+                                    </ng-template>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Precio por Mayor:</span>
+                                    <span class="badge badge-precio-mayor-detail" *ngIf="isValidValue(accesorioDetalle.precioPorMayor); else noPrecioMayor">
+                                        {{ accesorioDetalle.precioPorMayor | currency:'RD$':'symbol':'1.2-2' }}
+                                    </span>
+                                    <ng-template #noPrecioMayor>
+                                        <span class="text-muted">No especificado</span>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card de Estadísticas (si existen) -->
+                    <div class="col-12" *ngIf="isValidNumericValue(accesorioDetalle.totalInventario) || isValidNumericValue(accesorioDetalle.totalGanancia) || isValidNumericValue(accesorioDetalle.totalFacturado) || isValidNumericValue(accesorioDetalle.totalItbis)">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="bi bi-graph-up me-2"></i>
+                                Estadísticas de Inventario
+                            </div>
+                            <div class="info-card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-3" *ngIf="isValidNumericValue(accesorioDetalle.totalInventario)">
+                                        <div class="stat-item">
+                                            <div class="stat-value">{{ accesorioDetalle.totalInventario | currency:'RD$':'symbol':'1.2-2' }}</div>
+                                            <div class="stat-label">Total Inventario</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="isValidNumericValue(accesorioDetalle.totalFacturado)">
+                                        <div class="stat-item">
+                                            <div class="stat-value">{{ accesorioDetalle.totalFacturado | currency:'RD$':'symbol':'1.2-2' }}</div>
+                                            <div class="stat-label">Total Facturado</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="isValidNumericValue(accesorioDetalle.totalGanancia)">
+                                        <div class="stat-item">
+                                            <div class="stat-value">{{ accesorioDetalle.totalGanancia | currency:'RD$':'symbol':'1.2-2' }}</div>
+                                            <div class="stat-label">Total Ganancia</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="accesorioDetalle.totalItbis > 0">
+                                        <div class="stat-item">
+                                            <div class="stat-value">{{ accesorioDetalle.totalItbis | currency:'RD$':'symbol':'1.2-2' }}</div>
+                                            <div class="stat-label">Total ITBIS</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botones del modal -->
+        <div class="modal-actions mt-4">
+            <button type="button" class="btn btn-outline-primary me-2" (click)="editarAccesorio(accesorioDetalle.id)">
+                <i class="bi bi-pencil-square me-2"></i>
+                Editar Accesorio
+            </button>
+            <button cancel class="btn btn-secondary" (click)="closeDetalleModal()">
+                <i class="bi bi-x-circle me-2"></i>
+                Cerrar
+            </button>
+        </div>
+    </div>
+</r-modal>
+<!-- End modals -->
 
 <section class="section">
     <div class="row">
@@ -54,9 +240,6 @@
                                 <th scope="col">
                                     <i class="bi bi-card-text me-1"></i>Descripción
                                 </th>
-                                <th scope="col">
-                                    <i class="bi bi-cpu me-1"></i>Modelo
-                                </th>
                                 <th scope="col" class="text-center">
                                     <i class="bi bi-123 me-1"></i>Cantidad
                                 </th>
@@ -86,22 +269,10 @@
                                 <td class="name-cell">
                                     <span class="accesorio-name">{{accesorio.descripcionAccesorio | titlecase}}</span>
                                 </td>
-                                <td class="model-cell">
-                                    <span class="model-text" *ngIf="accesorio.modelo; else noModel">
-                                        <i class="bi bi-cpu-fill me-1 text-muted"></i>
-                                        {{accesorio.modelo}}
-                                    </span>
-                                    <ng-template #noModel>
-                                        <span class="text-muted">
-                                            <i class="bi bi-dash-circle me-1"></i>
-                                            Sin modelo
-                                        </span>
-                                    </ng-template>
-                                </td>
                                 <td class="text-center">
                                     <span class="badge badge-cantidad" 
-                                          [class.badge-low-stock]="accesorio.cantidad <= 5"
-                                          [class.badge-normal-stock]="accesorio.cantidad > 5">
+                                          [class.badge-sin-stock]="accesorio.cantidad === 0"
+                                          [class.badge-con-stock]="accesorio.cantidad > 0">
                                         {{accesorio.cantidad}} unidades
                                     </span>
                                 </td>
@@ -181,12 +352,28 @@
                         </div>
                         <div class="accesorio-details-mobile">
                             <div class="detail-item">
-                                <i class="bi bi-123 me-2 text-success"></i>
-                                <span class="badge badge-cantidad-mobile">{{accesorio.cantidad}} unidades</span>
+                                <span class="text-muted me-2 detail-label">Cantidad:</span>
+                                <span class="badge badge-cantidad-mobile"
+                                      [class.badge-sin-stock-mobile]="accesorio.cantidad === 0"
+                                      [class.badge-con-stock-mobile]="accesorio.cantidad > 0">
+                                    {{accesorio.cantidad}} unidades
+                                </span>
                             </div>
                             <div class="detail-item">
-                                <i class="bi bi-currency-dollar me-2 text-info"></i>
+                                <span class="text-muted me-2 detail-label">Costo:</span>
+                                <span class="badge badge-costo-mobile">{{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted me-2 detail-label">P. Detalle:</span>
                                 <span class="badge badge-precio-mobile">{{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted me-2 detail-label">P. Mayor:</span>
+                                <span class="badge badge-precio-mayor-mobile">{{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted me-2 detail-label">Almacén:</span>
+                                <span class="badge badge-almacen-mobile">{{accesorio.almacen}}</span>
                             </div>
                         </div>
                     </div>

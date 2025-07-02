@@ -129,18 +129,19 @@
   box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
 }
 
-.badge-low-stock {
+.badge-sin-stock {
   background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
   color: #dc2626 !important;
   border: 1px solid #fca5a5 !important;
-  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  font-weight: 700 !important;
 }
 
-.badge-normal-stock {
+.badge-con-stock {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
   color: #16a34a !important;
   border: 1px solid #bbf7d0 !important;
-  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
 }
 
 .badge-precio-costo {
@@ -169,6 +170,25 @@
   color: #16a34a !important;
   border: 1px solid #bbf7d0 !important;
   box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+}
+
+/* Badges para disponibilidad */
+.badge-disponible-si {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-disponible-no {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
 }
 
 /* ===== CELDAS ESPECÍFICAS ===== */
@@ -323,13 +343,25 @@
 .accesorio-details-mobile {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .detail-item {
   display: flex;
   align-items: center;
   color: #4a5568;
+  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  min-width: 75px;
+  font-weight: 500;
+  text-align: left;
 }
 
 .badge-cantidad-mobile {
@@ -342,6 +374,28 @@
   border: 1px solid #b3d7ff !important;
 }
 
+.badge-sin-stock-mobile {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  font-weight: 700 !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+}
+
+.badge-con-stock-mobile {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+}
+
 .badge-precio-mobile {
   background: #e6f7ff !important;
   color: #1890ff !important;
@@ -352,26 +406,54 @@
   border: 1px solid #91d5ff !important;
 }
 
-/* ===== CONTROL DE ANCHO DE COLUMNAS ===== */
-.modern-table th:nth-child(1) { width: 8%; }
-.modern-table th:nth-child(2) { width: 25%; }
-.modern-table th:nth-child(3) { width: 15%; }
-.modern-table th:nth-child(4) { width: 10%; }
-.modern-table th:nth-child(5) { width: 10%; }
-.modern-table th:nth-child(6) { width: 10%; }
-.modern-table th:nth-child(7) { width: 10%; }
-.modern-table th:nth-child(8) { width: 10%; }
-.modern-table th:nth-child(9) { width: 12%; min-width: 140px; }
+.badge-costo-mobile {
+  background: #f6ffed !important;
+  color: #52c41a !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #b7eb8f !important;
+}
 
-.modern-table td:nth-child(1) { width: 8%; }
-.modern-table td:nth-child(2) { width: 25%; }
-.modern-table td:nth-child(3) { width: 15%; }
-.modern-table td:nth-child(4) { width: 10%; }
-.modern-table td:nth-child(5) { width: 10%; }
-.modern-table td:nth-child(6) { width: 10%; }
-.modern-table td:nth-child(7) { width: 10%; }
-.modern-table td:nth-child(8) { width: 10%; }
-.modern-table td:nth-child(9) { width: 12%; }
+.badge-precio-mayor-mobile {
+  background: #fff1f0 !important;
+  color: #ff4d4f !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #ffccc7 !important;
+}
+
+.badge-almacen-mobile {
+  background: #fff7e6 !important;
+  color: #fa8c16 !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #ffd591 !important;
+}
+
+/* ===== CONTROL DE ANCHO DE COLUMNAS ===== */
+.modern-table th:nth-child(1) { width: 10%; } /* ID */
+.modern-table th:nth-child(2) { width: 35%; } /* Descripción - Más espacio */
+.modern-table th:nth-child(3) { width: 12%; } /* Cantidad */
+.modern-table th:nth-child(4) { width: 12%; } /* Costo */
+.modern-table th:nth-child(5) { width: 12%; } /* P. Detalle */
+.modern-table th:nth-child(6) { width: 12%; } /* P. Mayor */
+.modern-table th:nth-child(7) { width: 12%; } /* Almacén */
+.modern-table th:nth-child(8) { width: 15%; min-width: 140px; } /* Acciones */
+
+.modern-table td:nth-child(1) { width: 10%; }
+.modern-table td:nth-child(2) { width: 35%; }
+.modern-table td:nth-child(3) { width: 12%; }
+.modern-table td:nth-child(4) { width: 12%; }
+.modern-table td:nth-child(5) { width: 12%; }
+.modern-table td:nth-child(6) { width: 12%; }
+.modern-table td:nth-child(7) { width: 12%; }
+.modern-table td:nth-child(8) { width: 15%; }
 
 .modern-table {
   table-layout: fixed;
@@ -539,4 +621,226 @@
   --bs-table-active-color: #374151 !important;
   --bs-table-hover-bg: rgba(156, 163, 175, 0.075) !important;
   --bs-table-hover-color: #374151 !important;
+}
+
+/* ===== MODAL DE DETALLES DEL ACCESORIO ===== */
+.accesorio-detalle-modal {
+  max-width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1050;
+}
+
+/* Asegurar fondo sólido para el modal */
+:host ::ng-deep .modal-dialog {
+  background: white !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+:host ::ng-deep .modal-content {
+  background: white !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .modal-body {
+  background: white !important;
+  padding: 1.5rem !important;
+}
+
+:host ::ng-deep .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-bottom: none !important;
+  border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+:host ::ng-deep .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Contenedor wrapper para asegurar fondo sólido */
+.modal-content-wrapper {
+  background: white !important;
+  border-radius: 0.75rem;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Cards de información */
+.info-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.info-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.info-card-body {
+  padding: 1.25rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  min-width: 120px;
+}
+
+.info-value {
+  color: #2c3e50;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Badges para detalles */
+.badge-almacen-detail {
+  background: linear-gradient(135deg, #fff7e6 0%, #fef3c7 100%) !important;
+  color: #d97706 !important;
+  border: 1px solid #fde68a !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-costo-detail {
+  background: linear-gradient(135deg, #f6ffed 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-precio-detalle-detail {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-precio-mayor-detail {
+  background: linear-gradient(135deg, #fff1f0 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+/* Estadísticas */
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 0.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Acciones del modal */
+.modal-actions {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.modal-actions .btn {
+  min-width: 140px;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detalle-header {
+    padding: 1rem;
+  }
+  
+  .accesorio-title {
+    font-size: 1.25rem;
+  }
+  
+  .info-card-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .info-card-body {
+    padding: 1rem;
+  }
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .info-label {
+    min-width: auto;
+  }
+  
+  .info-value {
+    text-align: left;
+  }
+  
+  .stat-item {
+    padding: 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1.1rem;
+  }
 }
