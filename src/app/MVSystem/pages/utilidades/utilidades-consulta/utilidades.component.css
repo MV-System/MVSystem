@@ -1,35 +1,66 @@
 :host {
   display: block;
   width: 100%;
-  margin: 0;
-  padding: 8px 4px 0 4px; /* Padding lateral mínimo */
+  margin: 0; /* Cambiado de auto a 0 */
+  padding: 8px 4px 0 4px;
   box-sizing: border-box;
 }
 
-.card.no-max-width {
+.dashboard-card {
+  width: 100%;
   max-width: none;
-  margin: 0;
+  margin: 0; /* Cambiado de auto a 0 */
   padding: 1rem 0.5rem;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.05);
   background: #fff;
-  width: 100%;
   box-sizing: border-box;
+  /* max-height: 350px; */
+  overflow-y: hidden;
 }
 
 .grafico-responsive {
   width: 100%;
   min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
-  align-items: center;
-  /* overflow-x: auto; */
+  overflow-x: hidden;
 }
 
 ngx-charts-advanced-pie-chart {
   width: 100% !important;
   min-width: 0 !important;
-  max-width: 100% !important;
+  max-width: 400px !important;
+  flex: 1 1 300px;
+  margin: 0; /* Cambiado de auto a 0 */
   height: auto !important;
   display: block;
+}
+
+@media (max-width: 900px) {
+  ngx-charts-advanced-pie-chart {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .grafico-responsive {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.metric-row {
+  display: flex;
+  flex-wrap: wrap;      /* Permite que los elementos bajen si no caben */
+  gap: 1rem;            /* Espacio entre los elementos */
+  width: 100%;
+  min-width: 0;
+}
+
+.metric-item {
+  flex: 1 1 120px;      /* Se adaptan al espacio disponible */
+  min-width: 100px;
+  max-width: 200px;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: normal;  /* Permite salto de línea si es necesario */
 }

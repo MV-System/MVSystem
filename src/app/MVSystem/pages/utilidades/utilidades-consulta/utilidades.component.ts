@@ -25,7 +25,7 @@ export class UtilidadesComponent implements OnInit {
   almacenes!: Almacen[];
   subs: Subscription[] = [];
   // options
- view: [number, number] = [400, 200]; // ancho, alto
+ view: [number, number] = [100, 150]; // ancho, alto
   gradient: boolean = true;
   showLegend: boolean = true;
   showLabels: boolean = true;
