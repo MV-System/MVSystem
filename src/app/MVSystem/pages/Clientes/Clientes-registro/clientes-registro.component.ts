@@ -33,12 +33,32 @@ export class ClientesRegistroComponent implements OnInit {
   //Properties
   nombreApellidoPattern: string = '([a-zA-ZÀ-ÿ]+)';
   emailPattern: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+  telefonoPattern: string = '^[0-9]{3}-[0-9]{3}-[0-9]{4}$';
+
+  /**
+   * Custom validator for telephone with mask
+   */
+  telefonoValidator(control: any) {
+    const value = control.value;
+    if (!value) return null;
+    
+    // Remove any non-digit characters for validation
+    const digitsOnly = value.replace(/\D/g, '');
+    
+    // Check if we have exactly 10 digits
+    if (digitsOnly.length === 10) {
+      return null; // Valid
+    }
+    
+    return { invalidTelefono: true }; // Invalid
+  }
 
   clientes: ClienteRegistro[] = [];
   clientesListar!: Cliente;
   listaTipoClientes: TipoCliente[] = [];
   listaTipoTelefonos: TipoTelefono[] = [];
   btnDisabled: boolean = true;
+  isLoading: boolean = false;
 
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -46,9 +66,9 @@ export class ClientesRegistroComponent implements OnInit {
     apellido: ['', Validators.required],
     tipoCliente: [1],
     tipoClienteDescripcion: [""],
-    limiteCredito: [,],
+    limiteCredito: [0, [Validators.min(0)]],
     tipoTelefono: [1],
-    telefono: [,],
+    telefono: ['', [Validators.required, this.telefonoValidator]],
     extensionNumero: [, Validators.required],
     email: ['', [Validators.pattern(this.emailPattern)]],
     // criterio:     [''],
@@ -58,6 +78,18 @@ export class ClientesRegistroComponent implements OnInit {
     calle: [''],
     casaNumero: [''],
   });
+  limpiarFormulario(): void {
+    this.formRegistro.reset();
+    this.formRegistro.controls.extensionNumero.disable();
+    
+    // Reset to default values
+    this.formRegistro.patchValue({
+      tipoTelefono: '', // Reset phone type
+      // Add any other default values if needed
+    });
+    
+    this.toastr.info('Formulario limpiado correctamente', 'Información');
+  }
 
   modeloRegistroCliente() {
     let direccion: any = [
@@ -75,7 +107,7 @@ export class ClientesRegistroComponent implements OnInit {
        0 :  this.formRegistro.get('limiteCredito')?.value,
       numero_Telefono: Number(this.formRegistro.get('telefono')?.value),
       iD_Tipo_Telefono: Number(this.formRegistro.get('tipoTelefono')?.value),
-      extencion: this.formRegistro.get('extencion')?.value,
+      extencion: this.formRegistro.get('extensionNumero')?.value,
       email_Detalle: this.formRegistro.get('email')?.value,
       usuario: this.loginService.getUserName(),
       // usuario:      this.formRegistro.get('usuario')?.value,
@@ -109,6 +141,34 @@ export class ClientesRegistroComponent implements OnInit {
       return 'El valor no tiene formato de correo';
     }
     return ''
+  }
+
+  /**
+   * Get error message for telephone field
+   * @returns The telephone error message
+   */
+  get telefonoErrorMsg(): string {
+    const errors = this.formRegistro.get('telefono')?.errors;
+    
+    if (errors?.required) {
+      return 'Este campo es requerido';
+    }
+    if (errors?.invalidTelefono) {
+      return 'Debe ingresar un número de teléfono válido de 10 dígitos';
+    }
+    return '';
+  }
+
+  /**
+   * Get error message for credit limit field
+   * @returns The credit limit error message
+   */
+  get limiteCreditoErrorMsg(): string {
+    const errors = this.formRegistro.get('limiteCredito')?.errors;
+    if (errors?.min) {
+      return 'El límite de crédito no puede ser negativo';
+    }
+    return '';
   }
   /**
    * If the form control is invalid and has been touched, return true. Otherwise, return false.
@@ -144,34 +204,45 @@ export class ClientesRegistroComponent implements OnInit {
       });
   }
   /**
-   * If the form is valid, set the button to disabled, otherwise set it to enabled.
-   * @returns The return value of the function is the value of the last statement executed.
+   * Returns true if the form is invalid (button should be disabled)
+   * @returns boolean indicating if the submit button should be disabled
    */
   btnDisable() {
-    return this.formRegistro.valid ? this.btnDisabled = false : this.btnDisabled = true;
+    return !this.formRegistro.valid;
   }
   registroCliente() {
 
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
+      this.isLoading = true;
 
       this.clientesService.postCliente(model)
-        .subscribe((clienteInsertado: Cliente) => {
-          this.clientesListar = clienteInsertado;
+        .subscribe({
+          next: (clienteInsertado: Cliente) => {
+            this.clientesListar = clienteInsertado;
+            this.isLoading = false;
 
-          if (clienteInsertado.mensaje.includes('ya está')) {
-            this.toastr.error(clienteInsertado.mensaje, '',
-              { closeButton: true, progressBar: true });
-          }
-          else {
-            this.toastr.success(clienteInsertado.mensaje, '',
-              { closeButton: true, progressBar: true });
-            // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
+            if (clienteInsertado.mensaje.includes('ya está')) {
+              this.toastr.error(clienteInsertado.mensaje, '',
+                { closeButton: true, progressBar: true });
+            }
+            else {
+              this.toastr.success(clienteInsertado.mensaje, '',
+                { closeButton: true, progressBar: true });
+              // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
 
-            this.formRegistro.reset({
-              tipoCliente: 1,
-              tipoTelefono: 1
-            });
+              this.formRegistro.reset({
+                tipoCliente: 1,
+                tipoTelefono: 1,
+                limiteCredito: 0
+              });
+              this.formRegistro.controls.extensionNumero.disable();
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.toastr.error('Error al registrar el cliente', '',
+              { closeButton: true, progressBar: true });
           }
         });
     }

@@ -1,0 +1,178 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Editar Cliente</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a [routerLink]="['/mvSystem/clientes/consulta']">Consulta Clientes</a></li>
+                <li class="breadcrumb-item"><a [routerLink]="['/mvSystem/clientes/detalle', clienteId]">Detalle Cliente</a></li>
+                <li class="breadcrumb-item active">Editar</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Loading State -->
+    <div class="text-center py-5" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3">Cargando datos del cliente...</p>
+    </div>
+
+    <!-- Edit Form -->
+    <section class="section" *ngIf="!isLoading && cliente">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-pencil me-2"></i>
+                            Editando: {{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}
+                        </h5>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form [formGroup]="formEdicion" (ngSubmit)="actualizarCliente()" class="row g-3 needs-validation" novalidate>
+                            
+                            <!-- Tipo Cliente -->
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo cliente</label>
+                                <select formControlName="tipoCliente" class="form-select">
+                                    <option *ngFor="let tipoCliente of listaTipoClientes"
+                                            [value]="tipoCliente.iD_Tipo_Cliente">
+                                        {{tipoCliente.tipo_Cliente_Descripcion}}
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-8"></div>
+
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" formControlName="nombre" 
+                                       placeholder="Ingrese el nombre"
+                                       [ngClass]="{'is-invalid':validarCampos('nombre')}">
+                                <div class="required-field" *ngIf="validarCampos('nombre')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido <span class="required-field">*</span></label>
+                                <input type="text" class="form-control" formControlName="apellido" 
+                                       placeholder="Ingrese el apellido"
+                                       [ngClass]="{'is-invalid':validarCampos('apellido')}">
+                                <div class="required-field" *ngIf="validarCampos('apellido')">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+
+                            <!-- Tipo Teléfono -->
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo Número</label>
+                                <select formControlName="tipoTelefono" class="form-select">
+                                    <option *ngFor="let telefono of listaTipoTelefonos"
+                                            [value]="telefono.iD_Tipo_Telefono">
+                                        {{telefono.tipo_Telefono_Descripcion}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono: <span class="required-field">*</span></label>
+                                <input class="form-control" formControlName="telefono" type="text" mask="000-000-0000" 
+                                       placeholder="Ej: 809-555-1234"
+                                       [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                <div class="required-field" *ngIf="validarCampos('telefono')">
+                                    {{telefonoErrorMsg}}
+                                </div>
+                            </div>
+
+                            <!-- Extensión -->
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input" type="checkbox" 
+                                               [checked]="!formEdicion.controls['extensionNumero'].disabled"
+                                               (change)="onCheckboxChange($event)">
+                                        Ext. No.:
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">&nbsp;</label>
+                                <input type="text" class="form-control" placeholder="Inserte la extensión" 
+                                       formControlName="extensionNumero">
+                            </div>
+
+                            <!-- Límite de Crédito -->
+                            <div class="col-md-3">
+                                <label class="form-label">Límite crédito</label>
+                                <input type="number" min="0" step="0.01" placeholder="0.00" 
+                                       class="form-control" formControlName="limiteCredito"
+                                       [ngClass]="{'is-invalid':formEdicion.get('limiteCredito')?.errors}">
+                                <div class="required-field" *ngIf="formEdicion.get('limiteCredito')?.errors">
+                                    {{limiteCreditoErrorMsg}}
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" formControlName="email" 
+                                       placeholder="ejemplo@correo.com"
+                                       [ngClass]="{'is-invalid':validarCamposEmail('email')}">
+                                <div class="required-field" *ngIf="validarCamposEmail('email')">
+                                    {{emailErrorMsg}}
+                                </div>
+                            </div>
+
+                            <!-- Provincia -->
+                            <div class="col-md-6">
+                                <label class="form-label">Provincia</label>
+                                <input type="text" class="form-control" formControlName="provincia">
+                            </div>
+
+                            <!-- Sector -->
+                            <div class="col-md-6">
+                                <label class="form-label">Sector</label>
+                                <input type="text" class="form-control" formControlName="sector">
+                            </div>
+
+                            <!-- Calle -->
+                            <div class="col-md-6">
+                                <label class="form-label">Calle</label>
+                                <input type="text" class="form-control" formControlName="calle">
+                            </div>
+
+                            <!-- Casa No. -->
+                            <div class="col-md-6">
+                                <label class="form-label">Casa No.</label>
+                                <input type="text" class="form-control" formControlName="casaNumero">
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" (click)="cancelar()" [disabled]="isSaving">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </button>
+                                    <button class="btn btn-success" type="submit" [disabled]="btnDisable() || isSaving">
+                                        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        <i class="bi bi-check-circle" *ngIf="!isSaving"></i>
+                                        {{isSaving ? 'Guardando cambios...' : 'Guardar Cambios'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

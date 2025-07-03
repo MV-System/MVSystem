@@ -1,0 +1,517 @@
+/* Estilos básicos para el componente de consulta de clientes */
+.card-body {
+  background-color: #fafbfc;
+}
+
+/* Estilos adicionales para mejor apariencia */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.card-title {
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Estilos para la tabla */
+.table {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  background-color: white;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 1rem 0.75rem;
+}
+
+.table td {
+  vertical-align: middle;
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Estilo especial para la columna de acciones */
+.table td:last-child {
+  text-align: center;
+  min-width: 140px;
+  padding: 0.75rem;
+}
+
+/* Estilos para botones */
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-lg:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+/* Estilos específicos para los grupos de botones de acción */
+.btn-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-group .btn {
+  flex: 1;
+  min-width: auto;
+  white-space: nowrap;
+}
+
+/* Botones de acción con colores suaves */
+.btn-outline-info {
+  border-color: #78a5c4;
+  color: #4a6b7c;
+  background-color: transparent;
+}
+
+.btn-outline-info:hover {
+  background-color: #78a5c4;
+  border-color: #78a5c4;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-outline-warning {
+  border-color: #d4bd76;
+  color: #8b7355;
+  background-color: transparent;
+}
+
+.btn-outline-warning:hover {
+  background-color: #d4bd76;
+  border-color: #d4bd76;
+  color: #495057;
+  transform: translateY(-1px);
+}
+
+/* Botón primario con color más suave */
+.btn-primary {
+  background-color: #7c8db5;
+  border-color: #7c8db5;
+}
+
+.btn-primary:hover {
+  background-color: #6b7ba3;
+  border-color: #6b7ba3;
+}
+
+/* Estilos específicos para botones principales */
+.btn-primary.btn-lg {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1;
+  position: relative;
+}
+
+.btn-primary.btn-lg.shadow-lg {
+  box-shadow: 0 4px 12px rgba(124, 141, 181, 0.25) !important;
+}
+
+.btn-primary.btn-lg:hover.shadow-lg {
+  box-shadow: 0 6px 16px rgba(124, 141, 181, 0.35) !important;
+}
+
+/* Prioridad visual máxima para el botón Agregar Cliente */
+.btn-container-right .btn-primary.btn-lg {
+  z-index: 9999 !important;
+  position: relative !important;
+  background-color: #7c8db5 !important;
+  border-color: #7c8db5 !important;
+  color: white !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.btn-container-right .btn-primary.btn-lg:hover {
+  z-index: 9999 !important;
+  background-color: #6b7ba3 !important;
+  border-color: #6b7ba3 !important;
+}
+
+/* Forzar que el contenedor también tenga prioridad */
+.btn-container-right {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Estilos para badges con colores más suaves */
+.badge {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
+.badge.bg-info {
+  background-color: #a8c8d8 !important;
+  color: #495057;
+}
+
+.badge.bg-secondary {
+  background-color: #b8b9ba !important;
+  color: #495057;
+}
+
+.badge.bg-primary {
+  background-color: #7c8db5 !important;
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+}
+
+/* Hover effects con colores suaves */
+.table-hover tbody tr:hover {
+  background-color: rgba(124, 141, 181, 0.05);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Efectos adicionales para interactividad */
+.table tbody tr:hover .btn-group .btn {
+  transform: scale(1.02);
+}
+
+.table tbody tr .btn-group .btn {
+  transition: transform 0.15s ease-in-out;
+}
+
+/* Mejoras para el formulario de búsqueda con colores suaves */
+.input-group .form-control {
+  border-radius: 0.5rem 0 0 0.5rem;
+  border-right: none;
+  border-color: #d1d5db;
+  background-color: white;
+}
+
+.input-group .form-control:focus {
+  border-color: #7c8db5;
+  box-shadow: 0 0 0 0.2rem rgba(124, 141, 181, 0.15);
+}
+
+.input-group .btn {
+  border-radius: 0;
+  border-left: none;
+  border-color: #d1d5db !important;
+  background-color: white !important;
+}
+
+.input-group .btn:last-child {
+  border-radius: 0 0.5rem 0.5rem 0;
+  background-color: white !important;
+}
+
+.btn-outline-secondary {
+  border-color: #d1d5db !important;
+  color: #6c757d !important;
+  background-color: white !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f8f9fa !important;
+  border-color: #adb5bd !important;
+  color: #495057 !important;
+}
+
+.btn-outline-secondary:focus {
+  background-color: white !important;
+  border-color: #7c8db5 !important;
+  color: #495057 !important;
+  box-shadow: 0 0 0 0.2rem rgba(124, 141, 181, 0.15) !important;
+}
+
+.btn-outline-secondary:active {
+  background-color: #f8f9fa !important;
+  border-color: #adb5bd !important;
+  color: #495057 !important;
+}
+
+/* Específicamente para botones del formulario de búsqueda */
+.input-group .btn-outline-secondary {
+  background-color: white !important;
+  border-color: #d1d5db !important;
+  color: #6c757d !important;
+}
+
+.input-group .btn-outline-secondary:hover {
+  background-color: #f8f9fa !important;
+  border-color: #adb5bd !important;
+  color: #495057 !important;
+}
+
+.input-group .btn-outline-secondary:focus,
+.input-group .btn-outline-secondary:active {
+  background-color: #f8f9fa !important;
+  border-color: #7c8db5 !important;
+  color: #495057 !important;
+  box-shadow: none !important;
+}
+
+/* Spinner suave */
+.spinner-border {
+  color: #7c8db5;
+}
+
+.spinner-border-sm {
+  color: #7c8db5;
+}
+
+/* Texto suave para mensajes */
+.text-muted {
+  color: #8d9498 !important;
+}
+
+/* Iconos con colores suaves */
+.bi {
+  color: inherit;
+}
+
+/* Breadcrumb con colores suaves */
+.breadcrumb-item a {
+  color: #7c8db5;
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: #6b7ba3;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+}
+
+/* Títulos con colores suaves */
+h1, h5, h6 {
+  color: #495057;
+}
+
+/* Estados de loading más suaves */
+.text-center i.display-1 {
+  color: #d1d5db !important;
+}
+
+/* Responsive con colores suaves */
+@media (max-width: 768px) {
+  .table td, .table th {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.5rem;
+  }
+  
+  /* En móviles, hacer los botones más pequeños y solo mostrar iconos */
+  .btn-group {
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Ocultar texto en botones pequeños, solo mostrar iconos */
+  .btn-group .btn span {
+    display: none !important;
+  }
+  
+  .btn-group .btn i {
+    margin: 0 !important;
+  }
+  
+  /* Hacer el botón principal más pequeño en móviles */
+  .btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Ajustar la columna de acciones */
+  .table td:last-child {
+    min-width: 80px;
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Para pantallas muy pequeñas */
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch !important;
+  }
+  
+  .btn-lg {
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Ajustar colores de fondo en móviles */
+  .card-body {
+    background-color: white;
+  }
+}
+
+/* Forzar visibilidad de iconos Bootstrap */
+.bi::before {
+  display: inline-block !important;
+}
+
+.bi-plus-circle-fill::before {
+  content: "\f62c" !important;
+}
+
+/* Asegurar que los botones no sean ocultados por otros estilos */
+button.btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+}
+
+/* Contenedores de botones principales */
+.text-center > div {
+  display: inline-block;
+  position: relative;
+  margin-top: 1rem;
+}
+
+/* Alineación específica para el botón Agregar Cliente */
+.d-flex.justify-content-between .card-title {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.btn-container-right {
+  margin-left: auto;
+  text-align: right;
+  z-index: 100 !important;
+  position: relative;
+  flex-shrink: 0;
+  min-width: fit-content;
+  display: flex !important;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Forzar alineación a la derecha del botón principal */
+.btn-container-right .btn-primary.btn-lg {
+  display: inline-flex !important;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Media query para asegurar alineación en diferentes pantallas */
+@media (min-width: 768px) {
+  .btn-container-right {
+    position: relative;
+    right: 0;
+  }
+  
+  .d-flex.justify-content-between {
+    position: relative;
+  }
+}
+
+@media (max-width: 767px) {
+  .btn-container-right {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .btn-container-right .btn-primary.btn-lg {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* =================================================================
+   ESTILOS PARA ELIMINAR FONDO VERDE DE BOTONES DE BÚSQUEDA
+   ================================================================= */
+
+/* Los siguientes estilos aseguran que los botones de "Buscar" y "Limpiar"
+   mantengan un fondo blanco limpio sin colores verde/success de Bootstrap */
+
+/* Sobrescribir cualquier estilo de Bootstrap que pueda causar fondos verdes */
+.btn-outline-secondary:not(:disabled):not(.disabled):active,
+.btn-outline-secondary:not(:disabled):not(.disabled).active,
+.show > .btn-outline-secondary.dropdown-toggle {
+  background-color: #f8f9fa !important;
+  border-color: #adb5bd !important;
+  color: #495057 !important;
+}
+
+/* Eliminar cualquier fondo de success/verde que pueda aplicarse */
+.btn-outline-secondary:not(.btn-outline-success) {
+  background-color: white !important;
+}
+
+.btn-outline-secondary:hover:not(.btn-outline-success) {
+  background-color: #f8f9fa !important;
+}
+
+/* Asegurar que no se apliquen estilos de éxito/verde */
+.input-group .btn:not(.btn-success):not(.btn-outline-success) {
+  background-color: white !important;
+}
+
+.input-group .btn:hover:not(.btn-success):not(.btn-outline-success) {
+  background-color: #f8f9fa !important;
+}
+
+/* Forzar colores específicos para evitar cualquier verde */
+form .btn-outline-secondary {
+  background: white !important;
+  border: 1px solid #d1d5db !important;
+  color: #6c757d !important;
+}
+
+form .btn-outline-secondary:hover {
+  background: #f8f9fa !important;
+  border-color: #adb5bd !important;
+  color: #495057 !important;
+}

@@ -1,30 +1,846 @@
+/* ===== ESTILOS GENERALES ===== */
+.section {
+  padding: 0;
+}
+
+/* ===== HEADER DE RESULTADOS ===== */
+.results-title {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.count-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.pagination-info {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+/* ===== ESTADOS VACÍOS ===== */
+.empty-state {
+  padding: 3rem 1rem;
+}
+
+.empty-icon i {
+  color: #cbd5e0;
+  font-size: 4rem;
+}
+
+.empty-title {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.empty-description {
+  color: #6c757d;
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.empty-action .btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* ===== TABLA MODERNA ===== */
+.table {
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 0;
+}
+
+.table-dark {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  color: #374151 !important;
+  --bs-table-bg: transparent !important;
+  --bs-table-color: #374151 !important;
+  --bs-table-border-color: rgba(156, 163, 175, 0.2) !important;
+}
+
+.table-dark th {
+  border: none !important;
+  padding: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  color: #374151 !important;
+}
+
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f7fafc !important;
+  transform: scale(1.01);
+}
+
+.table td {
+  padding: 1rem !important;
+  vertical-align: middle !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* ===== BADGES PERSONALIZADOS ===== */
+.badge {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+
+.id-badge {
+  background: linear-gradient(135deg, #a8c8d8 0%, #7c8db5 100%) !important;
+  color: white !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 8px rgba(120, 165, 196, 0.3);
+  display: inline-block;
+}
+
+.badge-cantidad {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+}
+
+.badge-sin-stock {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  font-weight: 700 !important;
+}
+
+.badge-con-stock {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+}
+
+.badge-precio-costo {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%) !important;
+  color: #be185d !important;
+  border: 1px solid #f9a8d4 !important;
+  box-shadow: 0 2px 8px rgba(190, 24, 93, 0.1);
+}
+
+.badge-precio-detalle {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+}
+
+.badge-precio-mayor {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+  color: #d97706 !important;
+  border: 1px solid #fde68a !important;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+}
+
+.badge-almacen {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+}
+
+/* Badges para disponibilidad */
+.badge-disponible-si {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-disponible-no {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+/* ===== CELDAS ESPECÍFICAS ===== */
+.name-cell {
+  font-weight: 600;
+  color: #2c3e50;
+  padding-right: 1rem;
+}
+
+.accesorio-name {
+  font-weight: 600;
+  color: #2c3e50;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+.model-cell {
+  color: #495057;
+}
+
+.model-text {
+  color: #495057;
+  word-wrap: break-word;
+}
+
+/* ===== BOTONES DE ACCIÓN - COLORES SUAVES ===== */
+.btn-outline-info {
+  border: 2px solid #78a5c4 !important;
+  color: #4a6b7c !important;
+  background: white !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-outline-info:hover {
+  background: #78a5c4 !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(120, 165, 196, 0.4);
+}
+
+.btn-outline-warning {
+  border: 2px solid #d4bd76 !important;
+  color: #8b7355 !important;
+  background: white !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-outline-warning:hover {
+  background: #d4bd76 !important;
+  color: #495057 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 189, 118, 0.4);
+}
+
+.btn-group .btn {
+  margin-right: 0.5rem;
+}
+
+.btn-group .btn:last-child {
+  margin-right: 0;
+}
+
+/* ===== VISTA MÓVIL - TARJETAS ===== */
+.accesorio-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.accesorio-card {
+  background: #f6f9ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  border-left: 4px solid #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.accesorio-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-header-mobile {
+  background: #e6f0fa;
+  color: #667eea;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.accesorio-id {
+  flex: 1;
+}
+
+.id-badge-mobile {
+  background: #667eea;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.accesorio-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.accesorio-actions .btn {
+  border: 2px solid #667eea !important;
+  color: #667eea !important;
+  background: white !important;
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.3s ease;
+}
+
+.accesorio-actions .btn:hover {
+  background: #667eea !important;
+  color: white !important;
+  transform: scale(1.05);
+}
+
+.card-body-mobile {
+  padding: 1rem;
+  background: #f6f9ff;
+}
+
+.accesorio-name-mobile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #2d3748;
+}
+
+.accesorio-name-mobile strong {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.accesorio-details-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  min-width: 75px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.badge-cantidad-mobile {
+  background: #cce5ff !important;
+  color: #667eea !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #b3d7ff !important;
+}
+
+.badge-sin-stock-mobile {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  font-weight: 700 !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+}
+
+.badge-con-stock-mobile {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+}
+
+.badge-precio-mobile {
+  background: #e6f7ff !important;
+  color: #1890ff !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #91d5ff !important;
+}
+
+.badge-costo-mobile {
+  background: #f6ffed !important;
+  color: #52c41a !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #b7eb8f !important;
+}
+
+.badge-precio-mayor-mobile {
+  background: #fff1f0 !important;
+  color: #ff4d4f !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #ffccc7 !important;
+}
+
+.badge-almacen-mobile {
+  background: #fff7e6 !important;
+  color: #fa8c16 !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid #ffd591 !important;
+}
+
+/* ===== CONTROL DE ANCHO DE COLUMNAS ===== */
+.modern-table th:nth-child(1) { width: 10%; } /* ID */
+.modern-table th:nth-child(2) { width: 35%; } /* Descripción - Más espacio */
+.modern-table th:nth-child(3) { width: 12%; } /* Cantidad */
+.modern-table th:nth-child(4) { width: 12%; } /* Costo */
+.modern-table th:nth-child(5) { width: 12%; } /* P. Detalle */
+.modern-table th:nth-child(6) { width: 12%; } /* P. Mayor */
+.modern-table th:nth-child(7) { width: 12%; } /* Almacén */
+.modern-table th:nth-child(8) { width: 15%; min-width: 140px; } /* Acciones */
+
+.modern-table td:nth-child(1) { width: 10%; }
+.modern-table td:nth-child(2) { width: 35%; }
+.modern-table td:nth-child(3) { width: 12%; }
+.modern-table td:nth-child(4) { width: 12%; }
+.modern-table td:nth-child(5) { width: 12%; }
+.modern-table td:nth-child(6) { width: 12%; }
+.modern-table td:nth-child(7) { width: 12%; }
+.modern-table td:nth-child(8) { width: 15%; }
+
+.modern-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .accesorio-cards {
+    padding: 0.5rem;
+  }
+  
+  .accesorio-card {
+    border-radius: 0.75rem;
+  }
+  
+  .card-header-mobile {
+    padding: 0.75rem;
+  }
+  
+  .card-body-mobile {
+    padding: 1rem;
+  }
+  
+  .accesorio-name-mobile {
+    font-size: 1rem;
+  }
+  
+  .accesorio-actions .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .results-title {
+    font-size: 1.125rem;
+  }
+  
+  .empty-state {
+    padding: 2rem 0.5rem;
+  }
+  
+  .empty-icon i {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .accesorio-cards {
+    padding: 0.25rem;
+  }
+  
+  .detail-item {
+    font-size: 0.875rem;
+  }
+  
+  .pagination-info {
+    display: none;
+  }
+}
+
+/* ===== ANIMACIONES SUAVES ===== */
+* {
+  transition: all 0.2s ease;
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
 *::-webkit-scrollbar {
-    width: 12px;
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/* ===== BOTONES DE ACCIÓN - COLORES SUAVES ===== */
+.actions-cell {
+  min-width: 140px;
+  white-space: nowrap;
+}
+
+.modern-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modern-actions .btn {
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  min-width: 60px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== EFECTOS HOVER Y FILAS ALTERNADAS - ESTILO SUAVE ===== */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.075) !important;
+  transform: scale(1.01);
+  transition: all 0.2s ease-in-out;
+}
+
+.table-hover tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efectos adicionales para interactividad */
+.table tbody tr:hover .btn-group .btn {
+  transform: scale(1.05);
+}
+
+.table tbody tr .btn-group .btn {
+  transition: transform 0.15s ease-in-out;
+}
+
+/* Filas alternadas más sutiles */
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(248, 249, 250, 0.5) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: white !important;
+}
+
+/* ===== SOBRESCRIBIR ESTILOS DE BOOTSTRAP PARA ENCABEZADO SUAVE ===== */
+.modern-table.table-dark,
+.modern-table .table-dark,
+.table.table-dark thead th {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  color: #374151 !important;
+  border-color: rgba(156, 163, 175, 0.2) !important;
+}
+
+.modern-table.table-dark th,
+.modern-table .table-dark th,
+.table.table-dark th {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  color: #374151 !important;
+  border-color: rgba(156, 163, 175, 0.2) !important;
+}
+
+/* Asegurar que no haya estilos de Bootstrap conflictivos */
+.table-dark {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: #374151 !important;
+  --bs-table-border-color: rgba(156, 163, 175, 0.2) !important;
+  --bs-table-striped-bg: rgba(156, 163, 175, 0.05) !important;
+  --bs-table-striped-color: #374151 !important;
+  --bs-table-active-bg: rgba(156, 163, 175, 0.1) !important;
+  --bs-table-active-color: #374151 !important;
+  --bs-table-hover-bg: rgba(156, 163, 175, 0.075) !important;
+  --bs-table-hover-color: #374151 !important;
+}
+
+/* ===== MODAL DE DETALLES DEL ACCESORIO ===== */
+.accesorio-detalle-modal {
+  max-width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1050;
+}
+
+/* Asegurar fondo sólido para el modal */
+:host ::ng-deep .modal-dialog {
+  background: white !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+:host ::ng-deep .modal-content {
+  background: white !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .modal-body {
+  background: white !important;
+  padding: 1.5rem !important;
+}
+
+:host ::ng-deep .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-bottom: none !important;
+  border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+:host ::ng-deep .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Contenedor wrapper para asegurar fondo sólido */
+.modal-content-wrapper {
+  background: white !important;
+  border-radius: 0.75rem;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Cards de información */
+.info-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.info-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.info-card-body {
+  padding: 1.25rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  min-width: 120px;
+}
+
+.info-value {
+  color: #2c3e50;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Badges para detalles */
+.badge-almacen-detail {
+  background: linear-gradient(135deg, #fff7e6 0%, #fef3c7 100%) !important;
+  color: #d97706 !important;
+  border: 1px solid #fde68a !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-costo-detail {
+  background: linear-gradient(135deg, #f6ffed 0%, #dcfce7 100%) !important;
+  color: #16a34a !important;
+  border: 1px solid #bbf7d0 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-precio-detalle-detail {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge-precio-mayor-detail {
+  background: linear-gradient(135deg, #fff1f0 0%, #fecaca 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+/* Estadísticas */
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 0.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Acciones del modal */
+.modal-actions {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.modal-actions .btn {
+  min-width: 140px;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detalle-header {
+    padding: 1rem;
   }
-  *::-webkit-scrollbar-track {
-    background: rgba(8, 55, 223, 0.218);
+  
+  .accesorio-title {
+    font-size: 1.25rem;
   }
-  *::-webkit-scrollbar-thumb {
-    background-color: #467ff1;
-    border-radius: 20px;
-    border: 2px solid rgba(8, 55, 223, 0.218);
+  
+  .info-card-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
-  .scroll-table{
-    overflow: auto;
-    white-space: nowrap;
+  
+  .info-card-body {
+    padding: 1rem;
   }
-  tr#put:hover {
-    background-color: #467ff1;
-    cursor: pointer;
-    color: white;
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
-  td{
-   max-width: 100px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
+  
+  .info-label {
+    min-width: auto;
   }
-  .selected {
-    background-color: #2a4f99;
-    color: #FFF;
+  
+  .info-value {
+    text-align: left;
+  }
+  
+  .stat-item {
+    padding: 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1.1rem;
+  }
 }

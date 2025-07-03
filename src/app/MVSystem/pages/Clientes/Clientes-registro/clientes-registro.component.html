@@ -1,162 +1,255 @@
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1 id="registro">Registro Clientes</h1>
+        <h1 id="registro">Registro de Clientes</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Registro clientes</li>
+                <li class="breadcrumb-item">Clientes</li>
+                <li class="breadcrumb-item active">Registro de clientes</li>
             </ol>
         </nav>
     </div>
     <!-- End Page Title -->
+    
     <section class="section">
         <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="card">
+            <div class="col-lg-8">
+                <div class="card modern-card">
                     <div class="card-body">
-                        <h5 class="card-title">Datos del cliente</h5>
+                        <!-- Header moderno -->
+                        <div class="form-header mb-4">
+                            <h5 class="form-title">
+                                <i class="bi bi-person-plus-fill me-2 text-primary"></i>
+                                Datos del Cliente
+                            </h5>
+                            <p class="form-subtitle">Complete la información del nuevo cliente</p>
+                        </div>
 
-                        <!--  Form -->
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroCliente()" class="row g-3 needs-validation" novalidate>
-                            <!-- --------------- DropDown Tipo Cliente --------------- -->
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="form-label">Tipo cliente</label>
-                                    <select formControlName="tipoCliente" class="form-select">
-                                <!-- <option selected>Choose...</option>
-                                <option>...</option> -->
-                                <option *ngFor="let tipoCliente of listaTipoClientes"
-                                        [value]="tipoCliente.iD_Tipo_Cliente">
-                                {{tipoCliente.tipo_Cliente_Descripcion}}
-                                </option>
-                            </select>
+                        <!--  Modern Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroCliente()" class="modern-form" novalidate>
+                            
+                            <!-- Sección: Información Básica -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-person me-2"></i>
+                                        Información Básica
+                                    </h6>
                                 </div>
-                                <div class="col-md-8"></div>
+                                
+                                <div class="row g-3">
+                                    <!-- Tipo Cliente -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-tags me-1"></i>
+                                            Tipo de Cliente
+                                        </label>
+                                        <select formControlName="tipoCliente" class="form-select modern-select">
+                                            <option value="" disabled selected>Seleccione un tipo</option>
+                                            <option *ngFor="let tipoCliente of listaTipoClientes"
+                                                    [value]="tipoCliente.iD_Tipo_Cliente">
+                                                {{tipoCliente.tipo_Cliente_Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Nombre -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-person me-1"></i>
+                                            Nombre <span class="required-asterisk">*</span>
+                                        </label>
+                                        <input type="text" class="form-control modern-input" formControlName="nombre" 
+                                               placeholder="Ingrese el nombre"
+                                               [ngClass]="{'is-invalid':validarCampos('nombre')}">
+                                        <div class="error-message" *ngIf="validarCampos('nombre')">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+
+                                    <!-- Apellido -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-person-badge me-1"></i>
+                                            Apellido <span class="required-asterisk">*</span>
+                                        </label>
+                                        <input type="text" class="form-control modern-input" formControlName="apellido" 
+                                               placeholder="Ingrese el apellido"
+                                               [ngClass]="{'is-invalid':validarCampos('apellido')}">
+                                        <div class="error-message" *ngIf="validarCampos('apellido')">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                  <!-- Grupo: Nombre y Apellido -->
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Nombre <span class="required-field">*</span></label>
-                    <input type="text" class="form-control" formControlName="nombre" required [ngClass]="{'is-invalid':validarCampos('nombre')}">
-                    <div class="required-field" *ngIf="validarCampos('nombre')">
-                      Este campo es requerido.
-                    </div>
-                  </div>
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Apellido <span class="required-field">*</span></label>
-                    <input type="text" class="form-control" required formControlName="apellido" [ngClass]="{'is-invalid':validarCampos('apellido')}">
-                    <div class="required-field" *ngIf="validarCampos('apellido')">
-                      Este campo es requerido.
-                    </div>
-                  </div>
+                            <!-- Sección: Información de Contacto -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-telephone me-2"></i>
+                                        Información de Contacto
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Tipo Teléfono -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-phone me-1"></i>
+                                            Tipo de Número
+                                        </label>
+                                        <select formControlName="tipoTelefono" class="form-select modern-select">
+                                            <option value="" disabled selected>Seleccione tipo</option>
+                                            <option *ngFor="let telefono of listaTipoTelefonos"
+                                                    [value]="telefono.iD_Tipo_Telefono">
+                                                {{telefono.tipo_Telefono_Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
 
-                  <!-- Grupo: Tipo Teléfono, Teléfono y Extensión -->
-                  <div class="col-12 col-md-4 mb-3">
-                    <label class="form-label">Tipo Número</label>
-                    <select formControlName="tipoTelefono" class="form-select">
-                      <option *ngFor="let telefono of listaTipoTelefonos"
-                        [value]="telefono.iD_Tipo_Telefono">
-                        {{telefono.tipo_Telefono_Descripcion}}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="col-12 col-md-5 mb-3">
-                    <label class="form-label">
-                      Teléfono: <span class="required-field">*</span>
-                    </label>
-                    <input class="form-control" required formControlName="telefono" type="text" mask="000-000-0000" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
-                    <div class="required-field" *ngIf="validarCampos('telefono')">
-                      Este campo es requerido.
-                    </div>
-                  </div>
-                  <div class="col-12 col-md-3 mb-3">
-                    <div class="row">
-                      <div class="col-4 d-flex align-items-end">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" (change)="onCheckboxChange($event)">
-                          <label class="form-check-label">Ext.</label>
-                        </div>
-                      </div>
-                      <div class="col-8">
-                        <input type="text" class="form-control" placeholder="Extensión" formControlName="extensionNumero">
-                      </div>
-                    </div>
-                  </div>
+                                    <!-- Teléfono -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-telephone-fill me-1"></i>
+                                            Teléfono <span class="required-asterisk">*</span>
+                                        </label>
+                                        <input class="form-control modern-input" formControlName="telefono" 
+                                               type="text" mask="000-000-0000" 
+                                               placeholder="Ej: 809-555-1234"
+                                               [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                        <div class="error-message" *ngIf="validarCampos('telefono')">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{telefonoErrorMsg}}
+                                        </div>
+                                    </div>
 
-                  <!-- Grupo: Email -->
-                  <div class="col-12 mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid':validarCamposEmail('email')}">
-                    <div class="required-field">
-                      {{emailErrorMsg}}
+                                    <!-- Extensión -->
+                                    <div class="col-md-4">
+                                        <div class="extension-container">
+                                            <div class="form-check modern-checkbox mb-2">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       (change)="onCheckboxChange($event)" id="checkExtension">
+                                                <label class="form-check-label" for="checkExtension">
+                                                    Tiene extensión
+                                                </label>
+                                            </div>
+                                            <input type="text" class="form-control modern-input" 
+                                                   placeholder="Número de extensión" 
+                                                   formControlName="extensionNumero">
+                                        </div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-8">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-envelope me-1"></i>
+                                            Correo Electrónico
+                                        </label>
+                                        <input type="email" class="form-control modern-input" formControlName="email" 
+                                               placeholder="ejemplo@correo.com"
+                                               [ngClass]="{'is-invalid':validarCamposEmail('email')}">
+                                        <div class="error-message" *ngIf="validarCamposEmail('email')">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{emailErrorMsg}}
+                                        </div>
+                                    </div>
+
+                                    <!-- Límite de Crédito -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-credit-card me-1"></i>
+                                            Límite de Crédito
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">RD$</span>
+                                            <input type="number" min="0" step="0.01" placeholder="0.00" 
+                                                   class="form-control modern-input" formControlName="limiteCredito"
+                                                   [ngClass]="{'is-invalid':formRegistro.get('limiteCredito')?.errors}">
+                                        </div>
+                                        <div class="error-message" *ngIf="formRegistro.get('limiteCredito')?.errors">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{limiteCreditoErrorMsg}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección: Información de Dirección -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-geo-alt me-2"></i>
+                                        Información de Dirección
+                                    </h6>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- Provincia -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-map me-1"></i>
+                                            Provincia
+                                        </label>
+                                        <input type="text" class="form-control modern-input" 
+                                               formControlName="provincia" placeholder="Ingrese la provincia">
+                                    </div>
+
+                                    <!-- Sector -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-buildings me-1"></i>
+                                            Sector
+                                        </label>
+                                        <input type="text" class="form-control modern-input" 
+                                               formControlName="sector" placeholder="Ingrese el sector">
+                                    </div>
+
+                                    <!-- Calle -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-signpost me-1"></i>
+                                            Calle
+                                        </label>
+                                        <input type="text" class="form-control modern-input" 
+                                               formControlName="calle" placeholder="Ingrese la calle">
+                                    </div>
+
+                                    <!-- Casa No. -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-house me-1"></i>
+                                            No. de Casa
+                                        </label>
+                                        <input type="text" class="form-control modern-input" 
+                                               formControlName="casaNumero" placeholder="Ingrese el número">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón de Guardar Modernizado -->
+                            <div class="form-actions">
+                                <div class="d-flex justify-content-center gap-3">
+                                    <button type="button" class="btn btn-secondary btn-lg modern-btn-secondary" 
+                                            (click)="limpiarFormulario()">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>
+                                        Limpiar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg modern-btn-primary" 
+                                            [disabled]="btnDisable() || isLoading">
+                                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        <i *ngIf="!isLoading" class="bi bi-check-circle-fill me-2"></i>
+                                        {{isLoading ? 'Guardando...' : 'Guardar Cliente'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- End Modern Form -->
                     </div>
-                  </div>
-
-                  <!-- Grupo: Dirección -->
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Provincia</label>
-                    <input type="text" class="form-control" formControlName="provincia">
-                  </div>
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Sector</label>
-                    <input type="text" class="form-control" formControlName="sector">
-                  </div>
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Calle</label>
-                    <input type="text" class="form-control" formControlName="calle">
-                  </div>
-                  <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label">Casa No.</label>
-                    <input type="text" class="form-control" formControlName="casaNumero">
-                  </div>
-
-                  <!-- Botón Guardar -->
-                  <div class="col-12 text-center">
-                    <button class="btn btn-primary w-100 w-md-auto" type="submit" [ngClass]="{'disabled':btnDisable()}">Guardar</button>
-                  </div>
-              </form>
-              <!-- End  Form -->
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-  </section>
+    </section>
 </main>
-<!-- End #main -->
-
-<!-- Tabla de clientes registrados (opcional, puedes ocultar o mostrar según tu lógica) -->
-<div class="container mt-4">
-  <div class="wrapper">
-    <div class="right">
-      <table class="table table-bordered table-responsive">
-        <thead>
-          <tr>
-            <th>Cod.</th>
-            <th>Tipo</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Telefono</th>
-            <th>Tipo de Telefono</th>
-            <th>Limite de credito</th>
-            <th>Email</th>
-            <th>Direccion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{clientesListar?.idContacto}}</td>
-            <td>{{clientesListar?.iD_Tipo_Cliente }}</td>
-            <td>{{clientesListar?.nombres |  titlecase }}</td>
-            <td>{{clientesListar?.apellidos |  titlecase}}</td>
-            <td>{{clientesListar?.numero_Telefono}}</td>
-            <td>{{clientesListar?.iD_Tipo_Telefono}}</td>
-            <td>{{clientesListar?.limite_Credito}}</td>
-            <td>{{clientesListar?.email_Detalle}}</td>
-            <td>{{clientesListar?.direccion_Detalle }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>

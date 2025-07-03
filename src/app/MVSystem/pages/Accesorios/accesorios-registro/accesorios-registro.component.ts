@@ -219,4 +219,21 @@ export class AccesoriosRegistroComponent implements OnInit {
     });
   }
 
+  /**
+   * Clear the form and reset all values
+   */
+  limpiarFormulario() {
+    this.formRegistro.reset({
+      almacen: 2 // Reset to default almacen value
+    });
+    
+    // Disable modelo field again
+    this.formRegistro.get('modelo')?.disable();
+    
+    // Clear modelo list
+    this.modeloListado = [];
+    
+    this.toastr.info('Formulario limpiado correctamente', 'Información');
+  }
+
 }

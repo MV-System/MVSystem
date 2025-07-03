@@ -13,6 +13,8 @@ import { ClientesConsultaComponent } from './Clientes-consulta/clientes-consulta
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DirectiveModule } from '../../../core/directives/directives.module';
 import { CuentasPorCobrarComponent } from './Cuentas-por-cobrar/cuentas-por-cobrar.component';
+import { ClientesDetalleComponent } from './Clientes-detalle/clientes-detalle.component';
+import { ClientesEditarComponent } from './Clientes-editar/clientes-editar.component';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -33,6 +35,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ValueArrayPipe,
     ClientesConsultaComponent,
     CuentasPorCobrarComponent,
+    ClientesDetalleComponent,
+    ClientesEditarComponent,
   ],
   imports: [
     CommonModule,

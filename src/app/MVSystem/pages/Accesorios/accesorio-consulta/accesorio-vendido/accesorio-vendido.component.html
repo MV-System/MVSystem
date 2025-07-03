@@ -1,184 +1,344 @@
 <r-loading *ngIf="isPrint"></r-loading>
 <div class="animate__animated animate__fadeIn">
-  <form [formGroup]="form" (ngSubmit)="getAccesoriosVendidos()" role="search">
-    <div class="row">
-      <div class="col-lg-8">
-        <div class="card">
-          <div class="card-body">
-            <span class="card-title">Filtros</span>
-
-            <div class="row mt-3">
-
-              <div class="col-md-4">
-                <label class="form-label"></label>
-                <input
-                  class="form-control"
-                  placeholder="search"
-                  formControlName="filter"
-                  (keyup)="getAccesoriosVendidos()" />
-              </div>
-              <!-- <div class="col-md-4">
-                <label class="form-label">Sucursal</label>
-                <ng-select
-                  formControlName="almacen"
-                  (change)="getAccesoriosVendidos()">
-                  <ng-option
-                    *ngFor="let almacen of almacenes"
-                    [value]="almacen.iD_Almacen" >
-                    {{ almacen.descripcion }}
-                  </ng-option>
-                </ng-select>
-              </div> -->
-
-              <div class="col-md-5" *ngIf="SelectSucursal()">
-                <label class="form-label">Sucursal</label>
-                <select class="form-select" formControlName="almacen" (change)="getAccesoriosVendidos()">
-                <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen" >
-                 {{ almacen.descripcion }}
-                </option>
-                </select>
-            </div>
-
-
-            <!-- <div class="row"> -->
-              <div class="col-md-5">
-                <label class="form-label row mx-2">Fecha de registro</label>
-                <my-date-range-picker
-                  [options]="myDateRangePickerOptions"
-                  formControlName="rangeDate"
-                  (dateRangeChanged)="onDateRangeChanged($event)"
-                  placeholder=" {{ FechaInicio | date }} -  {{
-                    fechaHoy | date
-                  }}"  >
-                </my-date-range-picker>
-              </div>
-            <!-- </div> -->
-        </div>
-
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="row mx-1 text-center mt-3">
-              <!-- Cuadro totales -->
-              <ng-container>
-                <div class="col-md-12">
-                  <div class="row mb-2">
-                    Total Accesorios
-                    <label class="form-control total">
-                      {{ accesorioQuantity }}
-                    </label>
-                  </div>
-                  <div class="row mb-2">
-                    Total Inventario
-                    <label class="form-control total">
-                      {{ totalInventario | currency }}
-                    </label>
-                  </div>
-                  <div class="row mb-2">
-                    Total Facturado
-
-                    <label class="form-control total">
-                      {{ totalFacturado | currency }}
-                    </label>
-                  </div>
-                  <div class="row mb-2">
-                    Total Ganancias
-                    <label class="form-control total">
-                      {{ totalGanancia | currency }}
-                    </label>
-                  </div>
-                  <div class="row mb-2">
-                    Total Itbis
-                    <label class="form-control total">
-                      {{ totalItbis | currency }}
-                    </label>
-                  </div>
+    <!-- Modern Filter Section -->
+    <div class="filter-section mb-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card filter-card">
+                    <div class="card-body">
+                        <div class="filter-header mb-3">
+                            <h6 class="filter-title">
+                                <i class="bi bi-funnel me-2 text-primary"></i>
+                                Filtros de Búsqueda
+                            </h6>
+                        </div>
+                        
+                        <!-- Search Form -->
+                        <form [formGroup]="form" (ngSubmit)="getAccesoriosVendidos()" role="search">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-search me-1"></i>
+                                        Buscar por descripción
+                                    </label>
+                                    <input class="form-control modern-input"
+                                           placeholder="Ej: Cover iPhone, Cargador..."
+                                           formControlName="filter"
+                                           (keyup)="getAccesoriosVendidos()">
+                                </div>
+                                <div class="col-md-4" *ngIf="SelectSucursal()">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-building me-1"></i>
+                                        Sucursal
+                                    </label>
+                                    <select class="form-select modern-select" 
+                                            formControlName="almacen" 
+                                            (change)="getAccesoriosVendidos()">
+                                        <option value="" disabled>Seleccione una sucursal</option>
+                                        <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                                            {{almacen.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-calendar-range me-1"></i>
+                                        Rango de fechas
+                                    </label>
+                                    <my-date-range-picker
+                                        [options]="myDateRangePickerOptions"
+                                        formControlName="rangeDate"
+                                        (dateRangeChanged)="onDateRangeChanged($event)"
+                                        placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"
+                                        class="modern-date-picker">
+                                    </my-date-range-picker>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-              </ng-container>
-
             </div>
-          </div>
         </div>
-      </div>
-
-        <!-- Fin Cuadro totales -->
-
     </div>
-  </form>
-  <section class="section mt-4">
 
-    <div class="row">
-      <div class="col-lg-12 scroll-table">
-        <h5 class="card-title">Accesorios</h5>
-        <p *ngIf="accesorios.length">
-          Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros
-        </p>
-        <!-- Table with stripped rows -->
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Factura</th>
-              <th scope="col">Cliente</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Costo</th>
-              <th scope="col">Precio</th>
-              <th scope="col">SubTotal</th>
-              <th scope="col">Descuento</th>
-              <th scope="col">Itbis</th>
-              <th scope="col">Total</th>
-              <th scope="col">Fecha Facturación</th>
-              <th scope="col">Sucursal</th>
-              <th scope="col">Vendedor</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="animate__animated animate__fadeIn"
-              *ngFor="
-                let accesorio of accesorios
-                  | paginate
-                    : {
-                        itemsPerPage: filter.pageSize,
-                        currentPage: filter.pageIndex,
-                        totalItems: totalRecord
-                      } " >
-
-              <td>{{ accesorio.factura }}</td>
-              <td>{{ accesorio.cliente }}</td>
-              <td>{{ accesorio.descripcion }}</td>
-              <td>{{ accesorio.cantidad }}</td>
-              <td>{{ accesorio.costo | currency }}</td>
-              <td>{{ accesorio.precio | currency }}</td>
-              <td>{{ accesorio.subTotal | currency}}</td>
-              <td>{{ accesorio.descuento | currency }}</td>
-              <td>{{ accesorio.itbis | currency }}</td>
-              <td>{{ accesorio.total | currency }}</td>
-              <td>{{ accesorio.fechaRegistro | date}}</td>
-              <td>{{ accesorio.sucursal}}</td>
-              <td>{{ accesorio.vendedor}}</td>
-
-            </tr>
-          </tbody>
-        </table>
-        <!-- End Table with stripped rows -->
-        <div class="not-data" *ngIf="!accesorios.length">
-          Datos no encontrados
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="stats-content">
+                        <div class="stats-icon">
+                            <i class="bi bi-bag-check-fill text-primary"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h6 class="stats-title">Total Vendidos</h6>
+                            <h3 class="stats-number">{{ accesorioQuantity }}</h3>
+                            <small class="stats-subtitle">Accesorios vendidos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="stats-content">
+                        <div class="stats-icon">
+                            <i class="bi bi-currency-dollar text-success"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h6 class="stats-title">Total Facturado</h6>
+                            <h3 class="stats-number">{{ totalFacturado | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                            <small class="stats-subtitle">Ingresos por ventas</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="stats-content">
+                        <div class="stats-icon">
+                            <i class="bi bi-graph-up-arrow text-info"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h6 class="stats-title">Total Ganancias</h6>
+                            <h3 class="stats-number">{{ totalGanancia | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                            <small class="stats-subtitle">Ganancias netas</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="stats-content">
+                        <div class="stats-icon">
+                            <i class="bi bi-percent text-warning"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h6 class="stats-title">Total ITBIS</h6>
+                            <h3 class="stats-number">{{ totalItbis | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                            <small class="stats-subtitle">Impuestos recaudados</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
-  <pagination-controls
-  [responsive]="true"
-    previousLabel="Anterior"
-    nextLabel="Siguiente"
-    (pageChange)="pageChanged($event)"
-    *ngIf="totalRecord > 10 && accesorios.length" >
-  </pagination-controls>
 </div>
+  <section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Results Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h6 class="results-title mb-0">
+                    <i class="bi bi-bag-check-fill me-2 text-primary"></i>
+                    Lista de Accesorios Vendidos
+                    <span class="badge bg-primary ms-2 count-badge" *ngIf="accesorios.length > 0">
+                        {{totalRecord}} vendido{{totalRecord !== 1 ? 's' : ''}}
+                    </span>
+                </h6>
+                <div class="pagination-info" *ngIf="accesorios.length">
+                    <small class="text-muted">
+                        Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros
+                    </small>
+                </div>
+            </div>
 
+            <!-- Modern No Results Message -->
+            <div class="empty-state text-center py-5" *ngIf="!accesorios.length">
+                <div class="empty-icon mb-3">
+                    <i class="bi bi-cart-x display-1 text-muted"></i>
+                </div>
+                <h5 class="empty-title mt-3">No se encontraron accesorios vendidos</h5>
+                <p class="empty-description text-muted mb-4">
+                    Intenta ajustar el rango de fechas o los criterios de búsqueda para ver las ventas realizadas.
+                </p>
+            </div>
+
+            <!-- Modern Table with Results - Desktop/Tablet View -->
+            <div class="table-container" *ngIf="accesorios.length > 0 && !isMobileScreen()">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped modern-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">
+                                    <i class="bi bi-receipt me-1"></i>
+                                    Factura
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-gear me-1"></i>
+                                    Descripción
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-person me-1"></i>
+                                    Cliente
+                                </th>
+                                <th scope="col" class="text-center">
+                                    <i class="bi bi-hash me-1"></i>
+                                    Cantidad
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Precio
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-percent me-1"></i>
+                                    ITBIS
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-calculator me-1"></i>
+                                    Total
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-building me-1"></i>
+                                    Sucursal
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-person-badge me-1"></i>
+                                    Vendedor
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-calendar me-1"></i>
+                                    Fecha
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let accesorio of accesorios" class="table-row">
+                                <td>
+                                    <span class="id-badge">#{{ accesorio.factura }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-dark">{{ accesorio.descripcion }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted">{{ accesorio.cliente }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border">{{ accesorio.cantidad }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-precio-vendido">{{ accesorio.precio | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-itbis-vendido">{{ accesorio.itbis | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-total-vendido">{{ accesorio.total | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">{{ accesorio.sucursal }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted fw-semibold">{{ accesorio.vendedor }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ accesorio.fechaRegistro | date: 'dd/MM/yyyy' }}</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="accesorio-cards" *ngIf="accesorios.length > 0 && isMobileScreen()">
+                <div class="card modern-card mb-3" *ngFor="let accesorio of accesorios">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="card-title mb-1">{{ accesorio.descripcion }}</h6>
+                                <small class="text-muted">Cliente: {{ accesorio.cliente }}</small>
+                            </div>
+                            <span class="id-badge-mobile">#{{ accesorio.factura }}</span>
+                        </div>
+                        
+                        <div class="row g-2 mb-3">
+                            <!-- Columna izquierda: Precio, Total, ITBIS -->
+                            <div class="col-6 border-end">
+                                <div class="info-item mb-2">
+                                    <label class="info-label">
+                                        <i class="bi bi-currency-dollar me-1 text-primary"></i>
+                                        Precio
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge badge-precio-vendido">{{ accesorio.precio | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item mb-2">
+                                    <label class="info-label">
+                                        <i class="bi bi-calculator me-1 text-success"></i>
+                                        Total
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge badge-total-vendido">{{ accesorio.total | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label class="info-label">
+                                        <i class="bi bi-percent me-1 text-info"></i>
+                                        ITBIS
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge badge-itbis-vendido">{{ accesorio.itbis | currency:'RD$':'symbol':'1.2-2' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Columna derecha: Cantidad, Sucursal, Vendedor -->
+                            <div class="col-6">
+                                <div class="info-item mb-2">
+                                    <label class="info-label">
+                                        <i class="bi bi-hash me-1 text-secondary"></i>
+                                        Cantidad
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge bg-light text-dark border">{{ accesorio.cantidad }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item mb-2">
+                                    <label class="info-label">
+                                        <i class="bi bi-building me-1 text-warning"></i>
+                                        Sucursal
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge bg-light text-dark border">{{ accesorio.sucursal }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label class="info-label">
+                                        <i class="bi bi-person-badge me-1 text-secondary"></i>
+                                        Vendedor
+                                    </label>
+                                    <div class="info-value text-muted fw-semibold">{{ accesorio.vendedor }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer-info">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>
+                                Vendido el {{ accesorio.fechaRegistro | date: 'dd/MM/yyyy' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Pagination -->
+            <div class="pagination-wrapper d-flex justify-content-center mt-4" *ngIf="totalRecord > filter.pageSize && accesorios.length">
+                <pagination-controls 
+                    (pageChange)="pageChanged($event)" 
+                    [responsive]="true"
+                    previousLabel="Anterior" 
+                    nextLabel="Siguiente" 
+                    class="modern-pagination">
+                </pagination-controls>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- End #main -->
