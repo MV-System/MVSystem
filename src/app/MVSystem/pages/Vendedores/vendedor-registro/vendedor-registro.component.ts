@@ -31,6 +31,7 @@ export class VendedorRegistroComponent implements OnInit {
     vendedorListar!: Vendedor;
     listaTipoTelefonos: TipoTelefono[]=[];
     btnDisabled: boolean = true;
+    isLoading: boolean = false;
 
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -106,30 +107,41 @@ export class VendedorRegistroComponent implements OnInit {
   registroVendedor(){
     const model: Vendedor = this.modeloRegistroVendedor();
     if (this.formRegistro.valid) {
-        this.vendedorService.postVendedor(model)
-            .subscribe((VendedorInsertado: any) =>{
-        
-        this.vendedorListar = VendedorInsertado;
-        if (VendedorInsertado.mensaje.includes('ya está')) {
-          this.toastr.error(VendedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
-        }
-        else{
-          this.toastr.success(VendedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
-          this.formRegistro.reset({
-              tipoVendedor: 1,
-              tipoTelefono: 1
-          });
-        }
-      });
-    }
-    else{
+      this.isLoading = true;
+      this.vendedorService.postVendedor(model)
+        .subscribe({
+          next: (VendedorInsertado: any) => {
+            this.vendedorListar = VendedorInsertado;
+            if (VendedorInsertado.mensaje.includes('ya está')) {
+              this.toastr.error(VendedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
+            } else {
+              this.toastr.success(VendedorInsertado.mensaje, '',{closeButton: true,progressBar:true});
+              this.formRegistro.reset({
+                tipoVendedor: 1,
+                tipoTelefono: 1
+              });
+            }
+            this.isLoading = false;
+          },
+          error: () => {
+            this.isLoading = false;
+            this.toastr.error('Error al registrar el vendedor', '',{closeButton: true,progressBar:true});
+          }
+        });
+    } else {
       this.formRegistro.markAllAsTouched();
       $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
       this.toastr.error('Hay datos en el formulario incompletos', '',{closeButton: true,progressBar:true});
     }
   }
   
-  
+  limpiarFormulario() {
+    this.formRegistro.reset({
+      tipoTelefono: 1
+    });
   }
   
+  
+  }
+
 

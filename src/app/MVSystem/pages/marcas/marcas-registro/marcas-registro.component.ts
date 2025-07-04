@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
-import {MarcaObjRetorno } from 'src/app/core/interfaces/mantenimiento';
+import { MarcaObjRetorno } from 'src/app/core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { MarcaService } from 'src/app/core/services/marca.service';
 import { LoginService } from 'src/app/auth/login.service';
@@ -20,6 +20,7 @@ export class MarcasRegistroComponent implements OnInit {
   marcaValorRetorno: MarcaObjRetorno[]=[];
   btnDisabled: boolean = true;
   IdMarcaReg!: number;
+  filtroMarca: string = "";
 
 
 
@@ -35,6 +36,7 @@ export class MarcasRegistroComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
+    this.marcaValorRetorno = [];
   }
   // VerFormMarca(): boolean {
   //   return this.validatorPermissionService.validateUserRole("MNU_MANT_MARCAS");
@@ -69,17 +71,17 @@ export class MarcasRegistroComponent implements OnInit {
       return registro;
   }
   registroMarca(){
-
     const model: MarcaEquipo = this.modeloRegistroMarca();
-
     if (this.formRegistro.valid) {
         this.MarcaService.postMarca(model)
             .subscribe((MarcaInsertada: MarcaObjRetorno) =>{
-                 this.marcaValorRetorno.push(MarcaInsertada);
-
-              this.toastr.success(MarcaInsertada.mensaje, '',
+                 // Agregar la nueva marca a la lista general
+                 this.marcaListado.unshift({
+                   iD_Marca: MarcaInsertada.iD_Marca,
+                   descripcion: MarcaInsertada.descripcion
+                 });
+                 this.toastr.success(MarcaInsertada.mensaje, '',
            {closeButton: true,progressBar:true});
-
           this.formRegistro.reset({
           });
 			});
@@ -90,6 +92,12 @@ export class MarcasRegistroComponent implements OnInit {
         this.toastr.error('Hay datos en el formulario incompletos', '',
         {closeButton: true,progressBar:true});
     }
+  }
+
+  get marcasFiltradas() {
+    const valor = this.formRegistro.get('descripcion')?.value || '';
+    if (!valor.trim()) return this.marcaListado;
+    return this.marcaListado.filter(m => m.descripcion?.toLowerCase().includes(valor.trim().toLowerCase()));
   }
 }
 function jwt_decode<T>(arg0: string): any {

@@ -36,6 +36,7 @@ export class SuplidorRegistroComponent implements OnInit {
   listaTipoSuplidores: TipoSuplidor[] = [];
   listaTipoTelefonos: TipoTelefono[] = [];
   btnDisabled: boolean = true;
+  isLoading: boolean = false;
 
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -134,30 +135,33 @@ export class SuplidorRegistroComponent implements OnInit {
   }
   registroSuplidores() {
     this.formRegistro.markAllAsTouched();
-
     const model: SuplidorRegistro = this.modeloRegistroSuplidor();
-
     if (this.formRegistro.valid) {
+      this.isLoading = true;
       this.suplidorService
         .postSuplidor(model)
-        .subscribe((suplidorInsertado: any) => {
-
-
-          this.suplidorListar = suplidorInsertado;
-
-          if (suplidorInsertado.mensaje.includes('ya está')) {
-            this.toastr.error(suplidorInsertado.mensaje, '', {
+        .subscribe({
+          next: (suplidorInsertado: any) => {
+            this.suplidorListar = suplidorInsertado;
+            if (suplidorInsertado.mensaje.includes('ya está')) {
+              this.toastr.error(suplidorInsertado.mensaje, '', {
+                closeButton: true,
+                progressBar: true,
+              });
+            } else {
+              this.toastr.success(suplidorInsertado.mensaje, '', {
+                closeButton: true,
+                progressBar: true,
+              });
+              this.limpiarFormulario();
+            }
+            this.isLoading = false;
+          },
+          error: () => {
+            this.isLoading = false;
+            this.toastr.error('Error al registrar el suplidor', '', {
               closeButton: true,
               progressBar: true,
-            });
-          } else {
-            this.toastr.success(suplidorInsertado.mensaje, '', {
-              closeButton: true,
-              progressBar: true,
-            });
-            this.formRegistro.reset({
-              tipoSuplidor: 1,
-              tipoTelefono: 1,
             });
           }
         });
@@ -169,5 +173,11 @@ export class SuplidorRegistroComponent implements OnInit {
       $("html, body").animate({ scrollTop: $("#registro").offset()?.top }, "slow");
 
     }
+  }
+  limpiarFormulario() {
+    this.formRegistro.reset({
+      tipoSuplidor: 1,
+      tipoTelefono: 1,
+    });
   }
 }

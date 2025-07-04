@@ -1,6 +1,6 @@
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1 id="registro">Registro Equipos</h1>
+        <h1 id="registro">Registro de Equipos</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -12,221 +12,308 @@
     <!-- End Page Title -->
     <section class="section">
         <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="card">
+            <div class="col-lg-7 order-lg-1 order-2">
+                <div class="card modern-card">
                     <div class="card-body">
-                        <h5 class="card-title">Datos del Equipo</h5>
- <div *ngIf="isLoading" class="text-center my-2">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Guardando...</span>
-  </div>
-  <div>Guardando equipo...</div>
-</div>
-                        <!--  Form -->
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroEquipos()" class="row g-3 needs-validation" novalidate>
-
-                            <!-- --------------- Factura No. --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label">Factura No.</label>
-                                <input type="text" class="form-control" formControlName="factura">
+                        <!-- Header moderno -->
+                        <div class="form-header mb-4">
+                            <h5 class="form-title">
+                                <i class="bi bi-phone-fill me-2 text-primary"></i>
+                                Datos del Equipo
+                            </h5>
+                            <p class="form-subtitle">Complete la información del nuevo equipo</p>
+                        </div>
+                        <div *ngIf="isLoading" class="text-center my-2">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Guardando...</span>
                             </div>
-
-                            <!-- --------------- IMEI  --------------- -->
-                            <div class="col-md-6">
-                                <label class="form-label" for="imeiInput">IMEI</label>
-                                <input type="text" 
-                                class="form-control" 
-                                formControlName="IMEI" 
-                                ngModel maxlength="30" 
-                                autocomplete="off"
-                                #ImeiInput [ngClass]="{'is-invalid':validarCampos('IMEI')}" 
-                                (keydown.enter)="ImeiInput.value='';ImeiInput.focus()"
-                                [attr.aria-invalid]="validarCampos('IMEI')">
-
-                                <div class="required-field" *ngIf="validarCampos('IMEI')">
-                                    Este campo es requerido.
+                            <div>Guardando equipo...</div>
+                        </div>
+                        <!-- Modern Form -->
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroEquipos()" class="modern-form" novalidate>
+                            <!-- Sección: Información Básica -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Información Básica
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Factura No. -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-receipt me-1"></i>
+                                            Factura No.
+                                        </label>
+                                        <input type="text" class="form-control modern-input" formControlName="factura">
+                                    </div>
+                                    <!-- IMEI -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label" for="imeiInput">
+                                            <i class="bi bi-upc me-1"></i>IMEI <span class="required-star">*</span>
+                                        </label>
+                                        <input type="text" class="form-control modern-input" formControlName="IMEI" maxlength="30" autocomplete="off" #ImeiInput [class.is-invalid]="validarCampos('IMEI')" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()" [attr.aria-invalid]="validarCampos('IMEI')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('IMEI')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- --------------- Costo  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Costo</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('costo')}">
-                                <div class="required-field" *ngIf="validarCampos('costo')">
-                                    Este campo es requerido.
+                            <!-- Sección: Precios y Costos -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-currency-dollar me-2"></i>
+                                        Precios y Costos
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Costo -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-tag me-1"></i>
+                                            Costo <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('costo')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('costo')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Al por Mayor -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-bag-check me-1"></i>
+                                            Al por Mayor <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alPorMayor')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('alPorMayor')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Al detalle -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cart me-1"></i>
+                                            Al detalle <span class="required-star">*</span>
+                                        </label>
+                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alDetalle')">
+                                        <div class="invalid-feedback" *ngIf="validarCampos('alDetalle')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- --------------- Al por Mayor  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Al por Mayor</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alPorMayor')}">
-                                <div class="required-field" *ngIf="validarCampos('alPorMayor')">
-                                    Este campo es requerido.
+                            <!-- Sección: Comisiones -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-percent me-2"></i>
+                                        Comisiones
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Comision Detalle -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cash-coin me-1"></i>
+                                            Comisión Detalle
+                                        </label>
+                                        <input type="number" class="form-control modern-input" placeholder="RD$" formControlName="comisionDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionDetalle')">
+                                    </div>
+                                    <!-- Comision Mayor -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cash-stack me-1"></i>
+                                            Comisión Mayor
+                                        </label>
+                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="comisionMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionMayor')">
+                                    </div>
                                 </div>
                             </div>
-                            <!-- --------------- Al detalle  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Al detalle</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('alDetalle')}">
-                                <div class="required-field" *ngIf="validarCampos('alDetalle')">
-                                    Este campo es requerido.
+                            <!-- Sección: Especificaciones -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-gear-wide-connected me-2"></i>
+                                        Especificaciones
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Tecnología -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-cpu me-1"></i>
+                                            Tecnología
+                                        </label>
+                                        <select formControlName="tecnologia" class="form-select modern-input">
+                                            <option *ngFor="let tecnologia of listaTecnologia" [value]="tecnologia.iD_Tecnologia">
+                                                {{tecnologia.descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- Garantía -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-shield-check me-1"></i>
+                                            Garantía <span class="required-star">*</span>
+                                        </label>
+                                        <select formControlName="garantia" class="form-select modern-input" required [class.is-invalid]="validarCampos('garantia')">
+                                            <option [value]="''" disabled selected>Seleccione garantía</option>
+                                            <option *ngFor="let garantia of listaGarantia" [value]="garantia.iD_Garantia">
+                                                {{garantia.descripcion}}
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="validarCampos('garantia')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Desbloqueado -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-unlock me-1"></i>
+                                            Desbloqueado
+                                        </label>
+                                        <select formControlName="idEstadoBloqueo" class="form-select modern-input">
+                                            <option *ngFor="let desbloqueo of listaDesbloqueo" [value]="desbloqueo.iD_Bloqueo">
+                                                {{desbloqueo.descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- --------------- Comision Detalle  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Comision Detalle</label>
-                                <input type="number" class="form-control" placeholder="RD$" required formControlName="comisionDetalle" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('comisionDetalle')}">
-                                <!-- <div class="required-field"  *ngIf="validarCampos('comisionDetalle')">
-                            Este campo es requerido.
-                        </div> -->
-                            </div>
-                            <!-- --------------- Comision Mayor  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Comision Mayor</label>
-                                <input type="number" class="form-control" required placeholder="RD$" formControlName="comisionMayor" appNumeric [maxlen]="9" [ngClass]="{'is-invalid':validarCampos('comisionMayor')}">
-                                <!-- <div class="required-field" *ngIf="validarCampos('comisionMayor')">
-                                    Este campo es requerido.
-                                </div> -->
-                            </div>
-                            <!-- --------------- DropDown Tecnologia --------------- -->
-
-                            <div class="col-md-4">
-                                <label class="form-label">Tecnología</label>
-                                <select formControlName="tecnologia" class="form-select">
-                        <option *ngFor="let tecnologia of listaTecnologia"
-                                [value]="tecnologia.iD_Tecnologia">
-                        {{tecnologia.descripcion}}
-                        </option>
-                    </select>
-                            </div>
-
-                            <!-- --------------- DropDown Garantia --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Garantia</label>
-                                <select formControlName="garantia" class="form-select" required
-                                [ngClass]="{'is-invalid': validarCampos('garantia')}">
-                             <option [value]="''" disabled selected>Seleccione garantia</option>
-                                    <option *ngFor="let garantia of listaGarantia"
-                                    [value]="garantia.iD_Garantia">
-                            {{garantia.descripcion}}
-                            </option>
-                        </select>
-                         <div class="required-field" *ngIf="validarCampos('garantia')">
-                           Este campo es requerido.
-                             </div>
-                            </div>
-                            <!-- --------------- DropDown Desbloqueado --------------- -->
-
-                            <div class="col-md-4">
-                                <label class="form-label">Desbloqueado</label>
-                                <select formControlName="idEstadoBloqueo" class="form-select">
-                        <option *ngFor="let desbloqueo of listaDesbloqueo"
-                        [value]="desbloqueo.iD_Bloqueo">
-                        {{desbloqueo.descripcion}}
-                        </option>
-                    </select>
-                            </div>
-
-                            <!-- --------------- Almacen  --------------- -->
-                            <div class="col-md-4">
-                                <label class="form-label">Almacen</label>                                
-                                <select formControlName="almacen" class="form-select" required [ngClass]="{'is-invalid': validarCampos('almacen')}">
-                           <option value="">Seleccione un almacén</option>
-                                    <option *ngFor="let almacen of listaAlmacen"
-                            [value]="almacen.iD_Almacen">
-                            {{almacen.descripcion}}
-                            </option>
-                        </select>
-                        <div class="required-field" *ngIf="validarCampos('almacen')">
-                           Este campo es requerido.
-                             </div>
-                            </div>
-                            <!-- --------------- Marca  --------------- -->
-                            <div class="col-md-5">
-                             <label class="form-label">Marca</label>
-                             <ng-select formControlName="marca" [ngClass]="{'is-invalid': validarCampos('marca')}" (change)="selectoresMarcaModeloValidator()" required>
-                             <ng-option [value]="''" disabled selected>Seleccione una marca</ng-option>
-                             <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
-                               {{marca.descripcion}}
-                            </ng-option>
-                           </ng-select>
-                          <div class="required-field" *ngIf="validarCampos('marca')">
-                            Este campo es requerido.
-                          </div>
-                         </div>
-                            <!-- --------------- Modelo  --------------- -->
-
-                            <div class="col-md-7">
-                                <label class="form-label">Modelo</label>
-                                <ng-select formControlName="modelo" [ngClass]="{'is-invalid': validarCampos('modelo')}" required>
-                                     <ng-option [value]="''" disabled selected>Seleccione un modelo</ng-option>
-                                    <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
-                                        {{modelo.descripcion}}
-                                    </ng-option>
-                                </ng-select>
-                                 <div class="required-field" *ngIf="validarCampos('modelo')">
-                                   Este campo es requerido.
-                              </div>
-                            </div>
-                            <!-- --------------- DropDown Suplidor --------------- -->
-                            <div class="col-md-5">
-                                <label class="form-label">Suplidor</label>
-                                <select class="js-example-basic-single" formControlName="suplidor" class="form-select" required id="js-example-basic-single">
-                       <option [value]="''" disabled selected>Seleccione un suplidor</option>
-                                    <option *ngFor="let suplidor of listaSuplidor"
-                                [value]="suplidor.iD_Suplidor">
-                        {{suplidor.descripcion}}
-                        </option>
-                    </select>
-                                <div class="required-field" *ngIf="validarCampos('suplidor')">
-                                    Este campo es requerido.
+                            <!-- Sección: Inventario y Marca/Modelo -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-box-seam me-2"></i>
+                                        Inventario y Marca/Modelo
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Almacén -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-building me-1"></i>
+                                            Almacén <span class="required-star">*</span>
+                                        </label>
+                                        <select formControlName="almacen" class="form-select modern-input" required [class.is-invalid]="validarCampos('almacen')">
+                                            <option value="">Seleccione un almacén</option>
+                                            <option *ngFor="let almacen of listaAlmacen" [value]="almacen.iD_Almacen">
+                                                {{almacen.descripcion}}
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="validarCampos('almacen')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Marca -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-award me-1"></i>
+                                            Marca <span class="required-star">*</span>
+                                        </label>
+                                        <ng-select formControlName="marca" [class.is-invalid]="validarCampos('marca')" (change)="selectoresMarcaModeloValidator()" required>
+                                            <ng-option [value]="''" disabled selected>Seleccione una marca</ng-option>
+                                            <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
+                                                {{marca.descripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <div class="invalid-feedback" *ngIf="validarCampos('marca')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Modelo -->
+                                    <div class="col-md-4">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-phone me-1"></i>
+                                            Modelo <span class="required-star">*</span>
+                                        </label>
+                                        <ng-select formControlName="modelo" [class.is-invalid]="validarCampos('modelo')" required>
+                                            <ng-option [value]="''" disabled selected>Seleccione un modelo</ng-option>
+                                            <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
+                                                {{modelo.descripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <div class="invalid-feedback" *ngIf="validarCampos('modelo')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-7">
-                                <label class="form-label"></label>
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" placeholder="Leave a comment here" formControlName="notaAdicional" style="height: 100px;">
-                            </textarea>
-                                    <label for="floatingTextarea">Nota adicional</label>
+                            <!-- Sección: Suplidor y Nota Adicional -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-truck me-2"></i>
+                                        Suplidor y Nota Adicional
+                                    </h6>
+                                </div>
+                                <div class="row g-3">
+                                    <!-- Suplidor -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-truck me-1"></i>
+                                            Suplidor <span class="required-star">*</span>
+                                        </label>
+                                        <select class="form-select modern-input" formControlName="suplidor" required>
+                                            <option [value]="''" disabled selected>Seleccione un suplidor</option>
+                                            <option *ngFor="let suplidor of listaSuplidor" [value]="suplidor.iD_Suplidor">
+                                                {{suplidor.descripcion}}
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="validarCampos('suplidor')">
+                                            Este campo es requerido.
+                                        </div>
+                                    </div>
+                                    <!-- Nota adicional -->
+                                    <div class="col-md-6">
+                                        <label class="form-label modern-label">
+                                            <i class="bi bi-journal-text me-1"></i>
+                                            Nota adicional
+                                        </label>
+                                        <textarea class="form-control modern-input" placeholder="Nota adicional" formControlName="notaAdicional" style="height: 100px;"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                           
                             <div class="text-end">
                                 <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
                             </div>
                         </form>
-                        <!-- End  Form -->
                     </div>
                 </div>
             </div>
             <!-- Tabla equipos agregados -->
-
-            <div class="col-lg-5" *ngIf="equipoValorRetorno.length">
-                <div class="card">
+            <div class="col-lg-5 order-lg-2 order-1" *ngIf="equipoValorRetorno.length">
+                <div class="card modern-card">
                     <div class="card-body">
-                        <h5 class="card-title">Equipo agregados</h5>
-                        <div>
-                            <table class="table table-Secondary">
-                                <thead>
+                        <div class="form-header mb-3">
+                            <h5 class="form-title">
+                                <i class="bi bi-list-check me-2 text-primary"></i>
+                                Equipos agregados
+                            </h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped modern-table align-middle">
+                                <thead class="table-primary">
                                     <tr>
-                                        <th>Cod.</th>
+                                        <th>#</th>
                                         <th>IMEI</th>
                                         <th>Marca</th>
                                         <th>Modelo</th>
+                                        <th class="text-center">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
-
-                                        <td>{{i + 1}}</td>
-                                        <td>{{equipo.imei}}</td>
+                                        <td><span class="badge bg-primary">{{i + 1}}</span></td>
+                                        <td><span class="fw-semibold">{{equipo.imei}}</span></td>
                                         <td>{{equipo?.marca}}</td>
                                         <td>{{equipo?.modelo}}</td>
-                                        <td> <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btns flat oorange" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Elimina Equipo">
-                                          <i class="bx bx-trash-alt"></i>
-                                      </button>
+                                        <td class="text-center">
+                                            <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Equipo">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -235,7 +322,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </main>

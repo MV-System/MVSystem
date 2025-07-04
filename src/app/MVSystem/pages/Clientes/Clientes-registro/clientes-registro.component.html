@@ -13,7 +13,7 @@
     
     <section class="section">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-8 order-lg-1 order-2">
                 <div class="card modern-card">
                     <div class="card-body">
                         <!-- Header moderno -->
@@ -247,6 +247,31 @@
                             </div>
                         </form>
                         <!-- End Modern Form -->
+                    </div>
+                </div>
+            </div>
+            <!-- Lista de clientes registrados -->
+            <div class="col-lg-4 order-lg-2 order-1 mb-4 mb-lg-0" *ngIf="clientesRegistrados?.length">
+                <div class="card modern-card h-100">
+                    <div class="card-body">
+                        <div class="form-header mb-3">
+                            <h5 class="form-title">
+                                <i class="bi bi-people-fill me-2 text-primary"></i>
+                                Clientes registrados
+                            </h5>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item py-3 px-0 border-0" *ngFor="let cliente of clientesRegistrados; let i = index">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary">{{ i + 1 }}</span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold">{{ cliente.nombre }} {{ cliente.apellido }}</div>
+                                        <div class="text-muted small"><i class="bi bi-telephone me-1"></i> {{ cliente.telefono }}</div>
+                                        <div class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ cliente.email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

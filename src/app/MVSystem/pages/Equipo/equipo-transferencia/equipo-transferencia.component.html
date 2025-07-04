@@ -16,17 +16,26 @@
   <section class="section">
     <div class="row justify-content-center">
       <!-- Formulario de transferencia -->
-      <div class="col-12 col-md-8 col-lg-6 mb-4">
-        <div class="card h-100">
+      <div class="col-12 col-md-8 col-lg-6 mb-4 order-lg-1 order-2">
+        <div class="card modern-card">
           <div class="card-body">
-            <h5 class="card-title mb-3">Datos de equipo</h5>
-            <form [formGroup]="form" class="row g-3">
+            <div class="form-header mb-4">
+              <h5 class="form-title">
+                <i class="bi bi-arrow-left-right me-2 text-primary"></i>
+                Datos de equipo
+              </h5>
+              <p class="form-subtitle">Complete la información para transferir el equipo</p>
+            </div>
+            <form [formGroup]="form" class="modern-form row g-3">
               <!-- IMEI -->
               <div class="col-12">
-                <label class="form-label" for="imeiInput">IMEI a transferir</label>
+                <label class="form-label modern-label" for="imeiInput">
+                  <i class="bi bi-upc me-1"></i>
+                  IMEI a transferir
+                </label>
                 <input
                   id="imeiInput"
-                  class="form-control"
+                  class="form-control modern-input"
                   placeholder="IMEI"
                   formControlName="imei"
                   required
@@ -36,10 +45,13 @@
               </div>
               <!-- Almacén destino -->
               <div class="col-12">
-                <label class="form-label" for="almacenSelect">Almacén destino</label>
+                <label class="form-label modern-label" for="almacenSelect">
+                  <i class="bi bi-building me-1"></i>
+                  Almacén destino
+                </label>
                 <select
                   id="almacenSelect"
-                  class="form-select"
+                  class="form-select modern-input"
                   formControlName="almacen"
                 >
                   <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
@@ -49,7 +61,10 @@
               </div>
               <!-- Total artículos -->
               <div class="col-12">
-                <label class="form-label">Total artículos</label>
+                <label class="form-label modern-label">
+                  <i class="bi bi-list-ol me-1"></i>
+                  Total artículos
+                </label>
                 <div>
                   <span class="form-control text-center bg-light">
                     {{ cantidadEquipoATransferir }}
@@ -61,15 +76,20 @@
         </div>
       </div>
       <!-- Lista de equipos agregados -->
-      <div class="col-12 col-md-10 col-lg-8" *ngIf="equipoToTransfer.length">
-        <div class="card h-100">
+      <div class="col-12 col-md-10 col-lg-6 order-lg-2 order-1" *ngIf="equipoToTransfer.length">
+        <div class="card modern-card">
           <div class="card-body">
-            <h5 class="card-title mb-3">Equipos agregados</h5>
+            <div class="form-header mb-3">
+              <h5 class="form-title">
+                <i class="bi bi-list-check me-2 text-primary"></i>
+                Equipos agregados
+              </h5>
+            </div>
             <div class="table-responsive">
-              <table class="table table-secondary align-middle">
-                <thead>
+              <table class="table table-hover table-striped modern-table align-middle">
+                <thead class="table-primary">
                   <tr>
-                    <th>Id Transf.</th>
+                    <th>#</th>
                     <th>IMEI</th>
                     <th>Modelo</th>
                     <th>Almacén Salida</th>
@@ -77,9 +97,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let equipo of equipoToTransfer">
-                    <td>{{ equipo.id }}</td>
-                    <td>{{ equipo.imei }}</td>
+                  <tr *ngFor="let equipo of equipoToTransfer; let i = index">
+                    <td><span class="badge bg-primary">{{ i + 1 }}</span></td>
+                    <td><span class="fw-semibold">{{ equipo.imei }}</span></td>
                     <td>{{ equipo?.modelo }}</td>
                     <td>{{ equipo?.almacenSalida }}</td>
                     <td>{{ equipo?.almacenDestino }}</td>
@@ -89,7 +109,10 @@
             </div>
             <div class="text-center mt-4">
               <button class="btn btn-primary" (click)="printReportEquipoVendido()">
-                Imprimir reporte
+                <i class="bi bi-printer"></i> Imprimir Reporte
+              </button>
+              <button class="btn btn-secondary ms-2" type="button" (click)="equipoToTransfer = []" *ngIf="equipoToTransfer.length">
+                <i class="bi bi-x-circle"></i> Limpiar Lista
               </button>
             </div>
           </div>

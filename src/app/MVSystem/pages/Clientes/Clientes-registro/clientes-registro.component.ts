@@ -59,6 +59,7 @@ export class ClientesRegistroComponent implements OnInit {
   listaTipoTelefonos: TipoTelefono[] = [];
   btnDisabled: boolean = true;
   isLoading: boolean = false;
+  clientesRegistrados: any[] = [];
 
   //Forms
   formRegistro: FormGroup = this.fb.group({
@@ -211,17 +212,14 @@ export class ClientesRegistroComponent implements OnInit {
     return !this.formRegistro.valid;
   }
   registroCliente() {
-
     const model: ClienteRegistro = this.modeloRegistroCliente();
     if (this.formRegistro.valid) {
       this.isLoading = true;
-
       this.clientesService.postCliente(model)
         .subscribe({
           next: (clienteInsertado: Cliente) => {
             this.clientesListar = clienteInsertado;
             this.isLoading = false;
-
             if (clienteInsertado.mensaje.includes('ya está')) {
               this.toastr.error(clienteInsertado.mensaje, '',
                 { closeButton: true, progressBar: true });
@@ -229,8 +227,13 @@ export class ClientesRegistroComponent implements OnInit {
             else {
               this.toastr.success(clienteInsertado.mensaje, '',
                 { closeButton: true, progressBar: true });
-              // this.toastr.success('Cliente registrado', '',{closeButton: true,progressBar:true});
-
+              // Agregar cliente a la lista local para mostrar en la card
+              this.clientesRegistrados.unshift({
+                nombre: model.nombres,
+                apellido: model.apellidos,
+                telefono: model.numero_Telefono,
+                email: model.email_Detalle
+              });
               this.formRegistro.reset({
                 tipoCliente: 1,
                 tipoTelefono: 1,

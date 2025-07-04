@@ -1,0 +1,120 @@
+/* Modern card styles reutilizados */
+.modern-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  background: white;
+  backdrop-filter: blur(10px);
+}
+
+.modern-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.card-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 2.5rem !important;
+  border-radius: 1rem;
+}
+
+.form-header {
+  text-align: center;
+  padding: 1rem 0 2rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.form-title {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.form-subtitle {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.form-label.modern-label {
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.form-control.modern-input, .form-select.modern-input {
+  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: #f8f9fa;
+}
+
+.form-control.modern-input:focus, .form-select.modern-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+.required-star {
+  color: #e74c3c;
+  margin-left: 0.25rem;
+}
+
+.invalid-feedback {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #667eea 0%, #5a67d8 100%);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.08);
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #5a67d8 0%, #667eea 100%);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+}
+
+.btn-warning {
+  background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(253, 160, 133, 0.08);
+  transition: all 0.2s;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(253, 160, 133, 0.15);
+}
+
+@media (max-width: 768px) {
+  .modern-card, .card-body {
+    padding: 1rem !important;
+  }
+}
+
+.is-invalid {
+  border: 1px solid #e74c3c !important;
+}

@@ -1,0 +1,97 @@
+/* Modern table and card styles for marcas */
+.modern-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+  transition: all 0.3s ease;
+  background: white;
+  backdrop-filter: blur(10px);
+}
+
+.modern-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.card-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 2.5rem !important;
+  border-radius: 1rem;
+}
+
+.form-header {
+  text-align: center;
+  padding: 1rem 0 2rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.form-title {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.table.modern-table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #f8fafd;
+}
+
+.table.modern-table th {
+  background: #e3eafc;
+  color: #185a9d;
+  font-weight: 700;
+  border: none;
+  font-size: 1.05rem;
+}
+
+.table.modern-table td {
+  background: #fff;
+  border: none;
+  font-size: 1rem;
+  vertical-align: middle;
+  padding: 0.85rem 0.75rem;
+}
+
+.badge.bg-secondary {
+  background: linear-gradient(90deg, #e3eafc 0%, #b5c6e0 100%);
+  color: #185a9d;
+  font-size: 1em;
+  padding: 0.5em 0.9em;
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+
+.table.modern-table tr {
+  transition: background 0.18s;
+}
+
+.table.modern-table tr:hover {
+  background: #f0f4fa;
+}
+
+.marcas-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  border-radius: 0.75rem;
+  background: #f8fafd;
+  box-shadow: 0 2px 8px rgba(24, 90, 157, 0.04);
+}
+
+@media (max-width: 768px) {
+  .modern-card, .card-body {
+    padding: 1rem !important;
+  }
+  .table.modern-table th, .table.modern-table td {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.4rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .marcas-scroll {
+    max-height: 260px;
+  }
+}

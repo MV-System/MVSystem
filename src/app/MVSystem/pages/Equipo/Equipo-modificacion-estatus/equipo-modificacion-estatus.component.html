@@ -13,95 +13,82 @@
     <section class="section">
         <div class="row justify-content-center">
             <div class="col-lg-7">
-                <div class="card">
+                <div class="card modern-card">
                     <div class="card-body">
-                        <h5 class="card-title">Consulta Imei de equipo</h5>
+                        <div class="form-header mb-4">
+                            <h5 class="form-title">
+                                <i class="bi bi-arrow-repeat me-2 text-primary"></i>
+                                Consulta IMEI de equipo
+                            </h5>
+                            <p class="form-subtitle">Modifique el estatus y valores del equipo</p>
+                        </div>
                         <!--  Form -->
-                        <form [formGroup]="cambiarEstadoForm" class="row g-3 needs-validation" novalidate>
+                        <form [formGroup]="cambiarEstadoForm" class="modern-form row g-3 needs-validation" novalidate>
                             <!-- --------------- IMEI  --------------- -->
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">IMEI <span class="required-field">*</span></label>
-                                    
-                                    <input type="text" class="form-control" maxlength="30" placeholder="Enter para realizar busqueda" formControlName="imei" (keyup.enter)="obtenerEquipoByImei()" [readonly]="existeEquipo">
-
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">IMEI <span class="required-star">*</span></label>
+                                <input type="text" class="form-control modern-input" maxlength="30" placeholder="Enter para realizar búsqueda" formControlName="imei" (keyup.enter)="obtenerEquipoByImei()" [readonly]="existeEquipo">
+                            </div>
+                            <!-- Estatus -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Estatus <span class="required-star">*</span></label>
+                                <select formControlName="condicionId" class="form-select modern-input">
+                                    <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
+                                        {{estado?.descripcion}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Costo -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Costo <span class="required-star">*</span></label>
+                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                <div class="invalid-feedback" *ngIf="validarCampos('costoEquipo') && existeEquipo">
+                                    {{mensajeErrorCampoCosto}}
                                 </div>
                             </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Estatus <span class="required-field">*</span></label>
-                                    
-                                    <select formControlName="condicionId" class="form-select">
-                                        <option *ngFor="let estado of equipoCondicionCatalogo" [value]="estado?.iD_Condicion">
-                                            {{estado?.descripcion}}
-                                        </option>
-                                    </select>
+                            <!-- Precio Por Mayor -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Precio Por Mayor  <span class="required-star">*</span></label>
+                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                <div class="invalid-feedback" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
+                                    {{mensajeErrorCampoPrecioMayor}}
                                 </div>
                             </div>
-
-
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Costo <span class="required-field">*</span></label>
-                                    
-                                    <input type="text" class="form-control" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
-                                    <div class="required-field" *ngIf="validarCampos('costoEquipo') && existeEquipo">
-                                        {{mensajeErrorCampoCosto}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Precio Por Mayor  <span class="required-field">*</span></label>
-                                   
-                                    <input type="text" class="form-control" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
-                                    <div class="required-field" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
-                                        {{mensajeErrorCampoPrecioMayor}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Precio de Detalle  <span class="required-field">*</span></label>
-                                   
-                                    <input type="text" class="form-control is-invalid" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
-                                </div>
-                                <div class="required-field" *ngIf="validarCampos('precioDetalle') && existeEquipo">
+                            <!-- Precio de Detalle -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Precio de Detalle  <span class="required-star">*</span></label>
+                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                <div class="invalid-feedback" *ngIf="validarCampos('precioDetalle') && existeEquipo">
                                     {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
                             </div>
-
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Comision Por Mayor</label>
-                                    <input type="text" class="form-control" maxlength="13" formControlName="comisionMayor" currencyMask placeholder="RD$">
-                                </div>
+                            <!-- Comision Por Mayor -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Comisión Por Mayor</label>
+                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="comisionMayor" currencyMask placeholder="RD$">
                             </div>
-
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Comision de Detalle</label>
-                                    <input type="text" class="form-control" maxlength="13" formControlName="comisionDetalle" currencyMask placeholder="RD$">
-                                </div>
+                            <!-- Comision de Detalle -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Comisión de Detalle</label>
+                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="comisionDetalle" currencyMask placeholder="RD$">
                             </div>
-
-
-                            <!-- --------------- DropDown Desbloqueado --------------- -->
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Desbloqueado <span class="required-field">*</span></label>
-                                    
-                                    <select formControlName="estadoBloqueoId" class="form-select">
-                                        <option *ngFor="let estado of equipoEstadosBloqueoCatalogo" [value]="estado?.iD_Bloqueo">
-                                            {{estado?.descripcion}}
-                                        </option>
-                                    </select>
-                                </div>
+                            <!-- DropDown Desbloqueado -->
+                            <div class="col-md-6">
+                                <label class="form-label modern-label">Desbloqueado <span class="required-star">*</span></label>
+                                <select formControlName="estadoBloqueoId" class="form-select modern-input">
+                                    <option *ngFor="let estado of equipoEstadosBloqueoCatalogo" [value]="estado?.iD_Bloqueo">
+                                        {{estado?.descripcion}}
+                                    </option>
+                                </select>
                             </div>
                         </form>
-                        <div class="pt-2">
-                            <button class="btn btn-warning mx-2" (click)="resetForm()" [disabled]=!existeEquipo>Cancelar</button>
-                            <button class="btn btn-primary" (click)="cambiarEstatus()" [disabled]=!existeEquipo>Guardar</button>
+                        <div class="pt-3 text-end">
+                            <button class="btn btn-warning mx-2" (click)="resetForm()" [disabled]=!existeEquipo>
+                                <i class="bi bi-x-circle me-1"></i> Cancelar
+                            </button>
+                            <button class="btn btn-primary" (click)="cambiarEstatus()" [disabled]=!existeEquipo>
+                                <i class="bi bi-save me-1"></i> Guardar
+                            </button>
                         </div>
                         <!-- End  Form -->
                     </div>

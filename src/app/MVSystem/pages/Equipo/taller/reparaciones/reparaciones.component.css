@@ -1,0 +1,165 @@
+/* Modern card styles reutilizados */
+.modern-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  background: white;
+  backdrop-filter: blur(10px);
+}
+
+.modern-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.card-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 2.5rem !important;
+  border-radius: 1rem;
+}
+
+.form-header {
+  text-align: center;
+  padding: 1rem 0 2rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.form-title {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.form-subtitle {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.form-label.modern-label {
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.form-control.modern-input, .form-select.modern-input, ng-select.modern-input, textarea.modern-input {
+  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: #f8f9fa;
+}
+
+.form-control.modern-input:focus, .form-select.modern-input:focus, ng-select.modern-input:focus, textarea.modern-input:focus {
+  border-color: #43cea2;
+  box-shadow: 0 0 0 0.2rem rgba(67, 206, 162, 0.15);
+}
+
+.required-star {
+  color: #e74c3c;
+  margin-left: 0.25rem;
+}
+
+.invalid-feedback {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.btn-primary {
+  background: #e3eafc;
+  color: #185a9d;
+  border: 2px solid #b5c6e0;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(24, 90, 157, 0.06);
+  transition: all 0.18s;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background: #c7daf7;
+  color: #185a9d;
+  border-color: #a3b8d8;
+  box-shadow: 0 4px 16px rgba(24, 90, 157, 0.10);
+  transform: translateY(-1px) scale(1.01);
+}
+
+.btn-primary i {
+  font-size: 1.1em;
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(74, 85, 104, 0.06);
+  transition: all 0.18s;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background: #e2e8f0;
+  color: #2d3748;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(74, 85, 104, 0.10);
+  transform: translateY(-1px) scale(1.01);
+}
+
+.btn-danger {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 2px solid #fed7d7;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(229, 62, 62, 0.06);
+  transition: all 0.18s;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+  background: #fed7d7;
+  color: #c53030;
+  border-color: #feb2b2;
+  box-shadow: 0 4px 16px rgba(229, 62, 62, 0.10);
+  transform: translateY(-1px) scale(1.01);
+}
+
+@media (max-width: 768px) {
+  .modern-card, .card-body {
+    padding: 1rem !important;
+  }
+}
+
+.is-invalid {
+  border: 1px solid #e74c3c !important;
+}

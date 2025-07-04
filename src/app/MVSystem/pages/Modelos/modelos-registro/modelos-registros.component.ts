@@ -100,4 +100,9 @@ debugger;
         {closeButton: true,progressBar:true});
     }
   }
+  get modelosFiltrados() {
+    const valor = this.formRegistro.get('descripcion')?.value || '';
+    if (!valor.trim()) return this.listaModelo;
+    return this.listaModelo.filter(m => m.descripcion?.toLowerCase().includes(valor.trim().toLowerCase()));
+  }
 }
