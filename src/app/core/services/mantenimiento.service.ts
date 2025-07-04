@@ -132,8 +132,8 @@ export class MantenimientoService {
     queryParams = queryParams.append("IdEmpresa", facturaReq.IdEmpresa)
     queryParams = queryParams.append("IdSucursal", facturaReq.IdSucursal)
     queryParams = queryParams.append("ComprobanteCheck", facturaReq.ComprobanteCheck)
-    
     return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
+
   }
   getDetalleFactura(numeroFactura: number, sucursal: number){
     return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)

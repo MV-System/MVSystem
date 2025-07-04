@@ -13,8 +13,6 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { LoginService } from 'src/app/auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
-import { VendedorService } from 'src/app/core/services/vendedor.service';
-import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -31,8 +29,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private loginService: LoginService,
   private validatorPermissionService:ValidatorPermissionService,
-  private rDialogService: RDialogService,
-  private vendedorService: VendedorService) { }
+  private rDialogService: RDialogService,) { }
 
    // Método que se llama cuando cambia el tamaño de la página
 
@@ -54,7 +51,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getFacturas();
     this.getAlmacenes();
-    this.getVendedores();
+
   }
   ComprobanteCheck: number=1;
   isLoading: boolean = false; // Variable para controlar el estado de carga
@@ -63,9 +60,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   breadcrumbItem: string = "Consulta Facturas"
   breadcrumb: string = "Consulta"
   facturas: FacturaConsulta[]=[];
-  todasLasFacturas: FacturaConsulta[]=[]; // Array para almacenar todas las facturas sin filtrar
   almacenes!: Almacen[];
-  listaVendedores: VendedorLista[] = [];
   tipoBusqueda:    number = 3;
   totalFacturado!: number;
   currentPage:     number = 1;
@@ -102,15 +97,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     almacen: [this.loginService.getUserIdSucursal,],
     criterio: ['',],
     factura:['',],
-    rangeDate: [''],
-    vendedor: ['']
+    rangeDate: ['']
   });
   modelFacturaFilter(){
     const {criterio,almacen} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
       criterio: criterio,
-      vendedor: '', // No enviamos el vendedor al API
       fechaInicio: this.paginate.fechaInicio,
       fechaFinal: this.paginate.fechaFinal,
       pageIndex: this.paginate.pageIndex,
@@ -136,12 +129,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
         this.line = facturas[0].line;
         this.lastLine = facturas[0].lastLine;
       }
-      
-      // Almacenar todas las facturas sin filtrar
-      this.todasLasFacturas = facturas;
-      
-      // Aplicar filtro por vendedor del lado del cliente
-      this.aplicarFiltroVendedor();
+      this.facturas = facturas;
     });
     this.subs.push(sub);
 this.loading.hideLoading();
@@ -218,10 +206,10 @@ this.loading.hideLoading();
     this.subs.push(sub);
   }
   pageChanged(index: number) {
-    this.pageIndex = index;
-    this.paginate.pageIndex = this.pageIndex;
-    this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
-  }
+  this.pageIndex = index;
+  this.paginate.pageIndex = this.pageIndex;
+  this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
+}
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.paginate.fechaInicio = '';
@@ -239,62 +227,9 @@ this.loading.hideLoading();
     });
     this.subs.push(sub);
   }
-  
-  getVendedores() {
-    const sub = this.vendedorService.getVendedorLista().subscribe((vendedores) => {
-      this.listaVendedores = vendedores;
-    });
-    this.subs.push(sub);
-  }
-  
   onCheckboxComprobanteChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    
-    // Si el checkbox está marcado, activar filtro de comprobantes
-    if (target.checked) {
-      this.ComprobanteCheck = 2;
-    } else {
-      // Si el checkbox está desmarcado, volver al valor por defecto
-      this.ComprobanteCheck = 1;
-    }
-    
-    this.getFacturas();
-  }
 
-  aplicarFiltroVendedor() {
-    const vendedorSeleccionado = this.form.get('vendedor')?.value;
-    
-    if (!vendedorSeleccionado || vendedorSeleccionado.trim() === '') {
-      // Si no hay vendedor seleccionado, mostrar todas las facturas
-      this.facturas = [...this.todasLasFacturas];
-    } else {
-      // Filtrar por vendedor seleccionado
-      this.facturas = this.todasLasFacturas.filter(factura => 
-        factura.vendedor === vendedorSeleccionado
-      );
-    }
-    
-    // Recalcular los totales basados en las facturas filtradas
-    this.calcularTotalesFiltrados();
-  }
-
-  calcularTotalesFiltrados() {
-    if (this.facturas.length === 0) {
-      this.facturasCantidad = 0;
-      this.totalFacturado = 0;
-    } else {
-      this.facturasCantidad = this.facturas.length;
-      this.totalFacturado = this.facturas.reduce((total, factura) => total + factura.total, 0);
-    }
-  }
-
-  onVendedorChange() {
-    // Solo aplicar filtro del lado del cliente, sin llamar al API
-    this.aplicarFiltroVendedor();
-  }
-
-  onCriterioChange() {
-    // Llamar al API con el nuevo criterio pero mantener el filtro de vendedor
+   this.ComprobanteCheck = 2;
     this.getFacturas();
   }
 

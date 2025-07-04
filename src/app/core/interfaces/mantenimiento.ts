@@ -152,7 +152,7 @@ export interface FacturaFilter extends DatePaging, Pagination {
     IdEmpresa: string;
     IdSucursal: string;
     ComprobanteCheck: number;
-    vendedor?: string;
+
 }
 
 export interface Articulo {
