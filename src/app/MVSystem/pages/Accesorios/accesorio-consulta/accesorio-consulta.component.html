@@ -40,12 +40,7 @@
                                 <div class="col-12">
                                     <div class="card filter-card">
                                         <div class="card-body">
-                                            <div class="filter-header mb-3">
-                                                <h6 class="filter-title">
-                                                    <i class="bi bi-funnel me-2 text-primary"></i>
-                                                    Filtros de Búsqueda
-                                                </h6>
-                                            </div>
+                                          
                                             
                                             <!-- Radio Buttons for Type Selection -->
                                             <div class="type-selection mb-4">
@@ -76,9 +71,60 @@
                                                 </div>
                                             </div>
                                             
-                                            <!-- Search Form -->
-                                            <form [formGroup]="form" role="search">
-                                                <div class="row g-3">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Accesorios Disponibles Component -->
+                        <ng-container *ngIf="accesorioTipo == 1">
+                            <!-- Statistics Cards -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card stats-card">
+                                        <div class="card-body">
+                                            <div class="stats-content">
+                                                <div class="stats-icon">
+                                                    <i class="bi bi-gear-fill text-primary"></i>
+                                                </div>
+                                                <div class="stats-info">
+                                                    <h6 class="stats-title">Total Accesorios</h6>
+                                                    <h3 class="stats-number">{{ accesorioQuantity }}</h3>
+                                                    <small class="stats-subtitle">Unidades en inventario</small>
+                                                </div>
+                                                <!-- Search Form -->
+                                         
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                    <div class="card stats-card">
+                                        <div class="card-body">
+                                            <div class="stats-content">
+                                                <div class="stats-icon">
+                                                    <i class="bi bi-currency-dollar text-success"></i>
+                                                </div>
+                                                <div class="stats-info">
+                                                    <h6 class="stats-title">Total Inventario</h6>
+                                                    <h3 class="stats-number">{{ totalInventario | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                                                    <small class="stats-subtitle">Valor total del inventario</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+   <form [formGroup]="form" role="search">
+      <div class="filter-header mb-3">
+                                                <h6 class="filter-title">
+                                                    <i class="bi bi-funnel me-2 text-primary"></i>
+                                                    Filtros de Búsqueda
+                                                </h6>
+                                            </div>                                            
+    <div class="row g-3">
                                                     <div class="col-md-8">
                                                         <label class="form-label modern-label">
                                                             <i class="bi bi-search me-1"></i>
@@ -105,48 +151,6 @@
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- Accesorios Disponibles Component -->
-                        <ng-container *ngIf="accesorioTipo == 1">
-                            <!-- Statistics Cards -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="card stats-card">
-                                        <div class="card-body">
-                                            <div class="stats-content">
-                                                <div class="stats-icon">
-                                                    <i class="bi bi-gear-fill text-primary"></i>
-                                                </div>
-                                                <div class="stats-info">
-                                                    <h6 class="stats-title">Total Accesorios</h6>
-                                                    <h3 class="stats-number">{{ accesorioQuantity }}</h3>
-                                                    <small class="stats-subtitle">Unidades en inventario</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card stats-card">
-                                        <div class="card-body">
-                                            <div class="stats-content">
-                                                <div class="stats-icon">
-                                                    <i class="bi bi-currency-dollar text-success"></i>
-                                                </div>
-                                                <div class="stats-info">
-                                                    <h6 class="stats-title">Total Inventario</h6>
-                                                    <h3 class="stats-number">{{ totalInventario | currency:'RD$':'symbol':'1.2-2' }}</h3>
-                                                    <small class="stats-subtitle">Valor total del inventario</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Results Section -->
                             <div class="results-section">
                                 <div class="card results-card">

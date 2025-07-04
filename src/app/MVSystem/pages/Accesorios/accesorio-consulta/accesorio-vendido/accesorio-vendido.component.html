@@ -6,62 +6,8 @@
             <div class="col-12">
                 <div class="card filter-card">
                     <div class="card-body">
-                        <div class="filter-header mb-3">
-                            <h6 class="filter-title">
-                                <i class="bi bi-funnel me-2 text-primary"></i>
-                                Filtros de Búsqueda
-                            </h6>
-                        </div>
-                        
-                        <!-- Search Form -->
-                        <form [formGroup]="form" (ngSubmit)="getAccesoriosVendidos()" role="search">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label class="form-label modern-label">
-                                        <i class="bi bi-search me-1"></i>
-                                        Buscar por descripción
-                                    </label>
-                                    <input class="form-control modern-input"
-                                           placeholder="Ej: Cover iPhone, Cargador..."
-                                           formControlName="filter"
-                                           (keyup)="getAccesoriosVendidos()">
-                                </div>
-                                <div class="col-md-4" *ngIf="SelectSucursal()">
-                                    <label class="form-label modern-label">
-                                        <i class="bi bi-building me-1"></i>
-                                        Sucursal
-                                    </label>
-                                    <select class="form-select modern-select" 
-                                            formControlName="almacen" 
-                                            (change)="getAccesoriosVendidos()">
-                                        <option value="" disabled>Seleccione una sucursal</option>
-                                        <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
-                                            {{almacen.descripcion}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label modern-label">
-                                        <i class="bi bi-calendar-range me-1"></i>
-                                        Rango de fechas
-                                    </label>
-                                    <my-date-range-picker
-                                        [options]="myDateRangePickerOptions"
-                                        formControlName="rangeDate"
-                                        (dateRangeChanged)="onDateRangeChanged($event)"
-                                        placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"
-                                        class="modern-date-picker">
-                                    </my-date-range-picker>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
+                       
+                          <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-6 col-lg-3">
             <div class="card stats-card">
@@ -128,6 +74,61 @@
             </div>
         </div>
     </div>
+     <div class="filter-header mb-3">
+                            <h6 class="filter-title">
+                                <i class="bi bi-funnel me-2 text-primary"></i>
+                                Filtros de Búsqueda
+                            </h6>
+                        </div>
+                        <!-- Search Form -->
+                        <form [formGroup]="form" (ngSubmit)="getAccesoriosVendidos()" role="search">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-search me-1"></i>
+                                        Buscar por descripción
+                                    </label>
+                                    <input class="form-control modern-input"
+                                           placeholder="Ej: Cover iPhone, Cargador..."
+                                           formControlName="filter"
+                                           (keyup)="getAccesoriosVendidos()">
+                                </div>
+                                <div class="col-md-4" *ngIf="SelectSucursal()">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-building me-1"></i>
+                                        Sucursal
+                                    </label>
+                                    <select class="form-select modern-select" 
+                                            formControlName="almacen" 
+                                            (change)="getAccesoriosVendidos()">
+                                        <option value="" disabled>Seleccione una sucursal</option>
+                                        <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                                            {{almacen.descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-calendar-range me-1"></i>
+                                        Rango de fechas
+                                    </label>
+                                    <my-date-range-picker
+                                        [options]="myDateRangePickerOptions"
+                                        formControlName="rangeDate"
+                                        (dateRangeChanged)="onDateRangeChanged($event)"
+                                        placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"
+                                        class="modern-date-picker">
+                                    </my-date-range-picker>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
 </div>
   <section class="section">
     <div class="row">
