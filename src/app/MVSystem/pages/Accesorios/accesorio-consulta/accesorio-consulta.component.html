@@ -1,4 +1,3 @@
-
 <main id="main" class="main">
     <div class="pagetitle">
         <h1 id="registro">Consulta de Accesorios</h1>
@@ -34,118 +33,122 @@
                             </div>
                         </div>
 
-                        <!-- Modern Filter Section -->
-                        <div class="filter-section mb-4">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card filter-card">
-                                        <div class="card-body">
-                                            <div class="filter-header mb-3">
-                                                <h6 class="filter-title">
-                                                    <i class="bi bi-funnel me-2 text-primary"></i>
-                                                    Filtros de Búsqueda
-                                                </h6>
-                                            </div>
-                                            
-                                            <!-- Radio Buttons for Type Selection -->
-                                            <div class="type-selection mb-4">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input modern-radio" 
-                                                           type="radio" 
-                                                           name="accesorio" 
-                                                           id="disponibles"
-                                                           value="1" 
-                                                           checked
-                                                           (change)="onCheckboxAccesorioChange($event)">
-                                                    <label class="form-check-label modern-radio-label" for="disponibles">
-                                                        <i class="bi bi-check-circle-fill me-1 text-success"></i>
-                                                        Disponibles
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input modern-radio" 
-                                                           type="radio" 
-                                                           name="accesorio" 
-                                                           id="vendidos"
-                                                           value="2"
-                                                           (change)="onCheckboxAccesorioChange($event)">
-                                                    <label class="form-check-label modern-radio-label" for="vendidos">
-                                                        <i class="bi bi-bag-check-fill me-1 text-warning"></i>
-                                                        Vendidos
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Search Form -->
-                                            <form [formGroup]="form" role="search">
-                                                <div class="row g-3">
-                                                    <div class="col-md-8">
-                                                        <label class="form-label modern-label">
-                                                            <i class="bi bi-search me-1"></i>
-                                                            Buscar por descripción
-                                                        </label>
-                                                        <input class="form-control modern-input"
-                                                               placeholder="Ej: Cover iPhone 14 Pro, Cargador Samsung..."
-                                                               formControlName="accesorio"
-                                                               (keyup)="getAccesorios()">
-                                                    </div>
-                                                    <div class="col-md-4" *ngIf="SelectSucursal()">
-                                                        <label class="form-label modern-label">
-                                                            <i class="bi bi-building me-1"></i>
-                                                            Sucursal
-                                                        </label>
-                                                        <select class="form-select modern-select" 
-                                                                formControlName="almacen" 
-                                                                (change)="getAccesorios()">
-                                                            <option value="" disabled>Seleccione una sucursal</option>
-                                                            <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
-                                                                {{almacen.descripcion}}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                        <!-- Selector de tipo de accesorio (vendidos/disponibles) -->
+                        <div class="type-selection mb-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input modern-radio" 
+                                       type="radio" 
+                                       name="accesorio" 
+                                       id="disponibles"
+                                       value="1" 
+                                       [checked]="accesorioTipo == 1"
+                                       (change)="onCheckboxAccesorioChange($event)">
+                                <label class="form-check-label modern-radio-label" for="disponibles">
+                                    <i class="bi bi-check-circle-fill me-1 text-success"></i>
+                                    Disponibles
+                                </label>
                             </div>
-                        <!-- Accesorios Disponibles Component -->
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input modern-radio" 
+                                       type="radio" 
+                                       name="accesorio" 
+                                       id="vendidos"
+                                       value="2"
+                                       [checked]="accesorioTipo == 2"
+                                       (change)="onCheckboxAccesorioChange($event)">
+                                <label class="form-check-label modern-radio-label" for="vendidos">
+                                    <i class="bi bi-bag-check-fill me-1 text-warning"></i>
+                                    Vendidos
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Totales modernos para accesorios disponibles -->
                         <ng-container *ngIf="accesorioTipo == 1">
-                            <!-- Statistics Cards -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="card stats-card">
-                                        <div class="card-body">
-                                            <div class="stats-content">
-                                                <div class="stats-icon">
-                                                    <i class="bi bi-gear-fill text-primary"></i>
+                            <div class="totales-row mb-3">
+                                <div class="row g-3">
+                                    <!-- Card Total Accesorios -->
+                                    <div class="col-lg-6 col-md-6 col-12">
+                                        <div class="summary-card accesorios-card">
+                                            <div class="summary-card-content">
+                                                <div class="summary-icon">
+                                                    <i class="bi bi-gear-fill"></i>
                                                 </div>
-                                                <div class="stats-info">
-                                                    <h6 class="stats-title">Total Accesorios</h6>
-                                                    <h3 class="stats-number">{{ accesorioQuantity }}</h3>
-                                                    <small class="stats-subtitle">Unidades en inventario</small>
+                                                <div class="summary-info">
+                                                    <h6 class="summary-title">Total Accesorios</h6>
+                                                    <div class="summary-value">{{ accesorioQuantity }}</div>
+                                                    <small class="summary-subtitle">Unidades en inventario</small>
                                                 </div>
                                             </div>
+                                            <div class="summary-decoration accesorios-decoration"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card stats-card">
-                                        <div class="card-body">
-                                            <div class="stats-content">
-                                                <div class="stats-icon">
-                                                    <i class="bi bi-currency-dollar text-success"></i>
+
+                                    <!-- Card Total Inventario -->
+                                    <div class="col-lg-6 col-md-6 col-12">
+                                        <div class="summary-card inventario-card">
+                                            <div class="summary-card-content">
+                                                <div class="summary-icon">
+                                                    <i class="bi bi-currency-dollar"></i>
                                                 </div>
-                                                <div class="stats-info">
-                                                    <h6 class="stats-title">Total Inventario</h6>
-                                                    <h3 class="stats-number">{{ totalInventario | currency:'RD$':'symbol':'1.2-2' }}</h3>
-                                                    <small class="stats-subtitle">Valor total del inventario</small>
+                                                <div class="summary-info">
+                                                    <h6 class="summary-title">Total Inventario</h6>
+                                                    <div class="summary-value">{{ totalInventario | currency:'RD$':'symbol':'1.0-0' }}</div>
+                                                    <small class="summary-subtitle">Valor total del inventario</small>
                                                 </div>
                                             </div>
+                                            <div class="summary-decoration inventario-decoration"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Modern Filter Section para disponibles -->
+                            <div class="filter-section mb-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card filter-card">
+                                            <div class="card-body">
+                                                <div class="filter-header mb-3">
+                                                    <h6 class="filter-title">
+                                                        <i class="bi bi-funnel me-2 text-primary"></i>
+                                                        Filtros de Búsqueda
+                                                    </h6>
+                                                </div>
+                                                <!-- Search Form -->
+                                                <form [formGroup]="form" role="search">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-8">
+                                                            <label class="form-label modern-label">
+                                                                <i class="bi bi-search me-1"></i>
+                                                                Buscar por descripción
+                                                            </label>
+                                                            <input class="form-control modern-input"
+                                                                placeholder="Ej: Cover iPhone 14 Pro, Cargador Samsung..."
+                                                                formControlName="accesorio"
+                                                                (keyup)="getAccesorios()">
+                                                        </div>
+                                                        <div class="col-md-4" *ngIf="SelectSucursal()">
+                                                            <label class="form-label modern-label">
+                                                                <i class="bi bi-building me-1"></i>
+                                                                Sucursal
+                                                            </label>
+                                                            <select class="form-select modern-select" 
+                                                                    formControlName="almacen" 
+                                                                    (change)="getAccesorios()">
+                                                                <option value="" disabled>Seleccione una sucursal</option>
+                                                                <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                                                                    {{almacen.descripcion}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div> <!-- card-body -->
+                                        </div> <!-- card -->
+                                    </div> <!-- col-12 -->
+                                </div> <!-- row -->
+                            </div> <!-- filter-section -->
 
                             <!-- Results Section -->
                             <div class="results-section">
@@ -199,7 +202,6 @@
                 </div>
             </div>
         </div>
-           </div>
     </section>
 </main>
 

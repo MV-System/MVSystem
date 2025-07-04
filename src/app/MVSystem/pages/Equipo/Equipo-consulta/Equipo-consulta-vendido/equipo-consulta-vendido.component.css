@@ -68,3 +68,260 @@ td {
    border: 1px solid #b3c6ff;
     background: #f6f9ff;
 }
+
+/* ===== SUMMARY CARDS MODERNIZADAS - HORIZONTALES ===== */
+.totales-row {
+  margin-bottom: 1.5rem;
+}
+
+.summary-card {
+  position: relative;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-left: 4px solid;
+  height: 100%;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.summary-info {
+  flex: 1;
+}
+
+.summary-title {
+  color: #6c757d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+  line-height: 1.1;
+}
+
+.summary-subtitle {
+  color: #6c757d;
+  font-size: 0.7rem;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.summary-decoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+/* ===== ESTILOS ESPECÍFICOS POR CARD ===== */
+.equipos-card {
+  border-left-color: #17a2b8;
+}
+
+.equipos-card .summary-icon {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  color: #17a2b8;
+}
+
+.equipos-decoration {
+  background: #17a2b8;
+}
+
+.inventario-card {
+  border-left-color: #6f42c1;
+}
+
+.inventario-card .summary-icon {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  color: #6f42c1;
+}
+
+.inventario-decoration {
+  background: #6f42c1;
+}
+
+.total-card {
+  border-left-color: #007bff;
+}
+
+.total-card .summary-icon {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #007bff;
+}
+
+.total-decoration {
+  background: #007bff;
+}
+
+.ganancias-card {
+  border-left-color: #28a745;
+}
+
+.ganancias-card .summary-icon {
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+  color: #28a745;
+}
+
+.ganancias-decoration {
+  background: #28a745;
+}
+
+.itbis-card {
+  border-left-color: #fd7e14;
+}
+
+.itbis-card .summary-icon {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #fd7e14;
+}
+
+.itbis-decoration {
+  background: #fd7e14;
+}
+
+/* ===== CARD DE ACCIÓN ===== */
+.action-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.btn-modern {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.action-btn {
+  height: 100%;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== FILTROS MODERNOS ===== */
+.filtros-row {
+  margin-bottom: 1.5rem;
+}
+
+.modern-filters-card-enhanced {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.filters-header-enhanced {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem 1.25rem;
+}
+
+.filters-title-enhanced {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.filters-body-enhanced {
+  padding: 1.25rem;
+  background: white;
+}
+
+.filter-group {
+  margin-bottom: 0;
+}
+
+.modern-label-enhanced {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+.modern-input-enhanced {
+  border-radius: 0.5rem;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.modern-input-enhanced:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.date-picker-container {
+  position: relative;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .summary-value {
+    font-size: 1rem;
+  }
+  
+  .summary-title {
+    font-size: 0.7rem;
+  }
+  
+  .summary-subtitle {
+    font-size: 0.65rem;
+  }
+  
+  .summary-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+}

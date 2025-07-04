@@ -298,7 +298,113 @@ main.main {
   transform: translateY(-1px);
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== CARDS DE TOTALES MODERNAS ===== */
+.totales-row {
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    height: 120px;
+    border-left: 4px solid;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card-content {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.accesorios-card {
+    border-left-color: #17a2b8;
+}
+
+.accesorios-card .summary-icon {
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    color: #17a2b8;
+}
+
+.accesorios-decoration {
+    background: #17a2b8;
+}
+
+.inventario-card {
+    border-left-color: #6f42c1;
+}
+
+.inventario-card .summary-icon {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    color: #6f42c1;
+}
+
+.inventario-decoration {
+    background: #6f42c1;
+}
+
+.summary-info {
+    flex: 1;
+}
+
+.summary-title {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #495057;
+    margin: 0 0 0.25rem 0;
+    line-height: 1;
+}
+
+.summary-subtitle {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.summary-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    opacity: 0.1;
+    z-index: 1;
+}
+
 @media (max-width: 768px) {
   .card-body {
     padding: 1.5rem !important;
@@ -347,6 +453,22 @@ main.main {
   
   .header-title p {
     display: none;
+  }
+
+  .summary-card {
+    height: auto;
+    min-height: 100px;
+  }
+  .summary-card-content {
+    padding: 1rem;
+  }
+  .summary-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  .summary-value {
+    font-size: 1.25rem;
   }
 }
 

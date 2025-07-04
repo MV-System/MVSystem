@@ -43,6 +43,8 @@ export class AccesorioConsultaComponent implements OnInit {
   accesorioTipo:   number = 1;
   disponible:      number = 1;
   vendido:         number = 2;
+  totalFacturado: number = 0;
+  totalVendidos: number = 0;
   form: FormGroup = this.fb.group({
     almacen: [0,],
     accesorio:['',],
