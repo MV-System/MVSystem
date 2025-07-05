@@ -63,7 +63,7 @@
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por cliente, # de factura
                                     </label>
-                                    <input type="text" class="form-control modern-input busqueda-input"
+                                    <input type="text" class="form-control modern-input"
                                            placeholder="Ej: Cliente, número de factura..."
                                            formControlName="criterio"
                                            (keyup)="getFacturas()">
@@ -114,7 +114,7 @@
                             <!-- Botones de acción modernos en una sola fila debajo de los filtros -->
                             <div class="row g-3 mb-4 mt-2">
                                 <div class="col-md-6">
-                                    <button class="btn button btn-primary btn-lg shadow-lg pulse-animation w-100 d-flex align-items-center justify-content-center"
+                                    <button class="button-imprimir-reporte w-100"
                                         [ngClass]="{'disabled': !facturas.length}"
                                         (click)="printReportFacturaConsulta()">
                                         <i class="bi bi-printer me-2"></i>
@@ -122,7 +122,7 @@
                                     </button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button class="btn button btn-primary btn-lg shadow-lg pulse-animation w-100 d-flex align-items-center justify-content-center"
+                                    <button class="button-imprimir-reporte w-100"
                                         [ngClass]="{'disabled': (!onFacturaButton)}"
                                         (click)="ReimprimeFactura()">
                                         <i class="bi bi-arrow-repeat me-2"></i>

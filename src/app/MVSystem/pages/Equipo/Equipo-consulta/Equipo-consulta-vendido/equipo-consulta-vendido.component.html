@@ -1,155 +1,144 @@
 <r-loading *ngIf="isPrint"></r-loading>
 <div class="box animate__animated animate__fadeIn">
     <h1>Equipos Vendidos</h1>
+    <!-- Tarjetas de totales arriba de los filtros -->
+    <div class="row mb-4">
+      <div class="col-md-2">
+        <div class="stats-card">
+          <div class="stats-content">
+            <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
+            <div class="stats-info">
+              <h6 class="stats-title">Total Equipos</h6>
+              <div class="stats-number">{{ equipoQuantity }}</div>
+              <small class="stats-subtitle">Vendidos</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <div class="stats-content">
+            <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
+            <div class="stats-info">
+              <h6 class="stats-title">Total Inventario</h6>
+              <div class="stats-number">{{ totalInventario | currency }}</div>
+              <small class="stats-subtitle">Inventario vendido</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <div class="stats-content">
+            <div class="stats-icon"><i class="bi bi-graph-up-arrow text-info"></i></div>
+            <div class="stats-info">
+              <h6 class="stats-title">Total Facturado</h6>
+              <div class="stats-number">{{ totalFacturado | currency }}</div>
+              <small class="stats-subtitle">Facturación</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <div class="stats-content">
+            <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
+            <div class="stats-info">
+              <h6 class="stats-title">Total Ganancias</h6>
+              <div class="stats-number">{{ totalGanancia | currency }}</div>
+              <small class="stats-subtitle">Ganancias netas</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <div class="stats-content">
+            <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
+            <div class="stats-info">
+              <h6 class="stats-title">Total Itbis</h6>
+              <div class="stats-number">{{ totalItbis | currency }}</div>
+              <small class="stats-subtitle">Impuestos</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
-        <div class="row ">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <span class="card-title">Filtros</span>
-
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Por telefono</label>
-                                <div class="searchbox" formControlName="telefono">
-                                    <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
-                                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Por IMEI</label>
-                                <div class="searchbox" formControlName="search">
-                                    <input type="search" formControlName="imei" class="form-control" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
-                                    <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
-                                <label class="form-label mb-1">Sucursal</label>
-                                <select class="form-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
-                            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
-                                {{ almacen.descripcion }}
-                            </option>
-                        </select>
-                            </div>
-                            
-                            <!-- <div class="col-md-4">
-                               <label class="form-label">Almacen</label>
-                                <select class="form-select chip" formControlName="almacen" (change)="obtenerEquiposVendidos()">
-                 <option value="" selected>Selecciona un almacén</option>
-                 <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
-                   {{ almacen.descripcion }}
-                 </option>
-               </select>
-                            </div> -->
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <!-- --------------- Suplidores --------------- -->
-                                    <label class="form-label">Suplidor</label>
-                                    <select class="form-select chip" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
-                                  <option value="" selected>Selecciona un Suplidor</option>
-                                  <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
-                                    {{ Suplidor.descripcion }}
-                                  </option>
-                        </select>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <!-- Search by -->
-                                    <!-- --------------- Vendedores --------------- -->
-                                    <label class="form-label">Vendedor</label>
-                                    <select class="form-select chip" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
-                                <option value="" selected>Selecciona un Vendedor</option>
-                        <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
-                          {{ vendedor.nombres }}
-                        </option>
-                      </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <!-- Search by -->
-                                    <!-- --------------- Modelos --------------- -->
-                                    <label class="form-label">Modelo</label>
-                                    <select class="form-select chip" formControlName="modelo" (change)="obtenerEquiposVendidos()">
-                    <option value="" selected>Selecciona un Modelo</option>
-            <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
-              {{ modelo.descripcion }}
+  <div class="card filter-card mb-4">
+    <div class="stats-card">
+      <div class="filter-header mb-3">
+        <h6 class="filter-title">
+          <i class="bi bi-funnel me-2 text-primary"></i>
+          Filtros de Búsqueda
+        </h6>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="form-label">Por telefono</label>
+          <div class="searchbox" formControlName="telefono">
+            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
+            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Por IMEI</label>
+          <div class="searchbox" formControlName="search">
+            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
+            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
+          <label class="form-label mb-1">Sucursal</label>
+          <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
+            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+              {{ almacen.descripcion }}
             </option>
           </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <!-- <div class="col-md-5">
-                                <label class="form-label row mx-2">Fecha de registro</label>
-                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder=" {{ FechaInicio| date }} -  {{
-                    fechaHoy | date
-                  }}">
-                                </my-date-range-picker>
-                            </div> -->
-                            <div class="col-md-5">
-                                <label class="form-label row mx-2">Fecha de facturación</label>
-                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
-                                </my-date-range-picker>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Botón Imprimir -->
-                <button class="btn print" [ngClass]="{'disabled':!equiposVendidos.length}" (click)="printReportEquipoVendido()">
-                  Imprimir reporte <i class="bi bi-printer"></i>
-              </button>
-            </div>
-            <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mx-1 text-center mt-3">
-                            <!-- Cuadro totales -->
-                            <ng-container>
-                                <div class="col-md-12">
-                                    <div class="row mb-2">
-                                        Total Equipos
-                                        <label class="form-control total">
-                                        {{ equipoQuantity }}
-
-                                        </label>
-                                    </div>
-                                    <div class="row mb-2">
-                                        Total Inventario
-                                        <label class="form-control total">
-                      {{ totalInventario | currency }}
-                    </label>
-                                    </div>
-                                    <div class="row mb-2">
-                                        Total Facturado
-
-                                        <label class="form-control total">
-                      {{ totalFacturado | currency }}
-                    </label>
-                                    </div>
-                                    <div class="row mb-2">
-                                        Total Ganancias
-                                        <label class="form-control total">
-                      {{ totalGanancia | currency }}
-                    </label>
-                                    </div>
-                                    <div class="row mb-2">
-                                        Total Itbis
-                                        <label class="form-control total">
-                      {{ totalItbis | currency }}
-                    </label>
-                                    </div>
-                                </div>
-                            </ng-container>
-
-                            <!-- Fin Cuadro totales -->
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </form>
+        <div class="row">
+          <div class="col-md-4">
+            <!-- --------------- Suplidores --------------- -->
+            <label class="form-label">Suplidor</label>
+            <select class="form-select modern-select" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
+              <option value="" selected>Selecciona un Suplidor</option>
+              <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
+                {{ Suplidor.descripcion }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <!-- --------------- Vendedores --------------- -->
+            <label class="form-label">Vendedor</label>
+            <select class="form-select modern-select" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
+              <option value="" selected>Selecciona un Vendedor</option>
+              <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
+                {{ vendedor.nombres }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <!-- --------------- Modelos --------------- -->
+            <label class="form-label">Modelo</label>
+            <select class="form-select modern-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
+              <option value="" selected>Selecciona un Modelo</option>
+              <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+                {{ modelo.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label class="form-label row mx-2">Fecha de facturación</label>
+          <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
+          </my-date-range-picker>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
         <span>Cargando datos, por favor espere...</span>

@@ -22,11 +22,11 @@
                             </h5>
                             <p class="form-subtitle">Complete la información para registrar un nuevo modelo</p>
                         </div>
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroModelo()" class="modern-form" novalidate style="background: #f8fafd; border-radius: 1rem; box-shadow: 0 2px 8px rgba(24,90,157,0.06); padding: 2rem 1.5rem;">
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroModelo()" class="modern-form">
                             <div class="row g-4 align-items-end">
                                 <!-- Marca -->
                                 <div class="col-md-6">
-                                    <label class="form-label modern-label" style="font-size:1.1rem; color:#185a9d; font-weight:600;">
+                                    <label class="form-label modern-label">
                                         <i class="bi bi-award me-1"></i>
                                         Marca
                                     </label>
@@ -41,19 +41,19 @@
                                 </div>
                                 <!-- Nombre del modelo -->
                                 <div class="col-md-6">
-                                    <label class="form-label modern-label" style="font-size:1.1rem; color:#185a9d; font-weight:600; display:flex; align-items:center; gap:0.4rem;">
+                                    <label class="form-label modern-label d-flex  gap-1">
                                         <i class="bi bi-type me-1"></i>
                                         <span>Nombre del Modelo</span>
-                                        <span class="required-star" style="color:#e74c3c; font-size:1.2em; margin-left:0.3em;">*</span>
+                                        <span class="required-star">*</span>
                                     </label>
-                                    <input type="text" class="form-control modern-input" required formControlName="descripcion" aria-describedby="inputGroupPrepend" style="font-size:1.08rem; border-radius:0.6rem; background:#f5f7fa; border:1.5px solid #b5c6e0;">
+                                    <input type="text" class="form-control modern-input" required formControlName="descripcion" aria-describedby="inputGroupPrepend">
                                     <div class="invalid-feedback" *ngIf="validarCampos('descripcion')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
                                 <!-- Botón -->
                                 <div class="col-12 text-end mt-3">
-                                    <button class="btn btn-primary px-5" type="submit" [ngClass]="{'disabled':btnDisable()}" style="font-size:1.08rem; border-radius:0.6rem;">
+                                    <button class="button-guardar w-100" type="submit" [ngClass]="{'disabled':btnDisable()}" style="font-size:1.08rem; border-radius:0.6rem;">
                                         <i class="bi bi-save me-1"></i> Guardar
                                     </button>
                                 </div>

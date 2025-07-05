@@ -12,7 +12,7 @@
     </div>
     <div class="col-md-6 mb-3" *ngIf="SelectSucursal()">
       <label class="form-label">Sucursal</label>
-      <select class="form-select" formControlName="almacen" (change)="GetUtilidades()">
+      <select class="form-select modern-select" formControlName="almacen" (change)="GetUtilidades()">
         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
           {{ almacen.descripcion }}
         </option>

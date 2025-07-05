@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-3">
                             <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
-                            <select class="form-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
+                            <select class="form-select modern-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
                               <option *ngFor="let TipoFactura of facturaTipos"
                                   [value]="TipoFactura.iD_Tipo_Factura">
                                   {{TipoFactura.descripcion_Factura_Tipo}}
@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-3" *ngIf="isFactura">
                             <label class="form-label">Tipo de Comprobante <span class="required-field">*</span></label>
-                            <select class="form-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
+                            <select class="form-select modern-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
                               <option *ngFor="let tipoComprobante of comprobanteTipos;"
                                   [value]="tipoComprobante.nfcTipoNumero">
                                   {{tipoComprobante.nfcTipoDescripcion}}
@@ -33,16 +33,16 @@
                         </div>
                         <div class="col-3">
                             <label class="form-label">Aplicar ITBIS
-                              <!-- <span class="required-field">*</span> -->
+                          
                           </label>
-                            <select class="form-select" formControlName="aplicarItbis" (change)="refreshGeneralValues()">
+                            <select class="form-select modern-select" formControlName="aplicarItbis" (change)="refreshGeneralValues()">
                               <option value=true>Si</option>
                               <option value=false>No</option>
                           </select>
                         </div>
                         <div class="col-3">
                             <label class="form-label">Vendedor <span class="required-field">*</span></label>
-                            <select class="form-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
+                            <select class="form-select modern-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
                               <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                                   {{vendedor.nombres}} {{vendedor.apellidos}}
                               </option>
@@ -56,15 +56,7 @@
             </div>
             <div id="invoice-wrapper" class="box grid">
                 <div class="leftcol">
-                    <!-- <div class="logo"><img src="https://blitsbedrukt.nl/wp-content/uploads/2015/09/fake-logo-2.png" alt=""></div>
-                    <div class="companydetail">
-                        <strong class="name"></strong>
-                        <div class="info">
-                            <address></address>
-                            <span class="phone"></span>
-                            <span class="email"></span>
-                        </div>
-                    </div> -->
+                   
                 </div>
                 <div class="rightcol">
                     <h3 class="sub-title">{{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
@@ -73,7 +65,11 @@
                             <label for="client" class="form-label">{{isFactura?'Facturar':'Cotización'}} a:<span class="required-field">*</span></label>
                             <div class="search-customer grid">
                                 <!-- ng-select para buscar un cliente por teléfono -->
-                                <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">
+                                <ng-select formControlName="telefono" 
+                                class="modern-select-ng flex-grow-1"
+                                (change)="obtenerClientesPorNombreTelefono()" 
+                                [clearable]="false" 
+                                [ngClass]="{ 'is-invalid': true }">
                                     <!-- Clases condicionales, puedes cambiar 'true' por una condición real -->
 
                                     <!-- Aquí se muestran las opciones del cliente, por cada cliente en la lista 'customers' -->
@@ -87,13 +83,6 @@
                                   <i class="bx bx-plus"></i>
                               </button>
 
-                                <!-- Mensaje de validación de teléfono si es requerido -->
-                                <!-- Se mantiene comentado, pero sería bueno habilitarlo si es necesario -->
-                                <!--
-                              <div class="required-field" *ngIf="validarCampos('telefono')">
-                                  Este campo es requerido.
-                              </div>
-                              -->
                             </div>
 
                             <div class="clientDetail">
@@ -106,7 +95,7 @@
                                 <div class="grid two-cols" *ngIf="isFactura">
                                     <div><strong>Tipo de pago:</strong></div>
                                     <div class="info">
-                                        <select formControlName="tipoPago" class="form-select" (change)="onChangeTipoPago()">
+                                        <select formControlName="tipoPago" class="form-select modern-select" (change)="onChangeTipoPago()">
                                       <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
                                           {{ TipoPago.descripcion_Tipo_Pagos }}
                                       </option>
@@ -147,7 +136,7 @@
                                 <div class="grid two-cols">
                                     <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
                                     <div>
-                                        <select formControlName="garantia" class="form-select">
+                                        <select formControlName="garantia" class="form-select modern-select">
                                           <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
                                               {{garantia.descripcion}}
                                           </option>
@@ -177,7 +166,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <!-- Caja de texto -->
                             <div class="flex-grow-1 me-3">
-                                <input type="text" class="form-control" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
+                                <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
                             </div>
 
                             <!-- Botón -->
@@ -206,7 +195,7 @@
                                     <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
                                         <ng-container [formGroupName]="i">
                                             <td>
-                                                <ng-select class="form-select"
+                                                <ng-select class="form-select modern-select-ng"
                                                 formControlName="articulo"
                                                 id="articulo"
                                                 [addTag]="addArticuloImei"
@@ -293,7 +282,7 @@
                                    *ngIf="isLoading"></span>
                       </button>
 
-                        <button class="btns secondary big" (click)="onClean()">
+                        <button class="button-limpiar" (click)="onClean()">
                               Limpiar datos
                       </button>
                     </div>

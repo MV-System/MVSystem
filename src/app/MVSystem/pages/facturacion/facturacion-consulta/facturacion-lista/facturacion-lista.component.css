@@ -231,17 +231,3 @@ tr.detalle-row, .detalle-row td {
   color: #fff;
   box-shadow: 0 2px 8px rgba(110,168,254,0.10);
 }
-.id-badge {
-  background: linear-gradient(135deg, #a8c8d8 0%, #7c8db5 100%) !important;
-  color: white !important;
-  padding: 0.25rem 0.5rem !important;
-  border-radius: 0.5rem !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  box-shadow: 0 2px 8px rgba(120, 165, 196, 0.3);
-  display: inline-block;
-  margin-left: 0.3rem;
-}
-.mv-table, .factura-cards, .factura-card, .detalle-row, .tr-hover, .selected-row, .collapsed-row, .results-title, .count-badge, .id-badge, .pagination-info, .card.results-card, .card.stats-card, .card-body, .form-label, .form-control, .form-select {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-}

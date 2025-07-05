@@ -1,4 +1,3 @@
-
 .scroll-table {
   overflow: auto;
   white-space: nowrap;
@@ -36,15 +35,11 @@ td {
 }
 
 .table th:nth-child(4),
-.table td:nth-child(4) {
-  width: auto;
-  /* La columna TIPO DE FACTURA se expandirá según el contenido */
-}
-
+.table td:nth-child(4),
 .table th:nth-child(2),
 .table td:nth-child(2) {
   width: auto !important;
-  /* La columna TELEFONO se expandirá según el contenido */
+  /* La columna TIPO DE FACTURA se expandirá según el contenido */
 }
 
 .table {
@@ -55,10 +50,6 @@ td {
 .scroll-table {
   overflow: auto;
   white-space: nowrap;
-}
-
-.display-filter-content {
-  display: flex !important;
 }
 
 *::-webkit-scrollbar {

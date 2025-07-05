@@ -112,7 +112,7 @@ main.main {
   margin-left: 0.5rem;
 }
 
-.modern-input,
+
 .modern-select {
   border: 2px solid #e2e8f0;
   border-radius: 0.75rem;
@@ -123,17 +123,12 @@ main.main {
   backdrop-filter: blur(10px);
 }
 
-.modern-input:focus,
+
 .modern-select:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
   background: white;
   outline: none;
-}
-
-.modern-input::placeholder {
-  color: #a0aec0;
-  font-weight: 400;
 }
 
 /* ===== NG-SELECT MODERNO ===== */
@@ -383,7 +378,7 @@ main.main {
     font-size: 1.25rem;
   }
   
-  .modern-input,
+  
   .modern-select {
     padding: 0.625rem 0.875rem;
     font-size: 0.9rem;

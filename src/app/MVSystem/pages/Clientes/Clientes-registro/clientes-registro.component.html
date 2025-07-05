@@ -59,7 +59,9 @@
                                             <i class="bi bi-person me-1"></i>
                                             Nombre <span class="required-asterisk">*</span>
                                         </label>
-                                        <input type="text" class="form-control modern-input" formControlName="nombre" 
+                                        <input type="text" 
+                                        class="form-control modern-input" 
+                                        formControlName="nombre" 
                                                placeholder="Ingrese el nombre"
                                                [ngClass]="{'is-invalid':validarCampos('nombre')}">
                                         <div class="error-message" *ngIf="validarCampos('nombre')">
@@ -74,7 +76,7 @@
                                             <i class="bi bi-person-badge me-1"></i>
                                             Apellido <span class="required-asterisk">*</span>
                                         </label>
-                                        <input type="text" class="form-control modern-input" formControlName="apellido" 
+                                        <input type="text"  class="form-control modern-input"  formControlName="apellido" 
                                                placeholder="Ingrese el apellido"
                                                [ngClass]="{'is-invalid':validarCampos('apellido')}">
                                         <div class="error-message" *ngIf="validarCampos('apellido')">
@@ -232,17 +234,18 @@
                             <!-- Botón de Guardar Modernizado -->
                             <div class="form-actions">
                                 <div class="d-flex justify-content-center gap-3">
-                                    <button type="button" class="btn btn-secondary btn-lg modern-btn-secondary" 
-                                            (click)="limpiarFormulario()">
-                                        <i class="bi bi-arrow-clockwise me-2"></i>
-                                        Limpiar
-                                    </button>
-                                    <button type="submit" class="btn btn-primary btn-lg modern-btn-primary" 
+                                    <button type="submit" class="button-guardar" 
                                             [disabled]="btnDisable() || isLoading">
                                         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
                                         <i *ngIf="!isLoading" class="bi bi-check-circle-fill me-2"></i>
                                         {{isLoading ? 'Guardando...' : 'Guardar Cliente'}}
                                     </button>
+                                    <button type="button" class="button-limpiar" 
+                                            (click)="limpiarFormulario()">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>
+                                        Limpiar
+                                    </button>
+                                    
                                 </div>
                             </div>
                         </form>

@@ -35,7 +35,7 @@
                 </label>
                 <input
                   id="imeiInput"
-                  class="form-control modern-input"
+                  class="form-control modern-input busqueda-input"
                   placeholder="IMEI"
                   formControlName="imei"
                   required
@@ -51,9 +51,8 @@
                 </label>
                 <select
                   id="almacenSelect"
-                  class="form-select modern-input"
-                  formControlName="almacen"
-                >
+                  class="form-select modern-select"
+                  formControlName="almacen">
                   <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                     {{ almacen.descripcion }}
                   </option>
@@ -108,10 +107,10 @@
               </table>
             </div>
             <div class="text-center mt-4">
-              <button class="btn btn-primary" (click)="printReportEquipoVendido()">
+              <button class="button-imprimir-reporte" (click)="printReportEquipoVendido()">
                 <i class="bi bi-printer"></i> Imprimir Reporte
               </button>
-              <button class="btn btn-secondary ms-2" type="button" (click)="equipoToTransfer = []" *ngIf="equipoToTransfer.length">
+              <button class="button-limpiar" type="button" (click)="equipoToTransfer = []" *ngIf="equipoToTransfer.length">
                 <i class="bi bi-x-circle"></i> Limpiar Lista
               </button>
             </div>

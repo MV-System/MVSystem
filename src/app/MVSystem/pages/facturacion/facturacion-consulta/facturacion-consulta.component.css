@@ -29,15 +29,6 @@
     }
 }
 
-/* Opcional: Si necesitas ajustar la separación o alineación, agrega esto a tu archivo CSS */
-.d-flex .form-check-label {
-  display: flex;
-  align-items: center; /* Alinea verticalmente el radio button con el texto */
-}
-
-.d-flex .form-control {
-  flex: 1; /* Hace que el input de búsqueda ocupe todo el espacio disponible */
-}
 @media (max-width: 600px) {
   .row .btn.print {
     margin-bottom: 0.7rem;
@@ -45,87 +36,6 @@
   }
 }
 
-/* Estilo para el dropdown de vendedor */
-select[formControlName="vendedor"] {
-  color: #185a9d;
-  font-weight: 600;
-  background: #f5f7fa;
-  border: 2px solid #b5c6e0;
-  border-radius: 0.6rem;
-}
-select[formControlName="vendedor"] option {
-  color: #185a9d;
-  font-weight: 500;
-  background: #e3eafc;
-}
-
-/* Dropdown sucursal moderno igual que accesorios */
-select.form-select.modern-select[formControlName="almacen"] {
-  color: #185a9d;
-  font-weight: 600;
-  background: #f5f7fa;
-  border: 2px solid #b5c6e0;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(24,90,157,0.04);
-}
-select.form-select.modern-select[formControlName="almacen"]:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
-  background: #fff;
-  outline: none;
-}
-select.form-select.modern-select[formControlName="almacen"] option {
-  color: #185a9d;
-  font-weight: 500;
-  background: #e3eafc;
-}
-
-/* Dropdown vendedor moderno igual que sucursal */
-select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"] {
-  color: #2c3e50;
-  font-weight: 600;
-  background: #f5f7fa;
-  border: 2px solid #bfc9d1;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(191,201,209,0.04);
-}
-select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"]:focus {
-  border-color: #bfc9d1;
-  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
-  background: #fff;
-  outline: none;
-}
-select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"] option {
-  color: #2c3e50;
-  font-weight: 500;
-  background: #f5f7fa;
-}
-
-/* Botones modernos con colores suaves y gradiente - ELIMINADO
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  border: none !important;
-  border-radius: 0.75rem !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 600 !important;
-  font-size: 1rem !important;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
-}
 */
 /* ===== CARDS DE ESTADÍSTICAS ===== */
 .stats-card {
@@ -220,39 +130,7 @@ select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"] o
   justify-content: center;
 }
 
-/* Botón moderno con un solo tono azul suave */
-.button {
-  background: #bfc9d1; /* gris claro neutro */
-  color: #2c3e50;
-  border: none;
-  border-radius: 0.8em;
-  padding: 0.85em 2em;
-  font-weight: 700;
-  font-size: 1.1em;
-  box-shadow: 0 6px 24px rgba(191, 201, 209, 0.18), 0 1.5px 4px rgba(0,0,0,0.08);
-  transition: all 0.18s cubic-bezier(.4,2,.6,1);
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-.button:hover {
-  color: #fff;
-  background: #6ea8fe;
-  box-shadow: 0 10px 32px rgba(110, 168, 254, 0.22), 0 2px 8px rgba(0,0,0,0.10);
-  transform: translateY(-2px) scale(1.03);
-}
-.button:active {
-  top: 1px;
-  filter: brightness(0.97);
-}
-.button i {
-  font-size: 1.3em;
-  margin-right: 0.6em;
-}
+
 
 /* Quitar azul de selects modernos */
 select[formControlName="vendedor"],
@@ -270,21 +148,6 @@ select.form-select.modern-select[formControlName="almacen"]:focus {
   border-color: #bfc9d1;
   box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
   background: #fff;
-  outline: none;
-}
-
-/* Quitar azul de inputs modernos */
-.modern-input,
-.modern-select {
-  border: 2px solid #bfc9d1;
-  background: rgba(255, 255, 255, 0.9);
-  color: #2c3e50;
-}
-.modern-input:focus,
-.modern-select:focus {
-  border-color: #bfc9d1;
-  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.15);
-  background: white;
   outline: none;
 }
 
@@ -326,28 +189,6 @@ select.form-select.modern-select[formControlName="almacen"]:focus {
   background: #aab4be;
 }
 
-/* Input de búsqueda moderno igual que los dropdowns */
-input.form-control.modern-input.busqueda-input[formControlName="criterio"] {
-  color: #2c3e50;
-  font-weight: 600;
-  background: #f5f7fa;
-  border: 2px solid #bfc9d1;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(191,201,209,0.04);
-}
-input.form-control.modern-input.busqueda-input[formControlName="criterio"]:focus {
-  border-color: #bfc9d1;
-  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
-  background: #fff;
-  outline: none;
-}
-input.form-control.modern-input.busqueda-input[formControlName="criterio"]::placeholder {
-  color: #a0aec0;
-  font-weight: 400;
-}
 
 /* Datepicker moderno igual que los dropdowns e inputs */
 .modern-datepicker .selection,

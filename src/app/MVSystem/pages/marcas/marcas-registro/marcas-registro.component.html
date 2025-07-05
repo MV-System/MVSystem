@@ -23,20 +23,20 @@
                             <p class="form-subtitle">Complete la información para registrar una nueva marca</p>
                         </div>
                         <!--  Form -->
-                        <form [formGroup]="formRegistro" (ngSubmit)="registroMarca()" class="modern-form row g-3 needs-validation" novalidate style="background: #f8fafd; border-radius: 1rem; box-shadow: 0 2px 8px rgba(24,90,157,0.06); padding: 2rem 1.5rem;">
+                        <form [formGroup]="formRegistro" (ngSubmit)="registroMarca()" class="modern-form row g-3 needs-validation marcas-registro-form" novalidate style="background: #f8fafd; border-radius: 1rem; box-shadow: 0 2px 8px rgba(24,90,157,0.06); padding: 2rem 1.5rem;">
                             <!-- --------------- Nombre de la marca --------------- -->
                             <div class="col-md-8">
-                                <label class="form-label modern-label" style="font-size:1.1rem; color:#185a9d; font-weight:600;">
+                                <label class="form-label modern-label">
                                     <i class="bi bi-type me-1"></i>
                                     Nombre de la Marca <span class="required-star">*</span>
                                 </label>
-                                <input type="text" class="form-control modern-input" required formControlName="descripcion" aria-describedby="inputGroupPrepend" style="font-size:1.08rem; border-radius:0.6rem; background:#f5f7fa; border:1.5px solid #b5c6e0;">
+                                <input type="text" class="form-control modern-input" required formControlName="descripcion" aria-describedby="inputGroupPrepend" >
                                 <div class="invalid-feedback" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
                                 </div>
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
-                                <button class="btn btn-primary w-100" type="submit" [ngClass]="{'disabled':btnDisable()}" style="font-size:1.08rem; border-radius:0.6rem;">
+                                <button class="button-guardar w-100" type="submit" [ngClass]="{'disabled':btnDisable()}">
                                     <i class="bi bi-save me-1"></i> Guardar
                                 </button>
                             </div>

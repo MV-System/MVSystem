@@ -20,7 +20,7 @@
 
                         <!-- Campo de Búsqueda por Nombre o Teléfono -->
                         <div class="form-group mb-4">
-                            <input type="text" class="form-control" formControlName="criterio" placeholder="Nombre o teléfono del cliente" title="Busqueda" (keydown)="onEnter($event)" style="max-width: 260px; width: 100%;" />
+                            <input type="text" class="form-control modern-input busqueda-input" formControlName="criterio" placeholder="Nombre o teléfono del cliente" title="Busqueda" (keydown)="onEnter($event)" style="max-width: 260px; width: 100%;" />
                         </div>
 
                         <!-- Filtro de Fecha -->
@@ -29,10 +29,18 @@
                             <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"></my-date-range-picker>
                         </div>
 
-                        <!-- Monto Pendiente -->
+                        <!-- Monto Pendiente con tarjeta global -->
                         <div class="form-group mb-4">
-                            <label class="form-label">Mira Cuánto te deben Tus Clientes</label>
-                            <label class="font-weight-bold" style="max-width: 260px; width: 100%; background-color: #e8f5e9; padding: 10px; border-radius: 5px;">{{ totalMontoPendiente | currency }}</label>
+                            <div class="stats-card">
+                                <div class="stats-content">
+                                    <div class="stats-icon"><i class="bi bi-cash-coin text-success"></i></div>
+                                    <div class="stats-info">
+                                        <h6 class="stats-title">Total Pendiente</h6>
+                                        <div class="stats-number">{{ totalMontoPendiente | currency }}</div>
+                                        <small class="stats-subtitle">Monto que te deben tus clientes</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Botón de Búsqueda (opcional) -->

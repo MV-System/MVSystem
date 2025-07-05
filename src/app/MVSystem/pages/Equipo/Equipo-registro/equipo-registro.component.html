@@ -146,7 +146,7 @@
                                             <i class="bi bi-cpu me-1"></i>
                                             Tecnología
                                         </label>
-                                        <select formControlName="tecnologia" class="form-select modern-input">
+                                        <select formControlName="tecnologia" class="form-select modern-select">
                                             <option *ngFor="let tecnologia of listaTecnologia" [value]="tecnologia.iD_Tecnologia">
                                                 {{tecnologia.descripcion}}
                                             </option>
@@ -158,7 +158,7 @@
                                             <i class="bi bi-shield-check me-1"></i>
                                             Garantía <span class="required-star">*</span>
                                         </label>
-                                        <select formControlName="garantia" class="form-select modern-input" required [class.is-invalid]="validarCampos('garantia')">
+                                        <select formControlName="garantia" class="form-select modern-select" required [class.is-invalid]="validarCampos('garantia')">
                                             <option [value]="''" disabled selected>Seleccione garantía</option>
                                             <option *ngFor="let garantia of listaGarantia" [value]="garantia.iD_Garantia">
                                                 {{garantia.descripcion}}
@@ -174,7 +174,7 @@
                                             <i class="bi bi-unlock me-1"></i>
                                             Desbloqueado
                                         </label>
-                                        <select formControlName="idEstadoBloqueo" class="form-select modern-input">
+                                        <select formControlName="idEstadoBloqueo" class="form-select modern-select">
                                             <option *ngFor="let desbloqueo of listaDesbloqueo" [value]="desbloqueo.iD_Bloqueo">
                                                 {{desbloqueo.descripcion}}
                                             </option>
@@ -197,7 +197,7 @@
                                             <i class="bi bi-building me-1"></i>
                                             Almacén <span class="required-star">*</span>
                                         </label>
-                                        <select formControlName="almacen" class="form-select modern-input" required [class.is-invalid]="validarCampos('almacen')">
+                                        <select formControlName="almacen" class="form-select modern-select" required [class.is-invalid]="validarCampos('almacen')">
                                             <option value="">Seleccione un almacén</option>
                                             <option *ngFor="let almacen of listaAlmacen" [value]="almacen.iD_Almacen">
                                                 {{almacen.descripcion}}
@@ -213,7 +213,10 @@
                                             <i class="bi bi-award me-1"></i>
                                             Marca <span class="required-star">*</span>
                                         </label>
-                                        <ng-select formControlName="marca" [class.is-invalid]="validarCampos('marca')" (change)="selectoresMarcaModeloValidator()" required>
+                                        <ng-select formControlName="marca"
+                                        class="modern-select-ng"
+                                         [class.is-invalid]="validarCampos('marca')" 
+                                         (change)="selectoresMarcaModeloValidator()" required>
                                             <ng-option [value]="''" disabled selected>Seleccione una marca</ng-option>
                                             <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
                                                 {{marca.descripcion}}
@@ -229,7 +232,10 @@
                                             <i class="bi bi-phone me-1"></i>
                                             Modelo <span class="required-star">*</span>
                                         </label>
-                                        <ng-select formControlName="modelo" [class.is-invalid]="validarCampos('modelo')" required>
+                                        <ng-select formControlName="modelo" 
+                                        class="modern-select-ng"
+                                         (change)="selectoresMarcaModeloValidator()"
+                                        [class.is-invalid]="validarCampos('modelo')" required>
                                             <ng-option [value]="''" disabled selected>Seleccione un modelo</ng-option>
                                             <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
                                                 {{modelo.descripcion}}
@@ -256,7 +262,7 @@
                                             <i class="bi bi-truck me-1"></i>
                                             Suplidor <span class="required-star">*</span>
                                         </label>
-                                        <select class="form-select modern-input" formControlName="suplidor" required>
+                                        <select class="form-select modern-select" formControlName="suplidor" required>
                                             <option [value]="''" disabled selected>Seleccione un suplidor</option>
                                             <option *ngFor="let suplidor of listaSuplidor" [value]="suplidor.iD_Suplidor">
                                                 {{suplidor.descripcion}}
@@ -277,7 +283,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <button class="btn btn-primary" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
+                                <button class="button-guardar w-100" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
                             </div>
                         </form>
                     </div>

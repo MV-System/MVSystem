@@ -1,4 +1,4 @@
-<p>equipos-consulta-transferencias works!</p>
+<p>equipos-consulta-transferencias</p>
 
 <div class="box animate__animated animate__fadeIn">
     <nav>
@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Almacen Salida</label>
-                                <select class="form-select chip" formControlName="almacenSalida" (change)="obtenerTransferencias()">
+                                <select class="form-select modern-select" formControlName="almacenSalida" (change)="obtenerTransferencias()">
                                     <option *ngFor="let almacen of this.filter.almacenSalida" [value]="almacen.iD_Almacen">
                                         {{ almacen.descripcion }}
                                     </option>
@@ -34,8 +34,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Almacen Destino</label>
-                                <select class="form-select chip" formControlName="almacenEntrada" (change)="obtenerTransferencias()">
-                                    <option *ngFor="let almacen of this.filter.almacenEntrada" [value]="almacen.iD_Almacen">
+                                <select class="form-select modern-select" 
+                                formControlName="almacenEntrada" 
+                                (change)="obtenerTransferencias()">
+                                    <option *ngFor="let almacen of this.filter.almacenEntrada"
+                                     [value]="almacen.iD_Almacen">
                                         {{ almacen.descripcion }}
                                     </option>
                                 </select>
@@ -45,25 +48,8 @@
                 </div>
             </div>
 
-            <!-- <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mx-1 text-center mt-3">
-                            <div class="col-md-12">
-                                <div class="row mb-4">
-                                    Total Equipos
-                                    <label class="form-control total">
-                                        {{ equipoQuantity }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <div class="col-md-9">
-                <button class="btn print mx-1" [ngClass]="{'disabled': (!idTransferenciaSeleccionada)}" (click)="printReportTransferencia()">
+                <button class="button-imprimir-reporte" [ngClass]="{'disabled': (!idTransferenciaSeleccionada)}" (click)="printReportTransferencia()">
                     <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Reimprimir Transferencia' }}</span>
                     <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
                 </button>

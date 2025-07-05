@@ -32,7 +32,11 @@
                   Cliente
                 </label>
                 <div class="d-flex align-items-center gap-2">
-                  <ng-select formControlName="telefono" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': validarCampos('telefono') }" class="modern-input flex-grow-1">
+                  <ng-select formControlName="telefono" 
+                  (change)="obtenerClientesPorNombreTelefono()" 
+                  [clearable]="false" 
+                  [ngClass]="{ 'is-invalid': validarCampos('telefono') }" 
+                  class="modern-select-ng flex-grow-1">
                     <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
                       {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
                     </ng-option>
@@ -103,12 +107,19 @@
                     <i class="bi bi-award me-1"></i>
                     Marca<span class="required-star">*</span>
                   </label>
-                  <ng-select formControlName="marca" (change)="selectoresMarcaModeloValidator()" required
-                    [ngClass]="{'is-invalid': validarCampos('marca')}" class="modern-input">
+
+                 
+                  <ng-select formControlName="marca"
+                  (change)="selectoresMarcaModeloValidator()" required
+                  [ngClass]="{'is-invalid': validarCampos('marca')}"
+                  class="modern-select-ng"
+                  placeholder="Seleccione una marca">
                     <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
-                      {{ marca.descripcion }}
+                          {{ marca.descripcion }}
                     </ng-option>
-                  </ng-select>
+                    </ng-select>
+
+
                   <div class="invalid-feedback" *ngIf="validarCampos('marca')">Este campo es requerido.</div>
                 </div>
                 <div class="col-md-6">
@@ -116,8 +127,12 @@
                     <i class="bi bi-phone me-1"></i>
                     Modelo<span class="required-star">*</span>
                   </label>
-                  <ng-select formControlName="modelo" [ngClass]="{'is-invalid': validarCampos('modelo')}" class="modern-input">
-                    <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
+                  <ng-select formControlName="modelo" 
+                  [ngClass]="{'is-invalid': validarCampos('modelo')}" 
+                  class="modern-select-ng"
+                  placeholder="Seleccione un Modelo">
+                    <ng-option *ngFor="let modelo of listaModelo" 
+                    [value]="modelo.iD_Modelo">
                       {{ modelo.descripcion }}
                     </ng-option>
                   </ng-select>
@@ -127,7 +142,7 @@
 
               <!-- Botón de enviar -->
               <div class="text-end">
-                <button class="btn btn-primary px-4" type="submit">
+                <button class="button-guardar w-100" type="submit">
                   <span *ngIf="!isLoading"><i class="bi bi-plus-circle"></i> Añadir</span>
                   <span *ngIf="isLoading">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

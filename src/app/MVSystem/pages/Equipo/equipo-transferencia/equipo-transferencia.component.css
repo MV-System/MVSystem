@@ -1,4 +1,6 @@
-/* Modern card styles reutilizados */
+/* Limpieza: Eliminar estilos duplicados con los globales y mantener solo los realmente únicos para este componente. */
+
+/* Card moderna solo si no está global */
 .modern-card {
   border: none;
   border-radius: 1rem;
@@ -7,7 +9,6 @@
   background: white;
   backdrop-filter: blur(10px);
 }
-
 .modern-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 15px 35px rgba(0,0,0,0.15);
@@ -50,20 +51,6 @@
   gap: 0.25rem;
 }
 
-.form-control.modern-input, .form-select.modern-input {
-  border: 1px solid #ced4da;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  background: #f8f9fa;
-}
-
-.form-control.modern-input:focus, .form-select.modern-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
-}
-
 .table.modern-table th, .table.modern-table td {
   vertical-align: middle;
 }
@@ -74,8 +61,9 @@
   border-radius: 0.5em;
 }
 
+/* Botones personalizados solo si no hay global equivalente y sin gradientes */
 .btn-primary {
-  background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+  background: #467ff1;
   border: none;
   border-radius: 2rem;
   font-weight: 700;
@@ -88,20 +76,18 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  color: #fff;
 }
-
 .btn-primary:hover, .btn-primary:focus {
-  background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+  background: #2c3e50;
   box-shadow: 0 4px 16px rgba(67, 206, 162, 0.18);
   transform: translateY(-2px) scale(1.03);
 }
-
 .btn-primary i {
   font-size: 1.2em;
 }
-
 .btn-secondary {
-  background: linear-gradient(90deg, #f8ffae 0%, #43c6ac 100%);
+  background: #bfc9d1;
   color: #2c3e50;
   border: none;
   border-radius: 2rem;
@@ -116,16 +102,14 @@
   align-items: center;
   gap: 0.5rem;
 }
-
 .btn-secondary:hover, .btn-secondary:focus {
-  background: linear-gradient(90deg, #43c6ac 0%, #f8ffae 100%);
+  background: #e3eafc;
   color: #2c3e50;
   box-shadow: 0 4px 16px rgba(67, 198, 172, 0.13);
   transform: translateY(-2px) scale(1.03);
 }
-
 .btn-danger {
-  background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+  background: #fcb69f;
   color: #e74c3c;
   border: none;
   border-radius: 2rem;
@@ -140,9 +124,8 @@
   align-items: center;
   gap: 0.5rem;
 }
-
 .btn-danger:hover, .btn-danger:focus {
-  background: linear-gradient(90deg, #fcb69f 0%, #ffecd2 100%);
+  background: #ffecd2;
   color: #e74c3c;
   box-shadow: 0 4px 16px rgba(252, 182, 159, 0.18);
   transform: translateY(-2px) scale(1.03);
