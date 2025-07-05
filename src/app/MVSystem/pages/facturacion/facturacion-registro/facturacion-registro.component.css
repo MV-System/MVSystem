@@ -2,3 +2,167 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     border-color: #dc3545;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
+
+.totals-card {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  min-width: 340px;
+  max-width: 420px;
+  padding: 2.2rem 2.2rem 1.5rem 2.2rem;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  border-right: 5px solid #28a745;
+  border-left: none;
+}
+.stats-card {
+  border-left: none;
+  border-right: none;
+}
+.stats-card.facturar-a {
+  border-left: 5px solid #28a745;
+  border-right: none;
+}
+.stats-card.datos-facturacion {
+  border-right: 5px solid #28a745;
+  border-left: none;
+}
+.totals-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: #2c3e50;
+}
+.totals-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.totals-card-body {
+  padding: 0;
+}
+.totals-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin-bottom: 0.7rem;
+}
+.totals-label {
+  color: #495057;
+  font-weight: 600;
+  margin-right: 0.7rem;
+}
+.total-row {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.2rem;
+}
+.total-amount {
+  color: #28a745;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+.filters-card {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 2rem 2.2rem 1.5rem 2.2rem;
+  margin-bottom: 1.2rem;
+  border-left: 5px solid #467ff1;
+}
+.filters-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: #2c3e50;
+}
+.filters-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.filters-card-body {
+  padding: 0;
+}
+.main-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.main-title h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #185a9d;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(70,127,241,0.08);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.sub-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #467ff1;
+  letter-spacing: 0.2px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sub-title i {
+  font-size: 1.2em;
+  color: #28a745;
+}
+.mv-table th {
+  background: #f5f7fa;
+  color: #185a9d;
+  font-size: 1.08rem;
+  font-weight: 700;
+  border-bottom: 2.5px solid #467ff1;
+  text-align: right;
+  padding: 0.85rem 0.5rem;
+  letter-spacing: 0.2px;
+}
+.mv-table th:first-child {
+  text-align: left;
+}
+.mv-table td {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #2c3e50;
+  background: #fff;
+  border-bottom: 1.5px solid #e3eafc;
+  text-align: right;
+  padding: 0.7rem 0.5rem;
+  vertical-align: middle;
+}
+.mv-table td:first-child {
+  text-align: left;
+}
+.mv-table td.align-right, .mv-table th.align-right {
+  text-align: right;
+}
+.mv-table td.align-center, .mv-table th.align-center {
+  text-align: center;
+}
+.mv-table td input.form-control {
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: #f5f7fa;
+  border: 1.5px solid #bfc9d1;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  min-width: 60px;
+  text-align: right;
+}
+.mv-table tr:hover td {
+  background: #e3eafc;
+}
