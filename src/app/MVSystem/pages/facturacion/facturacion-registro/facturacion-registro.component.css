@@ -74,7 +74,8 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
   padding: 2rem 2.2rem 1.5rem 2.2rem;
   margin-bottom: 1.2rem;
-  border-left: 5px solid #467ff1;
+  border-left: none;
+  border-right: 5px solid #ff9800; /* Color naranja a la derecha */
 }
 .filters-card-header {
   display: flex;
@@ -209,4 +210,27 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 }
 .compact-filters .col-3 {
   margin-bottom: 0.2rem;
+}
+/* Responsive: Oculta columnas menos relevantes en móvil */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  .mv-table th, .mv-table td {
+    font-size: 0.92rem;
+    padding: 0.25rem 0.15rem;
+  }
+  .mv-table td input.form-control {
+    font-size: 0.92rem;
+    padding: 0.15rem 0.3rem;
+    min-width: 40px;
+  }
+  .mv-table th[title], .mv-table td[title] {
+    white-space: normal;
+  }
+}
+/* Mejora visual para tooltips en headers */
+.mv-table th[title] {
+  cursor: help;
+  border-bottom: 2px dotted #467ff1;
 }
