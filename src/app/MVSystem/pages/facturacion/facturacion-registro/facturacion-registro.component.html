@@ -1,6 +1,10 @@
 <main id="main" class="main">
     <div class="main-title">
-        <h1 id="registro"><i class="bi bi-file-earmark-plus"></i> Nueva {{isFactura?'Factura':'Cotización'}}</h1>
+        <h1 id="registro" style="display: flex; align-items: center; gap: 1.2rem; font-size: 2.3rem; font-weight: 800; color: #185a9d; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(70,127,241,0.08); margin: 0;">
+          <i class="bi bi-file-earmark-plus"></i>
+          Nueva {{isFactura?'Factura':'Cotización'}}
+          <span style="font-size: 2rem; font-weight: 600; color: #185a9d; letter-spacing: 1px; text-shadow: 0 8px 8px rgba(70,127,241,0.08);">#{{facturaNumber}}</span>
+        </h1>
     </div>
     <section>
         <!-- <r-toggle [dataOff]="'Facturación'" [dataOn]="'Cotización'" (onToggle)="onToggle($event)"></r-toggle> -->
@@ -9,9 +13,9 @@
             
             <div class="row invoice-row" style="margin-left: 0;">
               <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
-                <div class="stats-card datos-facturacion" style="margin-top: 0.2rem; margin-bottom: 0; padding-top: 1rem; padding-bottom: 0.4rem;">
-                  <div class="card-header" style="margin-bottom: 0.1rem; margin-top: 0.1rem; padding: 0.1rem 0;">
-                    <span class="header-title">
+                <div class="stats-card datos-facturacion" style="margin-top: 0.2rem; margin-bottom: 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-left: 5px solid #28a745; border-right: none;">
+                  <div class="card-header" style="font-size: 1.2rem; font-weight: 700; color: #2c3e50; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.7rem;">
+                    <span class="header-title" style="font-size: 1.2rem; font-weight: 700; color: #2c3e50;">
                       <i class="bi bi-receipt"></i> Datos de Facturación
                     </span>
                   </div>
@@ -98,22 +102,22 @@
                     </button>
                   </div>
                   <div class="card-body sm-padding">
-                    <div class="clientDetail" style="display: flex; align-items: center; gap: 1.2rem; font-size: 1.08rem; font-weight: 600; margin-top: 0.5rem;">
-                      <span class="name" style="color: #185a9d; white-space: nowrap;">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
+                    <div class="clientDetail" style="display: flex; align-items: center; gap: 1.2rem; font-size: 1.2rem; font-weight: 700; color: #2c3e50; margin-top: 0.5rem;">
+                      <span class="name" style="color: #2c3e50; white-space: nowrap;">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
                       <span class="divider" style="height: 22px; width: 2px; background: #e3eafc; display: inline-block; border-radius: 2px;"></span>
-                      <span class="phones" style="color: #28a745; white-space: nowrap;">{{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
+                      <span class="phones" style="color: #2c3e50; white-space: nowrap;">{{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
-                <div class="filters-card compact-filters stats-card datos-facturacion" style="margin-bottom: 1.2rem; min-height: 445px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="filters-card compact-filters stats-card datos-facturacion" style="margin-bottom: 1.2rem; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
                   <div class="filters-card-header card-header">
                     <span class="header-title">
                       <i class="bi bi-funnel"></i> Filtros de Facturación
                     </span>
                   </div>
-                  <div class="filters-card-body card-body sm-padding">
+                  <div class="filters-card-body card-body sm-padding" style="display: flex; flex-direction: column; gap: 50%;">
                     <div class="row flex-column">
                       <div class="col-12">
                         <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
@@ -160,90 +164,89 @@
               </div>
             </div>
             <div id="invoice-wrapper" class="box singlecol" style="padding-left: 1.5rem; padding-right: 0.5rem;">
-              <h3 class="sub-title" style="margin-left: 0;"> <i class="bi bi-hash"></i> {{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
               
               <span class="separator-line"></span>
               <div class="DataTable">
-                  <div class="d-flex justify-content-between align-items-center">
-                      <!-- Caja de texto -->
-                      <div class="flex-grow-1 me-3">
-                          <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
-                      </div>
+                <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 1.2rem;">
+                  <!-- Caja de texto -->
+                  <div class="flex-grow-1 me-3">
+                    <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
+                  </div>
 
-                      <!-- Botón -->
-                      <div class="pull-right">
-                          <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
+                  <!-- Botón -->
+                  <div class="pull-right">
+                    <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
                       <i class="bx bx-plus"></i>
                       Agregar artículo
                     </button>
-                      </div>
                   </div>
+                </div>
 
-                  <table class="mv-table">
-                      <thead>
-                          <tr>
-                              <th title="Descripción del artículo">Descripción</th>
-                              <th class="align-center" title="Cantidad">Cant.</th>
-                              <th class="align-right" title="Precio unitario">Precio</th>
-                              <th class="align-left hide-mobile" title="Subtotal del artículo">Subtotal</th>
-                              <th class="align-right" title="Descuento aplicado">Desc.</th>
-                              <th class="align-left hide-mobile" title="Total del artículo">Total</th>
-                              <th class="align-center" title="Eliminar artículo"></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <ng-container formArrayName="articulos">
-                              <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
-                                  <ng-container [formGroupName]="i">
-                                      <td>
-                                          <ng-select class="form-select modern-select-ng"
-                                          formControlName="articulo"
-                                          id="articulo"
-                                          [addTag]="addArticuloImei"
-                                          [virtualScroll]="true"
-                                          [clearable]="false"
-                                          (keydown.enter)="$event.preventDefault();
-                                          descuentoInput.focus()"
-                                          (change)="obtenerDetalleFactura(i);
-                                          cantidadInput.focus()"
-                                          (scroll)="onScroll($event)"
-                                          required
-                                          [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
-                                              <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
-                                                  {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
-                                              </ng-option>
+                <table class="mv-table">
+                    <thead>
+                        <tr>
+                            <th title="Descripción del artículo">Descripción</th>
+                            <th class="align-center" title="Cantidad">Cant.</th>
+                            <th class="align-right" title="Precio unitario">Precio</th>
+                            <th class="align-left hide-mobile" title="Subtotal del artículo">Subtotal</th>
+                            <th class="align-right" title="Descuento aplicado">Desc.</th>
+                            <th class="align-left hide-mobile" title="Total del artículo">Total</th>
+                            <th class="align-center" title="Eliminar artículo"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container formArrayName="articulos">
+                            <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
+                                <ng-container [formGroupName]="i">
+                                    <td>
+                                        <ng-select class="form-select modern-select-ng"
+                                        formControlName="articulo"
+                                        id="articulo"
+                                        [addTag]="addArticuloImei"
+                                        [virtualScroll]="true"
+                                        [clearable]="false"
+                                        (keydown.enter)="$event.preventDefault();
+                                        descuentoInput.focus()"
+                                        (change)="obtenerDetalleFactura(i);
+                                        cantidadInput.focus()"
+                                        (scroll)="onScroll($event)"
+                                        required
+                                        [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
+                                            <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
+                                                {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
+                                            </ng-option>
 
-                                          </ng-select>
-                                      </td>
-                                      <td class="col-md-1 align-center">
-                                          <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
-                                          descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
-                                      </td>
+                                        </ng-select>
+                                    </td>
+                                    <td class="col-md-1 align-center">
+                                        <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
+                                        descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
+                                    </td>
 
-                                      <td class="col-md-1 align-center">
-                                          <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
-                                    descuentoInput.focus()" [maxlen]="7" appNumeric>
-                                      </td>
+                                    <td class="col-md-1 align-center">
+                                        <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
+                                descuentoInput.focus()" [maxlen]="7" appNumeric>
+                                    </td>
 
-                                      <td class="align-right hide-mobile">
-                                          {{detalleFactura.value.subTotal}}
-                                      </td>
-                                      <td class="col-md-1">
-                                          <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
-                                      </td>
-                                      <td class="align-right hide-mobile">
-                                          {{detalleFactura.value.total}}
-                                      </td>
-                                      <td class="align-center">
-                                          <button class="btns flat oorange" (click)="borrarArticulo(i)">
-                                    <i class="bx bx-trash-alt"></i>
-                                </button>
-                                      </td>
-                                  </ng-container>
-                              </tr>
-                          </ng-container>
-                      </tbody>
-                  </table>
+                                    <td class="align-right hide-mobile">
+                                        {{detalleFactura.value.subTotal}}
+                                    </td>
+                                    <td class="col-md-1">
+                                        <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
+                                    </td>
+                                    <td class="align-right hide-mobile">
+                                        {{detalleFactura.value.total}}
+                                    </td>
+                                    <td class="align-center">
+                                        <button class="btns flat oorange" (click)="borrarArticulo(i)">
+                                <i class="bx bx-trash-alt"></i>
+                            </button>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
               </div>
               <div class="clear-float">
                 <div class="pull-right">
