@@ -260,4 +260,20 @@ this.loading.hideLoading();
     return this.facturas.filter(f => f.vendedor === nombreVendedor);
   }
 
+  /**
+   * Calcula el total facturado en el cliente sumando los montos de todas las facturas filtradas
+   */
+  getTotalFacturadoCliente(): number {
+    return this.facturasFiltradas().reduce((acc, factura) => acc + (factura.total || 0), 0);
+  }
+
+  /**
+   * Devuelve la cantidad de facturas filtradas en el cliente
+   */
+  getCantidadFacturasCliente(): number {
+    const cantidad = this.facturasFiltradas().length;
+    console.log('Cantidad de facturas filtradas:', cantidad, this.facturasFiltradas());
+    return cantidad;
+  }
+
 }
