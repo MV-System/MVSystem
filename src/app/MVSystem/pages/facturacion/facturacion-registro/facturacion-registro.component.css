@@ -7,17 +7,19 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   background: #fff;
   border-radius: 1.1rem;
   box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
-  min-width: 340px;
-  max-width: 420px;
-  padding: 2.2rem 2.2rem 1.5rem 2.2rem;
-  margin-top: 1.2rem;
-  margin-bottom: 1.2rem;
+  min-width: 260px;
+  max-width: 320px;
+  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
   border-right: 5px solid #28a745;
   border-left: none;
 }
 .stats-card {
   border-left: none;
   border-right: none;
+  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-bottom: 0.7rem;
 }
 .stats-card.facturar-a {
   border-left: 5px solid #28a745;
@@ -33,7 +35,7 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   gap: 0.7rem;
   font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.7rem;
   color: #2c3e50;
 }
 .totals-title {
@@ -41,7 +43,7 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   font-weight: 700;
 }
 .totals-card-body {
-  padding: 0;
+  padding: 0.2rem 0 0 0;
 }
 .totals-row {
   display: flex;
@@ -124,24 +126,24 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 .mv-table th {
   background: #f5f7fa;
   color: #185a9d;
-  font-size: 1.08rem;
+  font-size: 0.98rem;
   font-weight: 700;
   border-bottom: 2.5px solid #467ff1;
   text-align: right;
-  padding: 0.85rem 0.5rem;
+  padding: 0.5rem 0.3rem;
   letter-spacing: 0.2px;
 }
 .mv-table th:first-child {
   text-align: left;
 }
 .mv-table td {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 500;
   color: #2c3e50;
   background: #fff;
   border-bottom: 1.5px solid #e3eafc;
   text-align: right;
-  padding: 0.7rem 0.5rem;
+  padding: 0.4rem 0.3rem;
   vertical-align: middle;
 }
 .mv-table td:first-child {
@@ -154,15 +156,57 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   text-align: center;
 }
 .mv-table td input.form-control {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 600;
   background: #f5f7fa;
   border: 1.5px solid #bfc9d1;
   border-radius: 0.5rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.2rem 0.5rem;
   min-width: 60px;
   text-align: right;
 }
 .mv-table tr:hover td {
   background: #e3eafc;
+}
+.separator-line {
+  display: block;
+  height: 1px;
+  background: #e3eafc;
+  margin: 0.7rem 0 0.7rem 0;
+}
+.DataTable {
+  margin-bottom: 0.4rem;
+}
+.DataTable .form-control.modern-input {
+  min-height: 36px;
+  height: 36px;
+  padding: 0.4rem 0.7rem;
+  font-size: 1rem;
+}
+.DataTable .btns.add-item {
+  min-height: 36px;
+  height: 36px;
+  padding: 0.3rem 1.1rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+.clear-float {
+  margin-top: 0.7rem;
+}
+.compact-filters {
+  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-bottom: 0.7rem;
+}
+.compact-filters .filters-card-header {
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.2rem;
+}
+.compact-filters .filters-card-body {
+  padding: 0.2rem 0 0 0;
+}
+.compact-filters .form-label {
+  margin-bottom: 0.2rem;
+}
+.compact-filters .col-3 {
+  margin-bottom: 0.2rem;
 }

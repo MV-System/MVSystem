@@ -54,6 +54,55 @@
                     </div>
                 </div>
             </div>
+            <div class="filters-card compact-filters">
+              <div class="filters-card-header">
+                <i class="bi bi-funnel"></i>
+                <span class="filters-title">Filtros de Facturación</span>
+              </div>
+              <div class="filters-card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
+                    <select class="form-select modern-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
+                      <option *ngFor="let TipoFactura of facturaTipos"
+                          [value]="TipoFactura.iD_Tipo_Factura">
+                          {{TipoFactura.descripcion_Factura_Tipo}}
+                      </option>
+                    </select>
+                    <div class="required-field" *ngIf="validarCampos('tipoFactura')">
+                        Este campo es requerido.
+                    </div>
+                  </div>
+                  <div class="col-3" *ngIf="isFactura">
+                    <label class="form-label">Tipo de Comprobante <span class="required-field">*</span></label>
+                    <select class="form-select modern-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
+                      <option *ngFor="let tipoComprobante of comprobanteTipos;"
+                          [value]="tipoComprobante.nfcTipoNumero">
+                          {{tipoComprobante.nfcTipoDescripcion}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label">Aplicar ITBIS</label>
+                    <select class="form-select modern-select" formControlName="aplicarItbis" (change)="refreshGeneralValues()">
+                      <option value=true>Si</option>
+                      <option value=false>No</option>
+                    </select>
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label">Vendedor <span class="required-field">*</span></label>
+                    <select class="form-select modern-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
+                      <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
+                          {{vendedor.nombres}} {{vendedor.apellidos}}
+                      </option>
+                    </select>
+                    <div class="required-field" *ngIf="validarCampos('vendedor')">
+                        Este campo es requerido.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div id="invoice-wrapper" class="box grid">
                 <div class="leftcol">
                    
