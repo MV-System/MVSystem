@@ -197,18 +197,18 @@
         <div class="col-lg-12">
             <!-- Results Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h6 class="results-title mb-0">
+                <h6 class="results-title mb-0 d-flex align-items-center w-100">
                     <i class="bi bi-list-ul me-2 text-primary"></i>
                     Lista de Accesorios 
                     <span class="badge bg-primary ms-2 count-badge" *ngIf="accesorios.length > 0">
                         {{totalRecord}} encontrado{{totalRecord !== 1 ? 's' : ''}}
                     </span>
+                    <span class="pagination-info ms-auto" *ngIf="accesorios.length">
+                        <small class="text-muted">
+                            Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros
+                        </small>
+                    </span>
                 </h6>
-                <div class="pagination-info" *ngIf="accesorios.length">
-                    <small class="text-muted">
-                        Mostrando {{line}} al {{lastLine}} de {{totalRecord}} registros
-                    </small>
-                </div>
             </div>
 
             <!-- Modern No Results Message -->

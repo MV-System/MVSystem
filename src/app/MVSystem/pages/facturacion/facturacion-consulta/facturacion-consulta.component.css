@@ -58,3 +58,413 @@ select[formControlName="vendedor"] option {
   font-weight: 500;
   background: #e3eafc;
 }
+
+/* Dropdown sucursal moderno igual que accesorios */
+select.form-select.modern-select[formControlName="almacen"] {
+  color: #185a9d;
+  font-weight: 600;
+  background: #f5f7fa;
+  border: 2px solid #b5c6e0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(24,90,157,0.04);
+}
+select.form-select.modern-select[formControlName="almacen"]:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
+  background: #fff;
+  outline: none;
+}
+select.form-select.modern-select[formControlName="almacen"] option {
+  color: #185a9d;
+  font-weight: 500;
+  background: #e3eafc;
+}
+
+/* Dropdown vendedor moderno igual que sucursal */
+select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"] {
+  color: #2c3e50;
+  font-weight: 600;
+  background: #f5f7fa;
+  border: 2px solid #bfc9d1;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(191,201,209,0.04);
+}
+select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"]:focus {
+  border-color: #bfc9d1;
+  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
+  background: #fff;
+  outline: none;
+}
+select.form-select.modern-select.vendedor-dropdown[formControlName="vendedor"] option {
+  color: #2c3e50;
+  font-weight: 500;
+  background: #f5f7fa;
+}
+
+/* Botones modernos con colores suaves y gradiente - ELIMINADO
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+}
+*/
+/* ===== CARDS DE ESTADÍSTICAS ===== */
+.stats-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-left: 4px solid #28a745;
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  min-height: unset;
+  height: 100%;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stats-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 1.6rem 0.4rem 1.1rem 0.4rem;
+  gap: 1.1rem;
+}
+
+.stats-icon {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-width: 2.2rem;
+}
+
+.stats-icon i {
+  font-size: 1.75rem;
+}
+
+.stats-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.stats-info h6 {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-number {
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stats-subtitle {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+/* ===== SOLD SECTION ===== */
+.sold-section {
+  margin-top: 0.1rem;
+}
+
+.sold-header {
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.sold-title {
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón moderno con un solo tono azul suave */
+.button {
+  background: #bfc9d1; /* gris claro neutro */
+  color: #2c3e50;
+  border: none;
+  border-radius: 0.8em;
+  padding: 0.85em 2em;
+  font-weight: 700;
+  font-size: 1.1em;
+  box-shadow: 0 6px 24px rgba(191, 201, 209, 0.18), 0 1.5px 4px rgba(0,0,0,0.08);
+  transition: all 0.18s cubic-bezier(.4,2,.6,1);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.button:hover {
+  color: #fff;
+  background: #6ea8fe;
+  box-shadow: 0 10px 32px rgba(110, 168, 254, 0.22), 0 2px 8px rgba(0,0,0,0.10);
+  transform: translateY(-2px) scale(1.03);
+}
+.button:active {
+  top: 1px;
+  filter: brightness(0.97);
+}
+.button i {
+  font-size: 1.3em;
+  margin-right: 0.6em;
+}
+
+/* Quitar azul de selects modernos */
+select[formControlName="vendedor"],
+select.form-select.modern-select[formControlName="almacen"] {
+  color: #2c3e50;
+  background: #f5f7fa;
+  border: 2px solid #bfc9d1;
+}
+select[formControlName="vendedor"] option,
+select.form-select.modern-select[formControlName="almacen"] option {
+  color: #2c3e50;
+  background: #f5f7fa;
+}
+select.form-select.modern-select[formControlName="almacen"]:focus {
+  border-color: #bfc9d1;
+  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
+  background: #fff;
+  outline: none;
+}
+
+/* Quitar azul de inputs modernos */
+.modern-input,
+.modern-select {
+  border: 2px solid #bfc9d1;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+}
+.modern-input:focus,
+.modern-select:focus {
+  border-color: #bfc9d1;
+  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.15);
+  background: white;
+  outline: none;
+}
+
+/* Quitar azul de radios modernos */
+.modern-radio {
+  border: 2px solid #bfc9d1;
+}
+.modern-radio:checked {
+  background-color: #bfc9d1;
+  border-color: #bfc9d1;
+}
+
+/* Quitar azul de íconos en labels modernos */
+.modern-label i {
+  color: #bfc9d1;
+}
+
+/* Quitar azul de cards de filtro */
+.filter-card {
+  border-left: 4px solid #bfc9d1;
+  background: linear-gradient(145deg, #f8f9ff 0%, #e6f0ff 100%);
+}
+
+/* Quitar azul de paginación */
+.modern-pagination ::ng-deep .ngx-pagination .current {
+  background: #bfc9d1;
+  color: #2c3e50;
+}
+.modern-pagination ::ng-deep .ngx-pagination a:hover {
+  background-color: #bfc9d1;
+  color: #2c3e50;
+}
+
+/* Quitar azul de scrollbar */
+*::-webkit-scrollbar-thumb {
+  background: #bfc9d1;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #aab4be;
+}
+
+/* Input de búsqueda moderno igual que los dropdowns */
+input.form-control.modern-input.busqueda-input[formControlName="criterio"] {
+  color: #2c3e50;
+  font-weight: 600;
+  background: #f5f7fa;
+  border: 2px solid #bfc9d1;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(191,201,209,0.04);
+}
+input.form-control.modern-input.busqueda-input[formControlName="criterio"]:focus {
+  border-color: #bfc9d1;
+  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
+  background: #fff;
+  outline: none;
+}
+input.form-control.modern-input.busqueda-input[formControlName="criterio"]::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+/* Datepicker moderno igual que los dropdowns e inputs */
+.modern-datepicker .selection,
+.modern-datepicker .mydrp .input-group,
+.modern-datepicker input {
+  color: #2c3e50 !important;
+  font-weight: 600;
+  background: #f5f7fa !important;
+  border: 2px solid #bfc9d1 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(191,201,209,0.04) !important;
+}
+.modern-datepicker .selection:focus,
+.modern-datepicker .mydrp .input-group:focus,
+.modern-datepicker input:focus {
+  border-color: #bfc9d1 !important;
+  box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12) !important;
+  background: #fff !important;
+  outline: none !important;
+}
+.modern-datepicker input::placeholder {
+  color: #a0aec0 !important;
+  font-weight: 400 !important;
+}
+
+/* Checkbox moderno y grande para comprobantes */
+.modern-check[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2.5px solid #bfc9d1;
+  border-radius: 0.4rem;
+  background: #f5f7fa;
+  transition: all 0.2s;
+  accent-color: #bfc9d1;
+}
+.modern-check[type="checkbox"]:checked {
+  background-color: #bfc9d1;
+  border-color: #bfc9d1;
+}
+
+/* Estilo para la etiqueta de los radios modernos */
+.form-check-label.modern-radio-label {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.card.stats-card {
+  border-left: 4px solid #28a745 !important;
+  border-radius: 1rem;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  background: white;
+  backdrop-filter: blur(10px);
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  min-height: unset;
+  height: 100%;
+}
+.card.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+.card.stats-card .card-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 0.1rem !important;
+  border-radius: 1rem;
+}
+.stats-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.8rem 0.4rem;
+  gap: 1.1rem;
+}
+.stats-icon {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem 0 0;
+}
+.stats-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.stats-title {
+  color: #6c757d;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stats-number {
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+}
+.stats-subtitle {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+.form-check.form-check-inline.ms-2 {
+  align-items: flex-start !important;
+  margin-top: -1.2rem;
+}

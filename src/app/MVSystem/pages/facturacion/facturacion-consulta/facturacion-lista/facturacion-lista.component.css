@@ -199,3 +199,49 @@ tr.detalle-row, .detalle-row td {
     margin-bottom: 0.2rem;
   }
 }
+.results-section {
+  margin-top: 0.5rem;
+}
+.card.results-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-left: 4px solid #bfc9d1;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+.card.results-card .card-body {
+  padding: 1.2rem 1.5rem 1rem 1.5rem;
+  border-radius: 1rem;
+}
+.results-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.count-badge {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.4em 0.9em;
+  border-radius: 0.7em;
+  background: #6ea8fe;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(110,168,254,0.10);
+}
+.id-badge {
+  background: linear-gradient(135deg, #a8c8d8 0%, #7c8db5 100%) !important;
+  color: white !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 8px rgba(120, 165, 196, 0.3);
+  display: inline-block;
+  margin-left: 0.3rem;
+}
+.mv-table, .factura-cards, .factura-card, .detalle-row, .tr-hover, .selected-row, .collapsed-row, .results-title, .count-badge, .id-badge, .pagination-info, .card.results-card, .card.stats-card, .card-body, .form-label, .form-control, .form-select {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}

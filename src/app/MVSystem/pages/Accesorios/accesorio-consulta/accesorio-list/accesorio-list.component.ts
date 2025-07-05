@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccesoriosService } from 'src/app/core/services/accesorios.service';
 import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './accesorio-list.component.html',
   styleUrls: ['./accesorio-list.component.css']
 })
-export class AccesorioListComponent implements OnInit {
+export class AccesorioListComponent implements OnInit, OnChanges {
 
   constructor(
     private accesoriosService: AccesoriosService,
@@ -17,7 +17,12 @@ export class AccesorioListComponent implements OnInit {
     private toastr: ToastrService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['accesorios']) {
+      this.recalcularTotales();
+    }
   }
   
   @Input() accesorios: Accesorio[]=[];
@@ -40,6 +45,12 @@ export class AccesorioListComponent implements OnInit {
     pageIndex: 1,
     pageSize: 10,
   };
+
+  totalCantidad: number = 0;
+  totalInventario: number = 0;
+  totalFacturado: number = 0;
+  totalGanancia: number = 0;
+  totalItbis: number = 0;
 
   putAccesorio(){
     this.isOpenModal=!this.isOpenModal;
@@ -191,6 +202,14 @@ export class AccesorioListComponent implements OnInit {
     setTimeout(() => {
       this.editarAccesorio(accesorioId);
     }, 100);
+  }
+
+  recalcularTotales() {
+    this.totalCantidad = this.accesorios.reduce((sum, a) => sum + (a.cantidad || 0), 0);
+    this.totalInventario = this.accesorios.reduce((sum, a) => sum + (a.totalInventario || 0), 0);
+    this.totalFacturado = this.accesorios.reduce((sum, a) => sum + (a.totalFacturado || 0), 0);
+    this.totalGanancia = this.accesorios.reduce((sum, a) => sum + (a.totalGanancia || 0), 0);
+    this.totalItbis = this.accesorios.reduce((sum, a) => sum + (a.totalItbis || 0), 0);
   }
 
 }

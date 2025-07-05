@@ -5,27 +5,28 @@
 
 /* ===== HEADER DE RESULTADOS ===== */
 .results-title {
-  color: #2c3e50;
-  font-weight: 700;
   font-size: 1.25rem;
-  margin-bottom: 0;
+  font-weight: 700;
+  color: #2c3e50;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .count-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
-  padding: 0.5rem 1rem !important;
-  border-radius: 0.75rem !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.4em 0.9em;
+  border-radius: 0.7em;
+  background: #6ea8fe;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(110,168,254,0.10);
 }
 
 .pagination-info {
-  color: #6c757d;
-  font-size: 0.875rem;
+  margin-left: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
 /* ===== ESTADOS VACÍOS ===== */

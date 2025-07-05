@@ -1,4 +1,3 @@
-
 <main id="main" class="main">
     <div class="pagetitle">
         <h1 id="registro">Consulta de Accesorios</h1>
@@ -124,33 +123,33 @@
                                                     Filtros de Búsqueda
                                                 </h6>
                                             </div>                                            
-    <div class="row g-3">
-                                                    <div class="col-md-8">
-                                                        <label class="form-label modern-label">
-                                                            <i class="bi bi-search me-1"></i>
-                                                            Buscar por descripción
-                                                        </label>
-                                                        <input class="form-control modern-input"
-                                                               placeholder="Ej: Cover iPhone 14 Pro, Cargador Samsung..."
-                                                               formControlName="accesorio"
-                                                               (keyup)="getAccesorios()">
-                                                    </div>
-                                                    <div class="col-md-4" *ngIf="SelectSucursal()">
-                                                        <label class="form-label modern-label">
-                                                            <i class="bi bi-building me-1"></i>
-                                                            Sucursal
-                                                        </label>
-                                                        <select class="form-select modern-select" 
-                                                                formControlName="almacen" 
-                                                                (change)="getAccesorios()">
-                                                            <option value="" disabled>Seleccione una sucursal</option>
-                                                            <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
-                                                                {{almacen.descripcion}}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </form>
+    <div class="row g-3 align-items-end">
+          <div class="col-md-8">
+            <label class="form-label modern-label">
+              <i class="bi bi-search me-1"></i>
+              Buscar por descripción
+            </label>
+            <input class="form-control modern-input"
+                   placeholder="Ej: Cover iPhone 14 Pro, Cargador Samsung..."
+                   formControlName="accesorio"
+                   (keyup)="getAccesorios()">
+          </div>
+          <div class="col-md-4" *ngIf="SelectSucursal()">
+            <label class="form-label modern-label">
+              <i class="bi bi-building me-1"></i>
+              Sucursal
+            </label>
+            <select class="form-select modern-select"
+                    formControlName="almacen"
+                    (change)="getAccesorios()">
+              <option value="" disabled>Seleccione una sucursal</option>
+              <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                {{almacen.descripcion}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </form>
                             <!-- Results Section -->
                             <div class="results-section">
                                 <div class="card results-card">
