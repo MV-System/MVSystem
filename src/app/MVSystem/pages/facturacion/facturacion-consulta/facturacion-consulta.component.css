@@ -44,3 +44,17 @@
     width: 100%; /* Opcional: que ocupen todo el ancho en móvil */
   }
 }
+
+/* Estilo para el dropdown de vendedor */
+select[formControlName="vendedor"] {
+  color: #185a9d;
+  font-weight: 600;
+  background: #f5f7fa;
+  border: 2px solid #b5c6e0;
+  border-radius: 0.6rem;
+}
+select[formControlName="vendedor"] option {
+  color: #185a9d;
+  font-weight: 500;
+  background: #e3eafc;
+}

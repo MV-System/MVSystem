@@ -5,6 +5,7 @@ import { Pagination } from 'src/app/core/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
 import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../../core/interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -21,11 +22,13 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 })
 export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   detalleFactura: DetalleFacturaList[]=[];
+  vendedores: any[] = [];
 
   constructor(private fb: FormBuilder,
     private loading: LoadingService,
     private mantenimientoService: MantenimientoService,
     private catalogosService: CatalogosService,
+    private vendedorService: VendedorService,
     private toast: ToastrService,
     private loginService: LoginService,
   private validatorPermissionService:ValidatorPermissionService,
@@ -51,8 +54,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getFacturas();
     this.getAlmacenes();
-
+    this.getVendedores();
   }
+
+  getVendedores() {
+    this.vendedorService.getVendedorLista().subscribe((vendedores: any[]) => {
+      this.vendedores = vendedores;
+    });
+  }
+
   ComprobanteCheck: number=1;
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
@@ -83,27 +93,28 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 // Obtener la fecha actual
  fechaHoy = new Date();
   // Crear una nueva fecha para el primer día del mes actual
- FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+  FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
 
-  paginate:Pagination={
-
-
+  // Utiliza el mismo formato que el filtro (YYYY/M/D)
+  paginate: Pagination = {
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: this.FechaInicio.toISOString().split('T')[0],
-    fechaFinal: this.fechaHoy.toISOString().split('T')[0]
+    fechaInicio: `${this.FechaInicio.getFullYear()}/${this.FechaInicio.getMonth() + 1}/${this.FechaInicio.getDate()}`,
+    fechaFinal: `${this.fechaHoy.getFullYear()}/${this.fechaHoy.getMonth() + 1}/${this.fechaHoy.getDate()}`
   }
   form: FormGroup = this.fb.group({
     almacen: [this.loginService.getUserIdSucursal,],
     criterio: ['',],
     factura:['',],
-    rangeDate: ['']
+    rangeDate: [''],
+    vendedor: ['']
   });
   modelFacturaFilter(){
-    const {criterio,almacen} = this.form.value;
+    const {criterio,almacen,vendedor} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
       criterio: criterio,
+      vendedor: vendedor,
       fechaInicio: this.paginate.fechaInicio,
       fechaFinal: this.paginate.fechaFinal,
       pageIndex: this.paginate.pageIndex,
@@ -211,6 +222,7 @@ this.loading.hideLoading();
   this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
 }
   onDateRangeChanged(event: any) {
+    console.log('DateRangeChanged:', event);
     if (event.beginDate.year === 0) {
       this.paginate.fechaInicio = '';
       this.paginate.fechaFinal = '';
@@ -231,6 +243,21 @@ this.loading.hideLoading();
 
    this.ComprobanteCheck = 2;
     this.getFacturas();
+  }
+
+  facturasFiltradas(): FacturaConsulta[] {
+    const vendedorSeleccionadoId = this.form.get('vendedor')?.value;
+    if (!vendedorSeleccionadoId) {
+      return this.facturas;
+    }
+    // Buscar el nombre del vendedor según el ID seleccionado
+    const vendedorObj = this.vendedores.find(v => String(v.iD_Vendedor) === String(vendedorSeleccionadoId));
+    if (!vendedorObj) {
+      return this.facturas;
+    }
+    const nombreVendedor = vendedorObj.nombres || vendedorObj.nombre;
+    // Filtrar por el nombre del vendedor
+    return this.facturas.filter(f => f.vendedor === nombreVendedor);
   }
 
 }
