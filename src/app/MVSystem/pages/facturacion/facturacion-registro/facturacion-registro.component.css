@@ -234,3 +234,100 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   cursor: help;
   border-bottom: 2px dotted #467ff1;
 }
+
+
+/* Boton global para Limpiar */
+.bottom-ft {
+  background: #bfc9d1; /* gris claro neutro */
+  color: #2c3e50;
+  border: none;
+  border-radius: 0.8em;
+  padding: 0.85em 2em;
+  font-weight: 700;
+  font-size: 1.1em;
+  box-shadow: 0 6px 24px rgba(191, 201, 209, 0.18), 0 1.5px 4px rgba(0,0,0,0.08);
+  transition: all 0.18s cubic-bezier(.4,2,.6,1);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.bottom-ft:active {
+  top: 1px;
+  filter: brightness(0.97);
+}
+.bottom-ft i {
+  font-size: 1.3em;
+  margin-right: 0.6em;
+}
+
+.bottom-ft:hover {
+  background: hsl(48, 65%, 78%);
+  color: #fff;
+  box-shadow: 0 10px 32px rgba(34, 187, 102, 0.22), 0 2px 8px rgba(0,0,0,0.10);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.bottom-ft {
+ 
+  bottom: 0px; /* distancia desde el borde inferior */
+  margin-top: 12rem; /* Lo aleja 3rem del borde superior */
+  left: 0;
+  width: 10%;
+  text-align: center; /* centra los botones horizontalmente */
+   width: 300px; /* Ancho fijo */
+    padding: 1rem 2rem; /* 1rem arriba y abajo (alto), 0.5rem izquierda y derecha (ancho) */
+}
+
+
+/* Boton global para Limpiar */
+.bottom-ft-procesa {
+  background: #bfc9d1; /* gris claro neutro */
+  color: #2c3e50;
+  border: none;
+  border-radius: 0.8em;
+  padding: 0.85em 2em;
+  font-weight: 700;
+  font-size: 1.1em;
+  box-shadow: 0 6px 24px rgba(191, 201, 209, 0.18), 0 1.5px 4px rgba(0,0,0,0.08);
+  transition: all 0.18s cubic-bezier(.4,2,.6,1);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.bottom-ft-procesa:active {
+  top: 1px;
+  filter: brightness(0.97);
+}
+.bottom-ft-procesa i {
+  font-size: 1.3em;
+  margin-right: 0.6em;
+}
+
+.bottom-ft-procesa:hover {
+  background: hsl(115, 61%, 50%);
+  color: #fff;
+  box-shadow: 0 10px 32px rgba(34, 187, 102, 0.22), 0 2px 8px rgba(0,0,0,0.10);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.bottom-ft-procesa {
+ 
+  bottom: 0px; /* distancia desde el borde inferior */
+  margin-top: 12rem; /* Lo aleja 3rem del borde superior */
+  left: 0;
+  width: 10%;
+  text-align: center; /* centra los botones horizontalmente */
+  margin-right: 1rem; /* separa los botones horizontalmente */
+   width: 300px; /* Ancho fijo */
+   padding: 1rem 0.1rem; /* 1rem arriba y abajo (alto), 0.5rem izquierda y derecha (ancho) */
+}

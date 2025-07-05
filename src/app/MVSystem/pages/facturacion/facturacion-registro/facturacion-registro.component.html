@@ -247,10 +247,15 @@
                         </ng-container>
                     </tbody>
                 </table>
+               
               </div>
-              <div class="clear-float">
+                
+             
                 <div class="pull-right">
+                     <div class="clear-float">
+                
                   <div class="totals-card">
+                  
                     <div class="totals-card-header">
                       <i class="bi bi-calculator"></i>
                       <span class="totals-title">Resumen</span>
@@ -280,8 +285,8 @@
                   </div>
                 </div>
               </div>
-              <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
-                  <button class="btns primary big" type="submit">
+               <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
+                  <button class="bottom-ft-procesa" type="submit">
                         <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
                         <span class="spinner-grow spinner-grow-sm m-0 x-10"
                              role="status"
@@ -289,7 +294,7 @@
                              *ngIf="isLoading"></span>
                 </button>
 
-                  <button class="button-limpiar" (click)="onClean()">
+                  <button class="bottom-ft" (click)="onClean()">
                         Limpiar datos
                 </button>
               </div>
