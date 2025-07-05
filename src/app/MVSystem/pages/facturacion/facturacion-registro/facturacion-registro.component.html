@@ -59,239 +59,240 @@
                    
                 </div>
                 <div class="rightcol">
-                    <h3 class="sub-title"><i class="bi bi-hash"></i> {{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
-                    <div class="grid invoice">
-                        <div class="col">
-                          <div class="stats-card facturar-a">
-                            <div class="card-header">
-                              <span class="header-title">
-                                <i class="bi bi-person"></i> {{isFactura?'Facturar':'Cotización'}} a:
-                                <span class="required-field">*</span>
-                              </span>
-                            </div>
-                            <div class="card-body sm-padding">
-                              <div class="search-customer grid">
-                                <ng-select formControlName="telefono" 
-                                  class="modern-select-ng flex-grow-1"
-                                  (change)="obtenerClientesPorNombreTelefono()" 
-                                  [clearable]="false" 
-                                  [ngClass]="{ 'is-invalid': true }">
-                                  <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
-                                    {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
-                                  </ng-option>
-                                </ng-select>
-                                <button class="btns icon primary" type="button" (click)="onAdd()">
-                                  <i class="bx bx-plus"></i>
-                              </button>
-                              </div>
-                              <div class="clientDetail">
-                                <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
-                                <span class="phones"> {{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
-                              </div>
-                            </div>
-                          </div>
+                  <h3 class="sub-title"><i class="bi bi-hash"></i> {{isFactura?'Factura':'Cotización'}} #{{facturaNumber }}</h3>
+                  <div class="grid invoice">
+                    <div class="col">
+                      <div class="stats-card facturar-a">
+                        <div class="card-header">
+                          <span class="header-title">
+                            <i class="bi bi-person"></i> {{isFactura?'Facturar':'Cotización'}} a:
+                            <span class="required-field">*</span>
+                          </span>
                         </div>
-                        <div class="col">
-                          <div class="stats-card datos-facturacion">
-                            <div class="card-header">
-                              <i class="bi bi-receipt"></i>
-                              <span class="header-title">Datos de Facturación</span>
-                            </div>
-                            <div class="card-body sm-padding">
-                              <div class="grid two-cols" *ngIf="isFactura">
-                                <div><strong>Tipo de pago:</strong></div>
-                                <div class="info">
-                                  <select formControlName="tipoPago" class="form-select modern-select" (change)="onChangeTipoPago()">
-                                    <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
-                                      {{ TipoPago.descripcion_Tipo_Pagos }}
-                                    </option>
-                                  </select>
-                                  <div class="required-field" *ngIf="validarCampos('tipoPago')">
-                                    Este campo es requerido.
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="grid two-cols" *ngIf="CambiarFechaFactura()">
-                                <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
-                                <div class="info">
-                                  <input class="form-control" type="datetime-local" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
-                                  <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
-                                    Este campo es requerido.
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="grid two-cols">
-                                <div><strong>Fecha límite de pago:</strong></div>
-                                <div class="info">
-                                  <input class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
-                                  <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
-                                    Este campo es requerido.
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="grid two-cols" *ngIf="isFactura && hasNumberConfirmation()">
-                                <div><strong>Núm. Confirmación:</strong></div>
-                                <div>
-                                  <input type="number" formControlName="numConfirmacion" class="form-control">
-                                </div>
-                              </div>
-                              <div class="grid two-cols">
-                                <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
-                                <div>
-                                  <select formControlName="garantia" class="form-select modern-select">
-                                    <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
-                                      {{garantia.descripcion}}
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>RNC:</strong></div>
-                                <div>
-                                  <input type="text" class="form-control" placeholder="101000000" formControlName="RNC">
-                                </div>
-                              </div>
-
-                              <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>Empresa:</strong></div>
-                                <div>
-                                  <input type="text" class="form-control" formControlName="empresa" placeholder="Nombre Empresa">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                    <span class="separator-line"></span>
-                    <div class="DataTable">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <!-- Caja de texto -->
-                            <div class="flex-grow-1 me-3">
-                                <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
-                            </div>
-
-                            <!-- Botón -->
-                            <div class="pull-right">
-                                <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
-                            <i class="bx bx-plus"></i>
-                            Agregar artículo
+                        <div class="card-body sm-padding">
+                          <div class="search-customer grid">
+                            <ng-select formControlName="telefono" 
+                              class="modern-select-ng flex-grow-1"
+                              (change)="obtenerClientesPorNombreTelefono()" 
+                              [clearable]="false" 
+                              [ngClass]="{ 'is-invalid': true }">
+                              <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
+                                {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                              </ng-option>
+                            </ng-select>
+                            <button class="btns icon primary" type="button" (click)="onAdd()">
+                              <i class="bx bx-plus"></i>
                           </button>
-                            </div>
-                        </div>
-
-                        <table class="mv-table">
-                            <thead>
-                                <tr>
-                                    <th>Descripción</th>
-                                    <th class="align-center">Cant.</th>
-                                    <th class="align-right">Precio</th>
-                                    <th class="align-left">Subtotal</th>
-                                    <th class="align-right">Desc.</th>
-                                    <th class="align-left">Total</th>
-                                    <th class="align-center"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <ng-container formArrayName="articulos">
-                                    <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
-                                        <ng-container [formGroupName]="i">
-                                            <td>
-                                                <ng-select class="form-select modern-select-ng"
-                                                formControlName="articulo"
-                                                id="articulo"
-                                                [addTag]="addArticuloImei"
-                                                [virtualScroll]="true"
-                                                [clearable]="false"
-                                                (keydown.enter)="$event.preventDefault();
-                                                descuentoInput.focus()"
-                                                (change)="obtenerDetalleFactura(i);
-                                                cantidadInput.focus()"
-                                                (scroll)="onScroll($event)"
-                                                required
-                                                [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
-                                                    <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
-                                                        {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
-
-                                                    </ng-option>
-
-                                                </ng-select>
-                                            </td>
-                                            <td class="col-md-1 align-center">
-                                                <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
-                                                descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
-                                            </td>
-
-                                            <td class="col-md-1 align-center">
-                                                <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
-                                              descuentoInput.focus()" [maxlen]="7" appNumeric>
-                                            </td>
-
-                                            <td class="align-right">
-                                                {{detalleFactura.value.subTotal}}
-                                            </td>
-                                            <td class="col-md-1">
-                                                <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
-                                            </td>
-                                            <td class="align-right">
-                                                {{detalleFactura.value.total}}
-                                            </td>
-                                            <td class="align-center">
-                                                <button class="btns flat oorange" (click)="borrarArticulo(i)">
-                                          <i class="bx bx-trash-alt"></i>
-                                      </button>
-                                            </td>
-                                        </ng-container>
-                                    </tr>
-                                </ng-container>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="clear-float">
-                      <div class="pull-right">
-                        <div class="totals-card">
-                          <div class="totals-card-header">
-                            <i class="bi bi-calculator"></i>
-                            <span class="totals-title">Resumen</span>
                           </div>
-                          <div class="totals-card-body">
-                            <div class="totals-row">
-                              <span class="totals-label">Subtotal:</span>
-                              <span class="info">{{subTotal}}</span>
+                          <div class="clientDetail">
+                            <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
+                            <span class="phones"> {{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="stats-card datos-facturacion">
+                        <div class="card-header">
+                          <span class="header-title">
+                            <i class="bi bi-receipt"></i> Datos de Facturación
+                          </span>
+                        </div>
+                        <div class="card-body sm-padding">
+                          <div class="grid two-cols" *ngIf="isFactura">
+                            <div><strong>Tipo de pago:</strong></div>
+                            <div class="info">
+                              <select formControlName="tipoPago" class="form-select modern-select" (change)="onChangeTipoPago()">
+                                <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
+                                  {{ TipoPago.descripcion_Tipo_Pagos }}
+                                </option>
+                              </select>
+                              <div class="required-field" *ngIf="validarCampos('tipoPago')">
+                                Este campo es requerido.
+                              </div>
                             </div>
-                            <div class="totals-row">
-                              <span class="totals-label">Descuento:</span>
-                              <span class="info">{{descuento}}</span>
+                          </div>
+                          <div class="grid two-cols" *ngIf="CambiarFechaFactura()">
+                            <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
+                            <div class="info">
+                              <input class="form-control" type="datetime-local" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
+                              <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
+                                Este campo es requerido.
+                              </div>
                             </div>
-                            <div class="totals-row">
-                              <span class="totals-label">ITBIS:</span>
-                              <span class="info">{{itbis}}</span>
+                          </div>
+                          <div class="grid two-cols">
+                            <div><strong>Fecha límite de pago:</strong></div>
+                            <div class="info">
+                              <input class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
+                              <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
+                                Este campo es requerido.
+                              </div>
                             </div>
-                            <div class="totals-row" *ngIf="isCredit && isFactura">
-                              <span class="totals-label">Abono:</span>
-                              <input class="form-control align-right" type="number" formControlName="abono" appNumeric [maxlen]="4" [decimals]="2" (keyup)="agregarAbono()" />
+                          </div>
+                          <div class="grid two-cols" *ngIf="isFactura && hasNumberConfirmation()">
+                            <div><strong>Núm. Confirmación:</strong></div>
+                            <div>
+                              <input type="number" formControlName="numConfirmacion" class="form-control">
                             </div>
-                            <div class="totals-row total-row">
-                              <span class="totals-label">Total:</span>
-                              <span class="info total-amount">RD$ {{total}}</span>
+                          </div>
+                          <div class="grid two-cols">
+                            <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
+                            <div>
+                              <select formControlName="garantia" class="form-select modern-select">
+                                <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
+                                  {{garantia.descripcion}}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="grid two-cols" *ngIf="isNcfRequire">
+                            <div><strong>RNC:</strong></div>
+                            <div>
+                              <input type="text" class="form-control" placeholder="101000000" formControlName="RNC">
+                            </div>
+                          </div>
+
+                          <div class="grid two-cols" *ngIf="isNcfRequire">
+                            <div><strong>Empresa:</strong></div>
+                            <div>
+                              <input type="text" class="form-control" formControlName="empresa" placeholder="Nombre Empresa">
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
-                        <button class="btns primary big" type="submit">
-                              <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
-                              <span class="spinner-grow spinner-grow-sm m-0 x-10"
-                                   role="status"
-                                   aria-hidden="true"
-                                   *ngIf="isLoading"></span>
-                      </button>
+                  </div>
+                  <span class="separator-line"></span>
+                  <div class="DataTable">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <!-- Caja de texto -->
+                          <div class="flex-grow-1 me-3">
+                              <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
+                          </div>
 
-                        <button class="button-limpiar" (click)="onClean()">
-                              Limpiar datos
-                      </button>
+                          <!-- Botón -->
+                          <div class="pull-right">
+                              <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
+                          <i class="bx bx-plus"></i>
+                          Agregar artículo
+                        </button>
+                          </div>
+                      </div>
+
+                      <table class="mv-table">
+                          <thead>
+                              <tr>
+                                  <th>Descripción</th>
+                                  <th class="align-center">Cant.</th>
+                                  <th class="align-right">Precio</th>
+                                  <th class="align-left">Subtotal</th>
+                                  <th class="align-right">Desc.</th>
+                                  <th class="align-left">Total</th>
+                                  <th class="align-center"></th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container formArrayName="articulos">
+                                  <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
+                                      <ng-container [formGroupName]="i">
+                                          <td>
+                                              <ng-select class="form-select modern-select-ng"
+                                              formControlName="articulo"
+                                              id="articulo"
+                                              [addTag]="addArticuloImei"
+                                              [virtualScroll]="true"
+                                              [clearable]="false"
+                                              (keydown.enter)="$event.preventDefault();
+                                              descuentoInput.focus()"
+                                              (change)="obtenerDetalleFactura(i);
+                                              cantidadInput.focus()"
+                                              (scroll)="onScroll($event)"
+                                              required
+                                              [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
+                                                  <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
+                                                      {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
+
+                                                  </ng-option>
+
+                                              </ng-select>
+                                          </td>
+                                          <td class="col-md-1 align-center">
+                                              <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
+                                              descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
+                                          </td>
+
+                                          <td class="col-md-1 align-center">
+                                              <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
+                                            descuentoInput.focus()" [maxlen]="7" appNumeric>
+                                          </td>
+
+                                          <td class="align-right">
+                                              {{detalleFactura.value.subTotal}}
+                                          </td>
+                                          <td class="col-md-1">
+                                              <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
+                                          </td>
+                                          <td class="align-right">
+                                              {{detalleFactura.value.total}}
+                                          </td>
+                                          <td class="align-center">
+                                              <button class="btns flat oorange" (click)="borrarArticulo(i)">
+                                        <i class="bx bx-trash-alt"></i>
+                                    </button>
+                                          </td>
+                                      </ng-container>
+                                  </tr>
+                              </ng-container>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div class="clear-float">
+                    <div class="pull-right">
+                      <div class="totals-card">
+                        <div class="totals-card-header">
+                          <i class="bi bi-calculator"></i>
+                          <span class="totals-title">Resumen</span>
+                        </div>
+                        <div class="totals-card-body">
+                          <div class="totals-row">
+                            <span class="totals-label">Subtotal:</span>
+                            <span class="info">{{subTotal}}</span>
+                          </div>
+                          <div class="totals-row">
+                            <span class="totals-label">Descuento:</span>
+                            <span class="info">{{descuento}}</span>
+                          </div>
+                          <div class="totals-row">
+                            <span class="totals-label">ITBIS:</span>
+                            <span class="info">{{itbis}}</span>
+                          </div>
+                          <div class="totals-row" *ngIf="isCredit && isFactura">
+                            <span class="totals-label">Abono:</span>
+                            <input class="form-control align-right" type="number" formControlName="abono" appNumeric [maxlen]="4" [decimals]="2" (keyup)="agregarAbono()" />
+                          </div>
+                          <div class="totals-row total-row">
+                            <span class="totals-label">Total:</span>
+                            <span class="info total-amount">RD$ {{total}}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
+                  <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
+                      <button class="btns primary big" type="submit">
+                            <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
+                            <span class="spinner-grow spinner-grow-sm m-0 x-10"
+                                 role="status"
+                                 aria-hidden="true"
+                                 *ngIf="isLoading"></span>
+                  </button>
+
+                    <button class="button-limpiar" (click)="onClean()">
+                          Limpiar datos
+                  </button>
+                </div>
                 </div>
             </div>
         </form>
