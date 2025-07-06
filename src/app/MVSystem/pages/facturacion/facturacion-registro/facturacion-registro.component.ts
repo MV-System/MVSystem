@@ -934,7 +934,8 @@ if (!articuloExistente) {
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
-      ComprobanteCheck:1
+      ComprobanteCheck:1,
+      IdVendedor:0
     }
     return model;
   }
@@ -1009,7 +1010,7 @@ printFacturaMini() {
       () => {
 
         this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-          
+
           () => {
             this.printFacturaNormal(); this.onClean()
           },

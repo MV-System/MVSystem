@@ -81,6 +81,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   lastLine!:       number;
   numerofactura!:  number;
   IdAlmacen!:  number;
+  iD_Vendedor!:  number;
   facturasCantidad:number = 0;
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
@@ -107,14 +108,14 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     criterio: ['',],
     factura:['',],
     rangeDate: [''],
-    vendedor: ['']
+    iD_Vendedor: ['']
   });
   modelFacturaFilter(){
-    const {criterio,almacen,vendedor} = this.form.value;
+    const {criterio,almacen,iD_Vendedor} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
       criterio: criterio,
-      vendedor: vendedor,
+      IdVendedor: Number(iD_Vendedor),
       fechaInicio: this.paginate.fechaInicio,
       fechaFinal: this.paginate.fechaFinal,
       pageIndex: this.paginate.pageIndex,
@@ -128,7 +129,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
   getFacturas(){
     this.loading.showLoading();
-    //this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
    // this.isLoading = false; // Terminar carga
@@ -155,7 +155,6 @@ this.loading.hideLoading();
       this.detalleFactura = detalle;
     })
     this.subs.push(sub);
-    //this.isLoading = false; // Terminar carga
   }
   printReportFacturaConsulta(){
     this.loading.showLoading();
@@ -163,7 +162,6 @@ this.loading.hideLoading();
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-      //this.isLoading = false; // Terminar carga
     },err=>{
       this.printing = !this.printing;
       this.toast.error('Error al imprimir factura');
@@ -173,12 +171,10 @@ this.loading.hideLoading();
   }
   printFactura(){
      this.loading.showLoading();
-   // this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
        this.loading.hideLoading();
-     // this.isLoading = false; // Terminar carga
     },err=>{
 
       this.toast.error('Error al imprimir factura');
@@ -222,7 +218,6 @@ this.loading.hideLoading();
   this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
 }
   onDateRangeChanged(event: any) {
-    console.log('DateRangeChanged:', event);
     if (event.beginDate.year === 0) {
       this.paginate.fechaInicio = '';
       this.paginate.fechaFinal = '';
@@ -246,7 +241,7 @@ this.loading.hideLoading();
   }
 
   facturasFiltradas(): FacturaConsulta[] {
-    const vendedorSeleccionadoId = this.form.get('vendedor')?.value;
+    const vendedorSeleccionadoId = this.form.get('iD_Vendedor')?.value;
     if (!vendedorSeleccionadoId) {
       return this.facturas;
     }
@@ -264,15 +259,17 @@ this.loading.hideLoading();
    * Calcula el total facturado en el cliente sumando los montos de todas las facturas filtradas
    */
   getTotalFacturadoCliente(): number {
-    return this.facturasFiltradas().reduce((acc, factura) => acc + (factura.total || 0), 0);
+    return this.totalFacturado  || 0;
+
+    //return this.facturasFiltradas().reduce((acc, factura) => acc + (factura.total || 0), 0);
   }
 
   /**
    * Devuelve la cantidad de facturas filtradas en el cliente
    */
   getCantidadFacturasCliente(): number {
-    const cantidad = this.facturasFiltradas().length;
-    return cantidad;
+     return this.totalRecord || 0;
+
   }
 
 }
