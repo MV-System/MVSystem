@@ -10,7 +10,7 @@
         </nav>
     </div>
     <!-- End Page Title -->
-    
+
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
@@ -28,7 +28,7 @@
                             <div class="action-buttons">
                                 <button type="button" class="button-guardar" (click)="navigateToRegistro()">
                                     <i class="bi bi-plus-circle-fill me-2"></i>
-                                    <span class="d-none d-sm-inline">Agregar </span>Accesorio
+                                    <span class="d-none d-sm-inline">Agregar </span>
                                 </button>
                             </div>
                         </div>
@@ -39,16 +39,16 @@
                                 <div class="col-12">
                                     <div class="card filter-card">
                                         <div class="card-body">
-                                          
-                                            
+
+
                                             <!-- Radio Buttons for Type Selection -->
                                             <div class="type-selection mb-4">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input modern-radio" 
-                                                           type="radio" 
-                                                           name="accesorio" 
+                                                    <input class="form-check-input modern-radio"
+                                                           type="radio"
+                                                           name="accesorio"
                                                            id="disponibles"
-                                                           value="1" 
+                                                           value="1"
                                                            checked
                                                            (change)="onCheckboxAccesorioChange($event)">
                                                     <label class="form-check-label modern-radio-label" for="disponibles">
@@ -57,9 +57,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input modern-radio" 
-                                                           type="radio" 
-                                                           name="accesorio" 
+                                                    <input class="form-check-input modern-radio"
+                                                           type="radio"
+                                                           name="accesorio"
                                                            id="vendidos"
                                                            value="2"
                                                            (change)="onCheckboxAccesorioChange($event)">
@@ -69,8 +69,8 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            
-                                            
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -92,12 +92,12 @@
                                                     <small class="stats-subtitle">Unidades en inventario</small>
                                                 </div>
                                                 <!-- Search Form -->
-                                         
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="card stats-card">
                                         <div class="card-body">
@@ -121,7 +121,7 @@
                                                     <i class="bi bi-funnel me-2 text-primary"></i>
                                                     Filtros de Búsqueda
                                                 </h6>
-                                            </div>                                            
+                                            </div>
     <div class="row g-3 align-items-end">
           <div class="col-md-8">
             <label class="form-label modern-label">
@@ -190,7 +190,7 @@
                                                 Historial de Accesorios Vendidos
                                             </h6>
                                         </div>
-                                        
+
                                         <app-accesorio-vendido></app-accesorio-vendido>
                                     </div>
                                 </div>

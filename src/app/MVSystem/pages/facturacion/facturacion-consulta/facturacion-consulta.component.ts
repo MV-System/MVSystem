@@ -210,7 +210,7 @@ this.loading.hideLoading();
     const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
-   this.loading.hideLoading();  
+   this.loading.hideLoading();
   },err=>{
       this.toast.error('Error al imprimir factura');
     });
@@ -272,7 +272,6 @@ this.loading.hideLoading();
    */
   getCantidadFacturasCliente(): number {
     const cantidad = this.facturasFiltradas().length;
-    console.log('Cantidad de facturas filtradas:', cantidad, this.facturasFiltradas());
     return cantidad;
   }
 

@@ -2,7 +2,7 @@
 <div class="box animate__animated animate__fadeIn">
     <h1>Equipos Vendidos</h1>
     <!-- Tarjetas de totales arriba de los filtros -->
-    <div class="row mb-4">
+    <div class="stats-container">
       <div class="col-md-2">
         <div class="stats-card">
           <div class="stats-content">
@@ -130,8 +130,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-5">
-          <label class="form-label row mx-2">Fecha de facturación</label>
+        <div class="col-md-5 align-items-center">
+          <label class="form-label row mx-1">Fecha de facturación</label>
           <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
           </my-date-range-picker>
         </div>
