@@ -1,25 +1,17 @@
 <main id="main" class="main">
-    <div class="main-title">
-        <h1 id="registro" style="display: flex; align-items: center; gap: 1.2rem; font-size: 2.3rem; font-weight: 800; color: #185a9d; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(70,127,241,0.08); margin: 0;">
-          <i class="bi bi-file-earmark-plus"></i>
-          Nueva {{isFactura?'Factura':'Cotización'}}
-          <span style="font-size: 2rem; font-weight: 600; color: #185a9d; letter-spacing: 1px; text-shadow: 0 8px 8px rgba(70,127,241,0.08);">#{{facturaNumber}}</span>
-        </h1>
-    </div>
+   
     <section>
-        <!-- <r-toggle [dataOff]="'Facturación'" [dataOn]="'Cotización'" (onToggle)="onToggle($event)"></r-toggle> -->
-
         <form [formGroup]="form" (ngSubmit)="onSubmit()" style="display: grid">
-
-            <div class="row invoice-row" style="margin-left: 0;">
-              <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
+            <div class="row invoice-row">
+              <div class="col-md-6 d-flex flex-column">
+                <!-- Tarjeta de datos de facturacion -->
                 <div class="stats-card-facturacion datos-facturacion">
                   <div class="card-header-facturacion">
-                    <span class="header-title">
+                    <span class="header-title-ft">
                       <i class="bi bi-receipt"></i> Datos de Facturación
                     </span>
                   </div>
-                  <div class="card-body sm-padding">
+                  <div class="card-body-ft sm-padding">
                     <div class="grid two-cols" *ngIf="isFactura">
                       <div><strong>Tipo de pago:</strong></div>
                       <div class="info">
@@ -83,41 +75,44 @@
                     </div>
                   </div>
                 </div>
-                <div class="stats-card facturar-a" style="margin-top: 0.2rem; margin-bottom: 0.2rem; padding-top: 0.4rem; padding-bottom: 0.4rem;">
-                  <div class="card-header" style="display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem;">
-                    <span class="header-title" style="margin-bottom: 0;">
+                <!-- Tarjeta de Cliente -->
+                <div class="stats-card-facturacion facturar-a">
+                  <div class="card-header-facturacion">
+                    <span class="header-title">
                       <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
                     </span>
-                    <ng-select formControlName="telefono"
-                      class="modern-select-ng flex-grow-1"
-                      (change)="obtenerClientesPorNombreTelefono()"
-                      [clearable]="false"
-                      [ngClass]="{ 'is-invalid': true }">
-                      <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
-                        {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
-                      </ng-option>
-                    </ng-select>
-                    <button class="btns icon primary" type="button" (click)="onAdd()">
-                      <i class="bx bx-plus"></i>
-                    </button>
                   </div>
                   <div class="card-body sm-padding">
-                    <div class="clientDetail" style="display: flex; align-items: center; gap: 1.2rem; font-size: 1.2rem; font-weight: 700; color: #2c3e50; margin-top: 0.5rem;">
-                      <span class="name" style="color: #2c3e50; white-space: nowrap;">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
-                      <span class="divider" style="height: 22px; width: 2px; background: #e3eafc; display: inline-block; border-radius: 2px;"></span>
-                      <span class="phones" style="color: #2c3e50; white-space: nowrap;">{{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
+                    <div class="d-flex align-items-center gap-2">
+                      <ng-select formControlName="telefono"
+                        class="modern-select-ng flex-grow-1"
+                        (change)="obtenerClientesPorNombreTelefono()"
+                        [clearable]="false"
+                        [ngClass]="{ 'is-invalid': true }">
+                        <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
+                          {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                        </ng-option>
+                      </ng-select>
+                      <button class="btns icon primary" type="button" (click)="onAdd()">
+                        <i class="bx bx-plus"></i>
+                      </button>
+                    </div>
+                    <div class="clientDetail client-detail-row mt-2">
+                      <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
+                      <span class="phones ms-3">{{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
-                <div class="filters-card-ft compact-filters stats-card datos-facturacion" style="margin-bottom: 1.2rem; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
-                  <div class="filters-card-header-ft card-header">
-                    <span class="header-title">
-                      <i class="bi bi-funnel"></i> Filtros de Facturación
-                    </span>
-                  </div>
-                  <div class="filters-card-body-ft card-body sm-padding" style="display: flex; flex-direction: column; gap: 50%;">
+                <!-- Tarjeta de filtros de facturacion -->
+              <div class="stats-card-facturacion col-md-6">
+                <div class="filters-card-ft datos-facturacion">
+                  <div class="filters-card-body-ft card-body sm-padding">
+                    <div class="card-header-facturacion mb-3">
+                      <span class="header-title">
+                        <i class="bi bi-funnel"></i> Filtros de Facturación
+                      </span>
+                    </div>
                     <div class="row flex-column">
                       <div class="col-12">
                         <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>

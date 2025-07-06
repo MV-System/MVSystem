@@ -2,7 +2,9 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     border-color: #dc3545;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
-
+.header-title-ft {
+  text-align: right;
+}
 .totals-card-facturacion {
   background: #fff;
   border-radius: 1.1rem;
@@ -18,31 +20,48 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 .stats-card-facturacion {
   border-left: none;
   border-right: none;
-  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
-  margin-bottom: 0.7rem;
+  padding: 0.1rem 0.1rem 0.1rem 0.1rem;
+  margin-bottom: 1xp;
 }
 .stats-card-facturacion.facturar-a {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  border-left: 5px solid #28a745;
+  border-right: none;
+  min-height: unset;
+  padding-bottom: 0.5rem;
+}
+.stats-card-facturacion.datos-facturacion {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
   border-left: 5px solid #28a745;
   border-right: none;
 }
-.stats-card-facturacion.datos-facturacion {
-  border-right: 5px solid #28a745;
-  border-left: none;
+.datos-facturacion {
+  background: #fff !important;
 }
-.totals-card-header-facturacion {
+.totals-card-header-facturacion, .card-header-facturacion {
   display: flex;
   align-items: center;
   gap: 0.7rem;
   font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.1rem;
   color: #2c3e50;
 }
 .totals-title {
   font-size: 1.2rem;
   font-weight: 700;
 }
-.totals-card-body-facturacion {
+.totals-card-body-facturacion, .card-body-ft.sm-padding {
   padding: 0.2rem 0 0 0;
 }
 .totals-row {
@@ -109,6 +128,24 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+}
+.main-title-factura {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #185a9d;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(70,127,241,0.08);
+  margin: 0;
+}
+.main-title-number {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #185a9d;
+  letter-spacing: 1px;
+  text-shadow: 0 8px 8px rgba(70,127,241,0.08);
 }
 .sub-title {
   font-size: 1.35rem;
@@ -330,4 +367,37 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   margin-right: 1rem; /* separa los botones horizontalmente */
    width: 300px; /* Ancho fijo */
    padding: 1rem 0.1rem; /* 1rem arriba y abajo (alto), 0.5rem izquierda y derecha (ancho) */
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  color: #2c3e50;
+}
+.card-body.sm-padding {
+  padding: 0.2rem 0 0 0;
+}
+.client-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-top: 0.5rem;
+}
+.divider {
+  height: 22px;
+  width: 2px;
+  background: #e3eafc;
+  display: inline-block;
+  border-radius: 2px;
+}
+.name, .phones {
+  color: #2c3e50;
+  white-space: nowrap;
 }
