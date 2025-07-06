@@ -10,7 +10,7 @@
         <!-- <r-toggle [dataOff]="'Facturación'" [dataOn]="'Cotización'" (onToggle)="onToggle($event)"></r-toggle> -->
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" style="display: grid">
-            
+
             <div class="row invoice-row" style="margin-left: 0;">
               <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
                 <div class="stats-card-facturacion datos-facturacion">
@@ -88,10 +88,10 @@
                     <span class="header-title" style="margin-bottom: 0;">
                       <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
                     </span>
-                    <ng-select formControlName="telefono" 
+                    <ng-select formControlName="telefono"
                       class="modern-select-ng flex-grow-1"
-                      (change)="obtenerClientesPorNombreTelefono()" 
-                      [clearable]="false" 
+                      (change)="obtenerClientesPorNombreTelefono()"
+                      [clearable]="false"
                       [ngClass]="{ 'is-invalid': true }">
                       <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
                         {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
@@ -111,13 +111,13 @@
                 </div>
               </div>
               <div class="col-md-6" style="padding-left: 0; width: 50%; min-width: 340px; max-width: 50%;">
-                <div class="filters-card compact-filters stats-card datos-facturacion" style="margin-bottom: 1.2rem; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
-                  <div class="filters-card-header card-header">
+                <div class="filters-card-ft compact-filters stats-card datos-facturacion" style="margin-bottom: 1.2rem; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div class="filters-card-header-ft card-header">
                     <span class="header-title">
                       <i class="bi bi-funnel"></i> Filtros de Facturación
                     </span>
                   </div>
-                  <div class="filters-card-body card-body sm-padding" style="display: flex; flex-direction: column; gap: 50%;">
+                  <div class="filters-card-body-ft card-body sm-padding" style="display: flex; flex-direction: column; gap: 50%;">
                     <div class="row flex-column">
                       <div class="col-12">
                         <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
@@ -164,7 +164,7 @@
               </div>
             </div>
             <div id="invoice-wrapper" class="box singlecol" style="padding-left: 1.5rem; padding-right: 0.5rem;">
-              
+
               <span class="separator-line"></span>
               <div class="DataTable">
                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 1.2rem;">
@@ -247,15 +247,15 @@
                         </ng-container>
                     </tbody>
                 </table>
-               
+
               </div>
-                
-             
+
+
                 <div class="pull-right">
                      <div class="clear-float">
-                
+
                   <div class="totals-card-facturacion">
-                  
+
                     <div class="totals-card-header">
                       <i class="bi bi-calculator"></i>
                       <span class="totals-title">Resumen</span>
