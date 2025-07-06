@@ -112,7 +112,7 @@
 
                         </div>
                     </div>
-                    <div class="scrollable-table thinScroll">
+                    <div class="scrollable-table thinScroll d-none d-md-block">
                         <table class="mv-table">
                             <thead>
                                 <tr>
@@ -127,24 +127,13 @@
                                     <th class="align-center">Estado</th>
                                     <th class="align-center">Garantía</th>
                                     <th class="align-center">Nota</th>
-
                                     <th class="align-center">Fecha Registro</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let Equipo of equiposDisponibles | paginate
-                      : {
-                          itemsPerPage: filter.pageSize,
-                          currentPage: filter.pageIndex,
-                          totalItems: totalRecord
-                        }">
+                                <tr *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
                                     <td class="fixed-item code">{{Equipo.imei}}</td>
-                                    <td class="fixed-item desc">
-                                        <span>{{Equipo.descripcion}}</span>
-                                        <!-- <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Editar artículo">
-                  <i class="bx bx-edit-alt"></i>
-                </button> -->
-                                    </td>
+                                    <td class="fixed-item desc"><span>{{Equipo.descripcion}}</span></td>
                                     <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
                                     <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
                                     <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
@@ -158,6 +147,27 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Cards para pantallas pequeñas -->
+                    <div class="d-block d-md-none">
+                      <div *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
+                        <div class="card-body">
+                          <div class="equipo-card-title mb-2">{{ Equipo.descripcion }}</div>
+                          <div class="row g-1">
+                            <div class="col-6"><strong>IMEI/Código:</strong> {{Equipo.imei}}</div>
+                            <div class="col-6"><strong>Costo:</strong> {{Equipo.costoEquipo|currency}}</div>
+                            <div class="col-6"><strong>Precio Detalle:</strong> {{Equipo.precioDetalle|currency}}</div>
+                            <div class="col-6"><strong>Precio PM:</strong> {{Equipo.precioPorMayor|currency}}</div>
+                            <div class="col-6"><strong>Almacén:</strong> {{Equipo.descripcionAlmacen}}</div>
+                            <div class="col-6"><strong>Suplidor:</strong> {{Equipo.suplidor}}</div>
+                            <div class="col-6"><strong>Tecnología:</strong> {{Equipo.tecnologia}}</div>
+                            <div class="col-6"><strong>Estado:</strong> {{Equipo.estadoBloqueo}}</div>
+                            <div class="col-6"><strong>Garantía:</strong> {{Equipo.garantia}}</div>
+                            <div class="col-6"><strong>Nota:</strong> {{Equipo.notaAdicional}}</div>
+                            <div class="col-6"><strong>Fecha Registro:</strong> {{Equipo.fecharegistro}}</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <!-- End Table with stripped rows -->
                     <div class="not-data" *ngIf="!equiposDisponibles.length">

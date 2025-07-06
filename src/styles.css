@@ -417,9 +417,7 @@ select.form-select.modern-select option {
   background: #f5f7fa;
   box-shadow: 0 2px 8px rgba(191,201,209,0.08);
 }
-.stats-info {
-  /* flex: 1; */
-}
+
 .stats-title {
   font-size: 1.05rem;
   font-weight: 600;

@@ -2,62 +2,62 @@
 <div class="box animate__animated animate__fadeIn">
     <h1>Equipos Vendidos</h1>
     <!-- Tarjetas de totales arriba de los filtros -->
-    <div class="stats-container">
-      <div class="col-md-2">
-        <div class="stats-card">
+    <div class="stats-container row flex-wrap g-2 mb-3 justify-content-center">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
+        <div class="stats-card flex-fill">
           <div class="stats-content">
             <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
             <div class="stats-info">
               <h6 class="stats-title">Total Equipos</h6>
-              <div class="stats-number">{{ equipoQuantity }}</div>
+              <div class="stats-number text-break">{{ equipoQuantity }}</div>
               <small class="stats-subtitle">Vendidos</small>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="stats-card">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
+        <div class="stats-card flex-fill">
           <div class="stats-content">
             <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
             <div class="stats-info">
               <h6 class="stats-title">Total Inventario</h6>
-              <div class="stats-number">{{ totalInventario | currency }}</div>
+              <div class="stats-number text-break">{{ totalInventario | currency }}</div>
               <small class="stats-subtitle">Inventario vendido</small>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="stats-card">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
+        <div class="stats-card flex-fill">
           <div class="stats-content">
             <div class="stats-icon"><i class="bi bi-graph-up-arrow text-info"></i></div>
             <div class="stats-info">
               <h6 class="stats-title">Total Facturado</h6>
-              <div class="stats-number">{{ totalFacturado | currency }}</div>
+              <div class="stats-number text-break">{{ totalFacturado | currency }}</div>
               <small class="stats-subtitle">Facturación</small>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="stats-card">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
+        <div class="stats-card flex-fill">
           <div class="stats-content">
             <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
             <div class="stats-info">
               <h6 class="stats-title">Total Ganancias</h6>
-              <div class="stats-number">{{ totalGanancia | currency }}</div>
+              <div class="stats-number text-break">{{ totalGanancia | currency }}</div>
               <small class="stats-subtitle">Ganancias netas</small>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="stats-card">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
+        <div class="stats-card flex-fill">
           <div class="stats-content">
             <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
             <div class="stats-info">
               <h6 class="stats-title">Total Itbis</h6>
-              <div class="stats-number">{{ totalItbis | currency }}</div>
+              <div class="stats-number text-break">{{ totalItbis | currency }}</div>
               <small class="stats-subtitle">Impuestos</small>
             </div>
           </div>
@@ -166,8 +166,8 @@
                         <p>Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros</p>
                     </div>
                 </div>
-                <!-- Table with stripped rows -->
-                <div class="scrollable-table thinScroll">
+                <!-- Table with stripped rows (solo visible en pantallas md o mayores) -->
+                <div class="scrollable-table thinScroll d-none d-md-block">
                     <table class="mv-table">
                         <thead>
                             <tr>
@@ -224,6 +224,29 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <!-- Cards para pantallas pequeñas -->
+                <div class="d-block d-md-none">
+                  <div *ngFor="let equipo of equiposVendidos | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
+                    <div class="card-body">
+                      <div class="equipo-card-title mb-2">{{ equipo.descripcion }}</div>
+                      <div class="row g-1">
+                        <div class="col-6"><strong>Imei:</strong> {{equipo.imei}}</div>
+                        <div class="col-6"><strong>Cliente:</strong> {{equipo.cliente}}</div>
+                        <div class="col-6"><strong>Precio Vendido:</strong> {{equipo.precioVendido | currency}}</div>
+                        <div class="col-6"><strong>Fecha facturado:</strong> {{equipo.fechaFacturado}}</div>
+                        <div class="col-6"><strong>Precio Mayor:</strong> {{equipo.precioPorMayor | currency}}</div>
+                        <div class="col-6"><strong>Precio Detalle:</strong> {{equipo.precioDetalle | currency}}</div>
+                        <div class="col-6"><strong>Costo:</strong> {{equipo.costoEquipo | currency}}</div>
+                        <div class="col-6"><strong>Itbis:</strong> {{equipo.itbis | currency}}</div>
+                        <div class="col-6"><strong>Tipo Pago:</strong> {{equipo.tipoFactura}}</div>
+                        <div class="col-6"><strong>Nota:</strong> {{equipo.notaAdicional}}</div>
+                        <div class="col-6"><strong>Almacen:</strong> {{equipo.descripcionAlmacen}}</div>
+                        <div class="col-6"><strong>Vendedor:</strong> {{equipo.vendedor}}</div>
+                        <div class="col-6"><strong>Fecha Registro:</strong> {{equipo.fechaRegistro}}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposVendidos.length">
