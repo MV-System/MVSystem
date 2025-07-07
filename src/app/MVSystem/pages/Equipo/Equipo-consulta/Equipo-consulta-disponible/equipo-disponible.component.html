@@ -38,7 +38,7 @@
   </div>
 </div>
 <!-- Filtros en tarjeta global -->
-<form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
+<form [formGroup]="form" (submit)="preventSubmit($event)" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
   <div class="card filter-card mb-4" style="background: #fff;">
     <div class="card-body">
       <div class="filter-header mb-3">
@@ -51,8 +51,17 @@
         <div class="col-md-4">
           <label class="form-label modern-label"><i class="bi bi-upc-scan me-1"></i> IMEI</label>
           <div class="input-group">
-            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposDisponibles()">
-            <button class="btns flat gunmetal" type="button" (click)="obtenerEquiposDisponibles()"><i class='bx bx-search'></i></button>
+            <input type="search" 
+            formControlName="imei" 
+            autocomplete="off" 
+            class="form-control modern-input busqueda-input" 
+            placeholder="Escriba el IMEI" 
+            (keyup.enter)="onEnterKey($event)">
+            <button class="btns flat gunmetal" 
+            type="button" 
+            (click)="obtenerEquiposDisponibles()">
+            <i class='bx bx-search'></i>
+          </button>
           </div>
         </div>
         <div class="col-md-4" *ngIf="SelectSucursal()">

@@ -213,15 +213,17 @@
                                             <i class="bi bi-award me-1"></i>
                                             Marca <span class="required-star">*</span>
                                         </label>
-                                        <ng-select formControlName="marca"
-                                        class="modern-select-ng"
-                                         [class.is-invalid]="validarCampos('marca')" 
-                                         (change)="selectoresMarcaModeloValidator()" required>
-                                            <ng-option [value]="''" disabled selected>Seleccione una marca</ng-option>
-                                            <ng-option *ngFor="let marca of listaMarca" [value]="marca.iD_Marca">
-                                                {{marca.descripcion}}
-                                            </ng-option>
-                                        </ng-select>
+                                        <ng-select
+  [items]="listaMarca"
+  bindLabel="descripcion"
+  bindValue="iD_Marca"
+  placeholder="Seleccione una marca"
+  [class.is-invalid]="validarCampos('marca')"
+  formControlName="marca"
+  (change)="selectoresMarcaModeloValidator()"
+  class="modern-select-ng"
+  required>
+</ng-select>
                                         <div class="invalid-feedback" *ngIf="validarCampos('marca')">
                                             Este campo es requerido.
                                         </div>
@@ -232,15 +234,16 @@
                                             <i class="bi bi-phone me-1"></i>
                                             Modelo <span class="required-star">*</span>
                                         </label>
-                                        <ng-select formControlName="modelo" 
-                                        class="modern-select-ng"
-                                         (change)="selectoresMarcaModeloValidator()"
-                                        [class.is-invalid]="validarCampos('modelo')" required>
-                                            <ng-option [value]="''" disabled selected>Seleccione un modelo</ng-option>
-                                            <ng-option *ngFor="let modelo of listaModelo" [value]="modelo.iD_Modelo">
-                                                {{modelo.descripcion}}
-                                            </ng-option>
-                                        </ng-select>
+                                        <ng-select
+  [items]="listaModelo"
+  bindLabel="descripcion"
+  bindValue="iD_Modelo"
+  placeholder="Seleccione un modelo"
+  [class.is-invalid]="validarCampos('modelo')"
+  formControlName="modelo"
+  class="modern-select-ng"
+  required>
+</ng-select>
                                         <div class="invalid-feedback" *ngIf="validarCampos('modelo')">
                                             Este campo es requerido.
                                         </div>

@@ -34,6 +34,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private validatorPermissionService:ValidatorPermissionService,
   ) { }
 
+  
+
   SelectSucursal(): boolean {
     return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
   }
@@ -48,7 +50,9 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.obtenerEquiposDisponibles();  // Rehacer la consulta para actualizar los datos
   }
-
+preventSubmit(event: Event) {
+  event.preventDefault();
+}
   ngOnInit(): void {
     //this.loading.showLoading();
     this.obtenerEquiposDisponibles();
@@ -124,7 +128,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.totalInventario = totalInventario;
   }
   onFilterPropHasValue(){
-    debugger;
+   
     if(
     this.filter.imei !=="" ||
     this.filter.fechaInicio !="" ||
@@ -137,34 +141,47 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
   }
-  obtenerEquiposDisponibles() {
-    this.loading.showLoading();
-   this.isLoading = true;
-    this.getValueFilterForm();
-    this.onFilterPropHasValue();
 
-    this.subscription = this.equipoService
-      .getEquipoDisponible(this.filter)
-      .subscribe((equipo) => {
+onEnterKey(event: Event) {
+  const keyboardEvent = event as KeyboardEvent;
+  keyboardEvent.preventDefault();
+  this.obtenerEquiposDisponibles();
+}
 
+obtenerEquiposDisponibles() {
+  this.loading.showLoading();
+  this.isLoading = true;
 
+  this.getValueFilterForm();
+  this.onFilterPropHasValue();
 
-        let record = equipo.length == 0 ? 0 : equipo[0].totalRecord;
-        let totalInventario = equipo.length == 0 ? 0 : equipo[0].totalInventario;
-        this.obtenerTotalEquipos(record);
-        this.obtenerTotalInventario(totalInventario);
-        this.loading.hideLoading();
-        this.isLoading = false;
-        if (equipo.length) {
-          this.totalRecord = equipo[0].totalRecord;
-          this.line = equipo[0].line;
-          this.lastLine = equipo[0].lastLine;
-        }
-        this.equiposDisponibles = equipo;
-
-      });
-
+  if (this.subscription) {
+    this.subscription.unsubscribe();
   }
+
+ 
+
+  this.subscription = this.equipoService
+    .getEquipoDisponible(this.filter)
+    .subscribe((equipo) => {
+      const [primerRegistro] = equipo;
+      const record = primerRegistro?.totalRecord || 0;
+      const totalInventario = primerRegistro?.totalInventario || 0;
+
+      this.obtenerTotalEquipos(record);
+      this.obtenerTotalInventario(totalInventario);
+      this.loading.hideLoading();
+      this.isLoading = false;
+
+      if (primerRegistro) {
+        this.totalRecord = primerRegistro.totalRecord;
+        this.line = primerRegistro.line;
+        this.lastLine = primerRegistro.lastLine;
+      }
+
+      this.equiposDisponibles = equipo;
+    });
+}
   printReportEquipoDisponibles() {
     this.loading.showLoading();
     this.equipoService.postEquipoDisponible(this.filter)
@@ -231,7 +248,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   pageChanged(index: number) {
     this.currentPage = index;
     this.filter.pageIndex = index;
-debugger;
     this.obtenerEquiposDisponibles();
   }
 
