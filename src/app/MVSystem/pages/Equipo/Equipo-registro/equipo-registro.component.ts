@@ -309,7 +309,6 @@ if (registroElement) {
     this.formRegistro.get('modelo')?.setValue('');
     if (this.formRegistro.get('marca')?.value) {
       this.formRegistro.controls.modelo.enable();
-
       this.obtenerModeloLista();
     }
     else {
