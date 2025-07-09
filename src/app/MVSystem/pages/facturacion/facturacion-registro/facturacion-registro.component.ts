@@ -155,7 +155,7 @@ onModalClose(rep: any) {
   vendedores: VendedorLista[] = []
   pagoTipos: TipoPago[] = [];
   garantias: Garantia[] = [];
-  asumeItbis: AsumeITBIS = null!;
+  asumeITBIS: AsumeITBIS = null!;
   accesorios: AccesorioLista[] = [];
   accesoriosBuffer: AccesorioLista[] = [];
   comprobanteTipos: TipoComprobante[] = [];
@@ -438,7 +438,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     this.catalogosService.getAsumeITBIS()
       .pipe(takeUntil(this.destroy$))
       .subscribe(itbis => {
-        this.asumeItbis = itbis;
+        this.asumeITBIS = itbis;
       })
   }
   onAddCustomer(customer: Cliente) {
@@ -781,38 +781,26 @@ if (!articuloExistente) {
       })
   }
   refreshGeneralValues() {
-
-    this.subTotal = this.descuento = this.total = this.itbis = 0
+    this.subTotal = this.descuento = this.total = this.itbis = 0;
 
     for (let a = 0; a < this.articulos().length; a++) {
-      const articulo = this.articulos().controls[a].value
-      this.subTotal += articulo.subTotal
-      this.subTotal > articulo.descuento ? this.descuento += articulo.descuento : 0;
-      this.total += articulo.total
+      const articulo = this.articulos().controls[a].value;
+      this.descuento += articulo.descuento || 0;
+      this.total += articulo.total || 0;
     }
 
     if (this.form.get('aplicarItbis')?.value == 'true') {
-      const itbis = this.asumeItbis.itbiS_Valor * 100
-
-      if (this.asumeItbis.asumeITBIS == 'S') {
-        const amountNew = this.total / (itbis / 100 + 1);
-
-        this.itbis = amountNew;
-        this.itbis = this.total - amountNew;
-        this.total = this.total;
-        this.subTotal = amountNew;
-
+      const itbis = this.asumeITBIS.itbiS_Valor * 100;
+      if (this.asumeITBIS.asumeITBIS == 'S') {
+        this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
+        this.total = Number(this.total.toFixed(2));
+      } else {
+        this.itbis = Number(((this.total * itbis) / 100).toFixed(2));
+        this.total = Number((this.total + this.itbis).toFixed(2));
       }
-      else {
-        this.itbis = (this.total * itbis) / 100;
-        this.total = this.total + this.itbis;
-      }
-      this.itbis = Number(this.itbis.toFixed(2))
-      this.total = Number(this.total.toFixed(2))
-    } else {
-     // this.total = this.total - this.abono;
     }
-
+    // El subtotal es igual a total - descuento - itbis
+    this.subTotal = Number((this.total - this.descuento - this.itbis).toFixed(2));
   }
   borrarArticulo(index: number) {
 
