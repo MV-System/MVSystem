@@ -24,7 +24,10 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+.my-date-range-picker-eq-vd {
+  margin: 0 auto;
+  display: block;
+}
 *::-webkit-scrollbar {
     width: 12px;
 }

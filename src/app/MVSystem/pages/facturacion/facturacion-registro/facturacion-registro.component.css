@@ -35,11 +35,33 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   min-height: unset;
   padding-bottom: 0.5rem;
 }
+.facturar-a {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 0.1rem 0.8rem 0.8rem 0.8rem;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  border-left: 5px solid #28a745;
+  border-right: none;
+  min-height: unset;
+  padding-bottom: 0.5rem;
+}
 .stats-card-facturacion.datos-facturacion {
   background: #fff;
   border-radius: 1.1rem;
   box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
   padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+  border-left: 5px solid #28a745;
+  border-right: none;
+}
+.stats-card-facturacion-filtrosFt.datos-facturacion-filtro-ft {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 0rem 1.2rem 0.8rem 1.2rem;
   margin-top: 0.1rem;
   margin-bottom: 0.1rem;
   border-left: 5px solid #28a745;
@@ -92,7 +114,7 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   border-radius: 1.1rem;
   box-shadow: 0 4px 24px rgba(70,127,241,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
   padding: 2rem 2.2rem 1.5rem 2.2rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.1rem;
   border-left: none;
   border-right: 5px solid #ff9800; /* Color naranja a la derecha */
 }
