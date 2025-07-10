@@ -186,26 +186,39 @@ isMobileScreen(): boolean {
     );
 
   }
-  // Este método se llama cuando cambia el número de elementos por página
- rebajarEquipo(detalle: DetalleFacturaList) {
-    const model = {
-      NumeroFactura: detalle.numeroFactura,
-      imei: detalle.idEquipo,
-      IDsucursal: this.loginService.getUserIdSucursal,
-      Usuario: this.loginService.getUserName(),
-    };
-    this.isLoading = true;
-    this.mantenimientoService.DetalleFacturaRebajaEquipo(model).subscribe({
-      next: (resp) => {
-        this.isLoading = false;
-        this.toast.success(resp.mensaje || 'Equipo rebajado correctamente.');
-        // Opcional: refrescar datos o recargar
+
+  rebajarEquipo(detalle: DetalleFacturaList) {
+    this.rDialogService.openDialog(
+      'Confirmación',
+      '¿Está seguro que desea rebajar este equipo de la factura?',
+      () => {
+        const model = {
+          NumeroFactura: detalle.numeroFactura,
+          imei: detalle.idEquipo,
+          IDsucursal: this.loginService.getUserIdSucursal,
+          Usuario: this.loginService.getUserName(),
+        };
+        this.isLoading = true;
+        this.mantenimientoService.DetalleFacturaRebajaEquipo(model).subscribe({
+          next: (resp) => {
+            this.isLoading = false;
+            this.toast.success(resp.mensaje || 'Equipo rebajado correctamente.');
+            setTimeout(() => {
+              window.location.reload(); // Recarga la página después de 2 segundos
+            }, 2000);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.toast.error('Error al rebajar el equipo.');
+          }
+        });
       },
-      error: (err) => {
-        this.isLoading = false;
-        this.toast.error('Error al rebajar el equipo.');
-      }
-    });
+      () => {
+        // Cancelado, no hacer nada
+      },
+      'No',
+      'Sí'
+    );
   }
 
 

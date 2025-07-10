@@ -257,52 +257,51 @@ onModalClose(rep: any) {
   onPrecioChange(index: number): void {
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;
-// Accedemos al valor del precio usando 'get'
-  const newPrecio = currentFormGroup.get('precio')?.value;
-    // Actualizamos el precio manualmente
+    const newPrecio = currentFormGroup.get('precio')?.value;
     currentFormGroup.get('precio')?.setValue(newPrecio);
 
-    // Verificar si el valor del precio ha sido modificado
-  const precioOriginal = currentFormGroup.get('articulo')?.value?.precio_Detalle || 0; // Precio original del artículo seleccionado
+    const precioOriginal = currentFormGroup.get('articulo')?.value?.precio_Detalle || 0;
 
-  // Si el precio ha sido modificado, lo dejamos tal cual, sino lo mantenemos como estaba
-  if (newPrecio !== precioOriginal) {
-    // Recalcular el subtotal con el nuevo precio
-    const cantidad = currentFormGroup.get('cantidad')?.value;
-    const subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
+    if (newPrecio !== precioOriginal) {
+      const cantidad = currentFormGroup.get('cantidad')?.value;
+      const total = newPrecio * cantidad;
+      const descuento = currentFormGroup.get('descuento')?.value || 0;
+      const itbis = this.calcularItbisArticulo(total);
+      const subTotal = this.calcularSubTotalArticulo(total, descuento, itbis);
 
-    // Actualizamos el subtotal en el formulario
-    currentFormGroup.get('subTotal')?.setValue(subTotal);
-
-    // Recalcular el total (Subtotal - Descuento)
-    const descuento = currentFormGroup.get('descuento')?.value || 0;
-    const total = subTotal - descuento;
-
-    // Actualizamos el total en el formulario
-    currentFormGroup.get('total')?.setValue(total);
-  } else {
-    // Si el precio no ha sido modificado, no hacemos nada
-    console.log("El precio no ha sido modificado, se mantiene el valor original");
-  }
-    // Actualizamos los valores generales si es necesario
+      currentFormGroup.get('subTotal')?.setValue(subTotal);
+      currentFormGroup.get('total')?.setValue(total);
+    } else {
+      console.log("El precio no ha sido modificado, se mantiene el valor original");
+    }
     this.refreshGeneralValues();
 }
 
-calcularSubTotalArticulo(precio: number, cantidad: number) {
-  const subTotal = precio * cantidad;
-  return subTotal
+/**
+ * Calcula el subtotal de un artículo con la misma lógica que la factura: subtotal = total - descuento - itbis
+ * @param total Total del artículo (precio * cantidad)
+ * @param descuento Descuento aplicado al artículo
+ * @param itbis ITBIS calculado para el artículo
+ */
+calcularSubTotalArticulo(total: number, descuento: number, itbis: number) {
+  // subtotal = total - descuento - itbis
+  console.log(`Calculando subtotal: total=${total}, descuento=${descuento}, itbis=${itbis}`);
+  return Number((total - descuento - itbis).toFixed(2));
 }
   private updatePriceArticulos(){
     debugger;
     this.articulos().controls.forEach((v,index)=>{
-      const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
-      const currentArticulo = currentFormGroup.getRawValue()
+      const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
+      const currentArticulo = currentFormGroup.getRawValue();
       currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
-      currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-      this.articulos().controls[index].setValue(currentArticulo)
+      const total = currentArticulo.precio * currentArticulo.cantidad;
+      const descuento = currentArticulo.descuento || 0;
+      const itbis = this.calcularItbisArticulo(total);
+      currentArticulo.subTotal = this.calcularSubTotalArticulo(total, descuento, itbis);
+      currentArticulo.total = total;
+      this.articulos().controls[index].setValue(currentArticulo);
       this.obtenerCantidadArticulo(currentArticulo);
-      this.obtenerCantidadArticuloStock(index)
-
+      this.obtenerCantidadArticuloStock(index);
       this.refreshGeneralValues();
     })
   }
@@ -564,9 +563,11 @@ if (!articuloExistente) {
     currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
   }
 
-  currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-
-  currentArticulo.total = currentArticulo.subTotal - (currentArticulo.descuento || 0);
+  const total = currentArticulo.precio * currentArticulo.cantidad;
+  const descuento = currentArticulo.descuento || 0;
+  const itbis = this.calcularItbisArticulo(total);
+  currentArticulo.subTotal = this.calcularSubTotalArticulo(total, descuento, itbis);
+  currentArticulo.total = total;
 
   // Validar duplicados
   for (let articuloAddIndex in this.articulos().controls) {
@@ -648,6 +649,10 @@ if (!articuloExistente) {
 
   modeloRegistroFacturacion(): FacturaRegistro {
 ///------------------------------------------------------------------------------------------------------------------////
+    // Si el tipo de pago es crédito (2), el abono es el valor del formulario; si no, el abono es igual al total
+    const isCredito = Number(this.form.get('tipoPago')?.value) === 2;
+    const abono = isCredito ? this.abono : this.total;
+
     const model: FacturaRegistro = {
       numeroFactura: this.facturaNumber,
       idCliente: this.customer.id_Cliente,
@@ -665,7 +670,7 @@ if (!articuloExistente) {
       itbis: this.itbis,
       subTotal: this.subTotal,
       total: this.total,
-      abono: this.abono,
+      abono: abono,
       descuento: this.descuento,
       cantidadArticulos: this.articulos().length,
       detalleFacturaList: [],
@@ -673,7 +678,6 @@ if (!articuloExistente) {
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
-
     }
 
     model.Cliente = {
@@ -691,7 +695,27 @@ if (!articuloExistente) {
 
     return model;
   }
+  /**
+   * Calcula el ITBIS de un artículo según la lógica global de la factura.
+   * @param precioBase Precio base del artículo (ya con descuento aplicado si corresponde)
+   * @returns Valor de ITBIS calculado para el artículo
+   */
+  calcularItbisArticulo(precioBase: number): number {
+    if (!this.form.get('aplicarItbis')?.value || !this.asumeITBIS) return 0;
+    const itbis = this.asumeITBIS.itbiS_Valor * 100;
+    if (this.asumeITBIS.asumeITBIS == 'S') {
+      // ITBIS incluido en el precio
+      return Number(((precioBase / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
+    } else {
+      // ITBIS se suma al precio
+      return Number(((precioBase * itbis) / 100).toFixed(2));
+    }
+  }
+
   modeloArticulos(control: AbstractControl) {
+    // El precio base para el cálculo de ITBIS es el total del artículo antes de ITBIS
+    const precioBase = control.get('total')?.value || 0;
+    const itbisArticulo = this.calcularItbisArticulo(precioBase);
     const model = {
       cantidad: Number(control.get('cantidad')?.value),
       descripcion: control.get('descripcion')?.value,
@@ -699,12 +723,12 @@ if (!articuloExistente) {
       idEquipo: control.get('idEquipo')?.value,
       idTipo: control.get('idTipo')?.value,
       idGarantia: control.get('idGarantia')?.value,
-      subTotal: control.get('subTotal')?.value,
+      subTotal: this.calcularSubTotalArticulo(precioBase,control.get('descuento')?.value,itbisArticulo),// control.get('subTotal')?.value,
       precio: control.get('precio')?.value,
       descuento: control.get('descuento')?.value,
       idVendedor: control.get('')?.value,
       idTipoFactura: control.get('')?.value,
-      itbis: 0,
+      itbis: itbisArticulo,
       total: control.get('total')?.value,
       fechaRegistro: this.form.get('fechaFacturacion')?.value,
       Usuario: this.loginService.getUserName(),
@@ -803,16 +827,13 @@ if (!articuloExistente) {
     this.subTotal = Number((this.total - this.descuento - this.itbis).toFixed(2));
   }
   borrarArticulo(index: number) {
-
-    this.articulos().removeAt(index)
-
-    if (this.articulos().length === 0)
-
-      this.agregarArticulo()
-
+    this.articulos().removeAt(index);
+    if (this.articulos().length === 0) {
+      this.agregarArticulo();
+    }
     this.refreshGeneralValues();
-    if(this.total==0){
-      this.form.get('tipoFactura')?.enable();  // Deshabilita el FormControl 'tipoFactura'
+    if (this.total == 0) {
+      this.form.get('tipoFactura')?.enable();
       this.form.get('tipoPago')?.enable();
     }
   }
@@ -868,28 +889,30 @@ if (!articuloExistente) {
       })
   }
   obtenerCantidadArticuloStock(index: number) {
-    const currentArticulo = this.articulos().controls[index].value
-    const subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+    const currentArticulo = this.articulos().controls[index].value;
+    const total = currentArticulo.precio * currentArticulo.cantidad;
+    const descuento = currentArticulo.descuento || 0;
+    const itbis = this.calcularItbisArticulo(total);
+    const subTotal = this.calcularSubTotalArticulo(total, descuento, itbis);
 
     if (!currentArticulo.articulo) {
       this.articulos().controls[index].patchValue({
         descuento: 0,
         cantidad: 1,
       })
-      return
+      return;
     }
 
     let cantidadStockAccesorio = currentArticulo.articulo.cantidad;
     let cantidadElegida = currentArticulo.cantidad;
 
-    const total = this.calculoTotal(subTotal, currentArticulo.descuento);
     this.articulos().controls[index].patchValue({
       total,
       subTotal,
-    })
+    });
 
     this.refreshGeneralValues();
-    return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`) : Number(cantidadElegida)
+    return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`) : Number(cantidadElegida);
   }
 
   onAcceptPrint(data: FacturaRegistro) {
