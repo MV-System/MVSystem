@@ -91,7 +91,9 @@ td {
   overflow-wrap: break-word;
   white-space: normal;
 }
-
+.filter-header-fecha {
+    gap: 0.01rem;
+  }
 /* Card para equipos en móvil */
 .equipo-card {
   background: #fff;

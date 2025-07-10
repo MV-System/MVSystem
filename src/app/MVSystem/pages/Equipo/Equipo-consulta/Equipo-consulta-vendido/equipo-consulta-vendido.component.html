@@ -67,12 +67,21 @@
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
   <div class="card filter-card mb-4">
     <div class="stats-card">
-      <div class="filter-header mb-3">
-        <h6 class="filter-title">
-          <i class="bi bi-funnel me-2 text-primary"></i>
-          Filtros de Búsqueda
-        </h6>
-      </div>
+<div class="filter-header mb-3 d-flex align-items-center flex-wrap">
+  <h6 class="filter-title d-flex align-items-center me-5 mb-0">
+    <i class="bi bi-funnel me-2 text-primary"></i>
+    Filtros de Búsqueda
+  </h6>
+  <div class="d-flex align-items-center">
+    <label class="form-label mb-0 me-3">Fecha de facturación:</label>
+    <my-date-range-picker
+      [options]="myDateRangePickerOptions"
+      formControlName="rangeDateFactura"
+      (dateRangeChanged)="onDateRangeFacturaChanged($event)"
+      placeholder="{{ FechaInicio | date }} - {{fechaHoy | date }}">
+    </my-date-range-picker>
+  </div>
+</div>
       <div class="row mt-3">
         <div class="col-md-4">
           <label class="form-label">Por telefono</label>
@@ -133,11 +142,7 @@
          <div class="col-md-4 d-flex justify-content-center align-items-center">
 
         </div>
-        <div class="col-md-4 d-flex ">
-          <label class="form-label row mx-1">Fecha de facturación</label>
-          <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder=" {{ FechaInicio | date }} - {{fechaHoy | date}}">
-          </my-date-range-picker>
-        </div>
+        
       </div>
     </div>
   </div>
