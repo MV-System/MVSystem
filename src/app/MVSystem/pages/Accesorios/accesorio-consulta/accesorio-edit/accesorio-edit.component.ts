@@ -40,7 +40,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   form: FormGroup = this.fb.group({
     id: [''],
     descripcion: [''],
-    codigo: ['', [Validators.required]],
+    codigo: [''],
     costoEquipo: [{ value: '', disabled: true }],
     cantidad: ['', [Validators.required, Validators.min(0)]],
     descripcionAccesorio: ['', [Validators.required]],
@@ -95,7 +95,6 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
    * Update accessory
    */
   updateAccesorio() {
-    debugger;
     if (this.isFormValid()) {
       this.isLoading = true;
 
@@ -112,6 +111,9 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
             closeButton: true
           });
           this.closeModal.emit();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         },
         error: (error) => {
           this.isLoading = false;

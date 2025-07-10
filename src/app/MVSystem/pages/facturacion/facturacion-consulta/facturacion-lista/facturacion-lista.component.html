@@ -91,8 +91,8 @@
                                                             <i class="bx bx-edit-alt"></i>
                                                         </button>
                                                           <!-- Botón para rebajar equipo si idTipo es 1 -->
-                                            <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo">
-                                              <i class="bx bx-minus-circle"></i>
+                                            <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
+                                              <i class="bi bi-arrow-bar-down" style="color: #dc3545; font-size: 1.2em;"></i>
                                           </button>
                                                     </ng-container>
                                                     <ng-container *ngIf="detalle.editMode">

@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <label for="codigo" class="modern-label">
                                 <i class="bi bi-upc-scan me-2"></i>
-                                Código <span class="text-danger">*</span>
+                                Código
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">
@@ -222,17 +222,9 @@
                 <div class="form-actions">
                     <div class="d-flex gap-2 justify-content-end flex-wrap">
                         <button type="button" 
-                                class="button-limpiar" 
-                                (click)="clearForm()"
-                                [disabled]="isLoading">
-                            <i class="bi bi-arrow-clockwise me-2"></i>
-                            Limpiar
-                        </button>
-                        <ng-content select="[cancel]"></ng-content>
-                        <button type="button" 
                                 class="button-guardar" 
                                 (click)="updateAccesorio()"
-                                [disabled]="!form.valid || !isPriceRelationValid() || isLoading">
+                                [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
                             <div class="d-flex align-items-center">
                                 <div class="spinner-border spinner-border-sm me-2" 
                                      role="status" 
@@ -243,6 +235,15 @@
                                 <span>{{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}</span>
                             </div>
                         </button>
+                        <button type="button" 
+                                class="button-limpiar" 
+                                (click)="clearForm()"
+                                [disabled]="isLoading">
+                            <i class="bi bi-arrow-clockwise me-2"></i>
+                            Limpiar
+                        </button>
+                        <!-- <ng-content select="[cancel]"></ng-content> -->
+                        
                     </div>
                 </div>
             </form>
