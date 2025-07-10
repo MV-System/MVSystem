@@ -167,4 +167,12 @@ export interface Articulo {
     total: number;
 }
 
+export interface RebajaEquipoModel {
+    NumeroFactura: number;
+    imei: string;
+    IDsucursal: string;
+    Usuario: string;
+    mensaje?: string;
+}
+
 

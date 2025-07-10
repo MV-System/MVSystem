@@ -17,6 +17,7 @@ import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { FormClienteComponent } from './facturacion-registro/form-cliente/form-cliente.component';
 import { CotizacionListComponent } from './facturacion-registro/cotizacion-list/cotizacion-list.component';
 
+
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
   allowNegative: false,

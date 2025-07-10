@@ -187,6 +187,27 @@ isMobileScreen(): boolean {
 
   }
   // Este método se llama cuando cambia el número de elementos por página
+ rebajarEquipo(detalle: DetalleFacturaList) {
+    const model = {
+      NumeroFactura: detalle.numeroFactura,
+      imei: detalle.idEquipo,
+      IDsucursal: this.loginService.getUserIdSucursal,
+      Usuario: this.loginService.getUserName(),
+    };
+    this.isLoading = true;
+    this.mantenimientoService.DetalleFacturaRebajaEquipo(model).subscribe({
+      next: (resp) => {
+        this.isLoading = false;
+        this.toast.success(resp.mensaje || 'Equipo rebajado correctamente.');
+        // Opcional: refrescar datos o recargar
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.toast.error('Error al rebajar el equipo.');
+      }
+    });
+  }
+
 
 
 }

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, RegistroReparaciones } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel } from '../interfaces/mantenimiento';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { switchMap } from 'rxjs/operators';
 
@@ -13,7 +13,11 @@ import { switchMap } from 'rxjs/operators';
 
 export class MantenimientoService {
   constructor(private http: HttpClient) { }
+//-- para buscar las reparaciones de un cliente y poder facturarla -------
 
+  DetalleFacturaRebajaEquipo(model: RebajaEquipoModel): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(APIURL.Factura.Actualiza.DetalleFacturaRebajaEquipo, model);
+  }
   // Post's
   postAccesorio(accesorio: Accesorio): Observable<AccesorioLista> {
     return this.http.post<AccesorioLista>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);

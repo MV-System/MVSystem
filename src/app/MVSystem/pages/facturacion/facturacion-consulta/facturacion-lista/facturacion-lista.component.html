@@ -90,6 +90,10 @@
                                                         <button *ngIf="detalle.idTipo === 1" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
                                                             <i class="bx bx-edit-alt"></i>
                                                         </button>
+                                                          <!-- Botón para rebajar equipo si idTipo es 1 -->
+                                            <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo">
+                                              <i class="bx bx-minus-circle"></i>
+                                          </button>
                                                     </ng-container>
                                                     <ng-container *ngIf="detalle.editMode">
                                                         <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control" placeholder="Ingrese el código" />

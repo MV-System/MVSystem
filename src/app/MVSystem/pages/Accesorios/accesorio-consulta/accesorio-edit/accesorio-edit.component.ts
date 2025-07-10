@@ -63,7 +63,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
     this.form.get('precioPorMayor')?.valueChanges.subscribe(() => {
       this.validatePrices();
     });
-    
+
     this.form.get('precioDetalle')?.valueChanges.subscribe(() => {
       this.validatePrices();
     });
@@ -75,7 +75,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   private validatePrices() {
     const precioPorMayor = this.form.get('precioPorMayor')?.value;
     const precioDetalle = this.form.get('precioDetalle')?.value;
-    
+
     if (precioPorMayor && precioDetalle) {
       if (precioPorMayor >= precioDetalle) {
         this.form.get('precioPorMayor')?.setErrors({ priceRelation: true });
@@ -95,13 +95,14 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
    * Update accessory
    */
   updateAccesorio() {
+    debugger;
     if (this.isFormValid()) {
       this.isLoading = true;
-      
+
       const formData = { ...this.form.value };
       // Asegurar que costoEquipo se incluya aunque esté disabled
       formData.costoEquipo = this.form.get('costoEquipo')?.value;
-      
+
       this.accesorioService.putAccesorio(formData).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -132,20 +133,20 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
    */
   private isFormValid(): boolean {
     this.form.markAllAsTouched();
-    
+
     if (!this.form.valid) {
       return false;
     }
-    
+
     // Check price relationship
     const precioPorMayor = this.form.get('precioPorMayor')?.value;
     const precioDetalle = this.form.get('precioDetalle')?.value;
-    
+
     if (precioPorMayor && precioDetalle && precioPorMayor >= precioDetalle) {
       this.msgValidacionesCamposFormDetallePorMayor();
       return false;
     }
-    
+
     return true;
   }
 
@@ -154,27 +155,27 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
    */
   private showValidationErrors() {
     const errors = [];
-    
+
     if (this.form.get('codigo')?.invalid) {
       errors.push('Código es requerido');
     }
-    
+
     if (this.form.get('descripcionAccesorio')?.invalid) {
       errors.push('Descripción es requerida');
     }
-    
+
     if (this.form.get('cantidad')?.invalid) {
       errors.push('Cantidad debe ser válida y mayor o igual a 0');
     }
-    
+
     if (this.form.get('precioDetalle')?.invalid) {
       errors.push('Precio por detalle debe ser mayor a 0');
     }
-    
+
     if (this.form.get('precioPorMayor')?.invalid) {
       errors.push('Precio por mayor debe ser mayor a 0');
     }
-    
+
     if (errors.length > 0) {
       this.toastr.error(errors.join('<br>'), 'Errores de validación', {
         timeOut: 5000,
@@ -192,8 +193,8 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
     this.toastr.error(
       'El precio por mayor debe ser menor que el precio por detalle',
       'Error de validación',
-      { 
-        closeButton: true, 
+      {
+        closeButton: true,
         progressBar: true,
         timeOut: 5000
       }
@@ -206,14 +207,14 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   clearForm() {
     const costoEquipo = this.form.get('costoEquipo')?.value;
     const id = this.form.get('id')?.value;
-    
+
     this.form.reset({
       id: id,
       costoEquipo: costoEquipo,
       estado: 'A',
       Usuario: this.loginService.getUserName()
     });
-    
+
     this.toastr.info('Formulario limpiado', 'Información', {
       timeOut: 2000,
       progressBar: true
@@ -270,11 +271,11 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   isPriceRelationValid(): boolean {
     const precioPorMayor = this.form.get('precioPorMayor')?.value;
     const precioDetalle = this.form.get('precioDetalle')?.value;
-    
+
     if (!precioPorMayor || !precioDetalle) {
       return true; // If either is empty, don't show error
     }
-    
+
     return precioPorMayor < precioDetalle;
   }
 
@@ -283,23 +284,23 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
    */
   getFieldError(fieldName: string): string {
     const field = this.form.get(fieldName);
-    
+
     if (!field?.errors || !field.touched) {
       return '';
     }
-    
+
     if (field.errors['required']) {
       return `${this.getFieldLabel(fieldName)} es requerido`;
     }
-    
+
     if (field.errors['min']) {
       return `${this.getFieldLabel(fieldName)} debe ser mayor a ${field.errors['min'].min}`;
     }
-    
+
     if (field.errors['priceRelation']) {
       return 'Debe ser menor que el precio por detalle';
     }
-    
+
     return 'Campo inválido';
   }
 
@@ -315,7 +316,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
       precioPorMayor: 'Precio por mayor',
       estado: 'Estado'
     };
-    
+
     return labels[fieldName] || fieldName;
   }
 }
