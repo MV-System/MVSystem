@@ -442,7 +442,18 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         this.asumeItbis = itbis;
       })
   }
-  onAddCustomer(customer: Cliente) {
+
+   onAddCustomer1(customer: Cliente) {
+    this.customer = customer;
+    this.clientesService.isOpeningForm$.next(false);
+
+  }
+  onAdd1() {
+    this.clientesService.isOpeningForm$.next(true);
+    this.form.get('telefono')?.reset()
+  }
+
+ onAddCustomer (customer: Cliente) {
     this.customer = customer;
     this.clientesService.isOpeningForm$.next(false);
     if (customer) {
@@ -457,6 +468,10 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       this.toastr.warning('Por favor ingrese un número de teléfono.');
     }
 
+  }
+  onAdd() {
+    // Indicar que el formulario está siendo abierto
+    this.clientesService.isOpeningForm$.next(true);
   }
   onSubmit() {
     if (this.form.valid) {
@@ -782,6 +797,7 @@ if (!articuloExistente) {
       })
   }
   refreshGeneralValues() {
+
     this.subTotal = this.descuento = this.total = this.itbis = 0;
 
     for (let a = 0; a < this.articulos().length; a++) {
@@ -791,68 +807,33 @@ if (!articuloExistente) {
     }
 
     if (this.form.get('aplicarItbis')?.value == 'true') {
+      //CALCULA EL ITBIS
       const itbis = this.asumeItbis.itbiS_Valor * 100;
-      const Subtotal =0;
-      if (this.asumeItbis.asumeITBIS == 'S') {
-        this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
-        this.total = Number(this.total.toFixed(2));
-        this.subTotal = Number((this.total + this.descuento - this.itbis).toFixed(2));
 
+          // si la factura lleva itbis pero ya el precio tiene incluido el itbis
+      if (this.asumeItbis.asumeITBIS == 'S') {
+            this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
+         const totalSinItbis = this.total;
+        this.total = Number(this.total.toFixed(2));
+        this.subTotal = Number((totalSinItbis).toFixed(2));
+          // si la factura lleva itbis pero la empresa se lo suma al precio
       } else {
+
         this.itbis = Number(((this.total * itbis) / 100).toFixed(2));
+        const totalSinItbis = this.total;
         this.total = Number((this.total + this.itbis).toFixed(2));
-        this.subTotal = Number((this.total + this.descuento).toFixed(2));
+        this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
       }
     }
-    // El subtotal es igual a total - descuento - itbis
-    // this.subTotal = Number((this.total - this.descuento).toFixed(2));
-  }
+    else
+    {
 
-  refreshGeneralValues1() {
-
-    this.subTotal = this.descuento = this.total = this.itbis = 0
-
-    for (let a = 0; a < this.articulos().length; a++) {
-      const articulo = this.articulos().controls[a].value
-      this.subTotal += articulo.subTotal
-      this.subTotal > articulo.descuento ? this.descuento += articulo.descuento : 0;
-      this.total += articulo.total
-    }
-
-
-     if (this.form.get('aplicarItbis')?.value == 'true') {
-      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
-      if (this.asumeItbis.asumeITBIS == 'S') {
-        const amountNew = this.total / (1 + itbisRate);
-        // this.itbis = this.total - amountNew;
-        this.itbis = Number(((this.total / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
-        this.total = Number(this.total.toFixed(2));
-        this.subTotal = amountNew;
-      } 
-          else {
-        this.itbis = this.total * itbisRate;
-        this.total += this.itbis;
-      }
-
-    // if (this.form.get('aplicarItbis')?.value == 'true') {
-    //   const itbisRate = this.asumeItbis.itbiS_Valor
-    //   if (this.asumeItbis.asumeITBIS == 'S') {
-    //     const amountNew = this.total / (1 + itbisRate);
-    //     this.itbis = this.total - amountNew;
-    //     this.subTotal = amountNew;
-
-    //   }
-    //   else {
-    //     this.itbis = this.total * itbisRate;
-    //     this.total += this.itbis;
-    //   }
-      this.itbis = Number(this.itbis.toFixed(2))
-      this.total = Number(this.total.toFixed(2))
-    } else {
-     // this.total = this.total - this.abono;
+       // si la factura no lleva itbis
+      this.subTotal = Number((this.total + this.descuento).toFixed(2));
     }
 
   }
+
   borrarArticulo(index: number) {
 
     this.articulos().removeAt(index)
@@ -1116,9 +1097,6 @@ printFacturaMini() {
       })
   }
 
-  onAdd() {
-    // Indicar que el formulario está siendo abierto
-    this.clientesService.isOpeningForm$.next(true);
-  }
+
 
 }

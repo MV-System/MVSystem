@@ -1,6 +1,6 @@
 <r-modal [show]="isOpenModal" >
     <section class="section">
-  
+
         <div class="row">
                 <div class="card">
                     <div class="card-body">
@@ -90,7 +90,7 @@
                             <!-- --------------- límite de credito Cliente --------------- -->
                             <div class="col-md-3">
                                 <label class="form-label">Limite credito</label>
-                                <input type="text" appNumeric [maxlen]="9"  placeholder="RD$" class="form-control" formControlName="limite_Credito">
+                                <input type="text" appNumeric maxlength="9"  placeholder="RD$" class="form-control" formControlName="limite_Credito">
                             </div>
 
                             <!-- --------------- Email Cliente --------------- -->
@@ -101,7 +101,7 @@
                                     {{emailErrorMsg}}
                                 </div>
                             </div>
-                            
+
                             <!-- --------------- Provincia Cliente --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label">Provincia</label>
