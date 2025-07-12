@@ -815,7 +815,7 @@ if (!articuloExistente) {
             this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
          const totalSinItbis = this.total;
         this.total = Number(this.total.toFixed(2));
-        this.subTotal = Number((totalSinItbis).toFixed(2));
+        this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
           // si la factura lleva itbis pero la empresa se lo suma al precio
       } else {
 
