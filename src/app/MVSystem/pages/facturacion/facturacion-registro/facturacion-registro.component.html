@@ -224,13 +224,15 @@
                                     </td>
 
                                     <td class="align-right hide-mobile">
-                                        {{detalleFactura.value.subTotal}}
+                                        <!-- Subtotal: solo precio x cantidad, sin descuento ni ITBIS -->
+                                        {{detalleFactura.value.precio * detalleFactura.value.cantidad | number:'1.2-2'}}
                                     </td>
                                     <td class="col-md-1">
                                         <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
                                     </td>
                                     <td class="align-right hide-mobile">
-                                        {{detalleFactura.value.total}}
+                                        <!-- Total: (precio x cantidad - descuento) + ITBIS (si aplica y no está incluido) -->
+                                        {{detalleFactura.value.total | number:'1.2-2'}}
                                     </td>
                                     <td class="align-center">
                                         <button class="btns flat oorange" (click)="borrarArticulo(i)">
