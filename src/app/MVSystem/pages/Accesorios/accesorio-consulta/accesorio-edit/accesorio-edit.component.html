@@ -14,7 +14,7 @@
 
             <!-- Modern Form -->
             <form [formGroup]="form" class="modern-form" novalidate>
-                
+
                 <!-- Sección: Información Básica -->
                 <div class="form-section">
                     <div class="section-header">
@@ -33,13 +33,13 @@
                                 <span class="input-group-text">
                                     <i class="bi bi-hash"></i>
                                 </span>
-                                <input type="text" 
+                                <input type="text"
                                        id="codigo"
-                                       formControlName="codigo" 
+                                       formControlName="codigo"
                                        class="form-control modern-input"
                                        placeholder="Ingrese el código">
                             </div>
-                            <div class="invalid-feedback" 
+                            <div class="invalid-feedback"
                                  [style.display]="form.get('codigo')?.invalid && form.get('codigo')?.touched ? 'block' : 'none'">
                                 {{ getFieldError('codigo') }}
                             </div>
@@ -54,7 +54,7 @@
                                     <i class="bi bi-check-circle"></i>
                                 </span>
                                 <select id="estado"
-                                        formControlName="estado" 
+                                        formControlName="estado"
                                         class="form-select modern-input">
                                     <option value="A">Activo</option>
                                     <option value="I">Inactivo</option>
@@ -70,13 +70,13 @@
                                 <span class="input-group-text">
                                     <i class="bi bi-file-text"></i>
                                 </span>
-                                <input type="text" 
+                                <input type="text"
                                        id="descripcion"
-                                       formControlName="descripcionAccesorio" 
+                                       formControlName="descripcionAccesorio"
                                        class="form-control modern-input"
                                        placeholder="Descripción detallada del accesorio">
                             </div>
-                            <div class="invalid-feedback" 
+                            <div class="invalid-feedback"
                                  [style.display]="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched ? 'block' : 'none'">
                                 {{ getFieldError('descripcionAccesorio') }}
                             </div>
@@ -100,9 +100,9 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">RD$</span>
-                                <input type="number" 
+                                <input type="number"
                                        id="costo"
-                                       formControlName="costoEquipo" 
+                                       formControlName="costoEquipo"
                                        class="form-control modern-input"
                                        placeholder="0.00"
                                        step="0.01"
@@ -120,15 +120,15 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">RD$</span>
-                                <input type="number" 
+                                <input type="number"
                                        id="precioMayor"
-                                       formControlName="precioPorMayor" 
+                                       formControlName="precioPorMayor"
                                        class="form-control modern-input"
                                        placeholder="0.00"
                                        step="0.01"
                                        min="0">
                             </div>
-                            <div class="invalid-feedback" 
+                            <div class="invalid-feedback"
                                  [style.display]="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched ? 'block' : 'none'">
                                 {{ getFieldError('precioPorMayor') }}
                             </div>
@@ -140,27 +140,27 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">RD$</span>
-                                <input type="number" 
+                                <input type="number"
                                        id="precioDetalle"
-                                       formControlName="precioDetalle" 
+                                       formControlName="precioDetalle"
                                        class="form-control modern-input"
                                        placeholder="0.00"
                                        step="0.01"
                                        min="0">
                             </div>
-                            <div class="invalid-feedback" 
+                            <div class="invalid-feedback"
                                  [style.display]="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched ? 'block' : 'none'">
                                 {{ getFieldError('precioDetalle') }}
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Validación visual de precios -->
                     <div class="mt-3" *ngIf="form.get('precioPorMayor')?.value && form.get('precioDetalle')?.value">
-                        <div class="alert-modern" 
+                        <div class="alert-modern"
                              [class.alert-danger-modern]="!isPriceRelationValid()"
                              [class.alert-success-modern]="isPriceRelationValid()">
-                            <i class="bi me-2" 
+                            <i class="bi me-2"
                                [class.bi-exclamation-triangle-fill]="!isPriceRelationValid()"
                                [class.bi-check-circle-fill]="isPriceRelationValid()"></i>
                             <span *ngIf="!isPriceRelationValid()">
@@ -191,16 +191,16 @@
                                 <span class="input-group-text">
                                     <i class="bi bi-box"></i>
                                 </span>
-                                <input type="number" 
+                                <input type="number"
                                        id="cantidad"
                                        formControlName="cantidad"
                                        class="form-control modern-input"
                                        placeholder="0"
                                        min="0"
                                        appNumeric
-                                       [maxlen]="4">
+                                       maxlength=4>
                             </div>
-                            <div class="invalid-feedback" 
+                            <div class="invalid-feedback"
                                  [style.display]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched ? 'block' : 'none'">
                                 {{ getFieldError('cantidad') }}
                             </div>
@@ -221,13 +221,13 @@
                 <!-- Botones de Acción -->
                 <div class="form-actions">
                     <div class="d-flex gap-2 justify-content-end flex-wrap">
-                        <button type="button" 
-                                class="button-guardar" 
+                        <button type="button"
+                                class="button-guardar"
                                 (click)="updateAccesorio()"
                                 [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
                             <div class="d-flex align-items-center">
-                                <div class="spinner-border spinner-border-sm me-2" 
-                                     role="status" 
+                                <div class="spinner-border spinner-border-sm me-2"
+                                     role="status"
                                      *ngIf="isLoading">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
@@ -235,15 +235,15 @@
                                 <span>{{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}</span>
                             </div>
                         </button>
-                        <button type="button" 
-                                class="button-limpiar" 
+                        <button type="button"
+                                class="button-limpiar"
                                 (click)="clearForm()"
                                 [disabled]="isLoading">
                             <i class="bi bi-arrow-clockwise me-2"></i>
                             Limpiar
                         </button>
                         <!-- <ng-content select="[cancel]"></ng-content> -->
-                        
+
                     </div>
                 </div>
             </form>
