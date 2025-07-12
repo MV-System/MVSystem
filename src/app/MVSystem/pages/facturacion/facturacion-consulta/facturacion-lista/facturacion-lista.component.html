@@ -107,11 +107,11 @@
                                                 </td>
                                                 <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
                                                 <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
-                                                <td><b>Precio:</b> {{ detalle.precio }}</td>
-                                                <td colspan="2"><b>SubTotal:</b> {{ detalle.subTotal }}</td>
-                                                <td><b>Desc.:</b> {{ detalle.descuento }}</td>
-                                                <td><b>Itbs:</b> {{ detalle.itbis }}</td>
-                                                <td><b>Total:</b> {{ detalle.total }}</td>
+                                                <td><b>Precio:</b> {{ detalle.precio | currency }}</td>
+                                                <td colspan="2"><b>SubTotal:</b> {{ detalle.subTotal | currency}}</td>
+                                                <td><b>Desc.:</b> {{ detalle.descuento |currency }}</td>
+                                                <td><b>Itbs:</b> {{ detalle.itbis | currency}}</td>
+                                                <td><b>Total:</b> {{ detalle.total | currency}}</td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
