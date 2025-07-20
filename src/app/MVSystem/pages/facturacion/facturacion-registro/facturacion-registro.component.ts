@@ -547,9 +547,20 @@ if (!articuloExistente) {
   // Asignar campos comunes
   currentArticulo.idGarantia = 1;
   currentArticulo.idEquipo = articulo.id ?? articulo.idEquipo ?? 0;
+  
+const precioModificadoManualmente = currentArticulo.precio !== 0;
+if (precioModificadoManualmente) {
+   currentArticulo.precioDetalle = currentArticulo.precio;
+  currentArticulo.precioMayor = currentArticulo.precio;
+  currentArticulo.precio =currentArticulo.precio;
+}
+else
+{
   currentArticulo.precioDetalle = articulo.precio_Detalle ?? articulo.precioDetalle ?? 0;
   currentArticulo.precioMayor = articulo.precio_Por_Mayor ?? articulo.precioMayor ?? 0;
   currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+}
+
 
   // Asignar descripción según tipo
   if (articulo.idTipo === 4) { // Reparación
@@ -805,54 +816,9 @@ if (!articuloExistente) {
       }
     }
     // El subtotal es igual a total - descuento - itbis
-    // this.subTotal = Number((this.total - this.descuento).toFixed(2));
+     this.subTotal = Number((this.total + this.descuento).toFixed(2));
   }
 
-  refreshGeneralValues1() {
-
-    this.subTotal = this.descuento = this.total = this.itbis = 0
-
-    for (let a = 0; a < this.articulos().length; a++) {
-      const articulo = this.articulos().controls[a].value
-      this.subTotal += articulo.subTotal
-      this.subTotal > articulo.descuento ? this.descuento += articulo.descuento : 0;
-      this.total += articulo.total
-    }
-
-
-     if (this.form.get('aplicarItbis')?.value == 'true') {
-      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
-      if (this.asumeItbis.asumeITBIS == 'S') {
-        const amountNew = this.total / (1 + itbisRate);
-        // this.itbis = this.total - amountNew;
-        this.itbis = Number(((this.total / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
-        this.total = Number(this.total.toFixed(2));
-        this.subTotal = amountNew;
-      } 
-          else {
-        this.itbis = this.total * itbisRate;
-        this.total += this.itbis;
-      }
-
-    // if (this.form.get('aplicarItbis')?.value == 'true') {
-    //   const itbisRate = this.asumeItbis.itbiS_Valor
-    //   if (this.asumeItbis.asumeITBIS == 'S') {
-    //     const amountNew = this.total / (1 + itbisRate);
-    //     this.itbis = this.total - amountNew;
-    //     this.subTotal = amountNew;
-
-    //   }
-    //   else {
-    //     this.itbis = this.total * itbisRate;
-    //     this.total += this.itbis;
-    //   }
-      this.itbis = Number(this.itbis.toFixed(2))
-      this.total = Number(this.total.toFixed(2))
-    } else {
-     // this.total = this.total - this.abono;
-    }
-
-  }
   borrarArticulo(index: number) {
 
     this.articulos().removeAt(index)
