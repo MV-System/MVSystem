@@ -820,15 +820,15 @@ else
     if (this.form.get('aplicarItbis')?.value == 'true') {
       //CALCULA EL ITBIS
       const itbis = this.asumeItbis.itbiS_Valor * 100;
-
           // si la factura lleva itbis pero ya el precio tiene incluido el itbis
       if (this.asumeItbis.asumeITBIS == 'S') {
             this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
-         const totalSinItbis = this.total;
+         const totalSinItbis = this.total  - this.itbis;
         this.total = Number(this.total.toFixed(2));
-        this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
+        this.subTotal = Number((totalSinItbis).toFixed(2));
           // si la factura lleva itbis pero la empresa se lo suma al precio
-      } else {
+      }
+      else {
 
         this.itbis = Number(((this.total * itbis) / 100).toFixed(2));
         const totalSinItbis = this.total;
@@ -836,8 +836,12 @@ else
         this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
       }
     }
-    // El subtotal es igual a total - descuento - itbis
+    else
+    {
      this.subTotal = Number((this.total + this.descuento).toFixed(2));
+     this.total = Number((this.total + this.itbis).toFixed(2));
+    }
+    // El subtotal es igual a total - descuento - itbis
   }
 
   borrarArticulo(index: number) {
