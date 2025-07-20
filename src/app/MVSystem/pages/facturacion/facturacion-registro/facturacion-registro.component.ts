@@ -562,9 +562,20 @@ if (!articuloExistente) {
   // Asignar campos comunes
   currentArticulo.idGarantia = 1;
   currentArticulo.idEquipo = articulo.id ?? articulo.idEquipo ?? 0;
+
+const precioModificadoManualmente = currentArticulo.precio !== 0;
+if (precioModificadoManualmente) {
+   currentArticulo.precioDetalle = currentArticulo.precio;
+  currentArticulo.precioMayor = currentArticulo.precio;
+  currentArticulo.precio =currentArticulo.precio;
+}
+else
+{
   currentArticulo.precioDetalle = articulo.precio_Detalle ?? articulo.precioDetalle ?? 0;
   currentArticulo.precioMayor = articulo.precio_Por_Mayor ?? articulo.precioMayor ?? 0;
   currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
+}
+
 
   // Asignar descripción según tipo
   if (articulo.idTipo === 4) { // Reparación
@@ -825,13 +836,8 @@ if (!articuloExistente) {
         this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
       }
     }
-    else
-    {
-
-       // si la factura no lleva itbis
-      this.subTotal = Number((this.total + this.descuento).toFixed(2));
-    }
-
+    // El subtotal es igual a total - descuento - itbis
+     this.subTotal = Number((this.total + this.descuento).toFixed(2));
   }
 
   borrarArticulo(index: number) {
