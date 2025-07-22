@@ -1,56 +1,106 @@
-  .modal-content {
-    position: relative;
-    background-color: white;
-    margin: auto;
-    padding: 1rem;
-    border: 1px solid #888;
-    width: 500px;
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s;
+/* Contenedor padre - fondo oscuro con blur y centrado */
+.modal-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px); /* efecto blur */
+  padding: 1rem;
+  box-sizing: border-box;
+  z-index: 1050;
+}
+
+/* Contenido del modal */
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  width: 480px;
+  max-width: 95vw;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  animation-name: fadeInScale;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+
+/* Animación suave */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
   }
-  
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  /* Add Animation */
-  @-webkit-keyframes animatetop {
-    from {
-      top: -300px;
-      opacity: 0;
-    }
-    to {
-      top: 0;
-      opacity: 1;
-    }
-  }
-  
-  @keyframes animatetop {
-    from {
-      top: -300px;
-      opacity: 0;
-    }
-    to {
-      top: 0;
-      opacity: 1;
-    }
-  }
-  
-  /* The Close Button */
-  .close {
-    color: #f1f1f1;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    transform: scale(1.25);
-    text-decoration: none;
-    cursor: pointer;
-  }
-  
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+/* Body */
+.modal-body {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Footer con botones alineados */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Botón cancelar */
+.modal-footer .btn-secondary {
+  background-color: #e0e0e0;
+  border: none;
+  color: #555;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-footer .btn-secondary:hover,
+.modal-footer .btn-secondary:focus {
+  background-color: #d1d1d1;
+  outline: none;
+}
+
+/* Botón confirmar */
+.modal-footer .btn-primary {
+  background: linear-gradient(45deg, #007bff, #0056d2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,123,255,0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-footer .btn-primary:hover,
+.modal-footer .btn-primary:focus {
+  background: linear-gradient(45deg, #0056d2, #003bb5);
+  box-shadow: 0 6px 14px rgba(0,86,210,0.6);
+  outline: none;
+}
