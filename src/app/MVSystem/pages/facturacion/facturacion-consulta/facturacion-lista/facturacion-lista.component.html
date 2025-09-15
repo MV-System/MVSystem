@@ -32,6 +32,43 @@
                             </div>
                         </div>
 
+                        <!-- Campo de búsqueda optimizado - OCULTO porque ahora se maneja desde el padre -->
+                        <div class="search-container" style="display: none;">
+                            <div class="input-group">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="Buscar por cliente, número de factura o teléfono..."
+                                    [(ngModel)]="criterio"
+                                    (input)="onSearchInput($event)"
+                                    (keydown)="onSearchKeydown($event)"
+                                    [disabled]="isLoading">
+                                
+                                <div class="input-group-append">
+                                    <button 
+                                        class="btn btn-outline-primary" 
+                                        type="button" 
+                                        (click)="searchManually()"
+                                        [disabled]="isLoading">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    
+                                    <button 
+                                        class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        (click)="clearSearch()"
+                                        [disabled]="isLoading">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Indicador de longitud mínima -->
+                            <small class="text-muted" *ngIf="criterio.length > 0 && criterio.length < minSearchLength">
+                                Mínimo {{minSearchLength}} caracteres para buscar
+                            </small>
+                        </div>
+
                         <!-- Vista de tabla para escritorio y tablet -->
                         <div class="scrollable-table thinScroll" *ngIf="!isMobileScreen()">
                             <table class="mv-table">

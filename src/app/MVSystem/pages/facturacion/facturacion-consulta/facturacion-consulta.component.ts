@@ -55,6 +55,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.getFacturas();
     this.getAlmacenes();
     this.getVendedores();
+    
+    // Suscribirse a cambios en el campo criterio para sincronizar con el componente hijo
+    this.form.get('criterio')?.valueChanges.subscribe(value => {
+      this.criterioActual = value || '';
+    });
   }
 
   getVendedores() {
@@ -86,6 +91,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
   printing: boolean = false;
+  criterioActual: string = ''; // Nueva propiedad para sincronizar criterio
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
@@ -270,6 +276,22 @@ this.loading.hideLoading();
   getCantidadFacturasCliente(): number {
      return this.totalRecord || 0;
 
+  }
+
+  /**
+   * Maneja las búsquedas desde el componente hijo (facturacion-lista)
+   * Este método recibe el criterio de búsqueda y pageIndex del debounce optimizado
+   */
+  onBuscarFacturas(event: {criterio: string, pageIndex: number}) {
+    // Actualizar el formulario con el criterio de búsqueda
+    this.form.patchValue({ criterio: event.criterio });
+    
+    // Actualizar la paginación
+    this.pageIndex = event.pageIndex;
+    this.paginate.pageIndex = event.pageIndex;
+    
+    // Ejecutar la búsqueda
+    this.getFacturas();
   }
 
 }

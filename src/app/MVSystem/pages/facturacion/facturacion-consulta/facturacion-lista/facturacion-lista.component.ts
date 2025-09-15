@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfaces/mantenimiento';
@@ -9,7 +9,7 @@ import { Subject, Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
   templateUrl: './facturacion-lista.component.html',
   styleUrls: ['./facturacion-lista.component.css']
 })
-export class FacturacionListaComponent implements OnInit {
+export class FacturacionListaComponent implements OnInit, OnChanges {
   @Output() pageSizeChanged = new EventEmitter<number>(); // Emitir evento para el cambio de pageSize
 selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
@@ -55,6 +55,22 @@ selectedRowIndex: number | null = null;
     private toast: ToastrService,
     private vendedorService: VendedorService) { }
   ngOnInit(): void {
+    this.setupSearchOptimization();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Sincronizar criterio cuando cambia desde el padre
+    if (changes['criterioInput'] && changes['criterioInput'].currentValue !== undefined) {
+      const newCriterio = changes['criterioInput'].currentValue || '';
+      
+      // Solo actualizar si el criterio es diferente para evitar loops infinitos
+      if (this.criterio !== newCriterio) {
+        this.criterio = newCriterio;
+        
+        // Activar el sistema de debounce cuando cambia el criterio desde el padre
+        this.searchSubject.next(this.criterio);
+      }
+    }
   }
   @Input() pageSize!:    number;
   @Input() pageIndex!:   number;
@@ -62,11 +78,21 @@ selectedRowIndex: number | null = null;
   @Input() currentPage:  number = 1;
   @Input() line!:  number;
   @Input() lastLine!:  number;
+  @Input() criterioInput!: string; // Nuevo Input para recibir criterio del padre
   @Input() facturas: FacturaConsulta[]=[];
   @Input() detalleFactura: DetalleFacturaList[]=[];
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
+  @Output() onBuscarFacturas = new EventEmitter<{criterio: string, pageIndex: number}>();
+
   vendedores: VendedorLista[] = []
+
+  // Nuevas propiedades para optimizar búsquedas
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+  criterio: string = '';
+  minSearchLength: number = 2; // Mínimo de caracteres para buscar
+  debounceTime: number = 800; // Tiempo de espera en milisegundos 
 
   btnAnulaFactura(): boolean {
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
@@ -221,6 +247,76 @@ isMobileScreen(): boolean {
     );
   }
 
+  // Configurar optimización de búsqueda
+  private setupSearchOptimization(): void {
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(this.debounceTime), // Esperar 500ms después de que el usuario deje de escribir
+        distinctUntilChanged(), // Solo proceder si el valor cambió
+        takeUntil(this.destroy$)
+      )
+      .subscribe(searchTerm => {
+        if (searchTerm.length >= this.minSearchLength || searchTerm.length === 0) {
+          this.executeSearch(searchTerm);
+        }
+      });
+  }
 
+  // Método para manejar el input de búsqueda
+  onSearchInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.criterio = target.value.trim();
+    
+    // Enviar al subject para procesar con debounce
+    this.searchSubject.next(this.criterio);
+  }
+
+  // Método para manejar Enter en el campo de búsqueda
+  onSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      
+      // Cancelar cualquier búsqueda pendiente del debounce
+      if (this.searchSubscription) {
+        this.searchSubscription.unsubscribe();
+        this.setupSearchOptimization(); // Reconfigurar
+      }
+      
+      // Ejecutar búsqueda inmediatamente
+      this.executeSearch(this.criterio);
+    }
+  }
+
+  // Método para ejecutar la búsqueda
+  private executeSearch(searchTerm: string): void {
+    // Emitir evento al componente padre para realizar la búsqueda
+    this.onBuscarFacturas.emit({
+      criterio: searchTerm,
+      pageIndex: 1 // Resetear a la primera página
+    });
+  }
+
+  // Método para limpiar búsqueda
+  clearSearch(): void {
+    this.criterio = '';
+    this.executeSearch('');
+  }
+
+  // Método para búsqueda manual (botón)
+  searchManually(): void {
+    this.executeSearch(this.criterio);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+    
+    // Limpiar otras suscripciones
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
 
 }

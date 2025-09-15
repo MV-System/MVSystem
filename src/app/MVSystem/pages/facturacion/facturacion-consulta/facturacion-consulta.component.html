@@ -66,7 +66,7 @@
                                     <input type="text" class="form-control modern-input"
                                            placeholder="Ej: Cliente, número de factura..."
                                            formControlName="criterio"
-                                           (keyup)="getFacturas()">
+                                           (keydown.enter)="$event.preventDefault()">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label modern-label">
@@ -141,8 +141,8 @@
 
                         <!-- Controles de Paginación -->
                         <!-- end form   -->
-                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine"
-                            (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)">
+                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" [criterioInput]="criterioActual"
+                            (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)">
                             <!-- <div *ngIf="equiposVendidos.length > 0"> -->
                             <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="pageIndex" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
                             </pagination-controls>
