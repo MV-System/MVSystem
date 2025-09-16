@@ -32,9 +32,19 @@
                                 <div class="col-md-8">
                                     <form [formGroup]="formBusqueda" (ngSubmit)="obtenerClientesPorNombreTelefono()" role="search">
                                         <div class="search-container">
-                                            <input type="search" class="form-control modern-input"
-                                                   placeholder="Buscar por nombre o teléfono..."
-                                                   formControlName="criterio">
+                                            <div class="input-group">
+                                                <input type="search" class="form-control modern-input"
+                                                       placeholder="Buscar por nombre o teléfono..."
+                                                       formControlName="criterio">
+                                                <button type="submit" class="btn btn-outline-primary">
+                                                    <i class="bi bi-search"></i>
+                                                    <span class="d-none d-sm-inline ms-1">Buscar</span>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" (click)="limpiarBusqueda()">
+                                                    <i class="bi bi-x-circle"></i>
+                                                    <span class="d-none d-sm-inline ms-1">Limpiar</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -112,32 +122,32 @@
                                                             <th scope="col">
                                                                 <i class="bi bi-envelope me-1"></i>Email
                                                             </th>
-                                                            <!-- <th scope="col" class="text-center">
+                                                            <th scope="col" class="text-center">
                                                                 <i class="bi bi-gear me-1"></i>Acciones
-                                                            </th> -->
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr *ngFor="let cliente of listaClientes | paginate: { itemsPerPage: 10, currentPage: page }" class="table-row">
                                                             <td class="text-center">
-                                                                <span class="id-badge">#{{cliente.id_Cliente}}</span>
+                                                                <span class="id-badge">#{{getClienteId(cliente)}}</span>
                                                             </td>
                                                             <td class="name-cell">
-                                                                <span class="client-name">{{cliente.nombres | titlecase}}</span>
+                                                                <span class="client-name">{{getClienteNombres(cliente) | titlecase}}</span>
                                                             </td>
                                                             <td class="name-cell">
-                                                                <span class="client-lastname">{{cliente.apellidos | titlecase}}</span>
+                                                                <span class="client-lastname">{{getClienteApellidos(cliente) | titlecase}}</span>
                                                             </td>
                                                             <td>
                                                                 <span class="badge badge-telefono">
                                                                     <i class="bi bi-telephone-fill me-1"></i>
-                                                                    {{cliente.numero_Telefono}}
+                                                                    {{getClienteTelefono(cliente)}}
                                                                 </span>
                                                             </td>
                                                             <td class="email-cell">
-                                                                <span class="email-text" *ngIf="cliente.email_Detalle; else noEmail">
+                                                                <span class="email-text" *ngIf="getClienteEmail(cliente); else noEmail">
                                                                     <i class="bi bi-envelope-fill me-1 text-muted"></i>
-                                                                    {{cliente.email_Detalle}}
+                                                                    {{getClienteEmail(cliente)}}
                                                                 </span>
                                                                 <ng-template #noEmail>
                                                                     <span class="text-muted">
@@ -146,14 +156,14 @@
                                                                     </span>
                                                                 </ng-template>
                                                             </td>
-                                                            <!-- <td class="text-center actions-cell">
+                                                            <td class="text-center actions-cell">
                                                                 <div class="btn-group modern-actions" role="group" aria-label="Acciones del cliente">
                                                                     <button type="button"
                                                                             class="btn btn-outline-info btn-sm action-btn"
                                                                             title="Ver detalles completos del cliente"
                                                                             data-bs-toggle="tooltip"
                                                                             data-bs-placement="top"
-                                                                            (click)="verDetalle(cliente.id_Cliente)">
+                                                                            (click)="verDetalle(getClienteId(cliente))">
                                                                         <i class="bi bi-eye-fill"></i>
                                                                         <span class="d-none d-lg-inline ms-1">Ver</span>
                                                                     </button>
@@ -162,12 +172,12 @@
                                                                             title="Editar información del cliente"
                                                                             data-bs-toggle="tooltip"
                                                                             data-bs-placement="top"
-                                                                            (click)="editarCliente(cliente.id_Cliente)">
+                                                                            (click)="editarCliente(getClienteId(cliente))">
                                                                         <i class="bi bi-pencil-square"></i>
                                                                         <span class="d-none d-lg-inline ms-1">Editar</span>
                                                                     </button>
                                                                 </div>
-                                                            </td> -->
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -184,17 +194,17 @@
                                             <div class="cliente-card" *ngFor="let cliente of listaClientes | paginate: { itemsPerPage: 10, currentPage: page }">
                                                 <div class="card-header-mobile">
                                                     <div class="client-id">
-                                                        <span class="id-badge-mobile">#{{cliente.id_Cliente}}</span>
+                                                        <span class="id-badge-mobile">#{{getClienteId(cliente)}}</span>
                                                     </div>
                                                     <div class="client-actions">
                                                         <button type="button"
                                                                 class="btn btn-outline-info btn-sm me-2"
-                                                                (click)="verDetalle(cliente.id_Cliente)">
+                                                                (click)="verDetalle(getClienteId(cliente))">
                                                             <i class="bi bi-eye-fill"></i>
                                                         </button>
                                                         <button type="button"
                                                                 class="btn btn-outline-warning btn-sm"
-                                                                (click)="editarCliente(cliente.id_Cliente)">
+                                                                (click)="editarCliente(getClienteId(cliente))">
                                                             <i class="bi bi-pencil-square"></i>
                                                         </button>
                                                     </div>
@@ -202,11 +212,11 @@
                                                 <div class="card-body-mobile">
                                                     <div class="client-name-mobile">
                                                         <i class="bi bi-person-fill me-2 text-primary"></i>
-                                                        <strong>{{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}</strong>
+                                                        <strong>{{getClienteNombres(cliente) | titlecase}} {{getClienteApellidos(cliente) | titlecase}}</strong>
                                                     </div>
                                                     <div class="client-phone-mobile">
                                                         <i class="bi bi-telephone-fill me-2 text-success"></i>
-                                                        <span class="badge badge-telefono-mobile">{{cliente.numero_Telefono}}</span>
+                                                        <span class="badge badge-telefono-mobile">{{getClienteTelefono(cliente)}}</span>
                                                     </div>
                                                 </div>
                                             </div>

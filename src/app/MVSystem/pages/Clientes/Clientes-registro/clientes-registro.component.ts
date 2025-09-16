@@ -220,12 +220,13 @@ export class ClientesRegistroComponent implements OnInit {
           next: (clienteInsertado: Cliente) => {
             this.clientesListar = clienteInsertado;
             this.isLoading = false;
-            if (clienteInsertado.mensaje.includes('ya está')) {
-              this.toastr.error(clienteInsertado.mensaje, '',
+            const mensaje = clienteInsertado.Mensaje || clienteInsertado.mensaje || '';
+            if (mensaje.includes('ya está')) {
+              this.toastr.error(mensaje, '',
                 { closeButton: true, progressBar: true });
             }
             else {
-              this.toastr.success(clienteInsertado.mensaje, '',
+              this.toastr.success(mensaje, '',
                 { closeButton: true, progressBar: true });
               // Agregar cliente a la lista local para mostrar en la card
               this.clientesRegistrados.unshift({

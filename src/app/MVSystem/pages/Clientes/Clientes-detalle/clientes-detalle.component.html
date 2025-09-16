@@ -27,7 +27,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">
                                 <i class="bi bi-person-circle me-2"></i>
-                                {{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}
+                                {{getClienteNombres() | titlecase}} {{getClienteApellidos() | titlecase}}
                             </h5>
                             <div>
                                 <button type="button" class="btn btn-light btn-sm me-2" (click)="editarCliente()">
@@ -50,18 +50,18 @@
                                 
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">ID Cliente</label>
-                                    <div class="fw-bold">{{cliente.id_Cliente}}</div>
+                                    <div class="fw-bold">{{getClienteId()}}</div>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Nombre Completo</label>
-                                    <div class="fw-bold">{{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}</div>
+                                    <div class="fw-bold">{{getClienteNombres() | titlecase}} {{getClienteApellidos() | titlecase}}</div>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Tipo de Cliente</label>
                                     <div>
-                                        <span class="badge bg-secondary">{{cliente.tipo_Cliente_Descripcion}}</span>
+                                        <span class="badge bg-secondary">{{getClienteTipoDescripcion()}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -75,20 +75,20 @@
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Teléfono</label>
                                     <div class="fw-bold">
-                                        <span class="badge bg-info">{{formatearTelefono(cliente.numero_Telefono)}}</span>
+                                        <span class="badge bg-info">{{formatearTelefono(getClienteTelefono())}}</span>
                                     </div>
                                 </div>
                                 
-                                <div class="mb-3" *ngIf="cliente.extencion">
+                                <div class="mb-3" *ngIf="getClienteExtencion()">
                                     <label class="form-label text-muted small">Extensión</label>
-                                    <div class="fw-bold">{{cliente.extencion}}</div>
+                                    <div class="fw-bold">{{getClienteExtencion()}}</div>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Email</label>
                                     <div class="fw-bold">
-                                        <span *ngIf="cliente.email_Detalle; else noEmail">
-                                            <i class="bi bi-envelope me-1"></i>{{cliente.email_Detalle}}
+                                        <span *ngIf="getClienteEmail(); else noEmail">
+                                            <i class="bi bi-envelope me-1"></i>{{getClienteEmail()}}
                                         </span>
                                         <ng-template #noEmail>
                                             <span class="text-muted">No especificado</span>
@@ -110,10 +110,10 @@
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Límite de Crédito</label>
                                     <div class="fw-bold">
-                                        <span class="badge bg-success" *ngIf="cliente.limite_Credito && cliente.limite_Credito !== '0'">
-                                            RD$ {{cliente.limite_Credito | number:'1.2-2'}}
+                                        <span class="badge bg-success" *ngIf="getClienteLimiteCredito() && getClienteLimiteCredito() !== '0'">
+                                            RD$ {{getClienteLimiteCredito() | number:'1.2-2'}}
                                         </span>
-                                        <span class="text-muted" *ngIf="!cliente.limite_Credito || cliente.limite_Credito === '0'">
+                                        <span class="text-muted" *ngIf="!getClienteLimiteCredito() || getClienteLimiteCredito() === '0'">
                                             Sin límite establecido
                                         </span>
                                     </div>
@@ -128,8 +128,8 @@
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Dirección Completa</label>
                                     <div class="fw-bold">
-                                        <span *ngIf="cliente.direccion_Detalle && cliente.direccion_Detalle !== ''; else noAddress">
-                                            {{cliente.direccion_Detalle}}
+                                        <span *ngIf="getClienteDireccion() && getClienteDireccion() !== ''; else noAddress">
+                                            {{getClienteDireccion()}}
                                         </span>
                                         <ng-template #noAddress>
                                             <span class="text-muted">No especificada</span>

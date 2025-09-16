@@ -96,7 +96,7 @@ export class ReparacionesComponent implements OnInit {
   modeloRegistroReparacion() {
     const model: RegistroReparaciones = {
      IMEI: this.formRegistroReparaciones.get('IMEI')?.value,
-     ID_Cliente:this.customer.id_Cliente,// Number(this.formRegistroReparaciones.get('ID_Cliente')?.value),
+     ID_Cliente: this.customer.Id_Cliente || this.customer.id_Cliente || 0,
      Detalle_Reparacion: String(this.formRegistroReparaciones.get('Detalle_Reparacion')?.value),
      Observaciones: String(this.formRegistroReparaciones.get('Observaciones')?.value),
      Costo: Number(this.formRegistroReparaciones.get('Costo')?.value),

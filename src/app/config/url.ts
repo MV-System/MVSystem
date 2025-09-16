@@ -115,6 +115,9 @@ export let APIURL = {
           ClienteInserta: API + 'Clientes/Cliente_Insert',
           AbonoFactura: API + 'Clientes/AbonoAfactura',
           AbonoGeneral: API + 'Clientes/AbonoGeneral',
+        },
+        Edita: {
+          ClienteUpdate: API + 'Clientes/Cliente_Update',
         }
     },
     Suplidor: {

@@ -677,7 +677,7 @@ else
 ///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {
       numeroFactura: this.facturaNumber,
-      idCliente: this.customer.id_Cliente,
+      idCliente: this.customer.Id_Cliente || this.customer.id_Cliente || 0,
       idVendedor: Number(this.form.get('vendedor')?.value),
       idAlmacen: Number(this.loginService.getUserIdSucursal),
       idTipoFactura: Number(this.form.get('tipoFactura')?.value),

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Cliente, ClienteRegistro, TipoCliente } from 'src/app/core/interfaces/cliente.interface';
+import { Cliente, ClienteRegistro, TipoCliente, ClienteActualizacion } from 'src/app/core/interfaces/cliente.interface';
 import { TipoTelefono } from 'src/app/core/interfaces/catalogo.interface';
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
@@ -55,7 +55,7 @@ export class ClientesEditarComponent implements OnInit {
         this.cargarDatosIniciales();
       } else {
         this.toastr.error('ID de cliente no válido');
-        this.router.navigate(['/mvSystem/clientes/consulta']);
+        this.router.navigateByUrl('/home/clientes/consulta');
       }
     });
   }
@@ -108,7 +108,7 @@ export class ClientesEditarComponent implements OnInit {
       this.clientesService.getClientesPorNombreTelefono('')
         .subscribe({
           next: (clientes) => {
-            this.cliente = clientes.find(c => c.id_Cliente === this.clienteId) || null;
+            this.cliente = clientes.find(c => (c.Id_Cliente || c.id_Cliente) === this.clienteId) || null;
             
             if (this.cliente) {
               this.llenarFormulario();
@@ -116,7 +116,7 @@ export class ClientesEditarComponent implements OnInit {
               resolve();
             } else {
               this.toastr.error('Cliente no encontrado');
-              this.router.navigate(['/mvSystem/clientes/consulta']);
+              this.router.navigateByUrl('/home/clientes/consulta');
               reject('Cliente no encontrado');
             }
           },
@@ -133,17 +133,17 @@ export class ClientesEditarComponent implements OnInit {
     if (!this.cliente) return;
 
     // Parsear la dirección
-    const direccionArray = this.cliente.direccion_Detalle ? this.cliente.direccion_Detalle.split(',') : [];
+    const direccionArray = this.getClienteDireccion() ? this.getClienteDireccion().split(',') : [];
     
     this.formEdicion.patchValue({
-      nombre: this.cliente.nombres,
-      apellido: this.cliente.apellidos,
-      tipoCliente: this.cliente.iD_Tipo_Cliente,
-      limiteCredito: parseFloat(this.cliente.limite_Credito) || 0,
-      tipoTelefono: this.cliente.iD_Tipo_Telefono,
-      telefono: this.formatearTelefonoParaInput(this.cliente.numero_Telefono),
-      extensionNumero: this.cliente.extencion || '',
-      email: this.cliente.email_Detalle || '',
+      nombre: this.getClienteNombres(),
+      apellido: this.getClienteApellidos(),
+      tipoCliente: this.getClienteTipoId(),
+      limiteCredito: parseFloat(this.getClienteLimiteCredito()) || 0,
+      tipoTelefono: this.getClienteTipoTelefonoId(),
+      telefono: this.formatearTelefonoParaInput(this.getClienteTelefono()),
+      extensionNumero: this.getClienteExtencion() || '',
+      email: this.getClienteEmail() || '',
       calle: direccionArray[0]?.trim() || '',
       casaNumero: direccionArray[1]?.trim() || '',
       sector: direccionArray[2]?.trim() || '',
@@ -226,7 +226,7 @@ export class ClientesEditarComponent implements OnInit {
     return !this.formEdicion.valid;
   }
 
-  modeloActualizarCliente(): ClienteRegistro {
+  modeloActualizarCliente(): ClienteActualizacion {
     let direccion: any = [
       this.formEdicion.get('calle')?.value,
       this.formEdicion.get('casaNumero')?.value,
@@ -234,17 +234,18 @@ export class ClientesEditarComponent implements OnInit {
       this.formEdicion.get('provincia')?.value
     ];
 
-    const actualizacion: ClienteRegistro = {
-      nombres: this.formEdicion.get('nombre')?.value,
-      apellidos: this.formEdicion.get('apellido')?.value,
-      iD_Tipo_Cliente: Number(this.formEdicion.get('tipoCliente')?.value),
-      limite_Credito: this.formEdicion.get('limiteCredito')?.value || 0,
-      numero_Telefono: Number(this.formEdicion.get('telefono')?.value.replace(/\D/g, '')),
-      iD_Tipo_Telefono: Number(this.formEdicion.get('tipoTelefono')?.value),
-      extencion: this.formEdicion.get('extensionNumero')?.value || null,
-      email_Detalle: this.formEdicion.get('email')?.value,
-      usuario: this.loginService.getUserName(),
-      direccion_Detalle: direccion.filter((item: any) => item).join(', '),
+    const actualizacion: ClienteActualizacion = {
+      ID_Cliente: this.clienteId,                                           // REQUERIDO
+      Nombres: this.formEdicion.get('nombre')?.value,                       // REQUERIDO
+      Apellidos: this.formEdicion.get('apellido')?.value,                   // REQUERIDO
+      ID_Tipo_Cliente: Number(this.formEdicion.get('tipoCliente')?.value),  // REQUERIDO
+      Numero_Telefono: Number(this.formEdicion.get('telefono')?.value.replace(/\D/g, '')), // REQUERIDO
+      ID_Tipo_Telefono: Number(this.formEdicion.get('tipoTelefono')?.value), // REQUERIDO
+      Direccion_Detalle: direccion.filter((item: any) => item).join(', '),  // REQUERIDO
+      Usuario: this.loginService.getUserName(),                             // REQUERIDO
+      Limite_Credito: this.formEdicion.get('limiteCredito')?.value || '0',  // OPCIONAL
+      Extencion: this.formEdicion.get('extensionNumero')?.value || null,    // OPCIONAL
+      Email_Detalle: this.formEdicion.get('email')?.value || '',            // OPCIONAL
     };
     
     return actualizacion;
@@ -255,14 +256,23 @@ export class ClientesEditarComponent implements OnInit {
       this.isSaving = true;
       const modelo = this.modeloActualizarCliente();
 
-      // Por ahora simularemos la actualización ya que no tenemos endpoint de actualización
-      // En una implementación real, llamarías a un método como: this.clientesService.updateCliente(this.clienteId, modelo)
-      
-      setTimeout(() => {
-        this.isSaving = false;
-        this.toastr.success('Cliente actualizado correctamente', 'Éxito');
-        this.router.navigate(['/mvSystem/clientes/detalle', this.clienteId]);
-      }, 1500);
+      console.log('Modelo de actualización a enviar:', modelo);
+
+      // Llamar al servicio de actualización
+      this.clientesService.putCliente(modelo)
+        .subscribe({
+          next: (response) => {
+            this.isSaving = false;
+            console.log('Cliente actualizado exitosamente:', response);
+            this.toastr.success('Cliente actualizado correctamente', 'Éxito');
+            this.router.navigateByUrl(`/home/clientes/detalle/${this.clienteId}`);
+          },
+          error: (error) => {
+            this.isSaving = false;
+            console.error('Error al actualizar cliente:', error);
+            this.toastr.error('Error al actualizar el cliente. Intente nuevamente.', 'Error');
+          }
+        });
 
     } else {
       this.formEdicion.markAllAsTouched();
@@ -271,6 +281,53 @@ export class ClientesEditarComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/mvSystem/clientes/detalle', this.clienteId]);
+    this.router.navigateByUrl(`/home/clientes/detalle/${this.clienteId}`);
+  }
+
+  /**
+   * Helper methods for data compatibility between old and new API format
+   */
+  getClienteId(): number {
+    return this.cliente?.Id_Cliente || this.cliente?.id_Cliente || (this.cliente as any)?.id_cliente || 0;
+  }
+
+  getClienteNombres(): string {
+    return this.cliente?.Nombres || this.cliente?.nombres || (this.cliente as any)?.nombre || '';
+  }
+
+  getClienteApellidos(): string {
+    return this.cliente?.Apellidos || this.cliente?.apellidos || (this.cliente as any)?.apellido || '';
+  }
+
+  getClienteTelefono(): number {
+    return this.cliente?.Numero_de_telefono || this.cliente?.numero_Telefono || (this.cliente as any)?.numero_de_telefono || 0;
+  }
+
+  getClienteEmail(): string {
+    return this.cliente?.Email || this.cliente?.email_Detalle || (this.cliente as any)?.email || '';
+  }
+
+  getClienteTipoDescripcion(): string {
+    return this.cliente?.Tipo_de_Cliente || this.cliente?.tipo_Cliente_Descripcion || (this.cliente as any)?.tipo_de_cliente || '';
+  }
+
+  getClienteLimiteCredito(): string {
+    return this.cliente?.Limite_Credito || this.cliente?.limite_Credito || (this.cliente as any)?.limite_credito || '0';
+  }
+
+  getClienteDireccion(): string {
+    return this.cliente?.Direccion || this.cliente?.direccion_Detalle || (this.cliente as any)?.direccion || '';
+  }
+
+  getClienteExtencion(): number | null {
+    return this.cliente?.Extencion || this.cliente?.extencion || (this.cliente as any)?.extension || null;
+  }
+
+  getClienteTipoId(): number {
+    return this.cliente?.iD_Tipo_Cliente || (this.cliente as any)?.id_tipo_cliente || (this.cliente as any)?.tipo_cliente_id || 1;
+  }
+
+  getClienteTipoTelefonoId(): number {
+    return this.cliente?.iD_Tipo_Telefono || (this.cliente as any)?.id_tipo_telefono || (this.cliente as any)?.tipo_telefono_id || 1;
   }
 }

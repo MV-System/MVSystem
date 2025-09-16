@@ -28,7 +28,7 @@ export class ClientesDetalleComponent implements OnInit {
         this.cargarDetalleCliente();
       } else {
         this.toastr.error('ID de cliente no válido');
-        this.router.navigate(['/mvSystem/clientes/consulta']);
+        this.router.navigate(['../consulta'], { relativeTo: this.route });
       }
     });
   }
@@ -40,12 +40,12 @@ export class ClientesDetalleComponent implements OnInit {
     this.clientesService.getClientesPorNombreTelefono('')
       .subscribe({
         next: (clientes) => {
-          this.cliente = clientes.find(c => c.id_Cliente === this.clienteId) || null;
+          this.cliente = clientes.find(c => (c.Id_Cliente || c.id_Cliente) === this.clienteId) || null;
           this.isLoading = false;
           
           if (!this.cliente) {
             this.toastr.error('Cliente no encontrado');
-            this.router.navigate(['/mvSystem/clientes/consulta']);
+            this.router.navigate(['../consulta'], { relativeTo: this.route });
           }
         },
         error: (error) => {
@@ -58,12 +58,16 @@ export class ClientesDetalleComponent implements OnInit {
 
   editarCliente(): void {
     if (this.cliente) {
-      this.router.navigate(['/mvSystem/clientes/editar', this.cliente.id_Cliente]);
+      const clienteId = this.cliente.Id_Cliente || this.cliente.id_Cliente;
+      console.log('Navegando a editar cliente desde detalle:', clienteId);
+      // Usar navegación absoluta para evitar problemas de rutas relativas
+      this.router.navigateByUrl(`/home/clientes/editar/${clienteId}`);
     }
   }
 
   volverAConsulta(): void {
-    this.router.navigate(['/mvSystem/clientes/consulta']);
+    // Navegar directamente a la URL completa para forzar recarga
+    this.router.navigateByUrl('/home/clientes/consulta');
   }
 
   formatearTelefono(telefono: number): string {
@@ -72,5 +76,56 @@ export class ClientesDetalleComponent implements OnInit {
       return `${telefonoStr.substring(0, 3)}-${telefonoStr.substring(3, 6)}-${telefonoStr.substring(6)}`;
     }
     return telefonoStr;
+  }
+
+  /**
+   * Helper methods for data compatibility between old and new API format
+   */
+  getClienteId(): number {
+    return this.cliente?.Id_Cliente || this.cliente?.id_Cliente || 0;
+  }
+
+  getClienteNombres(): string {
+    return this.cliente?.Nombres || this.cliente?.nombres || '';
+  }
+
+  getClienteApellidos(): string {
+    return this.cliente?.Apellidos || this.cliente?.apellidos || '';
+  }
+
+  getClienteTelefono(): number {
+    return this.cliente?.Numero_de_telefono || 
+           (this.cliente as any)?.numero_de_telefono || 
+           this.cliente?.numero_Telefono || 0;
+  }
+
+  getClienteEmail(): string {
+    return this.cliente?.Email || 
+           (this.cliente as any)?.email || 
+           this.cliente?.email_Detalle || '';
+  }
+
+  getClienteTipoDescripcion(): string {
+    return this.cliente?.Tipo_de_Cliente || 
+           (this.cliente as any)?.tipo_de_Cliente || 
+           this.cliente?.tipo_Cliente_Descripcion || '';
+  }
+
+  getClienteLimiteCredito(): string {
+    return this.cliente?.Limite_Credito || 
+           (this.cliente as any)?.limite_Credito || 
+           this.cliente?.limite_Credito || '';
+  }
+
+  getClienteDireccion(): string {
+    return this.cliente?.Direccion || 
+           (this.cliente as any)?.direccion || 
+           this.cliente?.direccion_Detalle || '';
+  }
+
+  getClienteExtencion(): number | null {
+    return this.cliente?.Extencion || 
+           (this.cliente as any)?.extencion || 
+           this.cliente?.extencion || null;
   }
 }

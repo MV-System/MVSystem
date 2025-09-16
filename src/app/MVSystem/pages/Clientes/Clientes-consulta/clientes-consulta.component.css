@@ -55,6 +55,71 @@
   height: 1rem !important;
 }
 
+/* ===== ESTILOS PARA COLUMNA DE ACCIONES ===== */
+.actions-cell {
+  padding: 0.75rem !important;
+  vertical-align: middle !important;
+}
+
+.modern-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
+  border-width: 1.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.action-btn i {
+  font-size: 0.875rem;
+}
+
+.btn-outline-info.action-btn {
+  border-color: #3182ce !important;
+  color: #3182ce !important;
+}
+
+.btn-outline-info.action-btn:hover {
+  background-color: #3182ce !important;
+  border-color: #3182ce !important;
+  color: white !important;
+}
+
+.btn-outline-warning.action-btn {
+  border-color: #ed8936 !important;
+  color: #ed8936 !important;
+}
+
+.btn-outline-warning.action-btn:hover {
+  background-color: #ed8936 !important;
+  border-color: #ed8936 !important;
+  color: white !important;
+}
+
+/* Responsive para acciones */
+@media (max-width: 1200px) {
+  .action-btn .d-none.d-lg-inline {
+    display: none !important;
+  }
+  
+  .action-btn {
+    padding: 0.375rem 0.5rem !important;
+  }
+}
+
 /* ===== ESTILOS GENERALES ===== */
 main.main {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);

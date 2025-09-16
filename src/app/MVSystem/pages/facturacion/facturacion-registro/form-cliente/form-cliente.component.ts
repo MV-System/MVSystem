@@ -133,12 +133,13 @@ export class FormClienteComponent implements OnInit {
       this.Loading.showLoading();
       this.customerService.postCliente(model)
         .subscribe((customerResp: Cliente) => {
-          if (customerResp.mensaje.includes('ya está')) {
-            this.toastr.error(customerResp.mensaje, '',
+          const mensaje = customerResp.Mensaje || customerResp.mensaje || '';
+          if (mensaje.includes('ya está')) {
+            this.toastr.error(mensaje, '',
               { closeButton: true, progressBar: true });
           }
           else {
-            this.toastr.success(customerResp.mensaje, '',
+            this.toastr.success(mensaje, '',
               { closeButton: true, progressBar: true });
               this.customer.emit(customerResp);
               

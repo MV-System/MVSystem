@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
 import { Observable, Subject } from 'rxjs';
-import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse } from '../interfaces/cliente.interface';
+import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse, ClienteActualizacion } from '../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,11 @@ export class ClientesService {
   // Post's
   postCliente(cliente : ClienteRegistro):Observable<Cliente>{
     return this.http.post<Cliente>(APIURL.Clientes.Inserta.ClienteInserta, cliente);
+  }
+
+  // Put's
+  putCliente(cliente: ClienteActualizacion): Observable<any> {
+    return this.http.put(APIURL.Clientes.Edita.ClienteUpdate, cliente);
   }
   // Post's
   postAbonoFactura(Param : AbonoFacturaParam):Observable<AbonoFacturaResponse>{

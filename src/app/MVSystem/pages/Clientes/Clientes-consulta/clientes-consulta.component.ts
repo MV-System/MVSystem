@@ -21,7 +21,8 @@ export class ClientesConsultaComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) { 
+  }
 
 
   ngOnInit(): void {
@@ -41,6 +42,7 @@ export class ClientesConsultaComponent implements OnInit {
         next: (cliente) => {
           this.listaClientes = cliente;
           this.isLoading = false;
+          
           if (cliente.length == 0) {
             this.toastr.info("No se encontraron clientes con este criterio de búsqueda", "Sin resultados");
           } else {
@@ -94,7 +96,7 @@ export class ClientesConsultaComponent implements OnInit {
    */
   verDetalle(clienteId: number) {
     console.log('Navegando a detalle del cliente:', clienteId);
-    this.router.navigate(['/mvSystem/clientes/detalle', clienteId]);
+    this.router.navigate(['../detalle', clienteId], { relativeTo: this.route });
   }
 
   /**
@@ -102,19 +104,23 @@ export class ClientesConsultaComponent implements OnInit {
    */
   editarCliente(clienteId: number) {
     console.log('Navegando a editar cliente:', clienteId);
-    this.router.navigate(['/mvSystem/clientes/editar', clienteId]);
+    this.router.navigate(['../editar', clienteId], { relativeTo: this.route });
   }
 
   /**
    * Load all clients on component initialization
    */
   cargarTodosLosClientes() {
+    console.log('Cargando todos los clientes...');
     this.isLoading = true;
+    
     this.clientesService.getClientesPorNombreTelefono('')
       .subscribe({
         next: (clientes) => {
+          console.log('Clientes cargados:', clientes.length);
           this.listaClientes = clientes;
           this.isLoading = false;
+          
           if (clientes.length > 0) {
             this.toastr.success(`Se cargaron ${clientes.length} cliente(s)`, "Clientes cargados");
           }
@@ -122,6 +128,7 @@ export class ClientesConsultaComponent implements OnInit {
         error: (error) => {
           this.isLoading = false;
           this.toastr.error("Error al cargar clientes", "Error");
+          console.error('Error al cargar clientes:', error);
         }
       });
   }
@@ -142,6 +149,46 @@ export class ClientesConsultaComponent implements OnInit {
    */
   isMobileScreen(): boolean {
     return window.innerWidth <= 768;
+  }
+
+  /**
+   * Helper methods for data compatibility between old and new API format
+   */
+  getClienteId(cliente: Cliente): number {
+    return cliente.Id_Cliente || cliente.id_Cliente || 0;
+  }
+
+  getClienteNombres(cliente: Cliente): string {
+    return cliente.Nombres || cliente.nombres || '';
+  }
+
+  getClienteApellidos(cliente: Cliente): string {
+    return cliente.Apellidos || cliente.apellidos || '';
+  }
+
+  getClienteTelefono(cliente: Cliente): number {
+    // Intentar múltiples variaciones del campo teléfono
+    const telefono = cliente.Numero_de_telefono || 
+                    (cliente as any).numero_de_telefono || 
+                    cliente.numero_Telefono || 
+                    (cliente as any).Numero_Telefono ||
+                    (cliente as any)['Numero de telefono'] ||
+                    (cliente as any)['numero de telefono'] ||
+                    0;
+    
+    return telefono;
+  }
+
+  getClienteEmail(cliente: Cliente): string {
+    return cliente.Email || 
+           (cliente as any).email || 
+           cliente.email_Detalle || '';
+  }
+
+  getClienteTipoDescripcion(cliente: Cliente): string {
+    return cliente.Tipo_de_Cliente || 
+           (cliente as any).tipo_de_Cliente || 
+           cliente.tipo_Cliente_Descripcion || '';
   }
 
 }
