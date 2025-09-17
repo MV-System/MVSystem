@@ -138,14 +138,23 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe(facturas=>{
    // this.isLoading = false; // Terminar carga
-      let cantidad = facturas.length == 0 ? 0 : facturas[0].totalRecord;
-      this.totalFacturado = facturas.length == 0 ? 0 : facturas[0].totalFacturado;
-      this.facturasCantidad = cantidad;
-      if (facturas.length) {
+      
+      if (facturas.length > 0) {
+        // Hay facturas: usar los valores del API
         this.totalRecord = facturas[0].totalRecord;
+        this.totalFacturado = facturas[0].totalFacturado;
+        this.facturasCantidad = facturas[0].totalRecord;
         this.line = facturas[0].line;
         this.lastLine = facturas[0].lastLine;
+      } else {
+        // Sin facturas: establecer todo en 0
+        this.totalRecord = 0;
+        this.totalFacturado = 0;
+        this.facturasCantidad = 0;
+        this.line = 0;
+        this.lastLine = 0;
       }
+      
       this.facturas = facturas;
     });
     this.subs.push(sub);
