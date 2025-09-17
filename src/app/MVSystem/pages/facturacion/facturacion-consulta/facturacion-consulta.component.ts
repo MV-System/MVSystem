@@ -257,7 +257,19 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
   onCheckboxComprobanteChange(event: Event) {
+    // Validar que el evento y el target existan
+    if (!event || !event.target) {
+      console.warn('Evento o target del checkbox no válido');
+      return;
+    }
+
     const checkbox = event.target as HTMLInputElement;
+    
+    // Validar que sea un elemento input
+    if (checkbox.tagName !== 'INPUT' || checkbox.type !== 'checkbox') {
+      console.warn('El target no es un checkbox válido');
+      return;
+    }
     
     // Si está seleccionado, usar valor 2 (solo comprobantes)
     // Si está deseleccionado, usar valor 1 (todas las facturas)

@@ -419,14 +419,93 @@ describe('FacturacionConsultaComponent', () => {
   });
 
   describe('Checkbox Functionality', () => {
-    it('should handle checkbox comprobante change', () => {
+    it('should handle checkbox comprobante change when checked', () => {
       spyOn(component, 'getFacturas');
+      
+      // Crear un elemento checkbox simulado
+      const mockCheckbox = document.createElement('input');
+      mockCheckbox.type = 'checkbox';
+      mockCheckbox.checked = true;
+      
+      // Crear evento con target válido
       const event = new Event('change');
+      Object.defineProperty(event, 'target', { value: mockCheckbox, writable: false });
 
       component.onCheckboxComprobanteChange(event);
 
       expect(component.ComprobanteCheck).toBe(2);
       expect(component.getFacturas).toHaveBeenCalled();
+    });
+
+    it('should handle checkbox comprobante change when unchecked', () => {
+      spyOn(component, 'getFacturas');
+      
+      // Crear un elemento checkbox simulado
+      const mockCheckbox = document.createElement('input');
+      mockCheckbox.type = 'checkbox';
+      mockCheckbox.checked = false;
+      
+      // Crear evento con target válido
+      const event = new Event('change');
+      Object.defineProperty(event, 'target', { value: mockCheckbox, writable: false });
+
+      component.onCheckboxComprobanteChange(event);
+
+      expect(component.ComprobanteCheck).toBe(1);
+      expect(component.getFacturas).toHaveBeenCalled();
+    });
+
+    it('should handle invalid event gracefully', () => {
+      spyOn(component, 'getFacturas');
+      spyOn(console, 'warn');
+      
+      // Guardar valor inicial
+      const initialValue = component.ComprobanteCheck;
+      
+      // Probar con evento null
+      component.onCheckboxComprobanteChange(null as any);
+      
+      expect(console.warn).toHaveBeenCalledWith('Evento o target del checkbox no válido');
+      expect(component.ComprobanteCheck).toBe(initialValue);
+      expect(component.getFacturas).not.toHaveBeenCalled();
+    });
+
+    it('should handle event with null target gracefully', () => {
+      spyOn(component, 'getFacturas');
+      spyOn(console, 'warn');
+      
+      // Guardar valor inicial
+      const initialValue = component.ComprobanteCheck;
+      
+      // Crear evento sin target
+      const event = new Event('change');
+      
+      component.onCheckboxComprobanteChange(event);
+      
+      expect(console.warn).toHaveBeenCalledWith('Evento o target del checkbox no válido');
+      expect(component.ComprobanteCheck).toBe(initialValue);
+      expect(component.getFacturas).not.toHaveBeenCalled();
+    });
+
+    it('should handle non-checkbox element gracefully', () => {
+      spyOn(component, 'getFacturas');
+      spyOn(console, 'warn');
+      
+      // Guardar valor inicial
+      const initialValue = component.ComprobanteCheck;
+      
+      // Crear un elemento que no es checkbox
+      const mockElement = document.createElement('div');
+      
+      // Crear evento con target no válido
+      const event = new Event('change');
+      Object.defineProperty(event, 'target', { value: mockElement, writable: false });
+
+      component.onCheckboxComprobanteChange(event);
+      
+      expect(console.warn).toHaveBeenCalledWith('El target no es un checkbox válido');
+      expect(component.ComprobanteCheck).toBe(initialValue);
+      expect(component.getFacturas).not.toHaveBeenCalled();
     });
   });
 
