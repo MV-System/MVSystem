@@ -14,42 +14,6 @@
                 <div class="card">
                     <div class="card-body">
                         <!-- form -->
-                        <!-- Totales en una sola fila, encima de los filtros -->
-                        <!-- Statistics Cards Modernas (igual que accesorios, con nuevos estilos) -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="card stats-card">
-                                    <div class="card-body">
-                                        <div class="stats-content">
-                                            <div class="stats-icon">
-                                                <i class="bi bi-receipt-cutoff text-primary"></i>
-                                            </div>
-                                            <div class="stats-info">
-                                                <h6 class="stats-title">Total de facturas</h6>
-                                                <h3 class="stats-number">{{ getCantidadFacturasCliente() }}</h3>
-                                                <small class="stats-subtitle">Facturas en el período</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card stats-card">
-                                    <div class="card-body">
-                                        <div class="stats-content">
-                                            <div class="stats-icon">
-                                                <i class="bi bi-cash-coin text-success"></i>
-                                            </div>
-                                            <div class="stats-info">
-                                                <h6 class="stats-title">Total facturado</h6>
-                                                <h3 class="stats-number">{{ getTotalFacturadoCliente() | currency }}</h3>
-                                                <small class="stats-subtitle">Monto total en el período</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <form [formGroup]="form" role="search">
                             <div class="filter-header mb-3">
                                 <h6 class="filter-title">
@@ -134,6 +98,75 @@
                                 </div>
                             </div>
                         </form>
+
+                        <!-- Resumen de Totales - Diseño horizontal compacto -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="summary-header mb-2">
+                                    <h6 class="summary-title">
+                                        <i class="bi bi-bar-chart-line me-2 text-success"></i>
+                                        Resumen de Resultados
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="stats-horizontal-container">
+                                    <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getCantidadFacturasCliente() === 0 && !isLoading}">
+                                        <div class="stats-content-horizontal">
+                                            <div class="stats-icon-horizontal">
+                                                <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                                <i *ngIf="!isLoading" class="bi bi-receipt-cutoff text-primary"></i>
+                                            </div>
+                                            <div class="stats-info-horizontal">
+                                                <h6 class="stats-title-horizontal">
+                                                    Facturas
+                                                    <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                        <i class="bi bi-funnel-fill text-info"></i>
+                                                    </span>
+                                                </h6>
+                                                <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                    <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                                    <span *ngIf="!isLoading">{{ getCantidadFacturasCliente() | number }}</span>
+                                                </span>
+                                                <small class="stats-subtitle-horizontal">
+                                                    <span *ngIf="!isLoading && getCantidadFacturasCliente() === 0" class="text-muted">Sin resultados</span>
+                                                    <span *ngIf="!isLoading && getCantidadFacturasCliente() > 0">En el período</span>
+                                                    <span *ngIf="isLoading">Cargando...</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stats-divider"></div>
+                                    
+                                    <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalFacturadoCliente() === 0 && !isLoading}">
+                                        <div class="stats-content-horizontal">
+                                            <div class="stats-icon-horizontal">
+                                                <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-success" role="status"></div>
+                                                <i *ngIf="!isLoading" class="bi bi-cash-coin text-success"></i>
+                                            </div>
+                                            <div class="stats-info-horizontal">
+                                                <h6 class="stats-title-horizontal">
+                                                    Total facturado
+                                                    <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                        <i class="bi bi-funnel-fill text-info"></i>
+                                                    </span>
+                                                </h6>
+                                                <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                    <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                                    <span *ngIf="!isLoading">{{ getTotalFacturadoCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                                </span>
+                                                <small class="stats-subtitle-horizontal">
+                                                    <span *ngIf="!isLoading && getTotalFacturadoCliente() === 0" class="text-muted">Sin montos</span>
+                                                    <span *ngIf="!isLoading && getTotalFacturadoCliente() > 0">Monto total</span>
+                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div *ngIf="!isLoading" class="row">
                        

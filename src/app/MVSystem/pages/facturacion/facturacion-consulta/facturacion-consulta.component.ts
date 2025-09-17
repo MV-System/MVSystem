@@ -134,11 +134,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     return model;
   }
   getFacturas(){
+    this.isLoading = true; // Iniciar loading para las tarjetas
     this.loading.showLoading();
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
-  .subscribe(facturas=>{
-   // this.isLoading = false; // Terminar carga
-      
+  .subscribe({
+    next: (facturas) => {
       if (facturas.length > 0) {
         // Hay facturas: usar los valores del API
         this.totalRecord = facturas[0].totalRecord;
@@ -156,9 +156,16 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       }
       
       this.facturas = facturas;
-    });
+      this.isLoading = false; // Terminar loading
+      this.loading.hideLoading();
+    },
+    error: (error) => {
+      console.error('Error al cargar facturas:', error);
+      this.isLoading = false;
+      this.loading.hideLoading();
+    }
+  });
     this.subs.push(sub);
-this.loading.hideLoading();
   }
   getDetalleFactura(numeroFactura: number){
     //this.isLoading = true; // Iniciar carga
@@ -250,8 +257,12 @@ this.loading.hideLoading();
     this.subs.push(sub);
   }
   onCheckboxComprobanteChange(event: Event) {
-
-   this.ComprobanteCheck = 2;
+    const checkbox = event.target as HTMLInputElement;
+    
+    // Si está seleccionado, usar valor 2 (solo comprobantes)
+    // Si está deseleccionado, usar valor 1 (todas las facturas)
+    this.ComprobanteCheck = checkbox.checked ? 2 : 1;
+    
     this.getFacturas();
   }
 
@@ -285,6 +296,22 @@ this.loading.hideLoading();
   getCantidadFacturasCliente(): number {
      return this.totalRecord || 0;
 
+  }
+
+  /**
+   * Detecta si hay filtros activos aplicados
+   */
+  hayFiltrosActivos(): boolean {
+    const formValues = this.form.value;
+    
+    // Verificar filtros de formulario
+    const criterioActivo = formValues.criterio && formValues.criterio.trim() !== '';
+    const vendedorActivo = formValues.iD_Vendedor && formValues.iD_Vendedor !== '';
+    const sucursalActiva = formValues.almacen && formValues.almacen !== '';
+    const fechasActivas = formValues.rangeDate && formValues.rangeDate !== '';
+    const comprobanteActivo = this.ComprobanteCheck === 2;
+    
+    return criterioActivo || vendedorActivo || sucursalActiva || fechasActivas || comprobanteActivo;
   }
 
   /**
