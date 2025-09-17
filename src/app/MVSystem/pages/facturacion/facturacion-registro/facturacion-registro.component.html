@@ -89,8 +89,8 @@
                         (change)="obtenerClientesPorNombreTelefono()"
                         [clearable]="false"
                         [ngClass]="{ 'is-invalid': true }">
-                        <ng-option *ngFor="let customer of customers" [value]="customer.numero_Telefono">
-                          {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                        <ng-option *ngFor="let customer of customers" [value]="getClienteTelefono(customer)">
+                          {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ getClienteTelefono(customer) }}
                         </ng-option>
                       </ng-select>
                       <button class="btns icon primary" type="button" (click)="onAdd()">
@@ -99,7 +99,7 @@
                     </div>
                     <div class="clientDetail client-detail-row mt-2">
                       <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
-                      <span class="phones ms-3">{{ ( !customer?.numero_Telefono?'[Teléfono]':customer.numero_Telefono) }} </span>
+                      <span class="phones ms-3">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
                     </div>
                   </div>
                 </div>

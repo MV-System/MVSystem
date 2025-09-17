@@ -1107,6 +1107,14 @@ printFacturaMini() {
       })
   }
 
-
+  /**
+   * Helper method to get client phone number from different API response formats
+   */
+  getClienteTelefono(cliente: Cliente): number {
+    return cliente?.Numero_de_telefono || 
+           cliente?.numero_Telefono || 
+           cliente?.numero_de_telefono || 
+           0;
+  }
 
 }
