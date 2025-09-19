@@ -17,8 +17,7 @@
                         <form [formGroup]="form" role="search">
                             <div class="filter-header mb-3">
                                 <h6 class="filter-title">
-                                    <i class="bi bi-funnel me-2 text-primary"></i>
-                                    Filtros de Búsqueda
+                                    <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
                                 </h6>
                             </div>
                             <div class="row g-3">
@@ -27,10 +26,7 @@
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por cliente, # de factura
                                     </label>
-                                    <input type="text" class="form-control modern-input"
-                                           placeholder="Ej: Cliente, número de factura..."
-                                           formControlName="criterio"
-                                           (keydown.enter)="$event.preventDefault()">
+                                    <input type="text" class="form-control modern-input" placeholder="Ej: Cliente, número de factura..." formControlName="criterio" (keydown.enter)="$event.preventDefault()">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label modern-label">
@@ -44,9 +40,7 @@
                                         <i class="bi bi-person-badge me-1"></i>
                                         Vendedor
                                     </label>
-                                    <select class="form-select modern-select vendedor-dropdown"
-                                    formControlName="iD_Vendedor"
-                                    (change)="getFacturas()">
+                                    <select class="form-select modern-select vendedor-dropdown" formControlName="iD_Vendedor" (change)="getFacturas()">
                                         <option value="">Todos</option>
                                         <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                                             {{ vendedor.nombres || vendedor.nombre }}
@@ -58,9 +52,7 @@
                                         <i class="bi bi-building me-1"></i>
                                         Sucursal
                                     </label>
-                                    <select class="form-select modern-select"
-                                            formControlName="almacen"
-                                            (change)="getFacturas()">
+                                    <select class="form-select modern-select" formControlName="almacen" (change)="getFacturas()">
                                         <option value="" disabled>Seleccione una sucursal</option>
                                         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                                             {{almacen.descripcion}}
@@ -80,19 +72,18 @@
                             <!-- Botones de acción modernos en una sola fila debajo de los filtros -->
                             <div class="row g-3 mb-4 mt-2">
                                 <div class="col-md-6">
-                                    <button class="button-imprimir-reporte w-100"
-                                        [ngClass]="{'disabled': !facturas.length}"
-                                        (click)="printReportFacturaConsulta()">
+                                    <button class="button-imprimir-reporte w-100" [ngClass]="{'disabled': !facturas.length}" (click)="printReportFacturaConsulta()">
                                         <i class="bi bi-printer me-2"></i>
                                         <span class="d-none d-sm-inline">Imprimir reporte</span>
                                     </button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button class="button-imprimir-reporte w-100"
-                                        [ngClass]="{'disabled': (!onFacturaButton)}"
-                                        (click)="ReimprimeFactura()">
+                                    <button class="button-imprimir-reporte w-100" [disabled]="!puedeReimprimir()" [ngClass]="{'disabled': !puedeReimprimir()}" (click)="puedeReimprimir() ? ReimprimeFactura() : null">
                                         <i class="bi bi-arrow-repeat me-2"></i>
-                                        <span class="d-inline">{{isLoading ? 'Procesando...' : 'Reimprimir Factura'}}</span>
+                                        <span class="d-inline">
+                                            {{ isLoading ? 'Procesando...' :
+                                               (puedeReimprimir() ? 'Reimprimir Factura' : 'Seleccione una factura') }}
+                                        </span>
                                         <span class="spinner-grow spinner-grow-sm m-0 x-10 ms-2" role="status" aria-hidden="true" *ngIf="isLoading"></span>
                                     </button>
                                 </div>
@@ -104,8 +95,7 @@
                             <div class="col-12">
                                 <div class="summary-header mb-2">
                                     <h6 class="summary-title">
-                                        <i class="bi bi-bar-chart-line me-2 text-success"></i>
-                                        Resumen de Resultados
+                                        <i class="bi bi-bar-chart-line me-2 text-success"></i> Resumen de Resultados
                                     </h6>
                                 </div>
                             </div>
@@ -126,7 +116,7 @@
                                                 </h6>
                                                 <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
                                                     <span *ngIf="isLoading" class="loading-placeholder">---</span>
-                                                    <span *ngIf="!isLoading">{{ getCantidadFacturasCliente() | number }}</span>
+                                                <span *ngIf="!isLoading">{{ getCantidadFacturasCliente() | number }}</span>
                                                 </span>
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getCantidadFacturasCliente() === 0" class="text-muted">Sin resultados</span>
@@ -136,9 +126,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="stats-divider"></div>
-                                    
+
                                     <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalFacturadoCliente() === 0 && !isLoading}">
                                         <div class="stats-content-horizontal">
                                             <div class="stats-icon-horizontal">
@@ -154,7 +144,7 @@
                                                 </h6>
                                                 <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
                                                     <span *ngIf="isLoading" class="loading-placeholder">---</span>
-                                                    <span *ngIf="!isLoading">{{ getTotalFacturadoCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                                <span *ngIf="!isLoading">{{ getTotalFacturadoCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
                                                 </span>
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getTotalFacturadoCliente() === 0" class="text-muted">Sin montos</span>
@@ -169,13 +159,13 @@
                         </div>
 
                         <div *ngIf="!isLoading" class="row">
-                       
+
                         </div>
 
                         <!-- Controles de Paginación -->
                         <!-- end form   -->
-                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" [criterioInput]="criterioActual"
-                            (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)">
+                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line"
+                            [lastLine]="lastLine" [criterioInput]="criterioActual" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)">
                             <!-- <div *ngIf="equiposVendidos.length > 0"> -->
                             <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="pageIndex" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
                             </pagination-controls>

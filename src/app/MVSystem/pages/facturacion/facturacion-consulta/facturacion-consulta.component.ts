@@ -55,7 +55,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.getFacturas();
     this.getAlmacenes();
     this.getVendedores();
-    
+
     // Suscribirse a cambios en el campo criterio para sincronizar con el componente hijo
     this.form.get('criterio')?.valueChanges.subscribe(value => {
       this.criterioActual = value || '';
@@ -91,6 +91,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
   printing: boolean = false;
+  facturaSeleccionada: number | null = null; // Para rastrear qué factura está seleccionada
   criterioActual: string = ''; // Nueva propiedad para sincronizar criterio
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -136,6 +137,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   getFacturas(){
     this.isLoading = true; // Iniciar loading para las tarjetas
     this.loading.showLoading();
+    // Resetear selección cuando se filtran las facturas
+    this.resetearSeleccionFactura();
+
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({
     next: (facturas) => {
@@ -154,7 +158,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
         this.line = 0;
         this.lastLine = 0;
       }
-      
+
       this.facturas = facturas;
       this.isLoading = false; // Terminar loading
       this.loading.hideLoading();
@@ -169,7 +173,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
   getDetalleFactura(numeroFactura: number){
     //this.isLoading = true; // Iniciar carga
-    this.numerofactura =numeroFactura;
+    this.numerofactura = numeroFactura;
+    this.facturaSeleccionada = numeroFactura; // Rastrear la factura seleccionada
     const { almacen } = this.form.value;
 
     const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
@@ -205,6 +210,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
   }
   ReimprimeFactura() {
+    // Validar que haya una factura seleccionada
+    if (!this.puedeReimprimir()) {
+      this.toast.warning('Por favor, seleccione una factura para reimprimir.');
+      return;
+    }
+
     this.rDialogService.openDialog(
       "Aviso",
       "¿Desea imprimir la factura mini o normal?",
@@ -237,6 +248,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   pageChanged(index: number) {
   this.pageIndex = index;
   this.paginate.pageIndex = this.pageIndex;
+  // Resetear selección al cambiar de página
+  this.resetearSeleccionFactura();
   this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
 }
   onDateRangeChanged(event: any) {
@@ -264,17 +277,17 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     }
 
     const checkbox = event.target as HTMLInputElement;
-    
+
     // Validar que sea un elemento input
     if (checkbox.tagName !== 'INPUT' || checkbox.type !== 'checkbox') {
       console.warn('El target no es un checkbox válido');
       return;
     }
-    
+
     // Si está seleccionado, usar valor 2 (solo comprobantes)
     // Si está deseleccionado, usar valor 1 (todas las facturas)
     this.ComprobanteCheck = checkbox.checked ? 2 : 1;
-    
+
     this.getFacturas();
   }
 
@@ -315,14 +328,14 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    */
   hayFiltrosActivos(): boolean {
     const formValues = this.form.value;
-    
+
     // Verificar filtros de formulario
     const criterioActivo = formValues.criterio && formValues.criterio.trim() !== '';
     const vendedorActivo = formValues.iD_Vendedor && formValues.iD_Vendedor !== '';
     const sucursalActiva = formValues.almacen && formValues.almacen !== '';
     const fechasActivas = formValues.rangeDate && formValues.rangeDate !== '';
     const comprobanteActivo = this.ComprobanteCheck === 2;
-    
+
     return criterioActivo || vendedorActivo || sucursalActiva || fechasActivas || comprobanteActivo;
   }
 
@@ -333,13 +346,29 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   onBuscarFacturas(event: {criterio: string, pageIndex: number}) {
     // Actualizar el formulario con el criterio de búsqueda
     this.form.patchValue({ criterio: event.criterio });
-    
+
     // Actualizar la paginación
     this.pageIndex = event.pageIndex;
     this.paginate.pageIndex = event.pageIndex;
-    
+
     // Ejecutar la búsqueda
     this.getFacturas();
+  }
+
+  /**
+   * Resetea la selección de factura cuando se filtran los datos
+   */
+  resetearSeleccionFactura() {
+    this.onFacturaButton = false;
+    this.facturaSeleccionada = null;
+    this.numerofactura = 0;
+  }
+
+  /**
+   * Valida si se puede reimprimir la factura
+   */
+  puedeReimprimir(): boolean {
+    return this.onFacturaButton && this.facturaSeleccionada !== null;
   }
 
 }

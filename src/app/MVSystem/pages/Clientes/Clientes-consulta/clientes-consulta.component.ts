@@ -21,7 +21,7 @@ export class ClientesConsultaComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) { 
+  ) {
   }
 
 
@@ -36,13 +36,13 @@ export class ClientesConsultaComponent implements OnInit {
   obtenerClientesPorNombreTelefono() {
     let criterio = this.formBusqueda.controls.criterio.value;
     this.isLoading = true;
-    
+
     this.clientesService.getClientesPorNombreTelefono(criterio)
       .subscribe({
         next: (cliente) => {
           this.listaClientes = cliente;
           this.isLoading = false;
-          
+
           if (cliente.length == 0) {
             this.toastr.info("No se encontraron clientes con este criterio de búsqueda", "Sin resultados");
           } else {
@@ -63,7 +63,7 @@ export class ClientesConsultaComponent implements OnInit {
   agregarCliente() {
     console.log('Navegando a registro de cliente...');
     console.log('Current URL:', this.router.url);
-    
+
     // Usar navegación relativa desde la ruta actual
     this.router.navigate(['../registro'], { relativeTo: this.route }).then(
       (success) => {
@@ -113,14 +113,14 @@ export class ClientesConsultaComponent implements OnInit {
   cargarTodosLosClientes() {
     console.log('Cargando todos los clientes...');
     this.isLoading = true;
-    
+
     this.clientesService.getClientesPorNombreTelefono('')
       .subscribe({
         next: (clientes) => {
           console.log('Clientes cargados:', clientes.length);
           this.listaClientes = clientes;
           this.isLoading = false;
-          
+
           if (clientes.length > 0) {
             this.toastr.success(`Se cargaron ${clientes.length} cliente(s)`, "Clientes cargados");
           }
@@ -152,6 +152,14 @@ export class ClientesConsultaComponent implements OnInit {
   }
 
   /**
+   * Detect if the current screen needs compact buttons (responsive design)
+   * This considers both screen size and available space
+   */
+  needsCompactButtons(): boolean {
+    return window.innerWidth < 1200; // Bootstrap's xl breakpoint
+  }
+
+  /**
    * Helper methods for data compatibility between old and new API format
    */
   getClienteId(cliente: Cliente): number {
@@ -168,26 +176,26 @@ export class ClientesConsultaComponent implements OnInit {
 
   getClienteTelefono(cliente: Cliente): number {
     // Intentar múltiples variaciones del campo teléfono
-    const telefono = cliente.Numero_de_telefono || 
-                    (cliente as any).numero_de_telefono || 
-                    cliente.numero_Telefono || 
+    const telefono = cliente.Numero_de_telefono ||
+                    (cliente as any).numero_de_telefono ||
+                    cliente.numero_Telefono ||
                     (cliente as any).Numero_Telefono ||
                     (cliente as any)['Numero de telefono'] ||
                     (cliente as any)['numero de telefono'] ||
                     0;
-    
+
     return telefono;
   }
 
   getClienteEmail(cliente: Cliente): string {
-    return cliente.Email || 
-           (cliente as any).email || 
+    return cliente.Email ||
+           (cliente as any).email ||
            cliente.email_Detalle || '';
   }
 
   getClienteTipoDescripcion(cliente: Cliente): string {
-    return cliente.Tipo_de_Cliente || 
-           (cliente as any).tipo_de_Cliente || 
+    return cliente.Tipo_de_Cliente ||
+           (cliente as any).tipo_de_Cliente ||
            cliente.tipo_Cliente_Descripcion || '';
   }
 

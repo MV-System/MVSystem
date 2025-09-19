@@ -1,809 +1,949 @@
 /* CLASE PERSONALIZADA PARA BOTONES BLANCOS */
+
 .btn-white-custom {
-  background-color: white !important;
-  border: 1px solid #d1d5db !important;
-  color: #6c757d !important;
-  padding: 0.375rem 0.75rem !important;
-  font-size: 0.875rem !important;
-  line-height: 1.5 !important;
-  border-radius: 0.375rem !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease-in-out !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  text-decoration: none !important;
-  cursor: pointer !important;
+    background-color: white !important;
+    border: 1px solid #d1d5db !important;
+    color: #6c757d !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
 }
 
 .btn-white-custom:hover {
-  background-color: #f8f9fa !important;
-  border-color: #adb5bd !important;
-  color: #495057 !important;
-  text-decoration: none !important;
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #495057 !important;
+    text-decoration: none !important;
 }
 
 .btn-white-custom:focus {
-  background-color: white !important;
-  border-color: #7c8db5 !important;
-  color: #495057 !important;
-  box-shadow: 0 0 0 0.2rem rgba(124, 141, 181, 0.15) !important;
-  outline: 0 !important;
+    background-color: white !important;
+    border-color: #7c8db5 !important;
+    color: #495057 !important;
+    box-shadow: 0 0 0 0.2rem rgba(124, 141, 181, 0.15) !important;
+    outline: 0 !important;
 }
 
 .btn-white-custom:active {
-  background-color: #f8f9fa !important;
-  border-color: #adb5bd !important;
-  color: #495057 !important;
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125) !important;
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #495057 !important;
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125) !important;
 }
 
 .btn-white-custom:disabled {
-  background-color: #e9ecef !important;
-  border-color: #d1d5db !important;
-  color: #6c757d !important;
-  opacity: 0.65 !important;
-  cursor: not-allowed !important;
+    background-color: #e9ecef !important;
+    border-color: #d1d5db !important;
+    color: #6c757d !important;
+    opacity: 0.65 !important;
+    cursor: not-allowed !important;
 }
 
+
 /* Asegurar que los iconos se vean correctamente */
+
 .btn-white-custom .bi {
-  color: inherit !important;
+    color: inherit !important;
 }
 
 .btn-white-custom .spinner-border-sm {
-  width: 1rem !important;
-  height: 1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
 }
 
+
 /* ===== ESTILOS PARA COLUMNA DE ACCIONES ===== */
+
 .actions-cell {
-  padding: 0.75rem !important;
-  vertical-align: middle !important;
+    padding: 0.75rem !important;
+    vertical-align: middle !important;
 }
 
 .modern-actions {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .action-btn {
-  padding: 0.375rem 0.75rem !important;
-  font-size: 0.875rem !important;
-  border-radius: 0.375rem !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease-in-out !important;
-  border-width: 1.5px !important;
-  display: inline-flex !important;
-  align-items: center !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+    border-width: 1.5px !important;
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 .action-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .action-btn i {
-  font-size: 0.875rem;
+    font-size: 0.875rem;
 }
 
 .btn-outline-info.action-btn {
-  border-color: #3182ce !important;
-  color: #3182ce !important;
+    border-color: #3182ce !important;
+    color: #3182ce !important;
 }
 
 .btn-outline-info.action-btn:hover {
-  background-color: #3182ce !important;
-  border-color: #3182ce !important;
-  color: white !important;
+    background-color: #3182ce !important;
+    border-color: #3182ce !important;
+    color: white !important;
 }
 
 .btn-outline-warning.action-btn {
-  border-color: #ed8936 !important;
-  color: #ed8936 !important;
+    border-color: #ed8936 !important;
+    color: #ed8936 !important;
 }
 
 .btn-outline-warning.action-btn:hover {
-  background-color: #ed8936 !important;
-  border-color: #ed8936 !important;
-  color: white !important;
+    background-color: #ed8936 !important;
+    border-color: #ed8936 !important;
+    color: white !important;
 }
+
 
 /* Responsive para acciones */
+
 @media (max-width: 1200px) {
-  .action-btn .d-none.d-lg-inline {
-    display: none !important;
-  }
-  
-  .action-btn {
-    padding: 0.375rem 0.5rem !important;
-  }
+    .action-btn .d-none.d-lg-inline {
+        display: none !important;
+    }
+    .action-btn {
+        padding: 0.375rem 0.5rem !important;
+    }
 }
 
+
 /* ===== ESTILOS GENERALES ===== */
+
 main.main {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
 }
 
 .pagetitle h1 {
-  color: #2c3e50;
-  font-weight: 700;
-  font-size: 2rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* ===== ESTILOS DE CARDS ===== */
+
 .card {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  background: white;
-  backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+    backdrop-filter: blur(10px);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card-body {
-  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-  padding: 2rem !important;
-  border-radius: 1rem;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 2rem !important;
+    border-radius: 1rem;
 }
 
 .card-title {
-  color: #2c3e50;
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 0;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+
 /* ===== BOTÓN AGREGAR CLIENTE PRINCIPAL ===== */
+
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  border: none !important;
-  border-radius: 0.75rem !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 600 !important;
-  font-size: 1rem !important;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
 }
 
 .btn-primary:active {
-  transform: translateY(1px) !important;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
 }
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
 }
 
 .btn-primary .bi {
-  font-size: 1.1rem;
-  margin-right: 0.5rem;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
 }
 
+
 /* ===== TABLA MODERNA ===== */
+
 .table {
-  background: white;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .table-dark {
-  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
-  color: white !important;
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+    color: white !important;
 }
 
 .table-dark th {
-  border: none !important;
-  padding: 1rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.875rem;
+    border: none !important;
+    padding: 1rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
 }
 
 .table tbody tr {
-  transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .table tbody tr:hover {
-  background-color: #f7fafc !important;
-  transform: scale(1.01);
+    background-color: #f7fafc !important;
+    transform: scale(1.01);
 }
 
 .table td {
-  padding: 1rem !important;
-  vertical-align: middle !important;
-  border-top: 1px solid #e2e8f0 !important;
+    padding: 1rem !important;
+    vertical-align: middle !important;
+    border-top: 1px solid #e2e8f0 !important;
 }
 
+
 /* ===== BADGES PERSONALIZADOS ===== */
+
 .badge {
-  font-size: 0.875rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
 }
 
 .badge.bg-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .badge-telefono {
-  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
-  color: #1565c0 !important;
-  padding: 0.5rem 1rem !important;
-  border-radius: 0.75rem !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  border: 1px solid #90caf9 !important;
-  box-shadow: 0 2px 8px rgba(21, 101, 192, 0.15);
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+    color: #1565c0 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.75rem !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    border: 1px solid #90caf9 !important;
+    box-shadow: 0 2px 8px rgba(21, 101, 192, 0.15);
 }
 
+
 /* ===== BOTONES DE ACCIÓN ===== */
+
 .btn-outline-info {
-  border: 2px solid #3182ce !important;
-  color: #3182ce !important;
-  background: white !important;
-  border-radius: 0.5rem !important;
-  padding: 0.5rem 1rem !important;
-  font-weight: 500 !important;
-  transition: all 0.3s ease !important;
+    border: 2px solid #3182ce !important;
+    color: #3182ce !important;
+    background: white !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
 }
 
 .btn-outline-info:hover {
-  background: #3182ce !important;
-  color: white !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.4);
+    background: #3182ce !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.4);
 }
 
 .btn-outline-warning {
-  border: 2px solid #ed8936 !important;
-  color: #ed8936 !important;
-  background: white !important;
-  border-radius: 0.5rem !important;
-  padding: 0.5rem 1rem !important;
-  font-weight: 500 !important;
-  transition: all 0.3s ease !important;
+    border: 2px solid #ed8936 !important;
+    color: #ed8936 !important;
+    background: white !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
 }
 
 .btn-outline-warning:hover {
-  background: #ed8936 !important;
-  color: white !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+    background: #ed8936 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
 }
 
 .btn-group .btn {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .btn-group .btn:last-child {
-  margin-right: 0;
+    margin-right: 0;
 }
 
+
 /* ===== ESTADOS VACÍOS Y LOADING ===== */
+
 .text-center .display-1 {
-  color: #cbd5e0 !important;
-  font-size: 4rem !important;
+    color: #cbd5e0 !important;
+    font-size: 4rem !important;
 }
 
 .spinner-border {
-  width: 3rem;
-  height: 3rem;
-  border-width: 0.3rem;
-  color: #667eea;
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+    color: #667eea;
 }
+
 
 /* ===== RESPONSIVE DESIGN ===== */
+
 @media (max-width: 768px) {
-  .card-body {
-    padding: 1rem !important;
-  }
-  
-  .btn-primary {
-    padding: 0.5rem 1rem !important;
-    font-size: 0.875rem !important;
-  }
-  
-  .table td {
-    padding: 0.75rem 0.5rem !important;
-  }
-  
-  .btn-outline-info,
-  .btn-outline-warning {
-    padding: 0.375rem 0.75rem !important;
-    font-size: 0.875rem !important;
-  }
+    .card-body {
+        padding: 1rem !important;
+    }
+    .btn-primary {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+    .table td {
+        padding: 0.75rem 0.5rem !important;
+    }
+    .btn-outline-info,
+    .btn-outline-warning {
+        padding: 0.375rem 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
 }
 
+
 /* ===== ANIMACIONES SUAVES ===== */
+
 * {
-  transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .btn {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-group .btn:last-child {
-  border-radius: 0 0.5rem 0.5rem 0;
+    border-radius: 0 0.5rem 0.5rem 0;
 }
 
+
 /* Estilos para la tabla */
+
 .table {
-  margin-bottom: 0;
-  margin-top: 1rem !important;
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 0.5rem;
-  overflow: hidden !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+    margin-bottom: 0;
+    margin-top: 1rem !important;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 0.5rem;
+    overflow: hidden !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
 }
 
 .table th {
-  border-top: none;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  letter-spacing: 0.5px;
-  background-color: #e9ecef;
-  color: #495057;
-  padding: 1rem 0.75rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+    border-top: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 1rem 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .table td {
-  vertical-align: middle;
-  padding: 1rem 0.75rem;
-  border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid #dee2e6;
 }
+
 
 /* Estilo especial para la columna de acciones */
+
 .table td:last-child {
-  text-align: center;
-  min-width: 140px;
-  padding: 0.75rem;
+    text-align: center;
+    min-width: 140px;
+    padding: 0.75rem;
 }
+
 
 /* Eliminar borde en la última fila */
+
 .table tbody tr:last-child td {
-  border-bottom: none;
+    border-bottom: none;
 }
 
+
 /* Estilos para botones */
+
 .btn-sm {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  border-radius: 0.375rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
 }
 
 .btn-lg {
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: all 0.2s ease-in-out;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
 .btn-lg:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .me-2 {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
+
 /* Estilos específicos para los grupos de botones de acción */
+
 .btn-group {
-  display: flex;
-  gap: 0.25rem;
+    display: flex;
+    gap: 0.25rem;
 }
 
 .btn-group .btn {
-  flex: 1;
-  min-width: auto;
-  white-space: nowrap;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
+    flex: 1;
+    min-width: auto;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
 }
 
+
 /* Botones de acción específicos */
+
 .btn-outline-info {
-  border-color: #78a5c4 !important;
-  color: #4a6b7c !important;
-  background-color: transparent !important;
+    border-color: #78a5c4 !important;
+    color: #4a6b7c !important;
+    background-color: transparent !important;
 }
 
 .btn-outline-info:hover {
-  background-color: #78a5c4 !important;
-  border-color: #78a5c4 !important;
-  color: white !important;
-  transform: translateY(-1px);
+    background-color: #78a5c4 !important;
+    border-color: #78a5c4 !important;
+    color: white !important;
+    transform: translateY(-1px);
 }
 
 .btn-outline-warning {
-  border-color: #d4bd76 !important;
-  color: #8b7355 !important;
-  background-color: transparent !important;
+    border-color: #d4bd76 !important;
+    color: #8b7355 !important;
+    background-color: transparent !important;
 }
 
 .btn-outline-warning:hover {
-  background-color: #d4bd76 !important;
-  border-color: #d4bd76 !important;
-  color: #495057 !important;
-  transform: translateY(-1px);
+    background-color: #d4bd76 !important;
+    border-color: #d4bd76 !important;
+    color: #495057 !important;
+    transform: translateY(-1px);
 }
+
 
 /* Estilos para badges */
+
 .badge {
-  font-size: 0.875rem;
-  padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
 }
 
+
 /* Badges con colores más suaves */
+
 .badge.bg-info {
-  background-color: #a8c8d8 !important;
-  color: #495057 !important;
+    background-color: #a8c8d8 !important;
+    color: #495057 !important;
 }
 
 .badge.bg-secondary {
-  background-color: #b8b9ba !important;
-  color: #495057 !important;
+    background-color: #b8b9ba !important;
+    color: #495057 !important;
 }
 
 .badge.bg-primary {
-  background-color: #7c8db5 !important;
-  color: white !important;
+    background-color: #7c8db5 !important;
+    color: white !important;
 }
 
+
 /* 4. BADGES DE TELÉFONO - COLOR MÁS SUAVE */
+
 .badge.bg-info,
 .badge.badge-info,
 span.badge.bg-info {
-  background-color: #b8d4ea !important;
-  color: #2c3e50 !important;
-  border: 1px solid #a8c8d8 !important;
+    background-color: #b8d4ea !important;
+    color: #2c3e50 !important;
+    border: 1px solid #a8c8d8 !important;
 }
+
 
 /* Badge alternativo para teléfono con color más suave */
+
 .badge-telefono {
-  background-color: #e3f2fd !important;
-  color: #1565c0 !important;
-  border: 1px solid #bbdefb !important;
-  font-weight: 500 !important;
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+    border: 1px solid #bbdefb !important;
+    font-weight: 500 !important;
 }
 
+
 /* Hover effects */
+
 .table-hover tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.075);
-  transform: scale(1.01);
-  transition: all 0.2s ease-in-out;
+    background-color: rgba(0, 123, 255, 0.075);
+    transform: scale(1.01);
+    transition: all 0.2s ease-in-out;
 }
 
 .table-hover tbody tr {
-  transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
+
 /* Efectos adicionales para interactividad */
+
 .table tbody tr:hover .btn-group .btn {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .table tbody tr .btn-group .btn {
-  transition: transform 0.15s ease-in-out;
+    transition: transform 0.15s ease-in-out;
 }
+
 
 /* 5. FILAS ALTERNADAS MÁS SUTILES */
-.table-striped > tbody > tr:nth-of-type(odd) {
-  background-color: rgba(248, 249, 250, 0.5) !important;
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: rgba(248, 249, 250, 0.5) !important;
 }
 
-.table-striped > tbody > tr:nth-of-type(even) {
-  background-color: white !important;
+.table-striped>tbody>tr:nth-of-type(even) {
+    background-color: white !important;
 }
+
 
 /* Responsive */
+
 @media (max-width: 768px) {
-  .card-body {
-    padding: 1rem !important;
-  }
-  
-  .btn-primary {
-    padding: 0.5rem 1rem !important;
-    font-size: 0.875rem !important;
-  }
-  
-  .table td {
-    padding: 0.75rem 0.5rem !important;
-  }
-  
-  .btn-outline-info,
-  .btn-outline-warning {
-    padding: 0.375rem 0.75rem !important;
-    font-size: 0.875rem !important;
-  }
+    .card-body {
+        padding: 1rem !important;
+    }
+    .btn-primary {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+    .table td {
+        padding: 0.75rem 0.5rem !important;
+    }
+    .btn-outline-info,
+    .btn-outline-warning {
+        padding: 0.375rem 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
 }
+
 
 /* ===== VISTA MÓVIL - TARJETAS ===== */
+
 @media (max-width: 768px) {
-  .search-section {
-    flex-direction: column;
-  }
-  
-  .search-section .row {
-    flex-direction: column;
-  }
-  
-  .search-section .col-md-6 {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+    .search-section {
+        flex-direction: column;
+    }
+    .search-section .row {
+        flex-direction: column;
+    }
+    .search-section .col-md-6 {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
 }
 
+
 /* Estilos para las tarjetas de clientes en móvil - Consistente con facturas */
+
 .cliente-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
 }
 
 .cliente-card {
-  background: #f6f9ff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-  border-left: 4px solid #467ff1;
-  margin-bottom: 0.5rem;
+    background: #f6f9ff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    border-left: 4px solid #467ff1;
+    margin-bottom: 0.5rem;
 }
 
 .cliente-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .card-header-mobile {
-  background: #e6f0fa;
-  color: #467ff1;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(70, 127, 241, 0.1);
+    background: #e6f0fa;
+    color: #467ff1;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(70, 127, 241, 0.1);
 }
 
 .client-id {
-  flex: 1;
+    flex: 1;
 }
 
 .id-badge-mobile {
-  background: #467ff1;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.875rem;
+    background: #467ff1;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
 }
 
 .client-actions {
-  display: flex;
-  gap: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
 }
 
 .client-actions .btn {
-  border: 2px solid #467ff1 !important;
-  color: #467ff1 !important;
-  background: white !important;
-  padding: 0.375rem 0.75rem !important;
-  border-radius: 0.5rem !important;
-  transition: all 0.3s ease;
+    border: 2px solid #467ff1 !important;
+    color: #467ff1 !important;
+    background: white !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease;
 }
 
 .client-actions .btn:hover {
-  background: #467ff1 !important;
-  color: white !important;
-  transform: scale(1.05);
+    background: #467ff1 !important;
+    color: white !important;
+    transform: scale(1.05);
 }
 
 .card-body-mobile {
-  padding: 1rem;
-  background: #f6f9ff;
+    padding: 1rem;
+    background: #f6f9ff;
 }
 
 .client-name-mobile {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #2d3748;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #2d3748;
 }
 
 .client-name-mobile b {
-  color: #467ff1;
-  font-weight: 600;
+    color: #467ff1;
+    font-weight: 600;
 }
 
 .client-name-mobile strong {
-  font-weight: 600;
-  color: #467ff1;
+    font-weight: 600;
+    color: #467ff1;
 }
 
 .client-phone-mobile {
-  display: flex;
-  align-items: center;
-  color: #4a5568;
+    display: flex;
+    align-items: center;
+    color: #4a5568;
 }
 
 .client-phone-mobile b {
-  color: #467ff1;
+    color: #467ff1;
 }
 
 .badge-telefono-mobile {
-  background: #cce5ff !important;
-  color: #467ff1 !important;
-  padding: 0.4rem 0.8rem !important;
-  border-radius: 0.5rem !important;
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-  border: 1px solid #b3d7ff !important;
+    background: #cce5ff !important;
+    color: #467ff1 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    border: 1px solid #b3d7ff !important;
 }
+
 
 /* Paginación móvil - Consistente con facturas */
+
 .pagination-wrapper-mobile {
-  padding: 1rem;
-  background: #f6f9ff;
-  border-radius: 8px;
-  margin-top: 1rem;
-  border-left: 4px solid #467ff1;
+    padding: 1rem;
+    background: #f6f9ff;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border-left: 4px solid #467ff1;
 }
+
 
 /* Función para detectar móvil - se debe implementar en el TypeScript */
+
+
 /* Esta función debe estar en el componente .ts */
 
+
 /* Responsive mejoras adicionales */
+
 @media (max-width: 576px) {
-  .cliente-cards {
-    padding: 0.5rem;
-  }
-  
-  .cliente-card {
-    border-radius: 0.75rem;
-  }
-  
-  .card-header-mobile {
-    padding: 0.75rem;
-  }
-  
-  .card-body-mobile {
-    padding: 1rem;
-  }
-  
-  .client-name-mobile {
-    font-size: 1rem;
-  }
-  
-  .client-actions .btn {
-    padding: 0.25rem 0.5rem !important;
-    font-size: 0.875rem !important;
-  }
+    .cliente-cards {
+        padding: 0.5rem;
+    }
+    .cliente-card {
+        border-radius: 0.75rem;
+    }
+    .card-header-mobile {
+        padding: 0.75rem;
+    }
+    .card-body-mobile {
+        padding: 1rem;
+    }
+    .client-name-mobile {
+        font-size: 1rem;
+    }
+    .client-actions .btn {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.875rem !important;
+    }
 }
+
 
 /* Header responsive para móvil */
+
 @media (max-width: 768px) {
-  .header-title h5 {
-    font-size: 1.25rem;
-  }
-  
-  .header-title p {
-    display: none;
-  }
-  
-  .action-buttons .btn {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem !important;
-  }
-  
-  .action-buttons .btn span {
-    display: none !important;
-  }
-  
-  .action-buttons .btn i {
-    margin-right: 0 !important;
-  }
+    .header-title h5 {
+        font-size: 1.25rem;
+    }
+    .header-title p {
+        display: none;
+    }
+    .action-buttons .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem !important;
+    }
+    .action-buttons .btn span {
+        display: none !important;
+    }
+    .action-buttons .btn i {
+        margin-right: 0 !important;
+    }
 }
+
 
 /* ===== CONTROL DE ANCHO DE COLUMNAS ===== */
-.modern-table th:nth-child(1) { /* ID */
-  width: 8%;
-  min-width: 60px;
+
+.modern-table th:nth-child(1) {
+    /* ID */
+    width: 8%;
+    min-width: 60px;
 }
 
-.modern-table th:nth-child(2) { /* Nombre */
-  width: 17%;
-  min-width: 120px;
+.modern-table th:nth-child(2) {
+    /* Nombre */
+    width: 17%;
+    min-width: 120px;
 }
 
-.modern-table th:nth-child(3) { /* Apellido */
-  width: 17%;
-  min-width: 120px;
+.modern-table th:nth-child(3) {
+    /* Apellido */
+    width: 17%;
+    min-width: 120px;
 }
 
-.modern-table th:nth-child(4) { /* Teléfono */
-  width: 19%;
-  min-width: 140px;
+.modern-table th:nth-child(4) {
+    /* Teléfono */
+    width: 19%;
+    min-width: 140px;
 }
 
-.modern-table th:nth-child(5) { /* Email */
-  width: 24%;
-  min-width: 180px;
+.modern-table th:nth-child(5) {
+    /* Email */
+    width: 24%;
+    min-width: 180px;
 }
 
-.modern-table th:nth-child(6) { /* Acciones */
-  width: 15%;
-  min-width: 160px;
+.modern-table th:nth-child(6) {
+    /* Acciones */
+    width: 15%;
+    min-width: 160px;
 }
+
 
 /* Aplicar los mismos anchos a las celdas del cuerpo */
-.modern-table td:nth-child(1) { width: 8%; }
-.modern-table td:nth-child(2) { width: 17%; }
-.modern-table td:nth-child(3) { width: 17%; }
-.modern-table td:nth-child(4) { width: 19%; }
-.modern-table td:nth-child(5) { width: 24%; }
-.modern-table td:nth-child(6) { width: 15%; }
+
+.modern-table td:nth-child(1) {
+    width: 8%;
+}
+
+.modern-table td:nth-child(2) {
+    width: 17%;
+}
+
+.modern-table td:nth-child(3) {
+    width: 17%;
+}
+
+.modern-table td:nth-child(4) {
+    width: 19%;
+}
+
+.modern-table td:nth-child(5) {
+    width: 24%;
+}
+
+.modern-table td:nth-child(6) {
+    width: 15%;
+}
+
 
 /* Reducir padding entre nombre y apellido */
-.modern-table td:nth-child(2), 
+
+.modern-table td:nth-child(2),
 .modern-table td:nth-child(3) {
-  padding-left: 0.75rem !important;
-  padding-right: 0.75rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
 }
+
 
 /* Asegurar que la tabla use el espacio de manera eficiente */
+
 .modern-table {
-  table-layout: fixed;
-  width: 100%;
+    table-layout: fixed;
+    width: 100%;
 }
 
+
 /* ID Badge para la vista desktop */
+
 .id-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
-  padding: 0.25rem 0.5rem !important;
-  border-radius: 0.5rem !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-  display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    display: inline-block;
+}
+
+
+/* Estilos para asegurar que los botones de acción no se corten */
+
+.actions-cell {
+    min-width: 120px !important;
+    white-space: nowrap !important;
+}
+
+.modern-actions {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+}
+
+.action-btn {
+    flex-shrink: 0 !important;
+    min-width: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+}
+
+
+/* Responsive adjustments for action buttons */
+
+@media (max-width: 1199.98px) {
+    .actions-cell {
+        min-width: 80px !important;
+    }
+    .action-btn {
+        min-width: 32px !important;
+        padding: 0.25rem 0.4rem !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .actions-cell {
+        min-width: 70px !important;
+    }
+    .action-btn {
+        min-width: 30px !important;
+        padding: 0.2rem 0.3rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+
+/* Ensure table doesn't overflow */
+
+.table-responsive {
+    overflow-x: auto !important;
+}
+
+.modern-table {
+    min-width: 600px !important;
+    table-layout: auto !important;
 }
