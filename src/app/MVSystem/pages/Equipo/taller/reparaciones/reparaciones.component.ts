@@ -115,9 +115,12 @@ export class ReparacionesComponent implements OnInit {
   if (customer) {
     // Agregar el nuevo cliente a la lista de 'customers'
     this.customers = [customer, ...this.customers];
-   this.formRegistroReparaciones.get('telefono')?.setValue(this.customer.numero_Telefono);
-
-    this.obtenerClientesPorNombreTelefono(this.customer.numero_Telefono);
+    this.formRegistroReparaciones.patchValue({
+      cliente: customer,
+      Nom: customer.nombres + ' ' + customer.apellidos,
+      Tel: customer.numero_Telefono,
+      ID_Cliente: customer.Id_Cliente || customer.id_Cliente || 0
+    });
     // Mostrar mensaje de éxito
   } else {
     // Si el campo 'telefono' está vacío, mostramos una advertencia
@@ -166,32 +169,15 @@ btnDisable() {
   this.msgValidacionesCamposFormNumericos();
 
 }
-obtenerClientesPorNombreTelefono(tel?: number) {
-
-      if(tel){
-        this.clientesService.getClientesPorNombreTelefono(tel)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(async customer => {
-
-          // await this.loadCotizacionCliente(telefono);
-          this.customer = customer[0];
-        }, error => {
-          this.toastr.error(error);
-        });
-      }
-      else{
-        const { telefono } = this.formRegistroReparaciones.value;
-        this.clientesService.getClientesPorNombreTelefono(telefono)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe(async customer => {
-
-            // await this.loadCotizacionCliente(telefono);
-            this.customer = customer[0];
-          }, error => {
-            this.toastr.error(error);
-          });
-      }
-    }
+  // Ahora la selección de cliente se maneja con onClienteChange(cliente: Cliente)
+  onClienteChange(cliente: Cliente) {
+    this.customer = cliente;
+    this.formRegistroReparaciones.patchValue({
+      Nom: cliente.nombres + ' ' + cliente.apellidos,
+      Tel: cliente.numero_Telefono,
+      ID_Cliente: cliente.Id_Cliente || cliente.id_Cliente || 0
+    });
+  }
 selectoresMarcaModeloValidator() {
 
   this.formRegistroReparaciones.get('modelo')?.setValue('');
@@ -298,4 +284,8 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
     this.toastr.error('Error', 'No se pudo generar el reporte');
   });
 }
+getClienteTelefono(cliente: any): number | string {
+    if (!cliente) return '[Teléfono]';
+    return cliente.numero_Telefono || cliente.numero_de_telefono || cliente.Numero_de_telefono || 0;
+  }
 }
