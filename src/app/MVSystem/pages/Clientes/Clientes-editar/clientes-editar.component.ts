@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Cliente, ClienteRegistro, TipoCliente, ClienteActualizacion } from 'src/app/core/interfaces/cliente.interface';
-import { TipoTelefono } from 'src/app/core/interfaces/catalogo.interface';
+import { CanalesLista, TipoTelefono } from 'src/app/core/interfaces/catalogo.interface';
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { LoginService } from 'src/app/auth/login.service';
@@ -19,9 +19,10 @@ export class ClientesEditarComponent implements OnInit {
   isLoading: boolean = true;
   isSaving: boolean = false;
   clienteId: number = 0;
-  
+
   listaTipoClientes: TipoCliente[] = [];
   listaTipoTelefonos: TipoTelefono[] = [];
+  Canales: CanalesLista[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -65,12 +66,13 @@ export class ClientesEditarComponent implements OnInit {
       // Cargar catalogos
       await Promise.all([
         this.obtenerTipoClientes(),
-        this.obtenerTipoTelefonos()
+        this.obtenerTipoTelefonos(),
+        this.obtenerCanales(null)
       ]);
-      
+
       // Cargar datos del cliente
       await this.cargarDatosCliente();
-      
+
     } catch (error) {
       this.toastr.error('Error al cargar los datos iniciales');
       console.error('Error:', error);
@@ -83,6 +85,19 @@ export class ClientesEditarComponent implements OnInit {
         .subscribe({
           next: (tipos) => {
             this.listaTipoTelefonos = tipos;
+            resolve();
+          },
+          error: (error) => reject(error)
+        });
+    });
+  }
+
+  obtenerCanales(idCanal: number | null): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.catalogosService.getCanalesLista(idCanal == null ? 0 : idCanal)
+        .subscribe({
+          next: (canales) => {
+            this.Canales = canales;
             resolve();
           },
           error: (error) => reject(error)
@@ -109,7 +124,7 @@ export class ClientesEditarComponent implements OnInit {
         .subscribe({
           next: (clientes) => {
             this.cliente = clientes.find(c => (c.Id_Cliente || c.id_Cliente) === this.clienteId) || null;
-            
+
             if (this.cliente) {
               this.llenarFormulario();
               this.isLoading = false;
@@ -134,11 +149,12 @@ export class ClientesEditarComponent implements OnInit {
 
     // Parsear la dirección
     const direccionArray = this.getClienteDireccion() ? this.getClienteDireccion().split(',') : [];
-    
+
     this.formEdicion.patchValue({
       nombre: this.getClienteNombres(),
       apellido: this.getClienteApellidos(),
       tipoCliente: this.getClienteTipoId(),
+      Canal: this.getClienteCanalId(),
       limiteCredito: parseFloat(this.getClienteLimiteCredito()) || 0,
       tipoTelefono: this.getClienteTipoTelefonoId(),
       telefono: this.formatearTelefonoParaInput(this.getClienteTelefono()),
@@ -166,13 +182,13 @@ export class ClientesEditarComponent implements OnInit {
   telefonoValidator(control: any) {
     const value = control.value;
     if (!value) return null;
-    
+
     const digitsOnly = value.replace(/\D/g, '');
-    
+
     if (digitsOnly.length === 10) {
       return null;
     }
-    
+
     return { invalidTelefono: true };
   }
 
@@ -196,7 +212,7 @@ export class ClientesEditarComponent implements OnInit {
 
   get telefonoErrorMsg(): string {
     const errors = this.formEdicion.get('telefono')?.errors;
-    
+
     if (errors?.required) {
       return 'Este campo es requerido';
     }
@@ -239,6 +255,7 @@ export class ClientesEditarComponent implements OnInit {
       Nombres: this.formEdicion.get('nombre')?.value,                       // REQUERIDO
       Apellidos: this.formEdicion.get('apellido')?.value,                   // REQUERIDO
       ID_Tipo_Cliente: Number(this.formEdicion.get('tipoCliente')?.value),  // REQUERIDO
+      ID_Canal: Number(this.formEdicion.get('iD_Canal')?.value),            // REQUERIDO
       Numero_Telefono: Number(this.formEdicion.get('telefono')?.value.replace(/\D/g, '')), // REQUERIDO
       ID_Tipo_Telefono: Number(this.formEdicion.get('tipoTelefono')?.value), // REQUERIDO
       Direccion_Detalle: direccion.filter((item: any) => item).join(', '),  // REQUERIDO
@@ -247,7 +264,7 @@ export class ClientesEditarComponent implements OnInit {
       Extencion: this.formEdicion.get('extensionNumero')?.value || null,    // OPCIONAL
       Email_Detalle: this.formEdicion.get('email')?.value || '',            // OPCIONAL
     };
-    
+
     return actualizacion;
   }
 
@@ -325,6 +342,9 @@ export class ClientesEditarComponent implements OnInit {
 
   getClienteTipoId(): number {
     return this.cliente?.iD_Tipo_Cliente || (this.cliente as any)?.id_tipo_cliente || (this.cliente as any)?.tipo_cliente_id || 1;
+  }
+    getClienteCanalId(): number {
+    return this.cliente?.iD_Canal || (this.cliente as any)?.id_canal || (this.cliente as any)?.canal_id || 1;
   }
 
   getClienteTipoTelefonoId(): number {

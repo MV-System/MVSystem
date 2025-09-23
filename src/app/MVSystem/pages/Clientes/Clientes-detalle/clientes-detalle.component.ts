@@ -42,7 +42,7 @@ export class ClientesDetalleComponent implements OnInit {
         next: (clientes) => {
           this.cliente = clientes.find(c => (c.Id_Cliente || c.id_Cliente) === this.clienteId) || null;
           this.isLoading = false;
-          
+
           if (!this.cliente) {
             this.toastr.error('Cliente no encontrado');
             this.router.navigate(['../consulta'], { relativeTo: this.route });
@@ -94,38 +94,43 @@ export class ClientesDetalleComponent implements OnInit {
   }
 
   getClienteTelefono(): number {
-    return this.cliente?.Numero_de_telefono || 
-           (this.cliente as any)?.numero_de_telefono || 
+    return this.cliente?.Numero_de_telefono ||
+           (this.cliente as any)?.numero_de_telefono ||
            this.cliente?.numero_Telefono || 0;
   }
 
   getClienteEmail(): string {
-    return this.cliente?.Email || 
-           (this.cliente as any)?.email || 
+    return this.cliente?.Email ||
+           (this.cliente as any)?.email ||
            this.cliente?.email_Detalle || '';
   }
 
   getClienteTipoDescripcion(): string {
-    return this.cliente?.Tipo_de_Cliente || 
-           (this.cliente as any)?.tipo_de_Cliente || 
+    return this.cliente?.Tipo_de_Cliente ||
+           (this.cliente as any)?.tipo_de_Cliente ||
            this.cliente?.tipo_Cliente_Descripcion || '';
+  }
+  getClienteCanal(): string {
+    return this.cliente?.iD_Canal ||
+           (this.cliente as any)?.iD_Canal ||
+           this.cliente?.canal_Nombre || '';
   }
 
   getClienteLimiteCredito(): string {
-    return this.cliente?.Limite_Credito || 
-           (this.cliente as any)?.limite_Credito || 
+    return this.cliente?.Limite_Credito ||
+           (this.cliente as any)?.limite_Credito ||
            this.cliente?.limite_Credito || '';
   }
 
   getClienteDireccion(): string {
-    return this.cliente?.Direccion || 
-           (this.cliente as any)?.direccion || 
+    return this.cliente?.Direccion ||
+           (this.cliente as any)?.direccion ||
            this.cliente?.direccion_Detalle || '';
   }
 
   getClienteExtencion(): number | null {
-    return this.cliente?.Extencion || 
-           (this.cliente as any)?.extencion || 
+    return this.cliente?.Extencion ||
+           (this.cliente as any)?.extencion ||
            this.cliente?.extencion || null;
   }
 }

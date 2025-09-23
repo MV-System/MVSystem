@@ -3,6 +3,7 @@ export interface ClienteRegistro {
   nombres: string;
   apellidos: string;
   iD_Tipo_Cliente: number;
+  iD_Canal?: number;
   limite_Credito: number;
   numero_Telefono: number;
   iD_Tipo_Telefono: number;
@@ -20,8 +21,9 @@ export interface ClienteRegistro {
 export interface ClienteActualizacion {
   ID_Cliente: number;                    // int - REQUERIDO (ID del cliente a editar)
   Nombres: string;                       // string - REQUERIDO
-  Apellidos: string;                     // string - REQUERIDO  
+  Apellidos: string;                     // string - REQUERIDO
   ID_Tipo_Cliente: number;               // int - REQUERIDO
+  ID_Canal: number;                      // int - REQUERIDO
   Numero_Telefono: number;               // long - REQUERIDO
   Limite_Credito?: string;               // string - OPCIONAL
   Extencion?: number | null;             // int? - OPCIONAL (puede ser null)
@@ -50,11 +52,13 @@ export interface Cliente {
   Apellidos?: string;
   Numero_de_telefono?: number;
   Limite_Credito?: string;
+  canal_Nombre?: string;
+  iD_Canal: number;
   Extencion?: number | null;
   Email?: string;
   Direccion?: string;
   Mensaje?: string;
-  
+
   // Campos del API actual (formato minúscula con guiones bajos)
   id_Cliente?: number;
   tipo_de_Cliente?: string;
@@ -66,7 +70,7 @@ export interface Cliente {
   email?: string;
   direccion?: string;
   mensaje?: string;
-  
+
   // Campos legacy (mantener para compatibilidad si es necesario)
   idContacto?: number;
   iD_Tipo_Cliente?: number;

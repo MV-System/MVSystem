@@ -88,6 +88,7 @@ export let APIURL = {
         },
     },
     Catalogos: {
+        canalesLista: API + 'Catalogos/Canales_Combo',
         tipoTelefonoLista: API + 'Catalogos/Tipo_Telefono_Combo',
         marcasLista: API + 'Catalogos/Marcas_Combo',
         modeloLista: API + 'Catalogos/Modelos_Combo',

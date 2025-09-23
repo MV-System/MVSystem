@@ -16,6 +16,11 @@ export interface Almacen {
   descripcion: string;
 }
 
+export interface CanalesLista {
+  iD_Canal: number;
+  canal_Nombre: string;
+}
+
 export interface ModeloEquipo {
   iD_Marca?: number;
   iD_Modelo: number;

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS, CanalesLista } from '../interfaces/catalogo.interface';
 import { Equipo } from "../interfaces/equipo.interface";
 
 
@@ -14,6 +14,9 @@ import { Equipo } from "../interfaces/equipo.interface";
 export class CatalogosService {
   constructor(private http: HttpClient) { }
 
+   getCanalesLista(IdCanal?: number): Observable<CanalesLista[]> {
+    return this.http.get<CanalesLista[]>(`${APIURL.Catalogos.canalesLista}?Id_Canal=` + IdCanal);
+  }
   getTipoTelefonoLista(): Observable<TipoTelefono[]> {
     return this.http.get<TipoTelefono[]>(APIURL.Catalogos.tipoTelefonoLista);
   }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TipoTelefono } from '../../../../core/interfaces/catalogo.interface';
+import { CanalesLista, TipoTelefono } from '../../../../core/interfaces/catalogo.interface';
 
 import { Cliente, ClienteRegistro, TipoCliente } from '../../../../core/interfaces/cliente.interface';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
@@ -15,6 +15,8 @@ import { LoginService } from 'src/app/auth/login.service';
 })
 export class ClientesRegistroComponent implements OnInit {
     @Output() customer = new EventEmitter<Cliente>();
+    // Propiedades para canales
+    listaCanales: CanalesLista[] = [];
   constructor(
     private loginService: LoginService,
     private fb: FormBuilder,
@@ -29,6 +31,7 @@ export class ClientesRegistroComponent implements OnInit {
     this.obtenerTipoTelefonos();
     this.obtenerTipoClientes();
     this.btnDisable();
+    this.obtenerCanalesLista(null);
   }
   //Properties
   nombreApellidoPattern: string = '([a-zA-ZÀ-ÿ]+)';
@@ -41,15 +44,15 @@ export class ClientesRegistroComponent implements OnInit {
   telefonoValidator(control: any) {
     const value = control.value;
     if (!value) return null;
-    
+
     // Remove any non-digit characters for validation
     const digitsOnly = value.replace(/\D/g, '');
-    
+
     // Check if we have exactly 10 digits
     if (digitsOnly.length === 10) {
       return null; // Valid
     }
-    
+
     return { invalidTelefono: true }; // Invalid
   }
 
@@ -66,6 +69,8 @@ export class ClientesRegistroComponent implements OnInit {
     nombre: ['', [Validators.required]],
     apellido: ['', Validators.required],
     tipoCliente: [1],
+    iD_Canal: [''],
+  Canal: [0],
     tipoClienteDescripcion: [""],
     limiteCredito: [0, [Validators.min(0)]],
     tipoTelefono: [1],
@@ -82,13 +87,13 @@ export class ClientesRegistroComponent implements OnInit {
   limpiarFormulario(): void {
     this.formRegistro.reset();
     this.formRegistro.controls.extensionNumero.disable();
-    
+
     // Reset to default values
     this.formRegistro.patchValue({
       tipoTelefono: '', // Reset phone type
       // Add any other default values if needed
     });
-    
+
     this.toastr.info('Formulario limpiado correctamente', 'Información');
   }
 
@@ -104,6 +109,7 @@ export class ClientesRegistroComponent implements OnInit {
       nombres: this.formRegistro.get('nombre')?.value,
       apellidos: this.formRegistro.get('apellido')?.value,
       iD_Tipo_Cliente: Number(this.formRegistro.get('tipoCliente')?.value),
+      iD_Canal: Number(this.formRegistro.get('Canal')?.value),
       limite_Credito: (this.formRegistro.get('limiteCredito')?.value == null) ?
        0 :  this.formRegistro.get('limiteCredito')?.value,
       numero_Telefono: Number(this.formRegistro.get('telefono')?.value),
@@ -150,7 +156,7 @@ export class ClientesRegistroComponent implements OnInit {
    */
   get telefonoErrorMsg(): string {
     const errors = this.formRegistro.get('telefono')?.errors;
-    
+
     if (errors?.required) {
       return 'Este campo es requerido';
     }
@@ -194,6 +200,11 @@ export class ClientesRegistroComponent implements OnInit {
         this.listaTipoTelefonos = tipoTelefono;
       });
   }
+  obtenerCanalesLista(idCanal: number | null) {
+    this.catalogosService.getCanalesLista(idCanal == null ? 0 : idCanal).subscribe((canales) => {
+      this.listaCanales = canales;
+    });
+}
   /**
    * It's a function that calls a service that returns an observable, which is then subscribed to and the
    * result is assigned to a variable.

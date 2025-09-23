@@ -26,14 +26,13 @@
                 <div class="card">
                     <div class="card-header bg-warning text-dark">
                         <h5 class="mb-0">
-                            <i class="bi bi-pencil me-2"></i>
-                            Editando: {{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}
+                            <i class="bi bi-pencil me-2"></i> Editando: {{cliente.nombres | titlecase}} {{cliente.apellidos | titlecase}}
                         </h5>
                     </div>
-                    
+
                     <div class="card-body">
                         <form [formGroup]="formEdicion" (ngSubmit)="actualizarCliente()" class="row g-3 needs-validation" novalidate>
-                            
+
                             <!-- Tipo Cliente -->
                             <div class="col-md-4">
                                 <label class="form-label">Tipo cliente</label>
@@ -44,15 +43,22 @@
                                     </option>
                                 </select>
                             </div>
-                            
+                            <!-- Canal -->
+                            <div class="col-md-4">
+                                <label class="form-label">Canal</label>
+                                <select formControlName="Canal" class="form-select">
+                                    <option *ngFor="let canal of Canales"
+                                            [value]="canal.iD_Canal">
+                                        {{canal.canal_Nombre}}
+                                    </option>
+                                </select>
+                            </div>
                             <div class="col-md-8"></div>
 
                             <!-- Nombre -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="nombre" 
-                                       placeholder="Ingrese el nombre"
-                                       [ngClass]="{'is-invalid':validarCampos('nombre')}">
+                                <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese el nombre" [ngClass]="{'is-invalid':validarCampos('nombre')}">
                                 <div class="required-field" *ngIf="validarCampos('nombre')">
                                     Este campo es requerido.
                                 </div>
@@ -61,9 +67,7 @@
                             <!-- Apellido -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido <span class="required-field">*</span></label>
-                                <input type="text" class="form-control" formControlName="apellido" 
-                                       placeholder="Ingrese el apellido"
-                                       [ngClass]="{'is-invalid':validarCampos('apellido')}">
+                                <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese el apellido" [ngClass]="{'is-invalid':validarCampos('apellido')}">
                                 <div class="required-field" *ngIf="validarCampos('apellido')">
                                     Este campo es requerido.
                                 </div>
@@ -83,9 +87,7 @@
                             <!-- Teléfono -->
                             <div class="col-md-6">
                                 <label class="form-label">Teléfono: <span class="required-field">*</span></label>
-                                <input class="form-control" formControlName="telefono" type="text" mask="000-000-0000" 
-                                       placeholder="Ej: 809-555-1234"
-                                       [ngClass]="{'is-invalid':validarCampos('telefono')}" />
+                                <input class="form-control" formControlName="telefono" type="text" mask="000-000-0000" placeholder="Ej: 809-555-1234" [ngClass]="{'is-invalid':validarCampos('telefono')}" />
                                 <div class="required-field" *ngIf="validarCampos('telefono')">
                                     {{telefonoErrorMsg}}
                                 </div>
@@ -96,7 +98,7 @@
                                 <label class="form-label">&nbsp;</label>
                                 <div class="form-check">
                                     <label>
-                                        <input class="form-check-input" type="checkbox" 
+                                        <input class="form-check-input" type="checkbox"
                                                [checked]="!formEdicion.controls['extensionNumero'].disabled"
                                                (change)="onCheckboxChange($event)">
                                         Ext. No.:
@@ -106,16 +108,13 @@
 
                             <div class="col-md-4">
                                 <label class="form-label">&nbsp;</label>
-                                <input type="text" class="form-control" placeholder="Inserte la extensión" 
-                                       formControlName="extensionNumero">
+                                <input type="text" class="form-control" placeholder="Inserte la extensión" formControlName="extensionNumero">
                             </div>
 
                             <!-- Límite de Crédito -->
                             <div class="col-md-3">
                                 <label class="form-label">Límite crédito</label>
-                                <input type="number" min="0" step="0.01" placeholder="0.00" 
-                                       class="form-control" formControlName="limiteCredito"
-                                       [ngClass]="{'is-invalid':formEdicion.get('limiteCredito')?.errors}">
+                                <input type="number" min="0" step="0.01" placeholder="0.00" class="form-control" formControlName="limiteCredito" [ngClass]="{'is-invalid':formEdicion.get('limiteCredito')?.errors}">
                                 <div class="required-field" *ngIf="formEdicion.get('limiteCredito')?.errors">
                                     {{limiteCreditoErrorMsg}}
                                 </div>
@@ -124,9 +123,7 @@
                             <!-- Email -->
                             <div class="col-12">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" formControlName="email" 
-                                       placeholder="ejemplo@correo.com"
-                                       [ngClass]="{'is-invalid':validarCamposEmail('email')}">
+                                <input type="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com" [ngClass]="{'is-invalid':validarCamposEmail('email')}">
                                 <div class="required-field" *ngIf="validarCamposEmail('email')">
                                     {{emailErrorMsg}}
                                 </div>
