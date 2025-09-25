@@ -163,40 +163,28 @@ export class ClientesConsultaComponent implements OnInit {
    * Helper methods for data compatibility between old and new API format
    */
   getClienteId(cliente: Cliente): number {
-    return cliente.Id_Cliente || cliente.id_Cliente || 0;
+    return cliente.id_Cliente || 0;
   }
 
   getClienteNombres(cliente: Cliente): string {
-    return cliente.Nombres || cliente.nombres || '';
+    return cliente.nombres || '';
   }
 
   getClienteApellidos(cliente: Cliente): string {
-    return cliente.Apellidos || cliente.apellidos || '';
+    return  cliente.apellidos || '';
   }
 
   getClienteTelefono(cliente: Cliente): number {
     // Intentar múltiples variaciones del campo teléfono
-    const telefono = cliente.Numero_de_telefono ||
-                    (cliente as any).numero_de_telefono ||
-                    cliente.numero_Telefono ||
-                    (cliente as any).Numero_Telefono ||
-                    (cliente as any)['Numero de telefono'] ||
-                    (cliente as any)['numero de telefono'] ||
-                    0;
-
-    return telefono;
+    return cliente.numero_de_telefono || 0;
   }
 
   getClienteEmail(cliente: Cliente): string {
-    return cliente.Email ||
-           (cliente as any).email ||
-           cliente.email_Detalle || '';
+    return cliente.email ||'';
   }
 
   getClienteTipoDescripcion(cliente: Cliente): string {
-    return cliente.Tipo_de_Cliente ||
-           (cliente as any).tipo_de_Cliente ||
-           cliente.tipo_Cliente_Descripcion || '';
+    return cliente.tipo_de_Cliente || '';
   }
 
 }

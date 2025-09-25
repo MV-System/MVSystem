@@ -39,6 +39,7 @@ export class ClientesEditarComponent implements OnInit {
       tipoCliente: [1],
       limiteCredito: [0, [Validators.min(0)]],
       tipoTelefono: [1],
+      Canal: [1],
       telefono: ['', [Validators.required, this.telefonoValidator]],
       extensionNumero: [''],
       email: ['', [Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
@@ -59,6 +60,7 @@ export class ClientesEditarComponent implements OnInit {
         this.router.navigateByUrl('/home/clientes/consulta');
       }
     });
+    console.log('Cliente Tipo:', this.getClienteTipoId());
   }
 
   async cargarDatosIniciales(): Promise<void> {
@@ -81,10 +83,10 @@ export class ClientesEditarComponent implements OnInit {
 
   obtenerTipoClientes(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.catalogosService.getTipoTelefonoLista()
+      this.clientesService.getTipoClienteLista()
         .subscribe({
           next: (tipos) => {
-            this.listaTipoTelefonos = tipos;
+            this.listaTipoClientes = tipos;
             resolve();
           },
           error: (error) => reject(error)
@@ -107,10 +109,10 @@ export class ClientesEditarComponent implements OnInit {
 
   obtenerTipoTelefonos(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.clientesService.getTipoClienteLista()
+      this.catalogosService.getTipoTelefonoLista()
         .subscribe({
           next: (tipos) => {
-            this.listaTipoClientes = tipos;
+            this.listaTipoTelefonos = tipos;
             resolve();
           },
           error: (error) => reject(error)
@@ -123,7 +125,7 @@ export class ClientesEditarComponent implements OnInit {
       this.clientesService.getClientesPorNombreTelefono('')
         .subscribe({
           next: (clientes) => {
-            this.cliente = clientes.find(c => (c.Id_Cliente || c.id_Cliente) === this.clienteId) || null;
+            this.cliente = clientes.find(c => c.id_Cliente=== this.clienteId) || null;
 
             if (this.cliente) {
               this.llenarFormulario();
@@ -156,7 +158,7 @@ export class ClientesEditarComponent implements OnInit {
       tipoCliente: this.getClienteTipoId(),
       Canal: this.getClienteCanalId(),
       limiteCredito: parseFloat(this.getClienteLimiteCredito()) || 0,
-      tipoTelefono: this.getClienteTipoTelefonoId(),
+     // tipoTelefono: this.getClienteTipoTelefonoId(),
       telefono: this.formatearTelefonoParaInput(this.getClienteTelefono()),
       extensionNumero: this.getClienteExtencion() || '',
       email: this.getClienteEmail() || '',
@@ -255,7 +257,7 @@ export class ClientesEditarComponent implements OnInit {
       Nombres: this.formEdicion.get('nombre')?.value,                       // REQUERIDO
       Apellidos: this.formEdicion.get('apellido')?.value,                   // REQUERIDO
       ID_Tipo_Cliente: Number(this.formEdicion.get('tipoCliente')?.value),  // REQUERIDO
-      ID_Canal: Number(this.formEdicion.get('iD_Canal')?.value),            // REQUERIDO
+      ID_Canal: Number(this.formEdicion.get('Canal')?.value),            // REQUERIDO
       Numero_Telefono: Number(this.formEdicion.get('telefono')?.value.replace(/\D/g, '')), // REQUERIDO
       ID_Tipo_Telefono: Number(this.formEdicion.get('tipoTelefono')?.value), // REQUERIDO
       Direccion_Detalle: direccion.filter((item: any) => item).join(', '),  // REQUERIDO
@@ -305,49 +307,51 @@ export class ClientesEditarComponent implements OnInit {
    * Helper methods for data compatibility between old and new API format
    */
   getClienteId(): number {
-    return this.cliente?.Id_Cliente || this.cliente?.id_Cliente || (this.cliente as any)?.id_cliente || 0;
+    return this.cliente?.id_Cliente || 0;
   }
 
   getClienteNombres(): string {
-    return this.cliente?.Nombres || this.cliente?.nombres || (this.cliente as any)?.nombre || '';
+    return this.cliente?.nombres || '';
   }
 
   getClienteApellidos(): string {
-    return this.cliente?.Apellidos || this.cliente?.apellidos || (this.cliente as any)?.apellido || '';
+    return this.cliente?.apellidos || '';
   }
 
   getClienteTelefono(): number {
-    return this.cliente?.Numero_de_telefono || this.cliente?.numero_Telefono || (this.cliente as any)?.numero_de_telefono || 0;
+    return this.cliente?.numero_de_telefono || 0;
   }
 
   getClienteEmail(): string {
-    return this.cliente?.Email || this.cliente?.email_Detalle || (this.cliente as any)?.email || '';
+    return this.cliente?.email || '';
   }
 
   getClienteTipoDescripcion(): string {
-    return this.cliente?.Tipo_de_Cliente || this.cliente?.tipo_Cliente_Descripcion || (this.cliente as any)?.tipo_de_cliente || '';
+    return this.cliente?.tipo_de_Cliente || '';
   }
 
   getClienteLimiteCredito(): string {
-    return this.cliente?.Limite_Credito || this.cliente?.limite_Credito || (this.cliente as any)?.limite_credito || '0';
+    return this.cliente?.limite_Credito || '0';
   }
 
   getClienteDireccion(): string {
-    return this.cliente?.Direccion || this.cliente?.direccion_Detalle || (this.cliente as any)?.direccion || '';
+    return this.cliente?.direccion || '';
   }
 
   getClienteExtencion(): number | null {
-    return this.cliente?.Extencion || this.cliente?.extencion || (this.cliente as any)?.extension || null;
+    return this.cliente?.extencion || null;
   }
 
   getClienteTipoId(): number {
-    return this.cliente?.iD_Tipo_Cliente || (this.cliente as any)?.id_tipo_cliente || (this.cliente as any)?.tipo_cliente_id || 1;
+    return this.cliente?.iD_Tipo_Cliente || 0;
   }
-    getClienteCanalId(): number {
-    return this.cliente?.iD_Canal || (this.cliente as any)?.id_canal || (this.cliente as any)?.canal_id || 1;
+  getClienteCanalId(): number {
+    return this.cliente?.iD_Canal || 1;
   }
-
-  getClienteTipoTelefonoId(): number {
-    return this.cliente?.iD_Tipo_Telefono || (this.cliente as any)?.id_tipo_telefono || (this.cliente as any)?.tipo_telefono_id || 1;
+getClienteCanalDescripcion(): string {
+    return this.cliente?.canal_Nombre || '';
   }
+  // getClienteTipoTelefonoId(): number {
+  //   return this.cliente?.iD_Tipo_Telefono || 1;
+  // }
 }

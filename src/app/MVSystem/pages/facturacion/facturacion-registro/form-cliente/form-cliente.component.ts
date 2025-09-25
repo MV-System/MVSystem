@@ -70,7 +70,7 @@ export class FormClienteComponent implements OnInit {
         this.addCustomer();
       }
       else{
-        
+
       }
   }
 
@@ -128,12 +128,12 @@ export class FormClienteComponent implements OnInit {
   }
   addCustomer() {
     const model: ClienteRegistro = this.modeloRegistroCliente();
-    
+
     if (this.form.valid) {
       this.Loading.showLoading();
       this.customerService.postCliente(model)
         .subscribe((customerResp: Cliente) => {
-          const mensaje = customerResp.Mensaje || customerResp.mensaje || '';
+          const mensaje = customerResp.mensaje || customerResp.mensaje || '';
           if (mensaje.includes('ya está')) {
             this.toastr.error(mensaje, '',
               { closeButton: true, progressBar: true });
@@ -142,9 +142,9 @@ export class FormClienteComponent implements OnInit {
             this.toastr.success(mensaje, '',
               { closeButton: true, progressBar: true });
               this.customer.emit(customerResp);
-              
+
             this.isOpenModal = false;
-            
+
             this.form.reset({
               iD_Tipo_Cliente: 1,
               iD_Tipo_Telefono: 1
@@ -157,7 +157,7 @@ export class FormClienteComponent implements OnInit {
           this.toastr.error('Upss! Ha ocurrido un error')
           this.toastr.error('',err.error)
           console.log(err);
-          
+
         });
     }
     else {

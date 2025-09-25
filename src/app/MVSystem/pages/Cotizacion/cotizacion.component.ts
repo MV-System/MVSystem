@@ -103,7 +103,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
         .subscribe(cliente => {
 
           if (cliente.length > 0) {
-            cliente.forEach(({ nombres, apellidos, numero_Telefono, id_Cliente }) => {
+            cliente.forEach(({ nombres, apellidos, numero_de_telefono, id_Cliente }) => {
               this.form.controls.nombre.setValue(nombres);
               this.form.controls.apellido.setValue(apellidos);
               this.form.controls.idCliente.setValue(id_Cliente);

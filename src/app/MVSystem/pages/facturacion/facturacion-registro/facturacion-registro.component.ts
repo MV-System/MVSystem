@@ -394,7 +394,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       if (this.customer) {
         this.customer.nombres = '';
         this.customer.apellidos = '';
-        this.customer.numero_Telefono = 0;
+        this.customer.numero_de_telefono = 0;
       }
       this.cleanAmounts();
       this.isCredit = false;
@@ -459,9 +459,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     if (customer) {
       // Agregar el nuevo cliente a la lista de 'customers'
       this.customers = [customer, ...this.customers];
-     this.form.get('telefono')?.setValue(this.customer.numero_Telefono);
+     this.form.get('telefono')?.setValue(this.customer.numero_de_telefono);
 
-      this.obtenerClientesPorNombreTelefono(this.customer.numero_Telefono);
+      this.obtenerClientesPorNombreTelefono(this.customer.numero_de_telefono);
       // Mostrar mensaje de éxito
     } else {
       // Si el campo 'telefono' está vacío, mostramos una advertencia
@@ -677,7 +677,7 @@ else
 ///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {
       numeroFactura: this.facturaNumber,
-      idCliente: this.customer.Id_Cliente || this.customer.id_Cliente || 0,
+      idCliente: this.customer.id_Cliente || 0,
       idVendedor: Number(this.form.get('vendedor')?.value),
       idAlmacen: Number(this.loginService.getUserIdSucursal),
       idTipoFactura: Number(this.form.get('tipoFactura')?.value),
@@ -1111,10 +1111,7 @@ printFacturaMini() {
    * Helper method to get client phone number from different API response formats
    */
   getClienteTelefono(cliente: Cliente): number {
-    return cliente?.Numero_de_telefono || 
-           cliente?.numero_Telefono || 
-           cliente?.numero_de_telefono || 
-           0;
+    return  cliente?.numero_de_telefono || 0;
   }
 
 }

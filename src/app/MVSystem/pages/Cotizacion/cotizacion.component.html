@@ -22,9 +22,8 @@
                             <!-- --------------- Nombre Cliente --------------- -->
                             <div class="row">
                                 <ng-select formControlName="telefono" (change)="getClientesPorNombreTelefono()">
-                                    <ng-option *ngFor="let cliente of clientes" [value]="cliente.numero_Telefono">
-                                        {{ cliente.nombres }} {{ cliente.apellidos }} -
-                                        {{ cliente.numero_Telefono }}
+                                    <ng-option *ngFor="let cliente of clientes" [value]="cliente.numero_de_telefono">
+                                        {{ cliente.nombres }} {{ cliente.apellidos }} - {{ cliente.numero_de_telefono }}
                                     </ng-option>
                                 </ng-select>
                             </div>
@@ -51,16 +50,8 @@
                                         Teléfono:
                                         <span class="required-field">*</span>
                                     </label>
-                                    <input class="form-control" 
-                                           required
-                                           type="text" 
-                                           mask="000-000-0000"
-                                           formControlName="telefono" 
-                                           (input)="searchCliente()" 
-                                           [value]="form.value.telefono" 
-                                           [ngClass]="{ 'is-invalid': validarCampos('telefono') }" />
-                                    <div class="required-field" 
-                                        [ngClass]="{   'invalid-feedback': !validarCampos('telefono')}">
+                                    <input class="form-control" required type="text" mask="000-000-0000" formControlName="telefono" (input)="searchCliente()" [value]="form.value.telefono" [ngClass]="{ 'is-invalid': validarCampos('telefono') }" />
+                                    <div class="required-field" [ngClass]="{   'invalid-feedback': !validarCampos('telefono')}">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -82,9 +73,7 @@
                                 <!-- --------------- Vendedores --------------- -->
                                 <div class="col-md-6">
                                     <label class="form-label">Vendedor <span class="required-field">*</span></label>
-                                    <select formControlName="vendedor"
-                                        [ngClass]="{ 'input-error': validarCampos('vendedor') }" required
-                                        class="form-select">
+                                    <select formControlName="vendedor" [ngClass]="{ 'input-error': validarCampos('vendedor') }" required class="form-select">
                                         <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                                             {{ vendedor.nombres }}
                                         </option>
@@ -97,9 +86,7 @@
                                 <!-- --------------- Tipo factura --------------- -->
                                 <div class="col-md-6">
                                     <label class="form-label">Tipo Factura</label>
-                                    <select class="form-select"
-                                        [ngClass]="{ 'input-error': validarCampos('tipoFactura') }"
-                                        formControlName="tipoFactura">
+                                    <select class="form-select" [ngClass]="{ 'input-error': validarCampos('tipoFactura') }" formControlName="tipoFactura">
                                         <option *ngFor="let TipoFactura of facturaTipos"
                                             [value]="TipoFactura.iD_Tipo_Factura">
                                             {{ TipoFactura.descripcion_Factura_Tipo }}
@@ -112,11 +99,7 @@
                                 <!-- --------------- Fecha de facturacion --------------- -->
                                 <div class="col-md-6">
                                     <label class="form-label"> Fecha de facturacion: </label>
-                                    <input class="form-control" 
-                                            type="date" 
-                                            required 
-                                            [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" 
-                                            formControlName="fechaFacturacion" />
+                                    <input class="form-control" type="date" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
                                     <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
                                         Este campo es requerido.
                                     </div>
@@ -124,10 +107,7 @@
                                 <!-- --------------- Fecha limite de pago --------------- -->
                                 <div class="col-md-6">
                                     <label class="form-label"> Fecha limite de pago: </label>
-                                    <input class="form-control" 
-                                            required
-                                            [ngClass]="{   'input-error': validarCampos('fechaLimitePago') }" 
-                                            formControlName="fechaLimitePago" type="date" />
+                                    <input class="form-control" required [ngClass]="{   'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" type="date" />
                                     <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
                                         Este campo es requerido.
                                     </div>
@@ -135,8 +115,7 @@
                                 <!-- --------------- Tipo de pago --------------- -->
                                 <div class="col-md-6">
                                     <label class="form-label"> Tipo de pago: </label>
-                                    <select formControlName="tipoPago" class="form-select"
-                                        (change)="desactivarActivarFechaLimitepago()">
+                                    <select formControlName="tipoPago" class="form-select" (change)="desactivarActivarFechaLimitepago()">
                                         <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
                                             {{ TipoPago.descripcion_Tipo_Pagos }}
                                         </option>
@@ -184,8 +163,7 @@
                                         <label>Tipo de comprobante:  </label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select formControlName="comprobante" class="form-select"
-                                            (change)="onCheckboxChangeFactura()">
+                                        <select formControlName="comprobante" class="form-select" (change)="onCheckboxChangeFactura()">
                                             <option *ngFor="let tipoComprobante of comprobanteTipos"
                                                 [value]="tipoComprobante.nfcTipoNumero">
                                                 {{ tipoComprobante.nfcTipoDescripcion }}
@@ -211,20 +189,11 @@
                                     <button type="button" class="btn btn-success" (click)="agregarArticulo()">
                                         Agregar Artículo
                                     </button>
-                                    <app-cotizacion-list 
-                                        [aplicarItbis]="aplicarItbis"
-                                        [articulos]="articulos" 
-                                        [tipoFactura]="tipoFactura" 
-                                        [form]="form"
-                                        [itbis]="itbis"
-                                        (onArticuloValue)="onArticuloValue = $event">
-                                    </app-cotizacion-list>              
+                                    <app-cotizacion-list [aplicarItbis]="aplicarItbis" [articulos]="articulos" [tipoFactura]="tipoFactura" [form]="form" [itbis]="itbis" (onArticuloValue)="onArticuloValue = $event">
+                                    </app-cotizacion-list>
                                 </div>
                                 <div>
-                                    <button type="button" 
-                                            class="button-imprimir-reporte" 
-                                            [disabled]="form.invalid"
-                                            (click)="imprimir()">
+                                    <button type="button" class="button-imprimir-reporte" [disabled]="form.invalid" (click)="imprimir()">
                                         <i class="bi bi-printer"></i>
                                         Imprimir
                                     </button>

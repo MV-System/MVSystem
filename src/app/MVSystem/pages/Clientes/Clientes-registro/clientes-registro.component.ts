@@ -231,7 +231,7 @@ export class ClientesRegistroComponent implements OnInit {
           next: (clienteInsertado: Cliente) => {
             this.clientesListar = clienteInsertado;
             this.isLoading = false;
-            const mensaje = clienteInsertado.Mensaje || clienteInsertado.mensaje || '';
+            const mensaje = clienteInsertado.mensaje || '';
             if (mensaje.includes('ya está')) {
               this.toastr.error(mensaje, '',
                 { closeButton: true, progressBar: true });

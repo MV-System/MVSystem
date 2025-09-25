@@ -96,7 +96,7 @@ export class ReparacionesComponent implements OnInit {
   modeloRegistroReparacion() {
     const model: RegistroReparaciones = {
      IMEI: this.formRegistroReparaciones.get('IMEI')?.value,
-     ID_Cliente: this.customer.Id_Cliente || this.customer.id_Cliente || 0,
+     ID_Cliente: this.customer.id_Cliente || 0,
      Detalle_Reparacion: String(this.formRegistroReparaciones.get('Detalle_Reparacion')?.value),
      Observaciones: String(this.formRegistroReparaciones.get('Observaciones')?.value),
      Costo: Number(this.formRegistroReparaciones.get('Costo')?.value),
@@ -118,8 +118,8 @@ export class ReparacionesComponent implements OnInit {
     this.formRegistroReparaciones.patchValue({
       cliente: customer,
       Nom: customer.nombres + ' ' + customer.apellidos,
-      Tel: customer.numero_Telefono,
-      ID_Cliente: customer.Id_Cliente || customer.id_Cliente || 0
+      Tel: customer.numero_de_telefono,
+      ID_Cliente: customer.id_Cliente || 0
     });
     // Mostrar mensaje de éxito
   } else {
@@ -174,8 +174,8 @@ btnDisable() {
     this.customer = cliente;
     this.formRegistroReparaciones.patchValue({
       Nom: cliente.nombres + ' ' + cliente.apellidos,
-      Tel: cliente.numero_Telefono,
-      ID_Cliente: cliente.Id_Cliente || cliente.id_Cliente || 0
+      Tel: cliente.numero_de_telefono,
+      ID_Cliente: cliente.id_Cliente || 0
     });
   }
 selectoresMarcaModeloValidator() {

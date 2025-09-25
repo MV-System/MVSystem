@@ -33,7 +33,7 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <ng-select formControlName="cliente" (change)="onClienteChange($event)" [clearable]="false" [ngClass]="{ 'is-invalid': validarCampos('cliente') }" class="modern-select-ng flex-grow-1">
                                         <ng-option *ngFor="let customer of customers" [value]="customer">
-                                            {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_Telefono }}
+                                            {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ customer.numero_de_telefono }}
                                         </ng-option>
                                     </ng-select>
                                     <button class="btn btn-secondary" type="button" (click)="onAdd()" title="Agregar cliente">

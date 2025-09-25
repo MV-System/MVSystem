@@ -29,19 +29,17 @@ describe('FacturacionRegistroComponent', () => {
       id_Cliente: 1,
       nombres: 'Juan',
       apellidos: 'Pérez',
-      Numero_de_telefono: 8091234567,
-      numero_Telefono: 8091234567,
       numero_de_telefono: 8091234567,
-      tipo_de_Cliente: 'Por Mayor'
+      tipo_de_Cliente: 'Por Mayor',
+        iD_Canal: 1
     },
     {
       id_Cliente: 2,
       nombres: 'María',
       apellidos: 'González',
-      Numero_de_telefono: 8097654321,
-      numero_Telefono: 8097654321,
       numero_de_telefono: 8097654321,
-      tipo_de_Cliente: 'Por Menor'
+      tipo_de_Cliente: 'Por Menor',
+      iD_Canal: 1
     }
   ];
 
@@ -90,7 +88,7 @@ describe('FacturacionRegistroComponent', () => {
       toastrService: jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']),
       vendedorService: jasmine.createSpyObj('VendedorService', ['getVendedorLista']),
       catalogosService: jasmine.createSpyObj('CatalogosService', [
-        'getTipoFacturaLista', 
+        'getTipoFacturaLista',
         'getTipoPagoLista',
         'getGarantiaLista',
         'getAsumeItbisLista',
@@ -173,38 +171,39 @@ describe('FacturacionRegistroComponent', () => {
 
   describe('getClienteTelefono - CRITICAL BUG PREVENTION', () => {
     it('should return phone number from Numero_de_telefono field (highest priority)', () => {
-      const cliente: Cliente = { 
-        Numero_de_telefono: 8091111111,
-        numero_Telefono: 8092222222,
-        numero_de_telefono: 8093333333
+      const cliente: Cliente = {
+        numero_de_telefono: 8093333333,
+          iD_Canal: 1
       };
-      
-      expect(component.getClienteTelefono(cliente)).toBe(8091111111);
+
+      expect(component.getClienteTelefono(cliente)).toBe(8093333333);
     });
 
-    it('should return phone number from numero_Telefono field when Numero_de_telefono not available', () => {
-      const cliente: Cliente = { 
-        numero_Telefono: 8092222222,
-        numero_de_telefono: 8093333333
+    it('should return phone number from numero_de_telefono field when Numero_de_telefono not available', () => {
+      const cliente: Cliente = {
+        numero_de_telefono: 8092222222,
+          iD_Canal: 1
       };
-      
+
       expect(component.getClienteTelefono(cliente)).toBe(8092222222);
     });
 
     it('should return phone number from numero_de_telefono field when others not available', () => {
-      const cliente: Cliente = { 
-        numero_de_telefono: 8093333333
+      const cliente: Cliente = {
+        numero_de_telefono: 8093333333,
+        iD_Canal: 1
       };
-      
+
       expect(component.getClienteTelefono(cliente)).toBe(8093333333);
     });
 
     it('should return 0 when no phone number is available', () => {
-      const cliente: Cliente = { 
-        nombres: 'Test', 
-        apellidos: 'Cliente' 
+      const cliente: Cliente = {
+        nombres: 'Test',
+        apellidos: 'Cliente',
+        iD_Canal: 1
       };
-      
+
       expect(component.getClienteTelefono(cliente)).toBe(0);
     });
 
@@ -214,16 +213,17 @@ describe('FacturacionRegistroComponent', () => {
     });
 
     it('should handle empty cliente object', () => {
-      const cliente: Cliente = {};
-      
+  const cliente: Cliente = { iD_Canal: 1 };
+
       expect(component.getClienteTelefono(cliente)).toBe(0);
     });
 
     it('should handle string phone numbers (API compatibility)', () => {
       const cliente: any = {
-        numero_de_telefono: '8091234567'
+        numero_de_telefono: '8091234567',
+        iD_Canal: 1
       };
-      
+
       const resultado = component.getClienteTelefono(cliente);
       // Should handle string conversion
       expect(resultado).toBeTruthy();
@@ -233,9 +233,10 @@ describe('FacturacionRegistroComponent', () => {
     it('should handle null phone number values', () => {
       const cliente: Cliente = {
         nombres: 'Test',
-        numero_de_telefono: null as any
+        numero_de_telefono: null as any,
+        iD_Canal: 1
       };
-      
+
       expect(component.getClienteTelefono(cliente)).toBe(0);
     });
   });
@@ -243,15 +244,15 @@ describe('FacturacionRegistroComponent', () => {
   describe('Regression Tests - Phone Number Display Bug', () => {
     it('should NEVER return undefined for phone number display', () => {
       const testCases = [
-        { Numero_de_telefono: 8091234567 },
-        { numero_Telefono: 8097654321 },
-        { numero_de_telefono: 8095555555 },
-        { nombres: 'Sin telefono' } as Cliente,
+        { Numero_de_telefono: 8091234567, iD_Canal: 1 },
+        { numero_Telefono: 8097654321, iD_Canal: 1 },
+        { numero_de_telefono: 8095555555, iD_Canal: 1 },
+        { nombres: 'Sin telefono', iD_Canal: 1 } as Cliente,
         null as any,
         undefined as any,
-        {} as Cliente
+        { iD_Canal: 1 } as Cliente
       ];
-      
+
       testCases.forEach((testCase, index) => {
         const resultado = component.getClienteTelefono(testCase);
         expect(resultado).toBeDefined(`Test case ${index} returned undefined`);
@@ -261,23 +262,23 @@ describe('FacturacionRegistroComponent', () => {
     });
 
     it('should provide fallback value for template rendering', () => {
-      const clienteVacio: Cliente = {};
+  const clienteVacio: Cliente = { iD_Canal: 1 };
       const phone = component.getClienteTelefono(clienteVacio);
-      
+
       // Template logic: phoneNumber === 0 ? '[Teléfono]' : phoneNumber
       const displayValue = phone === 0 ? '[Teléfono]' : phone;
-      
+
       expect(displayValue).toBeDefined();
       expect(displayValue).toBe('[Teléfono]');
     });
 
     it('should correctly display actual phone numbers in template context', () => {
-      const clienteConTelefono: Cliente = { Numero_de_telefono: 8091234567 };
+  const clienteConTelefono: Cliente = { numero_de_telefono: 8091234567, iD_Canal: 1 };
       const phone = component.getClienteTelefono(clienteConTelefono);
-      
-      // Template logic: phoneNumber === 0 ? '[Teléfono]' : phoneNumber  
+
+      // Template logic: phoneNumber === 0 ? '[Teléfono]' : phoneNumber
       const displayValue = phone === 0 ? '[Teléfono]' : phone;
-      
+
       expect(displayValue).toBe(8091234567);
       expect(displayValue).not.toBe('[Teléfono]');
     });
@@ -286,11 +287,10 @@ describe('FacturacionRegistroComponent', () => {
   describe('API Compatibility Tests', () => {
     it('should handle different API response formats', () => {
       const formatosVariados = [
-        { Numero_de_telefono: 1111111111 },
-        { numero_Telefono: 2222222222 },
-        { numero_de_telefono: 3333333333 }
+        { numero_de_telefono: 1111111111, iD_Canal: 1 },
+        { numero_de_telefono: 2222222222, iD_Canal: 1 },
+        { numero_de_telefono: 3333333333, iD_Canal: 1 }
       ];
-      
       formatosVariados.forEach((cliente, index) => {
         const phone = component.getClienteTelefono(cliente);
         expect(phone).toBeGreaterThan(0, `Format ${index} should have valid phone`);
@@ -300,10 +300,9 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should handle mixed case field names from different API versions', () => {
       const mixedCaseCliente: any = {
-        Numero_De_Telefono: 8091234567, // This won't match our current logic
         numero_de_telefono: 8095555555   // This should match
       };
-      
+
       // Should get the field that matches our current implementation
       expect(component.getClienteTelefono(mixedCaseCliente)).toBe(8095555555);
     });
@@ -328,9 +327,9 @@ describe('FacturacionRegistroComponent', () => {
     it('should call ngOnInit and initialize data', () => {
       spyOn(component, 'obtenerItbis');
       spyOn(component, 'obtenerClientes');
-      
+
       component.ngOnInit();
-      
+
       expect(component.obtenerItbis).toHaveBeenCalled();
       expect(component.obtenerClientes).toHaveBeenCalled();
     });
@@ -338,9 +337,9 @@ describe('FacturacionRegistroComponent', () => {
     it('should handle destroy properly', () => {
       spyOn(component['destroy$'], 'next');
       spyOn(component['destroy$'], 'unsubscribe');
-      
+
       component.ngOnDestroy();
-      
+
       expect(component['destroy$'].next).toHaveBeenCalledWith(true);
       expect(component['destroy$'].unsubscribe).toHaveBeenCalled();
     });
@@ -373,7 +372,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should have required validators on critical fields', () => {
       const telefonoControl = component.form.get('telefono');
       const vendedorControl = component.form.get('vendedor');
-      
+
       expect(telefonoControl?.hasError('required')).toBeTrue();
       expect(vendedorControl?.hasError('required')).toBeTrue();
     });
@@ -398,7 +397,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should validate date change permission', () => {
       const mockValidatorService = TestBed.inject(ValidatorPermissionService) as jasmine.SpyObj<ValidatorPermissionService>;
       mockValidatorService.validateUserRole.and.returnValue(true);
-      
+
       expect(component.CambiarFechaFactura()).toBeTrue();
       expect(mockValidatorService.validateUserRole).toHaveBeenCalledWith('CAMBIAR_FECHA_FACTURA');
     });
@@ -406,7 +405,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should validate process invoice permission', () => {
       const mockValidatorService = TestBed.inject(ValidatorPermissionService) as jasmine.SpyObj<ValidatorPermissionService>;
       mockValidatorService.validateUserRole.and.returnValue(false);
-      
+
       expect(component.BotonProcesarFactura()).toBeFalse();
       expect(mockValidatorService.validateUserRole).toHaveBeenCalledWith('btngeneraFactura');
     });
@@ -414,7 +413,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should validate date modification permission', () => {
       const mockValidatorService = TestBed.inject(ValidatorPermissionService) as jasmine.SpyObj<ValidatorPermissionService>;
       mockValidatorService.validateUserRole.and.returnValue(true);
-      
+
       expect(component.isValidFechaFacturacion()).toBeTrue();
       expect(mockValidatorService.validateUserRole).toHaveBeenCalledWith('CAMBIAR_FECHA_FACTURA');
     });
@@ -427,9 +426,9 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should load clients successfully', () => {
       const mockClientService = TestBed.inject(ClientesService) as jasmine.SpyObj<ClientesService>;
-      
+
       component.obtenerClientesPorNombreTelefono();
-      
+
       expect(mockClientService.getClientesPorNombreTelefono).toHaveBeenCalled();
     });
 
@@ -437,27 +436,27 @@ describe('FacturacionRegistroComponent', () => {
       const mockClientService = TestBed.inject(ClientesService) as jasmine.SpyObj<ClientesService>;
       const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
       mockClientService.getClientesPorNombreTelefono.and.returnValue(throwError('API Error'));
-      
+
       component.obtenerClientesPorNombreTelefono();
-      
+
       expect(mockToastr.error).toHaveBeenCalled();
     });
 
     it('should load and set vendors', () => {
       const mockVendedorService = TestBed.inject(VendedorService) as jasmine.SpyObj<VendedorService>;
-      
+
       // Call the method that loads vendors (checking in component)
       // Since obtenerVendedores doesn't exist, we'll test the service call directly
       mockVendedorService.getVendedorLista();
-      
+
       expect(mockVendedorService.getVendedorLista).toHaveBeenCalled();
     });
 
     it('should load ITBIS configuration', () => {
       const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
-      
+
       component.obtenerItbis();
-      
+
       expect(mockCatalogosService.getAsumeITBIS).toHaveBeenCalled();
     });
   });
@@ -469,31 +468,31 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should calculate price based on invoice type - retail', () => {
       component.form.get('tipoFactura')?.setValue(1);
-      
+
       const price = component.calcularPrecioSegunTipofactura(500, 400);
-      
+
       expect(price).toBe(500); // Should use retail price
     });
 
     it('should calculate price based on invoice type - wholesale', () => {
       component.form.get('tipoFactura')?.setValue(2);
-      
+
       const price = component.calcularPrecioSegunTipofactura(500, 400);
-      
+
       expect(price).toBe(400); // Should use wholesale price
     });
 
     it('should calculate subtotal for article', () => {
       const subtotal = component.calcularSubTotalArticulo(500, 2);
-      
+
       expect(subtotal).toBe(1000);
     });
 
     it('should handle price calculation for special invoice type', () => {
       component.form.get('tipoFactura')?.setValue(4);
-      
+
       const price = component.calcularPrecioSegunTipofactura(500, 400);
-      
+
       expect(price).toBe(500); // Should use retail price for type 4
     });
   });
@@ -506,16 +505,16 @@ describe('FacturacionRegistroComponent', () => {
     it('should add article to form array', () => {
       // Ensure form is properly initialized
       expect(component.articulos).toBeDefined();
-      
+
       const initialCount = component.articulos().length;
-      
+
       // Fill the current empty article first (business logic prevents adding if empty exists)
       if (initialCount > 0) {
         component.articulos().at(0)?.get('articulo')?.setValue('Test Article');
       }
-      
+
       component.agregarArticulo();
-      
+
       // Should have one more article now
       expect(component.articulos().length).toBe(initialCount + 1);
     });
@@ -523,18 +522,18 @@ describe('FacturacionRegistroComponent', () => {
     it('should remove article from form array', () => {
       component.agregarArticulo(); // Add one first
       const initialCount = component.articulos().length;
-      
+
       // Use the actual method that exists
       component.articulos().removeAt(0);
-      
+
       expect(component.articulos().length).toBe(initialCount - 1);
     });
 
     it('should search equipment by IMEI', async () => {
       const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
-      
+
       await component.addArticuloImei('123456789');
-      
+
       expect(mockCatalogosService.buscarEquipoDisponible).toHaveBeenCalledWith('123456789', jasmine.any(Number));
     });
 
@@ -553,7 +552,7 @@ describe('FacturacionRegistroComponent', () => {
         precioPorMayor: 0
       } as any;
       mockCatalogosService.buscarEquipoDisponible.and.returnValue(of(mockEquipo));
-      
+
       // Since the method is complex, just verify the logic without async complexity
       expect(() => component.addArticuloImei('123456789')).not.toThrow();
     });
@@ -566,9 +565,9 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should search for pending repairs', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
-      
+
       component.buscarReparacionesPendientes(1);
-      
+
       expect(mockMantenimientoService.getReparacionesPendientes).toHaveBeenCalledWith({ IdCliente: 1 });
     });
 
@@ -581,9 +580,9 @@ describe('FacturacionRegistroComponent', () => {
         modelo: 'Test Model'
       }];
       mockMantenimientoService.getReparacionesPendientes.and.returnValue(of(mockRepairs));
-      
+
       component.buscarReparacionesPendientes(1);
-      
+
       // Verify the service was called
       expect(mockMantenimientoService.getReparacionesPendientes).toHaveBeenCalled();
     });
@@ -596,9 +595,9 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should validate form before submission', () => {
       spyOn(component, 'generateFactura');
-      
+
       component.onSubmit();
-      
+
       expect(component.form.touched).toBeTrue();
       expect(component.generateFactura).not.toHaveBeenCalled(); // Invalid form
     });
@@ -608,9 +607,9 @@ describe('FacturacionRegistroComponent', () => {
       component.form.get('telefono')?.setValue('8091234567');
       component.form.get('vendedor')?.setValue(1);
       spyOn(component, 'generateFactura');
-      
+
       component.onSubmit();
-      
+
       expect(component.generateFactura).toHaveBeenCalled();
     });
 
@@ -619,9 +618,9 @@ describe('FacturacionRegistroComponent', () => {
       component.form.get('telefono')?.setValue('8091234567');
       component.form.get('vendedor')?.setValue(1);
       spyOn(component, 'generateCotizacion');
-      
+
       component.onSubmit();
-      
+
       expect(component.generateCotizacion).toHaveBeenCalled();
     });
 
@@ -629,12 +628,12 @@ describe('FacturacionRegistroComponent', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
       const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
       mockMantenimientoService.postFactura.and.returnValue(throwError('Submission error'));
-      
+
       // Setup form with required data
       component.form.get('telefono')?.setValue('8091234567');
       component.form.get('vendedor')?.setValue(1);
       component.clienteSeleccionado = { Id_Cliente: 1, Nombre: 'Test Client' } as any;
-      
+
       // Test that the method can be called without throwing synchronous errors
       // The actual error handling is tested by checking service calls
       expect(() => {
@@ -644,7 +643,7 @@ describe('FacturacionRegistroComponent', () => {
           // Expected to handle errors gracefully
         }
       }).not.toThrow();
-      
+
       // Verify error service was configured
       expect(mockMantenimientoService.postFactura).toBeDefined();
     });
@@ -660,9 +659,9 @@ describe('FacturacionRegistroComponent', () => {
       articulo.get('precio')?.setValue(1000);
       articulo.get('cantidad')?.setValue(2);
       articulo.get('descuento')?.setValue(10);
-      
+
       const result = component.calculoTotal(2000, 10); // subtotal, descuento
-      
+
       expect(result).toBeGreaterThanOrEqual(0);
       expect(component.subTotal).toBeGreaterThanOrEqual(0);
       expect(component.total).toBeGreaterThanOrEqual(0);
@@ -671,14 +670,14 @@ describe('FacturacionRegistroComponent', () => {
     it('should apply ITBIS when enabled', () => {
       component.form.get('aplicarItbis')?.setValue(true);
       component.asumeItbis = mockAsumeItbis;
-      
+
       component.agregarArticulo();
       const articulo = component.articulos().at(0);
       articulo.get('precio')?.setValue(1000);
       articulo.get('cantidad')?.setValue(1);
-      
+
       const result = component.calculoTotal(1000, 0);
-      
+
       expect(result).toBeGreaterThanOrEqual(0);
       expect(component.itbis).toBeGreaterThanOrEqual(0);
     });
@@ -696,14 +695,14 @@ describe('FacturacionRegistroComponent', () => {
     it('should handle service unavailability', () => {
       const mockClientService = TestBed.inject(ClientesService) as jasmine.SpyObj<ClientesService>;
       mockClientService.getClientesPorNombreTelefono.and.returnValue(throwError('Service unavailable'));
-      
+
       expect(() => component.obtenerClientesPorNombreTelefono()).not.toThrow();
     });
 
     it('should handle malformed API responses', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
       mockMantenimientoService.getReparacionesPendientes.and.returnValue(of([] as any));
-      
+
       expect(() => component.buscarReparacionesPendientes(1)).not.toThrow();
     });
   });
@@ -715,10 +714,10 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should manage loading states', () => {
       const mockLoadingService = TestBed.inject(LoadingService) as jasmine.SpyObj<LoadingService>;
-      
+
       component.isLoading = true;
       expect(component.isLoading).toBeTrue();
-      
+
       // Loading service should be available
       expect(mockLoadingService.showLoading).toBeDefined();
     });
@@ -727,7 +726,7 @@ describe('FacturacionRegistroComponent', () => {
       component.modalVisible = false;
       component.isOpenModal = true;
       expect(component.isOpenModal).toBeTrue();
-      
+
       component.isOpenModal = false;
       expect(component.isOpenModal).toBeFalse();
     });
@@ -735,7 +734,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should handle button states', () => {
       expect(component.btnDisabledTelefono).toBeTrue();
       expect(component.btnDisabledArticulo).toBeTrue();
-      
+
       // Button states can be changed
       component.btnDisabledTelefono = false;
       expect(component.btnDisabledTelefono).toBeFalse();

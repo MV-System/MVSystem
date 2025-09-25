@@ -33,7 +33,8 @@ describe('ClientesConsultaComponent', () => {
       nombres: 'Juan',
       apellidos: 'Pérez',
       numero_de_telefono: 8091234567,
-      tipo_de_Cliente: 'Por Mayor'
+      tipo_de_Cliente: 'Por Mayor',
+      iD_Canal: 1
     }
   ];
 
@@ -69,7 +70,7 @@ describe('ClientesConsultaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ClientesConsultaComponent);
     component = fixture.componentInstance;
-    
+
     // Setup default mock response for ngOnInit
     mockClientesService.getClientesPorNombreTelefono.and.returnValue(of(mockClientes));
   });
@@ -121,12 +122,12 @@ describe('ClientesConsultaComponent', () => {
     it('should search clients by criteria', () => {
       const searchCriteria = 'Juan';
       const filteredClientes = [mockClientes[0]];
-      
+
       mockClientesService.getClientesPorNombreTelefono.and.returnValue(of(filteredClientes));
-      
+
       // Set form value
       component.formBusqueda.patchValue({ criterio: searchCriteria });
-      
+
       component.obtenerClientesPorNombreTelefono();
 
       expect(mockClientesService.getClientesPorNombreTelefono).toHaveBeenCalledWith(searchCriteria);
@@ -135,10 +136,10 @@ describe('ClientesConsultaComponent', () => {
 
     it('should clear search and reload all clients', () => {
       mockClientesService.getClientesPorNombreTelefono.and.returnValue(of(mockClientes));
-      
+
       // Set some search criteria first
       component.formBusqueda.patchValue({ criterio: 'test' });
-      
+
       component.limpiarBusqueda();
 
       // After reset(), the value becomes null, not empty string
@@ -185,8 +186,8 @@ describe('ClientesConsultaComponent', () => {
     });
 
     it('should get client phone correctly with all field variations', () => {
-      const cliente1 = { Numero_de_telefono: 8091234567 } as Cliente;
-      const cliente2 = { numero_Telefono: 8097654321 } as Cliente;
+      const cliente1 = { numero_de_telefono: 8091234567 } as Cliente;
+      const cliente2 = { numero_de_telefono: 8097654321 } as Cliente;
       const cliente3 = { numero_de_telefono: 8095555555 } as Cliente;
 
       expect(component.getClienteTelefono(cliente1)).toBe(8091234567);
@@ -196,7 +197,7 @@ describe('ClientesConsultaComponent', () => {
     });
 
     it('should get client last name correctly', () => {
-      const cliente1 = { Apellidos: 'Pérez' } as Cliente;
+      const cliente1 = { apellidos: 'Pérez' } as Cliente;
       const cliente2 = { apellidos: 'González' } as Cliente;
 
       expect(component.getClienteApellidos(cliente1)).toBe('Pérez');
@@ -205,7 +206,7 @@ describe('ClientesConsultaComponent', () => {
     });
 
     it('should get client type correctly', () => {
-      const cliente1 = { Tipo_de_Cliente: 'Por Mayor' } as Cliente;
+      const cliente1 = { tipo_de_Cliente: 'Por Mayor' } as Cliente;
       const cliente2 = { tipo_de_Cliente: 'Por Menor' } as Cliente;
 
       expect(component.getClienteTipoDescripcion(cliente1)).toBe('Por Mayor');

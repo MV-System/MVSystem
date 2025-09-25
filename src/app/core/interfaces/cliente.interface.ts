@@ -46,41 +46,19 @@ export interface AbonoFacturaResponse {
 }
 export interface Cliente {
   // Campos principales del API actualizado (formato nuevo)
-  Id_Cliente?: number;
-  Tipo_de_Cliente?: string;
-  Nombres?: string;
-  Apellidos?: string;
-  Numero_de_telefono?: number;
-  Limite_Credito?: string;
-  canal_Nombre?: string;
-  iD_Canal: number;
-  Extencion?: number | null;
-  Email?: string;
-  Direccion?: string;
-  Mensaje?: string;
-
-  // Campos del API actual (formato minúscula con guiones bajos)
   id_Cliente?: number;
+  iD_Tipo_Cliente?: number;
   tipo_de_Cliente?: string;
   nombres?: string;
   apellidos?: string;
+  iD_Canal: number;
+  canal_Nombre?: string;
   numero_de_telefono?: number;
   limite_Credito?: string;
   extencion?: number | null;
   email?: string;
   direccion?: string;
   mensaje?: string;
-
-  // Campos legacy (mantener para compatibilidad si es necesario)
-  idContacto?: number;
-  iD_Tipo_Cliente?: number;
-  tipo_Cliente_Descripcion?: string;
-  numero_Telefono?: number;
-  iD_Tipo_Telefono?: number;
-  email_Detalle?: string;
-  direccion_Detalle?: string;
-  criterio?: null;
-  usuario?: null;
 }
 
 export interface TipoCliente {
