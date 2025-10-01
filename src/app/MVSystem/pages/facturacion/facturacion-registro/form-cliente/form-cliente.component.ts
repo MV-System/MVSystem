@@ -168,11 +168,20 @@ export class FormClienteComponent implements OnInit {
     }
   }
   onCancel(){
-    this.isOpenModal = false;
+    // Actualizar el estado en el servicio
+    this.customerService.isOpeningForm$.next(false);
+    
+    // Reiniciar el formulario
     this.form.reset({
       iD_Tipo_Cliente:1,
       iD_Tipo_Telefono:1
-    })
+    });
+
+    // Emitir undefined para indicar que se canceló
+    this.customer.emit(undefined);
+    
+    // Cerrar el modal
+    this.isOpenModal = false;
   }
 
   private loadCatalogos(){

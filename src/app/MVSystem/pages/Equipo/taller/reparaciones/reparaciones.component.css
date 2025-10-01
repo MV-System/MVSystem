@@ -1,106 +1,174 @@
 /* Limpieza: Eliminar estilos duplicados con los globales y mantener solo los realmente únicos para este componente. */
 
+
 /* Card moderna solo si no está global */
+
 .modern-card {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  background: white;
-  backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+    backdrop-filter: blur(10px);
 }
+
 .modern-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
+
 
 /* Feedback de error específico */
+
 .invalid-feedback {
-  color: #e74c3c;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
 }
 
+
+/* Estilos para el modal de cliente */
+
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-wrapper.show {
+    display: flex;
+}
+
+
+/* Estilos para el contenido del modal */
+
+form-cliente {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 /* Botones personalizados solo si no hay global equivalente */
+
 .btn-primary {
-  background: #e3eafc;
-  color: #185a9d;
-  border: 2px solid #b5c6e0;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  padding: 0.7rem 2.2rem;
-  font-size: 1.05rem;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 8px rgba(24, 90, 157, 0.06);
-  transition: all 0.18s;
-  text-transform: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    background: #e3eafc;
+    color: #185a9d;
+    border: 2px solid #b5c6e0;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 8px rgba(24, 90, 157, 0.06);
+    transition: all 0.18s;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.btn-primary:hover, .btn-primary:focus {
-  background: #c7daf7;
-  color: #185a9d;
-  border-color: #a3b8d8;
-  box-shadow: 0 4px 16px rgba(24, 90, 157, 0.10);
-  transform: translateY(-1px) scale(1.01);
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: #c7daf7;
+    color: #185a9d;
+    border-color: #a3b8d8;
+    box-shadow: 0 4px 16px rgba(24, 90, 157, 0.10);
+    transform: translateY(-1px) scale(1.01);
 }
+
 .btn-primary i {
-  font-size: 1.1em;
+    font-size: 1.1em;
 }
+
 .btn-secondary {
-  background: #f8fafc;
-  color: #4a5568;
-  border: 2px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  padding: 0.7rem 2.2rem;
-  font-size: 1.05rem;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 8px rgba(74, 85, 104, 0.06);
-  transition: all 0.18s;
-  text-transform: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    background: #f8fafc;
+    color: #4a5568;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 8px rgba(74, 85, 104, 0.06);
+    transition: all 0.18s;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.btn-secondary:hover, .btn-secondary:focus {
-  background: #e2e8f0;
-  color: #2d3748;
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 16px rgba(74, 85, 104, 0.10);
-  transform: translateY(-1px) scale(1.01);
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #e2e8f0;
+    color: #2d3748;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 16px rgba(74, 85, 104, 0.10);
+    transform: translateY(-1px) scale(1.01);
 }
+
 .btn-danger {
-  background: #fff5f5;
-  color: #e53e3e;
-  border: 2px solid #fed7d7;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  padding: 0.7rem 2.2rem;
-  font-size: 1.05rem;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 8px rgba(229, 62, 62, 0.06);
-  transition: all 0.18s;
-  text-transform: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    background: #fff5f5;
+    color: #e53e3e;
+    border: 2px solid #fed7d7;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.06);
+    transition: all 0.18s;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.btn-danger:hover, .btn-danger:focus {
-  background: #fed7d7;
-  color: #c53030;
-  border-color: #feb2b2;
-  box-shadow: 0 4px 16px rgba(229, 62, 62, 0.10);
-  transform: translateY(-1px) scale(1.01);
+
+.btn-danger:hover,
+.btn-danger:focus {
+    background: #fed7d7;
+    color: #c53030;
+    border-color: #feb2b2;
+    box-shadow: 0 4px 16px rgba(229, 62, 62, 0.10);
+    transform: translateY(-1px) scale(1.01);
 }
 
 @media (max-width: 768px) {
-  .modern-card, .card-body {
-    padding: 1rem !important;
-  }
+    .modern-card,
+    .card-body {
+        padding: 1rem !important;
+    }
+    form-cliente {
+        width: 95%;
+        padding: 1rem;
+    }
 }
 
 .is-invalid {
-  border: 1px solid #e74c3c !important;
+    border: 1px solid #e74c3c !important;
 }

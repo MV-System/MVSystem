@@ -14,14 +14,27 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
+/**
+ * Componente para la gestión de reparaciones de equipos
+ * Permite registrar nuevas reparaciones, asociar clientes, y generar reportes
+ * Incluye funcionalidades para:
+ * - Registro de reparaciones con detalles técnicos
+ * - Gestión de clientes (selección y creación)
+ * - Control de costos y precios
+ * - Impresión de recibos
+ * - Validaciones de formulario
+ */
 @Component({
   selector: 'app-reparaciones',
   templateUrl: './reparaciones.component.html',
   styleUrls: ['./reparaciones.component.css']
 })
 export class ReparacionesComponent implements OnInit {
+  /** Indica si se está imprimiendo un reporte */
    printing: boolean = false;
- isLoading = false;
+  /** Indica si hay una operación en curso */
+  isLoading = false;
+  /** Indica si se está generando un reporte */
    generarReporteLoading: boolean = false;
 
     formEquipoReparado: FormGroup = this.fb.group({
@@ -46,6 +59,15 @@ export class ReparacionesComponent implements OnInit {
   customers: Cliente[] = []
   btnDisabled: boolean = true;
   IdReparacion : number = 0;
+  /**
+   * Formulario principal para el registro de reparaciones
+   * Incluye campos para:
+   * - Información del equipo (IMEI)
+   * - Datos del cliente
+   * - Costos y precios
+   * - Detalles técnicos de la reparación
+   * - Información de marca y modelo
+   */
   formRegistroReparaciones: FormGroup = this.fb.group({
     IMEI: ["",],
     Nom: ["",],
@@ -79,7 +101,6 @@ export class ReparacionesComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerMarcasLista();
     this.obtenerClientes();
-    this.obtenerMarcasLista();
   }
   obtenerMarcasLista() {
     this.catalogosService.getMarcasLista().subscribe((marca) => {
@@ -109,26 +130,45 @@ export class ReparacionesComponent implements OnInit {
    }
       return model;
  }
- onAddCustomer(customer: Cliente) {
-  this.customer = customer;
-  this.clientesService.isOpeningForm$.next(false);
-  if (customer) {
-    // Agregar el nuevo cliente a la lista de 'customers'
-    this.customers = [customer, ...this.customers];
-    this.formRegistroReparaciones.patchValue({
-      cliente: customer,
-      Nom: customer.nombres + ' ' + customer.apellidos,
-      Tel: customer.numero_de_telefono,
-      ID_Cliente: customer.id_Cliente || 0
-    });
-    // Mostrar mensaje de éxito
-  } else {
-    // Si el campo 'telefono' está vacío, mostramos una advertencia
-    this.toastr.warning('Por favor ingrese un número de teléfono.');
+  /**
+   * Maneja la adición de un nuevo cliente
+   * Actualiza el formulario con los datos del cliente
+   * y actualiza la lista de clientes disponibles
+   * @param customer Cliente a agregar
+   */
+  onAddCustomer(customer: Cliente) {
+  // Manejar el cierre del modal
+  const modalWrapper = document.querySelector('.modal-wrapper');
+  if (modalWrapper) {
+    modalWrapper.classList.remove('show');
   }
 
+  // Si customer es undefined o null, significa que se canceló
+  if (!customer) {
+    this.clientesService.isOpeningForm$.next(false);
+    return;
+  }
+
+  this.customer = customer;
+  this.clientesService.isOpeningForm$.next(false);
+
+  // Agregar el nuevo cliente a la lista de 'customers'
+  this.customers = [customer, ...this.customers];
+  this.formRegistroReparaciones.patchValue({
+    cliente: customer,
+    Nom: customer.nombres + ' ' + customer.apellidos,
+    Tel: customer.numero_de_telefono,
+    ID_Cliente: customer.id_Cliente || 0
+  });
+
+  // Mostrar mensaje de éxito
+  this.toastr.success('Cliente agregado correctamente');
 }
- validarCamposFormCostoDetalle() {
+  /**
+   * Valida que el precio no sea menor que el costo
+   * Muestra un mensaje de error si la validación falla
+   */
+  validarCamposFormCostoDetalle() {
 
   if (
     this.formRegistroReparaciones.get('Precio')?.value <
@@ -201,6 +241,11 @@ obtenerModeloLista() {
 onAdd() {
   // Indicar que el formulario está siendo abierto
   this.clientesService.isOpeningForm$.next(true);
+  // Mostrar el modal
+  const modalWrapper = document.querySelector('.modal-wrapper');
+  if (modalWrapper) {
+    modalWrapper.classList.add('show');
+  }
 }
 validarCampos(nombreCampo: string) {
   return (
@@ -256,7 +301,12 @@ private getBlobForCreateIFramePDF(blobResp: Blob): void {
     iframe.contentWindow?.print();
   }
 
- obtenerReporte(id_reparacion: number) {
+  /**
+   * Genera y muestra el reporte de reparación en PDF
+   * Crea un iframe temporal para mostrar el PDF y permite su impresión
+   * @param id_reparacion ID de la reparación para generar el reporte
+   */
+  obtenerReporte(id_reparacion: number) {
     this.loading.showLoading();
   this.equipoService.getEquipoReparadoReporte(
     id_reparacion,
