@@ -139,7 +139,7 @@ export class ReparacionesComponent implements OnInit {
    */
   onAddCustomer(customer: Cliente) {
     console.log('onAddCustomer llamado con:', customer);
-    
+
     // Si customer es undefined o null, significa que se canceló
     if (!customer) {
       this.closeModal();
@@ -152,7 +152,7 @@ export class ReparacionesComponent implements OnInit {
 
     // Agregar el nuevo cliente al inicio de la lista de 'customers'
     this.customers = [customer, ...this.customers];
-    
+
     // Actualizar el formulario con el nuevo cliente seleccionado
     this.formRegistroReparaciones.patchValue({
       cliente: customer, // Asignar el objeto completo al ng-select
@@ -244,7 +244,7 @@ onAdd() {
     // Mostrar el modal usando la propiedad showModal
     this.showModal = true;
   }
-  
+
   /**
    * Cierra el modal de registro de cliente
    */
