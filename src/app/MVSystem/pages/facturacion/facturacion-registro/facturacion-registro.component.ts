@@ -170,6 +170,7 @@ onModalClose(rep: any) {
   isNcfRequire!: boolean;
   facturaNumber!: number;
   facturaNumberReporte!: number;
+  showModal: boolean = false; // Para controlar el modal de cliente
 
   subTotal: number = 0;
   descuento: number = 0;
@@ -453,25 +454,61 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     this.form.get('telefono')?.reset()
   }
 
- onAddCustomer (customer: Cliente) {
-    this.customer = customer;
-    this.clientesService.isOpeningForm$.next(false);
-    if (customer) {
-      // Agregar el nuevo cliente a la lista de 'customers'
-      this.customers = [customer, ...this.customers];
-     this.form.get('telefono')?.setValue(this.customer.numero_de_telefono);
+  /**
+   * Maneja la adición de un nuevo cliente desde el modal
+   * Actualiza el formulario con los datos del cliente
+   * y actualiza la lista de clientes disponibles
+   * @param customer Cliente a agregar
+   */
+  onAddCustomer(customer: Cliente) {
+    console.log('onAddCustomer llamado con:', customer);
 
-      this.obtenerClientesPorNombreTelefono(this.customer.numero_de_telefono);
-      // Mostrar mensaje de éxito
-    } else {
-      // Si el campo 'telefono' está vacío, mostramos una advertencia
-      this.toastr.warning('Por favor ingrese un número de teléfono.');
+    // Si customer es undefined o null, significa que se canceló
+    if (!customer) {
+      this.closeModal();
+      return;
     }
 
+    // Asignar el cliente
+    this.customer = customer;
+    this.clientesService.isOpeningForm$.next(false);
+
+    // Agregar el nuevo cliente al inicio de la lista de 'customers'
+    this.customers = [customer, ...this.customers];
+
+    // Actualizar el formulario con el teléfono del nuevo cliente
+    this.form.patchValue({
+      telefono: customer.numero_de_telefono,
+      idCliente: customer.id_Cliente || 0
+    });
+
+    // Cerrar el modal
+    this.showModal = false;
+    console.log('Modal cerrado, showModal:', this.showModal);
+
+    // Mostrar mensaje de éxito
+    this.toastr.success('Cliente agregado correctamente');
   }
+
+  /**
+   * Abre el modal para agregar un nuevo cliente
+   */
   onAdd() {
+    console.log('onAdd() llamado - Abriendo modal');
     // Indicar que el formulario está siendo abierto
     this.clientesService.isOpeningForm$.next(true);
+    // Mostrar el modal
+    this.showModal = true;
+    console.log('showModal establecido a:', this.showModal);
+  }
+
+  /**
+   * Cierra el modal de registro de cliente
+   */
+  closeModal() {
+    console.log('closeModal() llamado');
+    this.showModal = false;
+    this.clientesService.isOpeningForm$.next(false);
   }
   onSubmit() {
     if (this.form.valid) {

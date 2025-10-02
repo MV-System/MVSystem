@@ -16,6 +16,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { FormClienteComponent } from './facturacion-registro/form-cliente/form-cliente.component';
 import { CotizacionListComponent } from './facturacion-registro/cotizacion-list/cotizacion-list.component';
+import { ClientesModule } from '../Clientes/clientes.module'; // Importar el módulo de clientes
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -49,6 +50,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     NgxPaginationModule,
     ReactiveFormsModule,
     SharedModule,
+    ClientesModule, // Agregar el módulo de clientes para usar app-clientes-registro
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
