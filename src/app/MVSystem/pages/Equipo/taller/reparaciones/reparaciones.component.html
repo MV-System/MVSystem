@@ -41,8 +41,8 @@
                   </button>
                                 </div>
                                 <div class="clientDetail mt-2">
-                                    <span formControlName="Nom" class="fw-bold">{{ customer?.nombres ? (customer.nombres + ' ' + customer.apellidos) : '[Nombre cliente]' }}</span>
-                                    <span formControlName="Tel" class="ms-2 text-muted">{{ getClienteTelefono(customer) }}</span>
+                                    <span class="fw-bold">{{ customer?.nombres ? (customer.nombres + ' ' + customer.apellidos) : '[Nombre cliente]' }}</span>
+                                    <span class="ms-2 text-muted">{{ getClienteTelefono(customer) }}</span>
                                 </div>
                             </div>
 
@@ -142,6 +142,9 @@
 </main>
 
 <!-- Modal de cliente -->
-<div class="modal-wrapper">
-    <form-cliente (customer)="onAddCustomer($event)"></form-cliente>
+<div class="modal-wrapper" [class.show]="showModal">
+    <div class="modal-content">
+        <app-clientes-registro (customer)="onAddCustomer($event)" (cancelar)="closeModal()" [isModal]="true">
+        </app-clientes-registro>
+    </div>
 </div>

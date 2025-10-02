@@ -1,5 +1,5 @@
-<main id="main" class="main">
-    <div class="pagetitle">
+<main id="main" class="main" [ngClass]="{'modal-mode': isModal}">
+    <div class="pagetitle" *ngIf="!isModal">
         <h1 id="registro">Registro de Clientes</h1>
         <nav>
             <ol class="breadcrumb">
@@ -225,11 +225,14 @@
                                         <i *ngIf="!isLoading" class="bi bi-check-circle-fill me-2"></i>
                                         {{isLoading ? 'Guardando...' : 'Guardar Cliente'}}
                                     </button>
-                                    <button type="button" class="button-limpiar" (click)="limpiarFormulario()">
+                                    <button type="button" class="button-limpiar" (click)="limpiarFormulario()" *ngIf="!isModal">
                                         <i class="bi bi-arrow-clockwise me-2"></i>
                                         Limpiar
                                     </button>
-
+                                    <button type="button" class="btn btn-secondary" (click)="cancelarRegistro()" *ngIf="isModal">
+                                        <i class="bi bi-x-circle me-2"></i>
+                                        Cancelar
+                                    </button>
                                 </div>
                             </div>
                         </form>

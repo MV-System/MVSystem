@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CanalesLista, TipoTelefono } from '../../../../core/interfaces/catalogo.interface';
@@ -14,7 +14,9 @@ import { LoginService } from 'src/app/auth/login.service';
   styleUrls: ['./clientes-registro.component.css']
 })
 export class ClientesRegistroComponent implements OnInit {
+    @Input() isModal: boolean = false;
     @Output() customer = new EventEmitter<Cliente>();
+    @Output() cancelar = new EventEmitter<void>(); // Para emitir cuando se cancela
     // Propiedades para canales
     listaCanales: CanalesLista[] = [];
   constructor(
@@ -70,7 +72,7 @@ export class ClientesRegistroComponent implements OnInit {
     apellido: ['', Validators.required],
     tipoCliente: [1],
     iD_Canal: [''],
-  Canal: [0],
+    Canal: [0],
     tipoClienteDescripcion: [""],
     limiteCredito: [0, [Validators.min(0)]],
     tipoTelefono: [1],
@@ -95,6 +97,15 @@ export class ClientesRegistroComponent implements OnInit {
     });
 
     this.toastr.info('Formulario limpiado correctamente', 'Información');
+  }
+
+  /**
+   * Cancela el registro y cierra el modal
+   */
+  cancelarRegistro(): void {
+    if (this.isModal) {
+      this.cancelar.emit();
+    }
   }
 
   modeloRegistroCliente() {
@@ -224,14 +235,18 @@ export class ClientesRegistroComponent implements OnInit {
   }
   registroCliente() {
     const model: ClienteRegistro = this.modeloRegistroCliente();
+    console.log('registroCliente llamado, isModal:', this.isModal);
+
     if (this.formRegistro.valid) {
       this.isLoading = true;
       this.clientesService.postCliente(model)
         .subscribe({
           next: (clienteInsertado: Cliente) => {
+            console.log('Cliente insertado:', clienteInsertado);
             this.clientesListar = clienteInsertado;
             this.isLoading = false;
             const mensaje = clienteInsertado.mensaje || '';
+
             if (mensaje.includes('ya está')) {
               this.toastr.error(mensaje, '',
                 { closeButton: true, progressBar: true });
@@ -239,20 +254,62 @@ export class ClientesRegistroComponent implements OnInit {
             else {
               this.toastr.success(mensaje, '',
                 { closeButton: true, progressBar: true });
-              // Agregar cliente a la lista local para mostrar en la card
-              this.clientesRegistrados.unshift({
-                nombre: model.nombres,
-                apellido: model.apellidos,
-                telefono: model.numero_Telefono,
-                email: model.email_Detalle
-              });
-              this.formRegistro.reset({
-                tipoCliente: 1,
-                tipoTelefono: 1,
-                limiteCredito: 0
-              });
-              this.formRegistro.controls.extensionNumero.disable();
-            }
+
+              // El servidor devuelve 'idContacto' en lugar de 'id_Cliente'
+              const clienteId = clienteInsertado.id_Cliente || (clienteInsertado as any).idContacto;
+              console.log('Verificando id_Cliente:', clienteInsertado.id_Cliente, 'idContacto:', (clienteInsertado as any).idContacto);
+
+              // Si el registro fue exitoso y tenemos un ID
+              if (clienteId) {
+                // Preparar el cliente para emitir
+                const clienteEmitido: Cliente = {
+                  id_Cliente: clienteId,
+                  nombres: model.nombres,
+                  apellidos: model.apellidos,
+                  iD_Canal: model.iD_Canal || 0,
+                  numero_de_telefono: model.numero_Telefono,
+                  email: model.email_Detalle,
+                  direccion: model.direccion_Detalle,
+                  extencion: model.extencion,
+                  limite_Credito: model.limite_Credito?.toString()
+                };
+
+                console.log('Emitiendo cliente:', clienteEmitido, 'isModal:', this.isModal);
+
+                // Si estamos en modo modal, emitir el cliente
+                if (this.isModal) {
+                  this.customer.emit(clienteEmitido);
+                  console.log('Cliente emitido en modo modal');
+                  // No limpiar el formulario aquí, el componente padre se encarga
+                  return; // Salir para evitar ejecutar el código de abajo
+                } else {
+                  // Si no es modal, solo emitir para otros propósitos
+                  this.customer.emit(clienteEmitido);
+                }
+              } else {
+                console.warn('No hay id_Cliente ni idContacto en la respuesta, no se puede emitir');
+              }
+
+              // Solo actualizar la lista local si no estamos en modo modal
+              if (!this.isModal) {
+                this.clientesRegistrados.unshift({
+                  nombre: model.nombres,
+                  apellido: model.apellidos,
+                  telefono: model.numero_Telefono,
+                  email: model.email_Detalle
+                });
+              }
+
+              // Limpiar el formulario solo si NO es modal
+              if (!this.isModal) {
+                this.formRegistro.reset({
+                  tipoCliente: 1,
+                  tipoTelefono: 1,
+                  limiteCredito: 0
+                });
+                this.formRegistro.controls.extensionNumero.disable();
+              }
+          }
           },
           error: (error) => {
             this.isLoading = false;
@@ -268,7 +325,6 @@ export class ClientesRegistroComponent implements OnInit {
         { closeButton: true, progressBar: true });
     }
   }
-
 
 
 }

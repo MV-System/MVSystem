@@ -23,6 +23,7 @@ import { EquipoTransferenciaComponent } from './equipo-transferencia/equipo-tran
 import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 import { ReparacionesComponent } from './taller/reparaciones/reparaciones.component';
 import { FacturacionModule } from '../facturacion/facturacion.module';
+import { ClientesModule } from '../Clientes/clientes.module';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -59,6 +60,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     SharedModule,
     DirectiveModule,
     FacturacionModule,
+    ClientesModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

@@ -36,6 +36,8 @@ export class ReparacionesComponent implements OnInit {
   isLoading = false;
   /** Indica si se está generando un reporte */
    generarReporteLoading: boolean = false;
+  /** Controla la visibilidad del modal de registro de cliente */
+  showModal: boolean = false;
 
     formEquipoReparado: FormGroup = this.fb.group({
     criterio: [''],
@@ -70,8 +72,7 @@ export class ReparacionesComponent implements OnInit {
    */
   formRegistroReparaciones: FormGroup = this.fb.group({
     IMEI: ["",],
-    Nom: ["",],
-    Tel: ["",],
+    cliente: [null, Validators.required], // Control para el ng-select de cliente
     Costo: [, [Validators.required]],
     Detalle_Reparacion: ["",[Validators.required]],
     Observaciones: ["",],
@@ -137,33 +138,34 @@ export class ReparacionesComponent implements OnInit {
    * @param customer Cliente a agregar
    */
   onAddCustomer(customer: Cliente) {
-  // Manejar el cierre del modal
-  const modalWrapper = document.querySelector('.modal-wrapper');
-  if (modalWrapper) {
-    modalWrapper.classList.remove('show');
-  }
+    console.log('onAddCustomer llamado con:', customer);
+    
+    // Si customer es undefined o null, significa que se canceló
+    if (!customer) {
+      this.closeModal();
+      return;
+    }
 
-  // Si customer es undefined o null, significa que se canceló
-  if (!customer) {
+    // Asignar el cliente
+    this.customer = customer;
     this.clientesService.isOpeningForm$.next(false);
-    return;
+
+    // Agregar el nuevo cliente al inicio de la lista de 'customers'
+    this.customers = [customer, ...this.customers];
+    
+    // Actualizar el formulario con el nuevo cliente seleccionado
+    this.formRegistroReparaciones.patchValue({
+      cliente: customer, // Asignar el objeto completo al ng-select
+      ID_Cliente: customer.id_Cliente || 0
+    });
+
+    // Cerrar el modal
+    this.showModal = false;
+    console.log('Modal cerrado, showModal:', this.showModal);
+
+    // Mostrar mensaje de éxito
+    this.toastr.success('Cliente agregado correctamente');
   }
-
-  this.customer = customer;
-  this.clientesService.isOpeningForm$.next(false);
-
-  // Agregar el nuevo cliente a la lista de 'customers'
-  this.customers = [customer, ...this.customers];
-  this.formRegistroReparaciones.patchValue({
-    cliente: customer,
-    Nom: customer.nombres + ' ' + customer.apellidos,
-    Tel: customer.numero_de_telefono,
-    ID_Cliente: customer.id_Cliente || 0
-  });
-
-  // Mostrar mensaje de éxito
-  this.toastr.success('Cliente agregado correctamente');
-}
   /**
    * Valida que el precio no sea menor que el costo
    * Muestra un mensaje de error si la validación falla
@@ -213,8 +215,6 @@ btnDisable() {
   onClienteChange(cliente: Cliente) {
     this.customer = cliente;
     this.formRegistroReparaciones.patchValue({
-      Nom: cliente.nombres + ' ' + cliente.apellidos,
-      Tel: cliente.numero_de_telefono,
       ID_Cliente: cliente.id_Cliente || 0
     });
   }
@@ -239,14 +239,19 @@ obtenerModeloLista() {
   });
 }
 onAdd() {
-  // Indicar que el formulario está siendo abierto
-  this.clientesService.isOpeningForm$.next(true);
-  // Mostrar el modal
-  const modalWrapper = document.querySelector('.modal-wrapper');
-  if (modalWrapper) {
-    modalWrapper.classList.add('show');
+    // Indicar que el formulario está siendo abierto
+    this.clientesService.isOpeningForm$.next(true);
+    // Mostrar el modal usando la propiedad showModal
+    this.showModal = true;
   }
-}
+  
+  /**
+   * Cierra el modal de registro de cliente
+   */
+  closeModal() {
+    this.showModal = false;
+    this.clientesService.isOpeningForm$.next(false);
+  }
 validarCampos(nombreCampo: string) {
   return (
     this.formRegistroReparaciones.get(nombreCampo)?.invalid &&

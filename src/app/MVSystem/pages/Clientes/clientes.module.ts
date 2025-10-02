@@ -55,7 +55,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-
-
+  exports: [
+    ClientesRegistroComponent
+  ]
 })
 export class ClientesModule { }
