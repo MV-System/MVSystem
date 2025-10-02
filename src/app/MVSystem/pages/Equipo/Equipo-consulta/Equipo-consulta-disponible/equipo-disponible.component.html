@@ -11,92 +11,84 @@
     <h1>Equipos Disponibles</h1>
 
     <!-- Tarjetas de totales globales arriba de los filtros -->
-<div class="row mb-4">
-  <div class="col-md-3">
-    <div class="stats-card">
-      <div class="stats-content">
-        <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
-        <div class="stats-info">
-          <h6 class="stats-title">Total Equipos</h6>
-          <div class="stats-number">{{ equipoQuantity }}</div>
-          <small class="stats-subtitle">Disponibles</small>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-content">
+                    <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
+                    <div class="stats-info">
+                        <h6 class="stats-title">Total Equipos</h6>
+                        <div class="stats-number">{{ equipoQuantity }}</div>
+                        <small class="stats-subtitle">Disponibles</small>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="stats-card">
-      <div class="stats-content">
-        <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
-        <div class="stats-info">
-          <h6 class="stats-title">Total Inventario</h6>
-          <div class="stats-number">{{ totalInventario | currency }}</div>
-          <small class="stats-subtitle">Valor inventario</small>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-content">
+                    <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
+                    <div class="stats-info">
+                        <h6 class="stats-title">Total Inventario</h6>
+                        <div class="stats-number">{{ totalInventario | currency }}</div>
+                        <small class="stats-subtitle">Valor inventario</small>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-<!-- Filtros en tarjeta global -->
-<form [formGroup]="form" (submit)="preventSubmit($event)" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
-  <div class="card filter-card mb-4" style="background: #fff;">
-    <div class="card-body">
-      <div class="filter-header mb-3">
-        <h6 class="filter-title">
-          <i class="bi bi-funnel me-2 text-primary"></i>
-          Filtros de Búsqueda
-        </h6>
-      </div>
-      <div class="row g-3 align-items-end">
-        <div class="col-md-4">
-          <label class="form-label modern-label"><i class="bi bi-upc-scan me-1"></i> IMEI</label>
-          <div class="input-group">
-            <input type="search" 
-            formControlName="imei" 
-            autocomplete="off" 
-            class="form-control modern-input busqueda-input" 
-            placeholder="Escriba el IMEI" 
-            (keyup.enter)="onEnterKey($event)">
-            <button class="btns flat gunmetal" 
-            type="button" 
-            (click)="obtenerEquiposDisponibles()">
+    <!-- Filtros en tarjeta global -->
+    <form [formGroup]="form" (ngSubmit)="obtenerEquiposDisponibles()" role="search">
+        <div class="card filter-card mb-4" style="background: #fff;">
+            <div class="card-body">
+                <div class="filter-header mb-3">
+                    <h6 class="filter-title">
+                        <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
+                    </h6>
+                </div>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-upc-scan me-1"></i> IMEI</label>
+                        <div class="input-group">
+                            <input type="search" formControlName="imei" autocomplete="off" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="onEnterKey($event)">
+                            <button class="btns flat gunmetal" type="button" (click)="obtenerEquiposDisponibles()">
             <i class='bx bx-search'></i>
           </button>
-          </div>
-        </div>
-        <div class="col-md-4" *ngIf="SelectSucursal()">
-          <label class="form-label modern-label"><i class="bi bi-building me-1"></i> Sucursal</label>
-          <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
+                        </div>
+                    </div>
+                    <div class="col-md-4" *ngIf="SelectSucursal()">
+                        <label class="form-label modern-label"><i class="bi bi-building me-1"></i> Sucursal</label>
+                        <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
             <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">{{ almacen.descripcion }}</option>
           </select>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label modern-label"><i class="bi bi-box-seam me-1"></i> Suplidor</label>
-          <select class="form-select modern-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-box-seam me-1"></i> Suplidor</label>
+                        <select class="form-select modern-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
             <option value="" selected>Selecciona un Suplidor</option>
             <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">{{ Suplidor.descripcion }}</option>
           </select>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
-          <select class="form-select modern-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
+                        <select class="form-select modern-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
             <option value="" selected>Selecciona un Modelo</option>
             <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">{{ modelo.descripcion }}</option>
           </select>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
-          <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-          <button class="button-imprimir-reporte w-100" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
+                        <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="button" class="button-imprimir-reporte w-100" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
             Imprimir reporte <i class="bi bi-printer"></i>
           </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</form>
+    </form>
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
         <span>Cargando datos, por favor espere...</span>
@@ -159,24 +151,24 @@
                     </div>
                     <!-- Cards para pantallas pequeñas -->
                     <div class="d-block d-md-none">
-                      <div *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
-                        <div class="card-body">
-                          <div class="equipo-card-title mb-2">{{ Equipo.descripcion }}</div>
-                          <div class="row g-1">
-                            <div class="col-6"><strong>IMEI/Código:</strong> {{Equipo.imei}}</div>
-                            <div class="col-6"><strong>Costo:</strong> {{Equipo.costoEquipo|currency}}</div>
-                            <div class="col-6"><strong>Precio Detalle:</strong> {{Equipo.precioDetalle|currency}}</div>
-                            <div class="col-6"><strong>Precio PM:</strong> {{Equipo.precioPorMayor|currency}}</div>
-                            <div class="col-6"><strong>Almacén:</strong> {{Equipo.descripcionAlmacen}}</div>
-                            <div class="col-6"><strong>Suplidor:</strong> {{Equipo.suplidor}}</div>
-                            <div class="col-6"><strong>Tecnología:</strong> {{Equipo.tecnologia}}</div>
-                            <div class="col-6"><strong>Estado:</strong> {{Equipo.estadoBloqueo}}</div>
-                            <div class="col-6"><strong>Garantía:</strong> {{Equipo.garantia}}</div>
-                            <div class="col-6"><strong>Nota:</strong> {{Equipo.notaAdicional}}</div>
-                            <div class="col-6"><strong>Fecha Registro:</strong> {{Equipo.fecharegistro}}</div>
-                          </div>
+                        <div *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
+                            <div class="card-body">
+                                <div class="equipo-card-title mb-2">{{ Equipo.descripcion }}</div>
+                                <div class="row g-1">
+                                    <div class="col-6"><strong>IMEI/Código:</strong> {{Equipo.imei}}</div>
+                                    <div class="col-6"><strong>Costo:</strong> {{Equipo.costoEquipo|currency}}</div>
+                                    <div class="col-6"><strong>Precio Detalle:</strong> {{Equipo.precioDetalle|currency}}</div>
+                                    <div class="col-6"><strong>Precio PM:</strong> {{Equipo.precioPorMayor|currency}}</div>
+                                    <div class="col-6"><strong>Almacén:</strong> {{Equipo.descripcionAlmacen}}</div>
+                                    <div class="col-6"><strong>Suplidor:</strong> {{Equipo.suplidor}}</div>
+                                    <div class="col-6"><strong>Tecnología:</strong> {{Equipo.tecnologia}}</div>
+                                    <div class="col-6"><strong>Estado:</strong> {{Equipo.estadoBloqueo}}</div>
+                                    <div class="col-6"><strong>Garantía:</strong> {{Equipo.garantia}}</div>
+                                    <div class="col-6"><strong>Nota:</strong> {{Equipo.notaAdicional}}</div>
+                                    <div class="col-6"><strong>Fecha Registro:</strong> {{Equipo.fecharegistro}}</div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
                     <!-- End Table with stripped rows -->
                     <div class="not-data" *ngIf="!equiposDisponibles.length">

@@ -34,7 +34,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private validatorPermissionService:ValidatorPermissionService,
   ) { }
 
-  
+
 
   SelectSucursal(): boolean {
     return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
@@ -47,12 +47,13 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     // Si se selecciona "Todos", mostramos todos los registros
     if (this.filter.pageSize === this.totalRecord) {
       this.filter.pageIndex = 1;  // Restablecer a la primera página
+    } else {
+      this.filter.pageIndex = 1;  // Siempre resetear a página 1 cuando cambia el tamaño
     }
-    this.obtenerEquiposDisponibles();  // Rehacer la consulta para actualizar los datos
+    this.currentPage = 1;
+    this.obtenerEquiposDisponibles(false);  // Rehacer la consulta para actualizar los datos (sin resetear página porque ya lo hicimos)
   }
-preventSubmit(event: Event) {
-  event.preventDefault();
-}
+
   ngOnInit(): void {
     //this.loading.showLoading();
     this.obtenerEquiposDisponibles();
@@ -67,7 +68,9 @@ preventSubmit(event: Event) {
 
   }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
   @Input() clearFilter: any;
   subscription!: Subscription;
@@ -128,7 +131,7 @@ preventSubmit(event: Event) {
     this.totalInventario = totalInventario;
   }
   onFilterPropHasValue(){
-   
+
     if(
     this.filter.imei !=="" ||
     this.filter.fechaInicio !="" ||
@@ -148,18 +151,22 @@ onEnterKey(event: Event) {
   this.obtenerEquiposDisponibles();
 }
 
-obtenerEquiposDisponibles() {
+obtenerEquiposDisponibles(resetPage: boolean = true) {
   this.loading.showLoading();
   this.isLoading = true;
 
   this.getValueFilterForm();
-  this.onFilterPropHasValue();
+
+  // Solo resetear a página 1 si se especifica (al cambiar filtros)
+  if (resetPage) {
+    this.onFilterPropHasValue();
+  }
 
   if (this.subscription) {
     this.subscription.unsubscribe();
   }
 
- 
+
 
   this.subscription = this.equipoService
     .getEquipoDisponible(this.filter)
@@ -248,7 +255,7 @@ obtenerEquiposDisponibles() {
   pageChanged(index: number) {
     this.currentPage = index;
     this.filter.pageIndex = index;
-    this.obtenerEquiposDisponibles();
+    this.obtenerEquiposDisponibles(false); // false = no resetear página
   }
 
   loadCatalogos(){
