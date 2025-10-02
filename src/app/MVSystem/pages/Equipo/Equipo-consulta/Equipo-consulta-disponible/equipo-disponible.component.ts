@@ -191,16 +191,18 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
 }
   printReportEquipoDisponibles() {
     this.loading.showLoading();
+    this.printing = true;
+    
     this.equipoService.postEquipoDisponible(this.filter)
       .subscribe((blobResp) => {
-        this.printing = !this.printing;
-
         CreatorPDFFile(blobResp);
         this.loading.hideLoading();
+        this.printing = false;
       }, (err) => {
-      this.toast.error('Error','Error al imprimir reporte');
+        this.toast.error('Error al imprimir reporte', 'Error');
+        this.loading.hideLoading();
+        this.printing = false;
     });
-
   }
 
   getValueFilterForm() {
