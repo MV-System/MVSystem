@@ -57,7 +57,7 @@ export class ReparacionesComponent implements OnInit {
   listaModelo: ModeloEquipo[] = [];
   subs: Subscription[] = [];
   destroy$: Subject<any> = new Subject<any>();
-  customer!: Cliente;
+  customer?: Cliente;  // Cambio: permite undefined para ser más seguro
   customers: Cliente[] = []
   btnDisabled: boolean = true;
   IdReparacion : number = 0;
@@ -118,7 +118,7 @@ export class ReparacionesComponent implements OnInit {
   modeloRegistroReparacion() {
     const model: RegistroReparaciones = {
      IMEI: this.formRegistroReparaciones.get('IMEI')?.value,
-     ID_Cliente: this.customer.id_Cliente || 0,
+     ID_Cliente: this.customer?.id_Cliente || 0,
      Detalle_Reparacion: String(this.formRegistroReparaciones.get('Detalle_Reparacion')?.value),
      Observaciones: String(this.formRegistroReparaciones.get('Observaciones')?.value),
      Costo: Number(this.formRegistroReparaciones.get('Costo')?.value),

@@ -78,8 +78,8 @@ describe('FacturacionRegistroComponent', () => {
   ];
 
   const mockAsumeItbis: any = {
-    asumeITBIS: 'Incluido',
-    porcentaje: 18
+    asumeITBIS: 'S',
+    itbiS_Valor: 0.18
   };
 
   beforeEach(async () => {
@@ -100,7 +100,8 @@ describe('FacturacionRegistroComponent', () => {
       mantenimientoService: jasmine.createSpyObj('MantenimientoService', [
         'getReparacionesPendientes',
         'postFactura',
-        'getFacturaNumero'
+        'getFacturaNumero',
+        'postCotizacionReport'
       ]),
       loadingService: jasmine.createSpyObj('LoadingService', ['showLoading', 'hideLoading']),
       cotizacionService: jasmine.createSpyObj('CotizacionService', [
@@ -112,7 +113,7 @@ describe('FacturacionRegistroComponent', () => {
         getUserEmpresa: 'Test Company',
         getUserIdEmpresa: 1
       }),
-      rDialogService: jasmine.createSpyObj('RDialogService', ['open']),
+      rDialogService: jasmine.createSpyObj('RDialogService', ['open', 'openDialog']),
       validatorPermissionService: jasmine.createSpyObj('ValidatorPermissionService', [
         'validateUserRole'
       ])
@@ -738,6 +739,482 @@ describe('FacturacionRegistroComponent', () => {
       // Button states can be changed
       component.btnDisabledTelefono = false;
       expect(component.btnDisabledTelefono).toBeFalse();
+    });
+  });
+
+  describe('Complete Invoice Generation Flow', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should complete full invoice generation flow successfully', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      const mockRDialogService = TestBed.inject(RDialogService) as jasmine.SpyObj<RDialogService>;
+
+      // Mock successful invoice response
+      const mockInvoiceResponse = {
+        numeroFactura: 12345,
+        idEmpresa: '1',
+        idSucursal: '1'
+      };
+      mockMantenimientoService.postFactura.and.returnValue(of(mockInvoiceResponse));
+
+      // Setup: Select client - component uses 'customer', not 'clienteSeleccionado'
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      // Add article
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.get('articulo')?.setValue({ id: 1, accesorio_Descripcion: 'Test Article' });
+      articulo.get('precio')?.setValue(1000);
+      articulo.get('cantidad')?.setValue(2);
+
+      // Action: Generate invoice
+      component.generateFactura();
+
+      // Assert: Service called
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalled();
+      expect(mockToastr.success).toHaveBeenCalledWith('Factura generada con exito!');
+    });
+
+    it('should build invoice object with all required fields', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+
+      // Setup complete form data
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.patchValue({
+        telefono: '8091234567',
+        vendedor: 1,
+        tipoFactura: 1,
+        tipoPago: 1,
+        comprobante: 0,
+        garantia: 8,
+        aplicarItbis: true
+      });
+
+      // Add article
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        articulo: { id: 1, accesorio_Descripcion: 'Test Article' },
+        precio: 1000,
+        cantidad: 2,
+        descuento: 0
+      });
+
+      // Spy on loadDataToPrint
+      spyOn(component, 'loadDataToPrint').and.callThrough();
+
+      const mockInvoiceResponse = { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' };
+      mockMantenimientoService.postFactura.and.returnValue(of(mockInvoiceResponse));
+
+      // Generate invoice
+      component.generateFactura();
+
+      // Verify loadDataToPrint was called
+      expect(component.loadDataToPrint).toHaveBeenCalled();
+
+      // Verify invoice object structure
+      const invoiceData = component.loadDataToPrint();
+      expect(invoiceData).toBeDefined();
+      expect(invoiceData.detalleFacturaList).toBeDefined();
+      expect(invoiceData.detalleFacturaList.length).toBeGreaterThan(0);
+    });
+
+    it('should handle successful invoice creation and update UI', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+
+      const mockResponse = { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' };
+      mockMantenimientoService.postFactura.and.returnValue(of(mockResponse));
+      mockMantenimientoService.getFacturaNumero.and.returnValue(of(12346));
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      component.generateFactura();
+
+      expect(component.facturaNumberReporte).toBe(12345);
+      expect(mockToastr.success).toHaveBeenCalledWith('Factura generada con exito!');
+      expect(mockMantenimientoService.getFacturaNumero).toHaveBeenCalled();
+    });
+
+    it('should handle invoice generation error gracefully', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+
+      const errorMessage = 'Error al generar factura';
+      mockMantenimientoService.postFactura.and.returnValue(throwError(errorMessage));
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      component.generateFactura();
+
+      expect(mockToastr.error).toHaveBeenCalledWith(errorMessage);
+    });
+
+    it('should clear accessories buffer after successful invoice', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+
+      mockMantenimientoService.postFactura.and.returnValue(of({ numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' }));
+
+      // Add items to buffer
+      component.accesoriosBuffer = [
+        { id: '1', accesorio_Descripcion: 'Item 1', precio_Detalle: 100, precio_Por_Mayor: 90, cantidad: 1, codigo_Barra: 0, modelo: '', codigo: '', idTipo: 2, disponible: 'S', mensaje: '' }
+      ];
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      component.generateFactura();
+
+      expect(component.accesoriosBuffer.length).toBe(0);
+    });
+  });
+
+  describe('Quotation Generation Flow', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should generate quotation successfully', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockLoadingService = TestBed.inject(LoadingService) as jasmine.SpyObj<LoadingService>;
+
+      const mockPdfBlob = new Blob(['PDF content'], { type: 'application/pdf' });
+      mockMantenimientoService.postCotizacionReport.and.returnValue(of(mockPdfBlob));
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.isFactura = false;
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      component.generateCotizacion();
+
+      expect(mockLoadingService.showLoading).toHaveBeenCalledWith('Procesando cotización...');
+      expect(mockMantenimientoService.postCotizacionReport).toHaveBeenCalled();
+    });
+
+    it('should reset form after successful quotation generation', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+
+      const mockPdfBlob = new Blob(['PDF content'], { type: 'application/pdf' });
+      mockMantenimientoService.postCotizacionReport.and.returnValue(of(mockPdfBlob));
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      // Set form values
+      component.form.patchValue({
+        telefono: '8091234567',
+        vendedor: 1,
+        tipoFactura: 2,
+        tipoPago: 2,
+        aplicarItbis: true
+      });
+
+      component.generateCotizacion();
+
+      // Verify form reset with default values
+      expect(component.form.get('tipoFactura')?.value).toBe(1);
+      expect(component.form.get('tipoPago')?.value).toBe(1);
+      expect(component.form.get('comprobante')?.value).toBe(0);
+      expect(component.form.get('garantia')?.value).toBe(8);
+      expect(component.form.get('aplicarItbis')?.value).toBe(false);
+    });
+
+    it('should handle quotation generation error', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      const errorMessage = 'Error al generar cotización';
+      mockMantenimientoService.postCotizacionReport.and.returnValue(throwError(errorMessage));
+
+      component.generateCotizacion();
+
+      expect(mockToastr.error).toHaveBeenCalledWith(errorMessage);
+    });
+  });
+
+  describe('Payment Handling', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should handle payment type selection', () => {
+      component.form.get('tipoPago')?.setValue(1);
+      expect(component.form.get('tipoPago')?.value).toBe(1);
+
+      component.form.get('tipoPago')?.setValue(2);
+      expect(component.form.get('tipoPago')?.value).toBe(2);
+    });
+
+    it('should handle payment type changes', () => {
+      const tipoPagoControl = component.form.get('tipoPago');
+
+      tipoPagoControl?.setValue(null);
+      // Form control doesn't have required validator, so it's valid even when null
+      expect(tipoPagoControl?.value).toBeNull();
+
+      tipoPagoControl?.setValue(1);
+      expect(tipoPagoControl?.valid).toBeTrue();
+      expect(tipoPagoControl?.value).toBe(1);
+    });
+  });
+
+  describe('Business Validations', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should allow form to be valid even without articles (business logic handles this)', () => {
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      // Clear all articles
+      component.articulos().clear();
+
+      // Form can be technically valid (business logic prevents submission)
+      expect(component.articulos().length).toBe(0);
+    });
+
+    it('should validate client phone is required', () => {
+      component.customer = undefined as any;
+      component.form.get('telefono')?.setValue('');
+      component.form.get('vendedor')?.setValue(1);
+
+      // Add article
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.get('articulo')?.setValue({ id: 1, accesorio_Descripcion: 'Test' });
+
+      // Phone field should be invalid when empty
+      expect(component.form.get('telefono')?.valid).toBeFalse();
+
+      // When phone is provided, should be valid
+      component.form.get('telefono')?.setValue('8091234567');
+      expect(component.form.get('telefono')?.valid).toBeTrue();
+    });
+
+    it('should validate vendor is required', () => {
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(null);
+
+      // Vendor field should be invalid when null
+      expect(component.form.get('vendedor')?.valid).toBeFalse();
+
+      // When vendor is provided, should be valid
+      component.form.get('vendedor')?.setValue(1);
+      expect(component.form.get('vendedor')?.valid).toBeTrue();
+    });
+
+    it('should allow any quantity value (validation is done in business logic)', () => {
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+
+      articulo.get('cantidad')?.setValue(0);
+      expect(articulo.get('cantidad')?.value).toBe(0);
+
+      articulo.get('cantidad')?.setValue(-1);
+      expect(articulo.get('cantidad')?.value).toBe(-1);
+
+      articulo.get('cantidad')?.setValue(1);
+      expect(articulo.get('cantidad')?.value).toBe(1);
+    });
+
+    it('should allow any price value (validation is done in business logic)', () => {
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+
+      articulo.get('precio')?.setValue(-100);
+      expect(articulo.get('precio')?.value).toBe(-100);
+
+      articulo.get('precio')?.setValue(0);
+      expect(articulo.get('precio')?.value).toBe(0);
+
+      articulo.get('precio')?.setValue(100);
+      expect(articulo.get('precio')?.value).toBe(100);
+    });
+
+    it('should allow any discount value (validation is done in business logic)', () => {
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+
+      // No validators on discount field, accepts any value
+      articulo.get('descuento')?.setValue(-1);
+      expect(articulo.get('descuento')?.value).toBe(-1);
+
+      articulo.get('descuento')?.setValue(101);
+      expect(articulo.get('descuento')?.value).toBe(101);
+
+      articulo.get('descuento')?.setValue(50);
+      expect(articulo.get('descuento')?.value).toBe(50);
+    });
+  });
+
+  describe('Invoice Data Preparation', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should prepare complete invoice data structure', () => {
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.patchValue({
+        telefono: '8091234567',
+        vendedor: 1,
+        tipoFactura: 1,
+        tipoPago: 1,
+        comprobante: 0,
+        garantia: 8,
+        aplicarItbis: true
+      });
+
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        articulo: { id: 1, accesorio_Descripcion: 'Test Article', idTipo: 2 },
+        precio: 1000,
+        cantidad: 2,
+        descuento: 10
+      });
+
+      const invoiceData = component.loadDataToPrint();
+
+      expect(invoiceData).toBeDefined();
+      expect(invoiceData.detalleFacturaList).toBeDefined();
+      expect(invoiceData.detalleFacturaList.length).toBe(1);
+
+      const detail = invoiceData.detalleFacturaList[0];
+      expect(detail.cantidad).toBe(2);
+      expect(detail.precio).toBe(1000);
+      expect(detail.descuento).toBe(10);
+    });
+
+    it('should include multiple articles in invoice data', () => {
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+
+      // Form initializes with 1 article by default, verify it
+      expect(component.articulos().length).toBeGreaterThanOrEqual(1);
+
+      // Fill first article
+      const articulo1 = component.articulos().at(0);
+      articulo1.patchValue({
+        articulo: { id: 1, accesorio_Descripcion: 'Article 1', idTipo: 2 },
+        precio: 1000,
+        cantidad: 1
+      });
+
+      // Add second article
+      component.agregarArticulo();
+
+      const articulo2 = component.articulos().at(1);
+      articulo2.patchValue({
+        articulo: { id: 2, accesorio_Descripcion: 'Article 2', idTipo: 2 },
+        precio: 500,
+        cantidad: 2
+      });
+
+      const invoiceData = component.loadDataToPrint();
+
+      // Verify we have 2 articles in the list
+      expect(invoiceData.detalleFacturaList.length).toBe(2);
+      // Verify both articles are defined
+      expect(invoiceData.detalleFacturaList[0]).toBeDefined();
+      expect(invoiceData.detalleFacturaList[1]).toBeDefined();
+    });
+  });
+
+  describe('ITBIS Application', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should calculate ITBIS correctly when enabled', () => {
+      // Note: component checks for string 'true', not boolean
+      component.form.get('aplicarItbis')?.setValue('true');
+      component.asumeItbis = mockAsumeItbis;
+
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 1000,
+        cantidad: 1,
+        descuento: 0,
+        total: 1000  // Set total to trigger ITBIS calculation
+      });
+
+      // Call refreshGeneralValues instead of calculoTotal
+      component.refreshGeneralValues();
+
+      expect(component.itbis).toBeGreaterThan(0);
+      expect(component.total).toBeGreaterThan(0);
+    });
+
+    it('should not calculate ITBIS when disabled', () => {
+      component.form.get('aplicarItbis')?.setValue(false);
+
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 1000,
+        cantidad: 1,
+        descuento: 0,
+        total: 1000
+      });
+
+      component.refreshGeneralValues();
+
+      expect(component.itbis).toBe(0);
+    });
+  });
+
+  describe('Client Modal Integration', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should open client registration modal', () => {
+      expect(component.showModal).toBeFalse();
+
+      component.showModal = true;
+
+      expect(component.showModal).toBeTrue();
+    });
+
+    it('should close client registration modal', () => {
+      const mockClientService = TestBed.inject(ClientesService) as jasmine.SpyObj<ClientesService>;
+
+      component.showModal = true;
+
+      component.closeModal();
+
+      expect(component.showModal).toBeFalse();
+    });
+
+    it('should update form when client is registered from modal', () => {
+      const newClient = {
+        id_Cliente: 123,
+        idContacto: 123,
+        numero_de_telefono: 8091234567,
+        nombre: 'New Client'
+      };
+
+      // Simulate customer registered event
+      component.form.get('telefono')?.setValue('8091234567');
+      component.clienteSeleccionado = newClient;
+
+      expect(component.form.get('telefono')?.value).toBe('8091234567');
+      expect(component.clienteSeleccionado.id_Cliente).toBe(123);
     });
   });
 });

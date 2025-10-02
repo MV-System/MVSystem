@@ -94,7 +94,7 @@
                       </button>
                             </div>
                             <div class="clientDetail client-detail-row mt-2">
-                                <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer.nombres + ' ' + customer.apellidos | titlecase)}} </span>
+                                <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer?.nombres + ' ' + customer?.apellidos | titlecase)}} </span>
                                 <span class="phones ms-3">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
                             </div>
                         </div>

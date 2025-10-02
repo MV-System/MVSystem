@@ -147,7 +147,7 @@ onModalClose(rep: any) {
   subs: Subscription[] = [];
   destroy$: Subject<any> = new Subject<any>();
   printing: boolean = false;
-  customer!: Cliente;
+  customer?: Cliente;
   cotizaciones!: CotizacionAmount[];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
   customers: Cliente[] = []
@@ -380,7 +380,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         fechaFacturacion: this.currentDateTime(),
         tipoFactura: 1,
         tipoPago: 1,
-        garantia: 8,
+        garantia: 7,
         nota: '',
         nombre: '',
         apellido: '',
@@ -461,7 +461,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
    * @param customer Cliente a agregar
    */
   onAddCustomer(customer: Cliente) {
-    console.log('onAddCustomer llamado con:', customer);
 
     // Si customer es undefined o null, significa que se canceló
     if (!customer) {
@@ -484,7 +483,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
 
     // Cerrar el modal
     this.showModal = false;
-    console.log('Modal cerrado, showModal:', this.showModal);
 
     // Mostrar mensaje de éxito
     this.toastr.success('Cliente agregado correctamente');
@@ -494,12 +492,10 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
    * Abre el modal para agregar un nuevo cliente
    */
   onAdd() {
-    console.log('onAdd() llamado - Abriendo modal');
     // Indicar que el formulario está siendo abierto
     this.clientesService.isOpeningForm$.next(true);
     // Mostrar el modal
     this.showModal = true;
-    console.log('showModal establecido a:', this.showModal);
   }
 
   /**
@@ -714,7 +710,7 @@ else
 ///------------------------------------------------------------------------------------------------------------------////
     const model: FacturaRegistro = {
       numeroFactura: this.facturaNumber,
-      idCliente: this.customer.id_Cliente || 0,
+      idCliente: this.customer?.id_Cliente || 0,
       idVendedor: Number(this.form.get('vendedor')?.value),
       idAlmacen: Number(this.loginService.getUserIdSucursal),
       idTipoFactura: Number(this.form.get('tipoFactura')?.value),
@@ -1147,7 +1143,7 @@ printFacturaMini() {
   /**
    * Helper method to get client phone number from different API response formats
    */
-  getClienteTelefono(cliente: Cliente): number {
+  getClienteTelefono(cliente?: Cliente): number {
     return  cliente?.numero_de_telefono || 0;
   }
 
