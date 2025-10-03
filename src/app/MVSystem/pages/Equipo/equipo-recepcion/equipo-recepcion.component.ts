@@ -25,6 +25,50 @@ export class EquipoRecepcionComponent implements OnInit {
 
   Usuario: string = this.loginService.getUserName();
 
+  /**
+   * Validador personalizado para teléfono con máscara
+   * Valida que tenga exactamente 10 dígitos
+   */
+  telefonoValidator(control: any) {
+    const value = control.value;
+    if (!value) return null;
+
+    // Remover caracteres no numéricos para validación
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Verificar que tenga exactamente 10 dígitos
+    if (digitsOnly.length === 10) {
+      return null; // Válido
+    }
+
+    return { invalidTelefono: true }; // Inválido
+  }
+
+  /**
+   * Validador para cédula dominicana o pasaporte
+   * Cédula: 11 dígitos con formato XXX-XXXXXXX-X
+   * Pasaporte: Alfanumérico, mínimo 6 caracteres
+   */
+  cedulaOPasaporteValidator(control: any) {
+    const value = control.value;
+    if (!value) return null;
+
+    // Remover caracteres no numéricos
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Si tiene 11 dígitos, es cédula dominicana válida
+    if (digitsOnly.length === 11) {
+      return null;
+    }
+
+    // Si no tiene 11 dígitos, validar como pasaporte (alfanumérico, min 6 caracteres)
+    if (value.length >= 6 && /^[a-zA-Z0-9]+$/.test(value)) {
+      return null;
+    }
+
+    return { invalidCedulaOPasaporte: true };
+  }
+
   get precioImeiEntra(){return this.recepcionEquipoForm.get('PrecioImeiEntra');}
   get imeiEntra(){return this.recepcionEquipoForm.get('ImeiEntrada');}
   get imeiSale(){return this.recepcionEquipoForm.get('ImeiSale');}
@@ -39,16 +83,61 @@ export class EquipoRecepcionComponent implements OnInit {
     else return ''
   }
 
+  get nombresErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('Nombres')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.minlength) return 'Debe tener al menos 2 caracteres';
+    if (errors?.pattern) return 'No puede contener solo espacios';
+    return '';
+  }
+
+  get apellidosErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('Apellidos')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.minlength) return 'Debe tener al menos 2 caracteres';
+    if (errors?.pattern) return 'No puede contener solo espacios';
+    return '';
+  }
+
+  get cedulaErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('Cedula')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.invalidCedulaOPasaporte) return 'Ingrese una cédula válida (11 dígitos) o pasaporte (mín. 6 caracteres alfanuméricos)';
+    return '';
+  }
+
+  get telefonoErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('Telefono')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.invalidTelefono) return 'Debe ingresar un número de teléfono válido de 10 dígitos';
+    return '';
+  }
+
+  get imeiEntradaErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('ImeiEntrada')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.maxlength) return 'Máximo 30 caracteres';
+    if (errors?.pattern) return 'No puede contener espacios al inicio o final';
+    return '';
+  }
+
+  get imeiSaleErrorMsg(): string {
+    const errors = this.recepcionEquipoForm.get('ImeiSale')?.errors;
+    if (errors?.maxlength) return 'Máximo 30 caracteres';
+    if (errors?.pattern) return 'No puede contener espacios al inicio o final';
+    return 'Debe validar que el IMEI existe y esté disponible';
+  }
+
   recepcionEquipoForm = this.fb.group({
-    Nombres: ['', Validators.required],
-    Apellidos: ['', Validators.required],
-    Cedula: ['', Validators.required],
-    Telefono: ['', Validators.required],
-    ImeiEntrada: ['', Validators.required],
+    Nombres: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^\S.*\S$|^\S$/)]],
+    Apellidos: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^\S.*\S$|^\S$/)]],
+    Cedula: ['', [Validators.required, this.cedulaOPasaporteValidator]],
+    Telefono: ['', [Validators.required, this.telefonoValidator]],
+    ImeiEntrada: ['', [Validators.required, Validators.maxLength(30), Validators.pattern(/^\S.*\S$|^\S$/)]],
     PrecioImeiEntra: [,[Validators.required, this.formValidatorsService.validarPrecioMayorCero]],
     IDModelo: ['', Validators.required],
     IDCondicion: ['', Validators.required],
-    ImeiSale: ['',[],[this.imeiSaleAsyncValidatorService]],//this.imeiSaleAsyncValidatorService
+    ImeiSale: ['', [Validators.maxLength(30), Validators.pattern(/^\S.*\S$|^\S$/)], [this.imeiSaleAsyncValidatorService]],
     Nota: [''],
     Usuario: this.loginService.getUserName()
   })

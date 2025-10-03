@@ -16,8 +16,7 @@
                     <div class="card-body">
                         <div class="form-header mb-4">
                             <h5 class="form-title">
-                                <i class="bi bi-box-arrow-in-down me-2 text-primary"></i>
-                                Recepción de equipo
+                                <i class="bi bi-box-arrow-in-down me-2 text-primary"></i> Recepción de equipo
                             </h5>
                             <p class="form-subtitle">Complete la información para recibir el equipo</p>
                         </div>
@@ -30,7 +29,7 @@
                                 </label>
                                 <input type="text" class="form-control modern-input" formControlName="Nombres" required [ngClass]="{'is-invalid':validarCampos('Nombres')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('Nombres')">
-                                    Este campo es requerido
+                                    {{nombresErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -40,17 +39,17 @@
                                 </label>
                                 <input type="text" class="form-control modern-input" formControlName="Apellidos" required [ngClass]="{'is-invalid':validarCampos('Apellidos')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('Apellidos')">
-                                    Este campo es requerido
+                                    {{apellidosErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label modern-label">
                                     <i class="bi bi-credit-card-2-front me-1"></i>
-                                    Cédula <span class="required-star">*</span>
+                                    Cédula o Pasaporte <span class="required-star">*</span>
                                 </label>
                                 <input type="text" class="form-control modern-input" maxlength="13" mask="000-0000000-0" formControlName="Cedula" required [ngClass]="{'is-invalid':validarCampos('Cedula')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('Cedula')">
-                                    Este campo es requerido
+                                    {{cedulaErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -60,7 +59,7 @@
                                 </label>
                                 <input type="text" class="form-control modern-input" mask="000-000-0000" formControlName="Telefono" required [ngClass]="{'is-invalid':validarCampos('Telefono')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('Telefono')">
-                                    Este campo es requerido
+                                    {{telefonoErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -70,7 +69,7 @@
                                 </label>
                                 <input type="text" class="form-control modern-input" maxlength="30" formControlName="ImeiEntrada" required [ngClass]="{'is-invalid':validarCampos('ImeiEntrada')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('ImeiEntrada')">
-                                    Este campo es requerido
+                                    {{imeiEntradaErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -90,7 +89,7 @@
                                 </label>
                                 <input type="text" class="form-control modern-input" maxlength="30" formControlName="ImeiSale" [ngClass]="{'is-invalid':validarCampos('ImeiSale')}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('ImeiSale')">
-                                    Debe validar que el IMEI existe y esté disponible
+                                    {{imeiSaleErrorMsg}}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -119,11 +118,8 @@
                                     <i class="bi bi-phone me-1"></i>
                                     Modelo de equipo   <span class="required-star">*</span>
                                 </label>
-                                <select formControlName="IDModelo" class="form-select modern-select">
-                                    <option *ngFor="let modelo of modelosCatalogo" [value]="modelo?.iD_Modelo">
-                                        {{modelo?.descripcion}}
-                                    </option>
-                                </select>
+                                <ng-select [items]="modelosCatalogo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccione un modelo" [class.is-invalid]="validarCampos('IDModelo')" formControlName="IDModelo" class="modern-select-ng" required>
+                                </ng-select>
                                 <div class="invalid-feedback" *ngIf="validarCampos('IDModelo')">
                                     Este campo es requerido
                                 </div>
