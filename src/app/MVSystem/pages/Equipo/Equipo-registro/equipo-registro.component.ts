@@ -58,20 +58,190 @@ export class EquipoRegistroComponent implements OnInit {
 
   btnDisabled: boolean = true;
   isLoading: boolean = false; // Variable para controlar el estado de carga
+
+  /**
+   * Getter para mensajes de error del campo IMEI
+   */
+  get imeiErrorMsg(): string {
+    const errors = this.formRegistro.get('IMEI')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.maxlength) return 'Máximo 30 caracteres';
+    if (errors?.pattern) return 'No puede contener espacios al inicio o final';
+    return '';
+  }
+
+  get comisionDetalleErrorMsg(): string {
+    const errors = this.formRegistro.get('comisionDetalle')?.errors;
+    if (errors?.min) return 'No puede ser negativo';
+    if (errors?.max) return 'El valor máximo es RD$ 99,999';
+    return '';
+  }
+
+  get comisionMayorErrorMsg(): string {
+    const errors = this.formRegistro.get('comisionMayor')?.errors;
+    if (errors?.min) return 'No puede ser negativo';
+    if (errors?.max) return 'El valor máximo es RD$ 99,999';
+    return '';
+  }
+
+  get notaAdicionalErrorMsg(): string {
+    const errors = this.formRegistro.get('notaAdicional')?.errors;
+    if (errors?.maxlength) {
+      const maxLength = errors.maxlength.requiredLength;
+      const actualLength = errors.maxlength.actualLength;
+      return `Máximo ${maxLength} caracteres (actual: ${actualLength})`;
+    }
+    return '';
+  }
+
+  get facturaErrorMsg(): string {
+    const errors = this.formRegistro.get('factura')?.errors;
+    if (errors?.maxlength) return 'Máximo 20 caracteres';
+    if (errors?.pattern) return 'Solo se permiten letras, números y guiones';
+    return '';
+  }
+
+  get costoErrorMsg(): string {
+    const errors = this.formRegistro.get('costo')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.min) return 'Debe ser mayor a 0';
+    if (errors?.max) return 'El valor máximo es RD$ 999,999';
+    return '';
+  }
+
+  get alDetalleErrorMsg(): string {
+    const errors = this.formRegistro.get('alDetalle')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.min) return 'Debe ser mayor a 0';
+    if (errors?.max) return 'El valor máximo es RD$ 999,999';
+    return '';
+  }
+
+  get alPorMayorErrorMsg(): string {
+    const errors = this.formRegistro.get('alPorMayor')?.errors;
+    if (errors?.required) return 'Este campo es requerido';
+    if (errors?.min) return 'Debe ser mayor a 0';
+    if (errors?.max) return 'El valor máximo es RD$ 999,999';
+    return '';
+  }
+
+  get marcaErrorMsg(): string {
+    const errors = this.formRegistro.get('marca')?.errors;
+    if (errors?.required) return 'Debe seleccionar una marca';
+    return '';
+  }
+
+  get modeloErrorMsg(): string {
+    const errors = this.formRegistro.get('modelo')?.errors;
+    if (errors?.required) return 'Debe seleccionar un modelo';
+    return '';
+  }
+
+  /**
+   * Validador personalizado: Precio por mayor debe ser menor que precio al detalle
+   */
+  validadorPrecioDetalleMayor() {
+    return (formGroup: FormGroup) => {
+      const alPorMayor = formGroup.get('alPorMayor')?.value;
+      const alDetalle = formGroup.get('alDetalle')?.value;
+
+      if (alPorMayor && alDetalle && Number(alPorMayor) > Number(alDetalle)) {
+        return { precioMayorSuperaDetalle: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Precio al detalle no puede ser menor que el costo
+   */
+  validadorPrecioDetalleCosto() {
+    return (formGroup: FormGroup) => {
+      const alDetalle = formGroup.get('alDetalle')?.value;
+      const costo = formGroup.get('costo')?.value;
+
+      if (alDetalle && costo && Number(alDetalle) < Number(costo)) {
+        return { precioDetalleMenorQueCosto: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Precio por mayor no puede ser menor que el costo
+   */
+  validadorPrecioMayorCosto() {
+    return (formGroup: FormGroup) => {
+      const alPorMayor = formGroup.get('alPorMayor')?.value;
+      const costo = formGroup.get('costo')?.value;
+
+      if (alPorMayor && costo && Number(alPorMayor) < Number(costo)) {
+        return { precioMayorMenorQueCosto: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Comisión por mayor no puede ser mayor que comisión al detalle
+   */
+  validadorComisionMayorDetalle() {
+    return (formGroup: FormGroup) => {
+      const comisionMayor = formGroup.get('comisionMayor')?.value;
+      const comisionDetalle = formGroup.get('comisionDetalle')?.value;
+
+      // Solo validar si ambos campos tienen valor
+      if (comisionMayor && comisionDetalle && Number(comisionMayor) > Number(comisionDetalle)) {
+        return { comisionMayorSuperaDetalle: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Comisión al detalle no puede ser mayor que el precio al detalle
+   */
+  validadorComisionDetalleVsPrecio() {
+    return (formGroup: FormGroup) => {
+      const comisionDetalle = formGroup.get('comisionDetalle')?.value;
+      const alDetalle = formGroup.get('alDetalle')?.value;
+
+      if (comisionDetalle && alDetalle && Number(comisionDetalle) > Number(alDetalle)) {
+        return { comisionDetalleSuperaPrecio: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Comisión por mayor no puede ser mayor que el precio por mayor
+   */
+  validadorComisionMayorVsPrecio() {
+    return (formGroup: FormGroup) => {
+      const comisionMayor = formGroup.get('comisionMayor')?.value;
+      const alPorMayor = formGroup.get('alPorMayor')?.value;
+
+      if (comisionMayor && alPorMayor && Number(comisionMayor) > Number(alPorMayor)) {
+        return { comisionMayorSuperaPrecio: true };
+      }
+      return null;
+    };
+  }
+
   // Formulario de registro de equipos
   // Definición del formulario reactivo
   formRegistro: FormGroup = this.fb.group({
-    factura: ["",],
-    IMEI: ["",],
-    costo: [, [Validators.required]],
-    alDetalle: [, [Validators.required]],
-    alPorMayor: [, [Validators.required]],
-    comisionDetalle: [0,],
-    comisionMayor: [0,],
-    nota: ["",],
+    factura: ["", [Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9-]*$/)]],
+    IMEI: ["", [Validators.required, Validators.maxLength(30), Validators.pattern(/^\S.*\S$|^\S$/)]],
+    costo: [, [Validators.required, Validators.min(0.01), Validators.max(999999)]],
+    alDetalle: [, [Validators.required, Validators.min(0.01), Validators.max(999999)]],
+    alPorMayor: [, [Validators.required, Validators.min(0.01), Validators.max(999999)]],
+    comisionDetalle: [0, [Validators.min(0), Validators.max(99999)]],
+    comisionMayor: [0, [Validators.min(0), Validators.max(99999)]],
+    nota: ["", [Validators.maxLength(500)]],
     idCondicion: [1,],
     idEstadoBloqueo: [1,],
-    notaAdicional: ['',],
+    notaAdicional: ['', [Validators.maxLength(500)]],
     tecnologia: [1,],
     garantia: ['',[Validators.required]],
     estado: [,],
@@ -83,6 +253,15 @@ export class EquipoRegistroComponent implements OnInit {
     desbloqueado: ['S',],
     numeroRegistro: [,],
     usuario: [this.loginService.getUserName(),]
+  }, {
+    validators: [
+      this.validadorPrecioDetalleMayor(),
+      this.validadorPrecioDetalleCosto(),
+      this.validadorPrecioMayorCosto(),
+      this.validadorComisionMayorDetalle(),
+      this.validadorComisionDetalleVsPrecio(),
+      this.validadorComisionMayorVsPrecio()
+    ]
   })
 
  registroEquipos() {
@@ -104,7 +283,7 @@ export class EquipoRegistroComponent implements OnInit {
       progressBar: true,
     });
     return;
-  
+
   }
 
   const model: Equipo = this.modeloRegistroEquipo();
