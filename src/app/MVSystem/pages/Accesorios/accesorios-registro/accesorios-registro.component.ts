@@ -42,23 +42,43 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.obtenerAlmacenLista();
     this.btnDisable();
     this.formRegistro.get('modelo')?.disable();
+
+    // Suscribirse a cambios para mostrar validaciones en tiempo real
+    this.setupRealtimeValidations();
+  }
+
+  /**
+   * Configura validaciones en tiempo real
+   * Los validadores personalizados se ejecutan automáticamente
+   * y los mensajes visuales se muestran en el HTML
+   */
+  setupRealtimeValidations() {
+    // Ya no necesitamos suscripciones para mostrar toastr
+    // Los validadores se ejecutan automáticamente con cada cambio
   }
   //Forms
   formRegistro: FormGroup = this.fb.group({
-    descripcion: ['', [Validators.required]],
-    cantidad: [, Validators.required],
-    costo: [, Validators.required],
-    alDetalle: [, Validators.required],
-    alPorMayor: [, Validators.required],
-    IMEI: [,Validators.max(15)],
-    cantidadMax: [, Validators.required],
-    cantidadMin: [, Validators.required],
-    marca: [, Validators.required],
-    modelo: [, Validators.required],
-    almacen: [2, Validators.required],
+    descripcion: ['', [Validators.required, Validators.minLength(3)]],
+    cantidad: ['', Validators.required],
+    costo: ['', Validators.required],
+    alDetalle: ['', Validators.required],
+    alPorMayor: ['', Validators.required],
+    IMEI: ['', [Validators.maxLength(30), Validators.pattern(/^\S.*\S$|^\S$/)]],  // Alfanumérico, sin espacios al inicio/final
+    cantidadMax: [''],  // Campo opcional, valor por defecto será 2
+    cantidadMin: [''],  // Campo opcional, valor por defecto será 1
+    marca: ['', Validators.required],
+    modelo: ['', Validators.required],
+    almacen: ['', Validators.required],  // Valor vacío inicial para forzar selección
     usuario: [''],
 
-    fechaFacturacion:[,]
+    fechaFacturacion:['',]
+  }, {
+    validators: [
+      this.validadorCantidadMinMax(),
+      this.validadorPrecioDetalleMayor(),
+      this.validadorPrecioDetalleCosto(),
+      this.validadorPrecioMayorCosto()  // Precio por mayor no puede ser menor que costo
+    ]
   });
   /**
  * If the form is valid, set the button to disabled, otherwise set it to enabled.
@@ -79,24 +99,87 @@ export class AccesoriosRegistroComponent implements OnInit {
 
     }
   }
+
+  /**
+   * Validador personalizado: Cantidad mínima no puede ser mayor que cantidad máxima
+   */
+  validadorCantidadMinMax() {
+    return (formGroup: FormGroup) => {
+      const cantMin = formGroup.get('cantidadMin')?.value;
+      const cantMax = formGroup.get('cantidadMax')?.value;
+
+      if (cantMin && cantMax && Number(cantMin) > Number(cantMax)) {
+        return { cantidadMinMayorQueMax: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Precio por mayor debe ser menor que precio al detalle
+   */
+  validadorPrecioDetalleMayor() {
+    return (formGroup: FormGroup) => {
+      const alPorMayor = formGroup.get('alPorMayor')?.value;
+      const alDetalle = formGroup.get('alDetalle')?.value;
+
+      if (alPorMayor && alDetalle && Number(alPorMayor) > Number(alDetalle)) {
+        return { precioMayorSuperaDetalle: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Precio al detalle no puede ser menor que el costo
+   */
+  validadorPrecioDetalleCosto() {
+    return (formGroup: FormGroup) => {
+      const alDetalle = formGroup.get('alDetalle')?.value;
+      const costo = formGroup.get('costo')?.value;
+
+      if (alDetalle && costo && Number(alDetalle) < Number(costo)) {
+        return { precioDetalleMenorQueCosto: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado: Precio por mayor no puede ser menor que el costo
+   */
+  validadorPrecioMayorCosto() {
+    return (formGroup: FormGroup) => {
+      const alPorMayor = formGroup.get('alPorMayor')?.value;
+      const costo = formGroup.get('costo')?.value;
+
+      if (alPorMayor && costo && Number(alPorMayor) < Number(costo)) {
+        return { precioMayorMenorQueCosto: true };
+      }
+      return null;
+    };
+  }
+
   obtenerMarcasLista() {
     this.catalogosService.getMarcasLista().subscribe((marca) => {
       this.marcaListado = marca;
     });
   }
   msgValidacionesCamposFormCantMaxCantMin() {
-    if (
-      this.formRegistro.get('cantidadMin')?.value >
-      this.formRegistro.get('cantidadMax')?.value
-    ) {
+    const cantMin = this.formRegistro.get('cantidadMin')?.value;
+    const cantMax = this.formRegistro.get('cantidadMax')?.value;
+
+    // Solo validar si ambos campos tienen valor
+    if (cantMin && cantMax && Number(cantMin) > Number(cantMax)) {
       this.formRegistro.setErrors({error:''})
       this.toastr.error(
-        'La cantidad minima no puede ser mayor a la cantidad maxima',
+        'La cantidad mínima no puede ser mayor a la cantidad máxima',
         '',
         { closeButton: true, progressBar: true }
       );
-      return;
+      return true;
     }
+    return false;
   }
   msgValidacionesCamposFormDetallePorMayor() {
     if (
@@ -109,8 +192,9 @@ export class AccesoriosRegistroComponent implements OnInit {
         '',
         { closeButton: true, progressBar: true }
       );
-      return;
+      return true;
     }
+    return false;
   }
   //Al detalle no puede ser mayor que el costo
   validarCamposFormCostoDetalle() {
@@ -125,8 +209,9 @@ export class AccesoriosRegistroComponent implements OnInit {
         '',
         { closeButton: true, progressBar: true }
       );
-      return;
+      return true;
     }
+    return false;
   }
 
   msgValidacionesCamposFormNumericos() {
@@ -135,37 +220,89 @@ export class AccesoriosRegistroComponent implements OnInit {
       'costo',
       'alDetalle',
       'alPorMayor',
-      'cantidadMax',
-      'cantidadMin',
     ];
-    camposNumerico.forEach((campo) => {
-      if (
-        this.formRegistro.get(campo)?.value < 0 ||
-        this.formRegistro.get(campo)?.value == 0
-      ) {
-      this.formRegistro.setErrors({error:''})
-      this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
+    // Validar campos obligatorios
+    for (const campo of camposNumerico) {
+      const valor = this.formRegistro.get(campo)?.value;
+      if (valor !== null && valor !== '' && (Number(valor) <= 0)) {
+        this.formRegistro.setErrors({error:''})
+        this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
           closeButton: true,
           progressBar: true,
         });
-        return;
+        return true;
       }
-    });
+    }
+
+    // Validar campos opcionales solo si tienen valor
+    let camposOpcionales: string[] = ['cantidadMax', 'cantidadMin'];
+    for (const campo of camposOpcionales) {
+      const valor = this.formRegistro.get(campo)?.value;
+      if (valor !== null && valor !== '' && valor !== undefined) {
+        if (Number(valor) <= 0) {
+          this.formRegistro.setErrors({error:''})
+          this.toastr.error('Los valores de los campos deben ser mayor a 0', '', {
+            closeButton: true,
+            progressBar: true,
+          });
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 
-  validacionesRegistro(){
-    this.msgValidacionesCamposFormCantMaxCantMin();
-    this.msgValidacionesCamposFormDetallePorMayor();
-    this.msgValidacionesCamposFormNumericos();
-    this.validarCamposFormCostoDetalle();
+  validacionesRegistro(): boolean {
+    const error1 = this.msgValidacionesCamposFormCantMaxCantMin();
+    const error2 = this.msgValidacionesCamposFormDetallePorMayor();
+    const error3 = this.msgValidacionesCamposFormNumericos();
+    const error4 = this.validarCamposFormCostoDetalle();
+
+    return error1 || error2 || error3 || error4;
+  }
+
+  /**
+   * Marca todos los campos del formulario como touched para mostrar errores de validación
+   * Se llama cuando el usuario intenta guardar con el botón deshabilitado
+   */
+  marcarCamposComoTocados() {
+    Object.keys(this.formRegistro.controls).forEach(field => {
+      const control = this.formRegistro.get(field);
+      control?.markAsTouched({ onlySelf: true });
+      control?.markAsDirty({ onlySelf: true });
+    });
+
+    // Mostrar mensaje informativo
+    this.toastr.info(
+      'Por favor, complete todos los campos obligatorios correctamente',
+      'Formulario incompleto',
+      { closeButton: true, progressBar: true, timeOut: 4000 }
+    );
+  }
+
+  /**
+   * Intenta guardar el accesorio
+   * Si el formulario está inválido, marca todos los campos como touched para mostrar errores
+   */
+  intentarGuardar() {
+    // Si el formulario es inválido o tiene errores personalizados, marcar campos
+    if (this.btnDisabled) {
+      this.marcarCamposComoTocados();
+      return;
+    }
+
+    // Si está válido, proceder con el registro normal
+    this.registroAccesorio();
   }
 
   registroAccesorio() {
-    const model: Accesorio = this.modeloRegistroAccesorio();
+    // Primero ejecutar validaciones personalizadas
+    const hasCustomErrors = this.validacionesRegistro();
 
-    this.validacionesRegistro()
-    if (this.formRegistro.valid) {
+    // Solo proceder si el formulario es válido Y no hay errores personalizados
+    if (this.formRegistro.valid && !hasCustomErrors) {
+      const model: Accesorio = this.modeloRegistroAccesorio();
       this.mantenimientoService.postAccesorio(model)
           .subscribe((accesorio: AccesorioLista) =>{
                this.AccesorioValorRetorno.push(accesorio);
@@ -185,9 +322,9 @@ export class AccesoriosRegistroComponent implements OnInit {
       costo_Equipo: Number(this.formRegistro.get('costo')?.value),
       precio_Detalle:Number( this.formRegistro.get('alDetalle')?.value),
       precio_Por_Mayor:Number(  this.formRegistro.get('alPorMayor')?.value),
-      imei_Equipo: this.formRegistro.get('IMEI')?.value,
-      can_Max:Number(  this.formRegistro.get('cantidadMax')?.value),
-      can_Min:Number(  this.formRegistro.get('cantidadMin')?.value),
+      imei_Equipo: this.formRegistro.get('IMEI')?.value?.trim() || '',  // Trim para eliminar espacios
+      can_Max: this.formRegistro.get('cantidadMax')?.value ? Number(this.formRegistro.get('cantidadMax')?.value) : 2,
+      can_Min: this.formRegistro.get('cantidadMin')?.value ? Number(this.formRegistro.get('cantidadMin')?.value) : 1,
       id_Modelo:Number( this.formRegistro.get('modelo')?.value),
       id_Almacen: this.formRegistro.get('almacen')?.value,
       // cod_Barra:this.formRegistro.get('IMEI')?.value, //? preguntar //
@@ -224,16 +361,28 @@ export class AccesoriosRegistroComponent implements OnInit {
    */
   limpiarFormulario() {
     this.formRegistro.reset({
-      almacen: 2 // Reset to default almacen value
+      almacen: '', // Reset a valor vacío para forzar selección
+      descripcion: '',
+      cantidad: '',
+      costo: '',
+      alDetalle: '',
+      alPorMayor: '',
+      IMEI: '',
+      cantidadMax: '',
+      cantidadMin: '',
+      marca: '',
+      modelo: ''
     });
-    
+
+    // Resetear estado de validación
+    this.formRegistro.markAsPristine();
+    this.formRegistro.markAsUntouched();
+
     // Disable modelo field again
     this.formRegistro.get('modelo')?.disable();
-    
+
     // Clear modelo list
     this.modeloListado = [];
-    
-    this.toastr.info('Formulario limpiado correctamente', 'Información');
-  }
 
-}
+    this.toastr.info('Formulario limpiado correctamente', 'Información');
+  }}
