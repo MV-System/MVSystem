@@ -3,7 +3,7 @@ import { ClienteRegistro } from "./cliente.interface";
 import { DatePaging, Pagination } from "./pagination.interfaces";
 
 export interface Accesorio {
-    imei_Equipo?: null;
+    imei_Equipo?: string;
     id_Modelo: number;
     codigo?: string;
     descripcion_Accesorio: string;

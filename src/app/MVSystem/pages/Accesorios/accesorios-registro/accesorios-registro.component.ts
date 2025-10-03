@@ -304,14 +304,18 @@ export class AccesoriosRegistroComponent implements OnInit {
     if (this.formRegistro.valid && !hasCustomErrors) {
       const model: Accesorio = this.modeloRegistroAccesorio();
       this.mantenimientoService.postAccesorio(model)
-          .subscribe((accesorio: AccesorioLista) =>{
-               this.AccesorioValorRetorno.push(accesorio);
-
-            this.toastr.success('Accesorio registrado con exito!');
-
-        this.formRegistro.reset({
-        });
-    });
+          .subscribe({
+            next: (accesorio: AccesorioLista) => {
+              this.AccesorioValorRetorno.push(accesorio);
+              this.toastr.success('Accesorio registrado con exito!');
+              this.formRegistro.reset({});
+            },
+            error: (error) => {
+              console.error('Error al registrar accesorio:', error);
+              // Opcionalmente mostrar un mensaje de error al usuario
+              // this.toastr.error('Error al registrar el accesorio');
+            }
+          });
   }
 }
   modeloRegistroAccesorio() {
