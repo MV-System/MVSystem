@@ -245,6 +245,70 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     });
     this.subs.push(sub);
   }
+
+  /**
+   * Comparte la factura usando la API nativa de compartir del navegador
+   * Genera un PDF y permite compartir por WhatsApp, Email, etc.
+   */
+  compartirFactura(numeroFactura: number) {
+    // Verificar si el navegador soporta la Web Share API
+    if (!navigator.share) {
+      this.toast.warning('Tu navegador no soporta la función de compartir. Por favor, usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+
+    // Mostrar loading
+    this.loading.showLoading();
+    this.isLoading = true;
+
+    // Generar el PDF usando el mismo endpoint que la impresión normal
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(), numeroFactura)
+      .subscribe({
+        next: async (blob) => {
+          try {
+            // Convertir el Blob a File (necesario para navigator.share)
+            const fileName = `Factura_${numeroFactura}.pdf`;
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+
+            // Intentar compartir el archivo
+            try {
+              await navigator.share({
+                title: `Factura #${numeroFactura}`,
+                text: `Factura #${numeroFactura} - MVSystem`,
+                files: [file]
+              } as any); // usar 'as any' para evitar error de tipos en TS
+
+              this.toast.success('Factura compartida exitosamente');
+            } catch (shareError: any) {
+              // Si falla el share con archivos, intentar solo descargar
+              if (shareError.name === 'NotAllowedError' || shareError.message?.includes('files')) {
+                this.toast.warning('No se puede compartir el archivo. Se descargará en su lugar.');
+                CreatorPDFFile(blob);
+              } else if (shareError.name !== 'AbortError') {
+                // Cualquier otro error que no sea cancelación del usuario
+                console.error('Error al compartir:', shareError);
+                this.toast.warning('Error al compartir. Descargando archivo...');
+                CreatorPDFFile(blob);
+              }
+            }
+          } catch (error: any) {
+            console.error('Error al procesar archivo:', error);
+            this.toast.error('Error al preparar la factura para compartir');
+          } finally {
+            this.loading.hideLoading();
+            this.isLoading = false;
+          }
+        },
+        error: (err) => {
+          console.error('Error al generar PDF:', err);
+          this.toast.error('Error al generar la factura para compartir');
+          this.loading.hideLoading();
+          this.isLoading = false;
+        }
+      });
+
+    this.subs.push(sub);
+  }
   pageChanged(index: number) {
   this.pageIndex = index;
   this.paginate.pageIndex = this.pageIndex;

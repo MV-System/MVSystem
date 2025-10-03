@@ -62,11 +62,11 @@ selectedRowIndex: number | null = null;
     // Sincronizar criterio cuando cambia desde el padre
     if (changes['criterioInput'] && changes['criterioInput'].currentValue !== undefined) {
       const newCriterio = changes['criterioInput'].currentValue || '';
-      
+
       // Solo actualizar si el criterio es diferente para evitar loops infinitos
       if (this.criterio !== newCriterio) {
         this.criterio = newCriterio;
-        
+
         // Activar el sistema de debounce cuando cambia el criterio desde el padre
         this.searchSubject.next(this.criterio);
       }
@@ -84,6 +84,7 @@ selectedRowIndex: number | null = null;
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
   @Output() onBuscarFacturas = new EventEmitter<{criterio: string, pageIndex: number}>();
+  @Output() onCompartirFactura = new EventEmitter<number>(); // Nuevo output para compartir factura
 
   vendedores: VendedorLista[] = []
 
@@ -92,7 +93,7 @@ selectedRowIndex: number | null = null;
   private searchSubscription?: Subscription;
   criterio: string = '';
   minSearchLength: number = 2; // Mínimo de caracteres para buscar
-  debounceTime: number = 800; // Tiempo de espera en milisegundos 
+  debounceTime: number = 800; // Tiempo de espera en milisegundos
 
   btnAnulaFactura(): boolean {
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
@@ -266,7 +267,7 @@ isMobileScreen(): boolean {
   onSearchInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.criterio = target.value.trim();
-    
+
     // Enviar al subject para procesar con debounce
     this.searchSubject.next(this.criterio);
   }
@@ -275,13 +276,13 @@ isMobileScreen(): boolean {
   onSearchKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       event.preventDefault();
-      
+
       // Cancelar cualquier búsqueda pendiente del debounce
       if (this.searchSubscription) {
         this.searchSubscription.unsubscribe();
         this.setupSearchOptimization(); // Reconfigurar
       }
-      
+
       // Ejecutar búsqueda inmediatamente
       this.executeSearch(this.criterio);
     }
@@ -307,14 +308,21 @@ isMobileScreen(): boolean {
     this.executeSearch(this.criterio);
   }
 
+  /**
+   * Emite el evento para compartir la factura al componente padre
+   */
+  compartirFacturaMobile(numeroFactura: number): void {
+    this.onCompartirFactura.emit(numeroFactura);
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-    
+
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
-    
+
     // Limpiar otras suscripciones
     this.subs.forEach(sub => sub.unsubscribe());
   }

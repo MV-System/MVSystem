@@ -7,8 +7,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <!-- Encabezado de lista con ícono, badge y contador -->
                             <h6 class="results-title mb-0">
-                                <i class="bi bi-list-ul me-2 text-primary"></i>
-                                Lista de Facturas
+                                <i class="bi bi-list-ul me-2 text-primary"></i> Lista de Facturas
                                 <span class="badge bg-primary ms-2 count-badge" *ngIf="facturas.length > 0">
                                     {{totalRecord}} encontrada{{totalRecord !== 1 ? 's' : ''}}
                                 </span>
@@ -35,34 +34,19 @@
                         <!-- Campo de búsqueda optimizado - OCULTO porque ahora se maneja desde el padre -->
                         <div class="search-container" style="display: none;">
                             <div class="input-group">
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="Buscar por cliente, número de factura o teléfono..."
-                                    [(ngModel)]="criterio"
-                                    (input)="onSearchInput($event)"
-                                    (keydown)="onSearchKeydown($event)"
-                                    [disabled]="isLoading">
-                                
+                                <input type="text" class="form-control" placeholder="Buscar por cliente, número de factura o teléfono..." [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
+
                                 <div class="input-group-append">
-                                    <button 
-                                        class="btn btn-outline-primary" 
-                                        type="button" 
-                                        (click)="searchManually()"
-                                        [disabled]="isLoading">
+                                    <button class="btn btn-outline-primary" type="button" (click)="searchManually()" [disabled]="isLoading">
                                         <i class="fas fa-search"></i>
                                     </button>
-                                    
-                                    <button 
-                                        class="btn btn-outline-secondary" 
-                                        type="button" 
-                                        (click)="clearSearch()"
-                                        [disabled]="isLoading">
+
+                                    <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" [disabled]="isLoading">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <!-- Indicador de longitud mínima -->
                             <small class="text-muted" *ngIf="criterio.length > 0 && criterio.length < minSearchLength">
                                 Mínimo {{minSearchLength}} caracteres para buscar
@@ -93,9 +77,7 @@
                                 </thead>
                                 <tbody>
                                     <ng-container *ngFor="let factura of facturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }; let i = index">
-                                        <tr class="animate__animated animate__fadeIn tr-hover"
-                                            [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}"
-                                            (click)="handleClick(factura.numeroFactura, i)">
+                                        <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
                                             <td class="fixed-item">
                                                 <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
                                                     <i class="bx bx-trash-alt"></i>
@@ -119,16 +101,15 @@
                                         </tr>
                                         <!-- Detalle de factura con fondo diferenciado -->
                                         <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index">
-                                            <tr class="animate__animated animate__fadeIn tr-collapse detalle-row"
-                                                *ngFor="let detalle of detalleFactura; let d = index">
+                                            <tr class="animate__animated animate__fadeIn tr-collapse detalle-row" *ngFor="let detalle of detalleFactura; let d = index">
                                                 <td col="1">
                                                     <ng-container *ngIf="!detalle.editMode">
                                                         Cod: {{ detalle.idEquipo }}
                                                         <button *ngIf="detalle.idTipo === 1" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
                                                             <i class="bx bx-edit-alt"></i>
                                                         </button>
-                                                          <!-- Botón para rebajar equipo si idTipo es 1 -->
-                                            <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
+                                                        <!-- Botón para rebajar equipo si idTipo es 1 -->
+                                                        <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
                                               <i class="bi bi-arrow-bar-down" style="color: #dc3545; font-size: 1.2em;"></i>
                                           </button>
                                                     </ng-container>
@@ -162,25 +143,63 @@
                         <!-- Vista tipo tarjeta para móvil -->
                         <div class="factura-cards" *ngIf="isMobileScreen()">
                             <div class="factura-card" *ngFor="let factura of facturas; let i = index">
-                                <div><b>No. FACTURA:</b> {{factura.numeroFactura}}</div>
-                                <div><b>Cliente:</b> {{factura.nombres}} {{factura.apellidos}}</div>
-                                <div><b>Teléfono:</b> {{factura.telefono}}</div>
-                                <div><b>Total:</b> {{factura.total | currency}}</div>
-                                <div><b>Fecha:</b> {{factura.fechaFacturacion | date}}</div>
-                                <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange">
-                                    <i class="bx bx-trash-alt"></i> Anular
+                                <div class="factura-card-header">
+                                    <div class="factura-numero">
+                                        <i class="bi bi-receipt"></i>
+                                        <span><b>Factura #{{factura.numeroFactura}}</b></span>
+                                    </div>
+                                    <div class="factura-actions">
+                                        <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura">
+                                            <i class="bi bi-share-fill"></i>
+                                        </button>
+                                        <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="factura-card-body">
+                                    <div class="factura-info-item">
+                                        <i class="bi bi-person-fill"></i>
+                                        <span><b>Cliente:</b> {{factura.nombres}} {{factura.apellidos}}</span>
+                                    </div>
+                                    <div class="factura-info-item">
+                                        <i class="bi bi-telephone-fill"></i>
+                                        <span><b>Teléfono:</b> {{factura.telefono}}</span>
+                                    </div>
+                                    <div class="factura-info-item">
+                                        <i class="bi bi-cash-coin"></i>
+                                        <span><b>Total:</b> {{factura.total | currency}}</span>
+                                    </div>
+                                    <div class="factura-info-item">
+                                        <i class="bi bi-calendar-event"></i>
+                                        <span><b>Fecha:</b> {{factura.fechaFacturacion | date}}</span>
+                                    </div>
+                                </div>
+                                <button class="btn-ver-detalle" (click)="handleClick(factura.numeroFactura, i)">
+                                    <i class="bi bi-eye-fill me-1"></i>
+                                    {{ facturaVisibility[factura.numeroFactura] ? 'Ocultar' : 'Ver' }} Detalle
                                 </button>
                                 <!-- Detalle de factura en tarjeta -->
                                 <div class="detalle-card" *ngIf="facturaVisibility[factura.numeroFactura]">
-                                    <div *ngFor="let detalle of detalleFactura">
-                                        <div><b>Cod:</b> {{detalle.idEquipo}}</div>
+                                    <div class="detalle-header">
+                                        <i class="bi bi-list-ul"></i>
+                                        <span><b>Artículos de la factura</b></span>
+                                    </div>
+                                    <div class="detalle-item" *ngFor="let detalle of detalleFactura">
+                                        <div><b>Código:</b> {{detalle.idEquipo}}</div>
                                         <div><b>Descripción:</b> {{detalle.descripcion}}</div>
-                                        <div><b>Cantidad:</b> {{detalle.cantidad}}</div>
-                                        <div><b>Precio:</b> {{detalle.precio}}</div>
-                                        <div><b>SubTotal:</b> {{detalle.subTotal}}</div>
-                                        <div><b>Desc.:</b> {{detalle.descuento}}</div>
-                                        <div><b>Itbs:</b> {{detalle.itbis}}</div>
-                                        <div><b>Total:</b> {{detalle.total}}</div>
+                                        <div class="detalle-grid">
+                                            <div><b>Cant:</b> {{detalle.cantidad}}</div>
+                                            <div><b>Precio:</b> {{detalle.precio | currency}}</div>
+                                        </div>
+                                        <div class="detalle-grid">
+                                            <div><b>SubTotal:</b> {{detalle.subTotal | currency}}</div>
+                                            <div><b>Desc:</b> {{detalle.descuento | currency}}</div>
+                                        </div>
+                                        <div class="detalle-grid">
+                                            <div><b>ITBIS:</b> {{detalle.itbis | currency}}</div>
+                                            <div><b>Total:</b> {{detalle.total | currency}}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
