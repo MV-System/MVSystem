@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/core/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
@@ -37,6 +37,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    // Método que se llama cuando cambia el tamaño de la página
 
    onPageSizeChange(newPageSize: number) {
+    // Validar que pageSize sea válido
+    const validPageSizes = [5, 10, 50, 100];
+
+    // Permitir también totalRecord si es un número válido
+    if (!validPageSizes.includes(newPageSize) && newPageSize !== this.totalRecord) {
+      console.warn('Tamaño de página inválido:', newPageSize);
+      return;
+    }
+
     this.paginate.pageSize = newPageSize;
     // Llamar a la función que maneja la paginación y carga de datos
     this.getFacturas();
@@ -63,9 +72,17 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   getVendedores() {
-    this.vendedorService.getVendedorLista().subscribe((vendedores: any[]) => {
-      this.vendedores = vendedores;
+    const sub = this.vendedorService.getVendedorLista().subscribe({
+      next: (vendedores: any[]) => {
+        this.vendedores = vendedores;
+      },
+      error: (err) => {
+        console.error('Error al obtener vendedores:', err);
+        this.toast.error('Error al cargar la lista de vendedores');
+        this.vendedores = []; // Array vacío en caso de error
+      }
     });
+    this.subs.push(sub);
   }
 
   ComprobanteCheck: number=1;
@@ -111,12 +128,41 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     fechaFinal: `${this.fechaHoy.getFullYear()}/${this.fechaHoy.getMonth() + 1}/${this.fechaHoy.getDate()}`
   }
   form: FormGroup = this.fb.group({
-    almacen: [this.loginService.getUserIdSucursal,],
-    criterio: ['',],
-    factura:['',],
+    almacen: [this.loginService.getUserIdSucursal, [Validators.required]],
+    criterio: ['', [Validators.minLength(1), Validators.maxLength(100), Validators.pattern(/^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ-]*$/)]],
     rangeDate: [''],
-    iD_Vendedor: ['']
+    iD_Vendedor: ['', [Validators.pattern(/^[0-9]*$/)]]
   });
+
+  /**
+   * Getter para mensajes de error del campo criterio
+   */
+  get criterioErrorMsg(): string {
+    const errors = this.form.get('criterio')?.errors;
+    if (errors?.minlength) return 'Mínimo 1 carácter';
+    if (errors?.maxlength) return 'Máximo 100 caracteres';
+    if (errors?.pattern) return 'Solo se permiten letras, números y espacios';
+    return '';
+  }
+
+  /**
+   * Getter para mensajes de error del campo vendedor
+   */
+  get vendedorErrorMsg(): string {
+    const errors = this.form.get('iD_Vendedor')?.errors;
+    if (errors?.pattern) return 'Seleccione un vendedor válido';
+    return '';
+  }
+
+  /**
+   * Getter para mensajes de error del campo almacén
+   */
+  get almacenErrorMsg(): string {
+    const errors = this.form.get('almacen')?.errors;
+    if (errors?.required) return 'Debe seleccionar una sucursal';
+    return '';
+  }
+
   modelFacturaFilter(){
     const {criterio,almacen,iD_Vendedor} = this.form.value;
     const model:FacturaFilter = {
@@ -172,18 +218,37 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
   getDetalleFactura(numeroFactura: number){
+    // Validar numeroFactura
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toast.error('Número de factura inválido');
+      return;
+    }
+
     //this.isLoading = true; // Iniciar carga
     this.numerofactura = numeroFactura;
     this.facturaSeleccionada = numeroFactura; // Rastrear la factura seleccionada
     const { almacen } = this.form.value;
 
     const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
-    .subscribe(detalle => {
-      this.detalleFactura = detalle;
-    })
+    .subscribe({
+      next: (detalle) => {
+        this.detalleFactura = detalle;
+      },
+      error: (err) => {
+        console.error('Error al obtener detalle de factura:', err);
+        this.toast.error('Error al cargar el detalle de la factura');
+        this.detalleFactura = []; // Limpiar detalle en caso de error
+      }
+    });
     this.subs.push(sub);
   }
   printReportFacturaConsulta(){
+    // Validar que haya facturas para imprimir
+    if (!this.facturas || this.facturas.length === 0) {
+      this.toast.warning('No hay facturas para imprimir. Por favor, realice una búsqueda primero.');
+      return;
+    }
+
     this.loading.showLoading();
     //this.isLoading = true; // Iniciar carga
     const sub = this.mantenimientoService.postFacturaConsultaReport(this.modelFacturaFilter())
@@ -213,6 +278,19 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     // Validar que haya una factura seleccionada
     if (!this.puedeReimprimir()) {
       this.toast.warning('Por favor, seleccione una factura para reimprimir.');
+      return;
+    }
+
+    // Validación adicional: numeroFactura debe ser mayor a 0
+    if (!this.numerofactura || this.numerofactura <= 0) {
+      this.toast.error('Número de factura inválido para reimprimir.');
+      return;
+    }
+
+    // Validación adicional: verificar que la factura existe en la lista actual
+    const facturaExiste = this.facturas.some(f => f.numeroFactura === this.numerofactura);
+    if (!facturaExiste) {
+      this.toast.warning('La factura seleccionada ya no está disponible. Por favor, actualice la búsqueda.');
       return;
     }
 
@@ -251,6 +329,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    * Genera un PDF y permite compartir por WhatsApp, Email, etc.
    */
   compartirFactura(numeroFactura: number) {
+    // Validar numeroFactura
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toast.error('Número de factura inválido');
+      return;
+    }
+
     // Verificar si el navegador soporta la Web Share API
     if (!navigator.share) {
       this.toast.warning('Tu navegador no soporta la función de compartir. Por favor, usa un navegador moderno en tu dispositivo móvil.');
@@ -316,11 +400,42 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   this.resetearSeleccionFactura();
   this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
 }
+
+  /**
+   * Maneja el cambio de rango de fechas con validaciones completas
+   */
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
       this.paginate.fechaInicio = '';
       this.paginate.fechaFinal = '';
     } else {
+      // Crear objetos Date para las validaciones
+      const fechaInicio = new Date(event.beginDate.year, event.beginDate.month - 1, event.beginDate.day);
+      const fechaFinal = new Date(event.endDate.year, event.endDate.month - 1, event.endDate.day);
+      const hoy = new Date();
+      hoy.setHours(23, 59, 59, 999); // Establecer al final del día
+
+      // Validación 1: Fecha inicial no puede ser mayor que fecha final
+      if (fechaInicio > fechaFinal) {
+        this.toast.warning('La fecha inicial no puede ser mayor que la fecha final');
+        return;
+      }
+
+      // Validación 2: No se pueden seleccionar fechas futuras
+      if (fechaFinal > hoy) {
+        this.toast.warning('No se pueden seleccionar fechas futuras');
+        return;
+      }
+
+      // Validación 3: El rango no puede ser mayor a 1 año
+      const unAnoEnMs = 365 * 24 * 60 * 60 * 1000;
+      const rangoEnMs = fechaFinal.getTime() - fechaInicio.getTime();
+      if (rangoEnMs > unAnoEnMs) {
+        this.toast.warning('El rango de fechas no puede ser mayor a 1 año. Por favor, seleccione un período más corto.');
+        return;
+      }
+
+      // Si todas las validaciones pasan, asignar las fechas
       this.paginate.fechaInicio = `${event.beginDate.year}/${event.beginDate.month}/${event.beginDate.day}`;
       this.paginate.fechaFinal = `${event.endDate.year}/${event.endDate.month}/${event.endDate.day}`;
     }
@@ -328,8 +443,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   getAlmacenes() {
-    const sub = this.catalogosService.getSucursales().subscribe((almacen) => {
-      this.almacenes = almacen;
+    const sub = this.catalogosService.getSucursales().subscribe({
+      next: (almacen) => {
+        this.almacenes = almacen;
+      },
+      error: (err) => {
+        console.error('Error al obtener almacenes:', err);
+        this.toast.error('Error al cargar la lista de sucursales');
+        this.almacenes = []; // Array vacío en caso de error
+      }
     });
     this.subs.push(sub);
   }

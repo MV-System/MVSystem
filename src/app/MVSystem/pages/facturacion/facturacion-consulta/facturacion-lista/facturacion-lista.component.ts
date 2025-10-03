@@ -92,7 +92,7 @@ selectedRowIndex: number | null = null;
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
   criterio: string = '';
-  minSearchLength: number = 2; // Mínimo de caracteres para buscar
+  minSearchLength: number = 1; // Mínimo de caracteres para buscar (permite buscar facturas con un solo dígito)
   debounceTime: number = 800; // Tiempo de espera en milisegundos
 
   btnAnulaFactura(): boolean {

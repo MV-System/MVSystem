@@ -26,7 +26,10 @@
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por cliente, # de factura
                                     </label>
-                                    <input type="text" class="form-control modern-input" placeholder="Ej: Cliente, número de factura..." formControlName="criterio" (keydown.enter)="$event.preventDefault()">
+                                    <input type="text" class="form-control modern-input" [class.is-invalid]="form.get('criterio')?.invalid && form.get('criterio')?.touched" placeholder="Ej: Cliente, número de factura..." formControlName="criterio" maxlength="100" (keydown.enter)="$event.preventDefault()">
+                                    <div class="invalid-feedback" *ngIf="form.get('criterio')?.invalid && form.get('criterio')?.touched">
+                                        {{ criterioErrorMsg }}
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label modern-label">
@@ -40,24 +43,30 @@
                                         <i class="bi bi-person-badge me-1"></i>
                                         Vendedor
                                     </label>
-                                    <select class="form-select modern-select vendedor-dropdown" formControlName="iD_Vendedor" (change)="getFacturas()">
+                                    <select class="form-select modern-select vendedor-dropdown" [class.is-invalid]="form.get('iD_Vendedor')?.invalid && form.get('iD_Vendedor')?.touched" formControlName="iD_Vendedor" (change)="getFacturas()">
                                         <option value="">Todos</option>
                                         <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                                             {{ vendedor.nombres || vendedor.nombre }}
                                         </option>
                                     </select>
+                                    <div class="invalid-feedback" *ngIf="form.get('iD_Vendedor')?.invalid && form.get('iD_Vendedor')?.touched">
+                                        {{ vendedorErrorMsg }}
+                                    </div>
                                 </div>
                                 <div class="col-md-4" *ngIf="SelectSucursal()">
                                     <label class="form-label modern-label">
                                         <i class="bi bi-building me-1"></i>
                                         Sucursal
                                     </label>
-                                    <select class="form-select modern-select" formControlName="almacen" (change)="getFacturas()">
+                                    <select class="form-select modern-select" [class.is-invalid]="form.get('almacen')?.invalid && form.get('almacen')?.touched" formControlName="almacen" (change)="getFacturas()">
                                         <option value="" disabled>Seleccione una sucursal</option>
                                         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                                             {{almacen.descripcion}}
                                         </option>
                                     </select>
+                                    <div class="invalid-feedback" *ngIf="form.get('almacen')?.invalid && form.get('almacen')?.touched">
+                                        {{ almacenErrorMsg }}
+                                    </div>
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end">
                                     <div *ngIf="CheckComprobante()" class="form-check form-check-inline ms-2">
