@@ -79,7 +79,8 @@
                                 </div>
                             </div>
                             <!-- Botones de acción modernos en una sola fila debajo de los filtros -->
-                            <div class="row g-3 mb-4 mt-2">
+                            <!-- Ocultos en móvil (d-none d-md-flex) ya que desde móvil solo se comparte -->
+                            <div class="row g-3 mb-4 mt-2 d-none d-md-flex">
                                 <div class="col-md-6">
                                     <button class="button-imprimir-reporte w-100" [ngClass]="{'disabled': !facturas.length}" (click)="printReportFacturaConsulta()">
                                         <i class="bi bi-printer me-2"></i>

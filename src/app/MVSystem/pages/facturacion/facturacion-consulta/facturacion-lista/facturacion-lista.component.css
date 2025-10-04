@@ -1,3 +1,26 @@
+/* Prevenir scroll horizontal en móvil */
+
+@media (max-width: 600px) {
+     :host {
+        overflow-x: hidden !important;
+        width: 100%;
+        max-width: 100vw;
+    }
+    section,
+    .row,
+    .col-lg-12,
+    .results-section,
+    .card,
+    .card-body {
+        overflow-x: hidden !important;
+        max-width: 100%;
+    }
+    .card-body {
+        padding: 0.5rem !important;
+        /* Reducir padding en móvil */
+    }
+}
+
 .card-body {
     background-color: #f6f9ff;
 }
@@ -7,6 +30,16 @@
     white-space: nowrap;
     width: 100%;
     margin-bottom: 1rem;
+}
+
+
+/* Deshabilitar scroll horizontal en móvil */
+
+@media (max-width: 600px) {
+    .scroll-table {
+        overflow-x: hidden !important;
+        white-space: normal;
+    }
 }
 
 tr.tr-hover:hover {
@@ -19,7 +52,16 @@ tr.tr-hover:hover {
 td,
 th {
     overflow: hidden;
-    text-overflow: ellipsis;
+    .detalle-item {
+        background: #ffffff;
+        border-radius: 6px;
+        padding: 0.6rem;
+        /* Reducido de 0.75rem */
+        margin-bottom: 0.6rem;
+        border: 1px solid #d0e3f7;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
     padding: 0.5rem 0.75rem;
@@ -188,17 +230,26 @@ tr.detalle-row,
     .factura-cards {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        padding: 0.5rem;
+        gap: 0.75rem;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden !important;
     }
     .factura-card {
         background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         padding: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
         font-size: 0.95rem;
         border: 1px solid #e3e8ef;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem;
+        /* Reducido de 0.5rem */
         transition: all 0.3s ease;
         overflow: hidden;
     }
@@ -209,7 +260,8 @@ tr.detalle-row,
     /* Header del card con acciones */
     .factura-card-header {
         background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%);
-        padding: 0.75rem 1rem;
+        padding: 0.5rem 0.6rem;
+        /* Más reducido */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -218,30 +270,38 @@ tr.detalle-row,
     .factura-numero {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
+        /* Reducido de 0.5rem */
         color: #ffffff;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
+        /* Reducido de 1.1rem */
     }
     .factura-numero i {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        /* Reducido de 1.3rem */
     }
     .factura-actions {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.4rem;
+        /* Reducido de 0.5rem */
     }
     /* Botones de iconos en el header */
     .btn-icon-share,
     .btn-icon-delete {
         background: rgba(255, 255, 255, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        width: 36px;
-        height: 36px;
+        border-radius: 6px;
+        /* Reducido de 8px */
+        width: 32px;
+        /* Reducido de 36px */
+        height: 32px;
+        /* Reducido de 36px */
         display: flex;
         align-items: center;
         justify-content: center;
         color: #ffffff;
-        font-size: 1.1rem;
+        font-size: 1rem;
+        /* Reducido de 1.1rem */
         transition: all 0.2s ease;
         cursor: pointer;
     }
@@ -259,15 +319,19 @@ tr.detalle-row,
     }
     /* Cuerpo del card */
     .factura-card-body {
-        padding: 1rem;
+        padding: 0.6rem;
+        /* Reducido de 0.75rem */
         background: #f6f9ff;
     }
     .factura-info-item {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.6rem;
-        padding: 0.4rem 0;
+        gap: 0.4rem;
+        /* Reducido de 0.5rem */
+        margin-bottom: 0.5rem;
+        /* Reducido de 0.6rem */
+        padding: 0.3rem 0;
+        /* Reducido de 0.4rem */
         border-bottom: 1px solid #e3e8ef;
     }
     .factura-info-item:last-child {
@@ -276,13 +340,16 @@ tr.detalle-row,
     }
     .factura-info-item i {
         color: #467ff1;
-        font-size: 1.1rem;
-        min-width: 20px;
+        font-size: 1rem;
+        /* Reducido de 1.1rem */
+        min-width: 18px;
+        /* Reducido de 20px */
         text-align: center;
     }
     .factura-info-item span {
         flex: 1;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        /* Reducido de 0.95rem */
         color: #2c3e50;
     }
     .factura-info-item b {
@@ -292,18 +359,23 @@ tr.detalle-row,
     /* Botón ver detalle */
     .btn-ver-detalle {
         width: 100%;
-        margin-top: 0.75rem;
-        padding: 0.65rem;
+        margin-top: 0.6rem;
+        /* Reducido de 0.75rem */
+        padding: 0.55rem;
+        /* Reducido de 0.65rem */
         background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%);
         color: white;
         border: none;
-        border-radius: 8px;
-        font-size: 0.95rem;
+        border-radius: 6px;
+        /* Reducido de 8px */
+        font-size: 0.9rem;
+        /* Reducido de 0.95rem */
         font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
+        /* Reducido de 0.5rem */
         transition: all 0.2s ease;
         cursor: pointer;
     }
@@ -314,9 +386,12 @@ tr.detalle-row,
     /* Detalle card */
     .detalle-card {
         background: #e3f2fd;
-        border-radius: 8px;
-        padding: 0.75rem;
-        margin-top: 0.75rem;
+        border-radius: 6px;
+        /* Reducido de 8px */
+        padding: 0.5rem;
+        /* Reducido de 0.65rem */
+        margin-top: 0.6rem;
+        /* Reducido de 0.75rem */
         font-size: 0.9rem;
         border-left: 4px solid #467ff1;
     }
@@ -337,24 +412,109 @@ tr.detalle-row,
     .detalle-item {
         background: #ffffff;
         border-radius: 6px;
-        padding: 0.7rem;
+        padding: 0.75rem;
         margin-bottom: 0.6rem;
         border: 1px solid #d0e3f7;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     .detalle-item:last-child {
         margin-bottom: 0;
     }
-    .detalle-item div {
-        margin-bottom: 0.4rem;
-        color: #2c3e50;
+    /* Información principal más compacta */
+    .detalle-main-info {
+        margin-bottom: 0.5rem;
+        /* Reducido de 0.6rem */
+        padding-bottom: 0.5rem;
+        /* Reducido de 0.6rem */
+        border-bottom: 1px solid #e3f2fd;
     }
-    .detalle-item div:last-child {
-        margin-bottom: 0;
-    }
-    .detalle-item b {
+    .detalle-codigo {
+        font-size: 0.85rem;
         color: #467ff1;
         font-weight: 600;
+        margin-bottom: 0.25rem;
     }
+    .detalle-descripcion {
+        font-size: 0.9rem;
+        color: #2c3e50;
+        font-weight: 500;
+        line-height: 1.3;
+    }
+    /* Grid compacto de 3 columnas */
+    .detalle-compact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+        /* Reducido de 0.4rem */
+        margin-bottom: 0.5rem;
+        /* Reducido de 0.6rem */
+        padding: 0.35rem;
+        /* Reducido de 0.4rem */
+        background: #f6f9ff;
+        border-radius: 4px;
+    }
+    .detalle-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .detalle-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .detalle-value {
+        font-size: 0.9rem;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    /* Fila de totales más compacta */
+    .detalle-totales {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+        /* Reducido de 0.4rem */
+        padding-top: 0.4rem;
+        /* Reducido de 0.5rem */
+        border-top: 1px solid #e3f2fd;
+    }
+    .detalle-subtotal,
+    .detalle-itbis,
+    .detalle-total-final {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.85rem;
+        padding: 0.3rem;
+        border-radius: 4px;
+    }
+    .detalle-subtotal {
+        background: #fff8e1;
+    }
+    .detalle-itbis {
+        background: #e8f5e9;
+    }
+    .detalle-total-final {
+        background: #e3f2fd;
+    }
+    .detalle-subtotal span:first-child,
+    .detalle-itbis span:first-child,
+    .detalle-total-final span:first-child {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 0.15rem;
+    }
+    .detalle-subtotal b,
+    .detalle-itbis b,
+    .detalle-total-final b {
+        color: #2c3e50;
+        font-size: 0.9rem;
+    }
+    /* Eliminar estilos antiguos del detalle-grid */
     .detalle-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;

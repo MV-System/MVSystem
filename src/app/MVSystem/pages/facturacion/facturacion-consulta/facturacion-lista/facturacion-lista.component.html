@@ -186,19 +186,42 @@
                                         <span><b>Artículos de la factura</b></span>
                                     </div>
                                     <div class="detalle-item" *ngFor="let detalle of detalleFactura">
-                                        <div><b>Código:</b> {{detalle.idEquipo}}</div>
-                                        <div><b>Descripción:</b> {{detalle.descripcion}}</div>
-                                        <div class="detalle-grid">
-                                            <div><b>Cant:</b> {{detalle.cantidad}}</div>
-                                            <div><b>Precio:</b> {{detalle.precio | currency}}</div>
+                                        <!-- Código y Descripción en bloque principal -->
+                                        <div class="detalle-main-info">
+                                            <div class="detalle-codigo"><b>Código:</b> {{detalle.idEquipo}}</div>
+                                            <div class="detalle-descripcion">{{detalle.descripcion}}</div>
                                         </div>
-                                        <div class="detalle-grid">
-                                            <div><b>SubTotal:</b> {{detalle.subTotal | currency}}</div>
-                                            <div><b>Desc:</b> {{detalle.descuento | currency}}</div>
+
+                                        <!-- Grid compacto de 3 columnas para datos numéricos -->
+                                        <div class="detalle-compact-grid">
+                                            <div class="detalle-cell">
+                                                <span class="detalle-label">Cant.</span>
+                                                <span class="detalle-value">{{detalle.cantidad}}</span>
+                                            </div>
+                                            <div class="detalle-cell">
+                                                <span class="detalle-label">Precio</span>
+                                                <span class="detalle-value">{{detalle.precio | currency}}</span>
+                                            </div>
+                                            <div class="detalle-cell">
+                                                <span class="detalle-label">Desc.</span>
+                                                <span class="detalle-value">{{detalle.descuento | currency}}</span>
+                                            </div>
                                         </div>
-                                        <div class="detalle-grid">
-                                            <div><b>ITBIS:</b> {{detalle.itbis | currency}}</div>
-                                            <div><b>Total:</b> {{detalle.total | currency}}</div>
+
+                                        <!-- Fila final con totales destacados -->
+                                        <div class="detalle-totales">
+                                            <div class="detalle-subtotal">
+                                                <span>SubTotal:</span>
+                                                <span><b>{{detalle.subTotal | currency}}</b></span>
+                                            </div>
+                                            <div class="detalle-itbis">
+                                                <span>ITBIS:</span>
+                                                <span><b>{{detalle.itbis | currency}}</b></span>
+                                            </div>
+                                            <div class="detalle-total-final">
+                                                <span>Total:</span>
+                                                <span><b>{{detalle.total | currency}}</b></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
