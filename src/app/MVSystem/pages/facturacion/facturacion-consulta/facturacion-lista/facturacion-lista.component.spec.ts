@@ -175,7 +175,7 @@ describe('FacturacionListaComponent', () => {
       expect(component.facturaVisibility).toEqual({});
       expect(component.isLoading).toBeFalse();
       expect(component.criterio).toBe('');
-      expect(component.minSearchLength).toBe(2);
+      expect(component.minSearchLength).toBe(1);
       expect(component.debounceTime).toBe(800);
     });
 

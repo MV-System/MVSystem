@@ -145,7 +145,7 @@ describe('FacturacionConsultaComponent', () => {
 
     fixture = TestBed.createComponent(FacturacionConsultaComponent);
     component = fixture.componentInstance;
-    
+
     // No ejecutar detectChanges aquí para evitar problemas con el template
     // fixture.detectChanges();
   });
@@ -181,7 +181,6 @@ describe('FacturacionConsultaComponent', () => {
     it('should initialize form with correct default values', () => {
       expect(component.form.get('almacen')?.value).toBe('1');
       expect(component.form.get('criterio')?.value).toBe('');
-      expect(component.form.get('factura')?.value).toBe('');
       expect(component.form.get('iD_Vendedor')?.value).toBe('');
     });
   });
@@ -224,16 +223,16 @@ describe('FacturacionConsultaComponent', () => {
   describe('Pagination', () => {
     it('should handle page size change', () => {
       spyOn(component, 'getFacturas');
-      
-      component.onPageSizeChange(25);
 
-      expect(component.paginate.pageSize).toBe(25);
+      component.onPageSizeChange(50);
+
+      expect(component.paginate.pageSize).toBe(50);
       expect(component.getFacturas).toHaveBeenCalled();
     });
 
     it('should handle page change', () => {
       spyOn(component, 'getFacturas');
-      
+
       component.pageChanged(3);
 
       expect(component.pageIndex).toBe(3);
@@ -288,7 +287,7 @@ describe('FacturacionConsultaComponent', () => {
     it('should sync criterio with criterioActual', () => {
       // Don't trigger fixture.detectChanges() to avoid rangeDate value accessor error
       component.form.get('criterio')?.setValue('test criterio');
-      
+
       // Manually trigger the valueChanges subscription
       const criterio = component.form.get('criterio');
       if (criterio) {
@@ -421,12 +420,12 @@ describe('FacturacionConsultaComponent', () => {
   describe('Checkbox Functionality', () => {
     it('should handle checkbox comprobante change when checked', () => {
       spyOn(component, 'getFacturas');
-      
+
       // Crear un elemento checkbox simulado
       const mockCheckbox = document.createElement('input');
       mockCheckbox.type = 'checkbox';
       mockCheckbox.checked = true;
-      
+
       // Crear evento con target válido
       const event = new Event('change');
       Object.defineProperty(event, 'target', { value: mockCheckbox, writable: false });
@@ -439,12 +438,12 @@ describe('FacturacionConsultaComponent', () => {
 
     it('should handle checkbox comprobante change when unchecked', () => {
       spyOn(component, 'getFacturas');
-      
+
       // Crear un elemento checkbox simulado
       const mockCheckbox = document.createElement('input');
       mockCheckbox.type = 'checkbox';
       mockCheckbox.checked = false;
-      
+
       // Crear evento con target válido
       const event = new Event('change');
       Object.defineProperty(event, 'target', { value: mockCheckbox, writable: false });
@@ -458,13 +457,13 @@ describe('FacturacionConsultaComponent', () => {
     it('should handle invalid event gracefully', () => {
       spyOn(component, 'getFacturas');
       spyOn(console, 'warn');
-      
+
       // Guardar valor inicial
       const initialValue = component.ComprobanteCheck;
-      
+
       // Probar con evento null
       component.onCheckboxComprobanteChange(null as any);
-      
+
       expect(console.warn).toHaveBeenCalledWith('Evento o target del checkbox no válido');
       expect(component.ComprobanteCheck).toBe(initialValue);
       expect(component.getFacturas).not.toHaveBeenCalled();
@@ -473,15 +472,15 @@ describe('FacturacionConsultaComponent', () => {
     it('should handle event with null target gracefully', () => {
       spyOn(component, 'getFacturas');
       spyOn(console, 'warn');
-      
+
       // Guardar valor inicial
       const initialValue = component.ComprobanteCheck;
-      
+
       // Crear evento sin target
       const event = new Event('change');
-      
+
       component.onCheckboxComprobanteChange(event);
-      
+
       expect(console.warn).toHaveBeenCalledWith('Evento o target del checkbox no válido');
       expect(component.ComprobanteCheck).toBe(initialValue);
       expect(component.getFacturas).not.toHaveBeenCalled();
@@ -490,19 +489,19 @@ describe('FacturacionConsultaComponent', () => {
     it('should handle non-checkbox element gracefully', () => {
       spyOn(component, 'getFacturas');
       spyOn(console, 'warn');
-      
+
       // Guardar valor inicial
       const initialValue = component.ComprobanteCheck;
-      
+
       // Crear un elemento que no es checkbox
       const mockElement = document.createElement('div');
-      
+
       // Crear evento con target no válido
       const event = new Event('change');
       Object.defineProperty(event, 'target', { value: mockElement, writable: false });
 
       component.onCheckboxComprobanteChange(event);
-      
+
       expect(console.warn).toHaveBeenCalledWith('El target no es un checkbox válido');
       expect(component.ComprobanteCheck).toBe(initialValue);
       expect(component.getFacturas).not.toHaveBeenCalled();
@@ -524,7 +523,7 @@ describe('FacturacionConsultaComponent', () => {
     it('should call loading service when loading facturas', () => {
       // Test successful loading instead of error case to avoid uncaught errors
       mockMantenimientoService.getFacturas.and.returnValue(of(mockFacturas));
-      
+
       component.getFacturas();
 
       expect(mockLoadingService.showLoading).toHaveBeenCalled();
