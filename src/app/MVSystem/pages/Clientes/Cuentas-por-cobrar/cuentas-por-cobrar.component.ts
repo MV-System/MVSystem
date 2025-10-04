@@ -76,6 +76,14 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
   ngOnInit(): void {
     this.obtenerClientes()
   }
+
+  /**
+   * Detecta si la pantalla es móvil (ancho <= 600px)
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 600;
+  }
+
   // Función para determinar si la factura está vencida
   isFacturaVencida(fechaLimite: string): boolean {
     const fechaLimiteFactura = new Date(fechaLimite);

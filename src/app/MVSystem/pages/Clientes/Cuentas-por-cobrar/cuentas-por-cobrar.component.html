@@ -65,7 +65,7 @@
                 <h5 class="card-title">Cliente</h5>
 
                 <!-- Paginación -->
-                <div class="pagination-options">
+                <div class="pagination-options" *ngIf="!isMobileScreen()">
                     <label for="pageSize">Registros por página:</label>
                     <select class="form-select chippagin" id="pageSize" [(ngModel)]="filter.pageSize" (change)="onPageSizeChange()">
                 <option [value]="5">5</option>
@@ -75,8 +75,9 @@
                 <option [value]="totalRecord">Todos</option>
             </select>
                 </div>
-                <!-- Tabla de Clientes con facturas pendientes -->
-                <div class="scrollable-table thinScroll">
+
+                <!-- Tabla de Clientes (Desktop) -->
+                <div class="scrollable-table thinScroll" *ngIf="!isMobileScreen()">
                     <table class="mv-table tr.selected">
                         <thead>
                             <tr>
@@ -170,6 +171,114 @@
 
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Vista de Cards para Móvil -->
+                <div class="clientes-cards" *ngIf="isMobileScreen()">
+                    <div class="cliente-card" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
+
+                        <!-- Header del card -->
+                        <div class="cliente-card-header" (click)="seleccionarFila(Cliente)">
+                            <div class="cliente-info">
+                                <i class="bi bi-person-circle"></i>
+                                <div>
+                                    <span class="cliente-nombre"><b>{{Cliente.cliente}}</b></span>
+                                    <span class="cliente-id">ID: {{Cliente.id_Cliente}}</span>
+                                </div>
+                            </div>
+                            <div class="cliente-monto">
+                                <span class="monto-label">Pendiente</span>
+                                <span class="monto-valor">{{Cliente.montoPendiente | currency}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Body del card con acciones -->
+                        <div class="cliente-card-body">
+                            <!-- Input para abono general -->
+                            <div class="abono-section" *ngIf="Cliente.showInput">
+                                <input type="number" class="form-control abono-input-mobile" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="Monto del abono" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" />
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="acciones-cliente">
+                                <button class="btn-accion btn-procesar" *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" (click)="procesarAbonoGeneral(Cliente); $event.stopPropagation();">
+                                    <i class="bx bx-check"></i> Procesar Abono
+                                </button>
+
+                                <button class="btn-accion btn-abono" (click)="toggleDetalleInput(Cliente, $event)">
+                                    <i class="bx bx-edit-alt"></i> Hacer Abono
+                                </button>
+
+                                <button class="btn-accion btn-saldar" (click)="SaldarCuentaTotal(Cliente); $event.stopPropagation();">
+                                    <i class="bx bx-money"></i> Saldar Total
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Detalles de facturas (expandible) -->
+                        <div class="facturas-detalle" *ngIf="idClienteSeleccionado === Cliente.id_Cliente && FacturasPorClientes && FacturasPorClientes.length">
+                            <div class="facturas-header">
+                                <i class="bi bi-receipt-cutoff"></i>
+                                <span>Facturas del cliente</span>
+                            </div>
+
+                            <div class="factura-item" *ngFor="let detalle of FacturasPorClientes" [ngClass]="{
+                                     'factura-vencida-mobile': isFacturaVencida(detalle.fechaLimitePagoFactura),
+                                     'factura-normal-mobile': !isFacturaVencida(detalle.fechaLimitePagoFactura)
+                                 }">
+
+                                <!-- Info de la factura -->
+                                <div class="factura-info-grid">
+                                    <div class="factura-numero">
+                                        <i class="bi bi-receipt"></i>
+                                        <span><b>Factura #{{detalle.numeroFactura}}</b></span>
+                                    </div>
+
+                                    <div class="factura-montos">
+                                        <div class="monto-item">
+                                            <span class="label">Total:</span>
+                                            <span class="valor">{{detalle.totalFactura | currency}}</span>
+                                        </div>
+                                        <div class="monto-item pendiente">
+                                            <span class="label">Pendiente:</span>
+                                            <span class="valor">{{detalle.montoPendiente | currency}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="factura-fechas">
+                                        <div class="fecha-item">
+                                            <i class="bi bi-calendar-check"></i>
+                                            <span>{{detalle.fechaFactura}}</span>
+                                        </div>
+                                        <div class="fecha-item vencimiento">
+                                            <i class="bi bi-calendar-x"></i>
+                                            <span>Vence: {{detalle.fechaLimitePagoFactura}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Input para abono de factura -->
+                                <div class="abono-factura-section" *ngIf="detalle.showInput">
+                                    <input type="number" class="form-control abono-input-mobile" [(ngModel)]="detalle.montoAbono" placeholder="Monto del abono" (keydown)="onEnterAbono($event, detalle)" (click)="$event.stopPropagation()" />
+                                </div>
+
+                                <!-- Botones de acción de factura -->
+                                <div class="acciones-factura">
+                                    <button class="btn-accion-sm btn-procesar" *ngIf="detalle.montoAbono && detalle.montoAbono > 0" (click)="procesarAbono(detalle); $event.stopPropagation();">
+                                        <i class="bx bx-check"></i> Procesar
+                                    </button>
+
+                                    <button class="btn-accion-sm btn-abono" (click)="toggleDetalleInput(detalle, $event)">
+                                        <i class="bx bx-edit-alt"></i> Abono
+                                    </button>
+
+                                    <button class="btn-accion-sm btn-saldar" (click)="SaldarFactura(detalle); $event.stopPropagation();">
+                                        <i class="bx bx-money"></i> Saldar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Mensaje cuando no hay datos -->

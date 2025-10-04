@@ -94,7 +94,7 @@ td {
     /* Ajusta el padding si es necesario */
     font-size: 14px;
     /* Cambia el tamaño de la fuente si lo deseas */
-     border: 1px solid #b3c6ff;
+    border: 1px solid #b3c6ff;
     background: #f6f9ff;
 }
 
@@ -158,4 +158,369 @@ td {
 .abono-input {
     margin-right: 5px;
     max-width: 100px;
+}
+
+
+/* ============================================
+   ESTILOS PARA VISTA MÓVIL - CARDS RESPONSIVE
+   ============================================ */
+
+@media (max-width: 600px) {
+    /* Reestructuración completa del card de total pendiente para móvil */
+    .stats-card {
+        background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%) !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        box-shadow: 0 3px 12px rgba(70, 127, 241, 0.2) !important;
+    }
+    .stats-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 0.6rem !important;
+    }
+    .stats-icon {
+        width: 3rem !important;
+        height: 3rem !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    .stats-icon i {
+        font-size: 1.5rem !important;
+        color: #ffffff !important;
+    }
+    .stats-info {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    .stats-title {
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 0.3rem !important;
+    }
+    .stats-number {
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        margin-bottom: 0.2rem !important;
+        line-height: 1.2 !important;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+        white-space: nowrap !important;
+    }
+    .stats-subtitle {
+        font-size: 0.75rem !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 400 !important;
+        margin-top: 0.1rem !important;
+    }
+    /* Contenedor de cards */
+    .clientes-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0;
+        margin: 0;
+    }
+    /* Card individual de cliente */
+    .cliente-card {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    .cliente-card:active {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    /* Header del card de cliente */
+    .cliente-card-header {
+        background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%);
+        padding: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+    }
+    .cliente-info {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: #ffffff;
+        width: 100%;
+    }
+    .cliente-info i {
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+    .cliente-info div {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+    .cliente-nombre {
+        font-size: 0.95rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cliente-id {
+        font-size: 0.75rem;
+        opacity: 0.9;
+    }
+    .cliente-monto {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #ffffff;
+        width: 100%;
+        padding: 0.4rem 0.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+    }
+    .monto-label {
+        font-size: 0.75rem;
+        opacity: 0.95;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .monto-valor {
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+    /* Body del card */
+    .cliente-card-body {
+        padding: 0.75rem;
+        background: #f8f9fa;
+    }
+    .abono-section {
+        margin-bottom: 0.75rem;
+    }
+    .abono-input-mobile {
+        width: 100%;
+        padding: 0.6rem;
+        border: 2px solid #467ff1;
+        border-radius: 6px;
+        font-size: 1rem;
+        text-align: center;
+        font-weight: 600;
+    }
+    .abono-input-mobile:focus {
+        outline: none;
+        border-color: #3a6dd9;
+        box-shadow: 0 0 0 3px rgba(70, 127, 241, 0.1);
+    }
+    /* Botones de acción del cliente */
+    .acciones-cliente {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .btn-accion {
+        width: 100%;
+        padding: 0.65rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-accion i {
+        font-size: 1.2rem;
+    }
+    .btn-procesar {
+        background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+        color: white;
+    }
+    .btn-procesar:active {
+        background: linear-gradient(135deg, #218838 0%, #28a745 100%);
+    }
+    .btn-abono {
+        background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%);
+        color: white;
+    }
+    .btn-abono:active {
+        background: linear-gradient(135deg, #3a6dd9 0%, #467ff1 100%);
+    }
+    .btn-saldar {
+        background: linear-gradient(135deg, #ffc107 0%, #ffcd39 100%);
+        color: #333;
+    }
+    .btn-saldar:active {
+        background: linear-gradient(135deg, #e0a800 0%, #ffc107 100%);
+    }
+    /* Sección de facturas expandidas */
+    .facturas-detalle {
+        background: #e8f0fe;
+        padding: 0.75rem;
+        border-top: 2px solid #467ff1;
+    }
+    .facturas-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #b3d7ff;
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    .facturas-header i {
+        color: #467ff1;
+        font-size: 1.3rem;
+    }
+    /* Items de facturas */
+    .factura-item {
+        background: #ffffff;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        border-left: 4px solid #467ff1;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+    .factura-item:last-child {
+        margin-bottom: 0;
+    }
+    .factura-vencida-mobile {
+        border-left-color: #dc3545;
+        background: #fff5f5;
+    }
+    .factura-normal-mobile {
+        border-left-color: #28a745;
+        background: #f8fff9;
+    }
+    /* Grid de información de factura */
+    .factura-info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-bottom: 0.75rem;
+    }
+    .factura-numero {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.05rem;
+        color: #2c3e50;
+    }
+    .factura-numero i {
+        color: #467ff1;
+        font-size: 1.3rem;
+    }
+    .factura-montos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    .monto-item {
+        display: flex;
+        flex-direction: column;
+    }
+    .monto-item .label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .monto-item .valor {
+        font-size: 0.95rem;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+    .monto-item.pendiente .valor {
+        color: #dc3545;
+    }
+    .factura-fechas {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    .fecha-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        color: #495057;
+    }
+    .fecha-item i {
+        color: #467ff1;
+        font-size: 1rem;
+    }
+    .fecha-item.vencimiento {
+        color: #dc3545;
+    }
+    .fecha-item.vencimiento i {
+        color: #dc3545;
+    }
+    /* Abono de factura */
+    .abono-factura-section {
+        margin-bottom: 0.6rem;
+    }
+    /* Botones de acción de factura (más pequeños) */
+    .acciones-factura {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+    .btn-accion-sm {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-accion-sm i {
+        font-size: 1.1rem;
+    }
+    .btn-accion-sm.btn-procesar {
+        background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+        color: white;
+    }
+    .btn-accion-sm.btn-abono {
+        background: linear-gradient(135deg, #467ff1 0%, #5a8ff5 100%);
+        color: white;
+    }
+    .btn-accion-sm.btn-saldar {
+        background: linear-gradient(135deg, #ffc107 0%, #ffcd39 100%);
+        color: #333;
+    }
+    .btn-accion-sm:active {
+        transform: scale(0.95);
+    }
+    /* Ocultar elementos innecesarios en móvil */
+    .scroll-table {
+        overflow-x: hidden !important;
+    }
 }
