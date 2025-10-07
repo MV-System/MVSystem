@@ -56,6 +56,13 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   isLoading = false;
 
   /**
+   * Detecta si la pantalla es móvil (ancho <= 768px)
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 768;
+  }
+
+  /**
    * Initialize form with validators
    */
   private initializeForm() {

@@ -18,8 +18,7 @@
                             <div>
                                 <h4 class="accesorio-title mb-1">{{ accesorioDetalle.descripcionAccesorio | titlecase }}</h4>
                                 <p class="accesorio-subtitle text-muted mb-0">
-                                    <i class="bi bi-hash me-1"></i>
-                                    ID: {{ accesorioDetalle.id }}
+                                    <i class="bi bi-hash me-1"></i> ID: {{ accesorioDetalle.id }}
                                     <span *ngIf="isValidValue(accesorioDetalle.modelo)" class="ms-3">
                                         <i class="bi bi-cpu me-1"></i>
                                         Modelo: {{ accesorioDetalle.modelo }}
@@ -30,9 +29,7 @@
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="stock-indicator">
-                            <span class="badge badge-stock-large"
-                                  [class.badge-sin-stock-large]="accesorioDetalle.cantidad === 0"
-                                  [class.badge-con-stock-large]="accesorioDetalle.cantidad > 0">
+                            <span class="badge badge-stock-large" [class.badge-sin-stock-large]="accesorioDetalle.cantidad === 0" [class.badge-con-stock-large]="accesorioDetalle.cantidad > 0">
                                 <i class="bi bi-boxes me-2"></i>
                                 {{ accesorioDetalle.cantidad }} unidades
                             </span>
@@ -48,8 +45,7 @@
                     <div class="col-md-6">
                         <div class="info-card">
                             <div class="info-card-header">
-                                <i class="bi bi-info-circle-fill me-2"></i>
-                                Información Básica
+                                <i class="bi bi-info-circle-fill me-2"></i> Información Básica
                             </div>
                             <div class="info-card-body">
                                 <div class="info-row">
@@ -80,9 +76,7 @@
                                 </div>
                                 <div class="info-row">
                                     <span class="info-label">Disponible:</span>
-                                    <span class="badge"
-                                          [class.badge-disponible-si]="isAvailable(accesorioDetalle.disponible)"
-                                          [class.badge-disponible-no]="!isAvailable(accesorioDetalle.disponible)">
+                                    <span class="badge" [class.badge-disponible-si]="isAvailable(accesorioDetalle.disponible)" [class.badge-disponible-no]="!isAvailable(accesorioDetalle.disponible)">
                                         <i class="bi me-1"
                                            [class.bi-check-circle-fill]="isAvailable(accesorioDetalle.disponible)"
                                            [class.bi-x-circle-fill]="!isAvailable(accesorioDetalle.disponible)"></i>
@@ -101,8 +95,7 @@
                     <div class="col-md-6">
                         <div class="info-card">
                             <div class="info-card-header">
-                                <i class="bi bi-currency-dollar me-2"></i>
-                                Información de Precios
+                                <i class="bi bi-currency-dollar me-2"></i> Información de Precios
                             </div>
                             <div class="info-card-body">
                                 <div class="info-row">
@@ -140,8 +133,7 @@
                     <div class="col-12" *ngIf="isValidNumericValue(accesorioDetalle.totalInventario) || isValidNumericValue(accesorioDetalle.totalGanancia) || isValidNumericValue(accesorioDetalle.totalFacturado) || isValidNumericValue(accesorioDetalle.totalItbis)">
                         <div class="info-card">
                             <div class="info-card-header">
-                                <i class="bi bi-graph-up me-2"></i>
-                                Estadísticas de Inventario
+                                <i class="bi bi-graph-up me-2"></i> Estadísticas de Inventario
                             </div>
                             <div class="info-card-body">
                                 <div class="row g-3">
@@ -198,9 +190,8 @@
             <!-- Results Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h6 class="results-title mb-0 d-flex align-items-center w-100">
-                    <i class="bi bi-list-ul me-2 text-primary"></i>
-                    Lista de Accesorios
-                    <span class="badge bg-primary ms-2 count-badge" *ngIf="accesorios.length > 0">
+                    <i class="bi bi-list-ul me-2 text-primary"></i> Lista de Accesorios
+                    <span class="badge bg-primary ms-2 count-badge d-none d-md-inline" *ngIf="accesorios.length > 0">
                         {{totalRecord}} encontrado{{totalRecord !== 1 ? 's' : ''}}
                     </span>
                     <span class="pagination-info ms-auto" *ngIf="accesorios.length">
@@ -261,8 +252,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let accesorio of accesorios | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }"
-                                class="table-row">
+                            <tr *ngFor="let accesorio of accesorios | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }" class="table-row">
                                 <td class="text-center">
                                     <span class="id-badge">#{{accesorio.id}}</span>
                                 </td>
@@ -270,9 +260,7 @@
                                     <span class="accesorio-name">{{accesorio.descripcionAccesorio | titlecase}}</span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge badge-cantidad"
-                                          [class.badge-sin-stock]="accesorio.cantidad === 0"
-                                          [class.badge-con-stock]="accesorio.cantidad > 0">
+                                    <span class="badge badge-cantidad" [class.badge-sin-stock]="accesorio.cantidad === 0" [class.badge-con-stock]="accesorio.cantidad > 0">
                                         {{accesorio.cantidad}} unidades
                                     </span>
                                 </td>
@@ -299,12 +287,7 @@
                                 </td>
                                 <td class="text-center actions-cell">
                                     <div class="modern-actions" role="group" aria-label="Acciones del accesorio">
-                                        <button type="button"
-                                                class="btn btn-outline-warning btn-sm action-btn"
-                                                title="Editar información del accesorio"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-placement="top"
-                                                (click)="editarAccesorio(accesorio.id)">
+                                        <button type="button" class="btn btn-outline-warning btn-sm action-btn" title="Editar información del accesorio" data-bs-toggle="tooltip" data-bs-placement="top" (click)="editarAccesorio(accesorio.id)">
                                             <i class="bi bi-pencil-square"></i>
                                             <span class="d-none d-xl-inline ms-1">Editar</span>
                                         </button>
@@ -327,53 +310,42 @@
 
             <!-- Mobile Card View -->
             <div class="accesorio-cards" *ngIf="accesorios.length > 0 && isMobileScreen()">
-                <div class="accesorio-card" *ngFor="let accesorio of accesorios | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }">
-                    <div class="card-header-mobile">
-                        <div class="accesorio-id">
-                            <span class="id-badge-mobile">#{{accesorio.id}}</span>
-                        </div>
-                        <div class="accesorio-actions">
-                            <button type="button"
-                                    class="btn btn-outline-warning btn-sm me-2"
-                                    (click)="editarAccesorio(accesorio.id)">
+                <div class="card-accesorio" *ngFor="let accesorio of accesorios | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }">
+                    <div class="card-header">
+                        <span class="codigo">{{accesorio.descripcionAccesorio | titlecase}}</span>
+                        <div class="acciones">
+                            <button type="button" class="btn-icon" (click)="editarAccesorio(accesorio.id)">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
-                            <button type="button"
-                                    class="btn btn-outline-info btn-sm"
-                                    (click)="verDetalle(accesorio.id)">
+                            <!-- <button type="button" class="btn-icon" (click)="verDetalle(accesorio.id)">
                                 <i class="bi bi-eye-fill"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
-                    <div class="card-body-mobile">
-                        <div class="accesorio-name-mobile">
-                            <i class="bi bi-gear-fill me-2 text-primary"></i>
-                            <strong>{{accesorio.descripcionAccesorio | titlecase}}</strong>
-                        </div>
-                        <div class="accesorio-details-mobile">
-                            <div class="detail-item">
-                                <span class="text-muted me-2 detail-label">Cantidad:</span>
-                                <span class="badge badge-cantidad-mobile"
-                                      [class.badge-sin-stock-mobile]="accesorio.cantidad === 0"
-                                      [class.badge-con-stock-mobile]="accesorio.cantidad > 0">
+
+                    <div class="card-body">
+                        <div class="info">
+                            <div class="item">
+                                <span class="label">Cantidad:</span>
+                                <span class="valor" [class.cantidad-cero]="accesorio.cantidad === 0">
                                     {{accesorio.cantidad}} unidades
                                 </span>
                             </div>
-                            <div class="detail-item">
-                                <span class="text-muted me-2 detail-label">Costo:</span>
-                                <span class="badge badge-costo-mobile">{{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            <div class="item">
+                                <span class="label">Costo:</span>
+                                <span class="valor">{{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
                             </div>
-                            <div class="detail-item">
-                                <span class="text-muted me-2 detail-label">P. Detalle:</span>
-                                <span class="badge badge-precio-mobile">{{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            <div class="item">
+                                <span class="label">P. Detalle:</span>
+                                <span class="valor">{{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}</span>
                             </div>
-                            <div class="detail-item">
-                                <span class="text-muted me-2 detail-label">P. Mayor:</span>
-                                <span class="badge badge-precio-mayor-mobile">{{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}</span>
+                            <div class="item">
+                                <span class="label">P. Mayor:</span>
+                                <span class="valor">{{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}</span>
                             </div>
-                            <div class="detail-item">
-                                <span class="text-muted me-2 detail-label">Almacén:</span>
-                                <span class="badge badge-almacen-mobile">{{accesorio.almacen}}</span>
+                            <div class="item">
+                                <span class="label">Almacén:</span>
+                                <span class="badge almacen">{{accesorio.almacen}}</span>
                             </div>
                         </div>
                     </div>

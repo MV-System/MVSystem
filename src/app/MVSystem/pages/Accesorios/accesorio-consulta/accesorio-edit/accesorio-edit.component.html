@@ -1,252 +1,264 @@
-<div class="modal-content-wrapper">
-    <div class="card modern-card">
-        <div class="card-body">
-            <!-- Header moderno -->
-            <div class="form-header mb-4">
-                <h5 class="form-title">
-                    <i class="bi bi-pencil-square me-2 text-primary"></i>
-                    Editar Accesorio
-                </h5>
-                <p class="form-subtitle">
-                    Modificar información del accesorio #{{ form.get('id')?.value }}
+<div class="edit-form-container">
+    <div>
+        <!-- Header del Formulario -->
+        <div class="form-header mb-4">
+            <h5 class="form-title">
+                <i class="bi bi-pencil-square me-2 text-primary"></i> Editar Accesorio
+            </h5>
+            <p class="form-subtitle">ID: #{{ form.get('id')?.value }} | Estado: {{ form.get('estado')?.value === 'A' ? 'Activo' : 'Inactivo' }}</p>
+        </div>
+
+        <!-- Formulario Desktop -->
+        <form [formGroup]="form" class="modern-form desktop-only" novalidate>
+
+            <!-- Sección: Información Básica -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h6 class="section-title">
+                        <i class="bi bi-info-circle me-2"></i> Información Básica
+                    </h6>
+                </div>
+
+                <div class="row ">
+                    <!-- Código -->
+                    <div class="col-md-6">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-upc-scan me-1"></i>
+                            Código
+                        </label>
+                        <input type="text" formControlName="codigo" class="form-control modern-input" placeholder="ACC-001">
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="col-md-6">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-toggle-on me-1"></i>
+                            Estado
+                            <span class="required-star">*</span>
+                        </label>
+                        <select formControlName="estado" class="form-select modern-select">
+                            <option value="A">Activo</option>
+                            <option value="I">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="col-md-12">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-card-text me-1"></i>
+                            Descripción
+                            <span class="required-star">*</span>
+                        </label>
+                        <input type="text" formControlName="descripcionAccesorio" class="form-control modern-input" placeholder="Nombre del accesorio" [class.is-invalid]="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched">
+                        <div class="invalid-feedback" *ngIf="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched">
+                            {{ getFieldError('descripcionAccesorio') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección: Precios y Costos -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h6 class="section-title">
+                        <i class="bi bi-currency-dollar me-2"></i> Precios y Costos
+                    </h6>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Costo Base -->
+                    <div class="col-md-4">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-tag me-1"></i>
+                            Costo Base
+                            <span class="optional-text">(Solo lectura)</span>
+                        </label>
+                        <input type="text" class="form-control modern-input" [value]="'RD$ ' + (form.get('costoEquipo')?.value | number: '1.2-2')" readonly>
+                    </div>
+
+                    <!-- Precio Mayor -->
+                    <div class="col-md-4">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-bag-check me-1"></i>
+                            Precio Mayor
+                            <span class="required-star">*</span>
+                        </label>
+                        <input type="number" formControlName="precioPorMayor" class="form-control modern-input" placeholder="RD$ 0.00" step="0.01" [class.is-invalid]="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched">
+                        <div class="invalid-feedback" *ngIf="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched">
+                            {{ getFieldError('precioPorMayor') }}
+                        </div>
+                        <div class="text-danger small mt-1" *ngIf="!isPriceRelationValid() && form.get('precioPorMayor')?.value && form.get('precioDetalle')?.value">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Debe ser menor que el precio al detalle
+                        </div>
+                    </div>
+
+                    <!-- Precio Detalle -->
+                    <div class="col-md-4">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-cart me-1"></i>
+                            Precio Detalle
+                            <span class="required-star">*</span>
+                        </label>
+                        <input type="number" formControlName="precioDetalle" class="form-control modern-input" placeholder="RD$ 0.00" step="0.01" [class.is-invalid]="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched">
+                        <div class="invalid-feedback" *ngIf="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched">
+                            {{ getFieldError('precioDetalle') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección: Control de Inventario -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h6 class="section-title">
+                        <i class="bi bi-boxes me-2"></i> Control de Inventario
+                    </h6>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Cantidad en Stock -->
+                    <div class="col-md-6">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-123 me-1"></i>
+                            Cantidad en Stock
+                            <span class="required-star">*</span>
+                        </label>
+                        <input type="number" formControlName="cantidad" class="form-control modern-input" placeholder="0" min="0" appNumeric maxlength="4" [class.is-invalid]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+                        <div class="invalid-feedback" *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+                            {{ getFieldError('cantidad') }}
+                        </div>
+                    </div>
+
+                    <!-- Indicador de Stock -->
+                    <div class="col-md-6">
+                        <label class="form-label modern-label">
+                            <i class="bi bi-speedometer2 me-1"></i>
+                            Estado del Stock
+                        </label>
+                        <div class="stock-indicator-modern" [class.stock-zero]="(form.get('cantidad')?.value || 0) === 0" [class.stock-low]="(form.get('cantidad')?.value || 0) > 0 && (form.get('cantidad')?.value || 0) <= 10" [class.stock-ok]="(form.get('cantidad')?.value || 0) > 10">
+                            <i class="bi" [class.bi-x-circle-fill]="(form.get('cantidad')?.value || 0) === 0" [class.bi-exclamation-triangle-fill]="(form.get('cantidad')?.value || 0) > 0 && (form.get('cantidad')?.value || 0) <= 10" [class.bi-check-circle-fill]="(form.get('cantidad')?.value || 0) > 10"></i>
+                            <span class="stock-text">
+                                {{ (form.get('cantidad')?.value || 0) === 0 ? 'Sin stock' :
+                                   (form.get('cantidad')?.value || 0) <= 10 ? 'Stock bajo' :
+                                   'Stock disponible' }}
+                            </span>
+                            <span class="stock-count">{{ form.get('cantidad')?.value || 0 }} unidades</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="form-actions text-center">
+                <button type="button" class="btn modern-btn-secondary me-3" (click)="closeModal.emit()" [disabled]="isLoading">
+                    <i class="bi bi-x-lg me-2"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn modern-btn-primary" (click)="updateAccesorio()" [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
+                    <div class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></div>
+                    <i class="bi bi-check-lg me-2" *ngIf="!isLoading"></i>
+                    {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Formulario Mobile - Diseño Optimizado -->
+        <div class="mobile-only mobile-container">
+            <div class="mobile-header-info">
+                <h2 class="mobile-title-edit">
+                    <i class="bi bi-pencil-square"></i> Editar Accesorio
+                </h2>
+                <p class="mobile-subtitle">
+                    ID: #{{ form.get('id')?.value || '—' }} | Estado:
+                    <span class="status-active" *ngIf="form.get('estado')?.value === 'A'">Activo</span>
+                    <span class="status-inactive" *ngIf="form.get('estado')?.value !== 'A'">Inactivo</span>
                 </p>
             </div>
 
-            <!-- Modern Form -->
-            <form [formGroup]="form" class="modern-form" novalidate>
+            <form [formGroup]="form" class="mobile-form-optimized" novalidate>
 
-                <!-- Sección: Información Básica -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <h6 class="section-title">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            Información Básica
-                        </h6>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="codigo" class="modern-label">
-                                <i class="bi bi-upc-scan me-2"></i>
-                                Código
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-hash"></i>
-                                </span>
-                                <input type="text"
-                                       id="codigo"
-                                       formControlName="codigo"
-                                       class="form-control modern-input"
-                                       placeholder="Ingrese el código">
-                            </div>
-                            <div class="invalid-feedback"
-                                 [style.display]="form.get('codigo')?.invalid && form.get('codigo')?.touched ? 'block' : 'none'">
-                                {{ getFieldError('codigo') }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="estado" class="modern-label">
-                                <i class="bi bi-toggle-on me-2"></i>
-                                Estado <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-check-circle"></i>
-                                </span>
-                                <select id="estado"
-                                        formControlName="estado"
-                                        class="form-select modern-input">
-                                    <option value="A">Activo</option>
-                                    <option value="I">Inactivo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label for="descripcion" class="modern-label">
-                                <i class="bi bi-card-text me-2"></i>
-                                Descripción <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-file-text"></i>
-                                </span>
-                                <input type="text"
-                                       id="descripcion"
-                                       formControlName="descripcionAccesorio"
-                                       class="form-control modern-input"
-                                       placeholder="Descripción detallada del accesorio">
-                            </div>
-                            <div class="invalid-feedback"
-                                 [style.display]="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched ? 'block' : 'none'">
-                                {{ getFieldError('descripcionAccesorio') }}
-                            </div>
-                        </div>
-                    </div>
+                <!-- Código -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Código</label>
+                    <input type="text" formControlName="codigo" placeholder="Código del accesorio" class="input-movil">
                 </div>
 
-                <!-- Sección: Información de Precios -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <h6 class="section-title">
-                            <i class="bi bi-currency-dollar me-2"></i>
-                            Información de Precios
-                        </h6>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label for="costo" class="modern-label">
-                                <i class="bi bi-receipt me-2"></i>
-                                Costo
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">RD$</span>
-                                <input type="number"
-                                       id="costo"
-                                       formControlName="costoEquipo"
-                                       class="form-control modern-input"
-                                       placeholder="0.00"
-                                       step="0.01"
-                                       readonly>
-                            </div>
-                            <small class="form-text text-muted">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Campo de solo lectura
-                            </small>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="precioMayor" class="modern-label">
-                                <i class="bi bi-tags me-2"></i>
-                                Precio por Mayor <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">RD$</span>
-                                <input type="number"
-                                       id="precioMayor"
-                                       formControlName="precioPorMayor"
-                                       class="form-control modern-input"
-                                       placeholder="0.00"
-                                       step="0.01"
-                                       min="0">
-                            </div>
-                            <div class="invalid-feedback"
-                                 [style.display]="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched ? 'block' : 'none'">
-                                {{ getFieldError('precioPorMayor') }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="precioDetalle" class="modern-label">
-                                <i class="bi bi-tag me-2"></i>
-                                Precio por Detalle <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">RD$</span>
-                                <input type="number"
-                                       id="precioDetalle"
-                                       formControlName="precioDetalle"
-                                       class="form-control modern-input"
-                                       placeholder="0.00"
-                                       step="0.01"
-                                       min="0">
-                            </div>
-                            <div class="invalid-feedback"
-                                 [style.display]="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched ? 'block' : 'none'">
-                                {{ getFieldError('precioDetalle') }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Validación visual de precios -->
-                    <div class="mt-3" *ngIf="form.get('precioPorMayor')?.value && form.get('precioDetalle')?.value">
-                        <div class="alert-modern"
-                             [class.alert-danger-modern]="!isPriceRelationValid()"
-                             [class.alert-success-modern]="isPriceRelationValid()">
-                            <i class="bi me-2"
-                               [class.bi-exclamation-triangle-fill]="!isPriceRelationValid()"
-                               [class.bi-check-circle-fill]="isPriceRelationValid()"></i>
-                            <span *ngIf="!isPriceRelationValid()">
-                                El precio por mayor debe ser menor que el precio por detalle
-                            </span>
-                            <span *ngIf="isPriceRelationValid()">
-                                Configuración de precios correcta
-                            </span>
-                        </div>
-                    </div>
+                <!-- Descripción -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Descripción *</label>
+                    <input type="text" formControlName="descripcionAccesorio" placeholder="Ej: Cable USB Tipo C" class="input-movil" [class.input-error]="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched">
+                    <span class="mobile-error" *ngIf="form.get('descripcionAccesorio')?.invalid && form.get('descripcionAccesorio')?.touched">
+                        {{ getFieldError('descripcionAccesorio') }}
+                    </span>
                 </div>
 
-                <!-- Sección: Información de Inventario -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <h6 class="section-title">
-                            <i class="bi bi-boxes me-2"></i>
-                            Información de Inventario
-                        </h6>
-                    </div>
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-6">
-                            <label for="cantidad" class="modern-label">
-                                <i class="bi bi-123 me-2"></i>
-                                Cantidad <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-box"></i>
-                                </span>
-                                <input type="number"
-                                       id="cantidad"
-                                       formControlName="cantidad"
-                                       class="form-control modern-input"
-                                       placeholder="0"
-                                       min="0"
-                                       appNumeric
-                                       maxlength=4>
-                            </div>
-                            <div class="invalid-feedback"
-                                 [style.display]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched ? 'block' : 'none'">
-                                {{ getFieldError('cantidad') }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="stock-display">
-                                <span class="badge-stock-modern"
-                                      [class.badge-sin-stock-modern]="(form.get('cantidad')?.value || 0) === 0"
-                                      [class.badge-con-stock-modern]="(form.get('cantidad')?.value || 0) > 0">
-                                    <i class="bi bi-boxes me-2"></i>
-                                    {{ form.get('cantidad')?.value || 0 }} unidades en stock
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Cantidad -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Cantidad *</label>
+                    <input type="number" formControlName="cantidad" placeholder="0" min="0" class="input-movil" [class.input-error]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched" appNumeric maxlength="4">
+                    <span class="mobile-error" *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+                        {{ getFieldError('cantidad') }}
+                    </span>
                 </div>
 
-                <!-- Botones de Acción -->
-                <div class="form-actions">
-                    <div class="d-flex gap-2 justify-content-end flex-wrap">
-                        <button type="button"
-                                class="button-guardar"
-                                (click)="updateAccesorio()"
-                                [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
-                            <div class="d-flex align-items-center">
-                                <div class="spinner-border spinner-border-sm me-2"
-                                     role="status"
-                                     *ngIf="isLoading">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <i class="bi bi-check-circle me-2" *ngIf="!isLoading"></i>
-                                <span>{{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}</span>
-                            </div>
-                        </button>
-                        <button type="button"
-                                class="button-limpiar"
-                                (click)="clearForm()"
-                                [disabled]="isLoading">
-                            <i class="bi bi-arrow-clockwise me-2"></i>
-                            Limpiar
-                        </button>
-                        <!-- <ng-content select="[cancel]"></ng-content> -->
+                <!-- Costo -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Costo</label>
+                    <input type="text" [value]="'RD$ ' + (form.get('costoEquipo')?.value | number: '1.2-2')" placeholder="RD$0.00" disabled class="input-movil input-disabled">
+                </div>
 
-                    </div>
+                <!-- Precio Detalle -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Precio Detalle *</label>
+                    <input type="number" formControlName="precioDetalle" placeholder="RD$0.00" step="0.01" class="input-movil" [class.input-error]="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched">
+                    <span class="mobile-error" *ngIf="form.get('precioDetalle')?.invalid && form.get('precioDetalle')?.touched">
+                        {{ getFieldError('precioDetalle') }}
+                    </span>
+                </div>
+
+                <!-- Precio Mayor -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Precio Mayor *</label>
+                    <input type="number" formControlName="precioPorMayor" placeholder="RD$0.00" step="0.01" class="input-movil" [class.input-error]="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched">
+                    <span class="mobile-error" *ngIf="form.get('precioPorMayor')?.invalid && form.get('precioPorMayor')?.touched">
+                        {{ getFieldError('precioPorMayor') }}
+                    </span>
+                </div>
+
+                <!-- Alerta de validación de precios -->
+                <div class="mobile-alert mobile-alert-error" *ngIf="!isPriceRelationValid() && form.get('precioPorMayor')?.value && form.get('precioDetalle')?.value">
+                    <i class="bi bi-exclamation-triangle"></i> El precio mayor debe ser menor que el precio detalle
+                </div>
+
+                <!-- Estado -->
+                <div class="mobile-field-compact">
+                    <label class="mobile-label-compact">Estado *</label>
+                    <select formControlName="estado" class="input-movil">
+                        <option value="A">Activo</option>
+                        <option value="I">Inactivo</option>
+                    </select>
+                </div>
+
+                <!-- Indicador de Stock -->
+                <div class="mobile-stock-indicator" [class.stock-zero]="(form.get('cantidad')?.value || 0) === 0" [class.stock-low]="(form.get('cantidad')?.value || 0) > 0 && (form.get('cantidad')?.value || 0) <= 10" [class.stock-ok]="(form.get('cantidad')?.value || 0) > 10">
+                    <i class="bi" [class.bi-x-circle-fill]="(form.get('cantidad')?.value || 0) === 0" [class.bi-exclamation-triangle-fill]="(form.get('cantidad')?.value || 0) > 0 && (form.get('cantidad')?.value || 0) <= 10" [class.bi-check-circle-fill]="(form.get('cantidad')?.value || 0) > 10"></i>
+                    <span>{{ (form.get('cantidad')?.value || 0) === 0 ? 'Sin stock' : (form.get('cantidad')?.value || 0) <= 10 ? 'Stock bajo' : 'Stock disponible' }} - {{ form.get('cantidad')?.value || 0 }} unidades</span>
+                </div>
+
+                <!-- Botones -->
+                <div class="mobile-actions-optimized">
+                    <button type="button" class="mobile-btn-cancel-new" (click)="closeModal.emit()" [disabled]="isLoading">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="mobile-btn-save-new" (click)="updateAccesorio()" [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
+                        <i class="bi bi-check-lg" *ngIf="!isLoading"></i>
+                        <div class="spinner-border spinner-border-sm" *ngIf="isLoading"></div>
+                        {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
+                    </button>
                 </div>
             </form>
         </div>
+
     </div>
-</div>
