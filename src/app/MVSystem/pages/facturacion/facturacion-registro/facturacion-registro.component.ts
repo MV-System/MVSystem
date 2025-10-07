@@ -59,6 +59,14 @@ reparaciones: any[] = [];
     BotonProcesarFactura(): boolean {
       return this.validatorPermissionService.validateUserRole("btngeneraFactura");
     }
+
+  /**
+   * Detecta si la pantalla es móvil (ancho <= 768px)
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 768;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
@@ -231,6 +239,15 @@ onModalClose(rep: any) {
   }
   articulos(): FormArray {
     return this.form.controls["articulos"] as FormArray;
+  }
+
+  /**
+   * Verifica si un artículo en el índice dado debe estar bloqueado (readonly)
+   * Un artículo está bloqueado si ya tiene un artículo seleccionado
+   */
+  isArticuloReadonly(index: number): boolean {
+    const articulo = this.articulos().controls[index]?.value;
+    return articulo && articulo.articulo && articulo.articulo !== '';
   }
 
   onScrollToEnd() {

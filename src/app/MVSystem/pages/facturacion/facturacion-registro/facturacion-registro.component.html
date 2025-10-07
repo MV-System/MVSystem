@@ -190,9 +190,8 @@
                                 <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
                                     <ng-container [formGroupName]="i">
                                         <td>
-                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" (keydown.enter)="$event.preventDefault();
-                                        descuentoInput.focus()" (change)="obtenerDetalleFactura(i);
-                                        cantidadInput.focus()" (scroll)="onScroll($event)" required [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
+                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"
+                                                (change)="obtenerDetalleFactura(i); cantidadInput.focus()" (scroll)="onScroll($event)" required [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
                                                 <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                     {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
                                                 </ng-option>
@@ -231,6 +230,63 @@
                         </tbody>
                     </table>
 
+                    <!-- Vista de cards para móvil -->
+                    <div class="articulos-mobile-container" *ngIf="isMobileScreen()">
+                        <ng-container formArrayName="articulos">
+                            <div *ngFor="let detalleFactura of articulos().controls; let i = index" class="articulo-card-mobile" [class.articulo-completado]="detalleFactura.value.articulo && detalleFactura.value.articulo !== ''" [class.articulo-vacio]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
+                                <ng-container [formGroupName]="i">
+                                    <!-- Indicador de artículo completado -->
+                                    <div class="articulo-status" *ngIf="detalleFactura.value.articulo && detalleFactura.value.articulo !== ''">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        <span>Artículo #{{i + 1}}</span>
+                                    </div>
+
+                                    <div class="articulo-card-header">
+                                        <div class="articulo-descripcion">
+                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()"
+                                                (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()" (scroll)="onScroll($event)" required placeholder="Seleccionar artículo">
+                                                <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
+                                                    {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
+                                                </ng-option>
+                                            </ng-select>
+                                        </div>
+                                        <div class="articulo-eliminar">
+                                            <button class="btns flat oorange" type="button" (click)="borrarArticulo(i)">
+                                                <i class="bx bx-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="articulo-grid" [class.hidden]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
+                                        <div class="articulo-field">
+                                            <label>Cantidad</label>
+                                            <input type="text" class="form-control align-center" placeholder="0" formControlName="cantidad" #cantidadInputMobile (keydown.enter)="$event.preventDefault(); precioInputMobile.focus()" (keyup)="obtenerDetalleFactura(i)" [maxlen]="4" appNumeric>
+                                        </div>
+                                        <div class="articulo-field">
+                                            <label>Precio</label>
+                                            <input type="text" class="form-control align-right" placeholder="0.00" formControlName="precio" #precioInputMobile (keydown.enter)="$event.preventDefault(); descuentoInputMobile.focus()" (blur)="onPrecioChange(i)" [maxlen]="7" appNumeric>
+                                        </div>
+                                        <div class="articulo-field">
+                                            <label>Descuento</label>
+                                            <input type="number" class="form-control align-right" placeholder="0.00" formControlName="descuento" #descuentoInputMobile (keydown.enter)="$event.preventDefault(); agregarArticulo()" (keyup)="obtenerDetalleFactura(i)" [maxlen]="4" [decimals]="2" appNumeric>
+                                        </div>
+                                    </div>
+
+                                    <div class="articulo-totales" [class.hidden]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
+                                        <div class="articulo-subtotal">
+                                            <span>Subtotal</span>
+                                            <span>{{detalleFactura.value.precio * detalleFactura.value.cantidad | number:'1.2-2'}}</span>
+                                        </div>
+                                        <div class="articulo-total">
+                                            <span>Total</span>
+                                            <span>{{detalleFactura.value.total | number:'1.2-2'}}</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+
                 </div>
 
 
@@ -264,22 +320,24 @@
                                     <span class="totals-label">Total:</span>
                                     <span class="info total-amount">RD$ {{total}}</span>
                                 </div>
+
+                                <!-- Botones de acción dentro del card -->
+                                <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
+                                    <button class="bottom-ft-procesa" type="submit">
+                                        <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
+                                        <span class="spinner-grow spinner-grow-sm m-0 x-10"
+                                             role="status"
+                                             aria-hidden="true"
+                                             *ngIf="isLoading"></span>
+                                    </button>
+
+                                    <button class="bottom-ft" type="button" (click)="onClean()">
+                                        Limpiar datos
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="bottom-btns" *ngIf="BotonProcesarFactura()">
-                    <button class="bottom-ft-procesa" type="submit">
-                        <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
-                        <span class="spinner-grow spinner-grow-sm m-0 x-10"
-                             role="status"
-                             aria-hidden="true"
-                             *ngIf="isLoading"></span>
-                </button>
-
-                    <button class="bottom-ft" (click)="onClean()">
-                        Limpiar datos
-                </button>
                 </div>
             </div>
         </form>
