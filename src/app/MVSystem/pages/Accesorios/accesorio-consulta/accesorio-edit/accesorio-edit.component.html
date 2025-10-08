@@ -71,9 +71,12 @@
                         <label class="form-label modern-label">
                             <i class="bi bi-tag me-1"></i>
                             Costo Base
-                            <span class="optional-text">(Solo lectura)</span>
+                            <span class="required-star">*</span>
                         </label>
-                        <input type="text" class="form-control modern-input" [value]="'RD$ ' + (form.get('costoEquipo')?.value | number: '1.2-2')" readonly>
+                        <input type="number" formControlName="costoEquipo" class="form-control modern-input" [class.is-invalid]="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched" placeholder="0.00" step="0.01">
+                        <div class="invalid-feedback" *ngIf="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched">
+                            {{ getFieldError('costoEquipo') }}
+                        </div>
                     </div>
 
                     <!-- Precio Mayor -->
@@ -204,8 +207,11 @@
 
                 <!-- Costo -->
                 <div class="mobile-field-compact">
-                    <label class="mobile-label-compact">Costo</label>
-                    <input type="text" [value]="'RD$ ' + (form.get('costoEquipo')?.value | number: '1.2-2')" placeholder="RD$0.00" disabled class="input-movil input-disabled">
+                    <label class="mobile-label-compact">Costo *</label>
+                    <input type="number" formControlName="costoEquipo" placeholder="RD$0.00" step="0.01" class="input-movil" [class.input-error]="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched">
+                    <span class="mobile-error" *ngIf="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched">
+                        {{ getFieldError('costoEquipo') }}
+                    </span>
                 </div>
 
                 <!-- Precio Detalle -->

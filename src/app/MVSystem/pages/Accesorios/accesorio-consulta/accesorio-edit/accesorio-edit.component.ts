@@ -41,7 +41,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
     id: [''],
     descripcion: [''],
     codigo: [''],
-    costoEquipo: [{ value: '', disabled: true }],
+    costoEquipo: ['', [Validators.required, Validators.min(0.01)]],
     cantidad: ['', [Validators.required, Validators.min(0)]],
     descripcionAccesorio: ['', [Validators.required]],
     estado: ['A', [Validators.required]],
@@ -106,8 +106,6 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
       this.isLoading = true;
 
       const formData = { ...this.form.value };
-      // Asegurar que costoEquipo se incluya aunque esté disabled
-      formData.costoEquipo = this.form.get('costoEquipo')?.value;
 
       this.accesorioService.putAccesorio(formData).subscribe({
         next: (response) => {
@@ -175,6 +173,10 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
 
     if (this.form.get('cantidad')?.invalid) {
       errors.push('Cantidad debe ser válida y mayor o igual a 0');
+    }
+
+    if (this.form.get('costoEquipo')?.invalid) {
+      errors.push('Costo base debe ser mayor a 0');
     }
 
     if (this.form.get('precioDetalle')?.invalid) {
@@ -321,6 +323,7 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
       codigo: 'Código',
       descripcionAccesorio: 'Descripción',
       cantidad: 'Cantidad',
+      costoEquipo: 'Costo base',
       precioDetalle: 'Precio por detalle',
       precioPorMayor: 'Precio por mayor',
       estado: 'Estado'
