@@ -94,50 +94,120 @@
                         <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
                     </h6>
                 </div>
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label class="form-label modern-label"><i class="bi bi-upc-scan me-1"></i> IMEI</label>
-                        <div class="input-group">
-                            <input type="search" formControlName="imei" autocomplete="off" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="onEnterKey($event)">
-                            <button class="btns flat gunmetal" type="button" (click)="obtenerEquiposDisponibles()">
-            <i class='bx bx-search'></i>
-          </button>
+
+                <!-- Desktop: Layout Grid Original -->
+                <div class="d-none d-md-block">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label modern-label"><i class="bi bi-upc-scan me-1"></i> IMEI</label>
+                            <div class="input-group">
+                                <input type="search" formControlName="imei" autocomplete="off" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="onEnterKey($event)">
+                                <button class="btns flat gunmetal" type="button" (click)="obtenerEquiposDisponibles()">
+                                    <i class='bx bx-search'></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4" *ngIf="SelectSucursal()">
+                            <label class="form-label modern-label"><i class="bi bi-building me-1"></i> Sucursal</label>
+                            <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
+                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">{{ almacen.descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label modern-label"><i class="bi bi-box-seam me-1"></i> Suplidor</label>
+                            <select class="form-select modern-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
+                                <option value="" selected>Selecciona un Suplidor</option>
+                                <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">{{ Suplidor.descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
+                            <select class="form-select modern-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
+                                <option value="" selected>Selecciona un Modelo</option>
+                                <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">{{ modelo.descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
+                            <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="button-imprimir-reporte w-100" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
+                                Imprimir reporte <i class="bi bi-printer"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-4" *ngIf="SelectSucursal()">
-                        <label class="form-label modern-label"><i class="bi bi-building me-1"></i> Sucursal</label>
-                        <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
-            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">{{ almacen.descripcion }}</option>
-          </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label modern-label"><i class="bi bi-box-seam me-1"></i> Suplidor</label>
-                        <select class="form-select modern-select chip" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
-            <option value="" selected>Selecciona un Suplidor</option>
-            <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">{{ Suplidor.descripcion }}</option>
-          </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
-                        <select class="form-select modern-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
-            <option value="" selected>Selecciona un Modelo</option>
-            <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">{{ modelo.descripcion }}</option>
-          </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
-                        <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <!-- Desktop: Imprimir -->
-                        <button type="button" class="button-imprimir-reporte w-100 d-none d-md-block" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
-                            Imprimir reporte <i class="bi bi-printer"></i>
-                        </button>
+                </div>
 
-                        <!-- Mobile: Compartir -->
-                        <button type="button" class="button-imprimir-reporte w-100 d-block d-md-none" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="compartirReporteEquipos()">
-                            Compartir reporte <i class="bi bi-share"></i>
-                        </button>
+                <!-- Mobile: Layout Moderno -->
+                <div class="d-block d-md-none">
+                    <!-- Filtros móviles modernos -->
+                    <div class="filter-search-container">
+                        <!-- Búsqueda por IMEI -->
+                        <div class="search-input-wrapper">
+                            <i class="bi bi-upc-scan search-icon"></i>
+                            <input class="form-control mobile-search-input" placeholder="IMEI del equipo..." formControlName="imei" (keyup)="obtenerEquiposDisponibles()" type="text" autocomplete="off">
+                            <button type="button" class="clear-search-btn" *ngIf="form.get('imei')?.value" (click)="form.get('imei')?.setValue(''); obtenerEquiposDisponibles()">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dropdowns modernos -->
+                    <div class="filter-dropdowns-container">
+                        <!-- Sucursal -->
+                        <div class="sucursal-select-wrapper" *ngIf="SelectSucursal()">
+                            <i class="bi bi-building select-icon"></i>
+                            <select class="form-select mobile-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
+                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                                    {{ almacen.descripcion }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Suplidor -->
+                        <div class="sucursal-select-wrapper-with-label">
+                            <div class="mobile-filter-label">
+                                <i class="bi bi-truck me-2 text-orange"></i>
+                                <span class="label-text">Suplidor:</span>
+                            </div>
+                            <div class="sucursal-select-wrapper">
+                                <i class="bi bi-truck select-icon"></i>
+                                <select class="form-select mobile-select" formControlName="suplidor" (change)="obtenerEquiposDisponibles()">
+                                    <option value="" selected>Selecciona un Suplidor</option>
+                                    <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
+                                        {{ Suplidor.descripcion }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Modelo -->
+                        <div class="sucursal-select-wrapper">
+                            <i class="bi bi-cpu select-icon"></i>
+                            <select class="form-select mobile-select" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
+                                <option value="" selected>Selecciona un Modelo</option>
+                                <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+                                    {{ modelo.descripcion }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Fecha y botón de compartir -->
+                    <div class="mobile-actions-container">
+                        <div class="date-picker-mobile-wrapper">
+                            <label class="form-label mb-2 d-flex align-items-center">
+                                <i class="bi bi-calendar-range me-2 text-info"></i>
+                                Rango de fecha:
+                            </label>
+                            <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
+                        </div>
+                        <div class="share-button-wrapper">
+                            <button type="button" class="button-imprimir-reporte w-100" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="compartirReporteEquipos()">
+                                Compartir reporte <i class="bi bi-share"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

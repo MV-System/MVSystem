@@ -135,78 +135,104 @@
 
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
         <div class="card filter-card mb-4">
-            <div class="stats-card">
-                <div class="filter-header mb-3 d-flex align-items-center flex-wrap">
-                    <h6 class="filter-title d-flex align-items-center me-5 mb-0">
+            <div class="card-body">
+                <!-- Header con fecha -->
+                <div class="filter-header mb-3">
+                    <h6 class="filter-title d-flex align-items-center mb-3">
                         <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
                     </h6>
-                    <div class="d-flex align-items-center">
-                        <label class="form-label mb-0 me-3">Fecha de facturación:</label>
-                        <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
-                        </my-date-range-picker>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Por telefono</label>
-                        <div class="searchbox" formControlName="telefono">
-                            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
-                            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                    <div class="date-filter-section">
+                        <!-- Desktop: Label y datepicker en línea -->
+                        <div class="d-none d-md-flex align-items-center">
+                            <label class="form-label mb-0 me-3 d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2 text-info"></i>
+                                Fecha de facturación:
+                            </label>
+                            <div class="date-picker-wrapper">
+                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                </my-date-range-picker>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Por IMEI</label>
-                        <div class="searchbox" formControlName="search">
-                            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
-                            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-                        </div>
-                    </div>
-                    <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
-                        <label class="form-label mb-1">Sucursal</label>
-                        <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
-            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
-              {{ almacen.descripcion }}
-            </option>
-          </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <!-- --------------- Suplidores --------------- -->
-                            <label class="form-label">Suplidor</label>
-                            <select class="form-select modern-select" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
-              <option value="" selected>Selecciona un Suplidor</option>
-              <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
-                {{ Suplidor.descripcion }}
-              </option>
-            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <!-- --------------- Vendedores --------------- -->
-                            <label class="form-label">Vendedor</label>
-                            <select class="form-select modern-select" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
-              <option value="" selected>Selecciona un Vendedor</option>
-              <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
-                {{ vendedor.nombres }}
-              </option>
-            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <!-- --------------- Modelos --------------- -->
-                            <label class="form-label">Modelo</label>
-                            <select class="form-select modern-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
-              <option value="" selected>Selecciona un Modelo</option>
-              <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
-                {{ modelo.descripcion }}
-              </option>
-            </select>
+
+                        <!-- Mobile: Label y datepicker en columna -->
+                        <div class="d-block d-md-none">
+                            <label class="form-label mb-2 d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2 text-info"></i>
+                                Fecha de facturación:
+                            </label>
+                            <div class="date-picker-wrapper">
+                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                </my-date-range-picker>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 d-flex justify-content-center align-items-center">
 
+                <!-- Filtros móviles modernos -->
+                <div class="filter-search-container">
+                    <!-- Búsqueda por teléfono -->
+                    <div class="search-input-wrapper">
+                        <i class="bi bi-telephone search-icon"></i>
+                        <input class="form-control mobile-search-input" placeholder="Teléfono del cliente..." formControlName="telefono" (keyup)="obtenerEquiposVendidos()" type="search" autocomplete="off">
+                        <button type="button" class="clear-search-btn" *ngIf="form.get('telefono')?.value" (click)="form.get('telefono')?.setValue(''); obtenerEquiposVendidos()">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
                     </div>
 
+                    <!-- Búsqueda por IMEI -->
+                    <div class="search-input-wrapper">
+                        <i class="bi bi-device-hdd search-icon"></i>
+                        <input class="form-control mobile-search-input" placeholder="IMEI del equipo..." formControlName="imei" (keyup)="obtenerEquiposVendidos()" type="search" autocomplete="off">
+                        <button type="button" class="clear-search-btn" *ngIf="form.get('imei')?.value" (click)="form.get('imei')?.setValue(''); obtenerEquiposVendidos()">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dropdowns modernos -->
+                <div class="filter-dropdowns-container">
+                    <!-- Sucursal -->
+                    <div class="sucursal-select-wrapper" *ngIf="SelectSucursal()">
+                        <i class="bi bi-building select-icon"></i>
+                        <select class="form-select mobile-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
+                            <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                                {{ almacen.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Suplidor -->
+                    <div class="sucursal-select-wrapper">
+                        <i class="bi bi-truck select-icon"></i>
+                        <select class="form-select mobile-select" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
+                            <option value="" selected>Selecciona un Suplidor</option>
+                            <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
+                                {{ Suplidor.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Vendedor -->
+                    <div class="sucursal-select-wrapper">
+                        <i class="bi bi-person-badge select-icon"></i>
+                        <select class="form-select mobile-select" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
+                            <option value="" selected>Selecciona un Vendedor</option>
+                            <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
+                                {{ vendedor.nombres }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Modelo -->
+                    <div class="sucursal-select-wrapper">
+                        <i class="bi bi-cpu select-icon"></i>
+                        <select class="form-select mobile-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
+                            <option value="" selected>Selecciona un Modelo</option>
+                            <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
+                                {{ modelo.descripcion }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
