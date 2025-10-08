@@ -266,7 +266,6 @@ tr.detalle-row,
         align-items: center;
         border-bottom: none;
     }
-    
     .factura-numero {
         display: flex;
         align-items: center;
@@ -274,7 +273,6 @@ tr.detalle-row,
         color: #ffffff;
         font-size: 1.05rem;
     }
-    
     .factura-numero i {
         font-size: 1.2rem;
     }
@@ -365,7 +363,6 @@ tr.detalle-row,
         transition: all 0.2s ease;
         cursor: pointer;
     }
-    
     .btn-ver-detalle:active {
         background: #e5e7eb;
         transform: translateY(1px);
