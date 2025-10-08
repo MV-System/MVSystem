@@ -77,6 +77,12 @@
                         <div class="invalid-feedback" *ngIf="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched">
                             {{ getFieldError('costoEquipo') }}
                         </div>
+                        <div class="text-danger small mt-1" *ngIf="form.get('costoEquipo')?.value && form.get('precioDetalle')?.value && form.get('costoEquipo')?.value > form.get('precioDetalle')?.value">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> El costo no puede ser mayor que el precio por detalle
+                        </div>
+                        <div class="text-danger small mt-1" *ngIf="form.get('costoEquipo')?.value && form.get('precioPorMayor')?.value && form.get('costoEquipo')?.value > form.get('precioPorMayor')?.value">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> El costo no puede ser mayor que el precio por mayor
+                        </div>
                     </div>
 
                     <!-- Precio Mayor -->
@@ -212,6 +218,12 @@
                     <span class="mobile-error" *ngIf="form.get('costoEquipo')?.invalid && form.get('costoEquipo')?.touched">
                         {{ getFieldError('costoEquipo') }}
                     </span>
+                    <div class="mobile-alert mobile-alert-error" *ngIf="form.get('costoEquipo')?.value && form.get('precioDetalle')?.value && form.get('costoEquipo')?.value > form.get('precioDetalle')?.value">
+                        <i class="bi bi-exclamation-triangle"></i> El costo no puede ser mayor que el precio detalle
+                    </div>
+                    <div class="mobile-alert mobile-alert-error" *ngIf="form.get('costoEquipo')?.value && form.get('precioPorMayor')?.value && form.get('costoEquipo')?.value > form.get('precioPorMayor')?.value">
+                        <i class="bi bi-exclamation-triangle"></i> El costo no puede ser mayor que el precio mayor
+                    </div>
                 </div>
 
                 <!-- Precio Detalle -->

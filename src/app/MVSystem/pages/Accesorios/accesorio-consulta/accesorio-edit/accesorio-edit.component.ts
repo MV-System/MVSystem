@@ -74,6 +74,10 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
     this.form.get('precioDetalle')?.valueChanges.subscribe(() => {
       this.validatePrices();
     });
+
+    this.form.get('costoEquipo')?.valueChanges.subscribe(() => {
+      this.validatePrices();
+    });
   }
 
   /**
@@ -82,7 +86,9 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   private validatePrices() {
     const precioPorMayor = this.form.get('precioPorMayor')?.value;
     const precioDetalle = this.form.get('precioDetalle')?.value;
+    const costoEquipo = this.form.get('costoEquipo')?.value;
 
+    // Validar relación precio mayor vs precio detalle
     if (precioPorMayor && precioDetalle) {
       if (precioPorMayor >= precioDetalle) {
         this.form.get('precioPorMayor')?.setErrors({ priceRelation: true });
@@ -93,6 +99,36 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
           delete currentErrors['priceRelation'];
           const hasOtherErrors = Object.keys(currentErrors).length > 0;
           this.form.get('precioPorMayor')?.setErrors(hasOtherErrors ? currentErrors : null);
+        }
+      }
+    }
+
+    // Validar que el costo no sea mayor que el precio detalle
+    if (costoEquipo && precioDetalle) {
+      if (costoEquipo > precioDetalle) {
+        this.form.get('costoEquipo')?.setErrors({ costGreaterThanDetail: true });
+      } else {
+        // Clear cost relation error but keep other errors
+        const currentErrors = this.form.get('costoEquipo')?.errors;
+        if (currentErrors) {
+          delete currentErrors['costGreaterThanDetail'];
+          const hasOtherErrors = Object.keys(currentErrors).length > 0;
+          this.form.get('costoEquipo')?.setErrors(hasOtherErrors ? currentErrors : null);
+        }
+      }
+    }
+
+    // Validar que el costo no sea mayor que el precio por mayor
+    if (costoEquipo && precioPorMayor) {
+      if (costoEquipo > precioPorMayor) {
+        this.form.get('costoEquipo')?.setErrors({ costGreaterThanWholesale: true });
+      } else {
+        // Clear cost relation error but keep other errors
+        const currentErrors = this.form.get('costoEquipo')?.errors;
+        if (currentErrors) {
+          delete currentErrors['costGreaterThanWholesale'];
+          const hasOtherErrors = Object.keys(currentErrors).length > 0;
+          this.form.get('costoEquipo')?.setErrors(hasOtherErrors ? currentErrors : null);
         }
       }
     }
@@ -282,12 +318,30 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
   isPriceRelationValid(): boolean {
     const precioPorMayor = this.form.get('precioPorMayor')?.value;
     const precioDetalle = this.form.get('precioDetalle')?.value;
+    const costoEquipo = this.form.get('costoEquipo')?.value;
 
-    if (!precioPorMayor || !precioDetalle) {
-      return true; // If either is empty, don't show error
+    // Validar relación precio mayor vs precio detalle
+    if (precioPorMayor && precioDetalle) {
+      if (precioPorMayor >= precioDetalle) {
+        return false;
+      }
     }
 
-    return precioPorMayor < precioDetalle;
+    // Validar que el costo no sea mayor que el precio detalle
+    if (costoEquipo && precioDetalle) {
+      if (costoEquipo > precioDetalle) {
+        return false;
+      }
+    }
+
+    // Validar que el costo no sea mayor que el precio por mayor
+    if (costoEquipo && precioPorMayor) {
+      if (costoEquipo > precioPorMayor) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
@@ -310,6 +364,14 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
 
     if (field.errors['priceRelation']) {
       return 'Debe ser menor que el precio por detalle';
+    }
+
+    if (field.errors['costGreaterThanDetail']) {
+      return 'El costo no puede ser mayor que el precio por detalle';
+    }
+
+    if (field.errors['costGreaterThanWholesale']) {
+      return 'El costo no puede ser mayor que el precio por mayor';
     }
 
     return 'Campo inválido';
