@@ -1086,26 +1086,43 @@ printFacturaMini() {
            // this.isLoading = !this.isLoading;
             this.toastr.error(error)
           })
-    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
-      () => {
 
-        this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-
-          () => {
-            this.printFacturaNormal(); this.onClean()
-          },
-          () => {this.printFacturaMini(); this.onClean()},
-          "Mini",
-          "Normal"
-        )
-
-      },
-      () => {
-        this.onClean();
-       },
-      "No",
-      "Si"
-    )
+    // Verificar si es dispositivo móvil para cambiar el comportamiento
+    if (this.isMobileScreen()) {
+      // En móvil, preguntar si desea enviar la factura
+      this.rDialogService.openDialog("Aviso", '¿Desea enviar la factura?',
+        () => {
+          // Si acepta enviar, usar el método compartir
+          this.compartirFactura(this.facturaNumberReporte);
+          this.onClean();
+        },
+        () => {
+          // Si no desea enviar, solo limpiar
+          this.onClean();
+        },
+        "No",
+        "Sí"
+      )
+    } else {
+      // En desktop, mantener el comportamiento original de impresión
+      this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+        () => {
+          this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
+            () => {
+              this.printFacturaNormal(); this.onClean()
+            },
+            () => {this.printFacturaMini(); this.onClean()},
+            "Mini",
+            "Normal"
+          )
+        },
+        () => {
+          this.onClean();
+        },
+        "No",
+        "Si"
+      )
+    }
 
   }
   loadDataToPrint() {
@@ -1162,6 +1179,73 @@ printFacturaMini() {
    */
   getClienteTelefono(cliente?: Cliente): number {
     return  cliente?.numero_de_telefono || 0;
+  }
+
+  /**
+   * Comparte la factura usando la API nativa de compartir del navegador
+   * Genera un PDF y permite compartir por WhatsApp, Email, etc.
+   */
+  compartirFactura(numeroFactura: number) {
+    // Validar numeroFactura
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toastr.error('Número de factura inválido');
+      return;
+    }
+
+    // Verificar si el navegador soporta la Web Share API
+    if (!navigator.share) {
+      this.toastr.warning('Tu navegador no soporta la función de compartir. Por favor, usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+
+    // Mostrar loading
+    this.loading.showLoading();
+
+    // Generar el PDF usando el mismo endpoint que la impresión normal
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(), numeroFactura)
+      .subscribe({
+        next: async (blob) => {
+          try {
+            // Convertir el Blob a File (necesario para navigator.share)
+            const fileName = `Factura_${numeroFactura}.pdf`;
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+
+            // Intentar compartir el archivo
+            try {
+              await navigator.share({
+                title: `Factura #${numeroFactura}`,
+                text: `Factura #${numeroFactura} - MVSystem`,
+                files: [file]
+              } as any); // usar 'as any' para evitar error de tipos en TS
+
+              this.toastr.success('Factura compartida exitosamente');
+            } catch (shareError: any) {
+              // Si falla el share con archivos, intentar solo descargar
+              if (shareError.name === 'NotAllowedError' || shareError.message?.includes('files')) {
+                this.toastr.warning('No se puede compartir el archivo. Se descargará en su lugar.');
+                CreatorPDFFile(blob);
+              } else if (shareError.name !== 'AbortError') {
+                // Cualquier otro error que no sea cancelación del usuario
+                console.error('Error al compartir:', shareError);
+                this.toastr.warning('Error al compartir. Descargando archivo...');
+                CreatorPDFFile(blob);
+              }
+            }
+          } catch (error: any) {
+            console.error('Error al procesar archivo:', error);
+            this.toastr.error('Error al preparar la factura para compartir');
+          } finally {
+            this.loading.hideLoading();
+          }
+        },
+        error: (err) => {
+          console.error('Error al generar PDF:', err);
+          this.toastr.error('Error al generar la factura para compartir');
+          this.loading.hideLoading();
+        }
+      });
+
+    this.subs.push(sub);
   }
 
 }
