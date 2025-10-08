@@ -273,7 +273,75 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       this.toast.error('Error','Error al imprimir reporte');
     })
     this.isPrint = !this.isPrint;
+  }
 
+  /**
+   * Copia el IMEI al portapapeles
+   * @param imei - IMEI a copiar
+   */
+  copiarIMEI(imei: string, event?: Event) {
+    if (!imei) {
+      this.toast.warning('No hay IMEI para copiar');
+      return;
+    }
+
+    // Obtener el botón que disparó el evento para agregar efecto visual
+    const button = event?.target as HTMLElement;
+    const copyButton = button?.closest('.btn-copy-inline') as HTMLElement;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      // Usar la API moderna del portapapeles
+      navigator.clipboard.writeText(imei).then(() => {
+        this.toast.success(`IMEI copiado: ${imei}`);
+        this.activarEfectoCopia(copyButton);
+      }).catch(err => {
+        console.error('Error al copiar:', err);
+        this.fallbackCopyText(imei, copyButton);
+      });
+    } else {
+      // Fallback para navegadores más antiguos
+      this.fallbackCopyText(imei, copyButton);
+    }
+  }
+
+  /**
+   * Activa el efecto visual de copiado
+   * @param button - Elemento del botón
+   */
+  private activarEfectoCopia(button: HTMLElement | null) {
+    if (button) {
+      button.classList.add('copied');
+      setTimeout(() => {
+        button.classList.remove('copied');
+      }, 600); // Duración de la animación
+    }
+  }
+
+  /**
+   * Método de respaldo para copiar texto
+   * @param text - Texto a copiar
+   * @param button - Botón para aplicar efecto
+   */
+  private fallbackCopyText(text: string, button?: HTMLElement) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      this.toast.success(`IMEI copiado: ${text}`);
+      this.activarEfectoCopia(button || null);
+    } catch (err) {
+      console.error('Error al copiar:', err);
+      this.toast.error('No se pudo copiar el IMEI');
+    } finally {
+      document.body.removeChild(textArea);
+    }
   }
   obtenerAlmacenLista() {
     this.loading.showLoading();

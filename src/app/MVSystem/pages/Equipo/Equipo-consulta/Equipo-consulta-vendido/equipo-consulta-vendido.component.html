@@ -2,151 +2,215 @@
 <div class="box animate__animated animate__fadeIn">
     <h1>Equipos Vendidos</h1>
     <!-- Tarjetas de totales arriba de los filtros -->
-    <div class="stats-container row flex-wrap g-2 mb-3 justify-content-center">
-      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
-        <div class="stats-card flex-fill">
-          <div class="stats-content">
-            <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
-            <div class="stats-info">
-              <h6 class="stats-title">Total Equipos</h6>
-              <div class="stats-number text-break">{{ equipoQuantity }}</div>
-              <small class="stats-subtitle">Vendidos</small>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0 text-muted fw-semibold">
+                    <i class="bi bi-bar-chart-line me-2"></i> Resumen de Ventas
+                </h6>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
-        <div class="stats-card flex-fill">
-          <div class="stats-content">
-            <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
-            <div class="stats-info">
-              <h6 class="stats-title">Total Inventario</h6>
-              <div class="stats-number text-break">{{ totalInventario | currency }}</div>
-              <small class="stats-subtitle">Inventario vendido</small>
+
+            <!-- Desktop: Horizontal Layout -->
+            <div class="d-none d-md-block">
+                <div class="stats-horizontal-container">
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-bag-check-fill"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Equipos</div>
+                                <div class="stats-number">{{ equipoQuantity }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="equipoQuantity === 0">Sin ventas</span>
+                                    <span *ngIf="equipoQuantity === 1">Equipo vendido</span>
+                                    <span *ngIf="equipoQuantity > 1">Equipos vendidos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-divider"></div>
+
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Inventario</div>
+                                <div class="stats-number">{{ totalInventario | currency:'RD$':'symbol':'1.0-0' }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="totalInventario === 0">Sin inventario</span>
+                                    <span *ngIf="totalInventario > 0">Inventario vendido</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-divider"></div>
+
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Facturado</div>
+                                <div class="stats-number">{{ totalFacturado | currency:'RD$':'symbol':'1.0-0' }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="totalFacturado === 0">Sin facturación</span>
+                                    <span *ngIf="totalFacturado > 0">Facturación total</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-divider"></div>
+
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-percent"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Ganancias</div>
+                                <div class="stats-number">{{ totalGanancia | currency:'RD$':'symbol':'1.0-0' }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="totalGanancia === 0">Sin ganancias</span>
+                                    <span *ngIf="totalGanancia > 0">Ganancias netas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
-        <div class="stats-card flex-fill">
-          <div class="stats-content">
-            <div class="stats-icon"><i class="bi bi-graph-up-arrow text-info"></i></div>
-            <div class="stats-info">
-              <h6 class="stats-title">Total Facturado</h6>
-              <div class="stats-number text-break">{{ totalFacturado | currency }}</div>
-              <small class="stats-subtitle">Facturación</small>
+
+            <!-- Mobile: Vertical Layout -->
+            <div class="d-block d-md-none">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-bag-check-fill me-2 text-primary stats-card-icon"></i>
+                                <span class="stats-card-label">Total Equipos:</span>
+                                <span class="stats-card-value ms-auto">{{ equipoQuantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-currency-dollar me-2 text-success stats-card-icon"></i>
+                                <span class="stats-card-label">Total Inventario:</span>
+                                <span class="stats-card-value ms-auto">{{ totalInventario | currency:'RD$':'symbol':'1.0-0' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-graph-up-arrow me-2 text-info stats-card-icon"></i>
+                                <span class="stats-card-label">Total Facturado:</span>
+                                <span class="stats-card-value ms-auto">{{ totalFacturado | currency:'RD$':'symbol':'1.0-0' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-percent me-2 text-warning stats-card-icon"></i>
+                                <span class="stats-card-label">Total Ganancias:</span>
+                                <span class="stats-card-value ms-auto">{{ totalGanancia | currency:'RD$':'symbol':'1.0-0' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
-        <div class="stats-card flex-fill">
-          <div class="stats-content">
-            <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
-            <div class="stats-info">
-              <h6 class="stats-title">Total Ganancias</h6>
-              <div class="stats-number text-break">{{ totalGanancia | currency }}</div>
-              <small class="stats-subtitle">Ganancias netas</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex">
-        <div class="stats-card flex-fill">
-          <div class="stats-content">
-            <div class="stats-icon"><i class="bi bi-percent text-warning"></i></div>
-            <div class="stats-info">
-              <h6 class="stats-title">Total Itbis</h6>
-              <div class="stats-number text-break">{{ totalItbis | currency }}</div>
-              <small class="stats-subtitle">Impuestos</small>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+
     <form [formGroup]="form" (ngSubmit)="obtenerEquiposVendidos()" role="search">
-  <div class="card filter-card mb-4">
-    <div class="stats-card">
-<div class="filter-header mb-3 d-flex align-items-center flex-wrap">
-  <h6 class="filter-title d-flex align-items-center me-5 mb-0">
-    <i class="bi bi-funnel me-2 text-primary"></i>
-    Filtros de Búsqueda
-  </h6>
-  <div class="d-flex align-items-center">
-    <label class="form-label mb-0 me-3">Fecha de facturación:</label>
-    <my-date-range-picker
-      [options]="myDateRangePickerOptions"
-      formControlName="rangeDateFactura"
-      (dateRangeChanged)="onDateRangeFacturaChanged($event)"
-      placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
-    </my-date-range-picker>
-  </div>
-</div>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label class="form-label">Por telefono</label>
-          <div class="searchbox" formControlName="telefono">
-            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
-            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Por IMEI</label>
-          <div class="searchbox" formControlName="search">
-            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
-            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
-          </div>
-        </div>
-        <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
-          <label class="form-label mb-1">Sucursal</label>
-          <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
+        <div class="card filter-card mb-4">
+            <div class="stats-card">
+                <div class="filter-header mb-3 d-flex align-items-center flex-wrap">
+                    <h6 class="filter-title d-flex align-items-center me-5 mb-0">
+                        <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
+                    </h6>
+                    <div class="d-flex align-items-center">
+                        <label class="form-label mb-0 me-3">Fecha de facturación:</label>
+                        <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                        </my-date-range-picker>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Por telefono</label>
+                        <div class="searchbox" formControlName="telefono">
+                            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el telefono del cliente" (keyup.enter)="obtenerEquiposVendidos()">
+                            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Por IMEI</label>
+                        <div class="searchbox" formControlName="search">
+                            <input type="search" formControlName="imei" class="form-control modern-input busqueda-input" placeholder="Escriba el IMEI" (keyup.enter)="obtenerEquiposVendidos()">
+                            <button class="btns flat gunmetal"><i class='bx bx-search'></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-4" *ngIf="SelectSucursal()" style="padding-top: 0;">
+                        <label class="form-label mb-1">Sucursal</label>
+                        <select class="form-select modern-select" formControlName="almacen" (change)="obtenerEquiposVendidos()">
             <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
               {{ almacen.descripcion }}
             </option>
           </select>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <!-- --------------- Suplidores --------------- -->
-            <label class="form-label">Suplidor</label>
-            <select class="form-select modern-select" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- --------------- Suplidores --------------- -->
+                            <label class="form-label">Suplidor</label>
+                            <select class="form-select modern-select" formControlName="suplidor" (change)="obtenerEquiposVendidos()">
               <option value="" selected>Selecciona un Suplidor</option>
               <option *ngFor="let Suplidor of listaSuplidor" [value]="Suplidor.descripcion">
                 {{ Suplidor.descripcion }}
               </option>
             </select>
-          </div>
-          <div class="col-md-4">
-            <!-- --------------- Vendedores --------------- -->
-            <label class="form-label">Vendedor</label>
-            <select class="form-select modern-select" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
+                        </div>
+                        <div class="col-md-4">
+                            <!-- --------------- Vendedores --------------- -->
+                            <label class="form-label">Vendedor</label>
+                            <select class="form-select modern-select" formControlName="vendedor" (change)="obtenerEquiposVendidos()">
               <option value="" selected>Selecciona un Vendedor</option>
               <option *ngFor="let vendedor of listaVendedor" [value]="vendedor.nombres">
                 {{ vendedor.nombres }}
               </option>
             </select>
-          </div>
-          <div class="col-md-4">
-            <!-- --------------- Modelos --------------- -->
-            <label class="form-label">Modelo</label>
-            <select class="form-select modern-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
+                        </div>
+                        <div class="col-md-4">
+                            <!-- --------------- Modelos --------------- -->
+                            <label class="form-label">Modelo</label>
+                            <select class="form-select modern-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
               <option value="" selected>Selecciona un Modelo</option>
               <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
                 {{ modelo.descripcion }}
               </option>
             </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-         <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 d-flex justify-content-center align-items-center">
 
+                    </div>
+
+                </div>
+            </div>
         </div>
-        
-      </div>
-    </div>
-  </div>
-</form>
+    </form>
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
         <span>Cargando datos, por favor espere...</span>
@@ -235,26 +299,69 @@
                 </div>
                 <!-- Cards para pantallas pequeñas -->
                 <div class="d-block d-md-none">
-                  <div *ngFor="let equipo of equiposVendidos | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
-                    <div class="card-body">
-                      <div class="equipo-card-title mb-2">{{ equipo.descripcion }}</div>
-                      <div class="row g-1">
-                        <div class="col-6"><strong>Imei:</strong> {{equipo.imei}}</div>
-                        <div class="col-6"><strong>Cliente:</strong> {{equipo.cliente}}</div>
-                        <div class="col-6"><strong>Precio Vendido:</strong> {{equipo.precioVendido | currency}}</div>
-                        <div class="col-6"><strong>Fecha facturado:</strong> {{equipo.fechaFacturado}}</div>
-                        <div class="col-6"><strong>Precio Mayor:</strong> {{equipo.precioPorMayor | currency}}</div>
-                        <div class="col-6"><strong>Precio Detalle:</strong> {{equipo.precioDetalle | currency}}</div>
-                        <div class="col-6"><strong>Costo:</strong> {{equipo.costoEquipo | currency}}</div>
-                        <div class="col-6"><strong>Itbis:</strong> {{equipo.itbis | currency}}</div>
-                        <div class="col-6"><strong>Tipo Pago:</strong> {{equipo.tipoFactura}}</div>
-                        <div class="col-6"><strong>Nota:</strong> {{equipo.notaAdicional}}</div>
-                        <div class="col-6"><strong>Almacen:</strong> {{equipo.descripcionAlmacen}}</div>
-                        <div class="col-6"><strong>Vendedor:</strong> {{equipo.vendedor}}</div>
-                        <div class="col-6"><strong>Fecha Registro:</strong> {{equipo.fechaRegistro}}</div>
-                      </div>
+                    <div class="equipo-cards">
+                        <div class="card-equipo" *ngFor="let equipo of equiposVendidos | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
+                            <div class="card-header">
+                                <span class="codigo">{{equipo.descripcion | titlecase}}</span>
+                            </div>
+
+                            <div class="card-body">
+                                <!-- IMEI Minimalista -->
+                                <div class="imei-minimal">
+                                    <span class="imei-label">IMEI:</span>
+                                    <div class="imei-group">
+                                        <span class="imei-value">{{equipo.imei}}</span>
+                                        <button type="button" class="btn-copy-inline" (click)="copiarIMEI(equipo.imei, $event)" title="Copiar IMEI">
+                                            <i class="bi bi-files"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="info">
+                                    <div class="item">
+                                        <span class="label">Cliente:</span>
+                                        <span class="valor">{{equipo.cliente}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Precio Vendido:</span>
+                                        <span class="valor">{{equipo.precioVendido | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Fecha Facturado:</span>
+                                        <span class="valor">{{equipo.fechaFacturado | date:'dd/MM/yyyy'}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Costo:</span>
+                                        <span class="valor">{{equipo.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">ITBIS:</span>
+                                        <span class="valor">{{equipo.itbis | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Tipo Pago:</span>
+                                        <span class="valor">{{equipo.tipoFactura}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Almacén:</span>
+                                        <span class="badge almacen">{{equipo.descripcionAlmacen}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Vendedor:</span>
+                                        <span class="valor">{{equipo.vendedor}}</span>
+                                    </div>
+                                    <div class="item" *ngIf="equipo.notaAdicional">
+                                        <span class="label">Nota:</span>
+                                        <span class="valor">{{equipo.notaAdicional}}</span>
+                                    </div>
+                                    <div class="item">
+                                        <span class="label">Fecha Registro:</span>
+                                        <span class="valor">{{equipo.fechaRegistro | date:'dd/MM/yyyy'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
                 <!-- End Table with stripped rows -->
                 <div class="not-data" *ngIf="!equiposVendidos.length">
