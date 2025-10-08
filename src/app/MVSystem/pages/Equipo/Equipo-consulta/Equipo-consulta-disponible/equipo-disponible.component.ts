@@ -192,7 +192,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
   printReportEquipoDisponibles() {
     this.loading.showLoading();
     this.printing = true;
-    
+
     this.equipoService.postEquipoDisponible(this.filter)
       .subscribe((blobResp) => {
         CreatorPDFFile(blobResp);
@@ -203,6 +203,70 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
         this.loading.hideLoading();
         this.printing = false;
     });
+  }
+
+  /**
+   * Comparte el reporte de equipos disponibles usando la API nativa de compartir del navegador
+   * Para dispositivos móviles: permite compartir por WhatsApp, Email, etc.
+   */
+  compartirReporteEquipos() {
+    // Verificar si el navegador soporta la Web Share API
+    if (!navigator.share) {
+      this.toast.warning('Tu navegador no soporta la función de compartir. Por favor, usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+
+    // Mostrar loading
+    this.loading.showLoading();
+    this.printing = true;
+
+    // Generar el PDF usando el mismo endpoint que la impresión normal
+    this.equipoService.postEquipoDisponible(this.filter)
+      .subscribe({
+        next: async (blob) => {
+          try {
+            // Convertir el Blob a File (necesario para navigator.share)
+            const fileName = `Reporte_Equipos_Disponibles_${new Date().toISOString().split('T')[0]}.pdf`;
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+
+            // Intentar compartir el archivo
+            try {
+              await navigator.share({
+                title: 'Reporte de Equipos Disponibles',
+                text: 'Reporte de Equipos Disponibles - MVSystem',
+                files: [file]
+              } as any); // usar 'as any' para evitar error de tipos en TS
+
+              this.toast.success('Reporte compartido exitosamente');
+            } catch (shareError: any) {
+              // Si falla el share con archivos, intentar solo descargar
+              if (shareError.name === 'NotAllowedError' || shareError.message?.includes('files')) {
+                this.toast.warning('No se puede compartir el archivo. Se descargará en su lugar.');
+                CreatorPDFFile(blob);
+              } else if (shareError.name !== 'AbortError') {
+                // Cualquier otro error que no sea cancelación del usuario
+                console.error('Error al compartir:', shareError);
+                this.toast.warning('Error al compartir. Descargando archivo...');
+                CreatorPDFFile(blob);
+              }
+              // Si es AbortError (usuario canceló), no hacer nada
+            }
+          } catch (error) {
+            console.error('Error al procesar el archivo:', error);
+            this.toast.error('Error al procesar el archivo para compartir');
+            CreatorPDFFile(blob); // Fallback a descarga normal
+          } finally {
+            this.loading.hideLoading();
+            this.printing = false;
+          }
+        },
+        error: (err) => {
+          console.error('Error al generar reporte:', err);
+          this.toast.error('Error al generar reporte', 'Error');
+          this.loading.hideLoading();
+          this.printing = false;
+        }
+      });
   }
 
   getValueFilterForm() {

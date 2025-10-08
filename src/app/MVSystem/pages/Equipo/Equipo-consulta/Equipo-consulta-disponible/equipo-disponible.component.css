@@ -35,6 +35,143 @@ label.total {
     text-align: center
 }
 
+
+/* ===============================================
+   STATS HORIZONTAL CONTAINER - MODERN DESIGN
+   =============================================== */
+
+.stats-horizontal-container {
+    display: flex;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stats-horizontal-container:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.stats-horizontal-container:hover .stats-icon-horizontal {
+    transform: scale(1.05);
+}
+
+.stats-horizontal-container:hover .stats-number {
+    color: #2980b9;
+}
+
+.stats-card-horizontal {
+    flex: 1;
+    padding: 1.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.stats-content-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stats-icon-horizontal {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
+.stats-icon-horizontal i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stats-info-horizontal {
+    flex: 1;
+    min-width: 0;
+}
+
+.stats-title {
+    color: #2c3e50;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.stats-number {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    line-height: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.stats-label {
+    color: #6c757d;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    line-height: 1.5rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.stats-divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #d1d5db, transparent);
+    margin: 1rem 0;
+}
+
+
+/* Mobile Responsive */
+
+@media (max-width: 768px) {
+    .stats-horizontal-container {
+        flex-direction: column;
+        gap: 0;
+    }
+    .stats-card-horizontal {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .stats-card-horizontal:last-child {
+        border-bottom: none;
+    }
+    .stats-divider {
+        display: none;
+    }
+    .stats-number {
+        font-size: 1.25rem;
+    }
+    .stats-label {
+        font-size: 0.65rem;
+    }
+    .stats-content-horizontal {
+        gap: 0.75rem;
+    }
+    .stats-icon-horizontal {
+        width: 3rem;
+        height: 3rem;
+    }
+    .stats-icon-horizontal i {
+        font-size: 1.25rem;
+    }
+}
+
 .clear-filter {
     color: #467ff1;
     font-weight: 600;
@@ -82,62 +219,204 @@ label.total {
     background: #f6f9ff;
 }
 
+
 /* Card para equipos en móvil */
+
 .equipo-card {
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  padding: 1rem 0.75rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid #e3e3e3;
-  border-left: 4px solid #467ff1;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    padding: 1rem 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e3e3e3;
+    border-left: 4px solid #467ff1;
 }
+
 .equipo-card .card-body {
-  padding: 0;
+    padding: 0;
 }
-.equipo-card .row > div {
-  font-size: 0.97rem;
-  margin-bottom: 0.25rem;
-  word-break: break-word;
+
+.equipo-card .row>div {
+    font-size: 0.97rem;
+    margin-bottom: 0.25rem;
+    word-break: break-word;
 }
+
 .equipo-card strong {
-  color: #467ff1;
-  font-weight: 600;
+    color: #467ff1;
+    font-weight: 600;
 }
+
 .equipo-card-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1a237e;
-  margin-bottom: 0.5rem;
-  text-align: left;
-  word-break: break-word;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    word-break: break-word;
 }
+
 .equipo-card .row.g-1 {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0;
 }
-.equipo-card .row.g-1 > div {
-  flex: 0 0 100%;
-  max-width: 100%;
-  margin-bottom: 0.15rem;
-  font-size: 0.98rem;
-  line-height: 1.3;
+
+.equipo-card .row.g-1>div {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.15rem;
+    font-size: 0.98rem;
+    line-height: 1.3;
 }
+
 .equipo-card-title {
-  font-size: 1.08rem;
-  font-weight: 700;
-  color: #1a237e;
-  margin-bottom: 0.6rem;
-  text-align: left;
-  word-break: break-word;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 0.6rem;
+    text-align: left;
+    word-break: break-word;
 }
+
 .equipo-card strong {
-  min-width: 110px;
-  display: inline-block;
+    min-width: 110px;
+    display: inline-block;
 }
+
 @media (min-width: 768px) {
-  .equipo-card {
-    display: none;
-  }
+    .equipo-card {
+        display: none;
+    }
+}
+
+
+/* ===== VISTA MÓVIL MODERNA - TARJETAS DE EQUIPOS ===== */
+
+.equipo-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+}
+
+.card-equipo {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    margin: 0.5rem 0;
+    font-family: "Segoe UI", sans-serif;
+    transition: transform 0.2s ease;
+}
+
+.card-equipo:hover {
+    transform: translateY(-3px);
+}
+
+.card-equipo .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.card-equipo .codigo {
+    background: #e8eef9;
+    color: #355c9e;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.card-equipo .acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.card-equipo .btn-icon {
+    background: transparent;
+    border: none;
+    color: #555;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.card-equipo .btn-icon:hover {
+    color: #667eea;
+}
+
+.card-equipo .info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.4rem 1rem;
+}
+
+.card-equipo .item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.card-equipo .label {
+    font-weight: 500;
+}
+
+.card-equipo .valor {
+    font-weight: 600;
+    color: #333;
+}
+
+.card-equipo .badge.almacen {
+    background: #f8e6c1;
+    color: #8a6d3b;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+
+/* Responsive para cards modernos */
+
+@media (min-width: 768px) {
+    .equipo-cards {
+        display: none;
+    }
+}
+
+
+/* ===== CARDS MÓVILES PARA ESTADÍSTICAS ===== */
+
+.filter-card {
+    background: linear-gradient(145deg, #f8f9ff 0%, #e6f0ff 100%);
+    border-left: 4px solid #667eea;
+    margin-bottom: 0.75rem;
+}
+
+.filter-card .card-body {
+    padding: 0.75rem 1rem;
+}
+
+.stats-card-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.stats-card-label {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.stats-card-value {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 700;
 }

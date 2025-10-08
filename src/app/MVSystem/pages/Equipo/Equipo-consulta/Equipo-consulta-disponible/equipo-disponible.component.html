@@ -12,26 +12,74 @@
 
     <!-- Tarjetas de totales globales arriba de los filtros -->
     <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-card">
-                <div class="stats-content">
-                    <div class="stats-icon"><i class="bi bi-bag-check-fill text-primary"></i></div>
-                    <div class="stats-info">
-                        <h6 class="stats-title">Total Equipos</h6>
-                        <div class="stats-number">{{ equipoQuantity }}</div>
-                        <small class="stats-subtitle">Disponibles</small>
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0 text-muted fw-semibold">
+                    <i class="bi bi-bar-chart-line me-2"></i> Resumen de Resultados
+                </h6>
+            </div>
+
+            <!-- Desktop: Horizontal Layout -->
+            <div class="d-none d-md-block">
+                <div class="stats-horizontal-container">
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-bag-check-fill"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Equipos</div>
+                                <div class="stats-number">{{ equipoQuantity }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="equipoQuantity === 0">Sin equipos</span>
+                                    <span *ngIf="equipoQuantity === 1">Equipo disponible</span>
+                                    <span *ngIf="equipoQuantity > 1">Equipos disponibles</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-divider"></div>
+
+                    <div class="stats-card-horizontal">
+                        <div class="stats-content-horizontal">
+                            <div class="stats-icon-horizontal">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <div class="stats-info-horizontal">
+                                <div class="stats-title">Total Inventario</div>
+                                <div class="stats-number">{{ totalInventario | currency:'RD$':'symbol':'1.0-0' }}</div>
+                                <div class="stats-label">
+                                    <span *ngIf="totalInventario === 0">Sin inventario</span>
+                                    <span *ngIf="totalInventario > 0">Valor inventario</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-card">
-                <div class="stats-content">
-                    <div class="stats-icon"><i class="bi bi-currency-dollar text-success"></i></div>
-                    <div class="stats-info">
-                        <h6 class="stats-title">Total Inventario</h6>
-                        <div class="stats-number">{{ totalInventario | currency }}</div>
-                        <small class="stats-subtitle">Valor inventario</small>
+
+            <!-- Mobile: Vertical Layout -->
+            <div class="d-block d-md-none">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-bag-check-fill me-2 text-primary stats-card-icon"></i>
+                                <span class="stats-card-label">Total Equipos:</span>
+                                <span class="stats-card-value ms-auto">{{ equipoQuantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card filter-card">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-currency-dollar me-2 text-success stats-card-icon"></i>
+                                <span class="stats-card-label">Total Inventario:</span>
+                                <span class="stats-card-value ms-auto">{{ totalInventario | currency:'RD$':'symbol':'1.0-0' }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,9 +129,15 @@
                         <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="button" class="button-imprimir-reporte w-100" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
-            Imprimir reporte <i class="bi bi-printer"></i>
-          </button>
+                        <!-- Desktop: Imprimir -->
+                        <button type="button" class="button-imprimir-reporte w-100 d-none d-md-block" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="printReportEquipoDisponibles()">
+                            Imprimir reporte <i class="bi bi-printer"></i>
+                        </button>
+
+                        <!-- Mobile: Compartir -->
+                        <button type="button" class="button-imprimir-reporte w-100 d-block d-md-none" [ngClass]="{'disabled':!equiposDisponibles.length}" (click)="compartirReporteEquipos()">
+                            Compartir reporte <i class="bi bi-share"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -151,21 +205,47 @@
                     </div>
                     <!-- Cards para pantallas pequeñas -->
                     <div class="d-block d-md-none">
-                        <div *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }" class="equipo-card mb-2 animate__animated animate__fadeIn">
-                            <div class="card-body">
-                                <div class="equipo-card-title mb-2">{{ Equipo.descripcion }}</div>
-                                <div class="row g-1">
-                                    <div class="col-6"><strong>IMEI/Código:</strong> {{Equipo.imei}}</div>
-                                    <div class="col-6"><strong>Costo:</strong> {{Equipo.costoEquipo|currency}}</div>
-                                    <div class="col-6"><strong>Precio Detalle:</strong> {{Equipo.precioDetalle|currency}}</div>
-                                    <div class="col-6"><strong>Precio PM:</strong> {{Equipo.precioPorMayor|currency}}</div>
-                                    <div class="col-6"><strong>Almacén:</strong> {{Equipo.descripcionAlmacen}}</div>
-                                    <div class="col-6"><strong>Suplidor:</strong> {{Equipo.suplidor}}</div>
-                                    <div class="col-6"><strong>Tecnología:</strong> {{Equipo.tecnologia}}</div>
-                                    <div class="col-6"><strong>Estado:</strong> {{Equipo.estadoBloqueo}}</div>
-                                    <div class="col-6"><strong>Garantía:</strong> {{Equipo.garantia}}</div>
-                                    <div class="col-6"><strong>Nota:</strong> {{Equipo.notaAdicional}}</div>
-                                    <div class="col-6"><strong>Fecha Registro:</strong> {{Equipo.fecharegistro}}</div>
+                        <div class="equipo-cards">
+                            <div class="card-equipo" *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
+                                <div class="card-header">
+                                    <span class="codigo">{{Equipo.descripcion | titlecase}}</span>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="info">
+                                        <div class="item">
+                                            <span class="label">IMEI/Código:</span>
+                                            <span class="valor">{{Equipo.imei}}</span>
+                                        </div>
+                                        <div class="item">
+                                            <span class="label">Costo:</span>
+                                            <span class="valor">{{Equipo.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                        </div>
+                                        <div class="item">
+                                            <span class="label">P. Detalle:</span>
+                                            <span class="valor">{{Equipo.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                        </div>
+                                        <div class="item">
+                                            <span class="label">P. Mayor:</span>
+                                            <span class="valor">{{Equipo.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}</span>
+                                        </div>
+                                        <div class="item">
+                                            <span class="label">Almacén:</span>
+                                            <span class="badge almacen">{{Equipo.descripcionAlmacen}}</span>
+                                        </div>
+                                        <div class="item item-full-width">
+                                            <span class="label">Suplidor:</span>
+                                            <span class="valor valor-wrap">{{Equipo.suplidor}}</span>
+                                        </div>
+                                        <div class="item item-full-width" *ngIf="Equipo.notaAdicional">
+                                            <span class="label">Nota:</span>
+                                            <span class="valor valor-wrap">{{Equipo.notaAdicional}}</span>
+                                        </div>
+                                        <div class="item">
+                                            <span class="label">Fecha Registro:</span>
+                                            <span class="valor">{{Equipo.fecharegistro | date:'dd/MM/yyyy'}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
