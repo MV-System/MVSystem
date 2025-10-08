@@ -183,44 +183,41 @@
                                 <div class="detalle-card" *ngIf="facturaVisibility[factura.numeroFactura]">
                                     <div class="detalle-header">
                                         <i class="bi bi-list-ul"></i>
-                                        <span><b>Artículos de la factura</b></span>
+                                        <span>Artículos</span>
                                     </div>
                                     <div class="detalle-item" *ngFor="let detalle of detalleFactura">
-                                        <!-- Código y Descripción en bloque principal -->
-                                        <div class="detalle-main-info">
-                                            <div class="detalle-codigo"><b>Código:</b> {{detalle.idEquipo}}</div>
-                                            <div class="detalle-descripcion">{{detalle.descripcion}}</div>
-                                        </div>
+                                        <!-- Descripción como título -->
+                                        <div class="detalle-descripcion-titulo">{{detalle.descripcion | titlecase}}</div>
 
-                                        <!-- Grid compacto de 3 columnas para datos numéricos -->
-                                        <div class="detalle-compact-grid">
-                                            <div class="detalle-cell">
-                                                <span class="detalle-label">Cant.</span>
+                                        <!-- Información en formato simple -->
+                                        <div class="detalle-info">
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">Código:</span>
+                                                <span class="detalle-value">{{detalle.idEquipo}}</span>
+                                            </div>
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">Cantidad:</span>
                                                 <span class="detalle-value">{{detalle.cantidad}}</span>
                                             </div>
-                                            <div class="detalle-cell">
-                                                <span class="detalle-label">Precio</span>
-                                                <span class="detalle-value">{{detalle.precio | currency}}</span>
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">Precio:</span>
+                                                <span class="detalle-value">{{detalle.precio | currency:'RD$':'symbol':'1.2-2'}}</span>
                                             </div>
-                                            <div class="detalle-cell">
-                                                <span class="detalle-label">Desc.</span>
-                                                <span class="detalle-value">{{detalle.descuento | currency}}</span>
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">Descuento:</span>
+                                                <span class="detalle-value">{{detalle.descuento | currency:'RD$':'symbol':'1.2-2'}}</span>
                                             </div>
-                                        </div>
-
-                                        <!-- Fila final con totales destacados -->
-                                        <div class="detalle-totales">
-                                            <div class="detalle-subtotal">
-                                                <span>SubTotal:</span>
-                                                <span><b>{{detalle.subTotal | currency}}</b></span>
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">SubTotal:</span>
+                                                <span class="detalle-value">{{detalle.subTotal | currency:'RD$':'symbol':'1.2-2'}}</span>
                                             </div>
-                                            <div class="detalle-itbis">
-                                                <span>ITBIS:</span>
-                                                <span><b>{{detalle.itbis | currency}}</b></span>
+                                            <div class="detalle-row">
+                                                <span class="detalle-label">ITBIS:</span>
+                                                <span class="detalle-value">{{detalle.itbis | currency:'RD$':'symbol':'1.2-2'}}</span>
                                             </div>
-                                            <div class="detalle-total-final">
-                                                <span>Total:</span>
-                                                <span><b>{{detalle.total | currency}}</b></span>
+                                            <div class="detalle-row detalle-row-total">
+                                                <span class="detalle-label">Total:</span>
+                                                <span class="detalle-value-total">{{detalle.total | currency:'RD$':'symbol':'1.2-2'}}</span>
                                             </div>
                                         </div>
                                     </div>
