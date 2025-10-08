@@ -52,20 +52,20 @@ tr.tr-hover:hover {
 td,
 th {
     overflow: hidden;
-    .detalle-item {
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 0.6rem;
-        /* Reducido de 0.75rem */
-        margin-bottom: 0.6rem;
-        border: 1px solid #d0e3f7;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-    overflow: ellipsis;
+    text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
     padding: 0.5rem 0.75rem;
     font-size: 1rem;
+}
+
+.detalle-item {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid #d0e3f7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .spinner {
