@@ -212,11 +212,18 @@
                                 </div>
 
                                 <div class="card-body">
-                                    <div class="info">
-                                        <div class="item">
-                                            <span class="label">IMEI/Código:</span>
-                                            <span class="valor">{{Equipo.imei}}</span>
+                                    <!-- IMEI Minimalista -->
+                                    <div class="imei-minimal">
+                                        <span class="imei-label">IMEI:</span>
+                                        <div class="imei-group">
+                                            <span class="imei-value">{{Equipo.imei}}</span>
+                                            <button type="button" class="btn-copy-inline" (click)="copiarIMEI(Equipo.imei, $event)" title="Copiar IMEI">
+                                                <i class="bi bi-files"></i>
+                                            </button>
                                         </div>
+                                    </div>
+
+                                    <div class="info">
                                         <div class="item">
                                             <span class="label">Costo:</span>
                                             <span class="valor">{{Equipo.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
