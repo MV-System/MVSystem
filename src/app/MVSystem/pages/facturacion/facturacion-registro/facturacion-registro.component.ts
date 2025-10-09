@@ -525,13 +525,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   }
   onSubmit() {
     if (this.form.valid) {
-      // Validar que se haya seleccionado un cliente
-      if (!this.customer || !this.customer.id_Cliente) {
-        this.toastr.warning('Debe seleccionar un cliente antes de continuar');
-        this.form.get('telefono')?.markAsTouched();
-        return;
-      }
-
       if (this.isFactura) {
         this.generateFactura()
       }
@@ -1087,12 +1080,6 @@ printFacturaMini() {
   this.subs.push(sub);
 }
   generateFactura() {
-    // Validar que se haya seleccionado un cliente
-    if (!this.customer || !this.customer.id_Cliente) {
-      this.toastr.warning('Debe seleccionar un cliente antes de generar la factura');
-      return;
-    }
-
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
@@ -1158,11 +1145,6 @@ printFacturaMini() {
     return factura;
   }
   generateCotizacion() {
-    // Validar que se haya seleccionado un cliente
-    if (!this.customer || !this.customer.id_Cliente) {
-      this.toastr.warning('Debe seleccionar un cliente antes de generar la cotización');
-      return;
-    }
 
     const data = this.loadDataToPrint()
     this.loading.showLoading('Procesando cotización...');
