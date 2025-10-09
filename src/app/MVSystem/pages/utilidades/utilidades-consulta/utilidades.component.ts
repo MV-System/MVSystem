@@ -175,7 +175,7 @@ setResponsiveView() {
   }
   GetUtilidades() {
     this.loading.showLoading();
-    
+
     // Limpiar insights anteriores
     this.aiInsights = [];
 
@@ -412,7 +412,7 @@ setResponsiveView() {
     if (totalVentas === 0) {
       const sucursalSeleccionada = this.almacenes?.find(a => a.iD_Almacen == this.filter.sucursal);
       const nombreSucursal = sucursalSeleccionada ? sucursalSeleccionada.descripcion : 'La sucursal seleccionada';
-      
+
       this.aiInsights.push({
         tipo: 'warning',
         icono: '📋',
