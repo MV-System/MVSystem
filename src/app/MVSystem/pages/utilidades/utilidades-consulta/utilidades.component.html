@@ -99,7 +99,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Ventas Totales</p>
-                            <h4 class="stat-value">${{ getTotalVentas() | number:'1.2-2' }}</h4>
+                            <h4 class="stat-value">${{ getTotalVentas() | number:'1.0-0' }}</h4>
                             <small class="stat-change text-success" *ngIf="dataAnterior">
                 <i class="bi bi-arrow-up"></i> vs período anterior
               </small>
@@ -113,7 +113,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Ganancias Totales</p>
-                            <h4 class="stat-value">${{ getTotalGanancias() | number:'1.2-2' }}</h4>
+                            <h4 class="stat-value">${{ getTotalGanancias() | number:'1.0-0' }}</h4>
                             <small class="stat-change text-success" *ngIf="dataAnterior">
                 <i class="bi bi-graph-up"></i> {{ getMargenGeneral() }}% margen
               </small>
@@ -127,7 +127,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Costos Totales</p>
-                            <h4 class="stat-value">${{ getTotalCostos() | number:'1.2-2' }}</h4>
+                            <h4 class="stat-value">${{ getTotalCostos() | number:'1.0-0' }}</h4>
                             <small class="stat-change text-muted">
                 <i class="bi bi-info-circle"></i> Inversión total
               </small>

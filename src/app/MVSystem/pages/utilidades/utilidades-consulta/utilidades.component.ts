@@ -175,6 +175,9 @@ setResponsiveView() {
   }
   GetUtilidades() {
     this.loading.showLoading();
+    
+    // Limpiar insights anteriores
+    this.aiInsights = [];
 
     // Calcular fechas del período anterior
     const periodoAnterior = this.calcularPeriodoAnterior();
@@ -316,7 +319,7 @@ setResponsiveView() {
         tipo: 'success',
         icono: '🏆',
         mensaje: `${mejorCategoria.nombre} es tu categoría más rentable`,
-        detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${mejorCategoria.ganancia.toFixed(2)})`
+        detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${this.formatNumber(mejorCategoria.ganancia)})`
       });
     }
 
@@ -400,18 +403,21 @@ setResponsiveView() {
       this.aiInsights.push({
         tipo: 'success',
         icono: '💰',
-        mensaje: `Ganancias totales: $${totalGanancias.toFixed(2)}`,
-        detalle: `Ventas: $${totalVentas.toFixed(2)} | Costos: $${totalCostos.toFixed(2)}`
+        mensaje: `Ganancias totales: $${this.formatNumber(totalGanancias)}`,
+        detalle: `Ventas: $${this.formatNumber(totalVentas)} | Costos: $${this.formatNumber(totalCostos)}`
       });
     }
 
     // 7. Alerta si no hay datos
     if (totalVentas === 0) {
+      const sucursalSeleccionada = this.almacenes?.find(a => a.iD_Almacen == this.filter.sucursal);
+      const nombreSucursal = sucursalSeleccionada ? sucursalSeleccionada.descripcion : 'La sucursal seleccionada';
+      
       this.aiInsights.push({
-        tipo: 'info',
-        icono: 'ℹ️',
-        mensaje: 'No hay datos para el período seleccionado',
-        detalle: 'Intenta seleccionar un rango de fechas diferente'
+        tipo: 'warning',
+        icono: '📋',
+        mensaje: `${nombreSucursal} no tiene movimientos para realizar análisis`,
+        detalle: `No se registraron ventas en el período seleccionado (${this.filter.FI} - ${this.filter.FF}). Verifica que el rango de fechas sea correcto o selecciona una sucursal diferente.`
       });
     }
   }
@@ -464,14 +470,6 @@ setResponsiveView() {
       }
     ];
 
-    // Agregar separador visual para insights de tendencias
-    this.aiInsights.unshift({
-      tipo: 'info',
-      icono: '📊',
-      mensaje: 'Análisis de Tendencias vs Período Anterior',
-      detalle: `Comparando ${this.filter.FI} a ${this.filter.FF} con período anterior`
-    });
-
     // Analizar cada categoría
     categorias.forEach(cat => {
       // Análisis de VENTAS
@@ -506,7 +504,7 @@ setResponsiveView() {
             tipo,
             icono,
             mensaje: `${cat.nombre} ${accion} ${Math.abs(crecimientoVentas).toFixed(1)}%`,
-            detalle: `Ventas: $${cat.ventaAnterior.toFixed(2)} → $${cat.ventaActual.toFixed(2)}`
+            detalle: `Ventas: $${this.formatNumber(cat.ventaAnterior)} → $${this.formatNumber(cat.ventaActual)}`
           });
         }
       }
@@ -537,7 +535,7 @@ setResponsiveView() {
             tipo: 'success',
             icono: '💰',
             mensaje: `${cat.nombre}: Excelente crecimiento en ganancias (+${crecimientoGanancias.toFixed(1)}%)`,
-            detalle: `Ganancias: $${cat.gananciaAnterior.toFixed(2)} → $${cat.gananciaActual.toFixed(2)}`
+            detalle: `Ganancias: $${this.formatNumber(cat.gananciaAnterior)} → $${this.formatNumber(cat.gananciaActual)}`
           });
         }
       }
@@ -562,14 +560,14 @@ setResponsiveView() {
           tipo: 'success',
           icono: '🎉',
           mensaje: `Ventas totales crecieron ${crecimientoTotal.toFixed(1)}%`,
-          detalle: `De $${totalVentasAnterior.toFixed(2)} a $${totalVentasActual.toFixed(2)}`
+          detalle: `De $${this.formatNumber(totalVentasAnterior)} a $${this.formatNumber(totalVentasActual)}`
         });
       } else if (crecimientoTotal < -10) {
         this.aiInsights.unshift({
           tipo: 'warning',
           icono: '⚠️',
           mensaje: `Ventas totales cayeron ${Math.abs(crecimientoTotal).toFixed(1)}%`,
-          detalle: `De $${totalVentasAnterior.toFixed(2)} a $${totalVentasActual.toFixed(2)}`
+          detalle: `De $${this.formatNumber(totalVentasAnterior)} a $${this.formatNumber(totalVentasActual)}`
         });
       }
     }
@@ -582,10 +580,19 @@ setResponsiveView() {
           tipo: 'success',
           icono: '💎',
           mensaje: `Ganancias totales aumentaron ${crecimientoGananciasTotal.toFixed(1)}%`,
-          detalle: `De $${totalGananciasAnterior.toFixed(2)} a $${totalGananciasActual.toFixed(2)}`
+          detalle: `De $${this.formatNumber(totalGananciasAnterior)} a $${this.formatNumber(totalGananciasActual)}`
         });
       }
     }
+
+    // IMPORTANTE: Agregar el separador de contexto al final para que aparezca PRIMERO
+    // Esto establece el contexto para que el usuario entienda las comparaciones
+    this.aiInsights.unshift({
+      tipo: 'info',
+      icono: '📊',
+      mensaje: 'Análisis de Tendencias vs Período Anterior',
+      detalle: `Comparando ${this.filter.FI} a ${this.filter.FF} con período anterior`
+    });
   }
 
   onSelect(data: any): void { }
@@ -636,5 +643,18 @@ setResponsiveView() {
 
     const totalGanancias = this.getTotalGanancias();
     return Math.round((totalGanancias / totalVentas) * 100);
+  }
+
+  /**
+   * Formatea un número con separadores de comas
+   * @param value - El número a formatear
+   * @param decimales - Número de decimales a mostrar (default: 2)
+   * @returns Número formateado con comas
+   */
+  private formatNumber(value: number, decimales: number = 2): string {
+    return value.toLocaleString('en-US', {
+      minimumFractionDigits: decimales,
+      maximumFractionDigits: decimales
+    });
   }
 }
