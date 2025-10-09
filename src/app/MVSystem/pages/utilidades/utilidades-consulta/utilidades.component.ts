@@ -10,11 +10,20 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-utilidades',
   templateUrl: './utilidades.component.html',
-  styleUrls: ['./utilidades.component.css']
+  styleUrls: ['./utilidades.component.css'],
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class UtilidadesComponent implements OnInit {
 
@@ -45,6 +54,10 @@ export class UtilidadesComponent implements OnInit {
   ganancia_Desbloqueos:0,
   valida: 0
   }; // Inicializa data
+
+  // Datos del período anterior para comparación
+  dataAnterior: Utilidades | null = null;
+
   isLoading: boolean = false; // Variable para controlar el estado de carga
 
   rangeDatePlaceholder: Date =new Date()
@@ -134,7 +147,7 @@ setResponsiveView() {
   if (window.innerWidth < 600) {
     this.view = [300, 200]; // Más pequeño para móvil
   } else {
-    this.view = [600, 180]; // Tamaño normal para escritorio
+    this.view = [1200, 180]; // Ancho ampliado para evitar scroll horizontal
   }
 }
   onDateRangeChanged(event: any) {
@@ -161,22 +174,52 @@ setResponsiveView() {
     });
   }
   GetUtilidades() {
-       this.loading.showLoading();
+    this.loading.showLoading();
+
+    // Calcular fechas del período anterior
+    const periodoAnterior = this.calcularPeriodoAnterior();
+    const filtroAnterior: utilidadesFiltros = {
+      ...this.filter,
+      FI: periodoAnterior.FI,
+      FF: periodoAnterior.FF
+    };
+
+    // Obtener datos del período actual
     this.UtilidadesServices
       .GetUtilidades(this.filter)
       .subscribe(
         (equipos: Utilidades) => {
           if (equipos) {
-            this.data = equipos; // Asigna el primer objeto a data
-            this.updateSingleData();
-            this.generateAIInsights(); // Generar insights automáticos
-            this.loading.hideLoading();
+            this.data = equipos; // Asigna datos actuales
+
+            // Obtener datos del período anterior para comparación
+            this.UtilidadesServices
+              .GetUtilidades(filtroAnterior)
+              .subscribe(
+                (datosAnteriores: Utilidades) => {
+                  this.dataAnterior = datosAnteriores;
+                  this.updateSingleData();
+                  this.generateAIInsights(); // Generar insights básicos
+                  this.analizarTendencias(); // Generar insights de tendencias
+                  this.loading.hideLoading();
+                },
+                (error) => {
+                  // Si falla la obtención del período anterior, continuar sin comparación
+                  console.warn('No se pudieron obtener datos del período anterior:', error);
+                  this.dataAnterior = null;
+                  this.updateSingleData();
+                  this.generateAIInsights();
+                  this.loading.hideLoading();
+                }
+              );
           } else {
             this.toastr.warning('No se encontraron utilidades.');
+            this.loading.hideLoading();
           }
         },
         (error) => {
           this.toastr.error('Error al cargar datos de utilidades');
+          this.loading.hideLoading();
         }
       );
   }
@@ -209,17 +252,50 @@ setResponsiveView() {
   };
 
   /**
+   * Calcula la diferencia en días entre dos fechas
+   */
+  private calcularDiasDiferencia(fecha1: string, fecha2: string): number {
+    const f1 = new Date(fecha1);
+    const f2 = new Date(fecha2);
+    const diferencia = Math.abs(f2.getTime() - f1.getTime());
+    return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+  }
+
+  /**
+   * Resta días a una fecha y retorna el string en formato ISO
+   */
+  private restarDias(fecha: string, dias: number): string {
+    const date = new Date(fecha);
+    date.setDate(date.getDate() - dias);
+    return date.toISOString().split('T')[0];
+  }
+
+  /**
+   * Calcula las fechas del período anterior basándose en el período actual
+   */
+  private calcularPeriodoAnterior(): { FI: string, FF: string } {
+    const diasDiferencia = this.calcularDiasDiferencia(this.filter.FI, this.filter.FF);
+    const fechaFinAnterior = this.restarDias(this.filter.FI, 1);
+    const fechaInicioAnterior = this.restarDias(fechaFinAnterior, diasDiferencia);
+
+    return {
+      FI: fechaInicioAnterior,
+      FF: fechaFinAnterior
+    };
+  }
+
+  /**
    * Genera insights automáticos con IA basados en los datos de utilidades
    */
   private generateAIInsights(): void {
     this.aiInsights = [];
 
     // Calcular totales
-    const totalVentas = this.data.venta_Equipos + this.data.venta_Accesorios + 
+    const totalVentas = this.data.venta_Equipos + this.data.venta_Accesorios +
                         this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
-    const totalGanancias = this.data.ganancia_Equipos + this.data.ganancia_Accesorios + 
+    const totalGanancias = this.data.ganancia_Equipos + this.data.ganancia_Accesorios +
                           this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
-    const totalCostos = this.data.costo_Equipos + this.data.costo_Accesorios + 
+    const totalCostos = this.data.costo_Equipos + this.data.costo_Accesorios +
                        this.data.costo_Reparaciones + this.data.costo_Desbloqueos;
 
     // 1. Análisis de categoría más rentable
@@ -229,8 +305,8 @@ setResponsiveView() {
       { nombre: 'Reparaciones', ganancia: this.data.ganancia_Reparaciones, venta: this.data.venta_Reparaciones },
       { nombre: 'Desbloqueos', ganancia: this.data.ganancia_Desbloqueos, venta: this.data.venta_Desbloqueos }
     ];
-    
-    const mejorCategoria = categorias.reduce((prev, current) => 
+
+    const mejorCategoria = categorias.reduce((prev, current) =>
       (prev.ganancia > current.ganancia) ? prev : current
     );
 
@@ -306,7 +382,7 @@ setResponsiveView() {
     }
 
     // 5. Análisis de distribución de ventas
-    const categoriaConMasVentas = categorias.reduce((prev, current) => 
+    const categoriaConMasVentas = categorias.reduce((prev, current) =>
       (prev.venta > current.venta) ? prev : current
     );
 
@@ -340,9 +416,225 @@ setResponsiveView() {
     }
   }
 
+  /**
+   * Analiza tendencias comparando el período actual con el anterior
+   */
+  private analizarTendencias(): void {
+    if (!this.dataAnterior) {
+      return; // No hay datos del período anterior para comparar
+    }
+
+    // Definir categorías para analizar
+    interface Categoria {
+      nombre: string;
+      ventaActual: number;
+      ventaAnterior: number;
+      gananciaActual: number;
+      gananciaAnterior: number;
+    }
+
+    const categorias: Categoria[] = [
+      {
+        nombre: 'Equipos',
+        ventaActual: this.data.venta_Equipos,
+        ventaAnterior: this.dataAnterior.venta_Equipos,
+        gananciaActual: this.data.ganancia_Equipos,
+        gananciaAnterior: this.dataAnterior.ganancia_Equipos
+      },
+      {
+        nombre: 'Accesorios',
+        ventaActual: this.data.venta_Accesorios,
+        ventaAnterior: this.dataAnterior.venta_Accesorios,
+        gananciaActual: this.data.ganancia_Accesorios,
+        gananciaAnterior: this.dataAnterior.ganancia_Accesorios
+      },
+      {
+        nombre: 'Reparaciones',
+        ventaActual: this.data.venta_Reparaciones,
+        ventaAnterior: this.dataAnterior.venta_Reparaciones,
+        gananciaActual: this.data.ganancia_Reparaciones,
+        gananciaAnterior: this.dataAnterior.ganancia_Reparaciones
+      },
+      {
+        nombre: 'Desbloqueos',
+        ventaActual: this.data.venta_Desbloqueos,
+        ventaAnterior: this.dataAnterior.venta_Desbloqueos,
+        gananciaActual: this.data.ganancia_Desbloqueos,
+        gananciaAnterior: this.dataAnterior.ganancia_Desbloqueos
+      }
+    ];
+
+    // Agregar separador visual para insights de tendencias
+    this.aiInsights.unshift({
+      tipo: 'info',
+      icono: '📊',
+      mensaje: 'Análisis de Tendencias vs Período Anterior',
+      detalle: `Comparando ${this.filter.FI} a ${this.filter.FF} con período anterior`
+    });
+
+    // Analizar cada categoría
+    categorias.forEach(cat => {
+      // Análisis de VENTAS
+      if (cat.ventaAnterior > 0) {
+        const crecimientoVentas = ((cat.ventaActual - cat.ventaAnterior) / cat.ventaAnterior) * 100;
+
+        // Solo mostrar si hay cambio significativo (más de 5%)
+        if (Math.abs(crecimientoVentas) > 5) {
+          let tipo: 'success' | 'warning' | 'info' = 'info';
+          let icono = '➡️';
+          let accion = 'se mantiene';
+
+          if (crecimientoVentas > 20) {
+            tipo = 'success';
+            icono = '🔥';
+            accion = 'creció significativamente';
+          } else if (crecimientoVentas > 0) {
+            tipo = 'success';
+            icono = '📈';
+            accion = 'creció';
+          } else if (crecimientoVentas < -20) {
+            tipo = 'warning';
+            icono = '📉';
+            accion = 'cayó significativamente';
+          } else {
+            tipo = 'warning';
+            icono = '📉';
+            accion = 'disminuyó';
+          }
+
+          this.aiInsights.unshift({
+            tipo,
+            icono,
+            mensaje: `${cat.nombre} ${accion} ${Math.abs(crecimientoVentas).toFixed(1)}%`,
+            detalle: `Ventas: $${cat.ventaAnterior.toFixed(2)} → $${cat.ventaActual.toFixed(2)}`
+          });
+        }
+      }
+
+      // Análisis de GANANCIAS
+      if (cat.gananciaAnterior > 0) {
+        const crecimientoGanancias = ((cat.gananciaActual - cat.gananciaAnterior) / cat.gananciaAnterior) * 100;
+
+        // Alerta si las ganancias cayeron más del 15% aunque las ventas suban
+        if (crecimientoGanancias < -15) {
+          const crecimientoVentas = cat.ventaAnterior > 0
+            ? ((cat.ventaActual - cat.ventaAnterior) / cat.ventaAnterior) * 100
+            : 0;
+
+          if (crecimientoVentas > 0) {
+            this.aiInsights.unshift({
+              tipo: 'warning',
+              icono: '⚠️',
+              mensaje: `${cat.nombre}: Ganancias cayeron ${Math.abs(crecimientoGanancias).toFixed(1)}% a pesar del aumento en ventas`,
+              detalle: `Posible aumento en costos o reducción de precios. Revisar márgenes.`
+            });
+          }
+        }
+
+        // Destacar mejoras significativas en ganancias
+        if (crecimientoGanancias > 30) {
+          this.aiInsights.unshift({
+            tipo: 'success',
+            icono: '💰',
+            mensaje: `${cat.nombre}: Excelente crecimiento en ganancias (+${crecimientoGanancias.toFixed(1)}%)`,
+            detalle: `Ganancias: $${cat.gananciaAnterior.toFixed(2)} → $${cat.gananciaActual.toFixed(2)}`
+          });
+        }
+      }
+    });
+
+    // Análisis GENERAL de totales
+    const totalVentasActual = this.data.venta_Equipos + this.data.venta_Accesorios +
+                              this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
+    const totalVentasAnterior = this.dataAnterior.venta_Equipos + this.dataAnterior.venta_Accesorios +
+                                this.dataAnterior.venta_Reparaciones + this.dataAnterior.venta_Desbloqueos;
+
+    const totalGananciasActual = this.data.ganancia_Equipos + this.data.ganancia_Accesorios +
+                                 this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
+    const totalGananciasAnterior = this.dataAnterior.ganancia_Equipos + this.dataAnterior.ganancia_Accesorios +
+                                   this.dataAnterior.ganancia_Reparaciones + this.dataAnterior.ganancia_Desbloqueos;
+
+    if (totalVentasAnterior > 0) {
+      const crecimientoTotal = ((totalVentasActual - totalVentasAnterior) / totalVentasAnterior) * 100;
+
+      if (crecimientoTotal > 10) {
+        this.aiInsights.unshift({
+          tipo: 'success',
+          icono: '🎉',
+          mensaje: `Ventas totales crecieron ${crecimientoTotal.toFixed(1)}%`,
+          detalle: `De $${totalVentasAnterior.toFixed(2)} a $${totalVentasActual.toFixed(2)}`
+        });
+      } else if (crecimientoTotal < -10) {
+        this.aiInsights.unshift({
+          tipo: 'warning',
+          icono: '⚠️',
+          mensaje: `Ventas totales cayeron ${Math.abs(crecimientoTotal).toFixed(1)}%`,
+          detalle: `De $${totalVentasAnterior.toFixed(2)} a $${totalVentasActual.toFixed(2)}`
+        });
+      }
+    }
+
+    if (totalGananciasAnterior > 0) {
+      const crecimientoGananciasTotal = ((totalGananciasActual - totalGananciasAnterior) / totalGananciasAnterior) * 100;
+
+      if (crecimientoGananciasTotal > 15) {
+        this.aiInsights.unshift({
+          tipo: 'success',
+          icono: '💎',
+          mensaje: `Ganancias totales aumentaron ${crecimientoGananciasTotal.toFixed(1)}%`,
+          detalle: `De $${totalGananciasAnterior.toFixed(2)} a $${totalGananciasActual.toFixed(2)}`
+        });
+      }
+    }
+  }
+
   onSelect(data: any): void { }
 
   onActivate(data: any): void { }
 
   onDeactivate(data: any): void { }
+
+  // ========== Métodos Helper para la UI ==========
+
+  /**
+   * Calcula el total de ventas sumando todas las categorías
+   */
+  getTotalVentas(): number {
+    return this.data.venta_Equipos +
+           this.data.venta_Accesorios +
+           this.data.venta_Desbloqueos +
+           this.data.venta_Reparaciones;
+  }
+
+  /**
+   * Calcula el total de ganancias sumando todas las categorías
+   */
+  getTotalGanancias(): number {
+    return this.data.ganancia_Equipos +
+           this.data.ganancia_Accesorios +
+           this.data.ganancia_Desbloqueos +
+           this.data.ganancia_Reparaciones;
+  }
+
+  /**
+   * Calcula el total de costos sumando todas las categorías
+   */
+  getTotalCostos(): number {
+    return this.data.costo_Equipos +
+           this.data.costo_Accesorios +
+           this.data.costo_Desbloqueos +
+           this.data.costo_Reparaciones;
+  }
+
+  /**
+   * Calcula el margen de ganancia general (porcentaje)
+   * Fórmula: (Ganancias / Ventas) * 100
+   */
+  getMargenGeneral(): number {
+    const totalVentas = this.getTotalVentas();
+    if (totalVentas === 0) return 0;
+
+    const totalGanancias = this.getTotalGanancias();
+    return Math.round((totalGanancias / totalVentas) * 100);
+  }
 }

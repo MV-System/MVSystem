@@ -1,82 +1,214 @@
-<form class="box" [formGroup]="form">
-    <!-- Filtros -->
-    <div class="row mb-4">
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Fecha de registro</label>
-            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas">
-            </my-date-range-picker>
+<div class="utilidades-container">
+    <form [formGroup]="form">
+        <!-- Header con título y filtros -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="page-title">
+                        <i class="bi bi-graph-up-arrow text-primary me-2"></i> Análisis de Utilidades
+                    </h3>
+                    <p class="page-subtitle text-muted mb-0">
+                        Visualiza y analiza el rendimiento de tu negocio
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-primary btn-sm" type="button" title="Actualizar datos">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Actualizar
+          </button>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6 mb-3" *ngIf="SelectSucursal()">
-            <label class="form-label">Sucursal</label>
-            <select class="form-select modern-select" formControlName="almacen" (change)="GetUtilidades()">
-        <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
-          {{ almacen.descripcion }}
-        </option>
-      </select>
+
+        <!-- Filtros mejorados -->
+        <div class="filters-card card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+              <i class="bi bi-calendar-range text-primary me-2"></i>
+              Período de Análisis
+            </label>
+                        <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas" class="modern-datepicker">
+                        </my-date-range-picker>
+                        <small class="form-text text-muted">
+              Selecciona el rango de fechas a analizar
+            </small>
+                    </div>
+                    <div class="col-md-6" *ngIf="SelectSucursal()">
+                        <label class="form-label fw-semibold">
+              <i class="bi bi-building text-primary me-2"></i>
+              Sucursal
+            </label>
+                        <select class="form-select form-select-modern" formControlName="almacen" (change)="GetUtilidades()">
+              <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                {{ almacen.descripcion }}
+              </option>
+            </select>
+                        <small class="form-text text-muted">
+              Filtra por sucursal específica
+            </small>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Loading Spinner -->
-    <div *ngIf="isLoading" class="loading">
-        <div class="spinner"></div>
-        <span>Cargando datos, por favor espere...</span>
-    </div>
+        <!-- Loading Spinner mejorado -->
+        <div *ngIf="isLoading" class="loading-overlay">
+            <div class="loading-content">
+                <div class="spinner-modern"></div>
+                <p class="loading-text mt-3">Analizando datos con IA...</p>
+                <small class="text-muted">Esto tomará solo unos segundos</small>
+            </div>
+        </div>
 
-    <!-- Panel de Insights con IA -->
-    <div class="row" *ngIf="!isLoading && aiInsights.length > 0">
-        <div class="col-12 mb-4">
-            <div class="card p-3">
-                <h5 class="mb-3">
-                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Análisis Inteligente
-                </h5>
-                <div class="insights-container">
-                    <div *ngFor="let insight of aiInsights" class="insight-card alert mb-2" [ngClass]="{
-                 'alert-success': insight.tipo === 'success',
-                 'alert-warning': insight.tipo === 'warning',
-                 'alert-info': insight.tipo === 'info',
-                 'alert-danger': insight.tipo === 'danger'
-               }">
-                        <div class="d-flex align-items-start">
-                            <span class="insight-icon me-2" style="font-size: 1.5rem;">{{ insight.icono }}</span>
-                            <div class="flex-grow-1">
-                                <strong>{{ insight.mensaje }}</strong>
-                                <p class="mb-0 mt-1" *ngIf="insight.detalle" style="font-size: 0.9rem; opacity: 0.9;">
-                                    {{ insight.detalle }}
-                                </p>
-                            </div>
+        <!-- Panel de Insights con IA - Mejorado -->
+        <div class="insights-section" *ngIf="!isLoading && aiInsights.length > 0">
+            <div class="section-header mb-3">
+                <h4 class="section-title">
+                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Insights Inteligentes
+                </h4>
+                <span class="badge bg-primary">{{ aiInsights.length }} insights generados</span>
+            </div>
+
+            <div class="insights-grid">
+                <div *ngFor="let insight of aiInsights; let i = index" class="insight-card-modern" [ngClass]="'insight-' + insight.tipo" [@fadeInUp]>
+                    <div class="insight-header">
+                        <span class="insight-emoji">{{ insight.icono }}</span>
+                        <span class="insight-badge" [ngClass]="'badge-' + insight.tipo">
+              {{ insight.tipo === 'success' ? 'Positivo' :
+                 insight.tipo === 'warning' ? 'Atención' :
+                 insight.tipo === 'danger' ? 'Urgente' : 'Info' }}
+            </span>
+                    </div>
+                    <div class="insight-body">
+                        <h6 class="insight-title">{{ insight.mensaje }}</h6>
+                        <p class="insight-detail" *ngIf="insight.detalle">{{ insight.detalle }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen de Totales -->
+        <div class="totals-section" *ngIf="!isLoading && data">
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card stat-ventas">
+                        <div class="stat-icon">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Ventas Totales</p>
+                            <h4 class="stat-value">${{ getTotalVentas() | number:'1.2-2' }}</h4>
+                            <small class="stat-change text-success" *ngIf="dataAnterior">
+                <i class="bi bi-arrow-up"></i> vs período anterior
+              </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card stat-ganancias">
+                        <div class="stat-icon">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Ganancias Totales</p>
+                            <h4 class="stat-value">${{ getTotalGanancias() | number:'1.2-2' }}</h4>
+                            <small class="stat-change text-success" *ngIf="dataAnterior">
+                <i class="bi bi-graph-up"></i> {{ getMargenGeneral() }}% margen
+              </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card stat-costos">
+                        <div class="stat-icon">
+                            <i class="bi bi-calculator"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Costos Totales</p>
+                            <h4 class="stat-value">${{ getTotalCostos() | number:'1.2-2' }}</h4>
+                            <small class="stat-change text-muted">
+                <i class="bi bi-info-circle"></i> Inversión total
+              </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card stat-margen">
+                        <div class="stat-icon">
+                            <i class="bi bi-percent"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Margen Promedio</p>
+                            <h4 class="stat-value">{{ getMargenGeneral() }}%</h4>
+                            <small class="stat-change" [ngClass]="getMargenGeneral() > 30 ? 'text-success' : 'text-warning'">
+                <i class="bi" [ngClass]="getMargenGeneral() > 30 ? 'bi-emoji-smile' : 'bi-emoji-neutral'"></i>
+                {{ getMargenGeneral() > 30 ? 'Excelente' : 'Puede mejorar' }}
+              </small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Gráficos en columnas, ocupando todo el ancho -->
-    <div class="row" *ngIf="!isLoading">
-        <div class="col-12 mb-4">
-            <div class="card p-3">
-                <div class="grafico-seccion mb-4">
-                    <label class="form-label">Ventas</label>
-                    <div class="grafico-responsive">
-                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
-                        </ngx-charts-advanced-pie-chart>
+        <!-- Gráficos en diseño mejorado -->
+        <div class="charts-section" *ngIf="!isLoading">
+            <div class="section-header mb-3">
+                <h4 class="section-title">
+                    <i class="bi bi-pie-chart-fill text-info me-2"></i> Distribución por Categorías
+                </h4>
+            </div>
+
+            <div class="row g-4">
+                <!-- Gráfico de Ventas -->
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h5 class="chart-title">
+                                <i class="bi bi-bag-check text-success me-2"></i> Ventas
+                            </h5>
+                            <span class="chart-total">${{ getTotalVentas() | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="chart-body">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
                     </div>
                 </div>
-                <div class="grafico-seccion mb-4">
-                    <label class="form-label">Ganancias</label>
-                    <div class="grafico-responsive">
-                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-                        </ngx-charts-advanced-pie-chart>
+
+                <!-- Gráfico de Ganancias -->
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h5 class="chart-title">
+                                <i class="bi bi-currency-dollar text-warning me-2"></i> Ganancias
+                            </h5>
+                            <span class="chart-total">${{ getTotalGanancias() | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="chart-body">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
                     </div>
                 </div>
-                <div class="grafico-seccion">
-                    <label class="form-label">Costos</label>
-                    <div class="grafico-responsive">
-                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-                        </ngx-charts-advanced-pie-chart>
+
+                <!-- Gráfico de Costos -->
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h5 class="chart-title">
+                                <i class="bi bi-wallet2 text-danger me-2"></i> Costos
+                            </h5>
+                            <span class="chart-total">${{ getTotalCostos() | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="chart-body">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

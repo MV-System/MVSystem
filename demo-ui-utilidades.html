@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo UI - Utilidades Mejoradas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* Header */
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        /* Stat Cards */
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card:hover::before {
+            width: 8px;
+        }
+
+        .stat-ventas::before {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .stat-ganancias::before {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        .stat-costos::before {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .stat-margen::before {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stat-ventas .stat-icon {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .stat-ganancias .stat-icon {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        .stat-costos .stat-icon {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .stat-margen .stat-icon {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        /* Insights */
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .insight-card-modern {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .insight-card-modern:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .insight-success {
+            border-left-color: #48bb78;
+        }
+
+        .insight-warning {
+            border-left-color: #ed8936;
+        }
+
+        .insight-danger {
+            border-left-color: #f56565;
+        }
+
+        .insight-info {
+            border-left-color: #4299e1;
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .insight-emoji {
+            font-size: 2rem;
+        }
+
+        .insight-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-warning {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h3 class="page-title">
+                <i class="bi bi-graph-up-arrow me-2"></i> Análisis de Utilidades - UI Mejorada
+            </h3>
+            <p class="mb-0 mt-2" style="opacity: 0.9;">
+                Visualiza y analiza el rendimiento de tu negocio
+            </p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-ventas">
+                    <div class="stat-icon">
+                        <i class="bi bi-cart-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="mb-0 text-muted" style="font-size: 0.875rem;">Ventas Totales</p>
+                        <h4 class="stat-value">$125,450.00</h4>
+                        <small class="text-success">
+                            <i class="bi bi-arrow-up"></i> vs período anterior
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-ganancias">
+                    <div class="stat-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="mb-0 text-muted" style="font-size: 0.875rem;">Ganancias Totales</p>
+                        <h4 class="stat-value">$42,890.00</h4>
+                        <small class="text-success">
+                            <i class="bi bi-graph-up"></i> 34% margen
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-costos">
+                    <div class="stat-icon">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="mb-0 text-muted" style="font-size: 0.875rem;">Costos Totales</p>
+                        <h4 class="stat-value">$82,560.00</h4>
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle"></i> Inversión total
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-margen">
+                    <div class="stat-icon">
+                        <i class="bi bi-percent"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="mb-0 text-muted" style="font-size: 0.875rem;">Margen Promedio</p>
+                        <h4 class="stat-value">34%</h4>
+                        <small class="text-success">
+                            <i class="bi bi-emoji-smile"></i> Excelente
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 style="font-size: 1.5rem; font-weight: 700; color: #2d3748; margin: 0;">
+                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Insights Inteligentes
+                </h4>
+                <span class="badge bg-primary">4 insights generados</span>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card-modern insight-success">
+                    <div class="insight-header">
+                        <span class="insight-emoji">📈</span>
+                        <span class="insight-badge badge-success">Positivo</span>
+                    </div>
+                    <div class="insight-body">
+                        <h6 style="font-weight: 600; color: #2d3748; margin: 0 0 0.5rem 0;">
+                            Accesorios crecieron 28.5%
+                        </h6>
+                        <p style="font-size: 0.875rem; color: #718096; margin: 0;">
+                            De $8,450.00 a $10,860.00 - Excelente rendimiento
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-card-modern insight-warning">
+                    <div class="insight-header">
+                        <span class="insight-emoji">⚠️</span>
+                        <span class="insight-badge badge-warning">Atención</span>
+                    </div>
+                    <div class="insight-body">
+                        <h6 style="font-weight: 600; color: #2d3748; margin: 0 0 0.5rem 0;">
+                            Reparaciones bajaron -12.3%
+                        </h6>
+                        <p style="font-size: 0.875rem; color: #718096; margin: 0;">
+                            Revisar estrategia de promoción de servicios
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-card-modern insight-success">
+                    <div class="insight-header">
+                        <span class="insight-emoji">💎</span>
+                        <span class="insight-badge badge-success">Positivo</span>
+                    </div>
+                    <div class="insight-body">
+                        <h6 style="font-weight: 600; color: #2d3748; margin: 0 0 0.5rem 0;">
+                            Margen mejoró de 32% a 34%
+                        </h6>
+                        <p style="font-size: 0.875rem; color: #718096; margin: 0;">
+                            Optimización de costos efectiva
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-card-modern insight-info">
+                    <div class="insight-header">
+                        <span class="insight-emoji">ℹ️</span>
+                        <span class="insight-badge" style="background: #bee3f8; color: #2c5282;">Info</span>
+                    </div>
+                    <div class="insight-body">
+                        <h6 style="font-weight: 600; color: #2d3748; margin: 0 0 0.5rem 0;">
+                            Período analizado: 30 días
+                        </h6>
+                        <p style="font-size: 0.875rem; color: #718096; margin: 0;">
+                            Comparación con período anterior automática
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle me-2"></i>Vista Previa - UI Mejorada</h5>
+            <p class="mb-0">
+                Esta es una demostración de los nuevos estilos implementados en el módulo de Utilidades. Incluye: header con gradiente, tarjetas de estadísticas con animaciones hover, y panel de insights con diseño moderno.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Animación de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.stat-card, .insight-card-modern');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+
+</html>
