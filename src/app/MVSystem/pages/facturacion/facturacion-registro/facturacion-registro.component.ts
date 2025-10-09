@@ -525,6 +525,13 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   }
   onSubmit() {
     if (this.form.valid) {
+      // Validar que se haya seleccionado un cliente
+      if (!this.customer || !this.customer.id_Cliente) {
+        this.toastr.warning('Debe seleccionar un cliente antes de continuar');
+        this.form.get('telefono')?.markAsTouched();
+        return;
+      }
+
       if (this.isFactura) {
         this.generateFactura()
       }
@@ -710,7 +717,6 @@ else
     let cantidadElegida = currentArticulo.cantidad
 
     this.calculoTotal(currentArticulo.subTotal, currentArticulo.descuento);
-    return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  <b>${cantidadStockAccesorio}</b>`) : Number(cantidadElegida)
   }
   calculoTotal(subTotal: number, descuento: number) {
     if (descuento > subTotal) {
@@ -974,6 +980,19 @@ else
     let cantidadStockAccesorio = currentArticulo.articulo.cantidad;
     let cantidadElegida = currentArticulo.cantidad;
 
+    // Validar si la cantidad elegida es mayor al stock disponible
+    if (Number(cantidadElegida) > cantidadStockAccesorio) {
+      this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`);
+      // Limpiar el campo de cantidad para que el usuario ingrese una cantidad válida
+      this.articulos().controls[index].patchValue({
+        cantidad: 1,
+        subTotal: 0,
+        total: 0
+      });
+      this.refreshGeneralValues();
+      return;
+    }
+
     const total = this.calculoTotal(subTotal, currentArticulo.descuento);
     this.articulos().controls[index].patchValue({
       total,
@@ -981,7 +1000,7 @@ else
     })
 
     this.refreshGeneralValues();
-    return Number(cantidadElegida) > cantidadStockAccesorio ? this.toastr.info(`Inventario insuficiente, cantidad disponible:  ${cantidadStockAccesorio}`) : Number(cantidadElegida)
+    return Number(cantidadElegida);
   }
 
   onAcceptPrint(data: FacturaRegistro) {
@@ -1068,6 +1087,12 @@ printFacturaMini() {
   this.subs.push(sub);
 }
   generateFactura() {
+    // Validar que se haya seleccionado un cliente
+    if (!this.customer || !this.customer.id_Cliente) {
+      this.toastr.warning('Debe seleccionar un cliente antes de generar la factura');
+      return;
+    }
+
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
@@ -1133,6 +1158,11 @@ printFacturaMini() {
     return factura;
   }
   generateCotizacion() {
+    // Validar que se haya seleccionado un cliente
+    if (!this.customer || !this.customer.id_Cliente) {
+      this.toastr.warning('Debe seleccionar un cliente antes de generar la cotización');
+      return;
+    }
 
     const data = this.loadDataToPrint()
     this.loading.showLoading('Procesando cotización...');
