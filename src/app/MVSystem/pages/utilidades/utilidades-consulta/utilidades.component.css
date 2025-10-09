@@ -1,66 +1,154 @@
 :host {
-  display: block;
-  width: 100%;
-  margin: 0; /* Cambiado de auto a 0 */
-  padding: 8px 4px 0 4px;
-  box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 0;
+    /* Cambiado de auto a 0 */
+    padding: 8px 4px 0 4px;
+    box-sizing: border-box;
 }
 
 .dashboard-card {
-  width: 100%;
-  max-width: none;
-  margin: 0; /* Cambiado de auto a 0 */
-  padding: 1rem 0.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-  background: #fff;
-  box-sizing: border-box;
-  /* max-height: 350px; */
-  overflow-y: hidden;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    /* Cambiado de auto a 0 */
+    padding: 1rem 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    box-sizing: border-box;
+    /* max-height: 350px; */
+    overflow-y: hidden;
 }
 
 .grafico-responsive {
-  width: 100%;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  overflow-x: hidden;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow-x: hidden;
 }
 
 ngx-charts-advanced-pie-chart {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 400px !important;
-  flex: 1 1 300px;
-  margin: 0; /* Cambiado de auto a 0 */
-  height: auto !important;
-  display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 400px !important;
+    flex: 1 1 300px;
+    margin: 0;
+    /* Cambiado de auto a 0 */
+    height: auto !important;
+    display: block;
 }
 
 @media (max-width: 900px) {
-  ngx-charts-advanced-pie-chart {
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-  .grafico-responsive {
-    flex-direction: column;
-    align-items: stretch;
-  }
+    ngx-charts-advanced-pie-chart {
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+    .grafico-responsive {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
+
 .metric-row {
-  display: flex;
-  flex-wrap: wrap;      /* Permite que los elementos bajen si no caben */
-  gap: 1rem;            /* Espacio entre los elementos */
-  width: 100%;
-  min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que los elementos bajen si no caben */
+    gap: 1rem;
+    /* Espacio entre los elementos */
+    width: 100%;
+    min-width: 0;
 }
 
 .metric-item {
-  flex: 1 1 120px;      /* Se adaptan al espacio disponible */
-  min-width: 100px;
-  max-width: 200px;
-  box-sizing: border-box;
-  text-align: center;
-  white-space: normal;  /* Permite salto de línea si es necesario */
+    flex: 1 1 120px;
+    /* Se adaptan al espacio disponible */
+    min-width: 100px;
+    max-width: 200px;
+    box-sizing: border-box;
+    text-align: center;
+    white-space: normal;
+    /* Permite salto de línea si es necesario */
+}
+
+
+/* Estilos para el Panel de Insights con IA */
+
+.insights-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.insight-card {
+    border-left: 4px solid;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.insight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.insight-card.alert-success {
+    background-color: #d1f0dd;
+    border-left-color: #28a745;
+    color: #155724;
+}
+
+.insight-card.alert-warning {
+    background-color: #fff3cd;
+    border-left-color: #ffc107;
+    color: #856404;
+}
+
+.insight-card.alert-info {
+    background-color: #d1ecf1;
+    border-left-color: #17a2b8;
+    color: #0c5460;
+}
+
+.insight-card.alert-danger {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+    color: #721c24;
+}
+
+.insight-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+
+/* Animación de entrada */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Responsive para insights */
+
+@media (max-width: 768px) {
+    .insight-card {
+        padding: 0.75rem;
+    }
+    .insight-icon {
+        font-size: 1.25rem;
+    }
 }

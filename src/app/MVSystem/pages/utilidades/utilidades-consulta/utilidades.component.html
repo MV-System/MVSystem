@@ -1,76 +1,82 @@
 <form class="box" [formGroup]="form">
-  <!-- Filtros -->
-  <div class="row mb-4">
-    <div class="col-md-6 mb-3">
-      <label class="form-label">Fecha de registro</label>
-      <my-date-range-picker
-        [options]="myDateRangePickerOptions"
-        formControlName="rangeDate"
-        (dateRangeChanged)="onDateRangeChanged($event)"
-        [placeholder]="rangoFechas">
-      </my-date-range-picker>
-    </div>
-    <div class="col-md-6 mb-3" *ngIf="SelectSucursal()">
-      <label class="form-label">Sucursal</label>
-      <select class="form-select modern-select" formControlName="almacen" (change)="GetUtilidades()">
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Fecha de registro</label>
+            <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas">
+            </my-date-range-picker>
+        </div>
+        <div class="col-md-6 mb-3" *ngIf="SelectSucursal()">
+            <label class="form-label">Sucursal</label>
+            <select class="form-select modern-select" formControlName="almacen" (change)="GetUtilidades()">
         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
           {{ almacen.descripcion }}
         </option>
       </select>
+        </div>
     </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <span>Cargando datos, por favor espere...</span>
-  </div>
-
-  <!-- Gráficos en columnas, ocupando todo el ancho -->
-  <div class="row" *ngIf="!isLoading">
-    <div class="col-12 mb-4">
-      <div class="card p-3">
-        <div class="grafico-seccion mb-4">
-          <label class="form-label">Ventas</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="colorScheme1"
-              [results]="singleVentas"
-              [gradient]="gradient"
-              (select)="onSelect($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-        <div class="grafico-seccion mb-4">
-          <label class="form-label">Ganancias</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="colorScheme1"
-              [results]="singleGanancias"
-              [gradient]="gradient"
-              (select)="onSelect($event)"
-              (activate)="onActivate($event)"
-              (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-        <div class="grafico-seccion">
-          <label class="form-label">Costos</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="colorScheme1"
-              [results]="singleCostos"
-              [gradient]="gradient"
-              (select)="onSelect($event)"
-              (activate)="onActivate($event)"
-              (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-      </div>
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <span>Cargando datos, por favor espere...</span>
     </div>
-  </div>
+
+    <!-- Panel de Insights con IA -->
+    <div class="row" *ngIf="!isLoading && aiInsights.length > 0">
+        <div class="col-12 mb-4">
+            <div class="card p-3">
+                <h5 class="mb-3">
+                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Análisis Inteligente
+                </h5>
+                <div class="insights-container">
+                    <div *ngFor="let insight of aiInsights" class="insight-card alert mb-2" [ngClass]="{
+                 'alert-success': insight.tipo === 'success',
+                 'alert-warning': insight.tipo === 'warning',
+                 'alert-info': insight.tipo === 'info',
+                 'alert-danger': insight.tipo === 'danger'
+               }">
+                        <div class="d-flex align-items-start">
+                            <span class="insight-icon me-2" style="font-size: 1.5rem;">{{ insight.icono }}</span>
+                            <div class="flex-grow-1">
+                                <strong>{{ insight.mensaje }}</strong>
+                                <p class="mb-0 mt-1" *ngIf="insight.detalle" style="font-size: 0.9rem; opacity: 0.9;">
+                                    {{ insight.detalle }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos en columnas, ocupando todo el ancho -->
+    <div class="row" *ngIf="!isLoading">
+        <div class="col-12 mb-4">
+            <div class="card p-3">
+                <div class="grafico-seccion mb-4">
+                    <label class="form-label">Ventas</label>
+                    <div class="grafico-responsive">
+                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
+                        </ngx-charts-advanced-pie-chart>
+                    </div>
+                </div>
+                <div class="grafico-seccion mb-4">
+                    <label class="form-label">Ganancias</label>
+                    <div class="grafico-responsive">
+                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                        </ngx-charts-advanced-pie-chart>
+                    </div>
+                </div>
+                <div class="grafico-seccion">
+                    <label class="form-label">Costos</label>
+                    <div class="grafico-responsive">
+                        <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                        </ngx-charts-advanced-pie-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>

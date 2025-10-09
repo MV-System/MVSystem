@@ -76,6 +76,14 @@ export class UtilidadesComponent implements OnInit {
     { "name": "Costo Reps.", "value": this.data.costo_Reparaciones }
   ];
 
+  // IA - Insights automáticos
+  aiInsights: Array<{
+    tipo: 'success' | 'warning' | 'info' | 'danger';
+    icono: string;
+    mensaje: string;
+    detalle?: string;
+  }> = [];
+
   constructor(
     private loading: LoadingService,
     private catalogosService: CatalogosService,
@@ -161,6 +169,7 @@ setResponsiveView() {
           if (equipos) {
             this.data = equipos; // Asigna el primer objeto a data
             this.updateSingleData();
+            this.generateAIInsights(); // Generar insights automáticos
             this.loading.hideLoading();
           } else {
             this.toastr.warning('No se encontraron utilidades.');
@@ -198,6 +207,138 @@ setResponsiveView() {
     FF: this.fechaHoy.toISOString().split('T')[0],
     sucursal:+this.loginService.getUserIdSucursal, // Asegúrate de que esto retorne el valor correcto
   };
+
+  /**
+   * Genera insights automáticos con IA basados en los datos de utilidades
+   */
+  private generateAIInsights(): void {
+    this.aiInsights = [];
+
+    // Calcular totales
+    const totalVentas = this.data.venta_Equipos + this.data.venta_Accesorios + 
+                        this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
+    const totalGanancias = this.data.ganancia_Equipos + this.data.ganancia_Accesorios + 
+                          this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
+    const totalCostos = this.data.costo_Equipos + this.data.costo_Accesorios + 
+                       this.data.costo_Reparaciones + this.data.costo_Desbloqueos;
+
+    // 1. Análisis de categoría más rentable
+    const categorias = [
+      { nombre: 'Equipos', ganancia: this.data.ganancia_Equipos, venta: this.data.venta_Equipos },
+      { nombre: 'Accesorios', ganancia: this.data.ganancia_Accesorios, venta: this.data.venta_Accesorios },
+      { nombre: 'Reparaciones', ganancia: this.data.ganancia_Reparaciones, venta: this.data.venta_Reparaciones },
+      { nombre: 'Desbloqueos', ganancia: this.data.ganancia_Desbloqueos, venta: this.data.venta_Desbloqueos }
+    ];
+    
+    const mejorCategoria = categorias.reduce((prev, current) => 
+      (prev.ganancia > current.ganancia) ? prev : current
+    );
+
+    if (mejorCategoria.ganancia > 0) {
+      const porcentajeContribucion = ((mejorCategoria.ganancia / totalGanancias) * 100).toFixed(1);
+      this.aiInsights.push({
+        tipo: 'success',
+        icono: '🏆',
+        mensaje: `${mejorCategoria.nombre} es tu categoría más rentable`,
+        detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${mejorCategoria.ganancia.toFixed(2)})`
+      });
+    }
+
+    // 2. Análisis de margen de ganancia general
+    const margenGeneral = totalVentas > 0 ? ((totalGanancias / totalVentas) * 100) : 0;
+    if (margenGeneral > 30) {
+      this.aiInsights.push({
+        tipo: 'success',
+        icono: '📈',
+        mensaje: `Excelente margen de ganancia: ${margenGeneral.toFixed(1)}%`,
+        detalle: `Tus ganancias representan más del 30% de las ventas totales`
+      });
+    } else if (margenGeneral < 15) {
+      this.aiInsights.push({
+        tipo: 'warning',
+        icono: '⚠️',
+        mensaje: `Margen de ganancia bajo: ${margenGeneral.toFixed(1)}%`,
+        detalle: `Considera revisar precios o reducir costos para mejorar rentabilidad`
+      });
+    } else {
+      this.aiInsights.push({
+        tipo: 'info',
+        icono: '📊',
+        mensaje: `Margen de ganancia moderado: ${margenGeneral.toFixed(1)}%`,
+        detalle: `Hay oportunidad de optimizar para aumentar rentabilidad`
+      });
+    }
+
+    // 3. Análisis de márgenes por categoría
+    categorias.forEach(cat => {
+      if (cat.venta > 0) {
+        const margen = ((cat.ganancia / cat.venta) * 100);
+        if (margen < 10 && cat.venta > totalVentas * 0.1) { // Solo si representa más del 10% de ventas
+          this.aiInsights.push({
+            tipo: 'warning',
+            icono: '⚡',
+            mensaje: `${cat.nombre}: Margen muy bajo (${margen.toFixed(1)}%)`,
+            detalle: `Revisa costos o ajusta precios en esta categoría`
+          });
+        }
+      }
+    });
+
+    // 4. Identificar categoría con peor rendimiento
+    const peorCategoria = categorias
+      .filter(c => c.venta > 0)
+      .reduce((prev, current) => {
+        const margenPrev = prev.venta > 0 ? (prev.ganancia / prev.venta) : 0;
+        const margenCurrent = current.venta > 0 ? (current.ganancia / current.venta) : 0;
+        return margenPrev < margenCurrent ? prev : current;
+      });
+
+    if (peorCategoria && peorCategoria.venta > 0) {
+      const margenPeor = ((peorCategoria.ganancia / peorCategoria.venta) * 100);
+      if (margenPeor < margenGeneral - 10) {
+        this.aiInsights.push({
+          tipo: 'info',
+          icono: '💡',
+          mensaje: `Oportunidad en ${peorCategoria.nombre}`,
+          detalle: `Esta categoría tiene un margen del ${margenPeor.toFixed(1)}%, menor al promedio`
+        });
+      }
+    }
+
+    // 5. Análisis de distribución de ventas
+    const categoriaConMasVentas = categorias.reduce((prev, current) => 
+      (prev.venta > current.venta) ? prev : current
+    );
+
+    if (categoriaConMasVentas.venta > totalVentas * 0.6) {
+      this.aiInsights.push({
+        tipo: 'warning',
+        icono: '⚖️',
+        mensaje: `Alta dependencia en ${categoriaConMasVentas.nombre}`,
+        detalle: `El ${((categoriaConMasVentas.venta / totalVentas) * 100).toFixed(1)}% de tus ventas provienen de esta categoría. Considera diversificar.`
+      });
+    }
+
+    // 6. Resumen general positivo
+    if (totalGanancias > 0) {
+      this.aiInsights.push({
+        tipo: 'success',
+        icono: '💰',
+        mensaje: `Ganancias totales: $${totalGanancias.toFixed(2)}`,
+        detalle: `Ventas: $${totalVentas.toFixed(2)} | Costos: $${totalCostos.toFixed(2)}`
+      });
+    }
+
+    // 7. Alerta si no hay datos
+    if (totalVentas === 0) {
+      this.aiInsights.push({
+        tipo: 'info',
+        icono: 'ℹ️',
+        mensaje: 'No hay datos para el período seleccionado',
+        detalle: 'Intenta seleccionar un rango de fechas diferente'
+      });
+    }
+  }
 
   onSelect(data: any): void { }
 
