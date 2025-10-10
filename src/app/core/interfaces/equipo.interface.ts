@@ -91,7 +91,7 @@ export interface EquipoVendidoFilter extends DatePaging,Pagination{
     imei: string;
     telefono: number;
     fechaRegistro: string;
-    modelo: string;
+    ID_Modelo: number;  // CAMBIADO: De modelo: string a ID_Modelo: number
     fechaInicioFactura: string;
     fechaFinalFactura: string;
 }

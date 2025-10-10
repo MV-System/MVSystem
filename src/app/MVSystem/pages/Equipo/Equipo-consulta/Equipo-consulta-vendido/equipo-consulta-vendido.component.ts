@@ -18,6 +18,14 @@ import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
+interface SalesInsight {
+  title: string;
+  value: string;
+  description: string;
+  icon: string;
+  iconColor: string;
+}
+
 @Component({
   selector: 'app-equipo-consulta-vendido',
   templateUrl: './equipo-consulta-vendido.component.html',
@@ -87,6 +95,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   listaVendedor:   VendedorLista[] = [];
   listaSuplidor:   Suplidor[] = [];
   equiposVendidos: EquipoVendido[] = [];
+  equiposVendidosCompletos: EquipoVendido[] = [];  // NUEVO: Todos los equipos para insights
+  salesInsights: SalesInsight[] = [];
   rangeDatePlaceholder: Date =new Date()
  // Obtener la fecha actual
  fechaHoy = new Date();
@@ -95,7 +105,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   filter: any = {
     almacen: '',
-    modelo: '',
+    ID_Modelo: 0,  // CAMBIADO: De modelo: '' a ID_Modelo: 0
     suplidor: '',
     vendedor: '',
     telefono:'',
@@ -114,7 +124,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     almacen: [''],
     suplidor: [''],
     vendedor: [''],
-    modelo: [''],
+    modelo: ['0'],  // CAMBIADO: Valor inicial '0' para compatibilidad con ID numérico
     rangeDate: [''],
     rangeDateFactura: [''],
     telefono:[''],
@@ -128,10 +138,14 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   clearFilters(){
     this.form.reset();
+    this.form.patchValue({ modelo: '0' });  // AGREGADO: Resetear modelo a '0'
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
     this.filter.fechaInicioFactura ='';
     this.filter.fechaFinalFactura ='';
+    this.filter.ID_Modelo = 0;  // AGREGADO: Resetear ID_Modelo
+    this.equiposVendidosCompletos = [];  // NUEVO: Limpiar datos completos
+    this.salesInsights = [];  // NUEVO: Limpiar insights
     this.obtenerEquiposVendidos()
   }
   onDateRangeChanged(event: any) {
@@ -149,8 +163,12 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       this.filter.fechaInicioFactura = '';
       this.filter.fechaFinalFactura = '';
     } else {
-      this.filter.fechaInicioFactura = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
-      this.filter.fechaFinalFactura = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
+      // Formatear en formato ISO (YYYY-MM-DD) para consistencia
+      const fechaInicio = new Date(event.beginDate.year, event.beginDate.month - 1, event.beginDate.day);
+      const fechaFinal = new Date(event.endDate.year, event.endDate.month - 1, event.endDate.day);
+
+      this.filter.fechaInicioFactura = fechaInicio.toISOString().split('T')[0];
+      this.filter.fechaFinalFactura = fechaFinal.toISOString().split('T')[0];
     }
     this.obtenerEquiposVendidos();
   }
@@ -175,7 +193,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.filter.almacen = nullOrEmpty(almacen);
     this.filter.vendedor = nullOrEmpty(vendedor);
     this.filter.suplidor = nullOrEmpty(suplidor);
-    this.filter.modelo = nullOrEmpty(modelo);
+    this.filter.ID_Modelo = modelo && modelo !== '0' ? parseInt(modelo) : 0;  // MEJORADO: Manejar tanto string "0" como valores vacíos
     this.filter.telefono = nullOrEmpty(telefono);
     this.filter.imei = nullOrEmpty(imei);
 
@@ -237,6 +255,8 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.isLoading = true; // Iniciar carga
     this.getValueFilterForm();
     this.onFilterPropHasValue();
+
+    // Consulta 1: Datos paginados para la tabla
     this.subscription = this.equipoService
       .getEquipoVendido(this.filter)
       .subscribe((equipo) => {
@@ -259,6 +279,17 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
         }
         this.equiposVendidos = equipo;
 
+        // Consulta 2: TODOS los datos para insights (sin paginación)
+        this.obtenerEquiposCompletosParaInsights();
+      });
+  }
+
+  // NUEVO: Método para obtener todos los equipos para insights
+  obtenerEquiposCompletosParaInsights() {
+    this.equipoService.getEquipoVendidoParaInsights(this.filter)
+      .subscribe((equiposCompletos) => {
+        this.equiposVendidosCompletos = equiposCompletos;
+        this.generateSalesInsights();
       });
   }
   printReportEquipoVendido(){
@@ -331,7 +362,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    
+
     try {
       document.execCommand('copy');
       this.toast.success(`IMEI copiado: ${text}`);
@@ -370,6 +401,133 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       this.listaSuplidor = suplidor;
     });
     this.loading.hideLoading();
+  }
+
+  // Método para formatear números con separadores de coma
+  formatNumber(value: number): string {
+    return value.toLocaleString('es-DO');
+  }
+
+  // Método para formatear rango de fechas para insights
+  formatDateRange(): string {
+    const fechaInicial = this.filter.fechaInicioFactura;
+    const fechaFinal = this.filter.fechaFinalFactura;
+
+    console.log('📅 DEBUG FECHAS:', {
+      fechaInicial,
+      fechaFinal,
+      filterCompleto: this.filter
+    });
+
+    if (!fechaInicial || !fechaFinal) {
+      return 'Sin filtro de fecha';
+    }
+
+    try {
+      // Crear fechas asegurando el formato correcto
+      const dateInicial = new Date(fechaInicial + 'T00:00:00');
+      const dateFinal = new Date(fechaFinal + 'T00:00:00');
+
+      console.log('📅 FECHAS PROCESADAS:', {
+        dateInicial,
+        dateFinal
+      });
+
+      const formatOptions: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      };
+
+      const fechaInicialFormateada = dateInicial.toLocaleDateString('es-DO', formatOptions);
+      const fechaFinalFormateada = dateFinal.toLocaleDateString('es-DO', formatOptions);
+
+      console.log('📅 FECHAS FORMATEADAS:', {
+        fechaInicialFormateada,
+        fechaFinalFormateada
+      });
+
+      return `${fechaInicialFormateada} - ${fechaFinalFormateada}`;
+    } catch (error) {
+      console.error('❌ ERROR EN FORMATEO DE FECHAS:', error);
+      return 'Rango de fechas inválido';
+    }
+  }  // Método para generar insights de ventas
+  generateSalesInsights() {
+    // CAMBIADO: Usar equiposVendidosCompletos (todos los datos) en lugar de equiposVendidos (paginados)
+    if (!this.equiposVendidosCompletos || this.equiposVendidosCompletos.length === 0) {
+      this.salesInsights = [];
+      return;
+    }
+
+    // Análisis de modelos más y menos vendidos
+    const modeloStats = new Map<string, number>();
+    this.equiposVendidosCompletos.forEach(equipo => {  // CAMBIADO: Usar equiposVendidosCompletos
+      const modelo = equipo.descripcion || 'Sin modelo';
+      modeloStats.set(modelo, (modeloStats.get(modelo) || 0) + 1);
+    });
+
+    const modelosOrdenados = Array.from(modeloStats.entries()).sort((a, b) => b[1] - a[1]);
+    const modeloMasVendido = modelosOrdenados.length > 0 ? modelosOrdenados[0] : null;
+    const modeloMenosVendido = modelosOrdenados.length > 0 ? modelosOrdenados[modelosOrdenados.length - 1] : null;
+
+    // Análisis de vendedores más y menos efectivos
+    const vendedorStats = new Map<string, { cantidad: number, monto: number }>();
+    this.equiposVendidosCompletos.forEach(equipo => {  // CAMBIADO: Usar equiposVendidosCompletos
+      const vendedor = equipo.vendedor || 'Sin vendedor';
+      const current = vendedorStats.get(vendedor) || { cantidad: 0, monto: 0 };
+      vendedorStats.set(vendedor, {
+        cantidad: current.cantidad + 1,
+        monto: current.monto + (equipo.precioVendido || 0)
+      });
+    });
+
+    const vendedoresOrdenados = Array.from(vendedorStats.entries()).sort((a, b) => b[1].monto - a[1].monto);
+    const vendedorTop = vendedoresOrdenados.length > 0 ? vendedoresOrdenados[0] : null;
+    const vendedorBajo = vendedoresOrdenados.length > 0 ? vendedoresOrdenados[vendedoresOrdenados.length - 1] : null;
+
+    // Crear insights
+    this.salesInsights = [];
+
+    if (modeloMasVendido) {
+      this.salesInsights.push({
+        title: 'Modelo Más Vendido',
+        value: `${modeloMasVendido[0]}`,
+        description: `${this.formatNumber(modeloMasVendido[1])} unidades vendidas (${this.formatDateRange()})`,
+        icon: 'bi bi-trophy-fill',
+        iconColor: 'text-success-custom'
+      });
+    }
+
+    if (modeloMenosVendido && modelosOrdenados.length > 1) {
+      this.salesInsights.push({
+        title: 'Modelo Menos Vendido',
+        value: `${modeloMenosVendido[0]}`,
+        description: `${this.formatNumber(modeloMenosVendido[1])} unidades vendidas`,
+        icon: 'bi bi-arrow-down-circle-fill',
+        iconColor: 'text-danger-custom'
+      });
+    }
+
+    if (vendedorTop) {
+      this.salesInsights.push({
+        title: 'Vendedor Top',
+        value: `${vendedorTop[0]}`,
+        description: `${this.formatNumber(vendedorTop[1].cantidad)} ventas - RD$${this.formatNumber(vendedorTop[1].monto)}`,
+        icon: 'bi bi-person-check-fill',
+        iconColor: 'text-primary-custom'
+      });
+    }
+
+    if (vendedorBajo && vendedoresOrdenados.length > 1) {
+      this.salesInsights.push({
+        title: 'Vendedor con Menos Ventas',
+        value: `${vendedorBajo[0]}`,
+        description: `${this.formatNumber(vendedorBajo[1].cantidad)} ventas - RD$${this.formatNumber(vendedorBajo[1].monto)}`,
+        icon: 'bi bi-person-dash-fill',
+        iconColor: 'text-warning-custom'
+      });
+    }
   }
 
 }

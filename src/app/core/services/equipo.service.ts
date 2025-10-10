@@ -60,7 +60,7 @@ export class EquipoService{
         '&fechaRegistro='+
         EquipoVendido.fechaRegistro +
         '&modelo='+
-        EquipoVendido.modelo +
+        EquipoVendido.ID_Modelo +
         '&pageIndex='+
         EquipoVendido.pageIndex +
         '&pageSize=' +
@@ -73,6 +73,37 @@ export class EquipoService{
         EquipoVendido.fechaInicioFactura +
         '&fechaFinalFactura='+
         EquipoVendido.fechaFinalFactura ;
+        return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
+    }
+
+    // NUEVO: Método para obtener TODOS los equipos vendidos para insights (sin paginación)
+    getEquipoVendidoParaInsights(EquipoVendido: EquipoVendidoFilter): Observable<EquipoVendido[]> {
+        const search =
+        'Almacen='+
+        EquipoVendido.almacen +
+        '&suplidor='+
+        EquipoVendido.suplidor +
+        '&telefono='+
+        EquipoVendido.telefono +
+        '&imei='+
+        EquipoVendido.imei +
+        '&vendedor='+
+        EquipoVendido.vendedor +
+        '&fechaRegistro='+
+        EquipoVendido.fechaRegistro +
+        '&modelo='+
+        EquipoVendido.ID_Modelo +
+        '&pageIndex=1' +           // Siempre página 1
+        '&pageSize=999999' +       // Tamaño muy grande para traer todos
+        '&fechaInicio=' +
+        EquipoVendido.fechaInicio +
+        '&fechaFinal='+
+        EquipoVendido.fechaFinal +
+        '&fechaInicioFactura=' +
+        EquipoVendido.fechaInicioFactura +
+        '&fechaFinalFactura='+
+        EquipoVendido.fechaFinalFactura;
+
         return this.http.get<EquipoVendido[]>(`${APIURL.Equipo.Consulta.EquipoVendido}?`+ search)
     }
     GetTransferenciaEquipos(Sucursal_Salida: number,Sucursal_Destino: number,FechaInicio: string,FechaFinal: string):Observable<EquipoAlmacenTransferirArrayRetorno[]>{
