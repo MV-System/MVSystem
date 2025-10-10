@@ -18,12 +18,13 @@
 /* ========== PAGE HEADER ========== */
 
 .page-header {
-    background: linear-gradient(135deg, #10b981 0%, #6ee7b7 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.25);
-    color: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    color: #1e293b;
     margin-bottom: 2rem;
+    border: 1px solid #e2e8f0;
 }
 
 .page-title {
@@ -45,32 +46,134 @@
 
 .filters-card {
     border: none;
-    border-radius: 12px;
-    background: white;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.filters-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
 }
 
 .filters-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+.filters-card .card-body {
+    padding: 2rem;
+    position: relative;
+}
+
+.filter-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
 }
 
 .form-label {
-    color: #2d3748;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-label i {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    font-size: 0.75rem;
+    margin-right: 0.75rem;
 }
 
 .form-select-modern {
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.75rem;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+    background: white;
     transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .form-select-modern:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.form-select-modern:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.modern-datepicker {
+    position: relative;
+}
+
+.modern-datepicker input {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+    background: white;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.modern-datepicker input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.modern-datepicker input:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-text {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.form-text::before {
+    content: '💡';
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
 }
 
 
