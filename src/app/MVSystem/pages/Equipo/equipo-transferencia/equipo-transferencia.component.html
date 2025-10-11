@@ -1,124 +1,125 @@
 <r-loading *ngIf="printing"></r-loading>
 
 <main id="main" class="main">
-  <div class="pagetitle">
-    <h1 id="registro">Transferencia de equipo</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item">Mantenimiento</li>
-        <li class="breadcrumb-item active">Transferencia del equipo</li>
-      </ol>
-    </nav>
-  </div>
-  <!-- End Page Title -->
+    <div class="pagetitle">
+        <h1 id="registro">Transferencia de equipo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Transferencia del equipo</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
 
-  <section class="section">
-    <div class="row justify-content-center">
-      <!-- Formulario de transferencia -->
-      <div class="col-12 col-md-8 col-lg-6 mb-4 order-lg-1 order-2">
-        <div class="card modern-card">
-          <div class="card-body">
-            <div class="form-header mb-4">
-              <h5 class="form-title">
-                <i class="bi bi-arrow-left-right me-2 text-primary"></i>
-                Datos de equipo
-              </h5>
-              <p class="form-subtitle">Complete la información para transferir el equipo</p>
-            </div>
-            <form [formGroup]="form" class="modern-form row g-3">
-              <!-- IMEI -->
-              <div class="col-12">
-                <label class="form-label modern-label" for="imeiInput">
+    <section class="section">
+        <div class="row justify-content-center">
+            <!-- Formulario de transferencia -->
+            <div class="col-12 col-md-8 col-lg-6 mb-4 order-lg-1 order-2">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="form-header mb-4">
+                            <h5 class="form-title">
+                                <i class="bi bi-arrow-left-right me-2 text-primary"></i> Datos de equipo
+                            </h5>
+                            <p class="form-subtitle">Complete la información para transferir el equipo</p>
+                        </div>
+                        <form [formGroup]="form" class="modern-form row g-3">
+                            <!-- IMEI -->
+                            <div class="col-12">
+                                <label class="form-label modern-label" for="imeiInput">
                   <i class="bi bi-upc me-1"></i>
                   IMEI a transferir
                 </label>
-                <input
-                  id="imeiInput"
-                  class="form-control modern-input busqueda-input"
-                  placeholder="IMEI"
-                  formControlName="imei"
-                  required
-                  (keyup.enter)="getEquipoByImei()"
-                  [ngClass]="{'is-invalid': validateInput('imei') || (submitted && form.controls.imei.errors)}"
-                />
-              </div>
-              <!-- Almacén destino -->
-              <div class="col-12">
-                <label class="form-label modern-label" for="almacenSelect">
+                                <input id="imeiInput" class="form-control modern-input busqueda-input" placeholder="IMEI" formControlName="imei" required (keyup.enter)="getEquipoByImei()" [ngClass]="{'is-invalid': validateInput('imei') || (submitted && form.controls.imei.errors)}" />
+                            </div>
+                            <!-- Almacén destino -->
+                            <div class="col-12">
+                                <label class="form-label modern-label" for="almacenSelect">
                   <i class="bi bi-building me-1"></i>
                   Almacén destino
                 </label>
-                <select
-                  id="almacenSelect"
-                  class="form-select modern-select"
-                  formControlName="almacen">
+                                <select id="almacenSelect" class="form-select modern-select" formControlName="almacen" required [ngClass]="{'is-invalid': validateInput('almacen')}">
+                  <option value="" disabled selected>Seleccione un almacén</option>
                   <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                     {{ almacen.descripcion }}
                   </option>
                 </select>
-              </div>
-              <!-- Total artículos -->
-              <div class="col-12">
-                <label class="form-label modern-label">
+                                <div class="invalid-feedback" *ngIf="validateInput('almacen')">
+                                    El almacén destino es requerido
+                                </div>
+                            </div>
+                            <!-- Total artículos -->
+                            <div class="col-12">
+                                <label class="form-label modern-label">
                   <i class="bi bi-list-ol me-1"></i>
                   Total artículos
                 </label>
-                <div>
-                  <span class="form-control text-center bg-light">
+                                <div>
+                                    <span class="form-control text-center bg-light">
                     {{ cantidadEquipoATransferir }}
                   </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- Lista de equipos agregados -->
-      <div class="col-12 col-md-10 col-lg-6 order-lg-2 order-1" *ngIf="equipoToTransfer.length">
-        <div class="card modern-card">
-          <div class="card-body">
-            <div class="form-header mb-3">
-              <h5 class="form-title">
-                <i class="bi bi-list-check me-2 text-primary"></i>
-                Equipos agregados
-              </h5>
             </div>
-            <div class="table-responsive">
-              <table class="table table-hover table-striped modern-table align-middle">
-                <thead class="table-primary">
-                  <tr>
-                    <th>#</th>
-                    <th>IMEI</th>
-                    <th>Modelo</th>
-                    <th>Almacén Salida</th>
-                    <th>Almacén Destino</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let equipo of equipoToTransfer; let i = index">
-                    <td><span class="badge bg-primary">{{ i + 1 }}</span></td>
-                    <td><span class="fw-semibold">{{ equipo.imei }}</span></td>
-                    <td>{{ equipo?.modelo }}</td>
-                    <td>{{ equipo?.almacenSalida }}</td>
-                    <td>{{ equipo?.almacenDestino }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="text-center mt-4">
-              <button class="button-imprimir-reporte" (click)="printReportEquipoVendido()">
+            <!-- Lista de equipos agregados -->
+            <div class="col-12 col-md-10 col-lg-6 order-lg-2 order-1" *ngIf="listEquiposToTransfer.length">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="form-header mb-3">
+                            <h5 class="form-title">
+                                <i class="bi bi-list-check me-2 text-primary"></i> Equipos agregados
+                            </h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped modern-table align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th style="width: 8%;" class="text-center">#</th>
+                                        <th style="width: 30%; min-width: 180px;">IMEI</th>
+                                        <th style="width: 25%; min-width: 140px;">Modelo</th>
+                                        <th style="width: 18.5%;">Almacén Salida</th>
+                                        <th style="width: 18.5%;">Almacén Destino</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let equipo of listEquiposToTransfer; let i = index">
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">{{ i + 1 }}</span>
+                                        </td>
+                                        <td class="imei-column">
+                                            <span class="fw-semibold text-dark">{{ equipo.imei }}</span>
+                                        </td>
+                                        <td class="text-truncate" style="max-width: 140px;" [title]="equipo?.modelo">
+                                            <span class="text-muted">{{ equipo?.modelo }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-info text-dark">{{ equipo?.almacenSalida }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success">{{ equipo?.almacenDestino }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button class="button-imprimir-reporte" (click)="printReportEquipoVendido()" *ngIf="listEquiposToTransfer.length">
                 <i class="bi bi-printer"></i> Imprimir Reporte
               </button>
-              <button class="button-limpiar" type="button" (click)="equipoToTransfer = []" *ngIf="equipoToTransfer.length">
+                            <button class="button-limpiar" type="button" (click)="equipoToTransfer = []; listEquiposToTransfer = []" *ngIf="listEquiposToTransfer.length">
                 <i class="bi bi-x-circle"></i> Limpiar Lista
               </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <!-- Lista end -->
         </div>
-      </div>
-      <!-- Lista end -->
-    </div>
-  </section>
+    </section>
 </main>
 <!-- End #main -->

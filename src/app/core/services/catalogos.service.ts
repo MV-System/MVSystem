@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
@@ -67,6 +67,11 @@ export class CatalogosService {
   }
 
   buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<Equipo> {
-    return this.http.get<Equipo>(`${APIURL.Equipo.Consulta.EquipoDisponibleFT}?Equipo=${equipo}&Id_Almacen=${Id_Almacen}`);
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams()
+      .set('Equipo', equipo)        // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+      .set('Id_Almacen', Id_Almacen);
+
+    return this.http.get<Equipo>(APIURL.Equipo.Consulta.EquipoDisponibleFT, { params });
   }
 }

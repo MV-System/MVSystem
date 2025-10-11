@@ -160,20 +160,34 @@ export class MantenimientoService {
   }
 
   PostEquipo_Delete(imei: string, Usuario:string): Observable<EquipoEliminadoResponse> {
-    const url = `${APIURL.Equipo.Accion.PostEquipo_Delete}?imei=${imei}&Usuario=${Usuario}`;  // Pasar el IMEI como parámetro en la URL
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams()
+      .set('imei', imei)       // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+      .set('Usuario', Usuario);
 
-    return this.http.post<EquipoEliminadoResponse>(url, null);  // Cambiar a la interfaz adecuada
+    return this.http.post<EquipoEliminadoResponse>(APIURL.Equipo.Accion.PostEquipo_Delete, null, { params });
   }
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
-    return this.http.get<EquipoModificarEstatus>(`${APIURL.Equipo.Consulta.EquipoModificarEstatus}?imei=${imei}`)
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams().set('imei', imei); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+    
+    return this.http.get<EquipoModificarEstatus>(APIURL.Equipo.Consulta.EquipoModificarEstatus, { params });
   }
 
   consultaEquipoDisponible(imei: string): Observable<EquipoTransferencia> {
-    return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=${imei}`)
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams().set('imei', imei); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+    
+    return this.http.get<EquipoTransferencia>(APIURL.Equipo.Consulta.EquipoTransferencia, { params });
   }
 
   buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<EquipoObjRetorno> {
-    return this.http.get<EquipoObjRetorno>(`${APIURL.Equipo.Consulta.EquipoBuscaDisponible}?Equipo=${equipo}&Id_Almacen=${Id_Almacen}`);
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams()
+      .set('Equipo', equipo)        // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+      .set('Id_Almacen', Id_Almacen);
+
+    return this.http.get<EquipoObjRetorno>(APIURL.Equipo.Consulta.EquipoBuscaDisponible, { params });
   }
 
   equipoEstadoActualiza(dataActualizar: EquipoEstadoUpdate): Observable<void> {

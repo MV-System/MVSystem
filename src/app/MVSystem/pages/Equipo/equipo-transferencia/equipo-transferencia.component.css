@@ -1,149 +1,269 @@
 /* Limpieza: Eliminar estilos duplicados con los globales y mantener solo los realmente únicos para este componente. */
 
+
 /* Card moderna solo si no está global */
+
 .modern-card {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  background: white;
-  backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+    backdrop-filter: blur(10px);
 }
+
 .modern-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
 .card-body {
-  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-  padding: 2.5rem !important;
-  border-radius: 1rem;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 2.5rem !important;
+    border-radius: 1rem;
 }
 
 .form-header {
-  text-align: center;
-  padding: 1rem 0 2rem;
-  border-bottom: 2px solid #e9ecef;
+    text-align: center;
+    padding: 1rem 0 2rem;
+    border-bottom: 2px solid #e9ecef;
 }
 
 .form-title {
-  color: #2c3e50;
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .form-subtitle {
-  color: #6c757d;
-  font-size: 1rem;
-  margin-bottom: 0;
-  font-weight: 400;
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0;
+    font-weight: 400;
 }
 
 .form-label.modern-label {
-  color: #495057;
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+    color: #495057;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
-.table.modern-table th, .table.modern-table td {
-  vertical-align: middle;
+.table.modern-table th,
+.table.modern-table td {
+    vertical-align: middle;
 }
 
 .badge.bg-primary {
-  font-size: 1em;
-  padding: 0.5em 0.8em;
-  border-radius: 0.5em;
+    font-size: 1em;
+    padding: 0.5em 0.8em;
+    border-radius: 0.5em;
 }
 
+
 /* Botones personalizados solo si no hay global equivalente y sin gradientes */
+
 .btn-primary {
-  background: #467ff1;
-  border: none;
-  border-radius: 2rem;
-  font-weight: 700;
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(67, 206, 162, 0.12);
-  transition: all 0.2s;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #fff;
+    background: #467ff1;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 700;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(67, 206, 162, 0.12);
+    transition: all 0.2s;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
 }
-.btn-primary:hover, .btn-primary:focus {
-  background: #2c3e50;
-  box-shadow: 0 4px 16px rgba(67, 206, 162, 0.18);
-  transform: translateY(-2px) scale(1.03);
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: #2c3e50;
+    box-shadow: 0 4px 16px rgba(67, 206, 162, 0.18);
+    transform: translateY(-2px) scale(1.03);
 }
+
 .btn-primary i {
-  font-size: 1.2em;
+    font-size: 1.2em;
 }
+
 .btn-secondary {
-  background: #bfc9d1;
-  color: #2c3e50;
-  border: none;
-  border-radius: 2rem;
-  font-weight: 700;
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(67, 198, 172, 0.08);
-  transition: all 0.2s;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    background: #bfc9d1;
+    color: #2c3e50;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 700;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(67, 198, 172, 0.08);
+    transition: all 0.2s;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.btn-secondary:hover, .btn-secondary:focus {
-  background: #e3eafc;
-  color: #2c3e50;
-  box-shadow: 0 4px 16px rgba(67, 198, 172, 0.13);
-  transform: translateY(-2px) scale(1.03);
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #e3eafc;
+    color: #2c3e50;
+    box-shadow: 0 4px 16px rgba(67, 198, 172, 0.13);
+    transform: translateY(-2px) scale(1.03);
 }
+
 .btn-danger {
-  background: #fcb69f;
-  color: #e74c3c;
-  border: none;
-  border-radius: 2rem;
-  font-weight: 700;
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(252, 182, 159, 0.10);
-  transition: all 0.2s;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    background: #fcb69f;
+    color: #e74c3c;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 700;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(252, 182, 159, 0.10);
+    transition: all 0.2s;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.btn-danger:hover, .btn-danger:focus {
-  background: #ffecd2;
-  color: #e74c3c;
-  box-shadow: 0 4px 16px rgba(252, 182, 159, 0.18);
-  transform: translateY(-2px) scale(1.03);
+
+.btn-danger:hover,
+.btn-danger:focus {
+    background: #ffecd2;
+    color: #e74c3c;
+    box-shadow: 0 4px 16px rgba(252, 182, 159, 0.18);
+    transform: translateY(-2px) scale(1.03);
 }
 
 @media (max-width: 768px) {
-  .modern-card, .card-body {
-    padding: 1rem !important;
-  }
+    .modern-card,
+    .card-body {
+        padding: 1rem !important;
+    }
 }
 
 .is-invalid {
-  border: 1px solid #e74c3c !important;
+    border: 1px solid #e74c3c !important;
 }
 
 td {
- max-width: 100px;
- overflow: hidden;
- text-overflow: ellipsis;
- white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Estilos específicos para la tabla de equipos */
+
+.modern-table {
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.modern-table th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    color: #495057 !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 1rem 0.75rem;
+    border: none;
+    text-align: center;
+    position: relative;
+}
+
+.modern-table th:first-child {
+    border-top-left-radius: 0.75rem;
+}
+
+.modern-table th:last-child {
+    border-top-right-radius: 0.75rem;
+}
+
+.modern-table td {
+    padding: 1rem 0.75rem;
+    border: none;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: middle;
+    max-width: none;
+    /* Override para la columna IMEI */
+}
+
+
+/* Estilos específicos para la columna IMEI */
+
+.modern-table td.imei-column {
+    word-break: break-all !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: none !important;
+    font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    max-width: 180px;
+}
+
+.modern-table tbody tr:hover {
+    background-color: rgba(248, 249, 250, 0.8);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Badge mejorados */
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+}
+
+.badge.bg-primary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #b8daff 100%) !important;
+    color: #0c5460 !important;
+    border: 1px solid #bee5eb;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%) !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .modern-table th,
+    .modern-table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+    }
+    .modern-table td.imei-column {
+        max-width: 120px;
+        font-size: 0.75rem;
+    }
 }

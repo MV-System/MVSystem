@@ -49,7 +49,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.fb.group({
       imei: ['', Validators.required],
-      almacen: [2]  // Almacen por defecto: Plaza Central
+      almacen: ['', Validators.required]  // Campo requerido sin valor por defecto
     });
   }
 
@@ -116,9 +116,21 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
 
   getEquipoByImei(): void {
     const imeiValue = this.form.get('imei')?.value;
+    const almacenValue = this.form.get('almacen')?.value;
 
+    // Validar que el IMEI no esté vacío
     if (!imeiValue) {
       this.submitted = true;
+      return;
+    }
+
+    // Validar que se haya seleccionado un almacén destino
+    if (!almacenValue) {
+      this.toastr.error('Debe seleccionar un almacén destino antes de agregar equipos', 'Almacén requerido', { 
+        progressBar: true, 
+        closeButton: true, 
+        timeOut: 3000 
+      });
       return;
     }
 
@@ -150,15 +162,22 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   }
 
   private addEquipoToList(equipo: any): void {
+    // Obtener el almacén destino seleccionado en el formulario
+    const almacenDestinoId = this.form.get('almacen')?.value;
+    const almacenDestino = this.almacenes.find(a => a.iD_Almacen == almacenDestinoId);
+    
+    // Obtener el almacén de salida del equipo
+    const almacenSalidaId = equipo.almacenSalidaId || equipo.almacenSalida;
+    const almacenSalida = this.almacenes.find(a => a.iD_Almacen == almacenSalidaId);
+    
     // Crea el modelo del equipo para añadirlo a la lista
     const model: EquipoTransferencia = {
       Id_Transferencia: equipo.Id_Transferencia,
       imei: equipo.imei,
       modelo: equipo.modelo,
-      almacenSalida: equipo.almacenSalida,
-      almacenDestino: equipo.almacenDestino,
+      almacenSalida: almacenSalida?.descripcion || almacenSalidaId || 'Sin definir',
+      almacenDestino: almacenDestino?.descripcion || 'Sin asignar',
       usuario: this.loginService.getUserName(),
-
       mensaje: ''
     };
     // Añadir el equipo a la lista de transferencia

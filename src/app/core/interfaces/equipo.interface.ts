@@ -145,7 +145,7 @@ export interface EquipoTransferencia{
     Id_Transferencia:number;
     imei:string;
     modelo:string;
-    almacenSalida:number;
+    almacenSalida:string;  // Cambiado a string para mostrar el nombre del almacén
     almacenSalidaId?:number;
     almacenDestino:string;
     mensaje:string;

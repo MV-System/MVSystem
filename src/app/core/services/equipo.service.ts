@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   EquipoDisponibleParam,
     EquipoVendido,
@@ -25,25 +25,18 @@ export class EquipoService{
 
 
      getEquipoDisponible( EquipoDisponible:EquipoDisponibleParam):Observable<EquipoDisponible[]>{
-        const search =
-        'Almacen='+
-        EquipoDisponible.almacen +
-        '&suplidor='+
-        EquipoDisponible.suplidor +
-        '&imei='+
-        EquipoDisponible.imei +
-        '&modelo='+
-        EquipoDisponible.modelo +
-        '&pageIndex='+
-        EquipoDisponible.pageIndex +
-        '&pageSize=' +
-        EquipoDisponible.pageSize +
-        '&fechaInicio=' +
-        EquipoDisponible.fechaInicio +
-        '&fechaFinal='+
-        EquipoDisponible.fechaFinal ;
+        // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+        const params = new HttpParams()
+            .set('Almacen', EquipoDisponible.almacen.toString())
+            .set('suplidor', EquipoDisponible.suplidor || '')
+            .set('imei', EquipoDisponible.imei || '') // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+            .set('modelo', EquipoDisponible.modelo || '')
+            .set('pageIndex', EquipoDisponible.pageIndex.toString())
+            .set('pageSize', EquipoDisponible.pageSize.toString())
+            .set('fechaInicio', EquipoDisponible.fechaInicio || '')
+            .set('fechaFinal', EquipoDisponible.fechaFinal || '');
 
-        return this.http.get<EquipoDisponible[]>(`${APIURL.Equipo.Consulta.EquipoDisponible}?`+ search)
+        return this.http.get<EquipoDisponible[]>(APIURL.Equipo.Consulta.EquipoDisponible, { params });
     }
     getEquipoVendido( EquipoVendido: EquipoVendidoFilter):Observable<EquipoVendido[]>{
         const search =
@@ -127,7 +120,10 @@ export class EquipoService{
     return this.http.get<EquipoAlmacenTransferirArrayRetorno[]>(`${APIURL.Equipo.Consulta.EquipoTransferenciasDetalleConsulta}?`+ search)
 }
     getEquipoByImei(imei: string):Observable<EquipoTransferencia>{
-        return this.http.get<EquipoTransferencia>(`${APIURL.Equipo.Consulta.EquipoTransferencia}?imei=` + imei);
+        // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+        const params = new HttpParams().set('imei', imei); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+
+        return this.http.get<EquipoTransferencia>(APIURL.Equipo.Consulta.EquipoTransferencia, { params });
     }
     getTransferenciaId():Observable<number>{
         return this.http.get<number>(APIURL.Equipo.Consulta.EquipoTransferenciaId);

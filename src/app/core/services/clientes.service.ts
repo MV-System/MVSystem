@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
 import { Observable, Subject } from 'rxjs';
 import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse, ClienteActualizacion } from '../interfaces/cliente.interface';
@@ -36,28 +36,29 @@ export class ClientesService {
   }
 
   getClientesPorNombreTelefono(criterio: any):Observable<Cliente[]>{
-    return this.http.get<Cliente[]>(`${APIURL.Clientes.Consultas.ClienteLista}?criterio=${criterio}`)
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams().set('criterio', criterio); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+
+    return this.http.get<Cliente[]>(APIURL.Clientes.Consultas.ClienteLista, { params });
   }
 
   getClientes(){
     return this.http.get(`${APIURL.Clientes.Consultas.ClienteLista}`)
   }
   getClientesConFacturasPendientes(FechaInicio: string, FechaFinal: string, Criterio: string):Observable<ClientesConFacturasPendientesRetorn[]>{
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams()
+      .set('FechaInicio', FechaInicio)
+      .set('FechaFin', FechaFinal)
+      .set('Criterio', Criterio); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
 
-const criterio =
-'FechaInicio='+
-FechaInicio +
- '&FechaFin='+
- FechaFinal +
- '&Criterio='+
- Criterio
-    return this.http.get<ClientesConFacturasPendientesRetorn[]>(`${APIURL.Clientes.Consultas.ClientesConFacturasPendientes}?`+criterio)
+    return this.http.get<ClientesConFacturasPendientesRetorn[]>(APIURL.Clientes.Consultas.ClientesConFacturasPendientes, { params });
   }
 
   getFacturasPendientesPorCliente(cliente: number):Observable<FacturasPorClienteRetorn[]>{
-    const search =
-    '&cliente='+
-    cliente
-    return this.http.get<FacturasPorClienteRetorn[]>(`${APIURL.Clientes.Consultas.FacturasPendientesPorCliente}?`+search)
+    // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
+    const params = new HttpParams().set('cliente', cliente.toString()); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
+
+    return this.http.get<FacturasPorClienteRetorn[]>(APIURL.Clientes.Consultas.FacturasPendientesPorCliente, { params });
   }
 }
