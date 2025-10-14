@@ -14,6 +14,7 @@ import { ClientesService } from '../../../../core/services/clientes.service';
 import { VendedorService } from '../../../../core/services/vendedor.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
+import { PreFacturasService, PreFactura, PreDetalleFactura } from '../../../../core/services/prefacturas.service';
 import { LoadingService } from '../../../../shared/components/r-loading/loading.service';
 import { CotizacionService } from '../../../../core/services/cotizacion.service';
 import { LoginService } from '../../../../auth/login.service';
@@ -51,7 +52,89 @@ reparaciones: any[] = [];
     private cotizacionService: CotizacionService,
     private loginService: LoginService,
     private rDialogService: RDialogService,
-    private validatorPermissionService: ValidatorPermissionService) { }
+  private validatorPermissionService: ValidatorPermissionService,
+  private preFacturasService: PreFacturasService) { }
+  onPreFacturar() {
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.isLoading = true;
+    // Construir el objeto PreFactura con todos los campos requeridos
+    const preFactura: PreFactura = {
+      ID_Cliente: this.customer?.id_Cliente || 0,
+      ID_Tipo_Factura: Number(this.form.get('tipoFactura')?.value),
+      ID_Vendedor: Number(this.form.get('vendedor')?.value),
+      ID_Sucursal: Number(this.loginService.getUserIdSucursal),
+      ID_Tipo_Pagos: Number(this.form.get('tipoPago')?.value),
+      SubTotal: this.subTotal,
+      Descuento: this.descuento,
+      Itbis: this.itbis,
+      Abono: this.abono,
+      Tiempo_Credito: this.form.get('fechaLimitePago')?.value,
+      Total: this.total,
+      Cantidad_Articulos: this.articulos().length,
+      Nota: this.form.get('nota')?.value,
+      Estado: 'P',
+      Usuario: this.loginService.getUserName(),
+      NFCTipoNumero: this.form.get('comprobante')?.value,
+      NFCFISCAL: '',
+      NCF_NUMERO: '',
+      RNC: this.form.get('RNC')?.value,
+      Cotizacion_Numero: 0,
+      Fecha_Registro: this.form.get('fechaFacturacion')?.value,
+      Fecha_Procesamiento: null,
+      Usuario_Procesamiento: null,
+      Literal: 'X'
+    };
+
+    this.preFacturasService.crearPreFactura(preFactura).subscribe({
+      next: (resp) => {
+        // Guardar detalles
+        const detalles: PreDetalleFactura[] = this.articulos().controls.map(control => {
+          return {
+            Numero_PreFactura: resp.Numero_PreFactura || resp.numero_PreFactura || 0,
+            ID_Equipo: control.get('idEquipo')?.value,
+            Descripcion: control.get('descripcion')?.value,
+            ID_Tipo: control.get('idTipo')?.value,
+            ID_Garantia: control.get('idGarantia')?.value,
+            cantidad: control.get('cantidad')?.value,
+            precio: control.get('precio')?.value,
+            SubTotal: control.get('subTotal')?.value,
+            Descuento: control.get('descuento')?.value,
+            Itbis: 0,
+            Total: control.get('total')?.value,
+            Estado: 'P',
+            Usuario: this.loginService.getUserName(),
+            Fecha_registro: this.form.get('fechaFacturacion')?.value,
+            Costo_Equipo: 0
+          };
+        });
+        // Guardar cada detalle
+        let detallesGuardados = 0;
+        detalles.forEach(detalle => {
+          this.preFacturasService.agregarDetallePreFactura(detalle).subscribe({
+            next: () => {
+              detallesGuardados++;
+              if (detallesGuardados === detalles.length) {
+                this.isLoading = false;
+                this.toastr.success('Pre-factura guardada correctamente');
+                this.onClean();
+              }
+            },
+            error: () => {
+              this.isLoading = false;
+              this.toastr.error('Error al guardar detalle de pre-factura');
+            }
+          });
+        });
+      },
+      error: () => {
+        this.isLoading = false;
+        this.toastr.error('Error al guardar la pre-factura');
+      }
+    });
+  }
 
     CambiarFechaFactura(): boolean {
       return this.validatorPermissionService.validateUserRole("CAMBIAR_FECHA_FACTURA");

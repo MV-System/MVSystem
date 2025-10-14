@@ -146,5 +146,13 @@ export let APIURL = {
         Login: API + 'login/login',
         ChangePassword: API + 'login/ChangePassword',
     },
+    PreFacturas: {
+        Crear: API + 'PreFacturas',
+        AgregarDetalle: API + 'PreFacturas/detalle',
+        Listar: API + 'PreFacturas',
+        Detalle: API + 'PreFacturas', // Usar como `${APIURL.PreFacturas.Detalle}/${id}/detalle`
+        Procesar: API + 'PreFacturas', // Usar como `${APIURL.PreFacturas.Procesar}/${id}/procesar`
+        Anular: API + 'PreFacturas',   // Usar como `${APIURL.PreFacturas.Anular}/${id}/anular`
+    },
     //}
 }

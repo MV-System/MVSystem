@@ -296,6 +296,15 @@
                         <div class="d-none d-lg-flex gap-3 align-items-end">
                             <!-- Botones de acción alineados con el total (solo desktop) -->
                             <div class="desktop-action-buttons d-flex flex-column gap-2" *ngIf="BotonProcesarFactura()">
+                                <button class="btn btn-warning btn-lg px-4 py-3" type="button" (click)="onPreFacturar()">
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    <span class="d-inline">{{isLoading?'Procesando...': 'Pre-Facturar'}} </span>
+                                    <span class="spinner-grow spinner-grow-sm ms-2"
+                                         role="status"
+                                         aria-hidden="true"
+                                         *ngIf="isLoading"></span>
+                                </button>
+
                                 <button class="btn btn-success btn-lg px-4 py-3" type="submit">
                                     <i class="bi bi-check-circle me-2"></i>
                                     <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
