@@ -22,12 +22,39 @@ describe('PreFacturasService', () => {
 
   it('debe crear una pre-factura', () => {
     const mockPreFactura: PreFactura = {
-      ID_Cliente: 1,
-      ID_Tipo_Factura: 1,
-      ID_Sucursal: 1,
-      SubTotal: 100,
-      Total: 100,
-      Cantidad_Articulos: 1
+      numero_PreFactura: 0,
+      iD_Cliente: 1,
+      iD_Tipo_Factura: 1,
+      iD_Sucursal: 1,
+      subTotal: 100,
+      total: 100,
+      cantidad_Articulos: 1,
+      nombres: '',
+      apellidos: '',
+      numero_Telefono: '',
+      tipo_Factura: '',
+      iD_Vendedor: 0,
+      vendedor_Nombres: '',
+      iD_Tipo_Pagos: 0,
+      tipo_Pago: '',
+      sucursal: '',
+      descuento: 0,
+      itbis: 0,
+      abono: null,
+      tiempo_Credito: null,
+      nota: '',
+      estado: '',
+      usuario: '',
+      fecha_Registro: '',
+      fecha_Procesamiento: null,
+      usuario_Procesamiento: null,
+      nfcTipoNumero: '',
+      nfcfiscal: '',
+      ncF_NUMERO: '',
+      rnc: '',
+      literal: null,
+      cotizacion_Numero: 0,
+      detalleFacturaList: null
     };
     service.crearPreFactura(mockPreFactura).subscribe(resp => {
       expect(resp).toBeTruthy();
@@ -59,7 +86,7 @@ describe('PreFacturasService', () => {
       expect(resp).toBeTruthy();
     });
     const req = httpMock.expectOne(r => r.url === APIURL.PreFacturas.Listar && r.method === 'GET');
-    req.flush([{ Numero_PreFactura: 1 }]);
+  req.flush([{ numero_PreFactura: 1 }]);
   });
 
   it('debe obtener detalle de una pre-factura', () => {
@@ -68,15 +95,16 @@ describe('PreFacturasService', () => {
     });
     const req = httpMock.expectOne(`${APIURL.PreFacturas.Detalle}/1/detalle`);
     expect(req.request.method).toBe('GET');
-    req.flush([{ Numero_PreFactura: 1 }]);
+  req.flush([{ numero_PreFactura: 1 }]);
   });
 
   it('debe procesar una pre-factura', () => {
-    service.procesarPreFactura(1).subscribe(resp => {
+    service.procesarPreFactura(1, 'testUser').subscribe(resp => {
       expect(resp).toBeTruthy();
     });
     const req = httpMock.expectOne(`${APIURL.PreFacturas.Procesar}/1/procesar`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ UsuarioProcesamiento: 'testUser' });
     req.flush({ ok: true });
   });
 

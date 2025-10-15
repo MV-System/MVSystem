@@ -1,0 +1,25 @@
+/* Sticky columns for ACCIONES and CLIENTE */
+
+.mv-table th.left-col,
+.mv-table td.left-col {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 3;
+}
+
+.mv-table th.second-col,
+.mv-table td.second-col {
+    position: sticky;
+    left: 120px;
+    background: #fff;
+    z-index: 4;
+}
+
+.mv-table th.third-col,
+.mv-table td.third-col {
+    position: sticky;
+    left: 240px;
+    background: #fff;
+    z-index: 2;
+}

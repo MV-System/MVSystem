@@ -6,12 +6,16 @@ import { FacturacionConsultaComponent } from './facturacion-consulta/facturacion
 
 const routes: Routes = [
   {
-    path:'',
+    path: '',
     component: FacturacionRegistroComponent
   },
   {
-    path:'consulta',
+    path: 'consulta',
     component: FacturacionConsultaComponent
+  },
+  {
+    path: 'caja',
+    loadChildren: () => import('./caja/caja.module').then(m => m.CajaModule)
   }
 ];
 

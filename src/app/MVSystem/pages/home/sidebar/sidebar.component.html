@@ -26,6 +26,12 @@
                 <span>Consultar Facturas</span>
             </a>
         </li>
+        <li *ngIf="VerFormConsultaFacturas()" class="nav-item">
+            <a (click)="onMenuClick()" class="nav-link" routerLinkActive="active" [routerLink]="['./facturacion/caja']">
+                <i class="bi bi-cash-coin"></i>
+                <span>Pre-Facturas(Caja)</span>
+            </a>
+        </li>
         <!-- End Dashboard Nav -->
         <li class="nav-item">
             <a *ngIf="VerMenuMantenimiento()" class="nav-link collapsed" data-bs-target="#mantenimiento-nav" data-bs-toggle="collapse" href="#">

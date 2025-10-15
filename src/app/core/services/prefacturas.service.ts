@@ -4,31 +4,39 @@ import { Observable } from 'rxjs';
 import { APIURL } from 'src/app/config/url';
 
 export interface PreFactura {
-  Numero_PreFactura?: number;
-  ID_Cliente: number;
-  ID_Tipo_Factura: number;
-  ID_Vendedor?: number;
-  ID_Tipo_Pagos?: number;
-  ID_Sucursal: number;
-  SubTotal: number;
-  Descuento?: number;
-  Itbis?: number;
-  Abono?: number;
-  Tiempo_Credito?: string;
-  Total: number;
-  Cantidad_Articulos: number;
-  Nota?: string;
-  Estado?: string;
-  Usuario?: string;
-  NFCTipoNumero?: string;
-  NFCFISCAL?: string;
-  NCF_NUMERO?: string;
-  RNC?: string;
-  Cotizacion_Numero?: number;
-  Fecha_Registro?: string;
-  Fecha_Procesamiento?: string | null;
-  Usuario_Procesamiento?: string | null;
-  Literal?: string;
+  numero_PreFactura: number;
+  iD_Cliente: number;
+  nombres: string;
+  apellidos: string;
+  numero_Telefono: string | number;
+  iD_Tipo_Factura: number;
+  tipo_Factura: string;
+  iD_Vendedor: number;
+  vendedor_Nombres: string;
+  iD_Tipo_Pagos: number;
+  tipo_Pago: string;
+  iD_Sucursal: number;
+  sucursal: string;
+  subTotal: number;
+  descuento: number;
+  itbis: number;
+  abono: number | null;
+  tiempo_Credito: string | null;
+  total: number;
+  cantidad_Articulos: number;
+  nota: string;
+  estado: string;
+  usuario: string;
+  fecha_Registro: string;
+  fecha_Procesamiento: string | null;
+  usuario_Procesamiento: string | null;
+  nfcTipoNumero: string;
+  nfcfiscal: string;
+  ncF_NUMERO: string;
+  rnc: string;
+  literal: string | null;
+  cotizacion_Numero: number;
+  detalleFacturaList: any;
 }
 
 export interface PreDetalleFactura {
@@ -64,11 +72,12 @@ export class PreFacturasService {
   }
 
   // 3. Listar pre-facturas (con filtro)
-  listarPreFacturas(filtros: { Estado?: string; ID_Sucursal?: number; ID_Cliente?: number }): Observable<PreFactura[]> {
+  listarPreFacturas(filtros: { Estado?: string; ID_Sucursal?: number; ID_Cliente?: number; criterio?: string }): Observable<PreFactura[]> {
     let params = new HttpParams();
     if (filtros.Estado) params = params.set('Estado', filtros.Estado);
     if (filtros.ID_Sucursal) params = params.set('ID_Sucursal', filtros.ID_Sucursal.toString());
     if (filtros.ID_Cliente) params = params.set('ID_Cliente', filtros.ID_Cliente.toString());
+    params = params.set('Criterio', filtros.criterio ? filtros.criterio : '');
     return this.http.get<PreFactura[]>(APIURL.PreFacturas.Listar, { params });
   }
 
@@ -78,8 +87,8 @@ export class PreFacturasService {
   }
 
   // 5. Procesar pre-factura
-  procesarPreFactura(id: number): Observable<any> {
-    return this.http.post(`${APIURL.PreFacturas.Procesar}/${id}/procesar`, {});
+  procesarPreFactura(id: number, usuarioProcesamiento: string): Observable<any> {
+    return this.http.post(`${APIURL.PreFacturas.Procesar}/${id}/procesar`, { UsuarioProcesamiento: usuarioProcesamiento });
   }
 
   // 6. Anular pre-factura
