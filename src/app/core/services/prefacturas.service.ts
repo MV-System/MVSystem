@@ -59,6 +59,13 @@ export interface PreDetalleFactura {
 
 @Injectable({ providedIn: 'root' })
 export class PreFacturasService {
+  // Rebajar item del detalle de una pre-factura
+  rebajarItemDetallePrefactura(NumeroPreFactura: number, IdEquipo: number | string): Observable<any> {
+    return this.http.post(`${APIURL.PreFacturas.Detalle}/rebajar-item`, {
+      NumeroPreFactura,
+      IdEquipo
+    });
+  }
   constructor(private http: HttpClient) {}
 
   // 1. Crear pre-factura

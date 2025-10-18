@@ -151,6 +151,9 @@ reparaciones: any[] = [];
     BotonProcesarFactura(): boolean {
       return this.validatorPermissionService.validateUserRole("btngeneraFactura");
     }
+     BotonPreFacturar(): boolean {
+      return this.validatorPermissionService.validateUserRole("BotonPreFacturar");
+    }
 
   /**
    * Detecta si la pantalla es móvil (ancho <= 768px)

@@ -1,8 +1,8 @@
+// Eliminado getter duplicado fuera de la clase
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PreFacturasService, PreFactura } from 'src/app/core/services/prefacturas.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
-import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
@@ -13,6 +13,51 @@ import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.serv
   styleUrls: ['./caja-lista.component.css']
 })
 export class CajaListaComponent implements OnInit {
+  rebajarItem(det: any): void {
+    const numeroPreFactura = this.selectedRowIndex !== null && this.preFacturas[this.selectedRowIndex]
+      ? this.preFacturas[this.selectedRowIndex].numero_PreFactura
+      : det.NumeroPreFactura || det.numeroPreFactura;
+    const idEquipo = det.ID_Equipo || det.iD_Equipo;
+    if (!numeroPreFactura || !idEquipo) {
+      this.toast.error('No se pudo identificar el item a rebajar.');
+      return;
+    }
+    this.rDialogService.openDialog(
+      'Confirmar acción',
+      `¿Está seguro que desea rebajar el item con código ${idEquipo}?`,
+      () => {
+        this.detalleLoading = true;
+        this.preFacturasService.rebajarItemDetallePrefactura(numeroPreFactura, idEquipo).subscribe({
+          next: (resp) => {
+            this.toast.success(resp?.Mensaje || 'Ítem rebajado correctamente.');
+            // Refrescar el detalle de la prefactura
+            this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura).subscribe({
+              next: (data) => {
+                this.detallePrefactura = data;
+                this.detalleLoading = false;
+                // Refrescar la lista general para actualizar totales
+                this.cargarPreFacturas();
+              },
+              error: () => {
+                this.detalleError = 'Error al recargar el detalle.';
+                this.detalleLoading = false;
+              }
+            });
+          },
+          error: (err) => {
+            this.toast.error('No se pudo rebajar el ítem.');
+            this.detalleLoading = false;
+          }
+        });
+      },
+      undefined,
+      'Cancelar',
+      'Rebajar'
+    );
+  }
+  get totalPrefacturado(): number {
+    return this.preFacturas.reduce((acc, pf) => acc + (pf.total || 0), 0);
+  }
   subs: any[] = [];
   facturaNumberReporte: number | null = null;
   @Output() imprimirFactura = new EventEmitter<number>();
@@ -26,6 +71,14 @@ export class CajaListaComponent implements OnInit {
   pageSize: number = 10;
   pageIndex: number = 1;
   selectedRowIndex: number | null = null;
+    expandedRowIndex: number | null = null;
+    detallePrefactura: any[] = [];
+    detalleLoading: boolean = false;
+    detalleError: string | null = null;
+
+    get totalPages(): number {
+    return Math.max(1, Math.ceil(this.preFacturas.length / this.pageSize));
+  }
 
   // Filtro de búsqueda
   criterio: string = '';
@@ -39,6 +92,26 @@ export class CajaListaComponent implements OnInit {
 
   handleClick(numeroPreFactura: number, index: number): void {
     this.selectedRowIndex = index;
+    if (this.expandedRowIndex === index) {
+      // Collapse if already expanded
+      this.expandedRowIndex = null;
+      this.detallePrefactura = [];
+      this.detalleError = null;
+    } else {
+      this.expandedRowIndex = index;
+      this.detalleLoading = true;
+      this.detalleError = null;
+      this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura).subscribe({
+        next: (data) => {
+          this.detallePrefactura = data;
+          this.detalleLoading = false;
+        },
+        error: (err) => {
+          this.detalleError = 'Error al cargar el detalle de la pre-factura.';
+          this.detalleLoading = false;
+        }
+      });
+    }
   }
 
   onSearchInput(event: Event): void {
