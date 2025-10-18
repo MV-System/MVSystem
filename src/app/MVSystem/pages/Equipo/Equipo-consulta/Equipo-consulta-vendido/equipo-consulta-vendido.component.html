@@ -286,12 +286,8 @@
                     <!-- Modelo -->
                     <div class="sucursal-select-wrapper">
                         <i class="bi bi-cpu select-icon"></i>
-                        <select class="form-select mobile-select" formControlName="modelo" (change)="obtenerEquiposVendidos()">
-                            <option value="0" selected>Selecciona un Modelo</option>
-                            <option *ngFor="let modelo of modeloListado" [value]="modelo.iD_Modelo">
-                                {{ modelo.descripcion }}
-                            </option>
-                        </select>
+                        <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposVendidos()" class="modern-select-ng">
+                        </ng-select>
                     </div>
                 </div>
             </div>

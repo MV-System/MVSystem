@@ -122,10 +122,8 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
-                            <select class="form-select modern-select chip" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
-                                <option value="" selected>Selecciona un Modelo</option>
-                                <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">{{ modelo.descripcion }}</option>
-                            </select>
+                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="descripcion" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            </ng-select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
@@ -185,12 +183,8 @@
                         <!-- Modelo -->
                         <div class="sucursal-select-wrapper">
                             <i class="bi bi-cpu select-icon"></i>
-                            <select class="form-select mobile-select" formControlName="modelo" (change)="obtenerEquiposDisponibles()">
-                                <option value="" selected>Selecciona un Modelo</option>
-                                <option *ngFor="let modelo of modeloListado" [value]="modelo.descripcion">
-                                    {{ modelo.descripcion }}
-                                </option>
-                            </select>
+                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="descripcion" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            </ng-select>
                         </div>
                     </div>
 
