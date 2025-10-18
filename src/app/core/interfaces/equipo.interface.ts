@@ -45,12 +45,14 @@ export interface EquipoObjRetorno {
     imei: string;
     modelo: string;
     marca: string;
+    precioCosto: number;
     precioPorMayor: number;
     precioDetalle: number;
     disponible: string;
     disponible_Detalle: null;
     mensaje: string;
-    existe:string;
+    existe: string;
+    costo?: number;
 }
 
 export interface EquipoDisponible {

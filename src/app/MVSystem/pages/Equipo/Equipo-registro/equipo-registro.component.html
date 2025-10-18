@@ -314,8 +314,11 @@
                                     <tr>
                                         <th>#</th>
                                         <th>IMEI</th>
-                                        <th>Marca</th>
+                                        <!-- <th>Marca</th> -->
                                         <th>Modelo</th>
+                                        <th>Costo</th>
+                                        <th>Precio x Mayor</th>
+                                        <th>Precio Detalle</th>
                                         <th class="text-center">Acción</th>
                                     </tr>
                                 </thead>
@@ -323,8 +326,11 @@
                                     <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
                                         <td><span class="badge bg-primary">{{i + 1}}</span></td>
                                         <td><span class="fw-semibold">{{equipo.imei}}</span></td>
-                                        <td>{{equipo?.marca}}</td>
+                                        <!-- <td>{{equipo?.marca}}</td> -->
                                         <td>{{equipo?.modelo}}</td>
+                                        <td>{{equipo?.precioCosto | currency}}</td>
+                                        <td>{{equipo?.precioPorMayor | currency}}</td>
+                                        <td>{{equipo?.precioDetalle | currency}}</td>
                                         <td class="text-center">
                                             <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Equipo">
                                                 <i class="bi bi-trash"></i>
