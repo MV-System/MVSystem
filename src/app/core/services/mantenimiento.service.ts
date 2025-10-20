@@ -137,6 +137,7 @@ export class MantenimientoService {
     queryParams = queryParams.append("IdSucursal", facturaReq.IdSucursal)
     queryParams = queryParams.append("IdVendedor", facturaReq.IdVendedor)
     queryParams = queryParams.append("ComprobanteCheck", facturaReq.ComprobanteCheck)
+    queryParams = queryParams.append("EstadoFactura", facturaReq.EstadoFactura)
     return this.http.get<FacturaConsulta[]>(`${APIURL.Factura.Consulta.Facturas}`,{  params: queryParams })
 
   }
@@ -170,14 +171,14 @@ export class MantenimientoService {
   getEquipoByImei(imei: string): Observable<EquipoModificarEstatus> {
     // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
     const params = new HttpParams().set('imei', imei); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
-    
+
     return this.http.get<EquipoModificarEstatus>(APIURL.Equipo.Consulta.EquipoModificarEstatus, { params });
   }
 
   consultaEquipoDisponible(imei: string): Observable<EquipoTransferencia> {
     // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
     const params = new HttpParams().set('imei', imei); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
-    
+
     return this.http.get<EquipoTransferencia>(APIURL.Equipo.Consulta.EquipoTransferencia, { params });
   }
 

@@ -57,6 +57,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     CheckComprobante(): boolean {
       return this.validatorPermissionService.validateUserRole("ComprobanteCheck");
     }
+    CheckAnuladas(): boolean {
+      return this.validatorPermissionService.validateUserRole("vercheckfacturasAnuladas");
+    }
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe())
   }
@@ -86,6 +89,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   ComprobanteCheck: number=1;
+  EstadoFactura: string="A"; // Activas
   isLoading: boolean = false; // Variable para controlar el estado de carga
   subs: Subscription[] = [];
   title: string = "Consulta Facturas";
@@ -177,6 +181,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
       ComprobanteCheck: this.ComprobanteCheck,
+      EstadoFactura: this.EstadoFactura,
     }
     return model;
   }
@@ -185,7 +190,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.loading.showLoading();
     // Resetear selección cuando se filtran las facturas
     this.resetearSeleccionFactura();
-
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({
     next: (facturas) => {
@@ -462,6 +466,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       return;
     }
 
+
     const checkbox = event.target as HTMLInputElement;
 
     // Validar que sea un elemento input
@@ -472,10 +477,31 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
     // Si está seleccionado, usar valor 2 (solo comprobantes)
     // Si está deseleccionado, usar valor 1 (todas las facturas)
-    this.ComprobanteCheck = checkbox.checked ? 2 : 1;
+  this.ComprobanteCheck = checkbox.checked ? 2 : 1;
 
     this.getFacturas();
   }
+
+  onCheckboxAnuladasChange(event: Event) {
+    // Validar que el evento y el target existan
+    if (!event || !event.target) {
+      console.warn('Evento o target del checkbox no válido');
+      return;
+    }
+
+    const checkbox = event.target as HTMLInputElement;
+
+    // Validar que sea un elemento input
+    if (checkbox.tagName !== 'INPUT' || checkbox.type !== 'checkbox') {
+      console.warn('El target no es un checkbox válido');
+      return;
+    }
+
+    // Si está marcado, enviar 'X' (anuladas), si no, 'A' (activas)
+    this.EstadoFactura = checkbox.checked ? "X" : "A";
+    this.getFacturas();
+  }
+
 
   facturasFiltradas(): FacturaConsulta[] {
     const vendedorSeleccionadoId = this.form.get('iD_Vendedor')?.value;
@@ -521,8 +547,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     const sucursalActiva = formValues.almacen && formValues.almacen !== '';
     const fechasActivas = formValues.rangeDate && formValues.rangeDate !== '';
     const comprobanteActivo = this.ComprobanteCheck === 2;
+    const anuladasActivo = this.EstadoFactura === "A";
 
-    return criterioActivo || vendedorActivo || sucursalActiva || fechasActivas || comprobanteActivo;
+    return criterioActivo || vendedorActivo || sucursalActiva || fechasActivas || comprobanteActivo || anuladasActivo;
   }
 
   /**

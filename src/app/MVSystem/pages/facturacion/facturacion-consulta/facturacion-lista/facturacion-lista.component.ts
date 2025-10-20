@@ -18,6 +18,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
   styleUrls: ['./facturacion-lista.component.css']
 })
 export class FacturacionListaComponent implements OnInit, OnChanges {
+  @Input() estadoFactura: string = 'A';
   @Output() pageSizeChanged = new EventEmitter<number>(); // Emitir evento para el cambio de pageSize
 selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
@@ -314,6 +315,13 @@ isMobileScreen(): boolean {
   compartirFacturaMobile(numeroFactura: number): void {
     this.onCompartirFactura.emit(numeroFactura);
   }
+
+
+  // Método para consultar facturas con el filtro actual
+getFacturas(): void {
+  // Usa el criterio actual y la página 1 (puedes ajustar si necesitas paginación)
+  this.executeSearch(this.criterio);
+}
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

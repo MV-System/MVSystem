@@ -38,6 +38,7 @@ mostrarReparacionesPendientes: boolean = false;
 reparacionSeleccionada: any = null;
 modalVisible = false;
 reparaciones: any[] = [];
+  EstadoFactura: string | "A" = "A";
 
   constructor(
     //private dialog: MatDialog,
@@ -1122,6 +1123,7 @@ else
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
       ComprobanteCheck:1,
+      EstadoFactura:this.EstadoFactura,
       IdVendedor:0
     }
     return model;

@@ -264,6 +264,7 @@ export class CajaListaComponent implements OnInit {
       IdEmpresa: this.loginService.getUserIdEmpresa,
       IdSucursal: this.sucursalReporte ? this.sucursalReporte : '',
       ComprobanteCheck: 1,
+      EstadoFactura: "A",
       IdVendedor: 0,
       numeroFactura: this.facturaNumberReporte!,
       pageIndex: 1,
@@ -302,7 +303,8 @@ export class CajaListaComponent implements OnInit {
       pageIndex: 1,
       pageSize: 1,
       fechaInicio: '',
-      fechaFinal: ''
+      fechaFinal: '',
+      EstadoFactura: '' // Valor por defecto, ajusta según lógica de tu app
     };
   }
 

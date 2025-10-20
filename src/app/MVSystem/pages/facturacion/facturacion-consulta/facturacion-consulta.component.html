@@ -70,10 +70,17 @@
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end">
                                     <div *ngIf="CheckComprobante()" class="form-check form-check-inline ms-2">
-                                        <input type="checkbox" name="accesorio" value="1" class="form-check-input modern-check" (change)="onCheckboxComprobanteChange($event)" />
+                                        <input type="checkbox" name="checkcomprobantes" value="1" class="form-check-input modern-check" (change)="onCheckboxComprobanteChange($event)" />
                                         <label class="form-check-label modern-radio-label">
                                             <i class="bi bi-file-earmark-check me-1 text-info"></i>
                                             Comprobantes
+                                        </label>
+                                    </div>
+                                    <div *ngIf="CheckAnuladas()" class="form-check form-check-inline ms-2">
+                                        <input type="checkbox" name="chekanuladas" value="1" class="form-check-input modern-check" (change)="onCheckboxAnuladasChange($event)" />
+                                        <label class="form-check-label modern-radio-label">
+                                            <i class="bi bi-file-earmark-check me-1 text-info"></i>
+                                            Anuladas
                                         </label>
                                     </div>
                                 </div>
@@ -175,7 +182,7 @@
                         <!-- Controles de Paginación -->
                         <!-- end form   -->
                         <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line"
-                            [lastLine]="lastLine" [criterioInput]="criterioActual" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event)">
+                            [lastLine]="lastLine" [criterioInput]="criterioActual" [estadoFactura]="EstadoFactura" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event)">
                             <!-- <div *ngIf="equiposVendidos.length > 0"> -->
                             <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="pageIndex" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
                             </pagination-controls>

@@ -79,7 +79,7 @@
                                     <ng-container *ngFor="let factura of facturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }; let i = index">
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
                                             <td class="fixed-item">
-                                                <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
+                                                <button *ngIf="estadoFactura !== 'X'" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
                                                     <i class="bx bx-trash-alt"></i>
                                                 </button>
                                                 <span class="id-badge">{{factura.numeroFactura}}</span>
@@ -152,7 +152,7 @@
                                         <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura">
                                             <i class="bi bi-share-fill"></i>
                                         </button>
-                                        <button *ngIf="btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
+                                        <button *ngIf="estadoFactura !== 'X'" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
                                     </div>
