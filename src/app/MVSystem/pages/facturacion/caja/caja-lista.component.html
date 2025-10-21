@@ -133,34 +133,20 @@
                                                 </div>
                                                 <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
                                                 <div *ngIf="!detalleLoading && !detalleError">
-                                                    <div *ngFor="let det of detallePrefactura" class="row align-items-center py-2 px-3 border-bottom">
-                                                        <div class="col-md-2 col-6 d-flex align-items-center">
+                                                    <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
+                                                        <div class="detalle-item">
                                                             <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}
                                                             <button class="btn btn-outline-danger btn-sm ms-2" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
                                                                 <i class="bi bi-arrow-bar-down"></i> Rebajar
                                                             </button>
                                                         </div>
-                                                        <div class="col-md-4 col-12">
-                                                            <span class="fw-bold">Descripción:</span> {{ det.descripcion }}
-                                                        </div>
-                                                        <div class="col-md-1 col-4">
-                                                            <span class="fw-bold">Cant:</span> {{ det.cantidad }}
-                                                        </div>
-                                                        <div class="col-md-1 col-4">
-                                                            <span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}
-                                                        </div>
-                                                        <div class="col-md-2 col-6">
-                                                            <span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}
-                                                        </div>
-                                                        <div class="col-md-1 col-4">
-                                                            <span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}
-                                                        </div>
-                                                        <div class="col-md-1 col-4">
-                                                            <span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}
-                                                        </div>
-                                                        <div class="col-md-2 col-6">
-                                                            <span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}
-                                                        </div>
+                                                        <div class="detalle-item"><span class="fw-bold">Descripción:</span> {{ det.descripcion }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Cant:</span> {{ det.cantidad }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}</div>
                                                     </div>
                                                 </div>
                                             </td>

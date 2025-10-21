@@ -200,6 +200,9 @@ export class CajaListaComponent implements OnInit {
         // Guardar el id de sucursal de la prefactura procesada
         const prefactura = this.preFacturas.find(p => p.numero_PreFactura === id);
         this.sucursalReporte = prefactura ? String(prefactura.iD_Sucursal) : null;
+        // Limpiar detalle y expandido si corresponde
+        this.detallePrefactura = [];
+        this.expandedRowIndex = null;
         this.cargarPreFacturas();
         if (response && response.cod_Factura) {
           this.facturaNumberReporte = response.cod_Factura;

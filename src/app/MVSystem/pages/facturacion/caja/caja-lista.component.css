@@ -1,3 +1,48 @@
+/* Reducir altura de filas de la tabla principal */
+
+.mv-table>tbody>tr {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 0.97em;
+}
+
+.mv-table>tbody>tr>td {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    vertical-align: middle;
+}
+
+
+/* Detalle de prefactura en flex para ajuste automático */
+
+.detalle-flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.detalle-item {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 1px 5px;
+    font-size: 0.94em;
+    white-space: nowrap;
+}
+
+
+/* Fila seleccionada en la lista de pre-facturas */
+
+.selected-row td,
+.selected-row .fixed-item {
+    background-color: #cce5ff !important;
+    /* El mismo color que uses para .selected-row */
+}
+
+
 /* Sticky columns for ACCIONES and CLIENTE */
 
 .mv-table th.left-col,
