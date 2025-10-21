@@ -103,7 +103,7 @@ describe('FacturacionListaComponent', () => {
     mockVendedorService.getVendedorLista.and.returnValue(of([]));
     mockLoginService.getUserName.and.returnValue('testuser');
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
-    
+
     // Mock completo para Equipo
     const mockEquipo: Partial<Equipo> = {
       disponible: 'S',
@@ -117,7 +117,7 @@ describe('FacturacionListaComponent', () => {
       Numero_de_Factura: '12345',
       Precio_Por_Mayor: 800,
       Precio_Detalle: 1000,
-      Costo_Equipo: 700,
+      costo_Equipo: 700,
       Desbloqueado: 'S',
       Usuario: 'testuser',
       Comision_Por_Mayor: 50,
@@ -127,7 +127,7 @@ describe('FacturacionListaComponent', () => {
       precioPorMayor: 800,
       precioDetalle: 1000
     };
-    
+
     mockCatalogosService.buscarEquipoDisponible.and.returnValue(of(mockEquipo as Equipo));
 
     await TestBed.configureTestingModule({
@@ -190,9 +190,9 @@ describe('FacturacionListaComponent', () => {
     it('should emit page size change event', () => {
       spyOn(component.pageSizeChanged, 'emit');
       component.pageSize = 25;
-      
+
       component.onPageSizeChange();
-      
+
       expect(component.pageSizeChanged.emit).toHaveBeenCalledWith(25);
     });
   });
@@ -201,9 +201,9 @@ describe('FacturacionListaComponent', () => {
     it('should handle click and set selected row index', () => {
       spyOn(component, 'getIdFactura');
       spyOn(component, 'toggleDetalleFactura');
-      
+
       component.handleClick(1001, 0);
-      
+
       expect(component.getIdFactura).toHaveBeenCalledWith(1001, 0);
       expect(component.toggleDetalleFactura).toHaveBeenCalledWith(1001);
       expect(component.selectedRowIndex).toBe(0);
@@ -211,13 +211,13 @@ describe('FacturacionListaComponent', () => {
 
     it('should toggle factura visibility', () => {
       const facturaId = 1001;
-      
+
       // Initially should be undefined/false
       expect(component.facturaVisibility[facturaId]).toBeFalsy();
-      
+
       component.toggleDetalleFactura(facturaId);
       expect(component.facturaVisibility[facturaId]).toBeTrue();
-      
+
       component.toggleDetalleFactura(facturaId);
       expect(component.facturaVisibility[facturaId]).toBeFalse();
     });
@@ -225,9 +225,9 @@ describe('FacturacionListaComponent', () => {
     it('should emit factura button and numero factura events', () => {
       spyOn(component.onFacturaButton, 'emit');
       spyOn(component.numerofactura, 'emit');
-      
+
       component.getIdFactura(1001, 0);
-      
+
       expect(component.onFacturaButton.emit).toHaveBeenCalledWith(true);
       expect(component.numerofactura.emit).toHaveBeenCalledWith(1001);
       expect(component.selectedRowIndex).toBe(0);
@@ -239,22 +239,22 @@ describe('FacturacionListaComponent', () => {
     it('should trigger search with debounce', fakeAsync(() => {
       spyOn(component.onBuscarFacturas, 'emit');
       component.criterio = 'test';
-      
+
       // Simular input event
       const event = new Event('input');
       Object.defineProperty(event, 'target', {
         value: { value: 'test' },
         enumerable: true
       });
-      
+
       component.onSearchInput(event);
-      
+
       // No debe emitir inmediatamente
       expect(component.onBuscarFacturas.emit).not.toHaveBeenCalled();
-      
+
       // Después del debounce time
       tick(800);
-      
+
       expect(component.onBuscarFacturas.emit).toHaveBeenCalledWith({
         criterio: 'test',
         pageIndex: 1
@@ -264,12 +264,12 @@ describe('FacturacionListaComponent', () => {
     it('should execute search immediately on Enter key', () => {
       spyOn(component.onBuscarFacturas, 'emit');
       component.criterio = 'test';
-      
+
       const event = new KeyboardEvent('keydown', { key: 'Enter' });
       spyOn(event, 'preventDefault');
-      
+
       component.onSearchKeydown(event);
-      
+
       expect(event.preventDefault).toHaveBeenCalled();
       expect(component.onBuscarFacturas.emit).toHaveBeenCalledWith({
         criterio: 'test',
@@ -280,9 +280,9 @@ describe('FacturacionListaComponent', () => {
     it('should clear search', () => {
       spyOn(component.onBuscarFacturas, 'emit');
       component.criterio = 'test';
-      
+
       component.clearSearch();
-      
+
       expect(component.criterio).toBe('');
       expect(component.onBuscarFacturas.emit).toHaveBeenCalledWith({
         criterio: '',
@@ -293,9 +293,9 @@ describe('FacturacionListaComponent', () => {
     it('should search manually', () => {
       spyOn(component.onBuscarFacturas, 'emit');
       component.criterio = 'manual test';
-      
+
       component.searchManually();
-      
+
       expect(component.onBuscarFacturas.emit).toHaveBeenCalledWith({
         criterio: 'manual test',
         pageIndex: 1
@@ -306,9 +306,9 @@ describe('FacturacionListaComponent', () => {
   describe('Permission Validation', () => {
     it('should validate anular factura permission', () => {
       mockValidatorPermissionService.validateUserRole.and.returnValue(true);
-      
+
       const result = component.btnAnulaFactura();
-      
+
       expect(mockValidatorPermissionService.validateUserRole)
         .toHaveBeenCalledWith('VNT_DETALLE_FACTURA_BTN_ANULAR');
       expect(result).toBeTrue();
@@ -316,9 +316,9 @@ describe('FacturacionListaComponent', () => {
 
     it('should return false when user has no permission', () => {
       mockValidatorPermissionService.validateUserRole.and.returnValue(false);
-      
+
       const result = component.btnAnulaFactura();
-      
+
       expect(result).toBeFalse();
     });
   });
@@ -327,13 +327,13 @@ describe('FacturacionListaComponent', () => {
     it('should detect mobile screen correctly', () => {
       // Mock window.innerWidth
       spyOnProperty(window, 'innerWidth', 'get').and.returnValue(500);
-      
+
       expect(component.isMobileScreen()).toBeTrue();
     });
 
     it('should detect desktop screen correctly', () => {
       spyOnProperty(window, 'innerWidth', 'get').and.returnValue(1024);
-      
+
       expect(component.isMobileScreen()).toBeFalse();
     });
   });
@@ -341,9 +341,9 @@ describe('FacturacionListaComponent', () => {
   describe('Detalle Factura Edit Mode', () => {
     it('should enter edit mode correctly', () => {
       const detalle = { ...mockDetalleFactura[0] };
-      
+
       component.onEdit(detalle);
-      
+
       expect(detalle.EquipoActual).toBe('IMEI123456789');
       expect(detalle.editMode).toBeTrue();
     });
@@ -353,9 +353,9 @@ describe('FacturacionListaComponent', () => {
       detalle.editMode = true;
       detalle.EquipoActual = 'ORIGINAL123';
       detalle.idEquipo = 'MODIFIED123';
-      
+
       component.onCancel(detalle);
-      
+
       expect(detalle.idEquipo).toBe('ORIGINAL123');
       expect(detalle.editMode).toBeFalse();
     });
@@ -371,11 +371,11 @@ describe('FacturacionListaComponent', () => {
           isFirstChange: () => false
         }
       };
-      
+
       spyOn((component as any).searchSubject, 'next');
-      
+
       component.ngOnChanges(changes);
-      
+
       expect(component.criterio).toBe('new search term');
       expect((component as any).searchSubject.next).toHaveBeenCalledWith('new search term');
     });
@@ -390,11 +390,11 @@ describe('FacturacionListaComponent', () => {
           isFirstChange: () => false
         }
       };
-      
+
       spyOn((component as any).searchSubject, 'next');
-      
+
       component.ngOnChanges(changes);
-      
+
       expect((component as any).searchSubject.next).not.toHaveBeenCalled();
     });
   });
@@ -404,12 +404,12 @@ describe('FacturacionListaComponent', () => {
       const mockSubscription = jasmine.createSpyObj('Subscription', ['unsubscribe']);
       component.subs = [mockSubscription];
       component['searchSubscription'] = mockSubscription;
-      
+
       spyOn((component as any).destroy$, 'next');
       spyOn((component as any).destroy$, 'complete');
-      
+
       component.ngOnDestroy();
-      
+
       expect((component as any).destroy$.next).toHaveBeenCalledWith(true);
       expect((component as any).destroy$.complete).toHaveBeenCalled();
       expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(2);

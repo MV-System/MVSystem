@@ -13,7 +13,7 @@ export interface Equipo {
     Numero_de_Factura: string;
     Precio_Por_Mayor: number;
     Precio_Detalle: number;
-    Costo_Equipo: number;
+    costo_Equipo: number;
     Desbloqueado: string;
     disponible: string;
     Nota_Adicional?: string;
@@ -45,7 +45,7 @@ export interface EquipoObjRetorno {
     imei: string;
     modelo: string;
     marca: string;
-    precioCosto: number;
+    costo_Equipo: number;
     precioPorMayor: number;
     precioDetalle: number;
     disponible: string;

@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin, Subject, Subscription } from 'rxjs';
@@ -29,7 +31,35 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
   templateUrl: './facturacion-registro.component.html',
   styleUrls: ['./facturacion-registro.component.css']
 })
+
 export class FacturacionRegistroComponent implements OnInit, OnDestroy {
+
+  /**
+   * Valida que ningún equipo se facture por debajo de su costo
+   * Si encuentra alguno, muestra error y retorna false
+   */
+  validarPrecioVsCosto(): boolean {
+    for (let i = 0; i < this.articulos().length; i++) {
+      const articulo = this.articulos().at(i).value;
+      // Solo aplica a equipos (idTipo == 1)
+      if (articulo.idTipo === 1) {
+        // Buscar costo_Equipo en el objeto articulo (puede venir de accesorio/articulo)
+        let costo = 0;
+        if (articulo.articulo && articulo.articulo.costo_Equipo !== undefined) {
+          costo = Number(articulo.articulo.costo_Equipo);
+        } else if (articulo.costo_Equipo !== undefined) {
+          costo = Number(articulo.costo_Equipo);
+        }
+        const precioVenta = Number(articulo.precio);
+        if (precioVenta < costo) {
+          this.toastr.error(`El equipo (línea ${i+1}) no puede venderse por debajo de su costo. Costo: $${costo}, Precio: $${precioVenta}`);
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
 
   tipoFactura: string = '';
 clienteSeleccionado: any = null;
@@ -196,6 +226,7 @@ buscarReparacionesPendientes(clienteId: number) {
             accesorio_Descripcion: `Reparación #${reparacion.idReparacion}`,
             precio_Detalle: reparacion.precio,
             precio_Por_Mayor: reparacion.precio,
+            costo_Equipo: reparacion.costo_Equipo,
             cantidad: 1,
             id: reparacion.idReparacion,
             codigo_Barra: 0,
@@ -232,7 +263,6 @@ onModalClose(rep: any) {
   if (rep) {
     // Aquí puedes manejar la reparación seleccionada
     // Por ejemplo, agregar la reparación a la factura
-    console.log('Reparación seleccionada:', rep);
   }
 }
 // ...existing code...
@@ -372,16 +402,16 @@ onModalClose(rep: any) {
   onPrecioChange(index: number): void {
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;
-// Accedemos al valor del precio usando 'get'
-  const newPrecio = currentFormGroup.get('precio')?.value;
+    // Accedemos al valor del precio usando 'get'
+    const newPrecio = currentFormGroup.get('precio')?.value;
     // Actualizamos el precio manualmente
     currentFormGroup.get('precio')?.setValue(newPrecio);
 
     // Verificar si el valor del precio ha sido modificado
-  const precioOriginal = currentFormGroup.get('articulo')?.value?.precio_Detalle || 0; // Precio original del artículo seleccionado
+    const precioOriginal = currentFormGroup.get('articulo')?.value?.precio_Detalle || 0; // Precio original del artículo seleccionado
 
   // Si el precio ha sido modificado, lo dejamos tal cual, sino lo mantenemos como estaba
-  if (newPrecio !== precioOriginal) {
+    if (newPrecio !== precioOriginal) {
     // Recalcular el subtotal con el nuevo precio
     const cantidad = currentFormGroup.get('cantidad')?.value;
     const subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
@@ -401,6 +431,28 @@ onModalClose(rep: any) {
   }
     // Actualizamos los valores generales si es necesario
     this.refreshGeneralValues();
+
+    // Validar precio vs costo al cambiar precio o descuento
+    const currentArticulo = currentFormGroup.getRawValue();
+    if (currentArticulo.idTipo === 1) {
+      let costo = 0;
+      if (currentArticulo.articulo && currentArticulo.articulo.costo_Equipo !== undefined) {
+        costo = Number(currentArticulo.articulo.costo_Equipo);
+      } else if (currentArticulo.costo_Equipo !== undefined) {
+        costo = Number(currentArticulo.costo_Equipo);
+      }
+      const precioVenta = Number(currentArticulo.precio) - Number(currentArticulo.descuento || 0);
+      if (precioVenta < costo) {
+        this.toastr.error(`El precio final del equipo ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será revertido.`);
+        currentFormGroup.get('descuento')?.setValue(0);
+        // Recalcular total
+        const cantidad = currentFormGroup.get('cantidad')?.value;
+        const subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, cantidad);
+        currentFormGroup.get('subTotal')?.setValue(subTotal);
+        currentFormGroup.get('total')?.setValue(subTotal);
+        this.refreshGeneralValues();
+      }
+    }
 }
 
 calcularSubTotalArticulo(precio: number, cantidad: number) {
@@ -615,21 +667,22 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
    * Cierra el modal de registro de cliente
    */
   closeModal() {
-    console.log('closeModal() llamado');
     this.showModal = false;
     this.clientesService.isOpeningForm$.next(false);
   }
   onSubmit() {
     if (this.form.valid) {
+      // Validar que ningún equipo se facture por debajo de su costo
+      if (!this.validarPrecioVsCosto()) {
+        return;
+      }
       if (this.isFactura) {
-        this.generateFactura()
+        this.generateFactura();
+      } else {
+        this.generateCotizacion();
       }
-      else {
-        this.generateCotizacion()
-      }
-    }
-    else {
-      this.form.markAllAsTouched()
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
@@ -637,14 +690,14 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
   const tipoFactura = this.form.get('tipoFactura')?.value;
   const precio = Number((tipoFactura == 1 ? precioDetalle : 0) ||
     (tipoFactura == 2 ? precioMayor : 0 || tipoFactura == 4 ? precioDetalle : 0));
-  console.log(
-    '[ng-option] Descripción:',
-    this.accesoriosBuffer.find(a => a.precio_Detalle === precioDetalle && a.precio_Por_Mayor === precioMayor)?.accesorio_Descripcion,
-    '| Precio:',
-    precio,
-    '| tipoFactura:',
-    tipoFactura
-  );
+  // console.log(
+  //   '[ng-option] Descripción:',
+  //   this.accesoriosBuffer.find(a => a.precio_Detalle === precioDetalle && a.precio_Por_Mayor === precioMayor)?.accesorio_Descripcion,
+  //   '| Precio:',
+  //   precio,
+  //   '| tipoFactura:',
+  //   tipoFactura
+  // );
   return precio;
 }
   addArticuloImei = (imei: string) => {
@@ -665,6 +718,7 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
               modelo: equipo.modelo,
               precio_Detalle: equipo.precioDetalle,
               precio_Por_Mayor: equipo.precioPorMayor,
+              costo_Equipo: equipo.costo_Equipo, // corregido: usar minúscula
               codigo: null!, // Esto podría ser modificado para tener un código real si es necesario
               idTipo: 1,
               disponible: equipo.disponible,
@@ -759,6 +813,25 @@ else
 
   // Deshabilitar cantidad si es equipo
   if (currentArticulo.idTipo == 1) currentFormGroup.controls["cantidad"].disable();
+
+  // Validar precio vs costo al agregar equipo
+  if (currentArticulo.idTipo === 1) {
+    // Buscar costo_Equipo
+    let costo = 0;
+    if (currentArticulo.articulo && currentArticulo.articulo.costo_Equipo !== undefined) {
+      costo = Number(currentArticulo.articulo.costo_Equipo);
+    } else if (currentArticulo.costo_Equipo !== undefined) {
+      costo = Number(currentArticulo.costo_Equipo);
+    }
+    const precioVenta = Number(currentArticulo.precio) - Number(currentArticulo.descuento || 0);
+    if (precioVenta < costo) {
+      this.toastr.error(`El precio de venta ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será puesto en cero.`);
+      currentArticulo.descuento = 0;
+      currentArticulo.total = currentArticulo.subTotal;
+      currentFormGroup.setValue(currentArticulo);
+      this.refreshGeneralValues();
+    }
+  }
 }
   onChangeTipoPago() {
 
@@ -994,7 +1067,6 @@ else
     this.articulos().removeAt(index)
 
     if (this.articulos().length === 0)
-
       this.agregarArticulo()
 
     this.refreshGeneralValues();

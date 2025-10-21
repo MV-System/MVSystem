@@ -75,6 +75,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
               modelo: equipo.modelo,
               precio_Detalle: equipo.precioDetalle,
               precio_Por_Mayor: equipo.precioPorMayor,
+              costo_Equipo: equipo.costo_Equipo,
               codigo: null!,
               idTipo: 1,
               disponible: equipo.disponible,

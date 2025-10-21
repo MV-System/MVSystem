@@ -866,7 +866,7 @@ describe('FacturacionRegistroComponent', () => {
 
       // Add items to buffer
       component.accesoriosBuffer = [
-        { id: '1', accesorio_Descripcion: 'Item 1', precio_Detalle: 100, precio_Por_Mayor: 90, cantidad: 1, codigo_Barra: 0, modelo: '', codigo: '', idTipo: 2, disponible: 'S', mensaje: '' }
+        { id: '1', accesorio_Descripcion: 'Item 1', costo_Equipo: 80, precio_Detalle: 100, precio_Por_Mayor: 90, cantidad: 1, codigo_Barra: 0, modelo: '', codigo: '', idTipo: 2, disponible: 'S', mensaje: '' }
       ];
 
       component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };

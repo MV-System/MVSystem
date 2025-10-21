@@ -375,7 +375,7 @@ if (registroElement) {
       Numero_de_Factura: this.formRegistro.get('factura')?.value,
       precioPorMayor:0,//Number(this.formRegistro.get('alPorMayor')?.value),
       precioDetalle:0,//Number(this.formRegistro.get('alDetalle')?.value),
-      Costo_Equipo: Number(this.formRegistro.get('costo')?.value),
+      costo_Equipo: Number(this.formRegistro.get('costo')?.value),
       Desbloqueado: this.formRegistro.get('desbloqueado')?.value,
       disponible: this.formRegistro.get('disponible')?.value,
       Nota_Adicional: this.formRegistro.get('notaAdicional')?.value,

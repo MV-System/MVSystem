@@ -52,6 +52,7 @@ export interface AccesorioLista {
   codigo_Barra: number;
   precio_Detalle: number;
   precio_Por_Mayor: number;
+  costo_Equipo: number;
   cantidad: number;
   idTipo: number;
   disponible: string;
