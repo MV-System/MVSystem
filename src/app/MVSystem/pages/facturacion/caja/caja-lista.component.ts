@@ -291,8 +291,9 @@ export class CajaListaComponent implements OnInit {
     this.subs.push(sub);
   }
   modelFacturaFilter(): FacturaFilter {
+    //-------
     return {
-      almacen: 0,
+      almacen: Number(this.loginService.getUserIdSucursal),
       criterio: '',
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa: this.loginService.getUserIdEmpresa,
@@ -304,7 +305,7 @@ export class CajaListaComponent implements OnInit {
       pageSize: 1,
       fechaInicio: '',
       fechaFinal: '',
-      EstadoFactura: '' // Valor por defecto, ajusta según lógica de tu app
+       EstadoFactura: "A"// Valor por defecto, ajusta según lógica de tu app
     };
   }
 
