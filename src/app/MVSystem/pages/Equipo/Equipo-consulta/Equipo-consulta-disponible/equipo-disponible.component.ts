@@ -92,7 +92,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   filter: any = {
     almacen: 0,
-    modelo: '',
+    modelo: 0,
     imei: '',
     suplidor: '',
     pageIndex: 1,
@@ -110,7 +110,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     almacen: [''],
     suplidor: [''],
     imei: [''],
-    modelo: [''],
+    modelo: [0,],
     rangeDate: [''],
     totalEquipos: [0,],
     totalInventario: [0,]
@@ -137,7 +137,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.fechaInicio !="" ||
     this.filter.fechaFinal !==""||
     this.filter.almacen  !==""||
-    this.filter.modelo !==""||
+    this.filter.modelo !== 0 ||
     this.filter.suplidor !==""){
 
       this.filter.pageIndex = 1;
@@ -325,7 +325,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    
+
     try {
       document.execCommand('copy');
       this.toast.success(`IMEI copiado: ${text}`);
@@ -356,7 +356,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
 
     this.filter.almacen = almacenValue == null ? 0 : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
-    this.filter.modelo = modeloValue == null ? '' : modeloValue;
+    this.filter.modelo = modeloValue == null ? 0 : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
   }
   setDateRange(): void {

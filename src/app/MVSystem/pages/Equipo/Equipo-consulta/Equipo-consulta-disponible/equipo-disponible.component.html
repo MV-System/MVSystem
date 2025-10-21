@@ -122,7 +122,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
-                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="descripcion" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
                             </ng-select>
                         </div>
                         <div class="col-md-4">
@@ -183,7 +183,7 @@
                         <!-- Modelo -->
                         <div class="sucursal-select-wrapper">
                             <i class="bi bi-cpu select-icon"></i>
-                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="descripcion" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
                             </ng-select>
                         </div>
                     </div>

@@ -155,7 +155,7 @@ describe('EquipoDisponibleComponent', () => {
 
     it('should initialize filter object with default values', () => {
       expect(component.filter.almacen).toBe(0);
-      expect(component.filter.modelo).toBe('');
+      expect(component.filter.modelo).toBe(0);
       expect(component.filter.imei).toBe('');
       expect(component.filter.suplidor).toBe('');
       expect(component.filter.pageIndex).toBe(1);
@@ -319,7 +319,7 @@ describe('EquipoDisponibleComponent', () => {
 
       expect(component.filter.almacen).toBe(0);
       expect(component.filter.suplidor).toBe('');
-      expect(component.filter.modelo).toBe('');
+      expect(component.filter.modelo).toBe(0);
       expect(component.filter.imei).toBe('');
     });
 
@@ -383,7 +383,7 @@ describe('EquipoDisponibleComponent', () => {
       component.filter.fechaInicio = '';
       component.filter.fechaFinal = '';
       component.filter.almacen = '';
-      component.filter.modelo = '';
+      component.filter.modelo = 0;
       component.filter.suplidor = '';
 
       component.onFilterPropHasValue();
@@ -397,7 +397,7 @@ describe('EquipoDisponibleComponent', () => {
       component.form.patchValue({
         almacen: 2,
         suplidor: 'Apple',
-        modelo: 'iPhone',
+        modelo: 0,
         imei: '123456'
       });
 
