@@ -73,117 +73,200 @@
                             </div>
                         </div>
 
-                        <!-- Tabla de pre-facturas -->
-                        <div class="scrollable-table thinScroll">
-                            <table class="mv-table">
-                                <thead>
-                                    <tr>
-                                        <th class="sticky-col left-col">ACCIONES</th>
-                                        <th class="sticky-col second-col">CLIENTE</th>
-                                        <th>TELEFONO</th>
-                                        <!-- <th>TIPO DE FACTURA</th> -->
-                                        <th>TIPO DE PAGO</th>
-                                        <th>TOTAL</th>
-                                        <th>SUB TOTAL</th>
-                                        <th>DESCUENTO</th>
-                                        <th>ITBIS</th>
+                        <!-- Vista tipo tarjeta para móvil (igual a facturas) -->
+                        <!-- Card mobile igual a facturas -->
+                        <div class="factura-cards" *ngIf="isMobileScreen()">
+                            <div class="factura-card" *ngFor="let pf of preFacturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: preFacturas.length }; let i = index">
+                                <div class="factura-card-header" style="background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.7rem; border-radius: 4px 4px 0 0;">
+                                    <div class="factura-numero" style="display: flex; align-items: center; gap: 0.4rem;">
+                                        <i class="bi bi-receipt" style="font-size: 1.2rem;"></i>
+                                        <span style="font-weight: 700; font-size: 1.05rem;">Pre-Factura #{{pf.numero_PreFactura}}</span>
+                                    </div>
+                                    <div class="factura-actions" style="display: flex; gap: 0.4rem;">
+                                        <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
+          <i class="bi bi-check-circle"></i>
+        </button>
+                                        <button (click)="anularPreFactura(pf.numero_PreFactura); $event.stopPropagation();" class="btn btn-danger btn-sm" title="Anular pre-factura" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null">
+          <i class="bi bi-x-circle"></i>
+        </button>
+                                    </div>
+                                </div>
+                                <div class="factura-card-body" style="background: #f6f9ff; padding: 0.7rem 0.9rem;">
+                                    <div class="factura-info-item" style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e3e8ef; padding: 0.45rem 0;">
+                                        <i class="bi bi-person-fill" style="color: #2563eb; min-width: 18px;"></i>
+                                        <span><b>Cliente:</b> {{pf.nombres}} {{pf.apellidos}}</span>
+                                    </div>
+                                    <div class="factura-info-item" style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e3e8ef; padding: 0.45rem 0;">
+                                        <i class="bi bi-telephone-fill" style="color: #2563eb; min-width: 18px;"></i>
+                                        <span><b>Teléfono:</b> {{pf.numero_Telefono}}</span>
+                                    </div>
+                                    <div class="factura-info-item" style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e3e8ef; padding: 0.45rem 0;">
+                                        <i class="bi bi-cash-coin" style="color: #2563eb; min-width: 18px;"></i>
+                                        <span><b>Total:</b> {{pf.total | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div class="factura-info-item" style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e3e8ef; padding: 0.45rem 0;">
+                                        <i class="bi bi-calendar-event" style="color: #2563eb; min-width: 18px;"></i>
+                                        <span><b>Fecha:</b> {{pf.fecha_Registro | date:'mediumDate'}}</span>
+                                    </div>
+                                </div>
+                                <button class="btn-ver-detalle" style="width: 100%; margin: 0; padding: 0.55rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 0 0 8px 8px; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.4rem;"
+                                    (click)="handleClick(pf.numero_PreFactura, i)">
+      <i class="bi bi-eye-fill me-1"></i>
+      {{ expandedRowIndex === i ? 'Ocultar' : 'Ver' }} Detalle
+    </button>
+                                <div class="detalle-card" *ngIf="expandedRowIndex === i">
+                                    <div class="detalle-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e5e7eb; color: #374151; font-weight: 600; font-size: 0.875rem;">
+                                        <i class="bi bi-list-ul" style="color: #2563eb;"></i>
+                                        <span>Artículos</span>
+                                    </div>
+                                    <div *ngFor="let det of detallePrefactura" style="background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e5e7eb; margin-bottom: 1rem; padding: 0.9rem 1rem 0.7rem 1rem;">
+                                        <div class="detalle-descripcion-titulo" style="font-size: 1rem; color: #222; font-weight: 600; margin-bottom: 0.35rem; border-bottom: 1px solid #f3f4f6; padding-bottom: 0.25rem;">{{det.descripcion}}</div>
+                                        <div class="detalle-info" style="display: flex; flex-direction: column; gap: 0.18rem;">
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">Código:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.iD_Equipo}}</span>
+                                            </div>
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">Cantidad:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.cantidad}}</span>
+                                            </div>
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">Precio:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.precio | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                            </div>
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">Descuento:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.descuento | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                            </div>
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">SubTotal:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.subTotal | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                            </div>
+                                            <div class="detalle-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.97rem; margin-bottom: 0.1rem;">
+                                                <span class="detalle-label" style="color: #6b7280; font-weight: 500;">ITBIS:</span>
+                                                <span class="detalle-value" style="color: #374151; font-weight: 600;">{{det.itbis | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                            </div>
+                                            <div class="detalle-row detalle-row-total" style="margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                                                <span class="detalle-label" style="color: #1f2937; font-weight: 600;">Total:</span>
+                                                <span class="detalle-value-total" style="color: #2563eb; font-weight: 700; font-size: 1.08rem;">{{det.total | currency:'DOP':'symbol':'1.2-2'}}</span>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end; margin-top: 0.7rem;">
+                                            <button class="btn btn-outline-danger btn-sm" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
+            <i class="bi bi-arrow-bar-down"></i> Rebajar
+          </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Tabla de pre-facturas -->
+                                <div class="scrollable-table thinScroll d-none d-md-block" *ngIf="!isMobileScreen()">
+                                    <table class="mv-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="sticky-col left-col">ACCIONES</th>
+                                                <th class="sticky-col second-col">CLIENTE</th>
+                                                <th>TELEFONO</th>
+                                                <!-- <th>TIPO DE FACTURA</th> -->
+                                                <th>TIPO DE PAGO</th>
+                                                <th>TOTAL</th>
+                                                <th>SUB TOTAL</th>
+                                                <th>DESCUENTO</th>
+                                                <th>ITBIS</th>
 
-                                        <th>NCF</th>
-                                        <th>RNC</th>
-                                        <th>VENDEDOR</th>
-                                        <th>ALMACEN</th>
-                                        <th>NOTA</th>
-                                        <th>NCF</th>
-                                        <th>RNC</th>
-                                        <th>FECHA REGISTRO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let pf of preFacturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: preFacturas.length }; let i = index">
-                                        <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="handleClick(pf.numero_PreFactura, i)">
-                                            <td class="sticky-col left-col">
-                                                <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
+                                                <th>NCF</th>
+                                                <th>RNC</th>
+                                                <th>VENDEDOR</th>
+                                                <th>ALMACEN</th>
+                                                <th>NOTA</th>
+                                                <th>NCF</th>
+                                                <th>RNC</th>
+                                                <th>FECHA REGISTRO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let pf of preFacturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: preFacturas.length }; let i = index">
+                                                <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="handleClick(pf.numero_PreFactura, i)">
+                                                    <td class="sticky-col left-col">
+                                                        <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-check-circle"></i>
                                                 </button>
-                                                <button class="btn btn-danger btn-sm" title="Anular" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && anularPreFactura(pf.numero_PreFactura)">
+                                                        <button class="btn btn-danger btn-sm" title="Anular" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && anularPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-x-circle"></i>
                                                 </button>
-                                            </td>
-                                            <td class="sticky-col second-col">{{ pf.nombres }} {{ pf.apellidos }}</td>
-                                            <td>{{ pf.numero_Telefono }}</td>
-                                            <!-- <td>{{ pf.tipo_Factura }}</td> -->
-                                            <td>{{ pf.tipo_Pago }}</td>
-                                            <td>{{ pf.total | currency:'DOP' }}</td>
-                                            <td>{{ pf.subTotal | currency:'DOP' }}</td>
-                                            <td>{{ pf.descuento | currency:'DOP' }}</td>
-                                            <td>{{ pf.itbis | currency:'DOP' }}</td>
-                                            <td>{{ pf.nfcTipoNumero }}</td>
-                                            <td>{{ pf.rnc }}</td>
-                                            <td>{{ pf.vendedor_Nombres }}</td>
-                                            <td>{{ pf.sucursal }}</td>
-                                            <td>{{ pf.nota }}</td>
-                                            <td>{{ pf.nfcTipoNumero }}</td>
-                                            <td>{{ pf.rnc }}</td>
-                                            <td>{{ pf.fecha_Registro | date:'short' }}</td>
-                                        </tr>
-                                        <tr *ngIf="expandedRowIndex === i">
-                                            <td colspan="16" class="detalle-row bg-light border-top border-primary" style="box-shadow: 0 2px 8px rgba(34,127,255,0.07);">
-                                                <div *ngIf="detalleLoading" class="text-center py-3">
-                                                    <span class="spinner-border spinner-border-sm text-primary"></span> Cargando detalle...
-                                                </div>
-                                                <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
-                                                <div *ngIf="!detalleLoading && !detalleError">
-                                                    <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
-                                                        <div class="detalle-item">
-                                                            <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}
-                                                            <button class="btn btn-outline-danger btn-sm ms-2" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
+                                                    </td>
+                                                    <td class="sticky-col second-col">{{ pf.nombres }} {{ pf.apellidos }}</td>
+                                                    <td>{{ pf.numero_Telefono }}</td>
+                                                    <!-- <td>{{ pf.tipo_Factura }}</td> -->
+                                                    <td>{{ pf.tipo_Pago }}</td>
+                                                    <td>{{ pf.total | currency:'DOP' }}</td>
+                                                    <td>{{ pf.subTotal | currency:'DOP' }}</td>
+                                                    <td>{{ pf.descuento | currency:'DOP' }}</td>
+                                                    <td>{{ pf.itbis | currency:'DOP' }}</td>
+                                                    <td>{{ pf.nfcTipoNumero }}</td>
+                                                    <td>{{ pf.rnc }}</td>
+                                                    <td>{{ pf.vendedor_Nombres }}</td>
+                                                    <td>{{ pf.sucursal }}</td>
+                                                    <td>{{ pf.nota }}</td>
+                                                    <td>{{ pf.nfcTipoNumero }}</td>
+                                                    <td>{{ pf.rnc }}</td>
+                                                    <td>{{ pf.fecha_Registro | date:'short' }}</td>
+                                                </tr>
+                                                <tr *ngIf="expandedRowIndex === i">
+                                                    <td colspan="16" class="detalle-row bg-light border-top border-primary" style="box-shadow: 0 2px 8px rgba(34,127,255,0.07);">
+                                                        <div *ngIf="detalleLoading" class="text-center py-3">
+                                                            <span class="spinner-border spinner-border-sm text-primary"></span> Cargando detalle...
+                                                        </div>
+                                                        <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
+                                                        <div *ngIf="!detalleLoading && !detalleError">
+                                                            <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
+                                                                <div class="detalle-item">
+                                                                    <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}
+                                                                    <button class="btn btn-outline-danger btn-sm ms-2" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
                                                                 <i class="bi bi-arrow-bar-down"></i> Rebajar
                                                             </button>
+                                                                </div>
+                                                                <div class="detalle-item"><span class="fw-bold">Descripción:</span> {{ det.descripcion }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold">Cant:</span> {{ det.cantidad }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}</div>
+                                                                <div class="detalle-item"><span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}</div>
+                                                            </div>
                                                         </div>
-                                                        <div class="detalle-item"><span class="fw-bold">Descripción:</span> {{ det.descripcion }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold">Cant:</span> {{ det.cantidad }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}</div>
-                                                        <div class="detalle-item"><span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                            </table>
-                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                        <!-- Controles de paginación mejorados -->
-                        <div *ngIf="preFacturas.length > pageSize" class="pagination-bar bg-light rounded shadow-sm py-2 px-3 mt-3 d-flex flex-wrap justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-primary me-2" [disabled]="pageIndex === 1" (click)="pageIndex = pageIndex - 1">
+                                <!-- Controles de paginación mejorados -->
+                                <div *ngIf="preFacturas.length > pageSize" class="pagination-bar bg-light rounded shadow-sm py-2 px-3 mt-3 d-flex flex-wrap justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-sm btn-outline-primary me-2" [disabled]="pageIndex === 1" (click)="pageIndex = pageIndex - 1">
                                     <i class="bi bi-chevron-left"></i> Anterior
                                 </button>
-                                <span class="mx-2">Página
+                                        <span class="mx-2">Página
                                     <input type="number" min="1" [max]="totalPages" [(ngModel)]="pageIndex" style="width: 60px; text-align: center; display: inline-block;" />
                                     de {{ totalPages }}
                                 </span>
-                                <button class="btn btn-sm btn-outline-primary ms-2" [disabled]="pageIndex >= totalPages" (click)="pageIndex = pageIndex + 1">
+                                        <button class="btn btn-sm btn-outline-primary ms-2" [disabled]="pageIndex >= totalPages" (click)="pageIndex = pageIndex + 1">
                                     Siguiente <i class="bi bi-chevron-right"></i>
                                 </button>
-                            </div>
-                            <div class="text-muted small ms-3">
-                                Mostrando {{ (pageIndex-1)*pageSize+1 }} al {{ (pageIndex-1)*pageSize + (pageSize
-                                < preFacturas.length - (pageIndex-1)*pageSize ? pageSize : preFacturas.length - (pageIndex-1)*pageSize) }} de {{ preFacturas.length }} registros </div>
-                            </div>
+                                    </div>
+                                    <div class="text-muted small ms-3">
+                                        Mostrando {{ (pageIndex-1)*pageSize+1 }} al {{ (pageIndex-1)*pageSize + (pageSize
+                                        < preFacturas.length - (pageIndex-1)*pageSize ? pageSize : preFacturas.length - (pageIndex-1)*pageSize) }} de {{ preFacturas.length }} registros </div>
+                                    </div>
 
-                            <!-- Mensaje de resultado de la operación -->
-                            <div *ngIf="mensaje" class="alert alert-info mt-3 text-center">{{ mensaje }}</div>
+                                    <!-- Mensaje de resultado de la operación -->
+                                    <div *ngIf="mensaje" class="alert alert-info mt-3 text-center">{{ mensaje }}</div>
 
-                            <div *ngIf="!loading && preFacturas.length === 0" class="mt-3">No hay pre-facturas pendientes.</div>
-                            <div *ngIf="loading" class="mt-3">Cargando pre-facturas...</div>
-                            <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+                                    <div *ngIf="!loading && preFacturas.length === 0" class="mt-3">No hay pre-facturas pendientes.</div>
+                                    <div *ngIf="loading" class="mt-3">Cargando pre-facturas...</div>
+                                    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-</section>

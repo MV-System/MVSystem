@@ -13,6 +13,12 @@ import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.serv
   styleUrls: ['./caja-lista.component.css']
 })
 export class CajaListaComponent implements OnInit {
+  /**
+   * Detecta si la pantalla es móvil (ancho menor a 600px)
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth < 600;
+  }
   rebajarItem(det: any): void {
     const numeroPreFactura = this.selectedRowIndex !== null && this.preFacturas[this.selectedRowIndex]
       ? this.preFacturas[this.selectedRowIndex].numero_PreFactura
@@ -206,27 +212,38 @@ export class CajaListaComponent implements OnInit {
         this.cargarPreFacturas();
         if (response && response.cod_Factura) {
           this.facturaNumberReporte = response.cod_Factura;
-          // Mostrar el diálogo para preguntar si desea imprimir la factura
-          this.rDialogService.openDialog(
-            '¿Imprimir factura?',
-            mensajeApi + '\n¿Desea imprimir la factura generada?',
-            () => {
-              // Si confirma, preguntar tipo de impresión
-              this.rDialogService.openDialog(
-                'Tipo de impresión',
-                '¿Cómo desea imprimir la factura?',
-                () => { this.printFacturaNormal(); },
-                () => { this.printFacturaMini(); },
-                'Mini',
-                'Normal'
-              );
-            },
-            () => {
-              // Si cancela, no imprime
-            },
-            'No',
-            'Sí'
-          );
+          if (this.isMobileScreen()) {
+            // En móvil, preguntar si desea compartir la factura
+            this.rDialogService.openDialog(
+              'Aviso',
+              mensajeApi + '\n¿Desea compartir la factura generada?',
+              () => {
+                this.compartirFactura(this.facturaNumberReporte!);
+              },
+              () => {},
+              'No',
+              'Sí'
+            );
+          } else {
+            // Desktop: mantener impresión
+            this.rDialogService.openDialog(
+              '¿Imprimir factura?',
+              mensajeApi + '\n¿Desea imprimir la factura generada?',
+              () => {
+                this.rDialogService.openDialog(
+                  'Tipo de impresión',
+                  '¿Cómo desea imprimir la factura?',
+                  () => { this.printFacturaNormal(); },
+                  () => { this.printFacturaMini(); },
+                  'Mini',
+                  'Normal'
+                );
+              },
+              () => {},
+              'No',
+              'Sí'
+            );
+          }
         }
       },
       error: () => {
@@ -234,6 +251,74 @@ export class CajaListaComponent implements OnInit {
         this.accionEnCurso = null;
       }
     });
+  }
+
+  /**
+   * Compartir factura usando Web Share API (móvil)
+   */
+  compartirFactura(numeroFactura: number) {
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toast.error('Número de factura inválido');
+      return;
+    }
+    if (!navigator.share) {
+      this.toast.warning('Tu navegador no soporta la función de compartir. Usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+    this.loading = true;
+    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(), numeroFactura)
+      .subscribe({
+        next: async (blob) => {
+          try {
+            const fileName = `Factura_${numeroFactura}.pdf`;
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+            try {
+              await (navigator as any).share({
+                title: `Factura #${numeroFactura}`,
+                text: `Factura #${numeroFactura} - MVSystem`,
+                files: [file]
+              });
+              this.toast.success('Factura compartida exitosamente');
+            } catch (shareError: any) {
+              if (shareError.name === 'NotAllowedError' || shareError.message?.includes('files')) {
+                this.toast.warning('No se puede compartir el archivo. Se descargará en su lugar.');
+                // Fallback: descargar
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                }, 100);
+              } else if (shareError.name !== 'AbortError') {
+                this.toast.warning('Error al compartir. Descargando archivo...');
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                }, 100);
+              }
+            }
+          } catch (error: any) {
+            this.toast.error('Error al preparar la factura para compartir');
+          } finally {
+            this.loading = false;
+          }
+        },
+        error: (err) => {
+          this.toast.error('Error al generar la factura para compartir');
+          this.loading = false;
+        }
+      });
+    this.subs.push(sub);
   }
   printFacturaMini(): void {
     this.loading = true;
