@@ -1230,6 +1230,22 @@ ng-select[readonly] ::ng-deep .ng-value {
     justify-content: center;
 }
 
+.mobile-btn-primary-modern-prefactura {
+    width: 100%;
+    background: #29679b;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.625rem 1rem;
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .mobile-btn-primary-modern:hover {
     background: #059669;
     transform: translateY(-1px);

@@ -390,8 +390,18 @@
                                 </div>
 
                                 <!-- Botones de acción dentro del card (solo móvil) -->
-                                <div class="mobile-actions-modern" *ngIf="BotonProcesarFactura()">
-                                    <button class="mobile-btn-primary-modern" type="submit">
+                                <div class="mobile-actions-modern">
+
+                                    <button class="btn btn-warning mobile-btn-primary-modern-prefactura" type="button" (click)="onPreFacturar()" *ngIf="BotonPreFacturar()">
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    <span class="d-inline">{{isLoading?'Procesando...': 'Pre-Facturar'}} </span>
+                                    <span class="spinner-grow spinner-grow-sm ms-2"
+                                         role="status"
+                                         aria-hidden="true"
+                                         *ngIf="isLoading"></span>
+                                </button>
+
+                                    <button class="mobile-btn-primary-modern" type="submit" *ngIf="BotonProcesarFactura()">
                                         <i class="bi bi-check-circle me-2"></i>
                                         <span class="d-inline">{{isLoading?'Procesando...': 'Procesar factura'}} </span>
                                         <span class="spinner-grow spinner-grow-sm ms-2"
