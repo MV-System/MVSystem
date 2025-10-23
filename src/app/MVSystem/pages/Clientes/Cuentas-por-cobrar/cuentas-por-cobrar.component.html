@@ -275,6 +275,11 @@
                                     <button class="btn-accion-sm btn-saldar" (click)="SaldarFactura(detalle); $event.stopPropagation();">
                                         <i class="bx bx-money"></i> Saldar
                                     </button>
+
+                                    <!-- Botón compartir solo en móvil -->
+                                    <button class="btn-accion-sm btn-compartir" *ngIf="isMobileScreen()" (click)="compartirFactura(detalle); $event.stopPropagation();" title="Compartir factura">
+                                        <i class="bx bx-share-alt"></i> Compartir
+                                    </button>
                                 </div>
                             </div>
                         </div>

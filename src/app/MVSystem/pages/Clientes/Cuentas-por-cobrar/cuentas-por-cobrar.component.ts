@@ -8,6 +8,9 @@ import { ClientesService } from 'src/app/core/services/clientes.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 
+import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
+
 @Component({
   selector: 'app-cuentas-por-cobrar',
   templateUrl: './cuentas-por-cobrar.component.html',
@@ -63,6 +66,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     Usuario: this.loginService.getUserName()
   };
   totalMontoPendiente: number =0;
+
   constructor(
     private loading: LoadingService,
     private fb: FormBuilder,
@@ -70,8 +74,82 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     private ClienteService: ClientesService,
     private toastr: ToastrService,
     private rDialogService: RDialogService,
-
+    private mantenimientoService: MantenimientoService
   ) { }
+  /**
+   * Compartir factura pendiente (solo móvil) usando Web Share API
+   */
+  async compartirFactura(detalle: any) {
+    const numeroFactura = detalle.numeroFactura;
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toastr.error('Número de factura inválido');
+      return;
+    }
+
+    if (!navigator.share) {
+      this.toastr.warning('Tu navegador no soporta la función de compartir. Usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+
+    this.loading.showLoading();
+    this.isLoading = true;
+
+    // Construir el filtro para el PDF (ajustar según tu lógica de negocio)
+    const filter: FacturaFilter = {
+      almacen:Number(this.loginService.getUserIdSucursal),// Si tienes almacén, pon el valor correcto
+      criterio: '',
+      empresa: this.loginService.getUserEmpresa,
+      IdEmpresa: this.loginService.getUserIdEmpresa,
+      IdSucursal: this.loginService.getUserIdSucursal,
+      ComprobanteCheck: 1,
+      EstadoFactura: 'A',
+      IdVendedor: 0,
+      pageIndex: 1,
+      pageSize: 1,
+      fechaInicio: '',
+      fechaFinal: ''
+    };
+
+    try {
+      this.mantenimientoService.postFacturaReport(filter, numeroFactura).subscribe({
+        next: async (blob: Blob) => {
+          try {
+            const fileName = `Factura_${numeroFactura}.pdf`;
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+            await (navigator as any).share({
+              title: `Factura #${numeroFactura}`,
+              text: `Factura #${numeroFactura} - MVSystem`,
+              files: [file]
+            });
+            this.toastr.success('Factura compartida exitosamente');
+          } catch (shareError: any) {
+            this.toastr.warning('No se pudo compartir la factura. Se descargará en su lugar.');
+            // Descargar el archivo como fallback
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Factura_${numeroFactura}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          } finally {
+            this.loading.hideLoading();
+            this.isLoading = false;
+          }
+        },
+        error: (err) => {
+          this.toastr.error('Error al generar la factura para compartir');
+          this.loading.hideLoading();
+          this.isLoading = false;
+        }
+      });
+    } catch (error) {
+      this.toastr.error('Error inesperado al compartir la factura');
+      this.loading.hideLoading();
+      this.isLoading = false;
+    }
+  }
 
   ngOnInit(): void {
     this.obtenerClientes()
