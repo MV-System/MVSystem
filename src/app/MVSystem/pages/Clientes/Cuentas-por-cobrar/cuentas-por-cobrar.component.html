@@ -1,3 +1,4 @@
+<!-- Botón compartir todas las facturas del cliente (solo móvil, ZIP) se mueve dentro del *ngFor de las tarjetas móviles -->
 <div class="box animate__animated animate__fadeIn">
     <nav>
         <ol class="breadcrumb">
@@ -176,6 +177,12 @@
                 <!-- Vista de Cards para Móvil -->
                 <div class="clientes-cards" *ngIf="isMobileScreen()">
                     <div class="cliente-card" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
+                        <!-- Botón compartir todas las facturas del cliente (solo móvil, ZIP) oculto temporalmente -->
+                        <!--
+                        <button class="btn-accion btn-compartir-todas" (click)="compartirFacturasZip(Cliente); $event.stopPropagation();" title="Compartir todas las facturas en ZIP">
+                            <i class="bx bx-archive"></i> Compartir todas (ZIP)
+                        </button>
+                        -->
 
                         <!-- Header del card -->
                         <div class="cliente-card-header" (click)="seleccionarFila(Cliente)">

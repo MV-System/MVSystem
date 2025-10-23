@@ -11,6 +11,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
+import * as JSZip from 'jszip';
 
 @Component({
   selector: 'app-cuentas-por-cobrar',
@@ -223,6 +224,134 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       }
     } catch (error) {
       this.toastr.error('Error al compartir las facturas.');
+    } finally {
+      this.loading.hideLoading();
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Comprimir y compartir todas las facturas pendientes de un cliente en un ZIP (solo móvil)
+   */
+  async compartirFacturasZip(cliente: any) {
+    const idCliente = cliente.id_Cliente;
+    if (!idCliente || idCliente <= 0) {
+      this.toastr.error('Cliente inválido');
+      return;
+    }
+    if (!navigator.share) {
+      this.toastr.warning('Tu navegador no soporta la función de compartir archivos. Usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+    this.loading.showLoading();
+    this.isLoading = true;
+    try {
+      // 1. Consultar facturas pendientes del cliente
+      const facturas: any[] = await new Promise((resolve, reject) => {
+        this.ClienteService.getFacturasPendientesPorCliente(idCliente).subscribe({
+          next: (res) => resolve(res),
+          error: (err) => reject(err)
+        });
+      });
+      if (!facturas || facturas.length === 0) {
+        this.toastr.warning('No hay facturas pendientes para este cliente.');
+        return;
+      }
+      // Limitar a 10 facturas para evitar problemas de tamaño (ajusta según necesidad)
+      const facturasLimitadas = facturas.slice(0, 10);
+      const filterBase: FacturaFilter = {
+        almacen: Number(this.loginService.getUserIdSucursal),
+        criterio: '',
+        empresa: this.loginService.getUserEmpresa,
+        IdEmpresa: this.loginService.getUserIdEmpresa,
+        IdSucursal: this.loginService.getUserIdSucursal,
+        ComprobanteCheck: 1,
+        EstadoFactura: 'A',
+        IdVendedor: 0,
+        pageIndex: 1,
+        pageSize: 1,
+        fechaInicio: '',
+        fechaFinal: ''
+      };
+      // Descargar todos los PDFs en paralelo
+      const pdfPromises = facturasLimitadas.map(detalle =>
+        new Promise<{name: string, blob: Blob}>((resolve, reject) => {
+          this.mantenimientoService.postFacturaReport(filterBase, detalle.numeroFactura).subscribe({
+            next: (blob: Blob) => {
+              resolve({ name: `Factura_${detalle.numeroFactura}.pdf`, blob });
+            },
+            error: (err) => reject(err)
+          });
+        })
+      );
+      const pdfs = await Promise.all(pdfPromises);
+      // Crear el ZIP
+      const zip = new JSZip();
+      pdfs.forEach(pdf => {
+        zip.file(pdf.name, pdf.blob);
+      });
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const zipFile = new File([zipBlob], `Facturas_Cliente_${idCliente}.zip`, { type: 'application/zip' });
+      // Compartir el ZIP
+      console.log('Intentando compartir ZIP:', zipFile);
+      if ((navigator as any).canShare && (navigator as any).canShare({ files: [zipFile] })) {
+        try {
+          await (navigator as any).share({
+            title: `Facturas del cliente #${idCliente}`,
+            text: `Facturas pendientes del cliente #${idCliente} - MVSystem`,
+            files: [zipFile]
+          });
+          console.log('ZIP compartido exitosamente');
+          this.toastr.success('ZIP compartido exitosamente');
+        } catch (shareError) {
+          console.error('Error al intentar compartir el ZIP:', shareError);
+          this.toastr.error('Error al intentar compartir el ZIP. Se intentará descargar.');
+          // Fallback a descarga
+          try {
+            const url = window.URL.createObjectURL(zipFile);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = zipFile.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            // Fallback extra para móviles: abrir el enlace si el click no funciona
+            setTimeout(() => {
+              window.open(url, '_blank');
+            }, 500);
+            this.toastr.info('Si no se descarga automáticamente, mantén presionado el enlace para descargar el ZIP.');
+            console.log('ZIP descargado por fallback tras error de compartir.');
+          } catch (downloadError) {
+            this.toastr.error('No se pudo descargar el ZIP. Intenta desde un navegador diferente.');
+            console.error('Error al intentar descargar el ZIP tras fallo de compartir:', downloadError);
+          }
+        }
+      } else {
+        console.warn('No se puede compartir el ZIP con Web Share API. Intentando descargar...');
+        this.toastr.warning('No se puede compartir el ZIP. Se descargará en su lugar.');
+        try {
+          const url = window.URL.createObjectURL(zipFile);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = zipFile.name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          // Fallback extra para móviles: abrir el enlace si el click no funciona
+          setTimeout(() => {
+            window.open(url, '_blank');
+          }, 500);
+          this.toastr.info('Si no se descarga automáticamente, mantén presionado el enlace para descargar el ZIP.');
+          console.log('ZIP descargado correctamente.');
+        } catch (downloadError) {
+          this.toastr.error('No se pudo descargar el ZIP. Intenta desde un navegador diferente.');
+          console.error('Error al intentar descargar el ZIP:', downloadError);
+        }
+      }
+    } catch (error) {
+      this.toastr.error('Error al comprimir o compartir las facturas.');
     } finally {
       this.loading.hideLoading();
       this.isLoading = false;
@@ -586,9 +715,6 @@ obtenerClientes() {
 
         // Aquí puedes almacenar el total en una variable para mostrarlo en un label
         this.totalMontoPendiente = totalMontoPendiente;
-
-        console.log("Total Monto Pendiente: ", this.totalMontoPendiente);  // Mostrar el total en consola (opcional)
-
       } else {
         console.log("No se encontraron clientes con facturas pendientes.");
         this.CLientesPorCobrar = [];  // Limpiar la lista si no se encuentran datos
