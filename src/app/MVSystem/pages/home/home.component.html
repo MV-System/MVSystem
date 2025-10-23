@@ -12,8 +12,8 @@
     </ng-container>
 
     <div class="main-content" [class.sidebar-open]="sidebarVisible">
-        <div class="bienvenida-msg" *ngIf="mensajeBienvenida" style="margin: 24px 0 0 24px; font-size: 1.5rem; font-weight: 500; color: #333;">
-            {{ mensajeBienvenida }}
+        <div class="bienvenida-toast" *ngIf="mensajeBienvenida">
+            <div class="bienvenida-toast-content" [innerHTML]="mensajeBienvenida"></div>
         </div>
         <router-outlet></router-outlet>
         <app-footer></app-footer>

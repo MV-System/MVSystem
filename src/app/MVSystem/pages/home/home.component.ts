@@ -13,6 +13,10 @@ export class HomeComponent implements OnInit {
  @ViewChild('sidebarContainer', { static: false }) sidebarContainer!: ElementRef;
  mensajeBienvenida: string = '';
 
+  isMobileScreen(): boolean {
+    return window.innerWidth < 992;
+  }
+
   constructor(
     private toastr: ToastrService,
     private loginService: LoginService
@@ -23,7 +27,11 @@ export class HomeComponent implements OnInit {
     if (window.innerWidth < 992) {
       this.sidebarVisible = false;
     }
-    this.mostrarPopupBienvenida();
+    // Mostrar solo si no se ha mostrado en esta sesión
+    if (!localStorage.getItem('bienvenidaMostrada')) {
+      this.mostrarPopupBienvenida();
+      localStorage.setItem('bienvenidaMostrada', 'true');
+    }
   }
 
   mostrarPopupBienvenida() {
@@ -38,7 +46,7 @@ export class HomeComponent implements OnInit {
       `${saludo}, ${nombre}! 🌞<br>Arrancamos el día con buena vibra. ¡Hoy la rompemos!`,
       `${saludo}, ${nombre}! ☕<br>Espero que hayas desayunado bien, porque hoy toca darlo todo.`,
       `${saludo}, ${nombre}! 😃<br>Vamos a meter mano desde temprano, que el éxito no se deja esperar.`,
-      `${saludo}, ${nombre}! 💪<br>Gracias por seguir confiando en MVSystem. ¡Hoy se trabaja con flow!`,
+      `${saludo}, ${nombre}! 💪<br>Gracias por seguir confiando en CellControl. ¡Hoy se trabaja con flow!`,
       `${saludo}, ${nombre}! ✨<br>Sonríe, que hoy puede ser un gran día para lograr algo nuevo.`,
       `${saludo}, ${nombre}! 📈<br>Cada pasito que des hoy, te acerca más a tus metas.`,
       `${saludo}, ${nombre}! 🚀<br>Comienza el día con energía, que el éxito está en movimiento.`,
@@ -50,68 +58,40 @@ export class HomeComponent implements OnInit {
     saludo = '¡Buenas tardes';
     mensajes = [
       `${saludo}, ${nombre}! 🌤️<br>Espero que tu día vaya bien. ¡Un empujoncito más y lo logras!`,
-      `${saludo}, ${nombre}! 👋<br>¿Ya almorzaste? Tómate un respiro y sigue dándole con todo.`,
-      `${saludo}, ${nombre}! 💼<br>La tarde está perfecta para cerrar esos pendientes con estilo.`,
-      `${saludo}, ${nombre}! 😎<br>Vamos bien, no aflojes. ¡El esfuerzo de ahora es el éxito de mañana!`,
-      `${saludo}, ${nombre}! ✨<br>Gracias por tu dedicación. ¡El trabajo bien hecho siempre se nota!`,
-      `${saludo}, ${nombre}! 🚀<br>Recuerda hidratarte y mantenerte activo. ¡Tú puedes!`,
-      `${saludo}, ${nombre}! 💪<br>Un poco más de esfuerzo y terminas el día con broche de oro.`,
-      `${saludo}, ${nombre}! 😊<br>MVSystem sigue contigo, ayudándote a sacar lo mejor de ti.`,
-      `${saludo}, ${nombre}! ⚡<br>Vamos a cerrar la tarde con buena energía. ¡A romperla!`,
-      `${saludo}, ${nombre}! 😃<br>Gracias por dar siempre lo mejor. ¡Sigue brillando!`
+      `${saludo}, ${nombre}! 👋<br>¿Ya almorzaste? Tómate un respiro y sigue dando lo mejor de ti.`,
+      `${saludo}, ${nombre}! 😃<br>La tarde es ideal para avanzar en tus proyectos. ¡Sigue así!`,
+      `${saludo}, ${nombre}! 💡<br>Un café y seguimos, que la tarde aún tiene mucho por ofrecer.`,
+      `${saludo}, ${nombre}! 🚀<br>Recuerda que cada esfuerzo suma. ¡Vamos por más!`,
+      `${saludo}, ${nombre}! ✨<br>Gracias por tu dedicación. ¡Que tengas una excelente tarde!`,
+      `${saludo}, ${nombre}! 📈<br>La constancia es la clave. ¡No te detengas!`,
+      `${saludo}, ${nombre}! 🙌<br>CellControl te acompaña en cada paso. ¿En qué puedo ayudarte esta tarde?`,
+      `${saludo}, ${nombre}! 😄<br>Un pequeño descanso puede darte nuevas ideas. ¡Ánimo!`,
+      `${saludo}, ${nombre}! 🌟<br>La tarde es perfecta para aprender algo nuevo. ¡Aprovecha!`
     ];
   } else {
     saludo = '¡Buenas noches';
     mensajes = [
-      `${saludo}, ${nombre}! 🌙<br>Gracias por todo tu esfuerzo hoy. ¡Te lo ganaste, descansa tranquilo!`,
-      `${saludo}, ${nombre}! 😴<br>Desconecta un poco, mañana seguimos con más ánimo.`,
-      `${saludo}, ${nombre}! ✨<br>Respira profundo, agradece el día y suéltalo. ¡Mañana hay más!`,
-      `${saludo}, ${nombre}! 🌟<br>Hoy diste lo mejor. ¡Ahora toca recargar energías!`,
-      `${saludo}, ${nombre}! 💤<br>Que descanses bien, mañana seguimos construyendo tus metas.`,
-      `${saludo}, ${nombre}! 📱<br>MVSystem sigue aquí para ti, pero ahora es hora de soltar el celular 😅.`,
-      `${saludo}, ${nombre}! 🌌<br>Gracias por formar parte de esta comunidad. ¡Nos vemos mañana!`,
-      `${saludo}, ${nombre}! 💫<br>Descansa, que el éxito también se construye durmiendo bien.`,
-      `${saludo}, ${nombre}! 🛌<br>Apaga las luces y deja que los sueños te inspiren. ¡Feliz noche!`,
-      `${saludo}, ${nombre}! 🌠<br>Cada día cuenta, pero el descanso también. ¡Hasta mañana!`
+      `${saludo}, ${nombre}! 🌙<br>Gracias por tu esfuerzo hoy. Que tengas un merecido descanso.`,
+      `${saludo}, ${nombre}! 😴<br>Recuerda desconectarte y recargar energías para mañana.`,
+      `${saludo}, ${nombre}! ✨<br>La noche es perfecta para reflexionar y agradecer. ¡Descansa!`,
+      `${saludo}, ${nombre}! 🌟<br>Esperamos que hayas tenido un día productivo. ¡Hasta mañana!`,
+      `${saludo}, ${nombre}! 💤<br>CellControl te desea una noche tranquila y reparadora.`,
+      `${saludo}, ${nombre}! 🤖<br>Si necesitas algo, aquí estaremos mañana para ayudarte.`,
+      `${saludo}, ${nombre}! 📚<br>Un buen libro y un descanso merecido, ¡feliz noche!`,
+      `${saludo}, ${nombre}! 🛌<br>Que sueñes con grandes logros. ¡Nos vemos mañana!`,
+      `${saludo}, ${nombre}! 🌌<br>Gracias por ser parte de CellControl. ¡Descansa!`,
+      `${saludo}, ${nombre}! 🌠<br>Recuerda: cada día es una nueva oportunidad. ¡Buenas noches!`
     ];
   }
+  const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)];
+  this.toastr.info(mensajeAleatorio, 'Bienvenido a CellControl', {
+    closeButton: true,
+    progressBar: true,
+    timeOut: 10000,
+    enableHtml: true
+  });
+}
 
-  const icono = hora >= 5 && hora < 12 ? '☀️' : (hora >= 12 && hora < 19 ? '🌤️' : '🌙');
-    const mensajeHtml = `<div class='bienvenida-text'>${saludo}, ${nombre}!</div>
-      <div class='bienvenida-msg'>${mensajes[Math.floor(Math.random() * mensajes.length)].replace(`${saludo}, ${nombre}!`, '')}</div>`;
-    this.toastr.info(mensajeHtml, '', {
-      timeOut: 6500,
-      closeButton: true,
-      progressBar: true,
-      positionClass: 'toast-top-center',
-      enableHtml: true,
-      toastClass: 'ngx-toastr bienvenida-toast',
-      // icono dinámico para el ::before
-      tapToDismiss: true
-    });
-    // Establecer el icono dinámico en el toast
-    setTimeout(() => {
-      const toast = document.querySelector('.bienvenida-toast');
-      if (toast) toast.setAttribute('data-icon', icono);
-    }, 100);
-  }
-  setMensajeBienvenida() {
-    const hora = new Date().getHours();
-    let saludo = 'Bienvenido';
-    if (hora >= 6 && hora < 12) {
-      saludo = 'Buenos días';
-    } else if (hora >= 12 && hora < 19) {
-      saludo = 'Buenas tardes';
-    } else {
-      saludo = 'Buenas noches';
-    }
-    const nombre = this.loginService.getUserGiveName ? this.loginService.getUserGiveName() : this.loginService.getUserName();
-    this.mensajeBienvenida = `${saludo}${nombre ? ', ' + nombre : ''}!`;
-  }
-
-  isMobileScreen(): boolean {
-    return window.innerWidth < 992;
-  }
   onToggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }
