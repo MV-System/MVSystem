@@ -1,24 +1,24 @@
 <app-header (toggleSidebar)="onToggleSidebar()"></app-header>
 
 <div class="grid mainLayout">
-  <!-- Sidebar y overlay solo cuando visible -->
-  <ng-container *ngIf="sidebarVisible">
-    <!-- Overlay para cerrar el sidebar al hacer click fuera -->
-    <div 
-      class="sidebar-overlay"
-      (click)="onToggleSidebar()"
-      *ngIf="isMobileScreen()">
+    <!-- Sidebar y overlay solo cuando visible -->
+    <ng-container *ngIf="sidebarVisible">
+        <!-- Overlay para cerrar el sidebar al hacer click fuera -->
+        <div class="sidebar-overlay" (click)="onToggleSidebar()" *ngIf="isMobileScreen()">
+        </div>
+        <div #sidebarContainer>
+            <app-sidebar (menuSelected)="onSidebarMenuSelected()"></app-sidebar>
+        </div>
+    </ng-container>
+
+    <div class="main-content" [class.sidebar-open]="sidebarVisible">
+        <div class="bienvenida-msg" *ngIf="mensajeBienvenida" style="margin: 24px 0 0 24px; font-size: 1.5rem; font-weight: 500; color: #333;">
+            {{ mensajeBienvenida }}
+        </div>
+        <router-outlet></router-outlet>
+        <app-footer></app-footer>
+        <a class="back-to-top d-flex align-items-center justify-content-center">
+            <i class="bi bi-arrow-up-short"></i>
+        </a>
     </div>
-    <div #sidebarContainer>
-      <app-sidebar (menuSelected)="onSidebarMenuSelected()"></app-sidebar>
-    </div>
-  </ng-container>
-  
-  <div class="main-content" [class.sidebar-open]="sidebarVisible">
-    <router-outlet></router-outlet>
-    <app-footer></app-footer>
-    <a class="back-to-top d-flex align-items-center justify-content-center">
-      <i class="bi bi-arrow-up-short"></i>
-    </a>
-  </div>
 </div>

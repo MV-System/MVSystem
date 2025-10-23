@@ -1,35 +1,127 @@
 .grid.mainLayout {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
 .main-content {
-  flex: 1 1 auto;
-  transition: margin-left 0.3s;
-  margin-left: 0;
+    flex: 1 1 auto;
+    transition: margin-left 0.3s;
+    margin-left: 0;
 }
 
 .sidebar-open {
-  margin-left: 250px; /* Debe coincidir con el ancho del sidebar */
+    margin-left: 250px;
+    /* Debe coincidir con el ancho del sidebar */
 }
 
 @media (max-width: 991.98px) {
-  .sidebar-open {
-    margin-left: 0 !important;
-  }
+    .sidebar-open {
+        margin-left: 0 !important;
+    }
 }
+
 .main-content {
-  flex: 1 1 auto;
-  transition: margin-left 0.3s;
-  margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
-  padding-left: 0 !important; /* Elimina cualquier padding izquierdo */
+    flex: 1 1 auto;
+    transition: margin-left 0.3s;
+    margin-left: 0 !important;
+    /* Elimina cualquier margen izquierdo */
+    padding-left: 0 !important;
+    /* Elimina cualquier padding izquierdo */
 }
+
 .sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.1); /* Puedes aumentar la opacidad si quieres */
-  z-index: 1040; /* Asegúrate que esté por encima del contenido pero debajo del sidebar */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.1);
+    /* Puedes aumentar la opacidad si quieres */
+    z-index: 1040;
+    /* Asegúrate que esté por encima del contenido pero debajo del sidebar */
+}
+
+.bienvenida-toast {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px) saturate(180%);
+    border-radius: 18px !important;
+    box-shadow: 0 12px 32px rgba(79, 141, 245, 0.18), 0 1.5px 8px rgba(0, 0, 0, 0.08);
+    padding: 28px 38px !important;
+    color: #1c1f26 !important;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-left: 8px solid #4f8df5;
+    border-right: 8px solid #7eb3ff;
+    position: relative;
+    animation: fadeInUp 0.5s cubic-bezier(.68, -0.55, .27, 1.55);
+    overflow: hidden;
+}
+
+.bienvenida-toast::before {
+    content: attr(data-icon);
+    font-size: 2.6rem;
+    margin-right: 10px;
+    animation: pulse 1.6s infinite ease-in-out;
+    filter: drop-shadow(0 2px 6px #4f8df5);
+}
+
+.bienvenida-toast .toast-progress {
+    background: linear-gradient(90deg, #4f8df5, #7eb3ff) !important;
+    height: 5px !important;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px #4f8df533;
+}
+
+.bienvenida-toast .toast-close-button {
+    color: #4f8df5 !important;
+    font-size: 1.3rem !important;
+    opacity: 0.7;
+    transition: opacity 0.25s ease;
+    margin-top: 2px;
+}
+
+.bienvenida-toast .toast-close-button:hover {
+    opacity: 1;
+}
+
+.bienvenida-toast .bienvenida-text {
+    font-size: 1.18rem;
+    font-weight: 600;
+    color: #2d8cf0;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.bienvenida-toast .bienvenida-msg {
+    font-size: 1.02rem;
+    color: #444;
+    margin-top: 2px;
+    line-height: 1.5;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 2px 6px #4f8df5);
+    }
+    50% {
+        transform: scale(1.12);
+        filter: drop-shadow(0 4px 12px #7eb3ff);
+    }
 }
