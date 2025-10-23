@@ -1,3 +1,4 @@
+// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
@@ -146,6 +147,83 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       });
     } catch (error) {
       this.toastr.error('Error inesperado al compartir la factura');
+      this.loading.hideLoading();
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Compartir todas las facturas pendientes de un cliente (solo móvil, varios archivos)
+   */
+  async compartirFacturasCliente(cliente: any) {
+    const idCliente = cliente.id_Cliente;
+    if (!idCliente || idCliente <= 0) {
+      this.toastr.error('Cliente inválido');
+      return;
+    }
+    // Corregido: usar (navigator as any).canShare para evitar error TS2339
+    if (!navigator.share || !(navigator as any).canShare || !(navigator as any).canShare({ files: [] })) {
+      this.toastr.warning('Tu navegador no soporta la función de compartir múltiples archivos. Usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+    if (!this.FacturasPorClientes || this.FacturasPorClientes.length === 0) {
+      this.toastr.warning('No hay facturas pendientes para este cliente.');
+      return;
+    }
+    this.loading.showLoading();
+    this.isLoading = true;
+    try {
+      // Limitar a 10 facturas para evitar problemas de tamaño (ajusta según necesidad)
+      const facturas = this.FacturasPorClientes.slice(0, 10);
+      const filterBase: FacturaFilter = {
+        almacen: Number(this.loginService.getUserIdSucursal),
+        criterio: '',
+        empresa: this.loginService.getUserEmpresa,
+        IdEmpresa: this.loginService.getUserIdEmpresa,
+        IdSucursal: this.loginService.getUserIdSucursal,
+        ComprobanteCheck: 1,
+        EstadoFactura: 'A',
+        IdVendedor: 0,
+        pageIndex: 1,
+        pageSize: 1,
+        fechaInicio: '',
+        fechaFinal: ''
+      };
+      // Descargar todos los PDFs en paralelo
+      const pdfPromises = facturas.map(detalle =>
+        new Promise<File>((resolve, reject) => {
+          this.mantenimientoService.postFacturaReport(filterBase, detalle.numeroFactura).subscribe({
+            next: (blob: Blob) => {
+              const file = new File([blob], `Factura_${detalle.numeroFactura}.pdf`, { type: 'application/pdf' });
+              resolve(file);
+            },
+            error: (err) => reject(err)
+          });
+        })
+      );
+      const files = await Promise.all(pdfPromises);
+      if ((navigator as any).canShare({ files })) {
+        await (navigator as any).share({
+          title: `Facturas del cliente #${idCliente}`,
+          text: `Facturas pendientes del cliente #${idCliente} - MVSystem`,
+          files
+        });
+        this.toastr.success('Facturas compartidas exitosamente');
+      } else {
+        this.toastr.warning('No se pueden compartir estos archivos. Se descargará la primera factura.');
+        // Fallback: descargar el primer archivo
+        const url = window.URL.createObjectURL(files[0]);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = files[0].name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      this.toastr.error('Error al compartir las facturas.');
+    } finally {
       this.loading.hideLoading();
       this.isLoading = false;
     }
