@@ -43,48 +43,49 @@ export class HomeComponent implements OnInit {
   if (hora >= 5 && hora < 12) {
     saludo = '¡Buenos días';
     mensajes = [
-      `${saludo}, ${nombre}! 🌞<br>Arrancamos el día con buena vibra. ¡Hoy la rompemos!`,
-      `${saludo}, ${nombre}! ☕<br>Espero que hayas desayunado bien, porque hoy toca darlo todo.`,
-      `${saludo}, ${nombre}! 😃<br>Vamos a meter mano desde temprano, que el éxito no se deja esperar.`,
-      `${saludo}, ${nombre}! 💪<br>Gracias por seguir confiando en CellControl. ¡Hoy se trabaja con flow!`,
-      `${saludo}, ${nombre}! ✨<br>Sonríe, que hoy puede ser un gran día para lograr algo nuevo.`,
-      `${saludo}, ${nombre}! 📈<br>Cada pasito que des hoy, te acerca más a tus metas.`,
-      `${saludo}, ${nombre}! 🚀<br>Comienza el día con energía, que el éxito está en movimiento.`,
-      `${saludo}, ${nombre}! 🌅<br>Hoy es una buena oportunidad para avanzar. ¡Vamos con todo!`,
-      `${saludo}, ${nombre}! 🙌<br>Gracias por formar parte de esta familia. ¡A romperla hoy!`,
-      `${saludo}, ${nombre}! 😄<br>Actitud positiva desde temprano, que eso se nota. ¡Vamos arriba!`
+      `${saludo}, ${nombre}! 🌞<br>Arrancamos el día con buena vibra. ¡Hoy se trabaja con actitud positiva!`,
+      `${saludo}, ${nombre}! ☕<br>Espero que hayas arrancado bien el día. ¡Vamos a darlo todo!`,
+      `${saludo}, ${nombre}! 💪<br>Cada día trae nuevas oportunidades. ¡Aprovecha las tuyas!`,
+      `${saludo}, ${nombre}! 😃<br>Gracias por seguir confiando en CellControl. ¡Hoy la rompemos!`,
+      `${saludo}, ${nombre}! ✨<br>Empieza el día con energía y buenas ideas. ¡Tú puedes!`,
+      `${saludo}, ${nombre}! 📈<br>Cada paso cuenta, y hoy es un buen día para avanzar.`,
+      `${saludo}, ${nombre}! 🚀<br>Arriba ese ánimo, que el éxito se construye paso a paso.`,
+      `${saludo}, ${nombre}! 🌅<br>Hoy es una buena oportunidad para crecer. ¡Vamos con todo!`,
+      `${saludo}, ${nombre}! 🙌<br>Gracias por ser parte de esta comunidad. ¡Hoy será un gran día!`,
+      `${saludo}, ${nombre}! 😄<br>Actitud positiva desde temprano, que eso siempre se nota. ¡Vamos arriba!`
     ];
   } else if (hora >= 12 && hora < 19) {
     saludo = '¡Buenas tardes';
     mensajes = [
-      `${saludo}, ${nombre}! 🌤️<br>Espero que tu día vaya bien. ¡Un empujoncito más y lo logras!`,
-      `${saludo}, ${nombre}! 👋<br>¿Ya almorzaste? Tómate un respiro y sigue dando lo mejor de ti.`,
-      `${saludo}, ${nombre}! 😃<br>La tarde es ideal para avanzar en tus proyectos. ¡Sigue así!`,
-      `${saludo}, ${nombre}! 💡<br>Un café y seguimos, que la tarde aún tiene mucho por ofrecer.`,
-      `${saludo}, ${nombre}! 🚀<br>Recuerda que cada esfuerzo suma. ¡Vamos por más!`,
-      `${saludo}, ${nombre}! ✨<br>Gracias por tu dedicación. ¡Que tengas una excelente tarde!`,
-      `${saludo}, ${nombre}! 📈<br>La constancia es la clave. ¡No te detengas!`,
-      `${saludo}, ${nombre}! 🙌<br>CellControl te acompaña en cada paso. ¿En qué puedo ayudarte esta tarde?`,
-      `${saludo}, ${nombre}! 😄<br>Un pequeño descanso puede darte nuevas ideas. ¡Ánimo!`,
-      `${saludo}, ${nombre}! 🌟<br>La tarde es perfecta para aprender algo nuevo. ¡Aprovecha!`
+      `${saludo}, ${nombre}! 🌤️<br>Espero que tu día vaya fluyendo bien. ¡Un poco más y lo logras!`,
+      `${saludo}, ${nombre}! 👋<br>¿Ya almorzaste? Recarga energías y sigue con todo.`,
+      `${saludo}, ${nombre}! 😃<br>La tarde es perfecta para avanzar con buen ritmo. ¡Sigue firme!`,
+      `${saludo}, ${nombre}! 💡<br>Un café y seguimos, que aún queda tarde para lograr mucho.`,
+      `${saludo}, ${nombre}! 🚀<br>Recuerda: cada esfuerzo suma. ¡Tú haces la diferencia!`,
+      `${saludo}, ${nombre}! ✨<br>Gracias por tu dedicación. ¡Que tengas una tarde productiva!`,
+      `${saludo}, ${nombre}! 📈<br>La constancia siempre da frutos. ¡No te detengas ahora!`,
+      `${saludo}, ${nombre}! 🙌<br>CellControl te acompaña en todo momento. ¡Vamos a seguir creciendo!`,
+      `${saludo}, ${nombre}! 😄<br>Un pequeño descanso puede traer grandes ideas. ¡Tú puedes!`,
+      `${saludo}, ${nombre}! 🌟<br>Cada día se aprende algo nuevo. ¡Aprovecha la tarde!`
     ];
   } else {
     saludo = '¡Buenas noches';
     mensajes = [
-      `${saludo}, ${nombre}! 🌙<br>Gracias por tu esfuerzo hoy. Que tengas un merecido descanso.`,
-      `${saludo}, ${nombre}! 😴<br>Recuerda desconectarte y recargar energías para mañana.`,
-      `${saludo}, ${nombre}! ✨<br>La noche es perfecta para reflexionar y agradecer. ¡Descansa!`,
-      `${saludo}, ${nombre}! 🌟<br>Esperamos que hayas tenido un día productivo. ¡Hasta mañana!`,
+      `${saludo}, ${nombre}! 🌙<br>Gracias por todo tu esfuerzo hoy. ¡Te lo ganaste!`,
+      `${saludo}, ${nombre}! 😴<br>Desconéctate un poco y recarga energías para mañana.`,
+      `${saludo}, ${nombre}! ✨<br>La noche es buena para agradecer lo logrado y planear lo que viene.`,
+      `${saludo}, ${nombre}! 🌟<br>Esperamos que hayas tenido un gran día. ¡A descansar!`,
       `${saludo}, ${nombre}! 💤<br>CellControl te desea una noche tranquila y reparadora.`,
-      `${saludo}, ${nombre}! 🤖<br>Si necesitas algo, aquí estaremos mañana para ayudarte.`,
-      `${saludo}, ${nombre}! 📚<br>Un buen libro y un descanso merecido, ¡feliz noche!`,
-      `${saludo}, ${nombre}! 🛌<br>Que sueñes con grandes logros. ¡Nos vemos mañana!`,
-      `${saludo}, ${nombre}! 🌌<br>Gracias por ser parte de CellControl. ¡Descansa!`,
-      `${saludo}, ${nombre}! 🌠<br>Recuerda: cada día es una nueva oportunidad. ¡Buenas noches!`
+      `${saludo}, ${nombre}! 🤖<br>Mañana seguimos con más. ¡Gracias por ser parte del equipo!`,
+      `${saludo}, ${nombre}! 📚<br>Un buen descanso también es parte del éxito. ¡Feliz noche!`,
+      `${saludo}, ${nombre}! 🛌<br>Que descanses y recargues energías. ¡Nos vemos mañana!`,
+      `${saludo}, ${nombre}! 🌌<br>Gracias por tu compromiso. ¡Sigue brillando!`,
+      `${saludo}, ${nombre}! 🌠<br>Recuerda: cada día cuenta. ¡Buenas noches y a soñar en grande!`
     ];
   }
+
   const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)];
-  this.toastr.info(mensajeAleatorio, 'Bienvenido a CellControl', {
+  this.toastr.info(mensajeAleatorio, '¡Hola!', {
     closeButton: true,
     progressBar: true,
     timeOut: 10000,
