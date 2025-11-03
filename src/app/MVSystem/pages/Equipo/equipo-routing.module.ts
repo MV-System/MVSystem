@@ -10,6 +10,7 @@ import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-dis
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 import { ReparacionesComponent } from './taller/reparaciones/reparaciones.component';
+import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,10 @@ const routes: Routes = [
   {
     path:'RegistraReparacion',
     component:ReparacionesComponent
+  },
+  {
+    path:'ConsultaReparaciones',
+    component:ReparacionesConsultaComponent
   }
 ];
 

@@ -1,0 +1,226 @@
+<section class="section mt-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Encabezado -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-tools me-2"></i> Consulta de Reparaciones
+                        </h5>
+                    </div>
+
+                    <!-- Filtros -->
+                    <form [formGroup]="formFiltros">
+                        <div class="row g-3 mb-4">
+                            <!-- Búsqueda -->
+                            <div class="col-md-4">
+                                <label class="form-label">Buscar</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Teléfono, cliente, ID..." formControlName="criterio" [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
+                                    <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" [disabled]="isLoading">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                                </div>
+                            </div>
+
+                            <!-- Estatus -->
+                            <div class="col-md-3">
+                                <label class="form-label">Estatus</label>
+                                <select class="form-select" formControlName="estatus" (change)="buscarReparaciones()">
+                  <option value="">Todos</option>
+                  <option *ngFor="let estatus of estatusList" [value]="estatus.iD_Estado_Taller">{{ estatus.descripcion_Estado_Taller }}</option>
+                </select>
+                            </div>
+
+                            <!-- Rango de Fechas -->
+                            <div class="col-md-4">
+                                <label class="form-label">Rango de Fechas</label>
+                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}">
+                                </my-date-range-picker>
+                            </div>
+
+                            <!-- Botón Buscar -->
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" type="button" (click)="buscarReparaciones()" [disabled]="isLoading">
+                  <i class="bi bi-search"></i>
+                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Resumen de Resultados -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="filter-header mb-3">
+                                <h6 class="filter-title">
+                                    <i class="bi bi-bar-chart-line me-2 text-success"></i> Resumen de Resultados
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="stats-horizontal-container">
+                                <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getCantidadReparaciones() === 0 && !isLoading}">
+                                    <div class="stats-content-horizontal">
+                                        <div class="stats-icon-horizontal">
+                                            <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                            <i *ngIf="!isLoading" class="bi bi-tools text-primary"></i>
+                                        </div>
+                                        <div class="stats-info-horizontal">
+                                            <h6 class="stats-title-horizontal">
+                                                Reparaciones
+                                                <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                    <i class="bi bi-funnel-fill text-info"></i>
+                                                </span>
+                                            </h6>
+                                            <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                            <span *ngIf="!isLoading">{{ getCantidadReparaciones() | number }}</span>
+                                            </span>
+                                            <small class="stats-subtitle-horizontal">
+                                                <span *ngIf="!isLoading && getCantidadReparaciones() === 0" class="text-muted">Sin resultados</span>
+                                                <span *ngIf="!isLoading && getCantidadReparaciones() > 0">En el período</span>
+                                                <span *ngIf="isLoading">Cargando...</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stats-divider"></div>
+
+                                <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalPrecioReparaciones() === 0 && !isLoading}">
+                                    <div class="stats-content-horizontal">
+                                        <div class="stats-icon-horizontal">
+                                            <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-success" role="status"></div>
+                                            <i *ngIf="!isLoading" class="bi bi-cash-coin text-success"></i>
+                                        </div>
+                                        <div class="stats-info-horizontal">
+                                            <h6 class="stats-title-horizontal">
+                                                Total en reparaciones
+                                                <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                    <i class="bi bi-funnel-fill text-info"></i>
+                                                </span>
+                                            </h6>
+                                            <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                            <span *ngIf="!isLoading">{{ getTotalPrecioReparaciones() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                            </span>
+                                            <small class="stats-subtitle-horizontal">
+                                                <span *ngIf="!isLoading && getTotalPrecioReparaciones() === 0" class="text-muted">Sin montos</span>
+                                                <span *ngIf="!isLoading && getTotalPrecioReparaciones() > 0">Monto total</span>
+                                                <span *ngIf="isLoading">Calculando...</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Reparaciones (componente hijo) -->
+                    <app-reparaciones-lista [reparaciones]="reparaciones" [pageSize]="pageSize" [pageIndex]="pageIndex" [totalRecord]="totalRecord" [line]="line" [lastLine]="lastLine" [isLoading]="isLoading" (onReparacionClick)="onReparacionClick($event)" (onPageSizeChange)="onPageSizeChange($event)"
+                        (onPageChange)="onPageChange($event)">
+                    </app-reparaciones-lista>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Detalle de Reparación -->
+<div class="modal fade" [class.show]="showModalDetalle" [style.display]="showModalDetalle ? 'block' : 'none'" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" *ngIf="reparacionSeleccionada">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-tools me-2"></i> Detalle Reparación #{{ reparacionSeleccionada.idReparacion }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row g-3">
+                    <!-- Información del Cliente -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Cliente</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.nombreCliente }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Teléfono</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.telefonoCliente }}</p>
+                    </div>
+
+                    <!-- Información del Equipo -->
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">IMEI</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.imei }}</p>
+                    </div>
+                    <!-- Marca y Modelo no disponibles en la lista, se pueden agregar después si es necesario -->
+
+                    <!-- Detalles de la Reparación -->
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Detalle de Reparación</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.detalle_Reparacion }}</p>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Observaciones</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.observaciones || 'Sin observaciones' }}</p>
+                    </div>
+
+                    <!-- Costo y Precio (Editables solo si no está completado) -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Costo</label>
+                        <input type="number" class="form-control" [(ngModel)]="reparacionSeleccionada.costo" min="0" step="0.01" [disabled]="!puedeEditarCostoPrecio()">
+                        <small class="text-muted" *ngIf="!puedeEditarCostoPrecio()">Solo se pueden editar reparaciones con estatus Pendiente</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Precio</label>
+                        <input type="number" class="form-control" [(ngModel)]="reparacionSeleccionada.precio" min="0" step="0.01" [disabled]="!puedeEditarCostoPrecio()">
+                        <small class="text-muted" *ngIf="!puedeEditarCostoPrecio()">Solo se pueden editar reparaciones con estatus Pendiente</small>
+                    </div>
+
+                    <!-- Estatus y Fechas -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Estatus</label>
+                        <p class="form-control-plaintext">
+                            <span class="badge" [class.bg-warning]="reparacionSeleccionada.estatus === 'Pendiente'" [class.bg-info]="reparacionSeleccionada.estatus === 'En proceso'" [class.bg-success]="reparacionSeleccionada.estatus === 'Completado'" [class.bg-primary]="reparacionSeleccionada.estatus === 'Entregado'"
+                                [class.bg-danger]="reparacionSeleccionada.estatus === 'Cancelado'">
+                {{ reparacionSeleccionada.estatus }}
+              </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Fecha de Entrega</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.fechaEntrega | date: 'dd/MM/yyyy' }}</p>
+                    </div>
+
+                    <!-- Usuario -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Registrado por</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.usuario }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Fecha de Registro</label>
+                        <p class="form-control-plaintext">{{ reparacionSeleccionada.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
+          <i class="bi bi-x-lg me-1"></i> Cerrar
+        </button>
+                <button type="button" class="btn btn-info" (click)="imprimirRecibo()">
+          <i class="bi bi-printer me-1"></i> Imprimir
+        </button>
+                <button type="button" class="btn btn-primary" (click)="guardarCambios()" [disabled]="!puedeEditarCostoPrecio()">
+          <i class="bi bi-save me-1"></i> Guardar Cambios
+        </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay del modal -->
+<div class="modal-backdrop fade" [class.show]="showModalDetalle" *ngIf="showModalDetalle"></div>

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS, CanalesLista } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS, CanalesLista, StatusTaller } from '../interfaces/catalogo.interface';
 import { Equipo } from "../interfaces/equipo.interface";
 
 
@@ -64,6 +64,9 @@ export class CatalogosService {
   }
   getSuplidorLista(): Observable<Suplidor[]> {
     return this.http.get<Suplidor[]>(APIURL.Catalogos.suplidorComboLista);
+  }
+  getStatusTallerLista(): Observable<StatusTaller[]> {
+    return this.http.get<StatusTaller[]>(APIURL.Catalogos.statusTallerLista);
   }
 
   buscarEquipoDisponible(equipo: string, Id_Almacen: string): Observable<Equipo> {

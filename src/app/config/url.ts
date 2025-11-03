@@ -65,11 +65,16 @@ export let APIURL = {
             EquipoTransferencia: API + 'Equipos/GetEquipoByImei',
             EquipoTransferenciaId: API + 'Equipos/GetEquipoUltimoIdTransferencia',
             EquiposRecibidos: API + 'Equipos/RecepcionEquipos?criterio=',
-            EquiposReparaciones: API + 'Equipos/GetReparaciones?'
+            EquiposReparaciones: API + 'Equipos/GetReparaciones?',
+            ReparacionesLista: API + 'Equipos/GetReparaciones_Lista',
+            ReparacionDetalle: API + 'Equipos/GetReparacion_Detalle'
         },
         Modifica: {
             ModificarEstatusEquipo: API + 'Equipos/ModificarEstatusEquipo',
             EstadoActualiza: API + 'Equipos/EstadoActualiza'
+        },
+        Actualiza: {
+            ReparacionCostoPrecio: API + 'Equipos/ActualizarCostoPrecioReparacion'
         },
         Accion: {
           EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio=',
@@ -104,6 +109,7 @@ export let APIURL = {
         tecnologiasComboLista: API + 'Catalogos/Tecnologias_Combo',
         suplidorComboLista: API + 'Catalogos/Suplidor_Combo',
         AsumeITBIS: API + 'Catalogos/AsumeITBIS',
+        statusTallerLista: API + 'Catalogos/GetStatusTaller',
     },
     Clientes: {
         Consultas: {

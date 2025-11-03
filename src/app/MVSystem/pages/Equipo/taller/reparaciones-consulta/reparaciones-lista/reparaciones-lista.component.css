@@ -1,0 +1,62 @@
+.results-section {
+    margin-top: 1rem;
+}
+
+.results-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr.table-active {
+    background-color: #e7f3ff;
+    border-left: 3px solid #0d6efd;
+}
+
+
+/* Estilos para cards móviles */
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+}
+
+.card.border-primary {
+    border-width: 2px;
+}
+
+
+/* Badge personalizado */
+
+.badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    font-weight: 500;
+}
+
+
+/* Responsive */
+
+@media (max-width: 767.98px) {
+    .results-title {
+        font-size: 1rem;
+    }
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+}

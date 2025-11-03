@@ -134,6 +134,11 @@
                             <i class="bi bi-circle"></i><span>Transferencias de Equipos</span>
                         </a>
                     </li>
+                    <li *ngIf="VerFormConsultaReparaciones()">
+                        <a (click)="onMenuClick()" routerLink="./equipo/ConsultaReparaciones">
+                            <i class="bi bi-circle"></i><span>Reparaciones</span>
+                        </a>
+                    </li>
                     <li *ngIf="VerFormConsultaClientesPorCobrar()">
                         <a (click)="onMenuClick()" routerLink="./clientes/cuentasPorCobrar">
                             <i class="bi bi-circle"></i><span>Cuentas Por Cobrar</span>

@@ -37,6 +37,36 @@ export class MantenimientoService {
     }
     return this.http.get<any[]>(APIURL.Equipo.Consulta.EquiposReparaciones, { params });
   }
+
+  // Consulta de reparaciones con filtros y paginación
+  getReparacionesLista(filtros: any): Observable<any> {
+    let queryParams = new HttpParams();
+
+    if (filtros.criterio) queryParams = queryParams.append("Criterio", filtros.criterio);
+    if (filtros.estatus) queryParams = queryParams.append("Estatus", filtros.estatus);
+    if (filtros.fechaInicio) queryParams = queryParams.append("FechaInicio", filtros.fechaInicio);
+    if (filtros.fechaFinal) queryParams = queryParams.append("FechaFinal", filtros.fechaFinal);
+    queryParams = queryParams.append("PageIndex", filtros.pageIndex);
+    queryParams = queryParams.append("PageSize", filtros.pageSize);
+
+    return this.http.get<any>(APIURL.Equipo.Consulta.ReparacionesLista, { params: queryParams });
+  }
+
+  // Obtener detalle completo de una reparación
+  getReparacionDetalle(idReparacion: number): Observable<any> {
+    return this.http.get<any>(`${APIURL.Equipo.Consulta.ReparacionDetalle}/${idReparacion}`);
+  }
+
+  // Actualizar costo y precio de una reparación
+  actualizarCostoPrecioReparacion(idReparacion: number, costo: number, precio: number, usuario: string): Observable<{ mensaje: string }> {
+    const body = {
+      ID_Reparacion: idReparacion,
+      Costo: costo,
+      Precio: precio,
+      Usuario: usuario
+    };
+    return this.http.put<{ mensaje: string }>(APIURL.Equipo.Actualiza.ReparacionCostoPrecio, body);
+  }
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }

@@ -41,6 +41,50 @@ export interface RegistroReparaciones{
     mensajeSalida: string;
     idReparacion: number;
 }
+
+export interface ReparacionConsulta {
+    idReparacion: number;
+    fechaRegistro: string;
+    nombreCliente: string;
+    telefonoCliente: number;
+    imei: string;
+    estatus: string;
+    precio: number;
+    costo: number;
+    fechaEntrega: string;
+    detalle_Reparacion: string;
+    observaciones: string;
+    usuario: string;
+    totalRecords: number;
+    line: number;
+    lastLine: number;
+}
+
+export interface ReparacionDetalle {
+    idReparacion: number;
+    fechaRegistro: string;
+    nombreCliente: string;
+    telefonoCliente: number;
+    imei: string;
+    marca: string;
+    modelo: string;
+    detalleReparacion: string;
+    observaciones: string;
+    estatus: string;
+    precio: number;
+    costo: number;
+    fechaEntrega: string;
+    usuario: string;
+}
+
+export interface ReparacionFiltros {
+    criterio: string;
+    estatus: string;
+    fechaInicio: string;
+    fechaFinal: string;
+    pageIndex: number;
+    pageSize: number;
+}
 export interface EquipoObjRetorno {
     imei: string;
     modelo: string;

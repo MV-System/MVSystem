@@ -83,6 +83,10 @@ export interface Suplidor {
   descripcion: string;
 }
 
+export interface StatusTaller {
+  iD_Estado_Taller: number;
+  descripcion_Estado_Taller: string;
+}
 
 
 

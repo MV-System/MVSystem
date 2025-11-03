@@ -1,0 +1,370 @@
+/* Modal personalizado */
+
+.modal.show {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+
+/* Labels en el modal */
+
+.form-label.fw-bold {
+    color: #495057;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-control-plaintext {
+    padding: 0.375rem 0;
+    color: #212529;
+    font-size: 1rem;
+}
+
+
+/* Inputs editables */
+
+.modal-body input[type="number"] {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+
+/* Badge en modal */
+
+.modal-body .badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+
+/* Botones del modal */
+
+.modal-footer .btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+
+/* ===== CARDS DE RESUMEN HORIZONTALES ===== */
+
+
+/* Contenedor principal horizontal */
+
+.stats-horizontal-container {
+    display: flex;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border-left: 4px solid #28a745;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.stats-horizontal-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Tarjetas individuales horizontales */
+
+.stats-card-horizontal {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Contenido horizontal */
+
+.stats-content-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+
+/* Íconos horizontales */
+
+.stats-icon-horizontal {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.stats-icon-horizontal i {
+    font-size: 1.25rem;
+}
+
+
+/* Información horizontal */
+
+.stats-info-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* Títulos horizontales */
+
+.stats-title-horizontal {
+    color: #6c757d;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+
+/* Números horizontales */
+
+.stats-number-horizontal {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+
+/* Subtítulos horizontales */
+
+.stats-subtitle-horizontal {
+    color: #6c757d;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+
+/* Divisor entre tarjetas */
+
+.stats-divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #dee2e6, transparent);
+    margin: 0 1rem;
+    align-self: stretch;
+}
+
+
+/* Estados especiales */
+
+.stats-card-horizontal.stats-loading {
+    opacity: 0.7;
+}
+
+.stats-card-horizontal.stats-empty .stats-icon-horizontal {
+    background: linear-gradient(135deg, #fdf2f2 0%, #fce4e4 100%);
+}
+
+.stats-card-horizontal.stats-empty .stats-number-horizontal {
+    color: #e74c3c;
+}
+
+
+/* Hover effects */
+
+.stats-horizontal-container:hover .stats-icon-horizontal {
+    transform: scale(1.05);
+}
+
+.stats-horizontal-container:hover .stats-number-horizontal {
+    color: #2980b9;
+}
+
+
+/* Estados de carga */
+
+.stats-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading-placeholder {
+    color: #bdc3c7;
+    font-weight: 400;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+
+/* Estado vacío */
+
+.stats-empty {
+    opacity: 0.8;
+}
+
+.stats-horizontal-container.stats-empty {
+    border-left-color: #e74c3c;
+    background: linear-gradient(145deg, #fdf2f2 0%, #fce4e4 100%);
+}
+
+
+/* Animaciones de números */
+
+.animate-number {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Indicador de filtros */
+
+.filter-indicator {
+    font-size: 0.6rem;
+    margin-left: 0.25rem;
+    opacity: 0.8;
+}
+
+.filter-indicator i {
+    animation: filterPulse 2s ease-in-out infinite;
+}
+
+@keyframes filterPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+
+/* Spinner personalizado */
+
+.stats-icon-horizontal .spinner-border {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+
+/* Header de filtros */
+
+.filter-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+.filter-title {
+    color: #495057;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-title i {
+    font-size: 1.1rem;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .stats-horizontal-container {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.6rem 0.8rem;
+    }
+    .stats-content-horizontal {
+        gap: 0.5rem;
+    }
+    .stats-icon-horizontal {
+        width: 2rem;
+        height: 2rem;
+    }
+    .stats-icon-horizontal i {
+        font-size: 1rem;
+    }
+    .stats-number-horizontal {
+        font-size: 1.25rem;
+    }
+    .stats-title-horizontal {
+        font-size: 0.7rem;
+    }
+    .stats-subtitle-horizontal {
+        font-size: 0.65rem;
+    }
+    .stats-divider {
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-body {
+        padding: 1rem;
+    }
+    .form-label.fw-bold {
+        font-size: 0.85rem;
+    }
+    .form-control-plaintext {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-info-horizontal {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}
