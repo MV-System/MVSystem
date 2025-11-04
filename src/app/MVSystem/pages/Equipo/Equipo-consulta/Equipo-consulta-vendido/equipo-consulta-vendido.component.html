@@ -134,7 +134,7 @@
     </div>
 
     <!-- Sección de Insights de Ventas -->
-    <div class="row mb-4" *ngIf="salesInsights && salesInsights.length > 0">
+    <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="insights-header">
@@ -143,9 +143,65 @@
                 </div>
             </div>
 
-            <!-- Desktop: Grid layout para insights -->
-            <div class="d-none d-lg-block">
-                <div class="insights-grid">
+            <!-- Loading inteligente con cerebro -->
+            <div *ngIf="isLoadingInsights" class="loading-smart-container-insights">
+                <div class="loading-smart-content-insights">
+                    <div class="loading-animation-insights">
+                        <div class="ai-brain-icon-insights">🧠</div>
+                        <div class="loading-dots-insights">
+                            <span class="dot-insights"></span>
+                            <span class="dot-insights"></span>
+                            <span class="dot-insights"></span>
+                        </div>
+                    </div>
+                    <div class="loading-message-insights">
+                        <p class="loading-title-insights">{{ mensajeCargaInsights.titulo }}</p>
+                        <p class="loading-subtitle-insights">{{ mensajeCargaInsights.subtitulo }}</p>
+                    </div>
+                    <div class="loading-progress-bar-insights">
+                        <div class="loading-progress-fill-insights"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights cuando ya cargaron -->
+            <div *ngIf="!isLoadingInsights && salesInsights && salesInsights.length > 0">
+                <!-- Desktop: Grid layout para insights -->
+                <div class="d-none d-lg-block">
+                    <div class="insights-grid">
+                        <div class="insight-card-compact" *ngFor="let insight of salesInsights">
+                            <div class="insight-header-compact">
+                                <i [class]="insight.icon" [ngClass]="insight.iconColor"></i>
+                                <span class="insight-title-compact">{{ insight.title }}</span>
+                            </div>
+                            <div class="insight-content-compact">
+                                <div class="insight-value-compact">{{ insight.value }}</div>
+                                <div class="insight-description-compact">{{ insight.description }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tablet: 2 columnas -->
+                <div class="d-none d-md-block d-lg-none">
+                    <div class="row">
+                        <div class="col-md-6" *ngFor="let insight of salesInsights">
+                            <div class="insight-card-compact mb-3">
+                                <div class="insight-header-compact">
+                                    <i [class]="insight.icon" [ngClass]="insight.iconColor"></i>
+                                    <span class="insight-title-compact">{{ insight.title }}</span>
+                                </div>
+                                <div class="insight-content-compact">
+                                    <div class="insight-value-compact">{{ insight.value }}</div>
+                                    <div class="insight-description-compact">{{ insight.description }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile: Stack vertical -->
+                <div class="d-block d-md-none">
                     <div class="insight-card-compact" *ngFor="let insight of salesInsights">
                         <div class="insight-header-compact">
                             <i [class]="insight.icon" [ngClass]="insight.iconColor"></i>
@@ -159,36 +215,10 @@
                 </div>
             </div>
 
-            <!-- Tablet: 2 columnas -->
-            <div class="d-none d-md-block d-lg-none">
-                <div class="row">
-                    <div class="col-md-6" *ngFor="let insight of salesInsights">
-                        <div class="insight-card-compact mb-3">
-                            <div class="insight-header-compact">
-                                <i [class]="insight.icon" [ngClass]="insight.iconColor"></i>
-                                <span class="insight-title-compact">{{ insight.title }}</span>
-                            </div>
-                            <div class="insight-content-compact">
-                                <div class="insight-value-compact">{{ insight.value }}</div>
-                                <div class="insight-description-compact">{{ insight.description }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mobile: Stack vertical -->
-            <div class="d-block d-md-none">
-                <div class="insight-card-compact" *ngFor="let insight of salesInsights">
-                    <div class="insight-header-compact">
-                        <i [class]="insight.icon" [ngClass]="insight.iconColor"></i>
-                        <span class="insight-title-compact">{{ insight.title }}</span>
-                    </div>
-                    <div class="insight-content-compact">
-                        <div class="insight-value-compact">{{ insight.value }}</div>
-                        <div class="insight-description-compact">{{ insight.description }}</div>
-                    </div>
-                </div>
+            <!-- Mensaje cuando no hay datos -->
+            <div *ngIf="!isLoadingInsights && (!salesInsights || salesInsights.length === 0)" class="no-insights-message">
+                <i class="bi bi-info-circle"></i>
+                <span>No hay suficientes datos para generar insights. Aplica filtros para ver análisis.</span>
             </div>
         </div>
     </div>

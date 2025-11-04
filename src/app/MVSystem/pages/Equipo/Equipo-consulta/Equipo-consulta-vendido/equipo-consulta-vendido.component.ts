@@ -51,6 +51,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   }
 
   ngOnInit(): void {
+    this.seleccionarMensajeAleatorioInsights();
     this.obtenerEquiposVendidos();
     this.obtenerAlmacenLista();
     this.obtenerModeloLista();
@@ -66,7 +67,8 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
    if (this.filter.pageSize === this.totalRecord) {
      this.filter.pageIndex = 1;  // Restablecer a la primera página
    }
-   this.obtenerEquiposVendidos();  // Rehacer la consulta para actualizar los datos
+   // OPTIMIZADO: Ya no hace llamada al servidor, solo repagina en el cliente
+   this.aplicarPaginacionCliente();
  }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -79,6 +81,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
 
   }
   isLoading: boolean = false; // Variable para controlar el estado de carga
+  isLoadingInsights: boolean = false; // Variable para controlar el estado de carga de insights
   subscription!: Subscription;
   isPrint: boolean = false;
   totalFacturado:  number = 0;
@@ -97,6 +100,49 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   equiposVendidos: EquipoVendido[] = [];
   equiposVendidosCompletos: EquipoVendido[] = [];  // NUEVO: Todos los equipos para insights
   salesInsights: SalesInsight[] = [];
+
+  // Mensajes inteligentes para loading de insights
+  private mensajesInsightsDisponibles = [
+    {
+      titulo: '🧠 Estoy analizando los patrones de venta, dame un momento...',
+      subtitulo: 'Estoy identificando qué modelos y vendedores están generando más ingresos.'
+    },
+    {
+      titulo: '🔍 Estoy revisando el rendimiento de tu equipo, no voy a tardar...',
+      subtitulo: 'Estoy comparando vendedores para mostrarte quién está destacando.'
+    },
+    {
+      titulo: '📊 Estoy calculando métricas de ventas, espera...',
+      subtitulo: 'Estoy preparando información clave para optimizar tu negocio.'
+    },
+    {
+      titulo: '💡 Voy a procesar todos los datos de ventas, dame un chance...',
+      subtitulo: 'Estoy analizando cada transacción para darte insights valiosos.'
+    },
+    {
+      titulo: '🎯 Estoy detectando los productos estrella, ya casi termino...',
+      subtitulo: 'Estoy identificando cuáles equipos tienen mejor rotación y rentabilidad.'
+    },
+    {
+      titulo: '✨ Voy a generar tu análisis personalizado, un segundo...',
+      subtitulo: 'Estoy organizando las estadísticas de forma clara y accionable.'
+    },
+    {
+      titulo: '⚙️ Estoy conectando con todo el historial de ventas, dame un momento...',
+      subtitulo: 'Estoy validando cada dato para darte información 100% precisa.'
+    },
+    {
+      titulo: '📌 Validando información de rendimiento...',
+      subtitulo: 'Estoy asegurándome de que los números reflejen la realidad de tu negocio.'
+    },
+    {
+      titulo: '🚀 Optimizando el análisis...',
+      subtitulo: 'Estoy maximizando la velocidad para mostrarte los insights rápidamente.'
+    }
+  ];
+
+  mensajeCargaInsights = this.mensajesInsightsDisponibles[0];
+
   rangeDatePlaceholder: Date =new Date()
  // Obtener la fecha actual
  fechaHoy = new Date();
@@ -176,7 +222,8 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.currentPage = index;
     this.filter.PageIndex = index;
     this.filter.pageIndex = index;
-    this.obtenerEquiposVendidos();
+    // OPTIMIZADO: Ya no hace llamada al servidor, solo repagina en el cliente
+    this.aplicarPaginacionCliente();
   }
   getValueFilterForm() {
   const nullOrEmpty =(data: null)=>{return data== null ? '':data}
@@ -252,45 +299,85 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
 
   obtenerEquiposVendidos() {
-    this.isLoading = true; // Iniciar carga
+    this.isLoading = true;
+    this.isLoadingInsights = true;
     this.getValueFilterForm();
     this.onFilterPropHasValue();
 
-    // Consulta 1: Datos paginados para la tabla
-    this.subscription = this.equipoService
-      .getEquipoVendido(this.filter)
-      .subscribe((equipo) => {
-        console.log("Filtros",this.filter);
-        let record = equipo.length == 0?0:equipo[0].totalRecord;
-        let totalInventario = equipo.length == 0?0:equipo[0].totalInventario;
-        let totalFacturado = equipo.length == 0?0:equipo[0].totalFacturado;
-        let totalGanancia = equipo.length == 0?0:equipo[0].totalGanancia;
-        let totalItbis = equipo.length == 0?0:equipo[0].totalItbis;
-        this.obtenerTotalEquipos(record);
-        this.obtenerTotalInventario(totalInventario);
-        this.obtenerTotalFacturado(totalFacturado);
-        this.obtenerTotalGanancia(totalGanancia);
-        this.obtenerTotalItbis(totalItbis);
-        this.isLoading = false; // Terminar carga
-        if (equipo.length) {
-          this.totalRecord = equipo[0].totalRecord;
-          this.line = equipo[0].line;
-          this.lastLine = equipo[0].lastLine;
-        }
-        this.equiposVendidos = equipo;
+    // OPTIMIZADO: Una sola llamada al servidor para obtener TODOS los datos
+    // Guardamos los filtros originales
+    const filtroCompleto = {
+      ...this.filter,
+      pageIndex: 1,
+      pageSize: 999999 // Traer todos los datos de una vez
+    };
 
-        // Consulta 2: TODOS los datos para insights (sin paginación)
-        this.obtenerEquiposCompletosParaInsights();
+    console.log("Filtros optimizados (una sola llamada):", filtroCompleto);
+
+    this.subscription = this.equipoService
+      .getEquipoVendidoParaInsights(filtroCompleto)
+      .subscribe({
+        next: (equiposCompletos) => {
+          console.log("Equipos recibidos (consulta única):", equiposCompletos.length);
+
+          // Guardar todos los equipos
+          this.equiposVendidosCompletos = equiposCompletos;
+
+          // Calcular totales
+          if (equiposCompletos.length > 0) {
+            this.totalRecord = equiposCompletos.length;
+            this.obtenerTotalEquipos(equiposCompletos.length);
+
+            // Calcular totales manualmente desde los datos completos
+            const totalInventario = equiposCompletos.reduce((sum, e) => sum + (e.costoEquipo || 0), 0);
+            const totalFacturado = equiposCompletos.reduce((sum, e) => sum + (e.precioVendido || 0), 0);
+            const totalGanancia = equiposCompletos.reduce((sum, e) => sum + ((e.precioVendido || 0) - (e.costoEquipo || 0)), 0);
+            const totalItbis = equiposCompletos.reduce((sum, e) => sum + (e.itbis || 0), 0);
+
+            this.obtenerTotalInventario(totalInventario);
+            this.obtenerTotalFacturado(totalFacturado);
+            this.obtenerTotalGanancia(totalGanancia);
+            this.obtenerTotalItbis(totalItbis);
+          } else {
+            this.totalRecord = 0;
+            this.obtenerTotalEquipos(0);
+            this.obtenerTotalInventario(0);
+            this.obtenerTotalFacturado(0);
+            this.obtenerTotalGanancia(0);
+            this.obtenerTotalItbis(0);
+          }
+
+          // Paginación en el cliente
+          this.aplicarPaginacionCliente();
+
+          // Generar insights (ya no necesita otra llamada)
+          this.generateSalesInsights();
+
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error("Error al obtener equipos vendidos:", error);
+          this.isLoading = false;
+          this.isLoadingInsights = false;
+          this.equiposVendidos = [];
+          this.equiposVendidosCompletos = [];
+          this.salesInsights = [];
+        }
       });
   }
 
-  // NUEVO: Método para obtener todos los equipos para insights
-  obtenerEquiposCompletosParaInsights() {
-    this.equipoService.getEquipoVendidoParaInsights(this.filter)
-      .subscribe((equiposCompletos) => {
-        this.equiposVendidosCompletos = equiposCompletos;
-        this.generateSalesInsights();
-      });
+  // NUEVO: Método para paginar en el cliente
+  aplicarPaginacionCliente() {
+    const startIndex = (this.filter.pageIndex - 1) * this.filter.pageSize;
+    const endIndex = startIndex + this.filter.pageSize;
+
+    this.equiposVendidos = this.equiposVendidosCompletos.slice(startIndex, endIndex);
+
+    // Calcular line y lastLine para mostrar "Mostrando X al Y de Z"
+    this.line = this.equiposVendidosCompletos.length > 0 ? startIndex + 1 : 0;
+    this.lastLine = Math.min(endIndex, this.equiposVendidosCompletos.length);
+
+    console.log(`Paginación cliente: Mostrando ${this.line} al ${this.lastLine} de ${this.totalRecord}`);
   }
   printReportEquipoVendido(){
     this.isLoading = true; // Iniciar carga
@@ -457,6 +544,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     // CAMBIADO: Usar equiposVendidosCompletos (todos los datos) en lugar de equiposVendidos (paginados)
     if (!this.equiposVendidosCompletos || this.equiposVendidosCompletos.length === 0) {
       this.salesInsights = [];
+      this.isLoadingInsights = false;
       return;
     }
 
@@ -528,6 +616,18 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
         iconColor: 'text-warning-custom'
       });
     }
+
+    this.isLoadingInsights = false;
+  }
+
+  /**
+   * Selecciona un mensaje aleatorio para el loading de insights
+   * Se ejecuta una vez al iniciar el componente
+   */
+  private seleccionarMensajeAleatorioInsights(): void {
+    const indiceAleatorio = Math.floor(Math.random() * this.mensajesInsightsDisponibles.length);
+    this.mensajeCargaInsights = this.mensajesInsightsDisponibles[indiceAleatorio];
+    console.log('[EquipoConsultaVendido] Mensaje insights seleccionado:', this.mensajeCargaInsights.titulo);
   }
 
 }
