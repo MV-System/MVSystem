@@ -1,0 +1,498 @@
+/* ==================== Widget Container ==================== */
+
+.vendedores-widget {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==================== Header ==================== */
+
+.widget-header {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #5a67d8;
+}
+
+.widget-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.widget-header .btn {
+    transition: all 0.3s ease;
+}
+
+.widget-header .btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    transform: scale(1.05);
+}
+
+.widget-header .btn i.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ==================== Loading State ==================== */
+
+.loading-state {
+    padding: 3rem;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* ==================== Ordenamiento ==================== */
+
+.ordenamiento-section {
+    padding: 1rem 1.25rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.ordenamiento-section .btn-group {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ordenamiento-section .btn {
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+
+/* ==================== Lista de Vendedores ==================== */
+
+.vendedores-list {
+    padding: 1rem 1.25rem;
+    max-height: 600px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.vendedor-item {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.vendedor-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.vendedor-item:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Rankings Especiales */
+
+.ranking-gold {
+    border-left: 5px solid #ffd700;
+    background: linear-gradient(to right, rgba(255, 215, 0, 0.05), transparent);
+}
+
+.ranking-silver {
+    border-left: 5px solid #c0c0c0;
+    background: linear-gradient(to right, rgba(192, 192, 192, 0.05), transparent);
+}
+
+.ranking-bronze {
+    border-left: 5px solid #cd7f32;
+    background: linear-gradient(to right, rgba(205, 127, 50, 0.05), transparent);
+}
+
+.ranking-default {
+    border-left: 5px solid #dee2e6;
+}
+
+
+/* ==================== Vendedor Header ==================== */
+
+.vendedor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.vendedor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.ranking-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 700;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.ranking-gold .ranking-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.ranking-silver .ranking-badge {
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(192, 192, 192, 0.4);
+}
+
+.ranking-bronze .ranking-badge {
+    background: linear-gradient(135deg, #cd7f32, #e89860);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(205, 127, 50, 0.4);
+}
+
+.ranking-badge i {
+    font-size: 1.2rem;
+    position: absolute;
+}
+
+.ranking-numero {
+    font-size: 0.75rem;
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: white;
+    color: #667eea;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid #667eea;
+}
+
+.ranking-gold .ranking-numero {
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+.ranking-silver .ranking-numero {
+    color: #c0c0c0;
+    border-color: #c0c0c0;
+}
+
+.ranking-bronze .ranking-numero {
+    color: #cd7f32;
+    border-color: #cd7f32;
+}
+
+.vendedor-nombre {
+    flex: 1;
+}
+
+.vendedor-nombre strong {
+    font-size: 1rem;
+    color: #212529;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.participacion-badge {
+    background: #e7f5ff;
+    color: #1971c2;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+
+/* ==================== Vendedor Body ==================== */
+
+.metric-box {
+    text-align: center;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.metric-box:hover {
+    background: #e9ecef;
+    transform: scale(1.05);
+}
+
+.metric-box small {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.metric-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+/* ==================== Progress Bar ==================== */
+
+.progress-container {
+    margin-top: 0.5rem;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 10px;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 1s ease-in-out;
+    border-radius: 10px;
+}
+
+.progress-label {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+
+/* ==================== Tendencia Badge ==================== */
+
+.tendencia-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    background: #f8f9fa;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.75rem;
+}
+
+.tendencia-badge i {
+    font-size: 1rem;
+}
+
+
+/* ==================== Empty State ==================== */
+
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.5;
+}
+
+.empty-state h6 {
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.empty-state p {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+}
+
+
+/* ==================== Widget Footer ==================== */
+
+.widget-footer {
+    padding: 1rem 1.25rem;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    margin-top: auto;
+}
+
+.footer-metric {
+    padding: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    word-break: break-all;
+}
+
+.metric-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    letter-spacing: 0.5px;
+}
+
+
+/* ==================== Scrollbar ==================== */
+
+.vendedores-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.vendedores-list::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 4px;
+}
+
+.vendedores-list::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 4px;
+}
+
+.vendedores-list::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+
+/* ==================== Responsive Design ==================== */
+
+@media (max-width: 768px) {
+    .widget-header {
+        padding: 0.75rem 1rem;
+    }
+    .widget-title {
+        font-size: 1rem;
+    }
+    .ordenamiento-section {
+        padding: 0.75rem 1rem;
+    }
+    .vendedores-list {
+        padding: 0.75rem 1rem;
+        max-height: 500px;
+    }
+    .vendedor-item {
+        padding: 0.75rem;
+    }
+    .ranking-badge {
+        width: 35px;
+        height: 35px;
+    }
+    .metric-value {
+        font-size: 1rem;
+    }
+    .footer-metric .metric-value {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .vendedor-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .participacion-badge {
+        align-self: flex-end;
+    }
+    .metric-box {
+        padding: 0.35rem;
+    }
+    .metric-value {
+        font-size: 0.9rem;
+    }
+    .ordenamiento-section .btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.5rem;
+    }
+    .ordenamiento-section .btn i {
+        display: none;
+    }
+    .footer-metric {
+        padding: 0.25rem;
+    }
+    .footer-metric .metric-value {
+        font-size: 1rem;
+    }
+    .footer-metric .metric-label {
+        font-size: 0.65rem;
+    }
+}
+
+
+/* ==================== Dark Mode Support ==================== */
+
+@media (prefers-color-scheme: dark) {
+    .vendedores-widget {
+        background: #1a1d23;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .ordenamiento-section {
+        background: #2d3139;
+        border-bottom-color: #404654;
+    }
+    .vendedor-item {
+        background: #2d3139;
+        border-color: #404654;
+    }
+    .metric-box {
+        background: #1a1d23;
+    }
+    .metric-box:hover {
+        background: #23272f;
+    }
+    .widget-footer {
+        background: #2d3139;
+        border-top-color: #404654;
+    }
+    .vendedor-nombre strong {
+        color: #e9ecef;
+    }
+    .progress {
+        background: #404654;
+    }
+    .tendencia-badge {
+        background: #1a1d23;
+    }
+}

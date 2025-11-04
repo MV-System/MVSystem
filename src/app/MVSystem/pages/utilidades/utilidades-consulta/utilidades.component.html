@@ -72,7 +72,7 @@
             </div>
 
             <div class="insights-grid">
-                <div *ngFor="let insight of aiInsights; let i = index" class="insight-card-modern" [ngClass]="'insight-' + insight.tipo" [@fadeInUp]>
+                <div *ngFor="let insight of aiInsights; let i = index" class="insight-card-modern" [ngClass]="'insight-' + insight.tipo" [@fadeInUp] [title]="'Click para ver más detalles'" (click)="mostrarDetalleInsight(insight)" style="cursor: pointer;">
                     <div class="insight-header">
                         <span class="insight-emoji">{{ insight.icono }}</span>
                         <span class="insight-badge" [ngClass]="'badge-' + insight.tipo">
@@ -84,7 +84,245 @@
                     <div class="insight-body">
                         <h6 class="insight-title">{{ insight.mensaje }}</h6>
                         <p class="insight-detail" *ngIf="insight.detalle">{{ insight.detalle }}</p>
+                        <small class="insight-hint">
+              <i class="bi bi-info-circle me-1"></i> Click para más detalles
+            </small>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Detalle de Insight -->
+        <div class="modal-insight-overlay" *ngIf="insightSeleccionado" (click)="cerrarDetalleInsight()">
+            <div class="modal-insight-content" (click)="$event.stopPropagation()">
+                <div class="modal-insight-header" [ngClass]="'modal-header-' + insightSeleccionado.tipo">
+                    <div class="modal-insight-icon">{{ insightSeleccionado.icono }}</div>
+                    <h4 class="modal-insight-title">{{ insightSeleccionado.mensaje }}</h4>
+                    <button class="btn-close-insight" (click)="cerrarDetalleInsight()" title="Cerrar">
+            <i class="bi bi-x-lg"></i>
+          </button>
+                </div>
+                <div class="modal-insight-body">
+                    <!-- Información Contextual Expandida -->
+                    <div class="insight-context-section">
+                        <div class="context-header">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <h5>Contexto del Análisis</h5>
+                        </div>
+                        <div class="context-grid">
+                            <div class="context-item">
+                                <span class="context-label">📅 Período Completo</span>
+                                <span class="context-value">
+                  Del {{ formatFechaCorta(insightSeleccionado.metadata?.fechaInicio) }}
+                  al {{ formatFechaCorta(insightSeleccionado.metadata?.fechaFin) }}
+                  <small class="text-muted d-block">
+                    ({{ calcularDiasDiferencia(insightSeleccionado.metadata?.fechaInicio, insightSeleccionado.metadata?.fechaFin) }} días de operación)
+                  </small>
+                </span>
+                            </div>
+                            <div class="context-item" *ngIf="insightSeleccionado.metadata?.categoria">
+                                <span class="context-label">🏷️ Categoría Analizada</span>
+                                <span class="context-value">
+                  <strong>{{ insightSeleccionado.metadata.categoria }}</strong>
+                  <small class="text-muted d-block">Línea de negocio principal</small>
+                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Análisis Financiero Profundo -->
+                    <div class="financial-deep-dive" *ngIf="insightSeleccionado.metadata?.totalVentas !== undefined">
+                        <div class="section-header-modal">
+                            <i class="bi bi-graph-up-arrow me-2"></i>
+                            <h5>Análisis Financiero Detallado</h5>
+                        </div>
+
+                        <!-- KPIs Principales -->
+                        <div class="kpi-grid">
+                            <div class="kpi-card kpi-ventas">
+                                <div class="kpi-icon">💵</div>
+                                <div class="kpi-content">
+                                    <div class="kpi-label">Ventas Totales</div>
+                                    <div class="kpi-value">${{ insightSeleccionado.metadata.totalVentas | number:'1.2-2' }}</div>
+                                    <div class="kpi-insight">
+                                        Promedio diario: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card kpi-ganancias">
+                                <div class="kpi-icon">💰</div>
+                                <div class="kpi-content">
+                                    <div class="kpi-label">Ganancias Netas</div>
+                                    <div class="kpi-value success">${{ insightSeleccionado.metadata.totalGanancias | number:'1.2-2' }}</div>
+                                    <div class="kpi-insight">
+                                        Ganancia por día: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card kpi-costos" *ngIf="insightSeleccionado.metadata.totalCostos !== undefined">
+                                <div class="kpi-icon">💳</div>
+                                <div class="kpi-content">
+                                    <div class="kpi-label">Costos de Operación</div>
+                                    <div class="kpi-value danger">${{ insightSeleccionado.metadata.totalCostos | number:'1.2-2' }}</div>
+                                    <div class="kpi-insight">
+                                        Inversión diaria: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalCostos, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card kpi-margen" *ngIf="insightSeleccionado.metadata.margen !== undefined">
+                                <div class="kpi-icon">📊</div>
+                                <div class="kpi-content">
+                                    <div class="kpi-label">Margen de Utilidad</div>
+                                    <div class="kpi-value" [ngClass]="getMargenClass(insightSeleccionado.metadata.margen)">
+                                        {{ insightSeleccionado.metadata.margen | number:'1.2-2' }}%
+                                    </div>
+                                    <div class="kpi-insight">
+                                        {{ interpretarMargen(insightSeleccionado.metadata.margen) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desglose Detallado -->
+                        <div class="financial-breakdown">
+                            <h6 class="breakdown-title">
+                                <i class="bi bi-pie-chart me-2"></i> Desglose de Rentabilidad
+                            </h6>
+                            <div class="breakdown-table">
+                                <div class="breakdown-row breakdown-header">
+                                    <span>Concepto</span>
+                                    <span>Monto</span>
+                                    <span>% del Total</span>
+                                </div>
+                                <div class="breakdown-row" *ngIf="insightSeleccionado.metadata.totalVentas">
+                                    <span class="breakdown-label">
+                    <i class="bi bi-cart-check text-primary me-1"></i> Ingresos por Ventas
+                  </span>
+                                    <span class="breakdown-value">${{ insightSeleccionado.metadata.totalVentas | number:'1.2-2' }}</span>
+                                    <span class="breakdown-percent">100%</span>
+                                </div>
+                                <div class="breakdown-row" *ngIf="insightSeleccionado.metadata.totalCostos">
+                                    <span class="breakdown-label">
+                    <i class="bi bi-dash-circle text-danger me-1"></i> Costos de Productos/Servicios
+                  </span>
+                                    <span class="breakdown-value text-danger">-${{ insightSeleccionado.metadata.totalCostos | number:'1.2-2' }}</span>
+                                    <span class="breakdown-percent">{{ calcularPorcentaje(insightSeleccionado.metadata.totalCostos, insightSeleccionado.metadata.totalVentas) | number:'1.1-1' }}%</span>
+                                </div>
+                                <div class="breakdown-row breakdown-total" *ngIf="insightSeleccionado.metadata.totalGanancias">
+                                    <span class="breakdown-label">
+                    <i class="bi bi-check-circle text-success me-1"></i> <strong>Utilidad Neta</strong>
+                                    </span>
+                                    <span class="breakdown-value text-success"><strong>${{ insightSeleccionado.metadata.totalGanancias | number:'1.2-2' }}</strong></span>
+                                    <span class="breakdown-percent"><strong>{{ insightSeleccionado.metadata.margen | number:'1.1-1' }}%</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proyecciones -->
+                        <div class="projections-section" *ngIf="insightSeleccionado.metadata.totalVentas">
+                            <h6 class="projections-title">
+                                <i class="bi bi-calendar-month me-2"></i> Proyecciones Basadas en Datos Actuales
+                            </h6>
+                            <div class="projections-grid">
+                                <div class="projection-item">
+                                    <div class="projection-period">� Semanal</div>
+                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 7) | number:'1.2-2' }}</div>
+                                    <div class="projection-label">Ventas estimadas/semana</div>
+                                </div>
+                                <div class="projection-item">
+                                    <div class="projection-period">📅 Mensual</div>
+                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | number:'1.2-2' }}</div>
+                                    <div class="projection-label">Ventas estimadas/mes</div>
+                                </div>
+                                <div class="projection-item" *ngIf="insightSeleccionado.metadata.totalGanancias">
+                                    <div class="projection-period">💰 Ganancia Mensual</div>
+                                    <div class="projection-value success">${{ proyectarVentas(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | number:'1.2-2' }}</div>
+                                    <div class="projection-label">Ganancia estimada/mes</div>
+                                </div>
+                                <div class="projection-item">
+                                    <div class="projection-period">📈 Anual</div>
+                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 365) | number:'1.2-2' }}</div>
+                                    <div class="projection-label">Proyección anual</div>
+                                </div>
+                            </div>
+                            <div class="projection-note">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <small>Proyecciones calculadas en base al promedio diario del período analizado. No consideran estacionalidad ni eventos especiales.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Análisis Comparativo -->
+                    <div class="comparative-analysis" *ngIf="insightSeleccionado.metadata?.porcentaje">
+                        <div class="section-header-modal">
+                            <i class="bi bi-graph-up me-2"></i>
+                            <h5>Análisis de Participación</h5>
+                        </div>
+                        <div class="participation-bar">
+                            <div class="bar-fill" [style.width.%]="insightSeleccionado.metadata.porcentaje"></div>
+                            <span class="bar-label">{{ insightSeleccionado.metadata.porcentaje | number:'1.1-1' }}%</span>
+                        </div>
+                        <div class="participation-insights">
+                            <p *ngIf="insightSeleccionado.metadata.porcentaje > 60" class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Alta concentración:</strong> Esta categoría representa más del 60% del total. Se recomienda diversificar para reducir riesgos.
+                            </p>
+                            <p *ngIf="insightSeleccionado.metadata.porcentaje <= 60 && insightSeleccionado.metadata.porcentaje >= 40" class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Distribución equilibrada:</strong> Esta categoría tiene una participación saludable entre 40-60% del total.
+                            </p>
+                            <p *ngIf="insightSeleccionado.metadata.porcentaje < 40 && insightSeleccionado.metadata.porcentaje >= 20" class="alert alert-success">
+                                <i class="bi bi-check-circle me-2"></i>
+                                <strong>Buena diversificación:</strong> Participación moderada que indica una buena distribución de riesgos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Recomendaciones Accionables -->
+                    <div class="recommendations-section">
+                        <div class="section-header-modal">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <h5>Recomendaciones Estratégicas</h5>
+                        </div>
+                        <div class="recommendations-list">
+                            <div class="recommendation-item" *ngFor="let rec of generarRecomendaciones(insightSeleccionado)">
+                                <div class="rec-icon" [ngClass]="'icon-' + rec.prioridad">
+                                    {{ rec.icono }}
+                                </div>
+                                <div class="rec-content">
+                                    <div class="rec-title">{{ rec.titulo }}</div>
+                                    <div class="rec-description">{{ rec.descripcion }}</div>
+                                    <div class="rec-action" *ngIf="rec.accion">
+                                        <i class="bi bi-arrow-right-circle me-1"></i> {{ rec.accion }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje Original del Insight -->
+                    <div class="original-insight">
+                        <div class="original-header">
+                            <span class="original-icon">{{ insightSeleccionado.icono }}</span>
+                            <span class="original-title">{{ insightSeleccionado.mensaje }}</span>
+                        </div>
+                        <p class="original-detail" *ngIf="insightSeleccionado.detalle">
+                            {{ insightSeleccionado.detalle }}
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-insight-footer">
+                    <span class="insight-type-badge" [ngClass]="'badge-' + insightSeleccionado.tipo">
+            {{ insightSeleccionado.tipo === 'success' ? '✅ Positivo' :
+               insightSeleccionado.tipo === 'warning' ? '⚠️ Atención' :
+               insightSeleccionado.tipo === 'danger' ? '🚨 Urgente' : 'ℹ️ Información' }}
+          </span>
+                    <button class="btn btn-sm btn-secondary" (click)="cerrarDetalleInsight()">
+            Cerrar
+          </button>
                 </div>
             </div>
         </div>

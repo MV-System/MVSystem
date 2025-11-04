@@ -28,9 +28,12 @@ export class HomeComponent implements OnInit {
       this.sidebarVisible = false;
     }
     // Mostrar solo si no se ha mostrado en esta sesión
+    // Esperar 2 segundos después de que cargue el componente para asegurar que todo esté renderizado
     if (!localStorage.getItem('bienvenidaMostrada')) {
-      this.mostrarPopupBienvenida();
-      localStorage.setItem('bienvenidaMostrada', 'true');
+      setTimeout(() => {
+        this.mostrarPopupBienvenida();
+        localStorage.setItem('bienvenidaMostrada', 'true');
+      }, 2000); // 2 segundos de espera
     }
   }
 

@@ -146,8 +146,20 @@ export let APIURL = {
     },
     Utilidades: {
       GetUtilidades: API + 'Utilidades/GetUtilidades',
-
   },
+    Dashboard: {
+        ResumenInteligente: API + 'Dashboard/ResumenInteligente',
+        TopProductos: API + 'Dashboard/TopProductos',
+        AlertasInteligentes: API + 'Dashboard/AlertasInteligentes',
+        PrediccionVentas: API + 'Dashboard/PrediccionVentas',
+        RentabilidadCategorias: API + 'Dashboard/RentabilidadCategorias',
+        PatronActividad: API + 'Dashboard/PatronActividad',
+        RecomendacionesPersonalizadas: API + 'Dashboard/RecomendacionesPersonalizadas',
+        ComparacionPeriodos: API + 'Dashboard/ComparacionPeriodos',
+        DeteccionAnomalias: API + 'Dashboard/DeteccionAnomalias',
+        MarcarAlertaLeida: API + 'Dashboard/Alertas/MarcarLeida',
+        ResumenEjecutivo: API + 'Dashboard/ResumenEjecutivo'
+    },
     Login: {
         Login: API + 'login/login',
         ChangePassword: API + 'login/ChangePassword',

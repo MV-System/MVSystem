@@ -1,54 +1,74 @@
 <span>DashBoard</span>
 <main id="main" class="main box" *ngIf="VerFormConsultaUtilidades()">
-  <label class="form-label">Ventas</label>
-  <div class="row">
-    <mat-spinner *ngIf="isLoading" class="loading">
-      <div class="spinner"></div>
-      <span>Cargando Dashboard, por favor espere...</span>
-    </mat-spinner>
-    <div *ngIf="!isLoading" class="col-12">
-      <div class="dashboard-card p-3">
-        <div class="grafico-seccion mb-4">
-          <label class="form-label">Este Día</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="colorScheme"
-              [results]="singleVentasDia"
-              [gradient]="gradient"
-              (select)="onSelect($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-        <div class="grafico-seccion mb-4">
-          <label class="form-label">Esta Semana</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="Neon"
-              [results]="singleVentasSemana"
-              [gradient]="gradient"
-              (select)="onSelect($event)"
-              (activate)="onActivate($event)"
-              (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-        <div class="grafico-seccion">
-          <label class="form-label">Este Mes</label>
-          <div class="grafico-responsive">
-            <ngx-charts-advanced-pie-chart
-              [view]="view"
-              [scheme]="Ordinal"
-              [results]="singleVentasMes"
-              [gradient]="gradient"
-              (select)="onSelect($event)"
-              (activate)="onActivate($event)"
-              (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </div>
-      </div>
+
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header mb-4">
+        <h4 class="mb-0">
+            <i class="bi bi-speedometer2 me-2"></i> Dashboard Inteligente
+        </h4>
+        <p class="text-muted mb-0">Análisis de ventas con IA</p>
     </div>
-  </div>
+
+    <!-- Dashboard Content - Siempre visible, cada widget gestiona su propio loading -->
+    <div>
+
+        <!-- Grid de Widgets -->
+        <div class="dashboard-grid">
+
+            <!-- Widget: Top Modelos Más Vendidos (Nuevo con IA) -->
+            <div class="grid-item grid-item-large">
+                <app-top-modelos-widget [fechaInicio]="FechaInicioMes.toISOString().split('T')[0]" [fechaFinal]="fechaHoy.toISOString().split('T')[0]" [limite]="5" [titulo]="'Top 5 Modelos Más Vendidos - Este Mes'">
+                </app-top-modelos-widget>
+            </div>
+
+            <!-- Gráfico: Ventas del Día -->
+            <div class="grid-item">
+                <div class="dashboard-card p-3">
+                    <div class="grafico-seccion">
+                        <label class="form-label">
+              <i class="bi bi-calendar-day me-2"></i>
+              Este Día
+            </label>
+                        <div class="grafico-responsive">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="singleVentasDia" [gradient]="gradient" (select)="onSelect($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico: Ventas de la Semana -->
+            <div class="grid-item">
+                <div class="dashboard-card p-3">
+                    <div class="grafico-seccion">
+                        <label class="form-label">
+              <i class="bi bi-calendar-week me-2"></i>
+              Esta Semana
+            </label>
+                        <div class="grafico-responsive">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Neon" [results]="singleVentasSemana" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico: Ventas del Mes -->
+            <div class="grid-item">
+                <div class="dashboard-card p-3">
+                    <div class="grafico-seccion">
+                        <label class="form-label">
+              <i class="bi bi-calendar-month me-2"></i>
+              Este Mes
+            </label>
+                        <div class="grafico-responsive">
+                            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="Ordinal" [results]="singleVentasMes" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                            </ngx-charts-advanced-pie-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </main>

@@ -68,7 +68,29 @@ export class UtilidadesComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
   myDateRangePickerOptions: IMyDrpOptions = {
-    dateFormat: 'dd.mm.yyyy',
+    dateFormat: 'dd/mm/yyyy',
+    showClearBtn: true,
+    showClearDateRangeBtn: true,
+    showApplyBtn: true,
+    showSelectDateText: true,
+    selectBeginDateTxt: 'Inicio',
+    selectEndDateTxt: 'Fin',
+    firstDayOfWeek: 'mo',
+    sunHighlight: true,
+    height: '34px',
+    width: '100%',
+    selectionTxtFontSize: '14px',
+    inline: false,
+    showWeekNumbers: false,
+    editableDateRangeField: false,
+    openSelectorOnInputClick: true,
+    monthLabels: {
+      1: 'Ene', 2: 'Feb', 3: 'Mar', 4: 'Abr', 5: 'May', 6: 'Jun',
+      7: 'Jul', 8: 'Ago', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dic'
+    },
+    dayLabels: {
+      su: 'Dom', mo: 'Lun', tu: 'Mar', we: 'Mié', th: 'Jue', fr: 'Vie', sa: 'Sáb'
+    }
   };
   singleVentas = [
     { "name": "Ventas Equipos", "value": this.data.venta_Equipos },
@@ -95,7 +117,22 @@ export class UtilidadesComponent implements OnInit {
     icono: string;
     mensaje: string;
     detalle?: string;
+    metadata?: {
+      categoria?: string;
+      valor?: number;
+      porcentaje?: number;
+      fechaInicio?: string;
+      fechaFin?: string;
+      comparacion?: string;
+      margen?: number;
+      totalVentas?: number;
+      totalGanancias?: number;
+      totalCostos?: number;
+    };
   }> = [];
+
+  // Variable para el insight seleccionado en el modal
+  insightSeleccionado: any = null;
 
   constructor(
     private loading: LoadingService,
@@ -127,6 +164,7 @@ getSucursales() {
 form!: FormGroup;
 createForm(){
   this.form = this.fb.group({
+    rangeDate: [null], // Control para el datepicker
     fechainicio: [this.FechaInicio.toISOString().split('T')[0], Validators.required],
     fechafin: [this.fechaHoy.toISOString().split('T')[0], Validators.required],
     almacen: [Number(this.loginService.getUserIdSucursal), Validators.required]
@@ -136,12 +174,10 @@ createForm(){
   ngOnInit(): void {
      this.setResponsiveView();
      window.addEventListener('resize', () => this.setResponsiveView());
-    this.createForm();
+    this.createForm(); // Crear el formulario PRIMERO
     this.getSucursales();
+    this.sucursalOnChange(); // Configurar listeners ANTES de cargar datos
     this.GetUtilidades(); // Llama a la función para obtener datos
-    this.createForm();
-    this.sucursalOnChange();
-    // this.loading.hideLoading();
   }
 setResponsiveView() {
   if (window.innerWidth < 600) {
@@ -190,41 +226,52 @@ setResponsiveView() {
     // Obtener datos del período actual
     this.UtilidadesServices
       .GetUtilidades(this.filter)
-      .subscribe(
-        (equipos: Utilidades) => {
-          if (equipos) {
+      .subscribe({
+        next: (equipos: Utilidades) => {
+          if (equipos && equipos !== null) {
             this.data = equipos; // Asigna datos actuales
 
             // Obtener datos del período anterior para comparación
             this.UtilidadesServices
               .GetUtilidades(filtroAnterior)
-              .subscribe(
-                (datosAnteriores: Utilidades) => {
+              .subscribe({
+                next: (datosAnteriores: Utilidades) => {
                   this.dataAnterior = datosAnteriores;
                   this.updateSingleData();
                   this.generateAIInsights(); // Generar insights básicos
                   this.analizarTendencias(); // Generar insights de tendencias
                   this.loading.hideLoading();
                 },
-                (error) => {
+                error: (error) => {
                   // Si falla la obtención del período anterior, continuar sin comparación
                   console.warn('No se pudieron obtener datos del período anterior:', error);
                   this.dataAnterior = null;
                   this.updateSingleData();
                   this.generateAIInsights();
                   this.loading.hideLoading();
+                },
+                complete: () => {
+                  // Asegurar que se oculte el loading incluso si no hay error ni data
+                  if (this.loading) {
+                    this.loading.hideLoading();
+                  }
                 }
-              );
+              });
           } else {
             this.toastr.warning('No se encontraron utilidades.');
             this.loading.hideLoading();
           }
         },
-        (error) => {
+        error: (error) => {
+          console.error('Error al cargar datos de utilidades:', error);
           this.toastr.error('Error al cargar datos de utilidades');
           this.loading.hideLoading();
+        },
+        complete: () => {
+          // Asegurar que siempre se oculte el loading
+          console.log('Consulta de utilidades completada');
         }
-      );
+      });
   }
 
   private updateSingleData() {
@@ -257,7 +304,7 @@ setResponsiveView() {
   /**
    * Calcula la diferencia en días entre dos fechas
    */
-  private calcularDiasDiferencia(fecha1: string, fecha2: string): number {
+  calcularDiasDiferencia(fecha1: string, fecha2: string): number {
     const f1 = new Date(fecha1);
     const f2 = new Date(fecha2);
     const diferencia = Math.abs(f2.getTime() - f1.getTime());
@@ -293,6 +340,12 @@ setResponsiveView() {
   private generateAIInsights(): void {
     this.aiInsights = [];
 
+    // Validar que existan datos antes de procesar
+    if (!this.data) {
+      console.warn('[UtilidadesComponent] No hay datos para generar insights');
+      return;
+    }
+
     // Calcular totales
     const totalVentas = this.data.venta_Equipos + this.data.venta_Accesorios +
                         this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
@@ -300,6 +353,12 @@ setResponsiveView() {
                           this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
     const totalCostos = this.data.costo_Equipos + this.data.costo_Accesorios +
                        this.data.costo_Reparaciones + this.data.costo_Desbloqueos;
+
+    // Si no hay movimiento, no generar insights
+    if (totalVentas === 0 && totalGanancias === 0 && totalCostos === 0) {
+      console.info('[UtilidadesComponent] No hay movimiento en el período seleccionado');
+      return;
+    }
 
     // 1. Análisis de categoría más rentable
     const categorias = [
@@ -309,18 +368,29 @@ setResponsiveView() {
       { nombre: 'Desbloqueos', ganancia: this.data.ganancia_Desbloqueos, venta: this.data.venta_Desbloqueos }
     ];
 
-    const mejorCategoria = categorias.reduce((prev, current) =>
-      (prev.ganancia > current.ganancia) ? prev : current
-    );
+    if (categorias.length > 0) {
+      const mejorCategoria = categorias.reduce((prev, current) =>
+        (prev.ganancia > current.ganancia) ? prev : current
+      );
 
-    if (mejorCategoria.ganancia > 0) {
-      const porcentajeContribucion = ((mejorCategoria.ganancia / totalGanancias) * 100).toFixed(1);
-      this.aiInsights.push({
-        tipo: 'success',
-        icono: '🏆',
-        mensaje: `${mejorCategoria.nombre} es tu categoría más rentable`,
-        detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${this.formatNumber(mejorCategoria.ganancia)})`
-      });
+      if (mejorCategoria.ganancia > 0) {
+        const porcentajeContribucion = ((mejorCategoria.ganancia / totalGanancias) * 100).toFixed(1);
+        this.aiInsights.push({
+          tipo: 'success',
+          icono: '🏆',
+          mensaje: `${mejorCategoria.nombre} es tu categoría más rentable`,
+          detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${this.formatNumber(mejorCategoria.ganancia)})`,
+          metadata: {
+            categoria: mejorCategoria.nombre,
+            valor: mejorCategoria.ganancia,
+            porcentaje: parseFloat(porcentajeContribucion),
+            fechaInicio: this.filter.FI,
+            fechaFin: this.filter.FF,
+            totalVentas: mejorCategoria.venta,
+            totalGanancias: totalGanancias
+          }
+        });
+      }
     }
 
     // 2. Análisis de margen de ganancia general
@@ -330,21 +400,45 @@ setResponsiveView() {
         tipo: 'success',
         icono: '📈',
         mensaje: `Excelente margen de ganancia: ${margenGeneral.toFixed(1)}%`,
-        detalle: `Tus ganancias representan más del 30% de las ventas totales`
+        detalle: `Tus ganancias representan más del 30% de las ventas totales`,
+        metadata: {
+          margen: margenGeneral,
+          totalVentas: totalVentas,
+          totalGanancias: totalGanancias,
+          totalCostos: totalCostos,
+          fechaInicio: this.filter.FI,
+          fechaFin: this.filter.FF
+        }
       });
     } else if (margenGeneral < 15) {
       this.aiInsights.push({
         tipo: 'warning',
         icono: '⚠️',
         mensaje: `Margen de ganancia bajo: ${margenGeneral.toFixed(1)}%`,
-        detalle: `Considera revisar precios o reducir costos para mejorar rentabilidad`
+        detalle: `Considera revisar precios o reducir costos para mejorar rentabilidad`,
+        metadata: {
+          margen: margenGeneral,
+          totalVentas: totalVentas,
+          totalGanancias: totalGanancias,
+          totalCostos: totalCostos,
+          fechaInicio: this.filter.FI,
+          fechaFin: this.filter.FF
+        }
       });
     } else {
       this.aiInsights.push({
         tipo: 'info',
         icono: '📊',
         mensaje: `Margen de ganancia moderado: ${margenGeneral.toFixed(1)}%`,
-        detalle: `Hay oportunidad de optimizar para aumentar rentabilidad`
+        detalle: `Hay oportunidad de optimizar para aumentar rentabilidad`,
+        metadata: {
+          margen: margenGeneral,
+          totalVentas: totalVentas,
+          totalGanancias: totalGanancias,
+          totalCostos: totalCostos,
+          fechaInicio: this.filter.FI,
+          fechaFin: this.filter.FF
+        }
       });
     }
 
@@ -357,45 +451,73 @@ setResponsiveView() {
             tipo: 'warning',
             icono: '⚡',
             mensaje: `${cat.nombre}: Margen muy bajo (${margen.toFixed(1)}%)`,
-            detalle: `Revisa costos o ajusta precios en esta categoría`
+            detalle: `Revisa costos o ajusta precios en esta categoría`,
+            metadata: {
+              categoria: cat.nombre,
+              margen: margen,
+              totalVentas: cat.venta,
+              totalGanancias: cat.ganancia,
+              fechaInicio: this.filter.FI,
+              fechaFin: this.filter.FF
+            }
           });
         }
       }
     });
 
     // 4. Identificar categoría con peor rendimiento
-    const peorCategoria = categorias
-      .filter(c => c.venta > 0)
-      .reduce((prev, current) => {
+    const categoriasConVentas = categorias.filter(c => c.venta > 0);
+    if (categoriasConVentas.length > 0) {
+      const peorCategoria = categoriasConVentas.reduce((prev, current) => {
         const margenPrev = prev.venta > 0 ? (prev.ganancia / prev.venta) : 0;
         const margenCurrent = current.venta > 0 ? (current.ganancia / current.venta) : 0;
         return margenPrev < margenCurrent ? prev : current;
       });
 
-    if (peorCategoria && peorCategoria.venta > 0) {
-      const margenPeor = ((peorCategoria.ganancia / peorCategoria.venta) * 100);
-      if (margenPeor < margenGeneral - 10) {
-        this.aiInsights.push({
-          tipo: 'info',
-          icono: '💡',
-          mensaje: `Oportunidad en ${peorCategoria.nombre}`,
-          detalle: `Esta categoría tiene un margen del ${margenPeor.toFixed(1)}%, menor al promedio`
-        });
+      if (peorCategoria && peorCategoria.venta > 0) {
+        const margenPeor = ((peorCategoria.ganancia / peorCategoria.venta) * 100);
+        if (margenPeor < margenGeneral - 10) {
+          this.aiInsights.push({
+            tipo: 'info',
+            icono: '💡',
+            mensaje: `Oportunidad en ${peorCategoria.nombre}`,
+            detalle: `Esta categoría tiene un margen del ${margenPeor.toFixed(1)}%, menor al promedio`,
+            metadata: {
+              categoria: peorCategoria.nombre,
+              margen: margenPeor,
+              totalVentas: peorCategoria.venta,
+              totalGanancias: peorCategoria.ganancia,
+              fechaInicio: this.filter.FI,
+              fechaFin: this.filter.FF,
+              comparacion: `Margen promedio: ${margenGeneral.toFixed(1)}%`
+            }
+          });
+        }
       }
     }
 
     // 5. Análisis de distribución de ventas
-    const categoriaConMasVentas = categorias.reduce((prev, current) =>
-      (prev.venta > current.venta) ? prev : current
-    );
+    if (categorias.length > 0) {
+      const categoriaConMasVentas = categorias.reduce((prev, current) =>
+        (prev.venta > current.venta) ? prev : current
+      );
 
-    if (categoriaConMasVentas.venta > totalVentas * 0.6) {
-      this.aiInsights.push({
-        tipo: 'warning',
-        icono: '⚖️',
-        mensaje: `Alta dependencia en ${categoriaConMasVentas.nombre}`,
-        detalle: `El ${((categoriaConMasVentas.venta / totalVentas) * 100).toFixed(1)}% de tus ventas provienen de esta categoría. Considera diversificar.`
-      });
+      if (categoriaConMasVentas.venta > totalVentas * 0.6) {
+        this.aiInsights.push({
+          tipo: 'warning',
+          icono: '⚖️',
+          mensaje: `Alta dependencia en ${categoriaConMasVentas.nombre}`,
+          detalle: `El ${((categoriaConMasVentas.venta / totalVentas) * 100).toFixed(1)}% de tus ventas provienen de esta categoría. Considera diversificar.`,
+          metadata: {
+            categoria: categoriaConMasVentas.nombre,
+            valor: categoriaConMasVentas.venta,
+            porcentaje: (categoriaConMasVentas.venta / totalVentas) * 100,
+            totalVentas: totalVentas,
+            fechaInicio: this.filter.FI,
+            fechaFin: this.filter.FF
+          }
+        });
+      }
     }
 
     // 6. Resumen general positivo
@@ -404,7 +526,15 @@ setResponsiveView() {
         tipo: 'success',
         icono: '💰',
         mensaje: `Ganancias totales: $${this.formatNumber(totalGanancias)}`,
-        detalle: `Ventas: $${this.formatNumber(totalVentas)} | Costos: $${this.formatNumber(totalCostos)}`
+        detalle: `Ventas: $${this.formatNumber(totalVentas)} | Costos: $${this.formatNumber(totalCostos)}`,
+        metadata: {
+          totalVentas: totalVentas,
+          totalGanancias: totalGanancias,
+          totalCostos: totalCostos,
+          margen: margenGeneral,
+          fechaInicio: this.filter.FI,
+          fechaFin: this.filter.FF
+        }
       });
     }
 
@@ -429,6 +559,22 @@ setResponsiveView() {
     if (!this.dataAnterior) {
       return; // No hay datos del período anterior para comparar
     }
+
+    // Calcular totales para ambos períodos
+    const totalVentasAct = this.data.venta_Equipos + this.data.venta_Accesorios +
+                           this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
+    const totalGananciasAct = this.data.ganancia_Equipos + this.data.ganancia_Accesorios +
+                              this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
+    const totalCostosAct = totalVentasAct - totalGananciasAct;
+
+    const totalVentasAnt = this.dataAnterior.venta_Equipos + this.dataAnterior.venta_Accesorios +
+                           this.dataAnterior.venta_Reparaciones + this.dataAnterior.venta_Desbloqueos;
+    const totalGananciasAnt = this.dataAnterior.ganancia_Equipos + this.dataAnterior.ganancia_Accesorios +
+                              this.dataAnterior.ganancia_Reparaciones + this.dataAnterior.ganancia_Desbloqueos;
+    const totalCostosAnt = totalVentasAnt - totalGananciasAnt;
+
+    const margenAct = totalVentasAct > 0 ? (totalGananciasAct / totalVentasAct) * 100 : 0;
+    const margenAnt = totalVentasAnt > 0 ? (totalGananciasAnt / totalVentasAnt) * 100 : 0;
 
     // Definir categorías para analizar
     interface Categoria {
@@ -475,6 +621,7 @@ setResponsiveView() {
       // Análisis de VENTAS
       if (cat.ventaAnterior > 0) {
         const crecimientoVentas = ((cat.ventaActual - cat.ventaAnterior) / cat.ventaAnterior) * 100;
+        const margenCat = cat.ventaActual > 0 ? (cat.gananciaActual / cat.ventaActual) * 100 : 0;
 
         // Solo mostrar si hay cambio significativo (más de 5%)
         if (Math.abs(crecimientoVentas) > 5) {
@@ -504,7 +651,19 @@ setResponsiveView() {
             tipo,
             icono,
             mensaje: `${cat.nombre} ${accion} ${Math.abs(crecimientoVentas).toFixed(1)}%`,
-            detalle: `Ventas: $${this.formatNumber(cat.ventaAnterior)} → $${this.formatNumber(cat.ventaActual)}`
+            detalle: `Ventas: $${this.formatNumber(cat.ventaAnterior)} → $${this.formatNumber(cat.ventaActual)}`,
+            metadata: {
+              categoria: cat.nombre,
+              valor: cat.ventaActual,
+              porcentaje: crecimientoVentas,
+              fechaInicio: this.filter.FI,
+              fechaFin: this.filter.FF,
+              totalVentas: cat.ventaActual,
+              totalGanancias: cat.gananciaActual,
+              totalCostos: cat.ventaActual - cat.gananciaActual,
+              margen: margenCat,
+              comparacion: `Período anterior: $${this.formatNumber(cat.ventaAnterior)}`
+            }
           });
         }
       }
@@ -512,6 +671,7 @@ setResponsiveView() {
       // Análisis de GANANCIAS
       if (cat.gananciaAnterior > 0) {
         const crecimientoGanancias = ((cat.gananciaActual - cat.gananciaAnterior) / cat.gananciaAnterior) * 100;
+        const margenCat = cat.ventaActual > 0 ? (cat.gananciaActual / cat.ventaActual) * 100 : 0;
 
         // Alerta si las ganancias cayeron más del 15% aunque las ventas suban
         if (crecimientoGanancias < -15) {
@@ -524,7 +684,19 @@ setResponsiveView() {
               tipo: 'warning',
               icono: '⚠️',
               mensaje: `${cat.nombre}: Ganancias cayeron ${Math.abs(crecimientoGanancias).toFixed(1)}% a pesar del aumento en ventas`,
-              detalle: `Posible aumento en costos o reducción de precios. Revisar márgenes.`
+              detalle: `Posible aumento en costos o reducción de precios. Revisar márgenes.`,
+              metadata: {
+                categoria: cat.nombre,
+                valor: cat.gananciaActual,
+                porcentaje: crecimientoGanancias,
+                fechaInicio: this.filter.FI,
+                fechaFin: this.filter.FF,
+                totalVentas: cat.ventaActual,
+                totalGanancias: cat.gananciaActual,
+                totalCostos: cat.ventaActual - cat.gananciaActual,
+                margen: margenCat,
+                comparacion: `Ganancias anteriores: $${this.formatNumber(cat.gananciaAnterior)}, Ventas crecieron: +${crecimientoVentas.toFixed(1)}%`
+              }
             });
           }
         }
@@ -535,52 +707,87 @@ setResponsiveView() {
             tipo: 'success',
             icono: '💰',
             mensaje: `${cat.nombre}: Excelente crecimiento en ganancias (+${crecimientoGanancias.toFixed(1)}%)`,
-            detalle: `Ganancias: $${this.formatNumber(cat.gananciaAnterior)} → $${this.formatNumber(cat.gananciaActual)}`
+            detalle: `Ganancias: $${this.formatNumber(cat.gananciaAnterior)} → $${this.formatNumber(cat.gananciaActual)}`,
+            metadata: {
+              categoria: cat.nombre,
+              valor: cat.gananciaActual,
+              porcentaje: crecimientoGanancias,
+              fechaInicio: this.filter.FI,
+              fechaFin: this.filter.FF,
+              totalVentas: cat.ventaActual,
+              totalGanancias: cat.gananciaActual,
+              totalCostos: cat.ventaActual - cat.gananciaActual,
+              margen: margenCat,
+              comparacion: `Período anterior: $${this.formatNumber(cat.gananciaAnterior)}`
+            }
           });
         }
       }
     });
 
     // Análisis GENERAL de totales
-    const totalVentasActual = this.data.venta_Equipos + this.data.venta_Accesorios +
-                              this.data.venta_Reparaciones + this.data.venta_Desbloqueos;
-    const totalVentasAnterior = this.dataAnterior.venta_Equipos + this.dataAnterior.venta_Accesorios +
-                                this.dataAnterior.venta_Reparaciones + this.dataAnterior.venta_Desbloqueos;
-
-    const totalGananciasActual = this.data.ganancia_Equipos + this.data.ganancia_Accesorios +
-                                 this.data.ganancia_Reparaciones + this.data.ganancia_Desbloqueos;
-    const totalGananciasAnterior = this.dataAnterior.ganancia_Equipos + this.dataAnterior.ganancia_Accesorios +
-                                   this.dataAnterior.ganancia_Reparaciones + this.dataAnterior.ganancia_Desbloqueos;
-
-    if (totalVentasAnterior > 0) {
-      const crecimientoTotal = ((totalVentasActual - totalVentasAnterior) / totalVentasAnterior) * 100;
+    if (totalVentasAnt > 0) {
+      const crecimientoTotal = ((totalVentasAct - totalVentasAnt) / totalVentasAnt) * 100;
 
       if (crecimientoTotal > 10) {
         this.aiInsights.unshift({
           tipo: 'success',
           icono: '🎉',
           mensaje: `Ventas totales crecieron ${crecimientoTotal.toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalVentasAnterior)} a $${this.formatNumber(totalVentasActual)}`
+          detalle: `De $${this.formatNumber(totalVentasAnt)} a $${this.formatNumber(totalVentasAct)}`,
+          metadata: {
+            valor: totalVentasAct,
+            porcentaje: crecimientoTotal,
+            fechaInicio: this.filter.FI,
+            fechaFin: this.filter.FF,
+            totalVentas: totalVentasAct,
+            totalGanancias: totalGananciasAct,
+            totalCostos: totalCostosAct,
+            margen: margenAct,
+            comparacion: `Período anterior: $${this.formatNumber(totalVentasAnt)} (Margen: ${margenAnt.toFixed(1)}%)`
+          }
         });
       } else if (crecimientoTotal < -10) {
         this.aiInsights.unshift({
           tipo: 'warning',
           icono: '⚠️',
           mensaje: `Ventas totales cayeron ${Math.abs(crecimientoTotal).toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalVentasAnterior)} a $${this.formatNumber(totalVentasActual)}`
+          detalle: `De $${this.formatNumber(totalVentasAnt)} a $${this.formatNumber(totalVentasAct)}`,
+          metadata: {
+            valor: totalVentasAct,
+            porcentaje: crecimientoTotal,
+            fechaInicio: this.filter.FI,
+            fechaFin: this.filter.FF,
+            totalVentas: totalVentasAct,
+            totalGanancias: totalGananciasAct,
+            totalCostos: totalCostosAct,
+            margen: margenAct,
+            comparacion: `Período anterior: $${this.formatNumber(totalVentasAnt)} (Caída de ${Math.abs(crecimientoTotal).toFixed(1)}%)`
+          }
         });
       }
     }
 
-    if (totalGananciasAnterior > 0) {
-      const crecimientoGananciasTotal = ((totalGananciasActual - totalGananciasAnterior) / totalGananciasAnterior) * 100;
+    if (totalGananciasAnt > 0) {
+      const crecimientoGananciasTotal = ((totalGananciasAct - totalGananciasAnt) / totalGananciasAnt) * 100;
 
       if (crecimientoGananciasTotal > 15) {
         this.aiInsights.unshift({
           tipo: 'success',
           icono: '💎',
           mensaje: `Ganancias totales aumentaron ${crecimientoGananciasTotal.toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalGananciasAnterior)} a $${this.formatNumber(totalGananciasActual)}`
+          detalle: `De $${this.formatNumber(totalGananciasAnt)} a $${this.formatNumber(totalGananciasAct)}`,
+          metadata: {
+            valor: totalGananciasAct,
+            porcentaje: crecimientoGananciasTotal,
+            fechaInicio: this.filter.FI,
+            fechaFin: this.filter.FF,
+            totalVentas: totalVentasAct,
+            totalGanancias: totalGananciasAct,
+            totalCostos: totalCostosAct,
+            margen: margenAct,
+            comparacion: `Período anterior: $${this.formatNumber(totalGananciasAnt)} (Crecimiento: +${crecimientoGananciasTotal.toFixed(1)}%)`
+          }
         });
       }
     }
@@ -591,7 +798,16 @@ setResponsiveView() {
       tipo: 'info',
       icono: '📊',
       mensaje: 'Análisis de Tendencias vs Período Anterior',
-      detalle: `Comparando ${this.filter.FI} a ${this.filter.FF} con período anterior`
+      detalle: `Comparando ${this.filter.FI} a ${this.filter.FF} con período anterior`,
+      metadata: {
+        fechaInicio: this.filter.FI,
+        fechaFin: this.filter.FF,
+        totalVentas: totalVentasAct,
+        totalGanancias: totalGananciasAct,
+        totalCostos: totalCostosAct,
+        margen: margenAct,
+        comparacion: `Período anterior - Ventas: $${this.formatNumber(totalVentasAnt)}, Ganancias: $${this.formatNumber(totalGananciasAnt)}, Margen: ${margenAnt.toFixed(1)}%`
+      }
     });
   }
 
@@ -656,5 +872,326 @@ setResponsiveView() {
       minimumFractionDigits: decimales,
       maximumFractionDigits: decimales
     });
+  }
+
+  /**
+   * Genera el tooltip completo para un insight con información contextual específica
+   * Muestra datos detallados sobre el período, valores y comparaciones
+   */
+  getInsightTooltip(insight: any): string {
+    if (!insight.metadata) {
+      return `${insight.mensaje}\n\n${insight.detalle || ''}`;
+    }
+
+    const meta = insight.metadata;
+    let tooltip = '📊 INFORMACIÓN DETALLADA\n';
+    tooltip += '═'.repeat(40) + '\n\n';
+
+    // Información del período
+    if (meta.fechaInicio && meta.fechaFin) {
+      const fechaInicioFormat = this.formatFechaTooltip(meta.fechaInicio);
+      const fechaFinFormat = this.formatFechaTooltip(meta.fechaFin);
+      tooltip += `📅 PERÍODO ANALIZADO:\n`;
+      tooltip += `   Desde: ${fechaInicioFormat}\n`;
+      tooltip += `   Hasta: ${fechaFinFormat}\n`;
+      tooltip += `   Días: ${this.calcularDiasDiferencia(meta.fechaInicio, meta.fechaFin)} días\n\n`;
+    }
+
+    // Información específica según el tipo de insight
+    if (meta.categoria) {
+      tooltip += `🏷️  CATEGORÍA: ${meta.categoria}\n\n`;
+    }
+
+    // Datos financieros
+    if (meta.totalVentas !== undefined) {
+      tooltip += `💵 VENTAS: $${this.formatNumber(meta.totalVentas, 2)}\n`;
+    }
+
+    if (meta.totalGanancias !== undefined) {
+      tooltip += `💰 GANANCIAS: $${this.formatNumber(meta.totalGanancias, 2)}\n`;
+    }
+
+    if (meta.totalCostos !== undefined) {
+      tooltip += `💳 COSTOS: $${this.formatNumber(meta.totalCostos, 2)}\n`;
+    }
+
+    if (meta.margen !== undefined) {
+      tooltip += `📊 MARGEN: ${meta.margen.toFixed(2)}%\n`;
+
+      // Interpretación del margen
+      if (meta.margen > 30) {
+        tooltip += `   ✅ Margen excelente (>30%)\n`;
+      } else if (meta.margen > 20) {
+        tooltip += `   ✔️  Margen bueno (20-30%)\n`;
+      } else if (meta.margen > 15) {
+        tooltip += `   ⚠️  Margen moderado (15-20%)\n`;
+      } else {
+        tooltip += `   ❌ Margen bajo (<15%)\n`;
+      }
+    }
+
+    if (meta.porcentaje !== undefined) {
+      tooltip += `📈 CONTRIBUCIÓN: ${meta.porcentaje.toFixed(2)}%\n`;
+    }
+
+    if (meta.valor !== undefined && !meta.totalVentas) {
+      tooltip += `💵 VALOR: $${this.formatNumber(meta.valor, 2)}\n`;
+    }
+
+    // Comparaciones
+    if (meta.comparacion) {
+      tooltip += `\n⚖️  ${meta.comparacion}\n`;
+    }
+
+    // Separador
+    tooltip += '\n' + '─'.repeat(40) + '\n';
+
+    // Mensaje principal
+    tooltip += `\n� ${insight.mensaje}\n`;
+
+    if (insight.detalle) {
+      tooltip += `\n📝 ${insight.detalle}\n`;
+    }
+
+    return tooltip;
+  }
+
+  /**
+   * Formatea una fecha para mostrar en tooltips
+   */
+  private formatFechaTooltip(fecha: string): string {
+    const date = new Date(fecha);
+    const opciones: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    return date.toLocaleDateString('es-DO', opciones);
+  }
+
+  /**
+   * Genera el tooltip para el badge de tipo de insight
+   */
+  getInsightBadgeTooltip(tipo: string): string {
+    const badges: { [key: string]: string } = {
+      'success': '✅ Positivo: Indicador favorable para el negocio',
+      'warning': '⚠️ Atención: Requiere revisión o ajustes',
+      'danger': '🚨 Urgente: Requiere acción inmediata',
+      'info': 'ℹ️ Informativo: Dato relevante para considerar'
+    };
+
+    return badges[tipo] || 'Tipo de insight';
+  }
+
+  /**
+   * Muestra el modal con el detalle completo del insight
+   */
+  mostrarDetalleInsight(insight: any): void {
+    this.insightSeleccionado = insight;
+  }
+
+  /**
+   * Cierra el modal de detalle del insight
+   */
+  cerrarDetalleInsight(): void {
+    this.insightSeleccionado = null;
+  }
+
+  /**
+   * Formatea una fecha para mostrar de forma detallada
+   */
+  formatFechaDetallada(fecha: string): string {
+    const date = new Date(fecha);
+    const opciones: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    return date.toLocaleDateString('es-DO', opciones);
+  }
+
+  /**
+   * Retorna la clase CSS según el margen de ganancia
+   */
+  getMargenClass(margen: number): string {
+    if (margen > 30) return 'success';
+    if (margen > 20) return 'good';
+    if (margen > 15) return 'moderate';
+    return 'danger';
+  }
+
+  /**
+   * Formatea una fecha de forma corta
+   */
+  formatFechaCorta(fecha: string): string {
+    if (!fecha) return '';
+    const date = new Date(fecha);
+    return date.toLocaleDateString('es-DO', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  /**
+   * Calcula el promedio diario de un valor en un período
+   */
+  calcularPromedioDiario(valor: number, fechaInicio: string, fechaFin: string): number {
+    if (!valor || !fechaInicio || !fechaFin) return 0;
+    const dias = this.calcularDiasDiferencia(fechaInicio, fechaFin) || 1;
+    return valor / dias;
+  }
+
+  /**
+   * Interpreta el margen de ganancia con texto descriptivo
+   */
+  interpretarMargen(margen: number): string {
+    if (margen > 40) return '🎯 Excepcional - Rentabilidad muy superior al mercado';
+    if (margen > 30) return '✅ Excelente - Rentabilidad saludable y sostenible';
+    if (margen > 20) return '👍 Bueno - Margen competitivo en el sector';
+    if (margen > 15) return '⚠️ Moderado - Hay oportunidad de mejora';
+    if (margen > 10) return '📉 Bajo - Requiere optimización urgente';
+    return '🚨 Crítico - Revisar estrategia de precios/costos';
+  }
+
+  /**
+   * Calcula el porcentaje que representa un valor del total
+   */
+  calcularPorcentaje(valor: number, total: number): number {
+    if (!total || total === 0) return 0;
+    return (valor / total) * 100;
+  }
+
+  /**
+   * Proyecta ventas para un período específico basado en el promedio actual
+   */
+  proyectarVentas(valorActual: number, fechaInicio: string, fechaFin: string, diasProyeccion: number): number {
+    const promedioDiario = this.calcularPromedioDiario(valorActual, fechaInicio, fechaFin);
+    return promedioDiario * diasProyeccion;
+  }
+
+  /**
+   * Genera recomendaciones accionables basadas en el insight
+   */
+  generarRecomendaciones(insight: any): Array<{
+    icono: string;
+    titulo: string;
+    descripcion: string;
+    accion?: string;
+    prioridad: 'alta' | 'media' | 'baja';
+  }> {
+    const recomendaciones: Array<any> = [];
+    const meta = insight.metadata;
+
+    if (!meta) return recomendaciones;
+
+    // Recomendaciones basadas en margen
+    if (meta.margen !== undefined) {
+      if (meta.margen < 15) {
+        recomendaciones.push({
+          icono: '🚨',
+          titulo: 'Optimizar Costos',
+          descripcion: `El margen del ${meta.margen.toFixed(1)}% está por debajo del objetivo mínimo (15%). Es crítico revisar la estructura de costos.`,
+          accion: 'Analizar proveedores alternativos, renegociar precios de compra, o ajustar precios de venta',
+          prioridad: 'alta'
+        });
+      } else if (meta.margen < 20) {
+        recomendaciones.push({
+          icono: '⚠️',
+          titulo: 'Incrementar Margen',
+          descripcion: `Margen de ${meta.margen.toFixed(1)}% es aceptable pero puede mejorarse para alcanzar el objetivo óptimo de 20-30%.`,
+          accion: 'Evaluar incremento moderado de precios o búsqueda de productos con mayor margen',
+          prioridad: 'media'
+        });
+      } else if (meta.margen > 40) {
+        recomendaciones.push({
+          icono: '💡',
+          titulo: 'Aprovechar Alta Rentabilidad',
+          descripcion: `Margen excepcional de ${meta.margen.toFixed(1)}%. Esta categoría es muy rentable.`,
+          accion: 'Aumentar inventario y esfuerzos de marketing en esta línea de productos',
+          prioridad: 'alta'
+        });
+      }
+    }
+
+    // Recomendaciones basadas en participación
+    if (meta.porcentaje !== undefined) {
+      if (meta.porcentaje > 60) {
+        recomendaciones.push({
+          icono: '⚖️',
+          titulo: 'Diversificar Portfolio',
+          descripcion: `${meta.categoria || 'Esta categoría'} representa el ${meta.porcentaje.toFixed(1)}% del total. Alta concentración = alto riesgo.`,
+          accion: 'Desarrollar otras líneas de negocio para reducir dependencia',
+          prioridad: 'alta'
+        });
+      } else if (meta.porcentaje < 10 && meta.totalVentas && meta.totalVentas > 0) {
+        recomendaciones.push({
+          icono: '📈',
+          titulo: 'Potencial de Crecimiento',
+          descripcion: `Baja participación (${meta.porcentaje.toFixed(1)}%) indica oportunidad de expansión.`,
+          accion: 'Evaluar si vale la pena invertir más recursos o considerar descontinuar',
+          prioridad: 'media'
+        });
+      }
+    }
+
+    // Recomendaciones basadas en volumen
+    if (meta.totalVentas !== undefined && meta.fechaInicio && meta.fechaFin) {
+      const promedioDiario = this.calcularPromedioDiario(meta.totalVentas, meta.fechaInicio, meta.fechaFin);
+
+      if (promedioDiario > 10000) {
+        recomendaciones.push({
+          icono: '💰',
+          titulo: 'Alto Volumen de Ventas',
+          descripcion: `Promedio diario de $${promedioDiario.toFixed(2)} indica alta demanda.`,
+          accion: 'Asegurar inventario suficiente y considerar expandir capacidad',
+          prioridad: 'media'
+        });
+      } else if (promedioDiario < 1000) {
+        recomendaciones.push({
+          icono: '📊',
+          titulo: 'Bajo Volumen',
+          descripcion: `Ventas diarias promedio de $${promedioDiario.toFixed(2)} están por debajo de lo esperado.`,
+          accion: 'Implementar estrategias de marketing o promociones',
+          prioridad: 'media'
+        });
+      }
+    }
+
+    // Recomendación general de análisis
+    if (meta.fechaInicio && meta.fechaFin) {
+      const dias = this.calcularDiasDiferencia(meta.fechaInicio, meta.fechaFin);
+      if (dias >= 30) {
+        recomendaciones.push({
+          icono: '📅',
+          titulo: 'Análisis Periódico',
+          descripcion: `Basado en ${dias} días de datos. Los resultados son estadísticamente significativos.`,
+          accion: 'Continuar monitoreando estas métricas mensualmente',
+          prioridad: 'baja'
+        });
+      } else {
+        recomendaciones.push({
+          icono: '⏱️',
+          titulo: 'Período Corto',
+          descripcion: `Solo ${dias} días analizados. Considerar período más largo para conclusiones definitivas.`,
+          accion: 'Reanalizar con 30+ días para validar tendencias',
+          prioridad: 'baja'
+        });
+      }
+    }
+
+    // Recomendación de costos si están altos
+    if (meta.totalCostos && meta.totalVentas) {
+      const ratioCostos = (meta.totalCostos / meta.totalVentas) * 100;
+      if (ratioCostos > 70) {
+        recomendaciones.push({
+          icono: '💸',
+          titulo: 'Costos Elevados',
+          descripcion: `Los costos representan el ${ratioCostos.toFixed(1)}% de las ventas. Ratio muy alto.`,
+          accion: 'Revisar cadena de suministro, negociar con proveedores, o aumentar precios',
+          prioridad: 'alta'
+        });
+      }
+    }
+
+    return recomendaciones;
   }
 }

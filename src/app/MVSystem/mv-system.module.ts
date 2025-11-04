@@ -1,7 +1,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MvSystemRoutingModule } from './mv-system-routing.module';
 import { HomeComponent } from './pages/home/home.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -19,7 +19,7 @@ import { DashboardModule } from './pages/dashboard/dashboard/dashboard.module';
     HomeComponent,
     HeaderComponent,
     SidebarComponent,
-    FooterComponent,
+    FooterComponent
   ],
   imports: [
     MyDateRangePickerModule,
@@ -27,6 +27,7 @@ import { DashboardModule } from './pages/dashboard/dashboard/dashboard.module';
     CommonModule,
     MvSystemRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     NgxPaginationModule,
     RouterModule,
     DashboardModule

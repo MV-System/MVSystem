@@ -36,7 +36,7 @@ data: Utilidades = {
   ganancia_Desbloqueos: 0,
   valida: 0
 }; // Inicializa data
-isLoading: boolean = false; // Variable para controlar el estado de carga
+
 rangeDatePlaceholder: Date = new Date();
 
 colorScheme = { domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']};
@@ -170,7 +170,6 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         }
       },
       (error) => {
-        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }
@@ -196,7 +195,6 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         }
       },
       (error) => {
-        this.isLoading = false; // Terminar carga
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
       }

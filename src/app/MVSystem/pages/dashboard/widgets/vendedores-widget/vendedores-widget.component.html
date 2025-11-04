@@ -1,0 +1,170 @@
+<div class="vendedores-widget">
+    <!-- Header -->
+    <div class="widget-header">
+        <h5 class="widget-title">
+            <i class="bi bi-people-fill me-2"></i> {{ titulo }}
+        </h5>
+        <button class="btn btn-sm btn-outline-light" (click)="refrescar()" [disabled]="isLoading">
+      <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+    </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Analizando vendedores...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="alert alert-danger m-3" role="alert">
+        <i class="bi bi-x-circle me-2"></i> {{ errorMessage }}
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && !hasError">
+
+        <!-- Filtros de Ordenamiento -->
+        <div class="ordenamiento-section">
+            <label class="small text-muted mb-2">Ordenar por:</label>
+            <div class="btn-group btn-group-sm w-100" role="group">
+                <button type="button" class="btn" [class.btn-primary]="ordenarPor === 'ventas'" [class.btn-outline-secondary]="ordenarPor !== 'ventas'" (click)="cambiarOrden('ventas')">
+          <i class="bi bi-cash-stack me-1"></i>
+          Ventas
+        </button>
+                <button type="button" class="btn" [class.btn-success]="ordenarPor === 'ganancia'" [class.btn-outline-secondary]="ordenarPor !== 'ganancia'" (click)="cambiarOrden('ganancia')">
+          <i class="bi bi-graph-up-arrow me-1"></i>
+          Ganancia
+        </button>
+                <button type="button" class="btn" [class.btn-info]="ordenarPor === 'cantidad'" [class.btn-outline-secondary]="ordenarPor !== 'cantidad'" (click)="cambiarOrden('cantidad')">
+          <i class="bi bi-box-seam me-1"></i>
+          Cantidad
+        </button>
+            </div>
+        </div>
+
+        <!-- Lista de Vendedores -->
+        <div class="vendedores-list" *ngIf="vendedores && vendedores.length > 0">
+            <div class="vendedor-item" *ngFor="let vendedor of vendedores; let i = index" [class]="getRankingClass(i + 1)">
+
+                <div class="vendedor-header">
+                    <div class="vendedor-info">
+                        <div class="ranking-badge">
+                            <i class="bi" [ngClass]="getRankingIcon(i + 1)"></i>
+                            <span class="ranking-numero">#{{ i + 1 }}</span>
+                        </div>
+                        <div class="vendedor-nombre">
+                            <strong>{{ vendedor.nombre }}</strong>
+                            <span [ngClass]="getPerformanceBadge(vendedor.ticketPromedio).class" class="ms-2">
+                {{ getPerformanceBadge(vendedor.ticketPromedio).text }}
+              </span>
+                        </div>
+                    </div>
+                    <div class="participacion-badge">
+                        {{ formatPorcentaje(vendedor.porcentajeParticipacion) }}
+                    </div>
+                </div>
+
+                <div class="vendedor-body">
+                    <div class="row g-2 mb-2">
+                        <div class="col-4">
+                            <div class="metric-box">
+                                <small class="text-muted">Ventas</small>
+                                <div class="metric-value text-primary">
+                                    {{ formatCurrency(vendedor.montoTotalVendido) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-box">
+                                <small class="text-muted">Ganancia</small>
+                                <div class="metric-value text-success">
+                                    {{ formatCurrency(vendedor.gananciaTotalGenerada) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-box">
+                                <small class="text-muted">Cantidad</small>
+                                <div class="metric-value text-info">
+                                    {{ formatNumber(vendedor.cantidadVentas) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <small class="text-muted d-block">Ticket Promedio</small>
+                            <strong class="text-dark">{{ formatCurrency(vendedor.ticketPromedio) }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Comisiones</small>
+                            <strong class="text-warning">{{ formatCurrency(vendedor.comisionesTotales) }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress">
+                            <div class="progress-bar" [class.bg-primary]="ordenarPor === 'ventas'" [class.bg-success]="ordenarPor === 'ganancia'" [class.bg-info]="ordenarPor === 'cantidad'" [style.width.%]="getProgressWidth(vendedor)">
+                            </div>
+                        </div>
+                        <small class="progress-label text-muted">
+              {{ formatPorcentaje(getProgressWidth(vendedor)) }} del líder
+            </small>
+                    </div>
+
+                    <!-- Tendencia -->
+                    <div class="tendencia-badge" *ngIf="vendedor.tendencia">
+                        <i class="bi" [class.bi-arrow-up-right]="vendedor.tendencia === 'ascendente'" [class.bi-arrow-down-right]="vendedor.tendencia === 'descendente'" [class.bi-arrow-right]="vendedor.tendencia === 'estable'" [class.text-success]="vendedor.tendencia === 'ascendente'"
+                            [class.text-danger]="vendedor.tendencia === 'descendente'" [class.text-muted]="vendedor.tendencia === 'estable'">
+            </i>
+                        <span>
+              {{ vendedor.tendencia === 'ascendente' ? 'En alza' :
+                 vendedor.tendencia === 'descendente' ? 'En baja' : 'Estable' }}
+            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="vendedores && vendedores.length === 0" class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h6 class="mt-3">Sin datos de vendedores</h6>
+            <p class="text-muted">No hay información disponible en el período seleccionado</p>
+        </div>
+
+        <!-- Footer con Totales -->
+        <div class="widget-footer" *ngIf="vendedores && vendedores.length > 0">
+            <div class="row text-center">
+                <div class="col-3">
+                    <div class="footer-metric">
+                        <div class="metric-value">{{ formatCurrency(getTotalVentas()) }}</div>
+                        <div class="metric-label">Total Ventas</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="footer-metric">
+                        <div class="metric-value text-success">{{ formatCurrency(getTotalGanancias()) }}</div>
+                        <div class="metric-label">Ganancias</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="footer-metric">
+                        <div class="metric-value text-info">{{ formatNumber(getTotalEquipos()) }}</div>
+                        <div class="metric-label">Equipos</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="footer-metric">
+                        <div class="metric-value text-warning">{{ formatCurrency(getTicketPromedioGeneral()) }}</div>
+                        <div class="metric-label">Ticket Prom.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

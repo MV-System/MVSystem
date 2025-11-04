@@ -1,0 +1,143 @@
+<!-- Widget compacto y minimalista con colores claros -->
+<div class="widget-compact-card">
+    <!-- Header compacto -->
+    <div class="widget-compact-header">
+        <i class="bi bi-trophy-fill text-warning me-2"></i>
+        <span class="fw-semibold">Top 5 Modelos Más Vendidos</span>
+    </div>
+
+    <!-- Loading State Inteligente -->
+    <div *ngIf="isLoading" class="loading-smart-container">
+        <div class="loading-smart-content">
+            <!-- Animación de análisis -->
+            <div class="loading-animation">
+                <div class="ai-brain-icon">🧠</div>
+                <div class="loading-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+
+            <!-- Mensaje inteligente fijo -->
+            <div class="loading-message">
+                <p class="loading-title">{{ mensajeCarga.titulo }}</p>
+                <p class="loading-subtitle">{{ mensajeCarga.subtitulo }}</p>
+            </div>
+
+            <!-- Barra de progreso animada -->
+            <div class="loading-progress-bar">
+                <div class="loading-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="alert alert-warning alert-sm mb-0" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <small>{{ errorMessage }}</small>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !hasError && topModelos.length === 0" class="empty-compact text-center py-3">
+        <i class="bi bi-inbox text-muted fs-3"></i>
+        <p class="text-muted small mb-0 mt-1">No hay datos disponibles</p>
+    </div>
+
+    <!-- Lista Compacta de Modelos -->
+    <div *ngIf="!isLoading && !hasError && topModelos.length > 0" class="modelos-compact-list">
+        <div *ngFor="let modelo of topModelos; let i = index" class="modelo-compact-item" (click)="verDetalleModelo(modelo)" style="cursor: pointer;">
+            <!-- Ranking pequeño -->
+            <div class="ranking-compact" [ngClass]="getRankingCompactClass(modelo.ranking)" [title]="getRankingTooltip(modelo.ranking)">
+                {{ modelo.ranking }}
+            </div>
+
+            <!-- Info principal -->
+            <div class="modelo-compact-info">
+                <div class="modelo-compact-name" title="Click para ver detalle de equipos vendidos">
+                    {{ modelo.modelo }}
+                    <i class="bi bi-chevron-right ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                </div>
+
+                <!-- Stats inline minimalistas -->
+                <div class="modelo-compact-stats">
+                    <span class="stat-compact-item" title="Cantidad de equipos vendidos">
+            <i class="bi bi-phone-fill text-primary"></i>
+            <strong>{{ modelo.cantidadVendida }}</strong>
+          </span>
+                    <span class="stat-compact-divider">|</span>
+                    <span class="stat-compact-item" title="Total de ventas generadas">
+            <i class="bi bi-currency-dollar text-success"></i>
+            <strong>{{ formatCurrency(modelo.totalVentas) }}</strong>
+          </span>
+                    <span class="stat-compact-divider">|</span>
+                    <span class="stat-compact-item" title="Margen de ganancia promedio">
+            <i class="bi bi-percent"></i>
+            <strong [ngClass]="getMargenCompactClass(modelo.margenPromedio)">{{ modelo.margenPromedio.toFixed(1) }}%</strong>
+          </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalle de Equipos -->
+<div *ngIf="mostrarDetalle" class="modal-detalle-overlay" (click)="cerrarDetalle()">
+    <div class="modal-detalle-content" (click)="$event.stopPropagation()">
+        <!-- Header del Modal -->
+        <div class="modal-detalle-header">
+            <h6 class="mb-0">
+                <i class="bi bi-list-ul me-2"></i> Detalle de Ventas: <strong>{{ modeloSeleccionado?.modelo }}</strong>
+            </h6>
+            <button type="button" class="btn-close-modal" (click)="cerrarDetalle()" title="Cerrar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <!-- Resumen -->
+        <div class="modal-detalle-resumen">
+            <span class="badge bg-primary me-2">
+                <i class="bi bi-phone-fill me-1"></i>
+                {{ equiposDelModelo.length }} equipos vendidos
+            </span>
+            <span class="badge bg-success">
+                <i class="bi bi-currency-dollar me-1"></i>
+                {{ formatCurrency(modeloSeleccionado?.totalVentas || 0) }} en ventas
+            </span>
+        </div>
+
+        <!-- Tabla de Equipos -->
+        <div class="modal-detalle-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>IMEI</th>
+                            <th>Cliente</th>
+                            <th>Precio Venta</th>
+                            <th>Fecha Venta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let equipo of equiposDelModelo; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td class="text-monospace">{{ equipo.imei }}</td>
+                            <td>{{ equipo.cliente || 'N/A' }}</td>
+                            <td class="text-success fw-bold">{{ formatCurrency(equipo.precioVendido) }}</td>
+                            <td>{{ formatearFechaDetalle(equipo.fechaFacturado || equipo.fechaRegistro) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer del Modal -->
+        <div class="modal-detalle-footer">
+            <button type="button" class="btn btn-sm btn-secondary" (click)="cerrarDetalle()">
+                <i class="bi bi-x-circle me-1"></i>
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>

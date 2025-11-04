@@ -1,51 +1,190 @@
 :host {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 8px 4px 0 4px;
-  box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+.main {
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+
+/* ==================== Dashboard Header ==================== */
+
+.dashboard-header {
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+.dashboard-header h4 {
+    color: white;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.dashboard-header .text-muted {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.875rem;
+}
+
+
+/* ==================== CSS Grid Layout ==================== */
+
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+/* Grid item estándar */
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+
+/* Grid item grande (widget de IA) */
+
+.grid-item-large {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+
+/* ==================== Dashboard Cards ==================== */
+
 .dashboard-card {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 1rem 0.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-  background: #fff;
-  box-sizing: border-box;
-   /* max-height: 350px; */
-  overflow-y: auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    border: 1px solid #e9ecef;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+
+/* ==================== Sección de Gráficos ==================== */
+
+.grafico-seccion {
+    margin-bottom: 0;
+}
+
+.grafico-seccion .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.grafico-seccion .form-label i {
+    color: #667eea;
 }
 
 .grafico-responsive {
-  width: 100%;
-  min-width: 0;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  /* overflow-x: auto; */
-}
-ngx-charts-advanced-pie-chart {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  height: auto !important;
-  display: block;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@media (max-width: 600px) {
-  .dashboard-card {
-    padding: 1rem 0.2rem;
-  }
-  ngx-charts-advanced-pie-chart {
-    min-width: 120px;
-  }
+ngx-charts-advanced-pie-chart {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
 }
-@media (min-width: 992px) {
-  .dashboard-card {
-    max-height: none;
-    overflow-y: visible;
-  }
+
+
+/* ==================== Loading Spinner ==================== */
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    gap: 1rem;
+}
+
+.loading span {
+    color: #667eea;
+    font-weight: 500;
+}
+
+
+/* ==================== Responsive Design ==================== */
+
+
+/* Tablets y pantallas medianas */
+
+@media (max-width: 992px) {
+    .dashboard-grid {
+        flex-direction: column;
+    }
+}
+
+
+/* Móviles */
+
+@media (max-width: 600px) {
+    .main {
+        padding: 0.75rem;
+    }
+    .dashboard-card {
+        padding: 0.75rem;
+    }
+    ngx-charts-advanced-pie-chart {
+        min-width: 120px;
+    }
+    .dashboard-header {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .dashboard-header h4 {
+        font-size: 1rem;
+    }
+    .dashboard-grid {
+        gap: 0.75rem;
+    }
+}
+
+
+/* Pantallas grandes - Mantener vertical */
+
+@media (min-width: 1200px) {
+    .dashboard-grid {
+        flex-direction: column;
+    }
 }
