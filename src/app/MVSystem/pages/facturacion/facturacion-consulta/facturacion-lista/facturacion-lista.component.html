@@ -17,14 +17,16 @@
 
                         <!-- Filtros y paginación -->
                         <div class="col-md-12 d-flex align-items-center">
-                            <div class="mx-1">
-                                <select class="form-select chippagin" id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-                                    <option [value]="5">5</option>
-                                    <option [value]="10">10</option>
-                                    <option [value]="50">50</option>
-                                    <option [value]="100">100</option>
-                                    <option [value]="totalRecord">Todos</option>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">Mostrar</span>
+                                <select class="form-select form-select-sm" [value]="pageSize" (change)="onPageSizeChange($event)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="totalRecord">Todos</option>
                                 </select>
+                                <span class="ms-2">registros</span>
                             </div>
                             <div *ngIf="facturas.length" class="mx-2">
                                 <p>Mostrando {{ line }} al {{ lastLine }} de {{ totalRecord }} registros</p>

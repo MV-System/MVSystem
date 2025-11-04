@@ -193,23 +193,23 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     }
     return model;
   }
-  getFacturas(){
-    this.isLoading = true; // Iniciar loading para las tarjetas
+  getFacturas() {
+    this.isLoading = true; // Iniciar loading
     this.loading.showLoading();
-    // Resetear selección cuando se filtran las facturas
+    this.facturas = []; // Limpiar facturas antes de la nueva búsqueda
     this.resetearSeleccionFactura();
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({
     next: (facturas) => {
-      if (facturas.length > 0) {
-        // Hay facturas: usar los valores del API
+      if (facturas && facturas.length > 0) {
+        // Hay facturas: usar los valores del API (del primer registro)
         this.totalRecord = facturas[0].totalRecord;
         this.totalFacturado = facturas[0].totalFacturado;
         this.facturasCantidad = facturas[0].totalRecord;
         this.line = facturas[0].line;
         this.lastLine = facturas[0].lastLine;
       } else {
-        // Sin facturas: establecer todo en 0
+        // Sin facturas: establecer todo en 0 para evitar mostrar datos incorrectos
         this.totalRecord = 0;
         this.totalFacturado = 0;
         this.facturasCantidad = 0;
@@ -412,9 +412,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   // Resetear selección al cambiar de página
   this.resetearSeleccionFactura();
   this.getFacturas();  // Llamar nuevamente para obtener las facturas con la nueva página
-}
-
-  /**
+}  /**
    * Maneja el cambio de rango de fechas con validaciones completas
    */
   onDateRangeChanged(event: any) {

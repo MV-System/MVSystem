@@ -25,10 +25,10 @@ selectedRowIndex: number | null = null;
   facturaVisibility: { [key: number]: boolean } = {};
 
   // Este método se ejecuta cuando el select cambia
-  onPageSizeChange() {
-    // Emitimos el nuevo tamaño de página para que el componente padre lo maneje
-    this.pageSizeChanged.emit(this.pageSize);
-  }
+  onPageSizeChange(event: any) {
+        const newSize = event.target.value;
+        this.pageSizeChanged.emit(Number(newSize));
+    }
 
   // La función para manejar ambos clics
   handleClick(facturaId: number, index: number) {
@@ -85,8 +85,9 @@ selectedRowIndex: number | null = null;
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
   @Output() onBuscarFacturas = new EventEmitter<{criterio: string, pageIndex: number}>();
-  @Output() onCompartirFactura = new EventEmitter<number>(); // Nuevo output para compartir factura
-  @Output() pageChanged = new EventEmitter<number>(); // Nuevo output para cambio de página
+  @Output() onCompartirFactura = new EventEmitter<FacturaConsulta>();
+  @Output() pageChanged = new EventEmitter<number>();
+
 
   vendedores: VendedorLista[] = []
 
@@ -173,7 +174,7 @@ onCancel(detalle: DetalleFacturaList) {
     this.numerofactura.emit(numerofactura);
 
   }
-isMobileScreen(): boolean {
+  isMobileScreen(): boolean {
   return window.innerWidth < 600;
 }
   obtenerVendedor() {
@@ -314,7 +315,16 @@ isMobileScreen(): boolean {
    * Emite el evento para compartir la factura al componente padre
    */
   compartirFacturaMobile(numeroFactura: number): void {
-    this.onCompartirFactura.emit(numeroFactura);
+    // Buscar la factura completa en el array usando el número de factura
+    const facturaParaCompartir = this.facturas.find(f => f.numeroFactura === numeroFactura);
+
+    // Si se encuentra la factura, emitirla
+    if (facturaParaCompartir) {
+        this.onCompartirFactura.emit(facturaParaCompartir);
+    } else {
+        // Opcional: manejar el caso en que no se encuentre la factura
+        this.toast.error(`No se encontró la factura #${numeroFactura} para compartir.`);
+    }
   }
 
   /**
@@ -324,12 +334,6 @@ isMobileScreen(): boolean {
     this.pageChanged.emit(newPage);
   }
 
-
-  // Método para consultar facturas con el filtro actual
-getFacturas(): void {
-  // Usa el criterio actual y la página 1 (puedes ajustar si necesitas paginación)
-  this.executeSearch(this.criterio);
-}
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
