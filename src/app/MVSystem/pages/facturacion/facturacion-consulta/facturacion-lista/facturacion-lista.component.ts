@@ -86,6 +86,7 @@ selectedRowIndex: number | null = null;
   @Output() numerofactura =new EventEmitter<number>();
   @Output() onBuscarFacturas = new EventEmitter<{criterio: string, pageIndex: number}>();
   @Output() onCompartirFactura = new EventEmitter<number>(); // Nuevo output para compartir factura
+  @Output() pageChanged = new EventEmitter<number>(); // Nuevo output para cambio de página
 
   vendedores: VendedorLista[] = []
 
@@ -314,6 +315,13 @@ isMobileScreen(): boolean {
    */
   compartirFacturaMobile(numeroFactura: number): void {
     this.onCompartirFactura.emit(numeroFactura);
+  }
+
+  /**
+   * Maneja el cambio de página y emite al componente padre
+   */
+  onPageChange(newPage: number): void {
+    this.pageChanged.emit(newPage);
   }
 
 

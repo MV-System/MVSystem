@@ -76,7 +76,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <ng-container *ngFor="let factura of facturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }; let i = index">
+                                    <ng-container *ngFor="let factura of facturas; let i = index">
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
                                             <td class="fixed-item">
                                                 <button *ngIf="estadoFactura !== 'X'" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">

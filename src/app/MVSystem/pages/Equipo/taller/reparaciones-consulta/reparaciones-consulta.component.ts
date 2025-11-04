@@ -263,6 +263,15 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
    * Cambiar tamaño de página
    */
   onPageSizeChange(newSize: number): void {
+    // Validar que pageSize sea válido
+    const validPageSizes = [5, 10, 50, 100];
+
+    // Permitir también totalRecord si es un número válido
+    if (!validPageSizes.includes(newSize) && newSize !== this.totalRecord) {
+      console.warn('Tamaño de página inválido:', newSize);
+      return;
+    }
+
     this.pageSize = newSize;
     this.pageIndex = 1;
     this.buscarReparaciones();

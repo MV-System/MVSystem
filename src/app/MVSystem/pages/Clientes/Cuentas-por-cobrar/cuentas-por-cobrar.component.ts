@@ -109,7 +109,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       pageIndex: 1,
       pageSize: 1,
       fechaInicio: '',
-      fechaFinal: ''
+      fechaFinal: '',
+      Usuario: this.loginService.getUserName(),
     };
 
     try {
@@ -188,7 +189,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
         pageIndex: 1,
         pageSize: 1,
         fechaInicio: '',
-        fechaFinal: ''
+        fechaFinal: '',
+        Usuario: this.loginService.getUserName(),
       };
       // Descargar todos los PDFs en paralelo
       const pdfPromises = facturas.map(detalle =>
@@ -271,7 +273,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
         pageIndex: 1,
         pageSize: 1,
         fechaInicio: '',
-        fechaFinal: ''
+        fechaFinal: '',
+        Usuario: this.loginService.getUserName(),
       };
       // Descargar todos los PDFs en paralelo
       const pdfPromises = facturasLimitadas.map(detalle =>

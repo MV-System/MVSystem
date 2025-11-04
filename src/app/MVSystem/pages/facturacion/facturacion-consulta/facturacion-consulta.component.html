@@ -184,7 +184,7 @@
                         <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas()" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line"
                             [lastLine]="lastLine" [criterioInput]="criterioActual" [estadoFactura]="EstadoFactura" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event)">
                             <!-- <div *ngIf="equiposVendidos.length > 0"> -->
-                            <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="pageIndex" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
+                            <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="pageSize">
                             </pagination-controls>
 
                             <!-- <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="totalRecord >= 10 && facturas.length">

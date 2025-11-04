@@ -158,115 +158,118 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Tabla de pre-facturas -->
-                                <div class="scrollable-table thinScroll d-none d-md-block" *ngIf="!isMobileScreen()">
-                                    <table class="mv-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="sticky-col left-col">ACCIONES</th>
-                                                <th class="sticky-col second-col">CLIENTE</th>
-                                                <th>TELEFONO</th>
-                                                <!-- <th>TIPO DE FACTURA</th> -->
-                                                <th>TIPO DE PAGO</th>
-                                                <th>TOTAL</th>
-                                                <th>SUB TOTAL</th>
-                                                <th>DESCUENTO</th>
-                                                <th>ITBIS</th>
+                            </div>
+                        </div>
 
-                                                <th>NCF</th>
-                                                <th>RNC</th>
-                                                <th>VENDEDOR</th>
-                                                <th>ALMACEN</th>
-                                                <th>NOTA</th>
-                                                <th>NCF</th>
-                                                <th>RNC</th>
-                                                <th>FECHA REGISTRO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let pf of preFacturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: preFacturas.length }; let i = index">
-                                                <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="handleClick(pf.numero_PreFactura, i)">
-                                                    <td class="sticky-col left-col">
-                                                        <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
+                        <!-- Tabla de pre-facturas para Desktop -->
+                        <div class="scrollable-table thinScroll" *ngIf="!isMobileScreen()">
+                            <table class="mv-table">
+                                <thead>
+                                    <tr>
+                                        <th class="sticky-col left-col">ACCIONES</th>
+                                        <th class="sticky-col second-col">CLIENTE</th>
+                                        <th>TELEFONO</th>
+                                        <!-- <th>TIPO DE FACTURA</th> -->
+                                        <th>TIPO DE PAGO</th>
+                                        <th>TOTAL</th>
+                                        <th>SUB TOTAL</th>
+                                        <th>DESCUENTO</th>
+                                        <th>ITBIS</th>
+
+                                        <th>NCF</th>
+                                        <th>RNC</th>
+                                        <th>VENDEDOR</th>
+                                        <th>ALMACEN</th>
+                                        <th>NOTA</th>
+                                        <th>NCF</th>
+                                        <th>RNC</th>
+                                        <th>FECHA REGISTRO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let pf of preFacturas | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: preFacturas.length }; let i = index">
+                                        <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="handleClick(pf.numero_PreFactura, i)">
+                                            <td class="sticky-col left-col">
+                                                <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-check-circle"></i>
                                                 </button>
-                                                        <button class="btn btn-danger btn-sm" title="Anular" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && anularPreFactura(pf.numero_PreFactura)">
+                                                <button class="btn btn-danger btn-sm" title="Anular" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && anularPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-x-circle"></i>
                                                 </button>
-                                                    </td>
-                                                    <td class="sticky-col second-col">{{ pf.nombres }} {{ pf.apellidos }}</td>
-                                                    <td>{{ pf.numero_Telefono }}</td>
-                                                    <!-- <td>{{ pf.tipo_Factura }}</td> -->
-                                                    <td>{{ pf.tipo_Pago }}</td>
-                                                    <td>{{ pf.total | currency:'DOP' }}</td>
-                                                    <td>{{ pf.subTotal | currency:'DOP' }}</td>
-                                                    <td>{{ pf.descuento | currency:'DOP' }}</td>
-                                                    <td>{{ pf.itbis | currency:'DOP' }}</td>
-                                                    <td>{{ pf.nfcTipoNumero }}</td>
-                                                    <td>{{ pf.rnc }}</td>
-                                                    <td>{{ pf.vendedor_Nombres }}</td>
-                                                    <td>{{ pf.sucursal }}</td>
-                                                    <td>{{ pf.nota }}</td>
-                                                    <td>{{ pf.nfcTipoNumero }}</td>
-                                                    <td>{{ pf.rnc }}</td>
-                                                    <td>{{ pf.fecha_Registro | date:'short' }}</td>
-                                                </tr>
-                                                <tr *ngIf="expandedRowIndex === i">
-                                                    <td colspan="16" class="detalle-row bg-light border-top border-primary" style="box-shadow: 0 2px 8px rgba(34,127,255,0.07);">
-                                                        <div *ngIf="detalleLoading" class="text-center py-3">
-                                                            <span class="spinner-border spinner-border-sm text-primary"></span> Cargando detalle...
-                                                        </div>
-                                                        <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
-                                                        <div *ngIf="!detalleLoading && !detalleError">
-                                                            <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
-                                                                <div class="detalle-item">
-                                                                    <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}
-                                                                    <button class="btn btn-outline-danger btn-sm ms-2" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
+                                            </td>
+                                            <td class="sticky-col second-col">{{ pf.nombres }} {{ pf.apellidos }}</td>
+                                            <td>{{ pf.numero_Telefono }}</td>
+                                            <!-- <td>{{ pf.tipo_Factura }}</td> -->
+                                            <td>{{ pf.tipo_Pago }}</td>
+                                            <td>{{ pf.total | currency:'DOP' }}</td>
+                                            <td>{{ pf.subTotal | currency:'DOP' }}</td>
+                                            <td>{{ pf.descuento | currency:'DOP' }}</td>
+                                            <td>{{ pf.itbis | currency:'DOP' }}</td>
+                                            <td>{{ pf.nfcTipoNumero }}</td>
+                                            <td>{{ pf.rnc }}</td>
+                                            <td>{{ pf.vendedor_Nombres }}</td>
+                                            <td>{{ pf.sucursal }}</td>
+                                            <td>{{ pf.nota }}</td>
+                                            <td>{{ pf.nfcTipoNumero }}</td>
+                                            <td>{{ pf.rnc }}</td>
+                                            <td>{{ pf.fecha_Registro | date:'short' }}</td>
+                                        </tr>
+                                        <tr *ngIf="expandedRowIndex === i">
+                                            <td colspan="16" class="detalle-row bg-light border-top border-primary" style="box-shadow: 0 2px 8px rgba(34,127,255,0.07);">
+                                                <div *ngIf="detalleLoading" class="text-center py-3">
+                                                    <span class="spinner-border spinner-border-sm text-primary"></span> Cargando detalle...
+                                                </div>
+                                                <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
+                                                <div *ngIf="!detalleLoading && !detalleError">
+                                                    <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
+                                                        <div class="detalle-item">
+                                                            <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}
+                                                            <button class="btn btn-outline-danger btn-sm ms-2" title="Rebajar item" (click)="$event.stopPropagation(); rebajarItem(det)">
                                                                 <i class="bi bi-arrow-bar-down"></i> Rebajar
                                                             </button>
-                                                                </div>
-                                                                <div class="detalle-item"><span class="fw-bold">Descripción:</span> {{ det.descripcion }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold">Cant:</span> {{ det.cantidad }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}</div>
-                                                                <div class="detalle-item"><span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}</div>
-                                                            </div>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                        <div class="detalle-item"><span class="fw-bold">Descripción:</span> {{ det.descripcion }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Cant:</span> {{ det.cantidad }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Precio:</span> {{ det.precio | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">SubTotal:</span> {{ det.subTotal | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Desc.:</span> {{ det.descuento | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold">Itbis:</span> {{ det.itbis | currency:'DOP' }}</div>
+                                                        <div class="detalle-item"><span class="fw-bold text-success">Total:</span> {{ det.total | currency:'DOP' }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                <!-- Controles de paginación mejorados -->
-                                <div *ngIf="preFacturas.length > pageSize" class="pagination-bar bg-light rounded shadow-sm py-2 px-3 mt-3 d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <button class="btn btn-sm btn-outline-primary me-2" [disabled]="pageIndex === 1" (click)="pageIndex = pageIndex - 1">
+                        <!-- Controles de paginación mejorados -->
+                        <div *ngIf="preFacturas.length > pageSize" class="pagination-bar bg-light rounded shadow-sm py-2 px-3 mt-3 d-flex flex-wrap justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-outline-primary me-2" [disabled]="pageIndex === 1" (click)="pageIndex = pageIndex - 1">
                                     <i class="bi bi-chevron-left"></i> Anterior
                                 </button>
-                                        <span class="mx-2">Página
+                                <span class="mx-2">Página
                                     <input type="number" min="1" [max]="totalPages" [(ngModel)]="pageIndex" style="width: 60px; text-align: center; display: inline-block;" />
                                     de {{ totalPages }}
                                 </span>
-                                        <button class="btn btn-sm btn-outline-primary ms-2" [disabled]="pageIndex >= totalPages" (click)="pageIndex = pageIndex + 1">
+                                <button class="btn btn-sm btn-outline-primary ms-2" [disabled]="pageIndex >= totalPages" (click)="pageIndex = pageIndex + 1">
                                     Siguiente <i class="bi bi-chevron-right"></i>
                                 </button>
-                                    </div>
-                                    <div class="text-muted small ms-3">
-                                        Mostrando {{ (pageIndex-1)*pageSize+1 }} al {{ (pageIndex-1)*pageSize + (pageSize
-                                        < preFacturas.length - (pageIndex-1)*pageSize ? pageSize : preFacturas.length - (pageIndex-1)*pageSize) }} de {{ preFacturas.length }} registros </div>
-                                    </div>
-
-                                    <!-- Mensaje de resultado de la operación -->
-                                    <div *ngIf="mensaje" class="alert alert-info mt-3 text-center">{{ mensaje }}</div>
-
-                                    <div *ngIf="!loading && preFacturas.length === 0" class="mt-3">No hay pre-facturas pendientes.</div>
-                                    <div *ngIf="loading" class="mt-3">Cargando pre-facturas...</div>
-                                    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-                                </div>
                             </div>
+                            <div class="text-muted small ms-3">
+                                Mostrando {{ (pageIndex-1)*pageSize+1 }} al {{ (pageIndex-1)*pageSize + (pageSize
+                                < preFacturas.length - (pageIndex-1)*pageSize ? pageSize : preFacturas.length - (pageIndex-1)*pageSize) }} de {{ preFacturas.length }} registros </div>
+                            </div>
+
+                            <!-- Mensaje de resultado de la operación -->
+                            <div *ngIf="mensaje" class="alert alert-info mt-3 text-center">{{ mensaje }}</div>
+
+                            <div *ngIf="!loading && preFacturas.length === 0" class="mt-3">No hay pre-facturas pendientes.</div>
+                            <div *ngIf="loading" class="mt-3">Cargando pre-facturas...</div>
+                            <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
                         </div>
                     </div>
+                </div>
+            </div>

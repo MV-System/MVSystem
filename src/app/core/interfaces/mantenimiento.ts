@@ -154,6 +154,8 @@ export interface FacturaFilter extends DatePaging, Pagination {
     ComprobanteCheck: number;
     EstadoFactura: string;
     IdVendedor: number;
+    Usuario: string;
+
 }
 
 export interface Articulo {

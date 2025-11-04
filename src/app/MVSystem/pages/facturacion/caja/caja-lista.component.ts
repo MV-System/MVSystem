@@ -153,7 +153,7 @@ export class CajaListaComponent implements OnInit {
   executeSearch(searchTerm: string): void {
     if (searchTerm.length >= this.minSearchLength || searchTerm.length === 0) {
       this.loading = true;
-      this.preFacturasService.listarPreFacturas({ Estado: 'Pendiente', criterio: searchTerm }).subscribe({
+      this.preFacturasService.listarPreFacturas({ Estado: 'P', criterio: searchTerm }).subscribe({
         next: (data) => {
           this.preFacturas = data;
           this.loading = false;
@@ -181,15 +181,36 @@ export class CajaListaComponent implements OnInit {
   cargarPreFacturas(): void {
     this.loading = true;
     this.error = null;
-    this.preFacturasService.listarPreFacturas({ Estado: 'Pendiente' }).subscribe({
+
+    console.log('🔄 Cargando prefacturas con filtro: Estado = P (Pendiente)');
+
+    this.preFacturasService.listarPreFacturas({ Estado: 'P' }).subscribe({
       next: (data) => {
-        this.preFacturas = data;
+        console.log('✅ Prefacturas recibidas:', data);
+        console.log('📊 Total de prefacturas:', data?.length || 0);
+
+        this.preFacturas = data || [];
         this.loading = false;
+
+        if (this.preFacturas.length === 0) {
+          console.warn('⚠️ No se encontraron prefacturas pendientes');
+        }
       },
       error: (err) => {
-        console.error('Error al cargar pre-facturas:', err);
-        this.error = 'Error al cargar pre-facturas';
+        console.error('❌ Error al cargar pre-facturas:', err);
+        console.error('📋 Detalles del error:', {
+          status: err.status,
+          statusText: err.statusText,
+          message: err.message,
+          url: err.url
+        });
+
+        this.error = `Error al cargar pre-facturas: ${err.status || 'Error de conexión'}`;
+        this.preFacturas = [];
         this.loading = false;
+
+        // Mostrar toast con el error
+        this.toast.error(this.error);
       }
     });
   }
@@ -358,7 +379,8 @@ export class CajaListaComponent implements OnInit {
       pageIndex: 1,
       pageSize: 1,
       fechaInicio: '',
-      fechaFinal: ''
+      fechaFinal: '',
+      Usuario: this.loginService.getUserName(),
     };
     const sub = this.mantenimientoService.postFacturaReport(filter, this.facturaNumberReporte!)
       .subscribe(blob => {
@@ -393,7 +415,8 @@ export class CajaListaComponent implements OnInit {
       pageSize: 1,
       fechaInicio: '',
       fechaFinal: '',
-       EstadoFactura: "A"// Valor por defecto, ajusta según lógica de tu app
+       EstadoFactura: "A",// Valor por defecto, ajusta según lógica de tu app
+       Usuario: this.loginService.getUserName(),
     };
   }
 

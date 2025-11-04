@@ -1196,7 +1196,8 @@ else
       IdSucursal:this.loginService.getUserIdSucursal,
       ComprobanteCheck:1,
       EstadoFactura:this.EstadoFactura,
-      IdVendedor:0
+      IdVendedor:0,
+      Usuario:this.loginService.getUserName(),
     }
     return model;
   }

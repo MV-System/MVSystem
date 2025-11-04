@@ -35,7 +35,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   private rDialogService: RDialogService,) { }
 
    // Método que se llama cuando cambia el tamaño de la página
-
    onPageSizeChange(newPageSize: number) {
     // Validar que pageSize sea válido
     const validPageSizes = [5, 10, 50, 100];
@@ -46,7 +45,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Actualizar AMBAS propiedades
+    this.pageSize = newPageSize;
     this.paginate.pageSize = newPageSize;
+
+    // Resetear a la primera página al cambiar el tamaño
+    this.pageIndex = 1;
+    this.paginate.pageIndex = 1;
+    this.currentPage = 1;
+
     // Llamar a la función que maneja la paginación y carga de datos
     this.getFacturas();
   }
@@ -182,6 +189,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       IdSucursal:this.loginService.getUserIdSucursal,
       ComprobanteCheck: this.ComprobanteCheck,
       EstadoFactura: this.EstadoFactura,
+      Usuario: this.loginService.getUserName(),
     }
     return model;
   }
@@ -398,6 +406,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
   pageChanged(index: number) {
+  this.currentPage = index;
   this.pageIndex = index;
   this.paginate.pageIndex = this.pageIndex;
   // Resetear selección al cambiar de página
