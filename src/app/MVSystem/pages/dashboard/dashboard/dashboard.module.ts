@@ -8,6 +8,7 @@ import { DashboardRoutingModule } from '../dashboard-routing.module';
 import { TopModelosWidgetComponent } from '../widgets/top-modelos-widget/top-modelos-widget.component';
 import { AnomaliasWidgetComponent } from '../widgets/anomalias-widget/anomalias-widget.component';
 import { VendedoresWidgetComponent } from '../widgets/vendedores-widget/vendedores-widget.component';
+import { TopEquiposLentosWidgetComponent } from '../widgets/top-equipos-lentos-widget/top-equipos-lentos-widget.component';
 
 
 
@@ -16,7 +17,8 @@ import { VendedoresWidgetComponent } from '../widgets/vendedores-widget/vendedor
     DashboardComponent,
     TopModelosWidgetComponent,
     AnomaliasWidgetComponent,
-    VendedoresWidgetComponent
+    VendedoresWidgetComponent,
+    TopEquiposLentosWidgetComponent
   ],
   imports: [
     DashboardRoutingModule,

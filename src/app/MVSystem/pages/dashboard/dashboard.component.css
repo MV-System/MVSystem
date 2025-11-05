@@ -68,6 +68,24 @@
 }
 
 
+/* Grid item que ocupa todo el ancho */
+
+.grid-item-full {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+
+/* Layout de 2 columnas para widgets */
+
+.two-column-widgets {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+}
+
+
 /* ==================== Dashboard Cards ==================== */
 
 .dashboard-card {
@@ -152,6 +170,10 @@ ngx-charts-advanced-pie-chart {
 @media (max-width: 992px) {
     .dashboard-grid {
         flex-direction: column;
+    }
+    .two-column-widgets {
+        grid-template-columns: 1fr;
+        /* Stack en móvil/tablet */
     }
 }
 

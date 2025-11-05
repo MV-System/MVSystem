@@ -15,10 +15,17 @@
         <!-- Grid de Widgets -->
         <div class="dashboard-grid">
 
-            <!-- Widget: Top Modelos Más Vendidos (Nuevo con IA) -->
-            <div class="grid-item grid-item-large">
-                <app-top-modelos-widget [fechaInicio]="FechaInicioMes.toISOString().split('T')[0]" [fechaFinal]="fechaHoy.toISOString().split('T')[0]" [limite]="5" [titulo]="'Top 5 Modelos Más Vendidos - Este Mes'">
-                </app-top-modelos-widget>
+            <!-- Sección: Top Modelos (2 columnas) -->
+            <div class="grid-item grid-item-full">
+                <div class="two-column-widgets">
+                    <!-- Columna Izquierda: Top Modelos Más Vendidos -->
+                    <app-top-modelos-widget [fechaInicio]="FechaInicioMes.toISOString().split('T')[0]" [fechaFinal]="fechaHoy.toISOString().split('T')[0]" [limite]="5" [titulo]="'Top 5 Modelos Más Vendidos'">
+                    </app-top-modelos-widget>
+
+                    <!-- Columna Derecha: Top Equipos con Más Tiempo en Inventario -->
+                    <app-top-equipos-lentos-widget [limite]="5" [titulo]="'Top 5 Equipos con Más Tiempo en Inventario'">
+                    </app-top-equipos-lentos-widget>
+                </div>
             </div>
 
             <!-- Gráfico: Ventas del Día -->

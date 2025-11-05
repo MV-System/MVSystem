@@ -1,0 +1,145 @@
+<div class="widget-compact-card">
+    <!-- Header compacto -->
+    <div class="widget-compact-header">
+        <i class="bi bi-hourglass-split text-warning me-2"></i>
+        <span class="fw-semibold">Top 5 Equipos con Más Tiempo en Inventario</span>
+    </div>
+
+    <!-- Loading State Inteligente -->
+    <div *ngIf="isLoading" class="loading-smart-container">
+        <div class="loading-smart-content">
+            <!-- Animación de análisis -->
+            <div class="loading-animation">
+                <div class="ai-brain-icon">🧠</div>
+                <div class="loading-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+
+            <!-- Mensaje inteligente fijo -->
+            <div class="loading-message">
+                <p class="loading-title">{{ mensajeCarga.titulo }}</p>
+                <p class="loading-subtitle">{{ mensajeCarga.subtitulo }}</p>
+            </div>
+
+            <!-- Barra de progreso animada -->
+            <div class="loading-progress-bar">
+                <div class="loading-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="alert alert-warning alert-sm mb-0" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <small>{{ errorMessage }}</small>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !hasError && topEquiposLentos.length === 0" class="empty-compact text-center py-3">
+        <i class="bi bi-check-circle text-success fs-3"></i>
+        <p class="text-muted small mb-0 mt-1">¡Excelente! No hay equipos con rotación lenta</p>
+    </div>
+
+    <!-- Lista Compacta de Equipos -->
+    <div *ngIf="!isLoading && !hasError && topEquiposLentos.length > 0" class="modelos-compact-list">
+        <div *ngFor="let equipo of topEquiposLentos; let i = index" class="modelo-compact-item" [ngClass]="getCategoriaClass(equipo.categoriaRotacion)" (click)="verDetalleModelo(equipo)" style="cursor: pointer;">
+            <!-- Ranking pequeño -->
+            <div class="ranking-compact" [ngClass]="getRankingCompactClass(i + 1)">
+                {{ i + 1 }}
+            </div>
+
+            <!-- Info del modelo -->
+            <div class="modelo-compact-info">
+                <div class="modelo-compact-nombre">{{ equipo.modelo }}</div>
+                <div class="modelo-compact-stats">
+                    <span class="stat-compact">
+                        <i class="bi bi-calendar-x"></i>
+                        {{ getDiasTexto(equipo.diasPromedio) }}
+                    </span>
+                    <span class="stat-compact">
+                        <i class="bi bi-box-seam"></i>
+                        {{ equipo.cantidadEquipos }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Badge de categoría -->
+            <div class="categoria-compact-badge">
+                <i [class]="'bi ' + getCategoriaIcon(equipo.categoriaRotacion)"></i>
+            </div>
+
+            <!-- Costo -->
+            <div class="valor-compact text-success">
+                {{ formatCurrency(equipo.costoTotal) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de detalle -->
+<div class="modal-overlay" *ngIf="mostrarDetalle" (click)="cerrarDetalle()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-box-seam"></i> Equipos en Inventario: {{ modeloSeleccionado?.modelo }}
+            </h3>
+            <button class="btn-close-modal" (click)="cerrarDetalle()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Resumen -->
+            <div class="detalle-resumen">
+                <div class="resumen-item">
+                    <i class="bi bi-calendar-x text-danger"></i>
+                    <div>
+                        <small>Tiempo Promedio</small>
+                        <strong>{{ getDiasTexto(modeloSeleccionado?.diasPromedio || 0) }}</strong>
+                    </div>
+                </div>
+                <div class="resumen-item">
+                    <i class="bi bi-box-seam text-primary"></i>
+                    <div>
+                        <small>Cantidad</small>
+                        <strong>{{ modeloSeleccionado?.cantidadEquipos }} unidades</strong>
+                    </div>
+                </div>
+                <div class="resumen-item">
+                    <i class="bi bi-cash-coin text-success"></i>
+                    <div>
+                        <small>Inversión Total</small>
+                        <strong>{{ formatCurrency(modeloSeleccionado?.costoTotal || 0) }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sugerencia -->
+            <div class="sugerencia-box" [class]="getCategoriaClass(modeloSeleccionado?.categoriaRotacion || 'aceptable')">
+                <i class="bi bi-lightbulb-fill"></i>
+                <p>{{ modeloSeleccionado?.sugerencia }}</p>
+            </div>
+
+            <!-- Lista de equipos -->
+            <div class="equipos-detalle-list">
+                <div class="equipo-detalle-item" *ngFor="let eq of equiposDelModelo">
+                    <div class="equipo-detalle-header">
+                        <span class="imei">IMEI: {{ eq.imei }}</span>
+                        <span class="dias-badge" [class]="getCategoriaClass(calcularDiasEnInventario(eq.fecharegistro) > 180 ? 'critico' : calcularDiasEnInventario(eq.fecharegistro) > 90 ? 'advertencia' : 'aceptable')">
+              {{ getDiasTexto(calcularDiasEnInventario(eq.fecharegistro)) }}
+            </span>
+                    </div>
+                    <div class="equipo-detalle-info">
+                        <span><i class="bi bi-building"></i> {{ eq.descripcionAlmacen }}</span>
+                        <span><i class="bi bi-truck"></i> {{ eq.suplidor }}</span>
+                        <span><i class="bi bi-calendar-event"></i> Ingreso: {{ formatearFechaDetalle(eq.fecharegistro) }}</span>
+                        <span><i class="bi bi-cash"></i> Costo: {{ formatCurrency(eq.costoEquipo) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
