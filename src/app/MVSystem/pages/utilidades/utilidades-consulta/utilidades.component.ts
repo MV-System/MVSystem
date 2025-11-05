@@ -11,6 +11,7 @@ import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-utilidades',
@@ -142,6 +143,7 @@ export class UtilidadesComponent implements OnInit {
     private toastr: ToastrService,
     private loginService: LoginService,
     private validatorPermissionService:ValidatorPermissionService,
+    private tracking: UserTrackingService
   ) { }
 
   // Obtener la fecha actual
@@ -178,6 +180,12 @@ createForm(){
     this.getSucursales();
     this.sucursalOnChange(); // Configurar listeners ANTES de cargar datos
     this.GetUtilidades(); // Llama a la función para obtener datos
+    
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Utilidades', { 
+      seccion: 'consulta', 
+      vista: 'principal' 
+    }).subscribe();
   }
 setResponsiveView() {
   if (window.innerWidth < 600) {
@@ -211,6 +219,13 @@ setResponsiveView() {
   }
   GetUtilidades() {
     this.loading.showLoading();
+
+    // 📊 Tracking: Registro de consulta de utilidades
+    this.tracking.trackAction('Utilidades', 'Consultar', {
+      fechaInicio: this.filter.FI,
+      fechaFin: this.filter.FF,
+      sucursal: this.filter.sucursal
+    }).subscribe();
 
     // Limpiar insights anteriores
     this.aiInsights = [];

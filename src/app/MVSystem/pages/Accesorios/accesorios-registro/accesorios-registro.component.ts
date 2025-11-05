@@ -11,6 +11,7 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { ToastrService } from 'ngx-toastr';
 import * as $ from"jquery";
 import { LoginService } from 'src/app/auth/login.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-accesorios',
@@ -34,6 +35,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     private mantenimientoService: MantenimientoService,
     private toastr: ToastrService,
     private loginService: LoginService,
+    private tracking: UserTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +47,12 @@ export class AccesoriosRegistroComponent implements OnInit {
 
     // Suscribirse a cambios para mostrar validaciones en tiempo real
     this.setupRealtimeValidations();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Registro Accesorios', {
+      seccion: 'registro',
+      vista: 'formulario'
+    }).subscribe();
   }
 
   /**
@@ -303,6 +311,13 @@ export class AccesoriosRegistroComponent implements OnInit {
     // Solo proceder si el formulario es válido Y no hay errores personalizados
     if (this.formRegistro.valid && !hasCustomErrors) {
       const model: Accesorio = this.modeloRegistroAccesorio();
+
+      // 📊 Tracking: Registro de creación de accesorio
+      this.tracking.trackAction('Registro Accesorios', 'Crear', {
+        descripcion: model.descripcion_Accesorio,
+        cantidad: model.cantidad
+      }).subscribe();
+
       this.mantenimientoService.postAccesorio(model)
           .subscribe({
             next: (accesorio: AccesorioLista) => {

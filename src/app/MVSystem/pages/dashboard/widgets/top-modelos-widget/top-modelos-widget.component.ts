@@ -84,8 +84,6 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
     // Seleccionar un mensaje aleatorio al iniciar el componente
     this.seleccionarMensajeAleatorio();
 
-    console.log('[TopModelosWidget] Componente inicializado');
-    console.log('[TopModelosWidget] Fechas:', this.fechaInicio, this.fechaFinal);
     this.cargarTopModelos();
   }
 
@@ -98,7 +96,6 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.hasError = false;
 
-    console.log('[TopModelosWidget] Iniciando carga...');
 
     // Usar fechas del mes actual si no se proporcionan
     if (!this.fechaInicio || !this.fechaFinal) {
@@ -106,7 +103,6 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
       const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
       this.fechaInicio = this.formatearFecha(inicioMes);
       this.fechaFinal = this.formatearFecha(hoy);
-      console.log('[TopModelosWidget] Fechas auto-calculadas:', this.fechaInicio, this.fechaFinal);
     }
 
     const filtro: EquipoVendidoFilter = {

@@ -14,6 +14,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { LoginService } from 'src/app/auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -32,7 +33,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private loginService: LoginService,
   private validatorPermissionService:ValidatorPermissionService,
-  private rDialogService: RDialogService,) { }
+  private rDialogService: RDialogService,
+  private tracking: UserTrackingService) { }
 
    // Método que se llama cuando cambia el tamaño de la página
    onPageSizeChange(newPageSize: number) {
@@ -79,6 +81,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.form.get('criterio')?.valueChanges.subscribe(value => {
       this.criterioActual = value || '';
     });
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Facturas', {
+      seccion: 'consulta',
+      vista: 'principal'
+    }).subscribe();
   }
 
   getVendedores() {
@@ -198,6 +206,15 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.loading.showLoading();
     this.facturas = []; // Limpiar facturas antes de la nueva búsqueda
     this.resetearSeleccionFactura();
+
+    // 📊 Tracking: Registro de consulta de facturas
+    this.tracking.trackAction('Facturas', 'Consultar', {
+      fechaInicio: this.paginate.fechaInicio,
+      fechaFin: this.paginate.fechaFinal,
+      sucursal: this.form.get('almacen')?.value,
+      estado: this.EstadoFactura
+    }).subscribe();
+
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({
     next: (facturas) => {

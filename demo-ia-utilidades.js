@@ -44,9 +44,7 @@ insights1.forEach((insight, index) => {
         insight.tipo === 'info' ? '#2196F3' : '#F44336';
 
     console.log(`\n%c${insight.icono} ${insight.mensaje}`, `color: ${color}; font-weight: bold;`);
-    if (insight.detalle) {
-        console.log(`   ${insight.detalle}`);
-    }
+    if (insight.detalle) {}
 });
 
 // ============================================================================
@@ -84,9 +82,7 @@ insights2.forEach((insight, index) => {
         insight.tipo === 'info' ? '#2196F3' : '#F44336';
 
     console.log(`\n%c${insight.icono} ${insight.mensaje}`, `color: ${color}; font-weight: bold;`);
-    if (insight.detalle) {
-        console.log(`   ${insight.detalle}`);
-    }
+    if (insight.detalle) {}
 });
 
 // ============================================================================
@@ -124,9 +120,7 @@ insights3.forEach((insight, index) => {
         insight.tipo === 'info' ? '#2196F3' : '#F44336';
 
     console.log(`\n%c${insight.icono} ${insight.mensaje}`, `color: ${color}; font-weight: bold;`);
-    if (insight.detalle) {
-        console.log(`   ${insight.detalle}`);
-    }
+    if (insight.detalle) {}
 });
 
 // ============================================================================
@@ -203,7 +197,6 @@ function analizarDatos(data) {
     categorias.forEach(cat => {
         if (cat.venta > 0) {
             const margen = ((cat.ganancia / cat.venta) * 100);
-            console.log(`   ${cat.nombre}: ${margen.toFixed(2)}%`);
 
             if (margen < 10 && cat.venta > totalVentas * 0.1) {
                 insights.push({

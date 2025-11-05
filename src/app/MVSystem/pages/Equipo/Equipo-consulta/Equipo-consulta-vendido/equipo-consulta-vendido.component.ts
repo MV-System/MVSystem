@@ -17,6 +17,7 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 interface SalesInsight {
   title: string;
@@ -42,6 +43,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     private loginService: LoginService,
     private loading: LoadingService,
     private validatorPermissionService:ValidatorPermissionService,
+    private tracking: UserTrackingService
   ) {}
   @Input() clearFilter:any;
 
@@ -57,6 +59,12 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerModeloLista();
     this.obtenerVendedor();
     this.obtenerSuplidor();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Equipos Vendidos', {
+      seccion: 'consulta',
+      vista: 'principal'
+    }).subscribe();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -303,6 +311,15 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.isLoadingInsights = true;
     this.getValueFilterForm();
     this.onFilterPropHasValue();
+
+    // 📊 Tracking: Registro de consulta de equipos vendidos
+    this.tracking.trackAction('Equipos Vendidos', 'Consultar', {
+      fechaInicio: this.filter.FechaInicial,
+      fechaFin: this.filter.FechaFinal,
+      sucursal: this.filter.almacen,
+      modelo: this.filter.modelo,
+      suplidor: this.filter.suplidor
+    }).subscribe();
 
     // OPTIMIZADO: Una sola llamada al servidor para obtener TODOS los datos
     // Guardamos los filtros originales

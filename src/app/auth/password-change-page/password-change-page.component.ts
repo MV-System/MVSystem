@@ -39,7 +39,6 @@ export class PasswordChangePageComponent implements OnInit {
         // set error on matchingControl if validation fails
         if (control.value !== matchingControl.value) {
             matchingControl.setErrors({ confirmPasswordMatch: true });
-            console.log(matchingControl);
 
         } else {
             matchingControl.setErrors(null);

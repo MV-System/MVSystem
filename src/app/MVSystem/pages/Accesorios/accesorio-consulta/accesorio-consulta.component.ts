@@ -8,6 +8,7 @@ import { Accesorio } from 'src/app/core/interfaces/accesorio.interface';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-accesorio-consulta',
@@ -23,11 +24,18 @@ export class AccesorioConsultaComponent implements OnInit {
     private catalogosService: CatalogosService,
     private accesoriosService:AccesoriosService,
     private fb: FormBuilder,
-    private router: Router) { }
+    private router: Router,
+    private tracking: UserTrackingService) { }
 
   ngOnInit(): void {
     this.getAccesorios();
     this.obtenerAlmacenes();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Accesorios', {
+      seccion: 'consulta',
+      vista: 'principal'
+    }).subscribe();
   }
   almacenes:   Almacen[] = [];
   accesorios:  Accesorio[] = [];
@@ -90,6 +98,12 @@ export class AccesorioConsultaComponent implements OnInit {
   }
 
    // let almacen = Number( this.form.get('almacen')?.value);
+
+    // 📊 Tracking: Registro de consulta de accesorios
+    this.tracking.trackAction('Accesorios', 'Consultar', {
+      accesorio: accesorio,
+      sucursal: almacen
+    }).subscribe();
 
     this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{

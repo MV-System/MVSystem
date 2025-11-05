@@ -17,6 +17,7 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-equipo-disponible',
@@ -32,6 +33,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     private toast: ToastrService,
     private loginService: LoginService,
     private validatorPermissionService:ValidatorPermissionService,
+    private tracking: UserTrackingService
   ) { }
 
 
@@ -59,6 +61,12 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.obtenerEquiposDisponibles();
     this.loadCatalogos();
 //this.loading.hideLoading();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('Equipos Disponibles', {
+      seccion: 'consulta',
+      vista: 'principal'
+    }).subscribe();
   }
   ngOnChanges(changes: SimpleChanges): void {
     const change = changes["clearFilter"];
@@ -156,6 +164,14 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
   this.isLoading = true;
 
   this.getValueFilterForm();
+
+  // 📊 Tracking: Registro de consulta de equipos disponibles
+  this.tracking.trackAction('Equipos Disponibles', 'Consultar', {
+    imei: this.filter.imei,
+    modelo: this.filter.modelo,
+    sucursal: this.filter.almacen,
+    suplidor: this.filter.suplidor
+  }).subscribe();
 
   // Solo resetear a página 1 si se especifica (al cambiar filtros)
   if (resetPage) {
