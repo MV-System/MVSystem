@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { FacturacionConsultaComponent } from './facturacion-consulta.component';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
@@ -12,6 +14,7 @@ import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { FacturaConsulta, DetalleFacturaList, FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
 
@@ -26,6 +29,7 @@ describe('FacturacionConsultaComponent', () => {
   let mockRDialogService: jasmine.SpyObj<RDialogService>;
   let mockLoadingService: jasmine.SpyObj<LoadingService>;
   let mockToastrService: jasmine.SpyObj<ToastrService>;
+  let mockTrackingService: jasmine.SpyObj<UserTrackingService>;
 
   // Datos de prueba
   const mockFacturas: FacturaConsulta[] = [
@@ -114,6 +118,7 @@ describe('FacturacionConsultaComponent', () => {
     mockRDialogService = jasmine.createSpyObj('RDialogService', ['openDialog']);
     mockLoadingService = jasmine.createSpyObj('LoadingService', ['showLoading', 'hideLoading']);
     mockToastrService = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info']);
+    mockTrackingService = jasmine.createSpyObj('UserTrackingService', ['trackPageView', 'trackAction', 'trackError']);
 
     // Configurar valores de retorno por defecto
     mockMantenimientoService.getFacturas.and.returnValue(of(mockFacturas));
@@ -122,11 +127,16 @@ describe('FacturacionConsultaComponent', () => {
     mockVendedorService.getVendedorLista.and.returnValue(of(mockVendedores));
     mockLoginService.getUserName.and.returnValue('testuser');
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
+    mockTrackingService.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
+    mockTrackingService.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));
+    mockTrackingService.trackError.and.returnValue(of({ success: true, message: 'Tracked' }));
 
     await TestBed.configureTestingModule({
       declarations: [FacturacionConsultaComponent],
       imports: [
         ReactiveFormsModule,
+        HttpClientTestingModule,
+        NgxPaginationModule,
         ToastrModule.forRoot()
       ],
       providers: [
@@ -138,6 +148,7 @@ describe('FacturacionConsultaComponent', () => {
         { provide: ValidatorPermissionService, useValue: mockValidatorPermissionService },
         { provide: RDialogService, useValue: mockRDialogService },
         { provide: LoadingService, useValue: mockLoadingService },
+        { provide: UserTrackingService, useValue: mockTrackingService },
         { provide: ToastrService, useValue: mockToastrService }
       ],
       schemas: [NO_ERRORS_SCHEMA] // Ignorar componentes no reconocidos

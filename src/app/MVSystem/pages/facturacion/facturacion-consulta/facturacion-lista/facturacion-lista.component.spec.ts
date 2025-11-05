@@ -190,8 +190,9 @@ describe('FacturacionListaComponent', () => {
     it('should emit page size change event', () => {
       spyOn(component.pageSizeChanged, 'emit');
       component.pageSize = 25;
+      const mockEvent = { target: { value: '25' } };
 
-      component.onPageSizeChange();
+      component.onPageSizeChange(mockEvent);
 
       expect(component.pageSizeChanged.emit).toHaveBeenCalledWith(25);
     });

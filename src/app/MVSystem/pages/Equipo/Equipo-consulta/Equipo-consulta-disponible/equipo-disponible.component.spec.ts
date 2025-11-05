@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { SimpleChange, NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { EquipoDisponibleComponent } from './equipo-disponible.component';
 import { EquipoService } from 'src/app/core/services/equipo.service';
@@ -9,6 +10,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoDisponible } from 'src/app/core/interfaces/equipo.interface';
 import { Almacen, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
@@ -22,6 +24,7 @@ describe('EquipoDisponibleComponent', () => {
   let mockLoginService: jasmine.SpyObj<LoginService>;
   let mockValidatorPermissionService: jasmine.SpyObj<ValidatorPermissionService>;
   let mockToastrService: jasmine.SpyObj<ToastrService>;
+  let mockTrackingService: jasmine.SpyObj<UserTrackingService>;
 
   // Mock data
   const mockEquiposDisponibles: EquipoDisponible[] = [
@@ -104,6 +107,7 @@ describe('EquipoDisponibleComponent', () => {
     });
     mockValidatorPermissionService = jasmine.createSpyObj('ValidatorPermissionService', ['validateUserRole']);
     mockToastrService = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
+    mockTrackingService = jasmine.createSpyObj('UserTrackingService', ['trackPageView', 'trackAction', 'trackError']);
 
     // Setup default return values
     mockEquipoService.getEquipoDisponible.and.returnValue(of(mockEquiposDisponibles));
@@ -111,10 +115,13 @@ describe('EquipoDisponibleComponent', () => {
     mockCatalogosService.getModeloLista.and.returnValue(of(mockModelos));
     mockCatalogosService.getSuplidorLista.and.returnValue(of(mockSuplidores));
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
+    mockTrackingService.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
+    mockTrackingService.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));
+    mockTrackingService.trackError.and.returnValue(of({ success: true, message: 'Tracked' }));
 
     await TestBed.configureTestingModule({
       declarations: [EquipoDisponibleComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: EquipoService, useValue: mockEquipoService },
@@ -122,6 +129,7 @@ describe('EquipoDisponibleComponent', () => {
         { provide: LoadingService, useValue: mockLoadingService },
         { provide: LoginService, useValue: mockLoginService },
         { provide: ValidatorPermissionService, useValue: mockValidatorPermissionService },
+        { provide: UserTrackingService, useValue: mockTrackingService },
         { provide: ToastrService, useValue: mockToastrService }
       ],
       schemas: [NO_ERRORS_SCHEMA] // Ignorar componentes externos no declarados

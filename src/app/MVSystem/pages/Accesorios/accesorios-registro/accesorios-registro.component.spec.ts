@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AccesoriosRegistroComponent } from './accesorios-registro.component';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { of, throwError } from 'rxjs';
@@ -15,6 +17,7 @@ describe('AccesoriosRegistroComponent', () => {
   let mantenimientoService: jasmine.SpyObj<MantenimientoService>;
   let toastrService: jasmine.SpyObj<ToastrService>;
   let loginService: jasmine.SpyObj<LoginService>;
+  let trackingService: jasmine.SpyObj<UserTrackingService>;
 
   // Mock data
   const mockMarcas = [
@@ -50,6 +53,7 @@ describe('AccesoriosRegistroComponent', () => {
     const mantenimientoServiceSpy = jasmine.createSpyObj('MantenimientoService', ['postAccesorio']);
     const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
     const loginServiceSpy = jasmine.createSpyObj('LoginService', ['getUserName']);
+    const trackingServiceSpy = jasmine.createSpyObj('UserTrackingService', ['trackPageView', 'trackAction', 'trackError']);
 
     // Setup default return values
     catalogosServiceSpy.getMarcasLista.and.returnValue(of(mockMarcas));
@@ -57,16 +61,20 @@ describe('AccesoriosRegistroComponent', () => {
     catalogosServiceSpy.getAlmaceLista.and.returnValue(of(mockAlmacenes));
     mantenimientoServiceSpy.postAccesorio.and.returnValue(of(mockAccesorioRegistrado));
     loginServiceSpy.getUserName.and.returnValue('testuser');
+    trackingServiceSpy.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
+    trackingServiceSpy.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));
+    trackingServiceSpy.trackError.and.returnValue(of({ success: true, message: 'Tracked' }));
 
     await TestBed.configureTestingModule({
       declarations: [AccesoriosRegistroComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: CatalogosService, useValue: catalogosServiceSpy },
         { provide: MantenimientoService, useValue: mantenimientoServiceSpy },
         { provide: ToastrService, useValue: toastrServiceSpy },
-        { provide: LoginService, useValue: loginServiceSpy }
+        { provide: LoginService, useValue: loginServiceSpy },
+        { provide: UserTrackingService, useValue: trackingServiceSpy }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -75,6 +83,7 @@ describe('AccesoriosRegistroComponent', () => {
     mantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
     toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     loginService = TestBed.inject(LoginService) as jasmine.SpyObj<LoginService>;
+    trackingService = TestBed.inject(UserTrackingService) as jasmine.SpyObj<UserTrackingService>;
 
     fixture = TestBed.createComponent(AccesoriosRegistroComponent);
     component = fixture.componentInstance;
