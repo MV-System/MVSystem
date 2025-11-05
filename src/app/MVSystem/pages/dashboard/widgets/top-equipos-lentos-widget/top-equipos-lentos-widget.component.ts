@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipoService } from 'src/app/core/services/equipo.service';
@@ -27,6 +27,8 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   @Input() fechaFinal: string = '';
   @Input() limite: number = 5;
   @Input() titulo: string = 'Top 5 Equipos con Más Tiempo en Inventario';
+
+  @Output() equipoLentoClicked = new EventEmitter<string>(); // Emitir cuando el usuario hace click en un equipo lento
 
   topEquiposLentos: TopEquipoLentoInsight[] = [];
   equiposCompletos: EquipoDisponible[] = [];
@@ -146,7 +148,7 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   analizarTiempoEnInventario(equipos: EquipoDisponible[]): TopEquipoLentoInsight[] {
     // Agrupar por modelo
     const modeloMap = new Map<string, EquipoDisponible[]>();
-    
+
     equipos.forEach(equipo => {
       const modelo = equipo.descripcion || 'Sin modelo';
       if (!modeloMap.has(modelo)) {
@@ -202,7 +204,7 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
 
   calcularDiasEnInventario(fechaRegistro: string): number {
     if (!fechaRegistro) return 0;
-    
+
     const hoy = new Date();
     const fecha = new Date(fechaRegistro);
     const diferencia = hoy.getTime() - fecha.getTime();
@@ -272,6 +274,10 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
     this.modeloSeleccionado = modelo;
     this.equiposDelModelo = modelo.equipos;
     this.mostrarDetalle = true;
+
+    // 📊 Emitir evento para tracking en el componente padre
+    this.equipoLentoClicked.emit(`Top Equipos Lentos - ${modelo.modelo}`);
+
     console.log(`[TopEquiposLentosWidget] Mostrando ${this.equiposDelModelo.length} equipos del modelo: ${modelo.modelo}`);
   }
 

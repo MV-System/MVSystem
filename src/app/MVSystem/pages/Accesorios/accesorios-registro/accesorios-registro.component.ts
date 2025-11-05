@@ -49,10 +49,7 @@ export class AccesoriosRegistroComponent implements OnInit {
     this.setupRealtimeValidations();
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Registro Accesorios', {
-      seccion: 'registro',
-      vista: 'formulario'
-    }).subscribe();
+    this.tracking.trackPageView('MNU_MANT_ACCESORIOS', 'PageView').subscribe();
   }
 
   /**
@@ -313,10 +310,7 @@ export class AccesoriosRegistroComponent implements OnInit {
       const model: Accesorio = this.modeloRegistroAccesorio();
 
       // 📊 Tracking: Registro de creación de accesorio
-      this.tracking.trackAction('Registro Accesorios', 'Crear', {
-        descripcion: model.descripcion_Accesorio,
-        cantidad: model.cantidad
-      }).subscribe();
+      this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'Registro').subscribe();
 
       this.mantenimientoService.postAccesorio(model)
           .subscribe({

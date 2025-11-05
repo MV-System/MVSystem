@@ -63,10 +63,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 //this.loading.hideLoading();
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Equipos Disponibles', {
-      seccion: 'consulta',
-      vista: 'principal'
-    }).subscribe();
+    this.tracking.trackPageView('MNU_CONS_EQUIPOS', 'PageView').subscribe();
   }
   ngOnChanges(changes: SimpleChanges): void {
     const change = changes["clearFilter"];
@@ -166,12 +163,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
   this.getValueFilterForm();
 
   // 📊 Tracking: Registro de consulta de equipos disponibles
-  this.tracking.trackAction('Equipos Disponibles', 'Consultar', {
-    imei: this.filter.imei,
-    modelo: this.filter.modelo,
-    sucursal: this.filter.almacen,
-    suplidor: this.filter.suplidor
-  }).subscribe();
+  this.tracking.trackAction('MNU_CONS_EQUIPOS', 'Consulta').subscribe();
 
   // Solo resetear a página 1 si se especifica (al cambiar filtros)
   if (resetPage) {

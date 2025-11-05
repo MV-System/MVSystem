@@ -83,10 +83,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     });
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Facturas', {
-      seccion: 'consulta',
-      vista: 'principal'
-    }).subscribe();
+    this.tracking.trackPageView('MNU_CONS_FACTURAS', 'PageView').subscribe();
   }
 
   getVendedores() {
@@ -208,12 +205,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.resetearSeleccionFactura();
 
     // 📊 Tracking: Registro de consulta de facturas
-    this.tracking.trackAction('Facturas', 'Consultar', {
-      fechaInicio: this.paginate.fechaInicio,
-      fechaFin: this.paginate.fechaFinal,
-      sucursal: this.form.get('almacen')?.value,
-      estado: this.EstadoFactura
-    }).subscribe();
+    this.tracking.trackAction('MNU_CONS_FACTURAS', 'Consulta').subscribe();
 
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({

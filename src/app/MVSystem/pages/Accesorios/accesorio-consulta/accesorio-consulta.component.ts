@@ -32,10 +32,7 @@ export class AccesorioConsultaComponent implements OnInit {
     this.obtenerAlmacenes();
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Accesorios', {
-      seccion: 'consulta',
-      vista: 'principal'
-    }).subscribe();
+    this.tracking.trackPageView('MNU_CONS_ACCESORIOS', 'PageView').subscribe();
   }
   almacenes:   Almacen[] = [];
   accesorios:  Accesorio[] = [];
@@ -100,10 +97,7 @@ export class AccesorioConsultaComponent implements OnInit {
    // let almacen = Number( this.form.get('almacen')?.value);
 
     // 📊 Tracking: Registro de consulta de accesorios
-    this.tracking.trackAction('Accesorios', 'Consultar', {
-      accesorio: accesorio,
-      sucursal: almacen
-    }).subscribe();
+    this.tracking.trackAction('MNU_CONS_ACCESORIOS', 'Consulta').subscribe();
 
     this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{

@@ -180,12 +180,9 @@ createForm(){
     this.getSucursales();
     this.sucursalOnChange(); // Configurar listeners ANTES de cargar datos
     this.GetUtilidades(); // Llama a la función para obtener datos
-    
+
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Utilidades', { 
-      seccion: 'consulta', 
-      vista: 'principal' 
-    }).subscribe();
+    this.tracking.trackPageView('verUtilidadesToolStripMenuItem', 'PageView').subscribe();
   }
 setResponsiveView() {
   if (window.innerWidth < 600) {
@@ -221,11 +218,7 @@ setResponsiveView() {
     this.loading.showLoading();
 
     // 📊 Tracking: Registro de consulta de utilidades
-    this.tracking.trackAction('Utilidades', 'Consultar', {
-      fechaInicio: this.filter.FI,
-      fechaFin: this.filter.FF,
-      sucursal: this.filter.sucursal
-    }).subscribe();
+    this.tracking.trackAction('verUtilidadesToolStripMenuItem', 'Consulta').subscribe();
 
     // Limpiar insights anteriores
     this.aiInsights = [];

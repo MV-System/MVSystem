@@ -19,11 +19,11 @@
             <div class="grid-item grid-item-full">
                 <div class="two-column-widgets">
                     <!-- Columna Izquierda: Top Modelos Más Vendidos -->
-                    <app-top-modelos-widget [fechaInicio]="FechaInicioMes.toISOString().split('T')[0]" [fechaFinal]="fechaHoy.toISOString().split('T')[0]" [limite]="5" [titulo]="'Top 5 Modelos Más Vendidos'">
+                    <app-top-modelos-widget [fechaInicio]="FechaInicioMes.toISOString().split('T')[0]" [fechaFinal]="fechaHoy.toISOString().split('T')[0]" [limite]="5" [titulo]="'Top 5 Modelos Más Vendidos'" (modeloClicked)="onWidgetInteraction($event)">
                     </app-top-modelos-widget>
 
                     <!-- Columna Derecha: Top Equipos con Más Tiempo en Inventario -->
-                    <app-top-equipos-lentos-widget [limite]="5" [titulo]="'Top 5 Equipos con Más Tiempo en Inventario'">
+                    <app-top-equipos-lentos-widget [limite]="5" [titulo]="'Top 5 Equipos con Más Tiempo en Inventario'" (equipoLentoClicked)="onWidgetInteraction($event)">
                     </app-top-equipos-lentos-widget>
                 </div>
             </div>

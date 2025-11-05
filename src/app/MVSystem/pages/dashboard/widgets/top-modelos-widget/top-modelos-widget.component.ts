@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipoService } from 'src/app/core/services/equipo.service';
@@ -18,6 +18,8 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
   @Input() fechaFinal: string = '';
   @Input() limite: number = 5;
   @Input() titulo: string = 'Top 5 Modelos Más Vendidos';
+
+  @Output() modeloClicked = new EventEmitter<string>(); // Emitir cuando el usuario hace click en un modelo
 
   topModelos: TopModeloInsight[] = [];
   equiposCompletos: EquipoVendido[] = []; // Guardar todos los equipos
@@ -278,6 +280,9 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
   // Mostrar detalle de equipos vendidos por modelo
   verDetalleModelo(modelo: TopModeloInsight): void {
     this.modeloSeleccionado = modelo;
+
+    // 📊 Emitir evento para tracking en el componente padre
+    this.modeloClicked.emit(`Top Equipos Vendidos - ${modelo.modelo}`);
 
     // Filtrar los equipos que pertenecen a este modelo
     this.equiposDelModelo = this.equiposCompletos.filter(

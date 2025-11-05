@@ -61,10 +61,7 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     this.obtenerSuplidor();
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Equipos Vendidos', {
-      seccion: 'consulta',
-      vista: 'principal'
-    }).subscribe();
+    this.tracking.trackPageView('equiposVendidosMenu', 'PageView').subscribe();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -313,13 +310,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.onFilterPropHasValue();
 
     // 📊 Tracking: Registro de consulta de equipos vendidos
-    this.tracking.trackAction('Equipos Vendidos', 'Consultar', {
-      fechaInicio: this.filter.FechaInicial,
-      fechaFin: this.filter.FechaFinal,
-      sucursal: this.filter.almacen,
-      modelo: this.filter.modelo,
-      suplidor: this.filter.suplidor
-    }).subscribe();
+    this.tracking.trackAction('equiposVendidosMenu', 'Consulta').subscribe();
 
     // OPTIMIZADO: Una sola llamada al servidor para obtener TODOS los datos
     // Guardamos los filtros originales

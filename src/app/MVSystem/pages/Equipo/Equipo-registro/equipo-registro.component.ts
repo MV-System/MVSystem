@@ -57,10 +57,7 @@ export class EquipoRegistroComponent implements OnInit {
     this.formRegistro.controls.modelo.disable();
 
     // 📊 Tracking: Registro de acceso al módulo
-    this.tracking.trackPageView('Registro Equipos', {
-      seccion: 'registro',
-      vista: 'formulario'
-    }).subscribe();
+    this.tracking.trackPageView('MNU_MANT_EQUIPOS', 'PageView').subscribe();
   }
 
   btnDisabled: boolean = true;
@@ -301,10 +298,7 @@ export class EquipoRegistroComponent implements OnInit {
      this.isLoading = true; // Mostrar spinner
 
      // 📊 Tracking: Registro de creación de equipo
-     this.tracking.trackAction('Registro Equipos', 'Crear', {
-       imei: model.imei,
-       modelo: this.formRegistro.get('modelo')?.value
-     }).subscribe();
+     this.tracking.trackAction('MNU_MANT_EQUIPOS', 'Registro').subscribe();
 
     this.mantenimientoService.postEquipo(model)
       .subscribe((equipo) => {
