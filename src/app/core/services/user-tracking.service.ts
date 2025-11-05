@@ -1,0 +1,259 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+
+/**
+ * Interfaz para el DTO de tracking
+ */
+export interface TrackingLogDto {
+  usuario: string;
+  modulo: string;
+  accion: string;
+  metadata?: string;
+}
+
+/**
+ * Interfaz para la respuesta del API
+ */
+export interface TrackingResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
+/**
+ * Servicio para rastrear interacciones del usuario
+ * Envía logs al backend para monitoreo y notificaciones WhatsApp
+ */
+@Injectable({
+  providedIn: 'root'
+})
+export class UserTrackingService {
+
+  private apiUrl = `${environment.api}api/tracking`;
+  private isEnabled = true; // Puedes desactivar el tracking globalmente
+
+  constructor(private http: HttpClient) { }
+
+  /**
+   * Registra el acceso a un módulo
+   * @param moduleName Nombre del módulo (ej: 'Dashboard IA', 'Equipos Disponibles')
+   * @param userName Nombre del usuario (opcional, se puede obtener del LoginService)
+   */
+  trackPageView(moduleName: string, userName?: string): void {
+    if (!this.isEnabled) return;
+
+    const log: TrackingLogDto = {
+      usuario: userName || this.getCurrentUser(),
+      modulo: moduleName,
+      accion: 'Acceso',
+      metadata: JSON.stringify({
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      })
+    };
+
+    this.sendLog(log).subscribe();
+  }
+
+  /**
+   * Registra una acción específica del usuario
+   * @param module Módulo donde ocurre la acción
+   * @param action Acción realizada (ej: 'Crear', 'Editar', 'Eliminar', 'Exportar')
+   * @param metadata Datos adicionales de la acción
+   * @param userName Usuario que realiza la acción (opcional)
+   */
+  trackAction(
+    module: string,
+    action: string,
+    metadata?: any,
+    userName?: string
+  ): void {
+    if (!this.isEnabled) return;
+
+    const log: TrackingLogDto = {
+      usuario: userName || this.getCurrentUser(),
+      modulo: module,
+      accion: action,
+      metadata: metadata ? JSON.stringify(metadata) : undefined
+    };
+
+    this.sendLog(log).subscribe();
+  }
+
+  /**
+   * Registra un click en un botón importante
+   * @param buttonName Nombre del botón
+   * @param moduleName Módulo donde está el botón
+   * @param metadata Datos adicionales
+   */
+  trackButtonClick(
+    buttonName: string,
+    moduleName: string,
+    metadata?: any
+  ): void {
+    this.trackAction(
+      moduleName,
+      `Click: ${buttonName}`,
+      metadata
+    );
+  }
+
+  /**
+   * Registra una búsqueda o filtro aplicado
+   * @param moduleName Módulo donde se realizó la búsqueda
+   * @param searchTerm Término buscado
+   * @param filters Filtros aplicados
+   */
+  trackSearch(
+    moduleName: string,
+    searchTerm: string,
+    filters?: any
+  ): void {
+    this.trackAction(
+      moduleName,
+      'Búsqueda',
+      {
+        searchTerm,
+        filters,
+        timestamp: new Date().toISOString()
+      }
+    );
+  }
+
+  /**
+   * Registra la exportación de datos
+   * @param moduleName Módulo desde donde se exporta
+   * @param format Formato de exportación (PDF, Excel, etc.)
+   * @param recordCount Cantidad de registros exportados
+   */
+  trackExport(
+    moduleName: string,
+    format: string,
+    recordCount?: number
+  ): void {
+    this.trackAction(
+      moduleName,
+      `Exportar ${format}`,
+      {
+        format,
+        recordCount,
+        timestamp: new Date().toISOString()
+      }
+    );
+  }
+
+  /**
+   * Registra un error o excepción
+   * @param moduleName Módulo donde ocurrió el error
+   * @param errorMessage Mensaje de error
+   * @param errorDetails Detalles adicionales del error
+   */
+  trackError(
+    moduleName: string,
+    errorMessage: string,
+    errorDetails?: any
+  ): void {
+    this.trackAction(
+      moduleName,
+      'Error',
+      {
+        error: errorMessage,
+        details: errorDetails,
+        timestamp: new Date().toISOString()
+      }
+    );
+  }
+
+  /**
+   * Obtiene el historial de tracking
+   * @param filters Filtros opcionales
+   */
+  getHistory(filters?: {
+    usuario?: string;
+    modulo?: string;
+    fechaDesde?: Date;
+    fechaHasta?: Date;
+    top?: number;
+  }): Observable<TrackingResponse> {
+    let params: any = {};
+
+    if (filters) {
+      if (filters.usuario) params.usuario = filters.usuario;
+      if (filters.modulo) params.modulo = filters.modulo;
+      if (filters.fechaDesde) params.fechaDesde = filters.fechaDesde.toISOString();
+      if (filters.fechaHasta) params.fechaHasta = filters.fechaHasta.toISOString();
+      if (filters.top) params.top = filters.top.toString();
+    }
+
+    return this.http.get<TrackingResponse>(`${this.apiUrl}/history`, { params });
+  }
+
+  /**
+   * Obtiene estadísticas de uso por módulo
+   */
+  getModuleStats(fechaDesde?: Date, fechaHasta?: Date): Observable<TrackingResponse> {
+    let params: any = {};
+    if (fechaDesde) params.fechaDesde = fechaDesde.toISOString();
+    if (fechaHasta) params.fechaHasta = fechaHasta.toISOString();
+
+    return this.http.get<TrackingResponse>(`${this.apiUrl}/stats/modules`, { params });
+  }
+
+  /**
+   * Obtiene los usuarios más activos
+   */
+  getActiveUsers(top: number = 10): Observable<TrackingResponse> {
+    return this.http.get<TrackingResponse>(`${this.apiUrl}/stats/users`, {
+      params: { top: top.toString() }
+    });
+  }
+
+  /**
+   * Verifica el estado del servicio WhatsApp
+   */
+  checkWhatsAppStatus(): Observable<TrackingResponse> {
+    return this.http.get<TrackingResponse>(`${this.apiUrl}/whatsapp/status`);
+  }
+
+  /**
+   * Habilita o deshabilita el tracking globalmente
+   */
+  setTrackingEnabled(enabled: boolean): void {
+    this.isEnabled = enabled;
+    console.log(`Tracking ${enabled ? 'habilitado' : 'deshabilitado'}`);
+  }
+
+  /**
+   * Envía el log al backend
+   */
+  private sendLog(log: TrackingLogDto): Observable<TrackingResponse> {
+    return this.http.post<TrackingResponse>(`${this.apiUrl}/log`, log).pipe(
+      tap(response => {
+        if (response.success) {
+          console.log(`✅ Tracking: ${log.modulo} - ${log.accion}`);
+        }
+      }),
+      catchError(error => {
+        console.error('❌ Error al enviar tracking:', error);
+        // No propagamos el error para no afectar la UX
+        return of({ success: false, message: error.message });
+      })
+    );
+  }
+
+  /**
+   * Obtiene el usuario actual (debes adaptar esto a tu LoginService)
+   */
+  private getCurrentUser(): string {
+    // IMPORTANTE: Adapta esto según tu implementación de LoginService
+    // Ejemplo:
+    // return this.loginService.getUserName() || 'Usuario Desconocido';
+    
+    // Por ahora retorna un valor temporal
+    const user = localStorage.getItem('currentUser');
+    return user || 'Sistema';
+  }
+}
