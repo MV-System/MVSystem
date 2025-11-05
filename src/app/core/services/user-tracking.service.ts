@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { LoginService } from '../../auth/login.service';
 
 /**
  * Interfaz para el DTO de tracking
@@ -35,27 +36,32 @@ export class UserTrackingService {
   private apiUrl = `${environment.api}api/tracking`;
   private isEnabled = true; // Puedes desactivar el tracking globalmente
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private loginService: LoginService
+  ) { }
 
   /**
    * Registra el acceso a un módulo
    * @param moduleName Nombre del módulo (ej: 'Dashboard IA', 'Equipos Disponibles')
+   * @param metadata Metadata adicional (opcional)
    * @param userName Nombre del usuario (opcional, se puede obtener del LoginService)
    */
-  trackPageView(moduleName: string, userName?: string): void {
-    if (!this.isEnabled) return;
+  trackPageView(moduleName: string, metadata?: any, userName?: string): Observable<TrackingResponse> {
+    if (!this.isEnabled) return of({ success: false, message: 'Tracking deshabilitado' });
 
     const log: TrackingLogDto = {
       usuario: userName || this.getCurrentUser(),
       modulo: moduleName,
       accion: 'Acceso',
       metadata: JSON.stringify({
+        ...metadata,
         url: window.location.href,
         timestamp: new Date().toISOString()
       })
     };
 
-    this.sendLog(log).subscribe();
+    return this.sendLog(log);
   }
 
   /**
@@ -70,8 +76,8 @@ export class UserTrackingService {
     action: string,
     metadata?: any,
     userName?: string
-  ): void {
-    if (!this.isEnabled) return;
+  ): Observable<TrackingResponse> {
+    if (!this.isEnabled) return of({ success: false, message: 'Tracking deshabilitado' });
 
     const log: TrackingLogDto = {
       usuario: userName || this.getCurrentUser(),
@@ -80,7 +86,7 @@ export class UserTrackingService {
       metadata: metadata ? JSON.stringify(metadata) : undefined
     };
 
-    this.sendLog(log).subscribe();
+    return this.sendLog(log);
   }
 
   /**
@@ -155,8 +161,8 @@ export class UserTrackingService {
     moduleName: string,
     errorMessage: string,
     errorDetails?: any
-  ): void {
-    this.trackAction(
+  ): Observable<TrackingResponse> {
+    return this.trackAction(
       moduleName,
       'Error',
       {
@@ -245,15 +251,15 @@ export class UserTrackingService {
   }
 
   /**
-   * Obtiene el usuario actual (debes adaptar esto a tu LoginService)
+   * Obtiene el usuario actual del LoginService
    */
   private getCurrentUser(): string {
-    // IMPORTANTE: Adapta esto según tu implementación de LoginService
-    // Ejemplo:
-    // return this.loginService.getUserName() || 'Usuario Desconocido';
-    
-    // Por ahora retorna un valor temporal
-    const user = localStorage.getItem('currentUser');
-    return user || 'Sistema';
+    try {
+      const userName = this.loginService.getUserName();
+      return userName || 'Usuario Desconocido';
+    } catch (error) {
+      console.warn('Error al obtener usuario actual:', error);
+      return 'Usuario Desconocido';
+    }
   }
 }

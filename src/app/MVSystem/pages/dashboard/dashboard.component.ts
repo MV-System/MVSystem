@@ -7,6 +7,7 @@ import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidade
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -81,6 +82,7 @@ constructor(
   private UtilidadesServices: UtilidadesService,
   private fb: FormBuilder,
   private toastr: ToastrService,
+  private tracking: UserTrackingService
 ) {}
 // Calcular las fechas de inicio de la semana y del mes actual
 private calcularFechas() {
@@ -111,6 +113,13 @@ setResponsiveView() {
 }
 ngOnInit(): void {
    this.setResponsiveView();
+  
+  // 📊 TRACKING: Registrar vista del Dashboard
+  this.tracking.trackPageView('Dashboard IA', { 
+    seccion: 'utilidades',
+    vista: 'principal'
+  }).subscribe();
+
   // Calcular el inicio de la semana y el mes actual
   this.calcularFechas();
 
@@ -152,6 +161,14 @@ const filterSemana: utilidadesFiltros = {
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {
   //this.loading.showLoading();
+  
+  // 📊 TRACKING: Consulta de utilidades del día
+  this.tracking.trackAction('Dashboard IA', 'Consultar Utilidades Día', {
+    fechaInicio: filterDia.FI,
+    fechaFin: filterDia.FF,
+    sucursal: filterDia.sucursal
+  }).subscribe();
+
   this.UtilidadesServices
     .GetUtilidades(filterDia)
     .subscribe(
@@ -172,11 +189,22 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
       (error) => {
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
+        
+        // 📊 TRACKING: Error al consultar
+        this.tracking.trackError('Dashboard IA', 'Error al consultar utilidades día', error).subscribe();
       }
     );
 }
 GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
   //this.loading.showLoading();
+  
+  // 📊 TRACKING: Consulta de utilidades de la semana
+  this.tracking.trackAction('Dashboard IA', 'Consultar Utilidades Semana', {
+    fechaInicio: filterSemana.FI,
+    fechaFin: filterSemana.FF,
+    sucursal: filterSemana.sucursal
+  }).subscribe();
+
   this.UtilidadesServices
     .GetUtilidades(filterSemana)
     .subscribe(
@@ -197,6 +225,9 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
       (error) => {
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
+        
+        // 📊 TRACKING: Error al consultar
+        this.tracking.trackError('Dashboard IA', 'Error al consultar utilidades semana', error).subscribe();
       }
     );
     //this.loading.hideLoading();
@@ -204,6 +235,14 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
 
 GetUtilidadesMes(filterMes: utilidadesFiltros) {
   this.loading.showLoading();
+  
+  // 📊 TRACKING: Consulta de utilidades del mes
+  this.tracking.trackAction('Dashboard IA', 'Consultar Utilidades Mes', {
+    fechaInicio: filterMes.FI,
+    fechaFin: filterMes.FF,
+    sucursal: filterMes.sucursal
+  }).subscribe();
+
   this.UtilidadesServices
     .GetUtilidades(filterMes)
     .subscribe(
@@ -224,6 +263,9 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
       (error) => {
         console.error('Error al obtener utilidades:', error);
         this.toastr.error('Error al cargar datos de utilidades');
+        
+        // 📊 TRACKING: Error al consultar
+        this.tracking.trackError('Dashboard IA', 'Error al consultar utilidades mes', error).subscribe();
       }
     );
 }
