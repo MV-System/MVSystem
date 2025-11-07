@@ -309,9 +309,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.getValueFilterForm();
     this.onFilterPropHasValue();
 
-    // 📊 Tracking: Registro de consulta de equipos vendidos
-    this.tracking.trackAction('equiposVendidosMenu', 'Consulta').subscribe();
-
     // OPTIMIZADO: Una sola llamada al servidor para obtener TODOS los datos
     // Guardamos los filtros originales
     const filtroCompleto = {

@@ -162,9 +162,6 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
 
   this.getValueFilterForm();
 
-  // 📊 Tracking: Registro de consulta de equipos disponibles
-  this.tracking.trackAction('MNU_CONS_EQUIPOS', 'Consulta').subscribe();
-
   // Solo resetear a página 1 si se especifica (al cambiar filtros)
   if (resetPage) {
     this.onFilterPropHasValue();

@@ -12,6 +12,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import * as JSZip from 'jszip';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-cuentas-por-cobrar',
@@ -76,7 +77,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     private ClienteService: ClientesService,
     private toastr: ToastrService,
     private rDialogService: RDialogService,
-    private mantenimientoService: MantenimientoService
+    private mantenimientoService: MantenimientoService,
+    private tracking: UserTrackingService
   ) { }
   /**
    * Compartir factura pendiente (solo móvil) usando Web Share API
@@ -362,7 +364,10 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
   }
 
   ngOnInit(): void {
-    this.obtenerClientes()
+    this.obtenerClientes();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_CONS_CUENTAS_COBRAR', 'PageView').subscribe();
   }
 
   /**

@@ -13,6 +13,7 @@ import { EquipoService } from 'src/app/core/services/equipo.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 /**
  * Componente para la gestión de reparaciones de equipos
@@ -97,11 +98,15 @@ export class ReparacionesComponent implements OnInit {
     private toastr: ToastrService,
     private loginService: LoginService,
     private fb: FormBuilder,
+    private tracking: UserTrackingService
   ) { }
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
     this.obtenerClientes();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_MANT_REPARACIONES', 'PageView').subscribe();
   }
   obtenerMarcasLista() {
     this.catalogosService.getMarcasLista().subscribe((marca) => {
@@ -263,6 +268,10 @@ registroReparacion() {
   this.validacionesRegistro();
   if (this.formRegistroReparaciones.valid) {
      this.loading.showLoading();
+
+    // 📊 Tracking: Registro de creación de reparación
+    this.tracking.trackAction('MNU_MANT_REPARACIONES', 'Registro').subscribe();
+
     this.mantenimientoService.postReparacion(model)
       .subscribe((Reparacion) => {
         Reparacion.forEach((Respuesta) => {

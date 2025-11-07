@@ -9,6 +9,7 @@ import { EquipoAlmacenTransferir } from '../../../../core/interfaces/equipo.inte
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-equipo-transferencia',
@@ -33,6 +34,7 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private loginService: LoginService,
+    private tracking: UserTrackingService
   ) {
     this.form = this.createForm();
   }
@@ -40,6 +42,9 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getAlmacenes();
     this.getTransferenciaId();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_MANT_TRANSFERENCIA_EQUIPOS', 'PageView').subscribe();
   }
 
   ngOnDestroy(): void {
@@ -79,6 +84,9 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
   }
 
   postTransferenciaEquipo(equipoToTransfer: EquipoAlmacenTransferir): void {
+    // 📊 Tracking: Registro de transferencia de equipo
+    this.tracking.trackAction('MNU_MANT_TRANSFERENCIA_EQUIPOS', 'Transferir Equipo').subscribe();
+
     this.equipoService.postTransferenciaEquipo(equipoToTransfer).subscribe({
       next: (EquipoTransfer: EquipoAlmacenTransferir) => {
         this.equipoToTransfer.push(EquipoTransfer);
@@ -126,10 +134,10 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
 
     // Validar que se haya seleccionado un almacén destino
     if (!almacenValue) {
-      this.toastr.error('Debe seleccionar un almacén destino antes de agregar equipos', 'Almacén requerido', { 
-        progressBar: true, 
-        closeButton: true, 
-        timeOut: 3000 
+      this.toastr.error('Debe seleccionar un almacén destino antes de agregar equipos', 'Almacén requerido', {
+        progressBar: true,
+        closeButton: true,
+        timeOut: 3000
       });
       return;
     }
@@ -165,11 +173,11 @@ export class EquipoTransferenciaComponent implements OnInit, OnDestroy {
     // Obtener el almacén destino seleccionado en el formulario
     const almacenDestinoId = this.form.get('almacen')?.value;
     const almacenDestino = this.almacenes.find(a => a.iD_Almacen == almacenDestinoId);
-    
+
     // Obtener el almacén de salida del equipo
     const almacenSalidaId = equipo.almacenSalidaId || equipo.almacenSalida;
     const almacenSalida = this.almacenes.find(a => a.iD_Almacen == almacenSalidaId);
-    
+
     // Crea el modelo del equipo para añadirlo a la lista
     const model: EquipoTransferencia = {
       Id_Transferencia: equipo.Id_Transferencia,

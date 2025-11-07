@@ -9,6 +9,7 @@ import { EquipoEstadoUpdate } from '../../../../core/interfaces/equipo.interface
 import { EquipoService } from '../../../../core/services/equipo.service';
 import { FormAsyncValidatorService } from 'src/app/services/form-async-validator.service';
 import { LoginService } from 'src/app/auth/login.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-equipo-recepcion',
@@ -150,7 +151,8 @@ export class EquipoRecepcionComponent implements OnInit {
               private formValidatorsService: FormValidatorService,
               private loginService:LoginService,
               private equipoService: EquipoService,
-              private imeiSaleAsyncValidatorService: FormAsyncValidatorService
+              private imeiSaleAsyncValidatorService: FormAsyncValidatorService,
+              private tracking: UserTrackingService
              ) {
               this.Usuario = this.loginService.getUserName()
             }
@@ -158,6 +160,9 @@ export class EquipoRecepcionComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerCondicionEquipoCatalogo();
     this.obtenerModeelosCatalogo();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_MANT_RECEPCION_EQUIPOS', 'PageView').subscribe();
   }
 
 
@@ -171,6 +176,9 @@ export class EquipoRecepcionComponent implements OnInit {
     this.toastr.error('El formulario contiene datos incorrectos, favor validar', '', this.toastrDefaultConfig);
     return
   }
+
+  // 📊 Tracking: Registro de recepción de equipo
+  this.tracking.trackAction('MNU_MANT_RECEPCION_EQUIPOS', 'Recibir Equipo').subscribe();
 
   let equipoEntraData = await this.consultaEquipoDisponible(this.imeiEntra?.value)
   let equipoSaleData = {imei: '', existe: false, disponible: false}

@@ -44,18 +44,22 @@ export class UserTrackingService {
   /**
    * Registra el acceso a un módulo
    * @param moduleName Nombre del módulo (ej: 'Dashboard IA', 'Equipos Disponibles')
+   * @param action Acción realizada (por defecto 'PageView')
    * @param metadata Metadata adicional (opcional)
    * @param userName Nombre del usuario (opcional, se puede obtener del LoginService)
    */
-  trackPageView(moduleName: string, metadata?: any, userName?: string): Observable<TrackingResponse> {
+  trackPageView(moduleName: string, action: string = 'PageView', metadata?: any, userName?: string): Observable<TrackingResponse> {
     if (!this.isEnabled) return of({ success: false, message: 'Tracking deshabilitado' });
 
     const log: TrackingLogDto = {
       usuario: userName || this.getCurrentUser(),
       modulo: moduleName,
-      accion: 'Acceso',
-      metadata: JSON.stringify({
+      accion: action,
+      metadata: metadata ? JSON.stringify({
         ...metadata,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      }) : JSON.stringify({
         url: window.location.href,
         timestamp: new Date().toISOString()
       })
@@ -236,16 +240,27 @@ export class UserTrackingService {
    * Envía el log al backend
    */
   private sendLog(log: TrackingLogDto): Observable<TrackingResponse> {
+    console.log('📤 Enviando tracking:', log);
+    console.log('🌐 URL del API:', `${this.apiUrl}/log`);
+
     return this.http.post<TrackingResponse>(`${this.apiUrl}/log`, log).pipe(
       tap(response => {
         if (response.success) {
-          console.log(`✅ Tracking: ${log.modulo} - ${log.accion}`);
+          console.log(`✅ Tracking exitoso: ${log.modulo} - ${log.accion}`, response);
+        } else {
+          console.warn(`⚠️ Tracking fallido: ${response.message}`);
         }
       }),
       catchError(error => {
         console.error('❌ Error al enviar tracking:', error);
+        console.error('📋 Detalles del error:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
         // No propagamos el error para no afectar la UX
-        return of({ success: false, message: error.message });
+        return of({ success: false, message: error.message || 'Error desconocido' });
       })
     );
   }

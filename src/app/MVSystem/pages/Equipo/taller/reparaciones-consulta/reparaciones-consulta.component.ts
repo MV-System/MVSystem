@@ -11,6 +11,7 @@ import { IMyDrpOptions } from 'mydaterangepicker';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { StatusTaller } from 'src/app/core/interfaces/catalogo.interface';
 import { EquipoService } from 'src/app/core/services/equipo.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-reparaciones-consulta',
@@ -79,13 +80,17 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
     private equipoService: EquipoService,
     private loginService: LoginService,
     private toastr: ToastrService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private tracking: UserTrackingService
   ) {}
 
   ngOnInit(): void {
     this.setupSearchOptimization();
     this.cargarEstatusTaller();
     this.buscarReparaciones();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_CONS_REPARACIONES', 'PageView').subscribe();
   }
 
   ngOnDestroy(): void {

@@ -7,6 +7,7 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { EquipoModificarEstatus } from 'src/app/core/interfaces/equipo.interface';
 import { FormValidatorService } from '../../../../services/form-validator.service';
 import { LoginService } from 'src/app/auth/login.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-equipo-modificacion-estatus',
@@ -66,12 +67,16 @@ export class EquipoModificacionEstatusComponent implements OnInit {
               private toastr: ToastrService,
               private mantenimientoService: MantenimientoService,
               private formValidatorsService: FormValidatorService,
-              private loginService: LoginService
+              private loginService: LoginService,
+              private tracking: UserTrackingService
              ) { }
 
   ngOnInit(): void {
     this.obtenerCondicionEquipoCatalogo();
     this.obtenerDesbloqueo();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_MANT_ESTATUS_EQUIPOS', 'PageView').subscribe();
   }
 
   cambiarEstadoForm = this.fb.group({
@@ -100,6 +105,9 @@ export class EquipoModificacionEstatusComponent implements OnInit {
     }
     this.campoComisionDetalle?.setValue(this.campoComisionDetalle.value??0.00)
     this.campoComisionMayor?.setValue(this.campoComisionMayor.value??0.00)
+
+    // 📊 Tracking: Registro de modificación de estatus
+    this.tracking.trackAction('MNU_MANT_ESTATUS_EQUIPOS', 'Modificar Estatus').subscribe();
 
     this.mantenimientoService.modificarEstatusEquipo(this.cambiarEstadoForm.value).subscribe(res => {
       this.toastr.success('Modificacion de estado del equipo exitosa', '',this.toastrDefaultConfig)

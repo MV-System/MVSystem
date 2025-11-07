@@ -11,6 +11,7 @@ import { CatalogosService } from '../../../core/services/catalogos.service';
 import { ClientesService } from '../../../core/services/clientes.service';
 import { MantenimientoService } from '../../../core/services/mantenimiento.service';
 import { VendedorService } from '../../../core/services/vendedor.service';
+import { UserTrackingService } from '../../../core/services/user-tracking.service';
 
 @Component({
   selector: 'app-cotizacion',
@@ -26,7 +27,8 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     private clientesService: ClientesService,
     private vendedorService: VendedorService,
     private mantenimientoService: MantenimientoService,
-    private toast: ToastrService) { }
+    private toast: ToastrService,
+    private tracking: UserTrackingService) { }
   ngOnDestroy(): void {
       this.sub.unsubscribe()
   }
@@ -39,6 +41,9 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     this.getVendedor();
     this.getDateCurrentDay();
     this.agregarArticulo();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_CONS_COTIZACION', 'PageView').subscribe();
   }
   sub!:Subscription;
   itbis: number = 0;

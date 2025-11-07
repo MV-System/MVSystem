@@ -204,9 +204,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.facturas = []; // Limpiar facturas antes de la nueva búsqueda
     this.resetearSeleccionFactura();
 
-    // 📊 Tracking: Registro de consulta de facturas
-    this.tracking.trackAction('MNU_CONS_FACTURAS', 'Consulta').subscribe();
-
     const sub = this.mantenimientoService.getFacturas(this.modelFacturaFilter())
   .subscribe({
     next: (facturas) => {

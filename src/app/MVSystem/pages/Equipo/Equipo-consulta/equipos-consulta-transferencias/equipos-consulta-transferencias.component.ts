@@ -6,6 +6,7 @@ import { EquipoAlmacenTransferirArrayRetorno, EquipoTransferencia, EquipoTransfe
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { EquipoService } from 'src/app/core/services/equipo.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-equipos-consulta-transferencias',
@@ -23,6 +24,7 @@ export class EquiposConsultaTransferenciasComponent implements OnInit {
     private equiposService: EquipoService,
     private fb: FormBuilder,
     private loginService: LoginService,
+    private tracking: UserTrackingService
   ) { }
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -73,7 +75,8 @@ cantidadEquipoATransferir: number = 0;
 this.obtenerAlmacen();
     this.obtenerTransferencias();
 
-
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_CONS_TRANSFERENCIAS', 'PageView').subscribe();
   }
   pageChanged(index: number) {
     this.idTransferenciaSeleccionada = null;

@@ -179,7 +179,9 @@ createForm(){
     this.createForm(); // Crear el formulario PRIMERO
     this.getSucursales();
     this.sucursalOnChange(); // Configurar listeners ANTES de cargar datos
-    this.GetUtilidades(); // Llama a la función para obtener datos
+
+    // Cargar datos iniciales SIN tracking (solo PageView)
+    this.cargarDatosIniciales();
 
     // 📊 Tracking: Registro de acceso al módulo
     this.tracking.trackPageView('verUtilidadesToolStripMenuItem', 'PageView').subscribe();
@@ -214,6 +216,75 @@ setResponsiveView() {
       }
     });
   }
+
+  /**
+   * Carga los datos iniciales sin tracking (se usa en ngOnInit)
+   */
+  private cargarDatosIniciales() {
+    this.loading.showLoading();
+
+    // Limpiar insights anteriores
+    this.aiInsights = [];
+
+    // Calcular fechas del período anterior
+    const periodoAnterior = this.calcularPeriodoAnterior();
+    const filtroAnterior: utilidadesFiltros = {
+      ...this.filter,
+      FI: periodoAnterior.FI,
+      FF: periodoAnterior.FF
+    };
+
+    // Obtener datos del período actual
+    this.UtilidadesServices
+      .GetUtilidades(this.filter)
+      .subscribe({
+        next: (equipos: Utilidades) => {
+          if (equipos && equipos !== null) {
+            this.data = equipos; // Asigna datos actuales
+
+            // Obtener datos del período anterior para comparación
+            this.UtilidadesServices
+              .GetUtilidades(filtroAnterior)
+              .subscribe({
+                next: (datosAnteriores: Utilidades) => {
+                  this.dataAnterior = datosAnteriores;
+                  this.updateSingleData();
+                  this.generateAIInsights(); // Generar insights básicos
+                  this.analizarTendencias(); // Generar insights de tendencias
+                  this.loading.hideLoading();
+                },
+                error: (error) => {
+                  // Si falla la obtención del período anterior, continuar sin comparación
+                  console.warn('No se pudieron obtener datos del período anterior:', error);
+                  this.dataAnterior = null;
+                  this.updateSingleData();
+                  this.generateAIInsights();
+                  this.loading.hideLoading();
+                },
+                complete: () => {
+                  // Asegurar que se oculte el loading incluso si no hay error ni data
+                  if (this.loading) {
+                    this.loading.hideLoading();
+                  }
+                }
+              });
+          } else {
+            this.toastr.warning('No se encontraron utilidades.');
+            this.loading.hideLoading();
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar datos de utilidades:', error);
+          this.toastr.error('Error al cargar datos de utilidades');
+          this.loading.hideLoading();
+        },
+        complete: () => {
+          // Asegurar que siempre se oculte el loading
+          console.log('Consulta de utilidades completada');
+        }
+      });
+  }
+
   GetUtilidades() {
     this.loading.showLoading();
 

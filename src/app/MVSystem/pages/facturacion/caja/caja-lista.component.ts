@@ -6,6 +6,7 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
+import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 
 @Component({
   selector: 'app-caja-lista',
@@ -171,11 +172,15 @@ export class CajaListaComponent implements OnInit {
     private loginService: LoginService,
     private mantenimientoService: MantenimientoService,
     private toast: ToastrService,
-    private rDialogService: RDialogService
+    private rDialogService: RDialogService,
+    private tracking: UserTrackingService
   ) {}
 
   ngOnInit(): void {
     this.cargarPreFacturas();
+
+    // 📊 Tracking: Registro de acceso al módulo
+    this.tracking.trackPageView('MNU_CONS_PREFACTURAS', 'PageView').subscribe();
   }
 
   cargarPreFacturas(): void {

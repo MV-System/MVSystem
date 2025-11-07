@@ -96,9 +96,6 @@ export class AccesorioConsultaComponent implements OnInit {
 
    // let almacen = Number( this.form.get('almacen')?.value);
 
-    // 📊 Tracking: Registro de consulta de accesorios
-    this.tracking.trackAction('MNU_CONS_ACCESORIOS', 'Consulta').subscribe();
-
     this.accesoriosService.getAccesorios(this.paginate,accesorio,almacen)
     .subscribe(accesorios=>{
       let record = accesorios.length == 0 ? 0 : accesorios[0].totalRecord;
