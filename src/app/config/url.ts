@@ -172,5 +172,19 @@ export let APIURL = {
         Procesar: API + 'PreFacturas', // Usar como `${APIURL.PreFacturas.Procesar}/${id}/procesar`
         Anular: API + 'PreFacturas',   // Usar como `${APIURL.PreFacturas.Anular}/${id}/anular`
     },
+    Inventario: {
+        IniciarSesion: API + 'api/Inventario/IniciarSesion',
+        RegistrarEscaneo: API + 'api/Inventario/RegistrarEscaneo',
+        Pendientes: API + 'api/Inventario/Pendientes',
+        Escaneados: API + 'api/Inventario/Escaneados',
+        Finalizar: API + 'api/Inventario/Finalizar',
+        Sesion: API + 'api/Inventario/Sesion',
+        Pausar: API + 'api/Inventario/Pausar',
+        Reanudar: API + 'api/Inventario/Reanudar',
+        Activos: API + 'api/Inventario/Activos',
+        Cancelar: API + 'api/Inventario/Cancelar',
+        Faltantes: API + 'api/Inventario/Faltantes',
+        Sobrantes: API + 'api/Inventario/Sobrantes',
+    },
     //}
 }

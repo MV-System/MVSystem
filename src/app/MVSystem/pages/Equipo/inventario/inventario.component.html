@@ -1,0 +1,382 @@
+<div class="inventario-container">
+
+    <!-- VISTA 1: SELECCIÓN DE ALMACÉN -->
+    <div *ngIf="vistaActual === 'seleccion'" class="vista-seleccion">
+        <div class="card">
+            <div class="card-body">
+                <!-- Header Section with Modern Styling -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="header-title">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-clipboard-list me-2 text-muted"></i> Inventario de Equipos
+                        </h5>
+                        <p class="text-muted mb-0 mt-1">Gestiona y controla el inventario por almacén</p>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <!-- Inventarios activos -->
+                    <div *ngIf="inventariosActivos.length > 0" class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <h6 class="text-muted mb-3"><i class="fas fa-info-circle me-2"></i> Inventarios en Proceso</h6>
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Almacén</th>
+                                            <th>Estado</th>
+                                            <th>Progreso</th>
+                                            <th>Inicio</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let inv of inventariosActivos">
+                                            <td>{{inv.nombre_Almacen}}</td>
+                                            <td>
+                                                <span class="badge" [ngClass]="{
+                      'bg-light text-primary': inv.estado === 'EN_PROCESO',
+                      'bg-light text-secondary': inv.estado === 'PAUSADO'
+                    }">
+                      {{inv.estado === 'EN_PROCESO' ? 'En Proceso' : 'Pausado'}}
+                    </span>
+                                            </td>
+                                            <td>
+                                                <div class="progress bg-light" style="height: 20px; border: 1px solid #dee2e6;">
+                                                    <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="inv.porcentaje_Completado || 0" [attr.aria-valuenow]="inv.porcentaje_Completado || 0" aria-valuemin="0" aria-valuemax="100">
+                                                        {{inv.total_Escaneados}}/{{inv.total_Esperados}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{inv.fecha_Inicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary mr-1" (click)="reanudarInventario(inv.iD_Sesion)">
+                      <i class="fas fa-play"></i> Reanudar
+                    </button>
+                                                <button class="btn btn-sm btn-danger" (click)="cancelarInventario(inv.iD_Sesion)">
+                      <i class="fas fa-trash"></i> Cancelar
+                    </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nuevo inventario -->
+                    <form [formGroup]="formIniciar" (ngSubmit)="iniciarInventario()">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label><i class="fas fa-warehouse"></i> Seleccione el Almacén *</label>
+                                    <select class="form-control" formControlName="almacen">
+                  <option value="">-- Seleccione --</option>
+                  <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
+                    {{almacen.descripcion}}
+                  </option>
+                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary btn-block" [disabled]="formIniciar.invalid">
+                  <i class="fas fa-plus-circle"></i> Iniciar Nuevo Inventario
+                </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA 2: ESCANEO DE EQUIPOS -->
+    <div *ngIf="vistaActual === 'escaneo' && sesionActiva" class="vista-escaneo">
+
+        <!-- Header con información de sesión -->
+        <div class="card mb-3 border-0 bg-light">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h6 class="mb-0 text-muted">
+                            <i class="fas fa-warehouse me-2"></i> {{sesionActiva.nombre_Almacen}}
+                            <small class="ms-3"><i class="fas fa-clock me-1"></i> {{duracionFormato}}</small>
+                        </h6>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-warning btn-sm mr-2" (click)="pausarInventario()">
+              <i class="fas fa-pause"></i> Pausar
+            </button>
+                        <button class="btn btn-danger btn-sm" (click)="volverASeleccion()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campo de escaneo -->
+        <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-body">
+                <form [formGroup]="formEscanear" (ngSubmit)="escanearEquipo()">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-0">
+                                <label class="text-muted"><i class="fas fa-barcode me-2"></i> Escanear IMEI o Código de Barras</label>
+                                <div class="input-group input-group-lg">
+                                    <input #imeiInput type="text" class="form-control" formControlName="imei" placeholder="Ingrese o escanee el IMEI" autocomplete="off" autofocus>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="submit" [disabled]="formEscanear.invalid">
+                      <i class="fas fa-search"></i> BUSCAR
+                    </button>
+                                    </div>
+                                </div>
+                                <small *ngIf="ultimoEscaneado" class="text-success">
+                  <i class="fas fa-check-circle"></i> Último: {{ultimoEscaneado.modelo}} - {{ultimoEscaneado.imei}}
+                </small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Progreso -->
+        <div class="card mb-3 border-0 bg-light">
+            <div class="card-body py-3">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h6 class="mb-1 text-muted">Escaneados</h6>
+                        <h4 class="text-primary mb-0">
+                            <i class="fas fa-check-circle me-1"></i> {{sesionActiva.total_Escaneados}}/{{sesionActiva.total_Esperados}}
+                        </h4>
+                        <small class="text-muted">{{sesionActiva.porcentaje_Completado | number:'1.0-0'}}%</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-1 text-muted">Progreso</h6>
+                        <div class="progress bg-white" style="height: 25px; border: 1px solid #dee2e6;">
+                            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" [style.width.%]="porcentajeProgreso" [attr.aria-valuenow]="porcentajeProgreso" aria-valuemin="0" aria-valuemax="100">
+                                {{porcentajeProgreso | number:'1.0-0'}}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-1 text-muted">Pendientes</h6>
+                        <h4 class="text-secondary mb-0">
+                            <i class="fas fa-hourglass-half me-1"></i> {{equiposPendientes.length}}
+                        </h4>
+                        <small class="text-muted">Sin escanear</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dos columnas: Pendientes y Escaneados -->
+        <div class="row">
+
+            <!-- COLUMNA IZQUIERDA: PENDIENTES -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-2 text-muted">
+                                <i class="fas fa-hourglass-half me-2 text-secondary"></i> Pendientes por Escanear
+                                <span class="badge bg-light text-dark ms-2">{{equiposPendientes.length}}</span>
+                            </h6>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaPendientes" placeholder="🔍 Buscar equipos...">
+                        </div>
+                        <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
+                            <div *ngFor="let equipo of equiposPendientesFiltrados" class="list-group-item list-group-item-action border-0">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1 text-dark">
+                                        <i class="fas fa-mobile-alt me-2 text-muted"></i>{{equipo.modelo}}
+                                    </h6>
+                                </div>
+                                <p class="mb-0"><small class="text-muted">IMEI: {{equipo.imei}}</small></p>
+                            </div>
+                            <div *ngIf="equiposPendientesFiltrados.length === 0" class="text-center py-5 text-muted">
+                                <i class="fas fa-check-circle fa-3x mb-3 text-light"></i>
+                                <p class="text-muted">{{busquedaPendientes ? 'No se encontraron resultados' : '¡Todos los equipos escaneados!'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: ESCANEADOS -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-2 text-muted">
+                                <i class="fas fa-check-circle me-2 text-primary"></i> Equipos Escaneados
+                                <span class="badge bg-light text-dark ms-2">{{equiposEscaneados.length}}</span>
+                            </h6>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaEscaneados" placeholder="🔍 Buscar equipos...">
+                        </div>
+                        <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
+                            <div *ngFor="let equipo of equiposEscaneadosFiltrados; let i = index" class="list-group-item border-0" [ngClass]="{'bg-light border-start border-4 border-primary': i === 0}">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 text-dark">
+                                            <i class="fas fa-check me-2 text-primary"></i>{{equipo.modelo}}
+                                            <span *ngIf="equipo.tipo_Hallazgo === 'SOBRANTE'" class="badge bg-info text-white ms-2">SOBRANTE</span>
+                                        </h6>
+                                        <p class="mb-0"><small class="text-muted">IMEI: {{equipo.imei}}</small></p>
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{equipo.fecha_Escaneo | date:'HH:mm:ss'}}
+                                    </small>
+                                </div>
+                            </div>
+                            <div *ngIf="equiposEscaneadosFiltrados.length === 0" class="text-center py-5 text-muted">
+                                <i class="fas fa-barcode fa-3x mb-3 text-light"></i>
+                                <p class="text-muted">{{busquedaEscaneados ? 'No se encontraron resultados' : 'Comienza a escanear equipos'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fin del row de dos columnas -->
+        </div>
+
+        <!-- Botón Finalizar -->
+        <div class="text-center mt-4">
+            <button class="btn btn-primary btn-lg px-5" (click)="finalizarInventario()">
+                <i class="fas fa-check-double me-2"></i>FINALIZAR INVENTARIO
+            </button>
+        </div>
+
+    </div>
+
+    <!-- VISTA 3: RESUMEN -->
+    <div *ngIf="vistaActual === 'resumen' && sesionActiva" class="vista-resumen">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <h4 class="text-muted"><i class="fas fa-check-circle me-2 text-primary"></i>Inventario Finalizado</h4>
+                    <p class="text-muted">El proceso de inventario se ha completado exitosamente</p>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6 class="text-muted">Almacén</h6>
+                                <h5 class="text-dark">{{sesionActiva.nombre_Almacen}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                            <div class="card-body text-white">
+                                <h6>Escaneados</h6>
+                                <h3>{{sesionActiva.total_Escaneados}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 clickable" style="background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); cursor: pointer;" [class.opacity-50]="sesionActiva.total_Faltantes === 0" (click)="verDetallesFaltantes()" [attr.title]="sesionActiva.total_Faltantes > 0 ? 'Click para ver detalles' : 'No hay equipos faltantes'">
+                            <div class="card-body text-white">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Faltantes</h6>
+                                <h3>{{sesionActiva.total_Faltantes}}</h3>
+                                <small *ngIf="sesionActiva.total_Faltantes > 0">
+                                    <i class="fas fa-mouse-pointer me-1"></i>Click para ver
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 clickable" style="background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%); cursor: pointer;" [class.opacity-50]="sesionActiva.total_Sobrantes === 0" (click)="verDetallesSobrantes()" [attr.title]="sesionActiva.total_Sobrantes > 0 ? 'Click para ver detalles' : 'No hay equipos sobrantes'">
+                            <div class="card-body text-white">
+                                <h6><i class="fas fa-plus-circle me-2"></i>Sobrantes</h6>
+                                <h3>{{sesionActiva.total_Sobrantes}}</h3>
+                                <small *ngIf="sesionActiva.total_Sobrantes > 0">
+                                    <i class="fas fa-mouse-pointer me-1"></i>Click para ver
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-3"><i class="fas fa-info-circle me-2"></i>Detalles del Proceso</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong class="text-muted">Duración:</strong> {{sesionActiva.minutos_Transcurridos}} minutos</p>
+                                <p class="mb-2"><strong class="text-muted">Responsable:</strong> {{sesionActiva.usuario_Responsable}}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong class="text-muted">Finalizado por:</strong> {{sesionActiva.usuario_Finalizo}}</p>
+                                <p *ngIf="sesionActiva.observaciones" class="mb-2"><strong class="text-muted">Observaciones:</strong> {{sesionActiva.observaciones}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg px-5" (click)="nuevoInventario()">
+                        <i class="fas fa-plus me-2"></i>Nuevo Inventario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL DE DETALLES (FALTANTES/SOBRANTES) -->
+<div class="modal fade show d-block" *ngIf="mostrarModalDetalles" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" [ngClass]="tipoDetalles === 'faltantes' ? 'bg-danger text-white' : 'bg-primary text-white'">
+                <h5 class="modal-title">
+                    <i class="fas" [ngClass]="tipoDetalles === 'faltantes' ? 'fa-exclamation-triangle' : 'fa-plus-circle'"></i> {{tituloModalDetalles}}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="cerrarModalDetalles()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>IMEI</th>
+                                <th>Modelo</th>
+                                <th>Marca</th>
+                                <th *ngIf="tipoDetalles === 'sobrantes'">Fecha Escaneo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let equipo of equiposDetalles; let i = index">
+                                <td>{{i + 1}}</td>
+                                <td><strong>{{equipo.imei}}</strong></td>
+                                <td>{{equipo.modelo || 'N/A'}}</td>
+                                <td>{{equipo.marca || 'N/A'}}</td>
+                                <td *ngIf="tipoDetalles === 'sobrantes'">{{equipo.fecha_Escaneo | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="equiposDetalles.length === 0" class="text-center py-5 text-muted">
+                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                    <p>No hay equipos para mostrar</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarModalDetalles()">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+                <button type="button" class="btn btn-success" disabled title="Próximamente">
+                    <i class="fas fa-file-excel me-2"></i>Exportar a Excel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

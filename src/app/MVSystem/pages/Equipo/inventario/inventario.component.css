@@ -1,0 +1,86 @@
+.inventario-container {
+    padding: 20px;
+}
+
+.border-left-4 {
+    border-left-width: 4px !important;
+}
+
+.list-group-item {
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.card-header input {
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.card-header input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.input-group-lg .form-control {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+
+/* Cards clickeables */
+
+.clickable {
+    transition: all 0.3s ease;
+}
+
+.clickable:hover:not(.opacity-50) {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.clickable:active:not(.opacity-50) {
+    transform: translateY(-2px);
+}
+
+.opacity-50 {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+
+
+/* Animación para último escaneado */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.bg-light.border-success {
+    animation: slideIn 0.5s ease;
+}
+
+
+/* Estilos responsivos */
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        margin-bottom: 15px;
+    }
+    .card-body {
+        max-height: 300px !important;
+    }
+}

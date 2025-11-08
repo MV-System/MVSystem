@@ -91,7 +91,6 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seleccionarMensajeAleatorio();
-    console.log('[TopEquiposLentosWidget] Componente inicializado');
     this.cargarTopEquiposLentos();
   }
 
@@ -104,8 +103,6 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.hasError = false;
 
-    console.log('[TopEquiposLentosWidget] Iniciando carga...');
-
     const filtro: EquipoDisponibleParam = {
       almacen: 4, // Sucursal 4 = Todas las sucursales
       suplidor: '',
@@ -117,22 +114,17 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
       fechaFinal: ''
     };
 
-    console.log('[TopEquiposLentosWidget] Filtro:', filtro);
-
     this.equipoService.getEquipoDisponible(filtro)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (equipos) => {
-          console.log('[TopEquiposLentosWidget] Equipos recibidos:', equipos?.length || 0);
           if (equipos && equipos.length > 0) {
             this.equiposCompletos = equipos;
             this.topEquiposLentos = this.analizarTiempoEnInventario(equipos);
-            console.log('[TopEquiposLentosWidget] Top equipos lentos calculados:', this.topEquiposLentos.length);
             this.isLoading = false;
           } else {
             this.topEquiposLentos = [];
             this.equiposCompletos = [];
-            console.warn('[TopEquiposLentosWidget] No hay equipos para analizar');
             this.isLoading = false;
           }
         },
@@ -267,7 +259,6 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   private seleccionarMensajeAleatorio(): void {
     const indiceAleatorio = Math.floor(Math.random() * this.mensajesDisponibles.length);
     this.mensajeCarga = this.mensajesDisponibles[indiceAleatorio];
-    console.log('[TopEquiposLentosWidget] Mensaje seleccionado:', this.mensajeCarga.titulo);
   }
 
   verDetalleModelo(modelo: TopEquipoLentoInsight): void {
@@ -277,8 +268,6 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
 
     // 📊 Emitir evento para tracking en el componente padre
     this.equipoLentoClicked.emit(`Top Equipos Lentos - ${modelo.modelo}`);
-
-    console.log(`[TopEquiposLentosWidget] Mostrando ${this.equiposDelModelo.length} equipos del modelo: ${modelo.modelo}`);
   }
 
   cerrarDetalle(): void {

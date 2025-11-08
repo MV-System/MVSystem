@@ -123,25 +123,20 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
       pageSize: 999999 // Traer todos para análisis
     };
 
-    console.log('[TopModelosWidget] Filtro:', filtro);
-
     this.equipoService.getEquipoVendidoParaInsights(filtro)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (equipos) => {
-          console.log('[TopModelosWidget] Equipos recibidos:', equipos?.length || 0);
           if (equipos && equipos.length > 0) {
             // Guardar equipos completos para el detalle
             this.equiposCompletos = equipos;
 
             // Procesar con IA en el cliente
             this.topModelos = this.analyticsService.analizarTopModelos(equipos, this.limite);
-            console.log('[TopModelosWidget] Top modelos calculados:', this.topModelos.length);
             this.isLoading = false;
           } else {
             this.topModelos = [];
             this.equiposCompletos = [];
-            console.warn('[TopModelosWidget] No hay equipos para analizar');
             this.isLoading = false;
           }
         },
@@ -259,7 +254,6 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
   private seleccionarMensajeAleatorio(): void {
     const indiceAleatorio = Math.floor(Math.random() * this.mensajesDisponibles.length);
     this.mensajeCarga = this.mensajesDisponibles[indiceAleatorio];
-    console.log('[TopModelosWidget] Mensaje seleccionado:', this.mensajeCarga.titulo);
   }
 
   // Calcular totales para el footer
@@ -297,7 +291,6 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
     });
 
     this.mostrarDetalle = true;
-    console.log(`[TopModelosWidget] Mostrando ${this.equiposDelModelo.length} equipos del modelo: ${modelo.modelo}`);
   }
 
   cerrarDetalle(): void {

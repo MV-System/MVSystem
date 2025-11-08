@@ -11,6 +11,7 @@ import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consult
 import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipos-consulta-transferencias/equipos-consulta-transferencias.component';
 import { ReparacionesComponent } from './taller/reparaciones/reparaciones.component';
 import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
+import { InventarioComponent } from './inventario/inventario.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,10 @@ const routes: Routes = [
   {
     path:'ConsultaReparaciones',
     component:ReparacionesConsultaComponent
+  },
+  {
+    path:'inventario',
+    component:InventarioComponent
   }
 ];
 

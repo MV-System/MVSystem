@@ -26,6 +26,7 @@ import { FacturacionModule } from '../facturacion/facturacion.module';
 import { ClientesModule } from '../Clientes/clientes.module';
 import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
 import { ReparacionesListaComponent } from './taller/reparaciones-consulta/reparaciones-lista/reparaciones-lista.component';
+import { InventarioComponent } from './inventario/inventario.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -49,7 +50,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     EquiposConsultaTransferenciasComponent,
     ReparacionesComponent,
     ReparacionesConsultaComponent,
-    ReparacionesListaComponent
+    ReparacionesListaComponent,
+    InventarioComponent
   ],
   imports: [
     CommonModule,

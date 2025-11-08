@@ -240,27 +240,14 @@ export class UserTrackingService {
    * Envía el log al backend
    */
   private sendLog(log: TrackingLogDto): Observable<TrackingResponse> {
-    console.log('📤 Enviando tracking:', log);
-    console.log('🌐 URL del API:', `${this.apiUrl}/log`);
-
+    // Logs de tracking silenciados para focus en inventario
     return this.http.post<TrackingResponse>(`${this.apiUrl}/log`, log).pipe(
       tap(response => {
-        if (response.success) {
-          console.log(`✅ Tracking exitoso: ${log.modulo} - ${log.accion}`, response);
-        } else {
-          console.warn(`⚠️ Tracking fallido: ${response.message}`);
-        }
+        // Tracking silencioso
       }),
       catchError(error => {
-        console.error('❌ Error al enviar tracking:', error);
-        console.error('📋 Detalles del error:', {
-          status: error.status,
-          statusText: error.statusText,
-          message: error.message,
-          url: error.url
-        });
-        // No propagamos el error para no afectar la UX
-        return of({ success: false, message: error.message || 'Error desconocido' });
+        // Error tracking silenciado - no propagamos el error para no afectar la UX
+        return of({ success: false, message: 'Error tracking', data: null });
       })
     );
   }
