@@ -59,10 +59,14 @@ const routes: Routes = [
         path: 'dashboard',
        loadChildren: () => import('./pages/dashboard/dashboard/dashboard.module').then( m => m.DashboardModule )
        },
-       {
-        path: 'cotizacion',
-        loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
-       },
+      {
+       path: 'bancos',
+       loadChildren: () => import('./pages/bancos/bancos.module').then(m => m.BancosModule)
+      },
+      {
+       path: 'cotizacion',
+       loadChildren: () => import('./pages/Cotizacion/cotizacion.module').then( m => m.CotizacionModule )
+      },
        { path: '', redirectTo: 'dashboard' }
     ]
   },

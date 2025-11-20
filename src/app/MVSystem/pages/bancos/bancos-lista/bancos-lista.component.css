@@ -1,0 +1,81 @@
+.bancos-lista {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    padding: 32px 24px;
+}
+
+.bancos-lista h2 {
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 2rem;
+    color: #2c3e50;
+}
+
+.banco-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.banco-card {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+    padding: 18px 20px;
+    transition: box-shadow 0.2s;
+}
+
+.banco-card:hover {
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.13);
+}
+
+
+/* Colores específicos por banco */
+
+.banco-card.efectivo {
+    background: linear-gradient(135deg, #6a716d 0%, #f8f9fa 70%);
+}
+
+.banco-card.popular {
+    background: linear-gradient(135deg, #14467c 0%, #f8f9fa 70%);
+}
+
+.banco-card.reservas {
+    background: linear-gradient(135deg, #264e72 0%, #f8f9fa 90%);
+}
+
+.banco-card.bhd {
+    background: linear-gradient(135deg, #54ad4d 0%, #f8f9fa 70%);
+}
+
+.banco-icon {
+    font-size: 2.2rem;
+    color: #ffffff;
+    margin-right: 18px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.banco-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.banco-nombre {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #014172;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.banco-saldo {
+    font-size: 1.1rem;
+    color: #1484ed;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
