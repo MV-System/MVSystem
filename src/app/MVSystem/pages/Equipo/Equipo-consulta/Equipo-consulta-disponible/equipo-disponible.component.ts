@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { forkJoin, Subscription } from 'rxjs';
 
+declare var JsBarcode: any;
+
 import {
   Almacen,
   ModeloEquipo,
@@ -278,6 +280,252 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
    * Copia el IMEI al portapapeles
    * @param imei - IMEI a copiar
    */
+  /**
+   * Genera una etiqueta/label imprimible para un equipo con código de barras
+   * Optimizado para impresoras térmicas de etiquetas 50mm x 30mm
+   * @param equipo - Datos del equipo para generar el label
+   */
+  generarLabelEquipo(equipo: EquipoDisponible) {
+    const empresaNombre = this.loginService.getUserEmpresa || 'MV System';
+    const fechaRegistro = new Date(equipo.fecharegistro).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+
+    // Generar el SVG del código de barras usando jsbarcode
+    let barcodeSVG = '';
+    try {
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, equipo.imei, {
+        format: 'CODE128',
+        width: 2,
+        height: 60,
+        displayValue: false,
+        margin: 5
+      });
+      barcodeSVG = canvas.toDataURL('image/png');
+    } catch (error) {
+      console.error('Error generando código de barras:', error);
+      barcodeSVG = ''; // Si falla, continuar sin código de barras
+    }
+
+    // Determinar qué precio mostrar (Detalle si existe, sino Mayor)
+    const precioMostrar = equipo.precioDetalle > 0 ? equipo.precioDetalle : equipo.precioPorMayor;
+    const tipoPrecio = equipo.precioDetalle > 0 ? 'P. Detalle' : 'P. Mayor';
+
+    const labelHTML = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Etiqueta Equipo - ${equipo.imei}</title>
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          html {
+            font-size: 16px;
+          }
+
+          body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin: 0;
+          }
+
+          /* Contenedor principal - 50mm x 30mm */
+          .label-container {
+            width: 190px;
+            height: 113px;
+            background: white;
+            border: 1px solid #333;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            page-break-inside: avoid;
+          }
+
+          .label-header {
+            text-align: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+          }
+
+          .empresa-nombre {
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.1;
+            margin: 0;
+          }
+
+          .barcode-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4px 0;
+            flex-grow: 1;
+          }
+
+          .barcode-section img {
+            max-width: 100%;
+            height: auto;
+            max-height: 55px;
+          }
+
+          .barcode-value {
+            font-size: 8px;
+            font-weight: bold;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-top: 2px;
+            word-break: break-all;
+            line-height: 1;
+          }
+
+          .label-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #333;
+            padding-top: 2px;
+            font-size: 8px;
+            gap: 4px;
+          }
+
+          .footer-item {
+            flex: 1;
+            text-align: center;
+            line-height: 1.1;
+          }
+
+          .footer-label {
+            font-size: 7px;
+            color: #666;
+            text-transform: uppercase;
+          }
+
+          .footer-value {
+            font-size: 8px;
+            font-weight: bold;
+            color: #333;
+          }
+
+          .print-instructions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #666;
+            background-color: #fffbea;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #ffeb99;
+          }
+
+          @media print {
+            body {
+              background: white;
+              padding: 0;
+              margin: 0;
+              min-height: auto;
+              display: block;
+            }
+
+            .print-instructions {
+              display: none;
+            }
+
+            .label-container {
+              box-shadow: none;
+              margin: 0;
+              page-break-after: always;
+            }
+          }
+
+          /* Para múltiples etiquetas en una hoja */
+          .labels-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 190px);
+            gap: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-instructions">
+          <strong>Instrucciones:</strong><br>
+          Usa Ctrl+P o Cmd+P para imprimir<br>
+          Márgenes: 0mm<br>
+          Tamaño: 50mm x 30mm
+        </div>
+
+        <div class="label-container">
+          <div class="label-header">
+            <p class="empresa-nombre">${empresaNombre}</p>
+          </div>
+
+          <div class="barcode-section">
+            ${barcodeSVG ? `
+              <img src="${barcodeSVG}" alt="Código de barras del IMEI">
+              <div class="barcode-value">${equipo.imei}</div>
+            ` : `
+              <div class="barcode-value">${equipo.imei}</div>
+            `}
+          </div>
+
+          <div class="label-footer">
+            <div class="footer-item">
+              <div class="footer-label">Modelo</div>
+              <div class="footer-value" style="font-size: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${equipo.descripcion.substring(0, 15)}</div>
+            </div>
+
+            <div class="footer-item">
+              <div class="footer-label">Precio</div>
+              <div class="footer-value">RD\$ ${precioMostrar.toFixed(0)}</div>
+            </div>
+
+            <div class="footer-item">
+              <div class="footer-label">Fecha</div>
+              <div class="footer-value">${fechaRegistro}</div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank', 'width=600,height=400');
+    if (printWindow) {
+      printWindow.document.write(labelHTML);
+      printWindow.document.close();
+      printWindow.focus();
+      // Esperar a que se cargue el contenido antes de preparar para imprimir
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    } else {
+      this.toast.error('No se pudo abrir la ventana de impresión. Verifica los permisos del navegador.');
+    }
+  }
+
   copiarIMEI(imei: string, event?: Event) {
     if (!imei) {
       this.toast.warning('No hay IMEI para copiar');

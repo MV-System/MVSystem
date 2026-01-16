@@ -247,6 +247,7 @@
                                     <th class="align-center">Garantía</th>
                                     <th class="align-center">Nota</th>
                                     <th class="align-center">Fecha Registro</th>
+                                    <th class="align-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -263,6 +264,11 @@
                                     <td class="align-center">{{Equipo.garantia}}</td>
                                     <td class="align-center">{{Equipo.notaAdicional}}</td>
                                     <td class="align-center">{{Equipo.fecharegistro}}</td>
+                                    <td class="align-center">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Generar etiqueta" (click)="generarLabelEquipo(Equipo)">
+                                            <i class="bi bi-tag me-1"></i> Etiqueta
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -315,6 +321,11 @@
                                         <div class="item">
                                             <span class="label">Fecha Registro:</span>
                                             <span class="valor">{{Equipo.fecharegistro | date:'dd/MM/yyyy'}}</span>
+                                        </div>
+                                        <div class="item item-full-width mt-3">
+                                            <button type="button" class="btn btn-sm btn-primary w-100" (click)="generarLabelEquipo(Equipo)">
+                                                <i class="bi bi-tag me-2"></i> Generar Etiqueta
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
