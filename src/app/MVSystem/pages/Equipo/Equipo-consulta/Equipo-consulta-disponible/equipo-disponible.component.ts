@@ -299,10 +299,10 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       const canvas = document.createElement('canvas');
       JsBarcode(canvas, equipo.imei, {
         format: 'CODE128',
-        width: 2,
-        height: 60,
+        width: 1.8,
+        height: 50,
         displayValue: false,
-        margin: 5
+        margin: 3
       });
       barcodeSVG = canvas.toDataURL('image/png');
     } catch (error) {
@@ -312,64 +312,63 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
 
     // Determinar qué precio mostrar (Detalle si existe, sino Mayor)
     const precioMostrar = equipo.precioDetalle > 0 ? equipo.precioDetalle : equipo.precioPorMayor;
-    const tipoPrecio = equipo.precioDetalle > 0 ? 'P. Detalle' : 'P. Mayor';
 
     const labelHTML = `
       <!DOCTYPE html>
       <html lang="es">
       <head>
         <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Etiqueta Equipo - ${equipo.imei}</title>
+        <title>Etiqueta - ${equipo.imei}</title>
         <style>
+          @page {
+            size: 50mm 30mm;
+            margin: 0;
+            padding: 0;
+          }
+
           * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
           }
 
-          html {
-            font-size: 16px;
+          html, body {
+            width: 50mm;
+            height: 30mm;
+            margin: 0;
+            padding: 0;
           }
 
           body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f5f5f5;
-            padding: 10px;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;
+            overflow: hidden;
           }
 
-          /* Contenedor principal - 50mm x 30mm */
           .label-container {
-            width: 190px;
-            height: 113px;
+            width: 50mm;
+            height: 30mm;
             background: white;
-            border: 1px solid #333;
-            padding: 6px;
+            border: 0.5px solid #000;
+            padding: 1.2mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            page-break-inside: avoid;
+            font-size: 7pt;
+            line-height: 1;
           }
 
           .label-header {
             text-align: center;
-            border-bottom: 1px solid #333;
-            padding-bottom: 4px;
-            margin-bottom: 4px;
-          }
-
-          .empresa-nombre {
-            font-size: 10px;
+            padding-bottom: 0.3mm;
+            margin-bottom: 0.2mm;
+            font-size: 6pt;
             font-weight: bold;
-            color: #333;
-            line-height: 1.1;
-            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .barcode-section {
@@ -377,75 +376,109 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 4px 0;
-            flex-grow: 1;
+            padding: 0.2mm 0;
+            overflow: hidden;
           }
 
           .barcode-section img {
             max-width: 100%;
+            max-height: 8.5mm;
+            width: auto;
             height: auto;
-            max-height: 55px;
           }
 
           .barcode-value {
-            font-size: 8px;
+            font-size: 5.5pt;
             font-weight: bold;
-            color: #333;
             font-family: 'Courier New', monospace;
             text-align: center;
-            letter-spacing: 1px;
-            margin-top: 2px;
-            word-break: break-all;
-            line-height: 1;
+            margin-top: 0.2mm;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+          }
+
+          .modelo-section {
+            text-align: center;
+            padding: 0.1mm 0;
+            margin: 0.1mm 0;
+            font-size: 5.2pt;
+            font-weight: bold;
+            color: #000;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            height: 2.5mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 0.5px solid #000;
           }
 
           .label-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #333;
-            padding-top: 2px;
-            font-size: 8px;
-            gap: 4px;
+            font-size: 5.8pt;
+            gap: 0.2mm;
+            height: 4.5mm;
+            padding: 0.2mm 0.5mm 0 0.5mm;
           }
 
           .footer-item {
             flex: 1;
             text-align: center;
-            line-height: 1.1;
+            line-height: 0.85;
+            overflow: hidden;
+            padding: 0 0.3mm;
           }
 
           .footer-label {
-            font-size: 7px;
-            color: #666;
+            font-size: 4.8pt;
+            color: #333;
+            font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: -0.4px;
+            line-height: 1;
+            margin-bottom: 0.2mm;
           }
 
           .footer-value {
-            font-size: 8px;
+            font-size: 6pt;
             font-weight: bold;
-            color: #333;
+            color: #000;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1;
           }
 
           .print-instructions {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            color: #666;
-            background-color: #fffbea;
-            padding: 10px 15px;
-            border-radius: 4px;
-            border: 1px solid #ffeb99;
+            top: 10px;
+            right: 10px;
+            font-size: 11px;
+            color: #333;
+            background-color: #fff3cd;
+            padding: 8px 12px;
+            border: 1px solid #ffc107;
+            border-radius: 3px;
+            z-index: 1000;
           }
 
           @media print {
-            body {
-              background: white;
-              padding: 0;
+            @page {
+              size: 50mm 30mm;
               margin: 0;
-              min-height: auto;
-              display: block;
+              padding: 0;
+            }
+
+            body {
+              margin: 0;
+              padding: 0;
+              width: 50mm;
+              height: 30mm;
+              background: white;
             }
 
             .print-instructions {
@@ -455,56 +488,35 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
             .label-container {
               box-shadow: none;
               margin: 0;
-              page-break-after: always;
+              width: 50mm;
+              height: 30mm;
             }
-          }
-
-          /* Para múltiples etiquetas en una hoja */
-          .labels-sheet {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 190px);
-            gap: 10px;
-            padding: 10px;
-            background: #f5f5f5;
           }
         </style>
       </head>
       <body>
         <div class="print-instructions">
-          <strong>Instrucciones:</strong><br>
-          Usa Ctrl+P o Cmd+P para imprimir<br>
-          Márgenes: 0mm<br>
-          Tamaño: 50mm x 30mm
+          <strong>Impresión:</strong> Ctrl+P | Márgenes: 0mm
         </div>
 
         <div class="label-container">
-          <div class="label-header">
-            <p class="empresa-nombre">${empresaNombre}</p>
-          </div>
+          <div class="label-header">${empresaNombre}</div>
 
           <div class="barcode-section">
-            ${barcodeSVG ? `
-              <img src="${barcodeSVG}" alt="Código de barras del IMEI">
-              <div class="barcode-value">${equipo.imei}</div>
-            ` : `
-              <div class="barcode-value">${equipo.imei}</div>
-            `}
+            ${barcodeSVG ? `<img src="${barcodeSVG}" alt="Código de barras">` : ''}
+            <div class="barcode-value">${equipo.imei}</div>
           </div>
+
+          <div class="modelo-section">${equipo.descripcion}</div>
 
           <div class="label-footer">
             <div class="footer-item">
-              <div class="footer-label">Modelo</div>
-              <div class="footer-value" style="font-size: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${equipo.descripcion.substring(0, 15)}</div>
-            </div>
-
-            <div class="footer-item">
-              <div class="footer-label">Precio</div>
-              <div class="footer-value">RD\$ ${precioMostrar.toFixed(0)}</div>
-            </div>
-
-            <div class="footer-item">
               <div class="footer-label">Fecha</div>
               <div class="footer-value">${fechaRegistro}</div>
+            </div>
+            <div class="footer-item">
+              <div class="footer-label">Precio</div>
+              <div class="footer-value">RD$ ${precioMostrar.toFixed(0)}</div>
             </div>
           </div>
         </div>
@@ -512,12 +524,11 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       </html>
     `;
 
-    const printWindow = window.open('', '_blank', 'width=600,height=400');
+    const printWindow = window.open('', '_blank', 'width=400,height=300');
     if (printWindow) {
       printWindow.document.write(labelHTML);
       printWindow.document.close();
       printWindow.focus();
-      // Esperar a que se cargue el contenido antes de preparar para imprimir
       setTimeout(() => {
         printWindow.print();
       }, 250);
@@ -526,6 +537,10 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
     }
   }
 
+  /**
+   * Copia el IMEI al portapapeles
+   * @param imei - IMEI a copiar
+   */
   copiarIMEI(imei: string, event?: Event) {
     if (!imei) {
       this.toast.warning('No hay IMEI para copiar');
