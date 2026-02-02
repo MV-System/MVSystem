@@ -95,5 +95,40 @@ export class SidebarComponent implements OnInit {
   VerFormPasarInventario(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_PASARINVEQ");
   }
+  VerMenuSeguridad(): boolean {
+    return this.validatorPermissionService.validateUserRole("MenuSeguridad");
+  }
+
+  VerUsuarios(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerUsuarios");
+  }
+
+  VerRoles(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerRoles");
+  }
+
+  VerPermisos(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerPermisos");
+  }
+
+  VerDepartamentos(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerDepartamentos");
+  }
+
+  VerModulos(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerModulos");
+  }
+
+  VerSistemas(): boolean {
+    return this.validatorPermissionService.validateUserRole("VerSistemas");
+  }
+
+  VerAsignarPermisos(): boolean {
+    return this.validatorPermissionService.validateUserRole("AsignarPermisos");
+  }
+
+  VerCambiaClave(): boolean {
+    return this.validatorPermissionService.validateUserRole("cambiarclave");
+  }
 
 }

@@ -1,0 +1,155 @@
+<app-main pageTitle="Asignación de Permisos" breadcrumb="Seguridad / Asignación de Permisos">
+    <div class="card">
+        <div class="card-body">
+            <div *ngIf="loading" class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+
+            <div *ngIf="!loading" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th></th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Login</th>
+                            <th>Perfil</th>
+                            <th>Departamento</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let usuario of usuarios">
+                            <tr class="cursor-pointer" (click)="expandirUsuario(usuario)">
+                                <td>
+                                    <i class="bi" [ngClass]="{'bi-chevron-down': expandedUsuario?.codigo !== usuario.codigo, 'bi-chevron-up': expandedUsuario?.codigo === usuario.codigo}"></i>
+                                </td>
+                                <td>{{ usuario.codigo }}</td>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.login }}</td>
+                                <td>{{ usuario.nombrePerfil }}</td>
+                                <td>{{ usuario.nombreDepartamento }}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="usuario.estado ? 'bg-success' : 'bg-danger'">
+                    {{ usuario.estado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary me-2" (click)="abrirModalAsignarPermisos(usuario)">
+                    <i class="bi bi-pencil"></i> Asignar
+                  </button>
+                                </td>
+                            </tr>
+
+                            <!-- Fila expandida con permisos -->
+                            <tr *ngIf="expandedUsuario?.codigo === usuario.codigo" class="bg-light">
+                                <td colspan="8">
+                                    <div class="p-3">
+                                        <h6 class="mb-3"><i class="bi bi-lock"></i> Permisos del usuario: <strong>{{ usuario.nombre }}</strong></h6>
+
+                                        <div *ngIf="usuario.permisosAsignados && usuario.permisosAsignados.length > 0" class="row">
+                                            <div *ngFor="let permiso of usuario.permisosAsignados" class="col-md-6 col-lg-4 mb-2">
+                                                <div class="card border-success" style="background-color: #f0fdf4;">
+                                                    <div class="card-body py-2 d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="card-title mb-1">{{ permiso.descripcion }}</h6>
+                                                            <small class="text-muted">{{ permiso.nombreModulo }}</small>
+                                                        </div>
+                                                        <button class="btn btn-sm btn-danger ms-2" (click)="quitarPermiso(usuario, permiso.codigo)" title="Quitar permiso">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="!usuario.permisosAsignados || usuario.permisosAsignados.length === 0" class="alert alert-info">
+                                            <i class="bi bi-info-circle"></i> Este usuario no tiene permisos asignados
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+
+                <div *ngIf="usuarios.length === 0" class="alert alert-warning text-center">
+                    <i class="bi bi-exclamation-triangle"></i> No hay usuarios disponibles
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para asignar permisos -->
+    <div class="modal" [ngClass]="{'show d-block': showModal}" [style.backgroundColor]="showModal ? 'rgba(0,0,0,0.5)' : ''">
+        <div class="modal-dialog modal-fullscreen-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-lock"></i> Asignar Permisos: <strong>{{ usuarioSeleccionado?.nombre }}</strong>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+                </div>
+                <div class="modal-body p-2">
+                    <div class="mb-2 d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm" placeholder="🔍 Buscar..." [(ngModel)]="busquedaPermiso" (ngModelChange)="filtrarPermisos()">
+                        <div class="form-check form-check-inline d-flex align-items-center ms-2">
+                            <input type="checkbox" class="form-check-input" id="selectAll" [checked]="permisosSeleccionados.length === permisosFiltrados.length && permisosFiltrados.length > 0" [indeterminate]="permisosSeleccionados.length > 0 && permisosSeleccionados.length < permisosFiltrados.length"
+                                (change)="seleccionarTodos()">
+                            <label class="form-check-label ms-2" for="selectAll">
+                <small><strong>Todos</strong></small>
+              </label>
+                        </div>
+                    </div>
+
+                    <div *ngIf="permisosFiltrados && permisosFiltrados.length > 0" class="permission-grid">
+                        <div *ngFor="let grupo of (permisosFiltrados | groupBy:'nombreModulo')" class="permission-group mb-2">
+                            <div class="group-header mb-1">
+                                <i class="bi bi-folder"></i>
+                                <strong>{{ grupo[0] || 'Sin módulo' }}</strong>
+                                <span class="badge bg-secondary">{{ grupo[1].length }}</span>
+                            </div>
+
+                            <div class="row g-1">
+                                <div *ngFor="let permiso of grupo[1]" class="col-12">
+                                    <div class="permission-card-compact" [ngClass]="{'selected': permisosSeleccionados.includes(permiso.codigo)}">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" [id]="'permiso-' + permiso.codigo" [checked]="permisosSeleccionados.includes(permiso.codigo)" (change)="alternarPermiso(permiso.codigo)">
+                                            <label class="form-check-label" [for]="'permiso-' + permiso.codigo">
+                        {{ permiso.descripcion }}
+                        <span *ngIf="permiso.basico" class="badge bg-warning text-dark ms-1">B</span>
+                      </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="(!permisosFiltrados || permisosFiltrados.length === 0) && busquedaPermiso" class="alert alert-warning alert-sm">
+                        <i class="bi bi-search"></i> No encontrado: <strong>{{ busquedaPermiso }}</strong>
+                    </div>
+
+                    <div *ngIf="(!permisosFiltrados || permisosFiltrados.length === 0) && !busquedaPermiso" class="alert alert-warning alert-sm">
+                        <i class="bi bi-exclamation-triangle"></i> Sin permisos
+                    </div>
+                </div>
+                <div class="modal-footer py-2 px-3 border-top">
+                    <small class="text-muted">
+            <i class="bi bi-check-circle"></i>
+            Seleccionados: <strong>{{ permisosSeleccionados.length }}</strong> / {{ permisosFiltrados.length }}
+          </small>
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="cerrarModal()">
+            <i class="bi bi-x"></i> Cancelar
+          </button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="guardarAsignaciones()">
+            <i class="bi bi-check"></i> Guardar
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-main>
