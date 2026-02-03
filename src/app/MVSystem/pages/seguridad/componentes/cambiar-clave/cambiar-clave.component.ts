@@ -87,7 +87,8 @@ export class CambiarClaveComponent implements OnInit {
     this.guardando = true;
     const payload = {
       contrasenaActual: this.contrasenaActual,
-      contrasenaNueva: this.nuevaContrasena
+      contrasenaNueva: this.nuevaContrasena,
+      confirmarContrasena: this.confirmarContrasena
     };
 
     this.seguridadService.cambiarContraseñaUsuario(payload).subscribe({
