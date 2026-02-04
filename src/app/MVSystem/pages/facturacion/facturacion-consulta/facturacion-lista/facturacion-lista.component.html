@@ -81,7 +81,7 @@
                                     <ng-container *ngFor="let factura of facturas; let i = index">
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
                                             <td class="fixed-item">
-                                                <button *ngIf="estadoFactura !== 'X'" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
+                                                <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
                                                     <i class="bx bx-trash-alt"></i>
                                                 </button>
                                                 <span class="id-badge">{{factura.numeroFactura}}</span>
@@ -107,11 +107,11 @@
                                                 <td col="1">
                                                     <ng-container *ngIf="!detalle.editMode">
                                                         Cod: {{ detalle.idEquipo }}
-                                                        <button *ngIf="detalle.idTipo === 1" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
+                                                        <button *ngIf="detalle.idTipo === 1 && btnCambiaImei()" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
                                                             <i class="bx bx-edit-alt"></i>
                                                         </button>
                                                         <!-- Botón para rebajar equipo si idTipo es 1 -->
-                                                        <button *ngIf="detalle.idTipo === 1" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
+                                                        <button *ngIf="detalle.idTipo === 1 && btnRebajaEquipo()" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
                                               <i class="bi bi-arrow-bar-down" style="color: #dc3545; font-size: 1.2em;"></i>
                                           </button>
                                                     </ng-container>
@@ -154,7 +154,7 @@
                                         <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura">
                                             <i class="bi bi-share-fill"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura !== 'X'" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
+                                        <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
                                     </div>

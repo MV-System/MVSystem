@@ -69,6 +69,9 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     CheckAnuladas(): boolean {
       return this.validatorPermissionService.validateUserRole("vercheckfacturasAnuladas");
     }
+    CierreCaja(): boolean {
+      return this.validatorPermissionService.validateUserRole("CierreCaja");
+    }
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe())
   }
@@ -126,6 +129,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   printing: boolean = false;
   facturaSeleccionada: number | null = null; // Para rastrear qué factura está seleccionada
   criterioActual: string = ''; // Nueva propiedad para sincronizar criterio
+  mostrarCierreCaja: boolean = false; // Para mostrar/ocultar el componente de cierre de caja
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
   };
@@ -588,6 +592,42 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.onFacturaButton = false;
     this.facturaSeleccionada = null;
     this.numerofactura = 0;
+  }
+
+  /**
+   * Obtiene el filtro para el reporte de cierre de caja
+   */
+  getCierreCajaFiltro(): FacturaFilter {
+    const almacen = this.form.get('almacen')?.value || this.loginService.getUserIdSucursal;
+    return {
+      almacen: Number(almacen),
+      criterio: '',
+      empresa: this.loginService.getUserEmpresa,
+      IdEmpresa: this.loginService.getUserIdEmpresa.toString(),
+      IdSucursal: this.loginService.getUserIdSucursal.toString(),
+      ComprobanteCheck: 0,
+      EstadoFactura: 'A',
+      IdVendedor: 0,
+      Usuario: this.loginService.getUserName(),
+      fechaInicio: this.paginate.fechaInicio,
+      fechaFinal: this.paginate.fechaFinal,
+      pageIndex: 1,
+      pageSize: 10
+    };
+  }
+
+  /**
+   * Obtiene la empresa actual del usuario logueado
+   */
+  getEmpresaActual(): string {
+    return this.loginService.getUserIdEmpresa;
+  }
+
+  /**
+   * Obtiene la sucursal actual del usuario logueado
+   */
+  getSucursalActual(): string {
+    return this.loginService.getUserIdSucursal;
   }
 
   /**

@@ -88,13 +88,13 @@
                             <!-- Botones de acción modernos en una sola fila debajo de los filtros -->
                             <!-- Ocultos en móvil (d-none d-md-flex) ya que desde móvil solo se comparte -->
                             <div class="row g-3 mb-4 mt-2 d-none d-md-flex">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <button class="button-imprimir-reporte w-100" [ngClass]="{'disabled': !facturas.length}" (click)="printReportFacturaConsulta()">
                                         <i class="bi bi-printer me-2"></i>
                                         <span class="d-none d-sm-inline">Imprimir reporte</span>
                                     </button>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <button class="button-imprimir-reporte w-100" [disabled]="!puedeReimprimir()" [ngClass]="{'disabled': !puedeReimprimir()}" (click)="puedeReimprimir() ? ReimprimeFactura() : null">
                                         <i class="bi bi-arrow-repeat me-2"></i>
                                         <span class="d-inline">
@@ -104,8 +104,19 @@
                                         <span class="spinner-grow spinner-grow-sm m-0 x-10 ms-2" role="status" aria-hidden="true" *ngIf="isLoading"></span>
                                     </button>
                                 </div>
+                                <div class="col-md-4" *ngIf="CierreCaja()">
+                                    <button class="button-imprimir-reporte w-100" (click)="mostrarCierreCaja = !mostrarCierreCaja" title="Ver cierre de caja">
+                                        <i class="bi bi-safe me-2"></i>
+                                        <span class="d-none d-sm-inline">Cierre de Caja</span>
+                                    </button>
+                                </div>
                             </div>
                         </form>
+
+                        <!-- Cierre de Caja Section -->
+                        <div *ngIf="mostrarCierreCaja" class="mt-4 mb-4">
+                            <app-cierre-caja-reporte [filtro]="getCierreCajaFiltro()"></app-cierre-caja-reporte>
+                        </div>
 
                         <!-- Resumen de Totales - Diseño horizontal compacto -->
                         <div class="row mb-3">

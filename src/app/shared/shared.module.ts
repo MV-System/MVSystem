@@ -8,6 +8,8 @@ import { RToggleComponent } from './components/r-toggle/r-toggle.component';
 import { RDialogComponent } from './components/r-dialog/r-dialog.component';
 import { RouterModule } from '@angular/router';
 import { MainComponent } from './main/main.component';
+import { ReducePipe } from './pipes/reduce.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { MainComponent } from './main/main.component';
     RDropdownMenuComponent,
     RToggleComponent,
     RDialogComponent,
+    ReducePipe,
+    FilterPipe
   ],
   imports: [
     CommonModule,
@@ -28,7 +32,9 @@ import { MainComponent } from './main/main.component';
     RModalComponent,
     RDropdownMenuComponent,
     RToggleComponent,
-    RDialogComponent
+    RDialogComponent,
+    ReducePipe,
+    FilterPipe
   ]
 })
 export class SharedModule { }

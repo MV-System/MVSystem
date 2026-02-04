@@ -41,7 +41,10 @@ export let APIURL = {
         Actualiza:{
           DetalleFactura: API + 'Factura/EditaDetalleFactura',
           DetalleFacturaRebajaEquipo: API + 'Factura/DetalleFacturaRebajaEquipo',
-      }
+        },
+        Reporte:{
+            CierreCaja: API + 'FacturacionReporte/CierreCajaReport',
+        }
     },
     Equipo: {
         Inserta: {

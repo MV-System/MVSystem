@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, RegistroReparaciones } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel } from '../interfaces/mantenimiento';
+import { CierreCajaReporteResumen } from '../interfaces/catalogo.interface';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { switchMap } from 'rxjs/operators';
 
@@ -223,5 +224,17 @@ export class MantenimientoService {
 
   equipoEstadoActualiza(dataActualizar: EquipoEstadoUpdate): Observable<void> {
     return this.http.post<void>(`${APIURL.Equipo.Modifica.EstadoActualiza}`, dataActualizar);
+  }
+
+  /**
+   * Obtiene el reporte de cierre de caja segmentado por tipo de pago
+   * @param filtro Parámetros de filtro (fechas, vendedor, almacén, etc.)
+   * @returns Observable con el resumen de cierre de caja
+   */
+  getCierreCajaReport(filtro: FacturaFilter): Observable<CierreCajaReporteResumen> {
+    return this.http.post<CierreCajaReporteResumen>(
+      APIURL.Factura.Reporte.CierreCaja,
+      filtro
+    );
   }
 }

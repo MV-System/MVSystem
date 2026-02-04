@@ -102,6 +102,14 @@ selectedRowIndex: number | null = null;
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
   }
 
+  btnRebajaEquipo(): boolean {
+    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_REBAJA");
+  }
+
+  btnCambiaImei(): boolean {
+    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_CAMBIA_IMEI");
+  }
+
   toggleDetalleFactura(facturaId: number) {
     // Cambia el estado de visibilidad de los detalles de la factura
     this.facturaVisibility[facturaId] = !this.facturaVisibility[facturaId];

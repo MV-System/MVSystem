@@ -1,0 +1,193 @@
+<div class="cierre-caja-container">
+    <!-- Loading -->
+    <mat-spinner *ngIf="isLoading" class="loading-center">
+        <div class="spinner"></div>
+        <span>Cargando reporte de cierre de caja...</span>
+    </mat-spinner>
+
+    <!-- Error -->
+    <div class="alert alert-danger" *ngIf="error && !isLoading" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i> {{ error }}
+    </div>
+
+    <!-- Contenido del Reporte -->
+    <div *ngIf="cierreCajaResumen && !isLoading">
+        <!-- Cards de Resumen Superior -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card summary-card h-100" style="border-left: 4px solid #2563eb;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="summary-icon bg-primary bg-opacity-10">
+                                <i class="bi bi-receipt text-primary"></i>
+                            </div>
+                            <div class="ms-3">
+                                <small class="text-muted text-uppercase fw-bold d-block">Total Facturas</small>
+                                <h5 class="mb-0">{{ cierreCajaResumen.cantidadTotalFacturas }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card summary-card h-100" style="border-left: 4px solid #22c55e;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="summary-icon bg-success bg-opacity-10">
+                                <i class="bi bi-coin text-success"></i>
+                            </div>
+                            <div class="ms-3">
+                                <small class="text-muted text-uppercase fw-bold d-block">Efectivo Real</small>
+                                <h5 class="mb-0">{{ formatearMoneda(cierreCajaResumen.totalEfectivoReal) }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card summary-card h-100" style="border-left: 4px solid #f59e0b;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="summary-icon bg-warning bg-opacity-10">
+                                <i class="bi bi-bar-chart text-warning"></i>
+                            </div>
+                            <div class="ms-3">
+                                <small class="text-muted text-uppercase fw-bold d-block">Total Facturado</small>
+                                <h5 class="mb-0">{{ formatearMoneda(cierreCajaResumen.totalFacturado) }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card summary-card h-100" style="border-left: 4px solid #ef4444;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="summary-icon bg-danger bg-opacity-10">
+                                <i class="bi bi-clock-history text-danger"></i>
+                            </div>
+                            <div class="ms-3">
+                                <small class="text-muted text-uppercase fw-bold d-block">Pendiente Cobrar</small>
+                                <h5 class="mb-0">{{ formatearMoneda(cierreCajaResumen.totalSaldoPendiente) }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Dinámica de Detalles -->
+        <div class="card">
+            <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <i class="bi bi-table me-2 text-primary"></i> Desglose por Forma de Pago
+                </h6>
+                <button class="btn btn-sm btn-outline-primary" (click)="imprimirReporte()" title="Imprimir reporte">
+          <i class="bi bi-printer me-1"></i>
+          Imprimir
+        </button>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>
+                                    <i class="bi bi-cash-coin me-1"></i> Forma de Pago
+                                </th>
+                                <th class="text-center">
+                                    <i class="bi bi-receipt me-1"></i> # Facturas
+                                </th>
+                                <th class="text-end">
+                                    <i class="bi bi-cash-back me-1"></i> Abonos
+                                </th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end">Descuento</th>
+                                <th class="text-end">ITBIS</th>
+                                <th class="text-end fw-bold" style="background: #f0f9ff;">
+                                    <i class="bi bi-coin me-1"></i> Total Facturado
+                                </th>
+                                <th class="text-end fw-bold" style="background: #f0fdf4;">
+                                    <i class="bi bi-check-circle me-1"></i> Efectivo Real
+                                </th>
+                                <th class="text-end" *ngIf="cierreCajaResumen.detallesPorTipoPago | filter: esCredito as creditoItems">
+                                    <span *ngIf="creditoItems.length > 0">
+                    <i class="bi bi-hourglass me-1"></i>
+                    Pendiente
+                  </span>
+                                </th>
+                                <th class="text-center">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalle of cierreCajaResumen.detallesPorTipoPago" [style.border-left]="'4px solid ' + getColorTipoPago(detalle.tipoPago)">
+                                <td class="fw-bold">
+                                    <i class="bi me-2" [ngClass]="getIconoTipoPago(detalle.tipoPago)"></i> {{ detalle.tipoPago }}
+                                    <span *ngIf="esCredito(detalle.tipoPago) && detalle.cantidadAbonosRecibidos > 0" class="badge bg-info ms-1">
+                    {{ detalle.cantidadAbonosRecibidos }} abono(s)
+                  </span>
+                                </td>
+                                <td class="text-center">{{ detalle.cantidadFacturas }}</td>
+                                <td class="text-end">{{ formatearMoneda(detalle.montoAbonos) }}</td>
+                                <td class="text-end">{{ formatearMoneda(detalle.subTotal) }}</td>
+                                <td class="text-end">{{ formatearMoneda(detalle.descuento) }}</td>
+                                <td class="text-end">{{ formatearMoneda(detalle.itbis) }}</td>
+                                <td class="text-end fw-bold" style="background: #f0f9ff;">{{ formatearMoneda(detalle.totalFacturado) }}</td>
+                                <td class="text-end fw-bold" style="background: #f0fdf4; color: #22c55e;">
+                                    {{ formatearMoneda(detalle.efectivoReal) }}
+                                </td>
+                                <td class="text-end" *ngIf="esCredito(detalle.tipoPago)">
+                                    <span class="text-danger">{{ formatearMoneda(detalle.saldoPendiente) }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="badge" [style.backgroundColor]="getColorTipoPago(detalle.tipoPago)" [style.opacity]="0.8">
+                    {{ detalle.porcentajeDelTotal | number:'1.2-2' }}%
+                  </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td>TOTALES</td>
+                                <td class="text-center">{{ cierreCajaResumen.cantidadTotalFacturas }}</td>
+                                <td class="text-end">{{ formatearMoneda(getTotalAbonos()) }}</td>
+                                <td class="text-end">{{ formatearMoneda(getTotalSubtotal()) }}</td>
+                                <td class="text-end">{{ formatearMoneda(getTotalDescuentos()) }}</td>
+                                <td class="text-end">{{ formatearMoneda(getTotalITBIS()) }}</td>
+                                <td class="text-end fw-bold" style="background: #f0f9ff;">
+                                    {{ formatearMoneda(cierreCajaResumen.totalFacturado) }}
+                                </td>
+                                <td class="text-end fw-bold" style="background: #f0fdf4; color: #22c55e;">
+                                    {{ formatearMoneda(cierreCajaResumen.totalEfectivoReal) }}
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-danger">{{ formatearMoneda(cierreCajaResumen.totalSaldoPendiente) }}</span>
+                                </td>
+                                <td class="text-center">100%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nota Explicativa -->
+        <!-- <div class="alert alert-info mt-3" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Nota:</strong> El "Efectivo Real" es el dinero que realmente entró a la caja:
+            <ul class="mb-0 mt-2">
+                <li><strong>Para Contado y otros métodos:</strong> 100% del monto facturado</li>
+                <li><strong>Para Crédito:</strong> Solo los abonos recibidos (el resto queda pendiente)</li>
+            </ul>
+        </div> -->
+    </div>
+
+    <!-- Sin datos -->
+    <div class="alert alert-warning mt-4" *ngIf="!isLoading && !cierreCajaResumen && !error" role="alert">
+        <i class="bi bi-info-circle me-2"></i> Presione "Cargar Reporte" para obtener el cierre de caja
+    </div>
+</div>

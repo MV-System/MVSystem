@@ -88,6 +88,35 @@ export interface StatusTaller {
   descripcion_Estado_Taller: string;
 }
 
+export interface CierreCajaDetalleReporte {
+  tipoPago: string;
+  cantidadFacturas: number;
+  cantidadAbonosRecibidos: number;
+  montoAbonos: number;
+  subTotal: number;
+  descuento: number;
+  itbis: number;
+  totalFacturado: number;
+  efectivoReal: number;
+  saldoPendiente: number;
+  porcentajeDelTotal: number;
+}
+
+export interface CierreCajaReporteResumen {
+  fechaInicio: Date;
+  fechaFinal: Date;
+  almacen: string;
+  vendedor: string;
+  empresa: string;
+  cantidadTotalFacturas: number;
+  totalFacturado: number;
+  totalEfectivoReal: number;
+  totalAbonos: number;
+  totalSaldoPendiente: number;
+  detallesPorTipoPago: CierreCajaDetalleReporte[];
+  datosEmpresaFactura: any;
+}
+
 
 
 
