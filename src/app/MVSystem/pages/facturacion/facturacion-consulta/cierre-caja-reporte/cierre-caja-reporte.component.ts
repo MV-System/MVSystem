@@ -388,12 +388,12 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
 
     // Imprimir directamente sin esperar
     printWindow.print();
-    
+
     // Cerrar la ventana después de imprimir
     printWindow.addEventListener('afterprint', () => {
       printWindow.close();
     });
-    
+
     // Fallback para navegadores que no disparan afterprint
     setTimeout(() => {
       try {
