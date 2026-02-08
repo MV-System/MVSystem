@@ -401,7 +401,7 @@ onModalClose(rep: any) {
 
   onSearchAccesorio(event: any, index: number) {
     const searchTerm = event.term?.toLowerCase() || '';
-    
+
     if (!searchTerm) {
       // Si está vacío, mostrar lista normal
       return;
@@ -419,14 +419,14 @@ onModalClose(rep: any) {
     });
 
     // Si hay coincidencia EXACTA en código de barra, seleccionar automáticamente
-    const accesorioCoincidente = this.accesoriosBuffer.find(a => 
+    const accesorioCoincidente = this.accesoriosBuffer.find(a =>
       a.codigo_Barra?.toString().toLowerCase() === searchTerm
     );
 
     if (accesorioCoincidente) {
       const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
       currentFormGroup.get('articulo')?.setValue(accesorioCoincidente);
-      
+
       // Disparar el cambio para llenar los datos del accesorio
       setTimeout(() => {
         this.obtenerDetalleFactura(index);
