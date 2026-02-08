@@ -4,186 +4,375 @@
     padding: 0;
 }
 
+/* ===== RESULTS SECTION MEJORADO ===== */
 
-/* ===== HEADER DE RESULTADOS ===== */
+.results-section {
+    width: 100%;
+}
 
-.results-title {
-    font-size: 1.25rem;
-    font-weight: 700;
+.results-card {
+    border: none;
+    border-radius: 1rem;
+    background: #ffffff;
+}
+
+.results-card .card-body {
+    padding: 2rem;
+}
+
+/* ===== HEADER MEJORADO ===== */
+
+.results-card .card-body > .d-flex {
+    gap: 1.5rem;
+}
+
+.results-card .bi-list-ul {
+    color: #0d6efd;
+    font-size: 2.5rem !important;
+}
+
+.results-card .card-body > .d-flex h5 {
+    font-size: 1.5rem;
     color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
-.count-badge {
-    font-size: 1rem;
+.results-card .card-body > .d-flex small {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+.results-card .badge {
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.95rem !important;
     font-weight: 600;
-    padding: 0.4em 0.9em;
-    border-radius: 0.7em;
-    background: #6ea8fe;
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(110, 168, 254, 0.10);
+    box-shadow: 0 3px 10px rgba(13, 110, 253, 0.2);
 }
 
-.pagination-info {
-    margin-left: 1.5rem;
+/* ===== PAGINATION INFO ===== */
+
+.pagination-info-section {
     display: flex;
     align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
 }
 
+.pagination-info-section small {
+    color: #6c757d;
+}
 
-/* ===== ESTADOS VACÍOS ===== */
+/* ===== LOADING SECTION MEJORADO ===== */
+
+.loading-section {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.02) 0%, rgba(13, 110, 253, 0.05) 100%);
+    border-radius: 0.75rem;
+}
+
+.spinner-wrapper {
+    text-align: center;
+}
+
+.spinner-wrapper .spinner-border {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-width: 0.4rem;
+}
+
+.spinner-wrapper p {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* ===== EMPTY STATE MEJORADO ===== */
 
 .empty-state {
-    padding: 3rem 1rem;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f3 100%);
+    border-radius: 0.75rem;
+    border: 2px dashed #dee2e6;
 }
 
-.empty-icon i {
+.empty-state .empty-icon {
+    margin-bottom: 1.5rem;
+}
+
+.empty-state .empty-icon i {
     color: #cbd5e0;
-    font-size: 4rem;
+    opacity: 0.7;
+    font-size: 5rem;
 }
 
-.empty-title {
+.empty-state .empty-title {
     color: #2c3e50;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 1rem;
+    font-size: 1.4rem;
 }
 
-.empty-description {
+.empty-state .empty-description {
     color: #6c757d;
     font-size: 1rem;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
+    line-height: 1.6;
 }
 
-.empty-action .btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    border: none !important;
-    border-radius: 0.75rem !important;
-    padding: 0.75rem 2rem !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+/* ===== TABLA MODERNA MEJORADA ===== */
+
+.table-container {
+    margin-top: 1.5rem;
+    display: block;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+    border-radius: 0.75rem;
 }
 
-
-/* ===== TABLA MODERNA ===== */
+.table-responsive {
+    border-radius: 0.75rem;
+    overflow: visible;
+    display: inline-block;
+    min-width: 100%;
+}
 
 .table {
     background: white;
     border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: visible;
     margin-bottom: 0;
+    width: 100%;
 }
 
 .table-dark {
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
-    color: #374151 !important;
-    --bs-table-bg: transparent !important;
-    --bs-table-color: #374151 !important;
-    --bs-table-border-color: rgba(156, 163, 175, 0.2) !important;
+    background: linear-gradient(135deg, #e8eaed 0%, #d8dce2 100%) !important;
+    color: #313235 !important;
 }
 
 .table-dark th {
     border: none !important;
-    padding: 1rem !important;
-    font-weight: 600 !important;
+    padding: 0.2rem 0.1rem !important;
+    font-weight: 700 !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-size: 0.875rem;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
-    color: #374151 !important;
+    font-size: 0.7rem;
+    color: #313235 !important;
+    white-space: nowrap;
+    line-height: 1;
+    height: auto;
 }
 
 .table tbody tr {
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+    border-bottom: 1px solid #f0f0f0;
+    height: auto;
 }
 
 .table tbody tr:hover {
-    background-color: #f7fafc !important;
-    transform: scale(1.01);
+    background-color: #f8f9fa !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) inset;
 }
 
 .table td {
-    padding: 1rem !important;
+    padding: 0.15rem 0.15rem !important;
     vertical-align: middle !important;
-    border-top: 1px solid #e2e8f0 !important;
+    border: none !important;
+    line-height: 1;
 }
 
-
-/* ===== BADGES PERSONALIZADOS ===== */
-
 .badge {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .id-badge {
-    background: linear-gradient(135deg, #a8c8d8 0%, #7c8db5 100%) !important;
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    padding: 0.15rem 0.3rem !important;
+    border-radius: 0.3rem !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #dee2e6;
+}
+
+.table-row {
+    cursor: default;
+}
+
+/* ===== CELDAS ESPECÍFICAS ===== */
+
+.name-cell {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 150px;
+    max-width: 400px;
+    word-break: break-word;
+    white-space: normal;
+}
+
+.accesorio-name {
+    font-weight: 600;
+    color: #2c3e50;
+    word-wrap: break-word;
+    line-height: 1.4;
+    display: block;
+    min-height: 1.4em;
+}
+
+.actions-cell {
+    min-width: 120px;
+    padding: 0.35rem 0.25rem !important;
+}
+
+.modern-actions {
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.action-btn {
+    transition: all 0.25s ease !important;
+    border-radius: 0.4rem !important;
+    padding: 0.3rem 0.5rem !important;
+    min-height: 28px;
+    min-width: 36px;
+    font-size: 0.75rem !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.action-btn.btn-outline-info {
+    border-color: #17a2b8 !important;
+    color: #17a2b8 !important;
+    background-color: transparent;
+}
+
+.action-btn.btn-outline-info:hover {
+    background-color: #17a2b8 !important;
     color: white !important;
-    padding: 0.25rem 0.5rem !important;
+    border-color: #17a2b8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3) !important;
+}
+
+.action-btn.btn-outline-warning {
+    border-color: #ffc107 !important;
+    color: #ff9800 !important;
+    background-color: transparent;
+}
+
+.action-btn.btn-outline-warning:hover {
+    background-color: #ff9800 !important;
+    color: white !important;
+    border-color: #ff9800 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3) !important;
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+/* ===== BADGES MEJORADOS ===== */
+
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.6rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
+}
+
+.id-badge {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    padding: 0.3rem 0.6rem !important;
     border-radius: 0.5rem !important;
-    font-size: 0.8rem !important;
-    font-weight: 500 !important;
-    box-shadow: 0 2px 8px rgba(120, 165, 196, 0.3);
-    display: inline-block;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-cantidad {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
-    color: #0369a1 !important;
-    border: 1px solid #bae6fd !important;
-    box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-sin-stock {
-    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+    background-color: #e9ecef !important;
     color: #dc2626 !important;
-    border: 1px solid #fca5a5 !important;
-    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+    border: 1px solid #dee2e6;
     font-weight: 700 !important;
 }
 
 .badge-con-stock {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
-    color: #16a34a !important;
-    border: 1px solid #bbf7d0 !important;
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-precio-costo {
-    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%) !important;
-    color: #be185d !important;
-    border: 1px solid #f9a8d4 !important;
-    box-shadow: 0 2px 8px rgba(190, 24, 93, 0.1);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-precio-detalle {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
-    color: #0369a1 !important;
-    border: 1px solid #bae6fd !important;
-    box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-precio-mayor {
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
-    color: #d97706 !important;
-    border: 1px solid #fde68a !important;
-    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
 .badge-almacen {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
-    color: #16a34a !important;
-    border: 1px solid #bbf7d0 !important;
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
+.badge-barcode {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
 
-/* Badges para disponibilidad */
+.badge-barcode-empty {
+    background-color: #e9ecef !important;
+    color: #6b7280 !important;
+    border: 1px solid #dee2e6;
+}
 
 .badge-disponible-si {
     background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
@@ -322,14 +511,27 @@
     background: transparent;
     border: none;
     color: #555;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
-    transition: color 0.2s ease;
+    padding: 0.4rem 0.6rem;
+    transition: all 0.25s ease;
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
 }
 
 .btn-icon:hover {
-    color: #667eea;
+    color: white;
+    background-color: #667eea;
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+.btn-icon:active {
+    transform: scale(0.98);
 }
 
 .nombre {
@@ -374,8 +576,20 @@
     font-size: 0.8rem;
 }
 
+.badge.barcode {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
 
-/* ===== OTROS BADGES (compatibilidad) ===== */
+.badge.barcode-empty {
+    background: #f3f4f6;
+    color: #6b7280;
+}
 
 .badge-precio-mayor-mobile {
     background: #fff1f0 !important;
