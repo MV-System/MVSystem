@@ -26,7 +26,7 @@ export class AccesorioListComponent implements OnInit, OnChanges {
       this.recalcularTotales();
     }
   }
-  
+
   @Input() accesorios: Accesorio[]=[];
   @Input() pageSize!:    number;
   @Input() pageIndex!:   number;
@@ -57,12 +57,12 @@ export class AccesorioListComponent implements OnInit, OnChanges {
 
   putAccesorio(){
     this.isOpenModal=!this.isOpenModal;
-  
+
   }
   getIdAccesorio(id:number){
     this.onSelectAccesorio();
     if(id > 0){this.onEditButton =false;}
-    
+
     this.accesoriosService.getAccesorioById(id)
     .subscribe(accesorio =>{
       this.accesorio = accesorio;
@@ -73,7 +73,7 @@ export class AccesorioListComponent implements OnInit, OnChanges {
   }
   onSelectAccesorio(){
     $('table tbody').on('click', 'tr', (e)=> {
-      
+
         if ($(e.currentTarget).hasClass('selected')) {
             $(e.currentTarget).removeClass('selected');
             $(e.currentTarget).addClass('selected');
@@ -472,7 +472,7 @@ export class AccesorioListComponent implements OnInit, OnChanges {
       printWindow.document.write(labelHTML);
       printWindow.document.close();
       printWindow.focus();
-      
+
       // Esperar a que se cargue completamente y luego imprimir
       setTimeout(() => {
         printWindow.print();
