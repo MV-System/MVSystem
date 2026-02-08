@@ -399,6 +399,41 @@ onModalClose(rep: any) {
     }, 200)
   }
 
+  onSearchAccesorio(event: any, index: number) {
+    const searchTerm = event.term?.toLowerCase() || '';
+    
+    if (!searchTerm) {
+      // Si está vacío, mostrar lista normal
+      return;
+    }
+
+    // Reordenar: primero coincidencias por código de barra, luego por descripción
+    this.accesoriosBuffer.sort((a, b) => {
+      const aCodigoMatch = a.codigo_Barra?.toString().toLowerCase().includes(searchTerm) ? 0 : 1;
+      const bCodigoMatch = b.codigo_Barra?.toString().toLowerCase().includes(searchTerm) ? 0 : 1;
+      const aDescMatch = a.accesorio_Descripcion?.toLowerCase().includes(searchTerm) ? 0 : 1;
+      const bDescMatch = b.accesorio_Descripcion?.toLowerCase().includes(searchTerm) ? 0 : 1;
+
+      // Prioridad: 1) Código de barra, 2) Descripción
+      return (aCodigoMatch - bCodigoMatch) || (aDescMatch - bDescMatch);
+    });
+
+    // Si hay coincidencia EXACTA en código de barra, seleccionar automáticamente
+    const accesorioCoincidente = this.accesoriosBuffer.find(a => 
+      a.codigo_Barra?.toString().toLowerCase() === searchTerm
+    );
+
+    if (accesorioCoincidente) {
+      const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup;
+      currentFormGroup.get('articulo')?.setValue(accesorioCoincidente);
+      
+      // Disparar el cambio para llenar los datos del accesorio
+      setTimeout(() => {
+        this.obtenerDetalleFactura(index);
+      }, 100);
+    }
+  }
+
   onPrecioChange(index: number): void {
     // Accedemos al FormGroup del artículo seleccionado
     const currentFormGroup = this.articulos().controls[index] as FormGroup;
