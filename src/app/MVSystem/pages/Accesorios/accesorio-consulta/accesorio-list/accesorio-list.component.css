@@ -157,20 +157,21 @@
 }
 
 .table-dark {
-    background: linear-gradient(135deg, #e8eaed 0%, #d8dce2 100%) !important;
-    color: #313235 !important;
+    background: #f8f9fa !important;
+    color: #495057 !important;
 }
 
 .table-dark th {
     border: none !important;
-    padding: 0.2rem 0.1rem !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    padding: 1rem 0.75rem !important;
     font-weight: 700 !important;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.7rem;
-    color: #313235 !important;
+    letter-spacing: 0.8px;
+    font-size: 0.9rem;
+    color: #495057 !important;
     white-space: nowrap;
-    line-height: 1;
+    line-height: 1.5;
     height: auto;
 }
 

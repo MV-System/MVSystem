@@ -241,33 +241,13 @@
                                 <table class="table table-hover modern-table">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-hash me-1"></i>ID
-                                            </th>
-                                            <th scope="col">
-                                                <i class="bi bi-card-text me-1"></i>Descripción
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-123 me-1"></i>Cantidad
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-tag me-1"></i>Costo
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-cart me-1"></i>P. Detalle
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-bag-check me-1"></i>P. Mayor
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-building me-1"></i>Almacén
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-barcode me-1"></i>Código de Barra
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                <i class="bi bi-gear me-1"></i>Acciones
-                                            </th>
+                                            <th scope="col" class="text-center">ID</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col" class="text-center">Cantidad</th>
+                                            <th scope="col" class="text-center">P. Detalle</th>
+                                            <th scope="col" class="text-center">P. Mayor</th>
+                                            <th scope="col" class="text-center">Stock</th>
+                                            <th scope="col" class="text-center">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -279,42 +259,24 @@
                                                 <span class="accesorio-name">{{accesorio.descripcionAccesorio | titlecase}}</span>
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-cantidad" [class.badge-sin-stock]="accesorio.cantidad === 0" [class.badge-con-stock]="accesorio.cantidad > 0">
-                                        {{accesorio.cantidad}} unidades
-                                    </span>
+                                                {{accesorio.cantidad}}
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-precio-costo">
-                                        {{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}
-                                    </span>
+                                                {{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-precio-detalle">
-                                        {{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}
-                                    </span>
+                                                {{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-precio-mayor">
-                                        {{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}
-                                    </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge badge-almacen">
-                                        <i class="bi bi-building-fill me-1"></i>
-                                        {{accesorio.almacen}}
-                                    </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge badge-barcode" [class.badge-barcode-empty]="!accesorio.codBarra">
-                                        <i class="bi bi-barcode me-1"></i>
-                                        {{ accesorio.codBarra ? accesorio.codBarra : 'N/A' }}
-                                    </span>
+                                                <span class="badge" [class.badge-con-stock]="accesorio.cantidad > 0" [class.badge-sin-stock]="accesorio.cantidad === 0">
+                                                    {{accesorio.cantidad > 0 ? 'Disponible' : 'Sin Stock'}}
+                                                </span>
                                             </td>
                                             <td class="text-center actions-cell">
                                                 <div class="modern-actions" role="group" aria-label="Acciones del accesorio">
                                                     <button type="button" class="btn btn-outline-info btn-sm action-btn" title="Imprimir etiqueta" data-bs-toggle="tooltip" data-bs-placement="top" (click)="generarLabelAccesorio(accesorio)" *ngIf="accesorio.codBarra">
                                             <i class="bi bi-printer"></i>
-                                            <span class="d-none d-xl-inline ms-1">Imprimir</span>
+                                            <span class="d-none d-xl-inline ms-1">Etiqueta</span>
                                         </button>
                                                     <button type="button" class="btn btn-outline-warning btn-sm action-btn" title="Editar información del accesorio" data-bs-toggle="tooltip" data-bs-placement="top" (click)="editarAccesorio(accesorio.id)">
                                             <i class="bi bi-pencil-square"></i>
