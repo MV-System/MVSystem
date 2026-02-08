@@ -1289,3 +1289,15 @@ ng-select[readonly] ::ng-deep .ng-value {
         font-size: 1.25rem;
     }
 }
+/* Validación de Abono */
+.totals-input-modern.is-invalid {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.text-danger {
+    color: #dc3545;
+    display: block;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}

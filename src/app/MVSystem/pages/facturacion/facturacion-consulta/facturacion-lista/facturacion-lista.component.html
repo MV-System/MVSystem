@@ -68,6 +68,7 @@
                                         <th scope="col">SUB TOTAL</th>
                                         <th scope="col">DESCUENTO</th>
                                         <th scope="col">ITBIS</th>
+                                        <th scope="col">ABONO</th>
                                         <th scope="col">TOTAL</th>
                                         <th scope="col">NCF</th>
                                         <th scope="col">RNC</th>
@@ -93,6 +94,7 @@
                                             <td>{{ factura.subTotal | currency}}</td>
                                             <td>{{ factura.descuento | currency }}</td>
                                             <td>{{ factura.itbis | currency}}</td>
+                                            <td>{{ factura.abono | currency}}</td>
                                             <td>{{ factura.total | currency}}</td>
                                             <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
                                             <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
@@ -132,9 +134,7 @@
                                                 <td><b>Desc.:</b> {{ detalle.descuento |currency }}</td>
                                                 <td><b>Itbs:</b> {{ detalle.itbis | currency}}</td>
                                                 <td><b>Total:</b> {{ detalle.total | currency}}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td colspan="4"></td>
                                             </tr>
                                         </ng-container>
                                     </ng-container>

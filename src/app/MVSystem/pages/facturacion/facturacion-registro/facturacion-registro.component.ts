@@ -523,6 +523,22 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
   }
   agregarAbono() {
     const { abono } = this.form.value;
+    
+    // Validación: el abono no puede ser mayor al total de la factura
+    if (abono > this.total) {
+      this.toastr.error('El abono no puede ser mayor al total de la factura');
+      this.form.get('abono')?.setValue(0);
+      this.abono = 0;
+      return;
+    }
+
+    if (abono < 0) {
+      this.toastr.error('El abono no puede ser negativo');
+      this.form.get('abono')?.setValue(0);
+      this.abono = 0;
+      return;
+    }
+
     this.abono = abono;
     this.refreshGeneralValues();
   }

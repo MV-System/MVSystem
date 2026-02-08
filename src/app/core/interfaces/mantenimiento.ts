@@ -132,6 +132,7 @@ export interface FacturaConsulta {
     subTotal: number;
     descuento: number;
     itbis: number;
+    abono: number;
     total: number;
     totalFacturado: number;
     nota: string;
