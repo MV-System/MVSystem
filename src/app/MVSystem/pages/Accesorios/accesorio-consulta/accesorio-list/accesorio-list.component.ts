@@ -456,10 +456,6 @@ export class AccesorioListComponent implements OnInit, OnChanges {
               <div class="footer-label">Precio</div>
               <div class="footer-value">RD\$${precioMostrar.toFixed(2)}</div>
             </div>
-            <div class="footer-item">
-              <div class="footer-label">Stock</div>
-              <div class="footer-value">${cantidad}</div>
-            </div>
           </div>
         </div>
       </body>

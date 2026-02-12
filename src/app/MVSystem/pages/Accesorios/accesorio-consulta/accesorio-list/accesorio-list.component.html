@@ -244,9 +244,9 @@
                                             <th scope="col" class="text-center">ID</th>
                                             <th scope="col">Descripción</th>
                                             <th scope="col" class="text-center">Cantidad</th>
+                                            <th scope="col" class="text-center">Costo</th>
                                             <th scope="col" class="text-center">P. Detalle</th>
                                             <th scope="col" class="text-center">P. Mayor</th>
-                                            <th scope="col" class="text-center">Stock</th>
                                             <th scope="col" class="text-center">Acciones</th>
                                         </tr>
                                     </thead>
@@ -262,15 +262,13 @@
                                                 {{accesorio.cantidad}}
                                             </td>
                                             <td class="text-center">
+                                                {{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}
+                                            </td>
+                                            <td class="text-center">
                                                 {{accesorio.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}
                                             </td>
                                             <td class="text-center">
                                                 {{accesorio.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge" [class.badge-con-stock]="accesorio.cantidad > 0" [class.badge-sin-stock]="accesorio.cantidad === 0">
-                                                    {{accesorio.cantidad > 0 ? 'Disponible' : 'Sin Stock'}}
-                                                </span>
                                             </td>
                                             <td class="text-center actions-cell">
                                                 <div class="modern-actions" role="group" aria-label="Acciones del accesorio">
