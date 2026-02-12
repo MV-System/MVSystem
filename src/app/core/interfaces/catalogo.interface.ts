@@ -57,6 +57,7 @@ export interface AccesorioLista {
   idTipo: number;
   disponible: string;
   mensaje: string;
+  idEquipo?: number;
 }
 export interface Garantia {
   iD_Garantia: number;

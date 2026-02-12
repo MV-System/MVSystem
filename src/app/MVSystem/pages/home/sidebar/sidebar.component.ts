@@ -53,6 +53,9 @@ export class SidebarComponent implements OnInit {
   VerFormRegistroVendedores(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_VENDEDORES");
   }
+  VerFormCotizacion(): boolean {
+    return this.validatorPermissionService.validateUserRole("CotizacionMenu");
+  }
   VerFormCambiaEstatusEquipo(): boolean {
     return this.validatorPermissionService.validateUserRole("cambiarEstadoDeEquipoToolStripMenuItem");
   }

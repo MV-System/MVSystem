@@ -781,16 +781,21 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
             if (articuloControl) {
               articuloControl.setValue(imei);  // Asegura que el IMEI se mantenga en el input
             }
-            // Agregar el artículo a la lista de accesorios, evitando duplicados
-const articuloExistente = this.accesoriosBuffer.find(a => a.id === articulo.id);
+            // Verificar duplicados SOLO en los artículos del formulario actual
+            const articuloDuplicadoEnFormulario = this.articulos().controls.some((control: AbstractControl) => {
+              const articuoValue = control.value;
+              return articuoValue.articulo &&
+                     typeof articuoValue.articulo === 'object' &&
+                     articuoValue.articulo.id === articulo.id;
+            });
 
-if (!articuloExistente) {
-  this.accesoriosBuffer.push(articulo);  // Agregar al final de la lista
-} else {
-  this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista.`);
-}
-
-            resolve(articulo);  // Resuelve la promesa con el artículo creado
+            if (!articuloDuplicadoEnFormulario) {
+              this.accesoriosBuffer.push(articulo);  // Agregar al final de la lista
+              resolve(articulo);  // Resuelve la promesa con el artículo creado
+            } else {
+              this.toastr.warning(`El artículo con IMEI ${imei} ya está en la lista de esta factura.`);
+              resolve(null);  // Resolver con null para evitar seleccionar nada
+            }
 
           } else {
             // Si el equipo no está disponible, mostrar un mensaje de error

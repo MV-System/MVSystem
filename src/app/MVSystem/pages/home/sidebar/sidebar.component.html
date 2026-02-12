@@ -98,6 +98,11 @@
                         <i class="bi bi-circle"></i><span>Vendedores</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormCotizacion()">
+                    <a (click)="onMenuClick()" routerLink="./cotizacion">
+                        <i class="bi bi-circle"></i><span>Cotizaciones</span>
+                    </a>
+                </li>
 
                 <!-- <li *ngIf="true">
                     <a (click)="onMenuClick()" routerLink="./bancos">

@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CreatorPDFFile } from '../../../helpers/helper';
 import { Garantia, TipoComprobante, TipoFactura, TipoPago } from '../../../core/interfaces/catalogo.interface';
 import { ClienteConsultaCriterio, Cliente } from '../../../core/interfaces/cliente.interface';
@@ -12,6 +13,7 @@ import { ClientesService } from '../../../core/services/clientes.service';
 import { MantenimientoService } from '../../../core/services/mantenimiento.service';
 import { VendedorService } from '../../../core/services/vendedor.service';
 import { UserTrackingService } from '../../../core/services/user-tracking.service';
+import { CotizacionListComponent } from './cotizacion-list/cotizacion-list.component';
 
 @Component({
   selector: 'app-cotizacion',
@@ -19,6 +21,8 @@ import { UserTrackingService } from '../../../core/services/user-tracking.servic
   styleUrls: ['./cotizacion.component.css']
 })
 export class CotizacionComponent implements OnInit,OnDestroy {
+
+  @ViewChild(CotizacionListComponent) cotizacionList!: CotizacionListComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -29,9 +33,15 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     private mantenimientoService: MantenimientoService,
     private toast: ToastrService,
     private tracking: UserTrackingService) { }
+
   ngOnDestroy(): void {
-      this.sub.unsubscribe()
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
+
   ngOnInit(): void {
     this.getClientes();
     this.getGarantia();
@@ -45,6 +55,8 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     // 📊 Tracking: Registro de acceso al módulo
     this.tracking.trackPageView('MNU_CONS_COTIZACION', 'PageView').subscribe();
   }
+
+  private destroy$ = new Subject<void>();
   sub!:Subscription;
   itbis: number = 0;
   aplicarItbis!: boolean;
@@ -52,6 +64,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   printing: boolean = false;
   comprobanteTipos: TipoComprobante[] = [];
   clientes: Cliente[] = []
+  clienteSeleccionado: Cliente | undefined;
   facturaTipos: TipoFactura[] = [];
   vendedores: VendedorLista[] = []
   pagoTipos: TipoPago[] = [];
@@ -87,38 +100,42 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     return this.form.controls["articulos"] as FormArray;
   }
   get nombreCliente() {
-    return this.form.get('nombre')?.value;
+    return this.clienteSeleccionado?.nombres || '';
   }
   get apellidoCliente() {
-    return this.form.get('apellido')?.value;
+    return this.clienteSeleccionado?.apellidos || '';
   }
 
   searchCliente() {
     if (this.form.get('telefono')?.value.length === 10)
-      this.getClientesPorNombreTelefono()
+      this.obtenerClientesPorNombreTelefono()
   }
-  getClientesPorNombreTelefono() {
-    this.form.controls.nombre.setValue('');
-    this.form.controls.apellido.setValue('');
-    this.form.controls.idCliente.setValue('');
-    const { telefono } = this.form.value;
 
-    if (telefono !== '' && telefono) {
-      this.sub = this.clientesService.getClientesPorNombreTelefono(telefono)
-        .subscribe(cliente => {
+  obtenerClientesPorNombreTelefono(tel?: number) {
+    const telefono = tel ?? this.form.value.telefono;
 
-          if (cliente.length > 0) {
-            cliente.forEach(({ nombres, apellidos, numero_de_telefono, id_Cliente }) => {
-              this.form.controls.nombre.setValue(nombres);
-              this.form.controls.apellido.setValue(apellidos);
-              this.form.controls.idCliente.setValue(id_Cliente);
-            });
+    this.clientesService.getClientesPorNombreTelefono(telefono)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        clientes => {
+          if (clientes && clientes.length > 0) {
+            this.clienteSeleccionado = clientes[0];
+            this.form.controls.nombre.setValue(this.clienteSeleccionado.nombres);
+            this.form.controls.apellido.setValue(this.clienteSeleccionado.apellidos);
+            this.form.controls.idCliente.setValue(this.clienteSeleccionado.id_Cliente);
+          } else {
+            this.toastr.warning('No existe cliente con ese teléfono');
+            this.clienteSeleccionado = undefined;
           }
-          else {
-            this.toastr.warning('No existe este número');
-          }
-        });
-    }
+        },
+        error => {
+          this.toastr.error('Error al buscar cliente');
+        }
+      );
+  }
+
+  getClienteTelefono(cliente?: Cliente): number {
+    return cliente?.numero_de_telefono || 0;
   }
   getClientes() {
     this.sub = this.clientesService.getClientesPorNombreTelefono('').subscribe(clientes => {
@@ -127,17 +144,133 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   }
 
   imprimir() {
-    this.sub = this.mantenimientoService.postCotizacionReport(this.form.value)
-    .subscribe(blob =>{
-      CreatorPDFFile(blob);
-    },err=>{
-      this.printing = !this.printing;
-      this.toast.error('Error al imprimir cotización');
-    });
+    // Validar que el formulario sea válido
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      this.toast.error('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    // Validar que haya al menos un artículo
+    if (!this.articulos.length || this.articulos.length === 0) {
+      this.toast.error('Debe agregar al menos un artículo a la cotización');
+      return;
+    }
+
+    // Validar campos requeridos de los artículos
+    if (!this.cotizacionList.validarCamposRequeridos()) {
+      return;
+    }
+
+    // Validar que el precio no sea menor al costo
+    if (!this.cotizacionList.validarPrecioVsCosto()) {
+      return;
+    }
+
+    // Validar cantidades disponibles
+    this.cotizacionList.validarCantidadDisponible();
+
+    // Activar estado de carga
+    this.printing = true;
+
+    // Preparar datos para enviar al backend
+    const data = this.generarModeloCotizacion();
+
+    // Si todas las validaciones pasaron, generar la cotización
+    this.sub = this.mantenimientoService.postCotizacionReport(data)
+      .subscribe(
+        blob => {
+          CreatorPDFFile(blob);
+          this.printing = false;
+          this.toast.success('Cotización generada exitosamente');
+
+          // Limpiar formulario manteniendo vendedor y configurando garantía por defecto
+          const vendedorActual = this.form.get('vendedor')?.value;
+          this.form.reset();
+          this.form.patchValue({
+            vendedor: vendedorActual,
+            garantia: 8, // No aplica
+            tipoFactura: 1,
+            tipoPago: 1,
+            comprobante: 0,
+            aplicarItbis: false,
+          });
+          this.getDateCurrentDay();
+
+          // Limpiar artículos y totales
+          this.articulos.clear();
+          this.agregarArticulo();
+          this.cotizacionList.limpiarTotales();
+
+          // Limpiar selección de cliente
+          this.clienteSeleccionado = undefined;
+        },
+        err => {
+          this.printing = false;
+          console.error('Error detallado:', err);
+          // Intentar mostrar el mensaje de error del backend
+          if (err.error) {
+            console.error('Response body:', err.error);
+          }
+          this.toast.error('Error al generar la cotización: ' + (err.message || 'Error desconocido'));
+        }
+      );
   }
-  validarCampos(nombreCampo: string) {
-    return this.form.get(nombreCampo)?.invalid &&
-      this.form.get(nombreCampo)?.touched
+
+  generarModeloCotizacion(): any {
+    const model: any = {
+      numeroFactura: 0,
+      idCliente: this.clienteSeleccionado?.id_Cliente || 0,
+      nombre: this.clienteSeleccionado?.nombres || this.form.get('nombre')?.value || '',
+      apellido: this.clienteSeleccionado?.apellidos || this.form.get('apellido')?.value || '',
+      telefono: this.form.get('telefono')?.value || '',
+      vendedor: this.form.get('vendedor')?.value || '',
+      idVendedor: Number(this.form.get('vendedor')?.value) || 0,
+      idAlmacen: 2,
+      idTipoFactura: Number(this.form.get('tipoFactura')?.value) || 1,
+      idTipoPago: Number(this.form.get('tipoPago')?.value) || 1,
+      fechaFacturacion: this.form.get('fechaFacturacion')?.value,
+      fechaRegistro: this.form.get('fechaFacturacion')?.value,
+      ncfTipoNumero: Number(this.form.get('comprobante')?.value) || 0,
+      rnc: this.form.get('rnc')?.value || '',
+      fechaLimitePago: this.form.get('fechaLimitePago')?.value,
+      garantia: this.form.get('garantia')?.value || 8,
+      nota: this.form.get('nota')?.value || '',
+      descripcion: "",
+      itbis: this.cotizacionList.itbis,
+      subTotal: this.cotizacionList.subTotal,
+      total: this.cotizacionList.total,
+      abono: 0,
+      descuento: this.cotizacionList.descuento,
+      cantidadArticulos: this.articulos.length,
+      usuario: 'admin',
+      empresa: 'http://localhost:4200/assets/logo.png',
+      idEmpresa: 1,
+      idSucursal: 2,
+      articulos: [], // Cambiar nombre a "articulos" en lugar de "detalleFacturaList"
+    };
+
+    // Agregar artículos con los nombres correctos esperados por la vista
+    this.articulos.controls.forEach(control => {
+      const articulo = control.value;
+      model.articulos.push({
+        cantidad: Number(articulo.cantidad),
+        descripcion: articulo.descripcion,
+        numeroFactura: 0,
+        idEquipo: articulo.idEquipo || 0,
+        idTipo: articulo.idTipo || 0,
+        idGarantia: articulo.idGarantia || 0,
+        subTotal: articulo.subTotal || 0,
+        precio: articulo.precio || 0,
+        descuento: articulo.descuento || 0,
+        itbis: 0,
+        total: articulo.total || 0,
+        fechaRegistro: articulo.fechaRegistro || new Date().toDateString(),
+        usuario: 'admin',
+      });
+    });
+
+    return model;
   }
 
   agregarArticulo() {
@@ -233,5 +366,10 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       .subscribe((vendedor) => {
         this.vendedores = vendedor;
       })
+  }
+
+  validarCampos(field: string): boolean {
+    const control = this.form.get(field);
+    return control ? control.invalid && control.touched : false;
   }
 }

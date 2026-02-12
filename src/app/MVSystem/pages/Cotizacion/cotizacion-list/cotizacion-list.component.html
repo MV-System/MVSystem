@@ -1,90 +1,154 @@
 <form [formGroup]="form">
-    <table class="table-mvsystem mt-3 mb-3 table-success" *ngIf="articulos.length">
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th>Cant.</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-                <th>Descuento</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
-        </thead>
-        <ng-container formArrayName="articulos">
-        <tbody >
-                <tr *ngFor="let detalleFactura of articulos.controls; let i = index" >
-                    <ng-container [formGroupName]="i">
-                        <td class="col-md-12">
-                            <ng-select formControlName="articulo"  [items]="accesorios"
-                                        id="articulo" 
-                                        required
-                                        dropdownPosition="auto"
-                                        [virtualScroll]="true"
-                                        bindLabel="accesorio_Descripcion"
-                                        [addTag]="addArticuloByImei"
-                                        (keydown.enter)="cantidadInput.focus()"
-                                        (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
-                                <ng-template ng-label-tmp ng-option-tmp let-articulo="item"  >
-                                  <ng-container>
+    <div *ngIf="articulos.length > 0">
+        <!-- VISTA DESKTOP: Tabla -->
+        <div class="table-container d-none d-md-block">
+            <div class="table-responsive">
+                <table class="table table-hover modern-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" class="text-center">Descripción</th>
+                            <th scope="col" class="text-center">Cantidad</th>
+                            <th scope="col" class="text-center">Precio</th>
+                            <th scope="col" class="text-center">Subtotal</th>
+                            <th scope="col" class="text-center">Descuento</th>
+                            <th scope="col" class="text-center">Total</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container formArrayName="articulos">
+                            <tr *ngFor="let detalleFactura of articulos.controls; let i = index" class="table-row">
+                                <ng-container [formGroupName]="i">
+                                    <td class="name-cell">
+                                        <ng-select formControlName="articulo" [items]="accesoriosBuffer" id="articulo" required [clearable]="false" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (keydown.enter)="cantidadInput.focus()"
+                                            (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
+                                            <ng-template ng-label-tmp ng-option-tmp let-articulo="item">
+                                                <span>{{ articulo.accesorio_Descripcion | titlecase }}</span>
+                                            </ng-template>
+                                        </ng-select>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" required class="form-control form-control-sm text-center" placeholder="Cantidad" formControlName="cantidad" (keydown.enter)="descuentoInput.focus()" #cantidadInput (change)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid': validarCamposArticulo(detalleFactura, 'cantidad')}"
+                                            appNumeric [maxlen]="4" />
+                                    </td>
+                                    <td class="text-center">
+                                        {{detalleFactura.value.precio | currency:'RD$':'symbol':'1.2-2'}}
+                                    </td>
+                                    <td class="text-center">
+                                        {{detalleFactura.value.subTotal | currency:'RD$':'symbol':'1.2-2'}}
+                                    </td>
+                                    <td class="text-center">
+                                        <input formControlName="descuento" class="form-control form-control-sm text-center" type="number" appNumeric [maxlen]="4" #descuentoInput [decimals]="2" (keydown.enter)="agregarArticulo()" (change)="obtenerDetalleFactura(i)" />
+                                    </td>
+                                    <td class="text-center">
+                                        {{detalleFactura.value.total | currency:'RD$':'symbol':'1.2-2'}}
+                                    </td>
+                                    <td class="text-center actions-cell">
+                                        <button type="button" class="btn btn-outline-danger btn-sm action-btn" title="Eliminar artículo" (click)="deleteArticulo(i)" *ngIf="articulos.length > 1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-                                        <span> 
-                                          {{ articulo.accesorio_Descripcion | titlecase }} |
-                                          {{ articulo.modelo | titlecase }}
-                                        </span>
-                                        <small><b>Precio: {{ calcularPrecioSegunTipofactura( articulo.precio_Detalle,
-                                            articulo.precio_Por_Mayor ) | currency }}</b></small>
-                                        </ng-container>
-                                </ng-template >
-                            </ng-select>
-                        </td>
-                        <td class="col-md-1">
-                            <input type="text" required class="form-control" placeholder="Cantidad"
-                                formControlName="cantidad" (keydown.enter)="descuentoInput.focus()" #cantidadInput
-                                (change)="obtenerDetalleFactura(i)" 
-                                [ngClass]="{'is-invalid': validarCamposArticulo( detalleFactura,'cantidad' )}" 
-                                appNumeric 
-                                [maxlen]="4" />
-                        </td>
-                        <td>
-                            {{ detalleFactura.value.precio }}
-                        </td>
-                        <td>
-                            {{ detalleFactura.value.subTotal }}
-                        </td>
-                        <td class="col-md-1">
-                            <input formControlName="descuento" class="form-control" type="number" appNumeric
-                                [maxlen]="4" #descuentoInput [decimals]="2" (keydown.enter)="agregarArticulo()"
-                                (change)="obtenerDetalleFactura(i)" />
-                        </td>
-                        <td>
-                            {{ detalleFactura.value.total }}
-                        </td>
-                        <td *ngIf="articulos.length -1"> 
-                            <i class="bi bi-trash" (click)="deleteArticulo(i)"
-                                style="color: rgb(205, 65, 65); cursor: pointer"></i>
-                        </td>
-                    </ng-container>
-                </tr>
-            </tbody>
-        </ng-container>
-    </table>
-    <hr />
-    <div class="row">
-
-        <p class="col-md-8">Total artículos: {{ articulos.length - 1 }}</p>
-        <div class="col-md-4 text-end" *ngIf="articulos.length">
-            <div class="box-pay">
-                <div class="row">
-                    <p class="col-md-7">Subtotal:</p>
-                    <p class="col-md-3">{{ subTotal }}</p>
-                    <p class="col-md-7">Descuento:</p>
-                    <p class="col-md-3">{{ descuento }}</p>
-                    <p class="col-md-7">ITBIS:</p>
-                    <p class="col-md-3">{{ itbis }}</p>
-                    <p class="col-md-7">Total:</p>
-                    <p class="col-md-3">{{ total }}</p>
+        <!-- Resumen de cotización -->
+        <div class="row mt-4" *ngIf="articulos.length > 0">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span class="summary-label">Total artículos:</span>
+                        <span class="summary-value">{{articulos.length - 1}}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal:</span>
+                        <span class="summary-value">{{subTotal | currency:'RD$':'symbol':'1.2-2'}}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Descuento:</span>
+                        <span class="summary-value">-{{descuento | currency:'RD$':'symbol':'1.2-2'}}</span>
+                    </div>
+                    <div class="summary-row" *ngIf="itbis > 0">
+                        <span class="summary-label">ITBIS:</span>
+                        <span class="summary-value">+{{itbis | currency:'RD$':'symbol':'1.2-2'}}</span>
+                    </div>
+                    <hr class="summary-divider">
+                    <div class="summary-row summary-total">
+                        <span class="summary-label">Total:</span>
+                        <span class="summary-value">{{total | currency:'RD$':'symbol':'1.2-2'}}</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- VISTA MOBILE: Cards -->
+            <div class="mobile-cards d-md-none">
+                <ng-container formArrayName="articulos">
+                    <div *ngFor="let detalleFactura of articulos.controls; let i = index" class="article-card">
+                        <ng-container [formGroupName]="i">
+                            <!-- Card Header -->
+                            <div class="card-header-mobile">
+                                <div class="card-title">
+                                    <h6 class="mb-0">Artículo {{i + 1}}</h6>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-close-mobile" (click)="deleteArticulo(i)" title="Eliminar" *ngIf="articulos.length > 1">
+                                <i class="bi bi-trash text-danger"></i>
+                            </button>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body-mobile">
+                                <!-- Descripción/Artículo -->
+                                <div class="mobile-field mb-3">
+                                    <label class="mobile-label">Artículo</label>
+                                    <ng-select formControlName="articulo" [items]="accesoriosBuffer" required [clearable]="false" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (change)="obtenerDetalleFactura(i)"
+                                        placeholder="Seleccionar artículo...">
+                                    </ng-select>
+                                </div>
+
+                                <!-- Cantidad -->
+                                <div class="mobile-field mb-3">
+                                    <label class="mobile-label">Cantidad</label>
+                                    <input type="text" class="form-control form-control-mobile" placeholder="Cantidad" formControlName="cantidad" (change)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid': validarCamposArticulo(detalleFactura, 'cantidad')}" appNumeric [maxlen]="4" />
+                                </div>
+
+                                <!-- Precio y Subtotal (lado a lado) -->
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="mobile-label">Precio</label>
+                                        <div class="mobile-value">
+                                            {{detalleFactura.value.precio | currency:'RD$':'symbol':'1.2-2'}}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="mobile-label">Subtotal</label>
+                                        <div class="mobile-value">
+                                            {{detalleFactura.value.subTotal | currency:'RD$':'symbol':'1.2-2'}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Descuento y Total (lado a lado) -->
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="mobile-label">Descuento</label>
+                                        <input type="number" class="form-control form-control-mobile" formControlName="descuento" appNumeric [maxlen]="4" [decimals]="2" (change)="obtenerDetalleFactura(i)" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="mobile-label">Total</label>
+                                        <div class="mobile-value text-success fw-bold">
+                                            {{detalleFactura.value.total | currency:'RD$':'symbol':'1.2-2'}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>

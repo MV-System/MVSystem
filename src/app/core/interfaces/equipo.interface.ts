@@ -26,7 +26,7 @@ export interface Equipo {
     precioPorMayor: number;
     precioDetalle: number;
     mensaje: string;
-
+    idEquipo?: number;
 }
 export interface RegistroReparaciones{
     IMEI:string;
