@@ -13,6 +13,7 @@ import { ClientesService } from '../../../core/services/clientes.service';
 import { MantenimientoService } from '../../../core/services/mantenimiento.service';
 import { VendedorService } from '../../../core/services/vendedor.service';
 import { UserTrackingService } from '../../../core/services/user-tracking.service';
+import { LoginService } from '../../../auth/login.service';
 import { CotizacionListComponent } from './cotizacion-list/cotizacion-list.component';
 
 @Component({
@@ -32,7 +33,8 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     private vendedorService: VendedorService,
     private mantenimientoService: MantenimientoService,
     private toast: ToastrService,
-    private tracking: UserTrackingService) { }
+    private tracking: UserTrackingService,
+    private loginService: LoginService) { }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -144,8 +146,11 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   }
 
   imprimir() {
+    console.log('=== INICIANDO GENERACIÓN DE COTIZACIÓN ===');
+
     // Validar que el formulario sea válido
     if (!this.form.valid) {
+      console.warn('Formulario inválido');
       this.form.markAllAsTouched();
       this.toast.error('Por favor completa todos los campos requeridos');
       return;
@@ -153,17 +158,22 @@ export class CotizacionComponent implements OnInit,OnDestroy {
 
     // Validar que haya al menos un artículo
     if (!this.articulos.length || this.articulos.length === 0) {
+      console.warn('No hay artículos');
       this.toast.error('Debe agregar al menos un artículo a la cotización');
       return;
     }
 
+    console.log(`Artículos: ${this.articulos.length}`);
+
     // Validar campos requeridos de los artículos
     if (!this.cotizacionList.validarCamposRequeridos()) {
+      console.warn('Campos requeridos de artículos no válidos');
       return;
     }
 
     // Validar que el precio no sea menor al costo
     if (!this.cotizacionList.validarPrecioVsCosto()) {
+      console.warn('Precio vs costo no válido');
       return;
     }
 
@@ -175,6 +185,11 @@ export class CotizacionComponent implements OnInit,OnDestroy {
 
     // Preparar datos para enviar al backend
     const data = this.generarModeloCotizacion();
+    console.log('Modelo generado:', JSON.stringify(data, null, 2));
+    console.log('Campo empresa:', data.empresa);
+    console.log('Campo idEmpresa:', data.idEmpresa);
+    console.log('Campo idSucursal:', data.idSucursal);
+    console.log('Enviando al backend...');
 
     // Si todas las validaciones pasaron, generar la cotización
     this.sub = this.mantenimientoService.postCotizacionReport(data)
@@ -207,11 +222,15 @@ export class CotizacionComponent implements OnInit,OnDestroy {
         },
         err => {
           this.printing = false;
-          console.error('Error detallado:', err);
-          // Intentar mostrar el mensaje de error del backend
-          if (err.error) {
-            console.error('Response body:', err.error);
+
+          // Intentar leer el blob de error
+          if (err.error && err.error instanceof Blob) {
+            const reader = new FileReader();
+            reader.onload = () => {
+            };
+            reader.readAsText(err.error);
           }
+
           this.toast.error('Error al generar la cotización: ' + (err.message || 'Error desconocido'));
         }
       );
@@ -243,11 +262,11 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       abono: 0,
       descuento: this.cotizacionList.descuento,
       cantidadArticulos: this.articulos.length,
-      usuario: 'admin',
-      empresa: 'http://localhost:4200/assets/logo.png',
-      idEmpresa: 1,
-      idSucursal: 2,
-      articulos: [], // Cambiar nombre a "articulos" en lugar de "detalleFacturaList"
+      usuario: this.loginService.getUserName() || "",
+      empresa: '',
+      IdEmpresa: this.loginService.getUserIdEmpresa,
+      IdSucursal: this.loginService.getUserIdSucursal,
+      articulos: [],
     };
 
     // Agregar artículos con los nombres correctos esperados por la vista
