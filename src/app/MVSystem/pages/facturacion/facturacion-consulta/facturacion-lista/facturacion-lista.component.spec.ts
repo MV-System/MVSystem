@@ -40,6 +40,7 @@ describe('FacturacionListaComponent', () => {
       descuento: 100,
       itbis: 162,
       total: 1062,
+      abono: 0,
       ncf: 100000001,
       rnc: 123456789,
       vendedor: 'Carlos Vendedor',
