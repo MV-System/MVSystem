@@ -276,12 +276,12 @@ onModalClose(rep: any) {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
-    
+
     // Sincronizar tipoPago con tipoPagoSeleccionado
     this.form.get('tipoPago')?.valueChanges.subscribe((value: any) => {
       this.tipoPagoSeleccionado = parseInt(value, 10);
     });
-    
+
     // Establecer el valor inicial
     const tipoPagoInicial = this.form.get('tipoPago')?.value;
     if (tipoPagoInicial) {
