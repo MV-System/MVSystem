@@ -276,6 +276,17 @@ onModalClose(rep: any) {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
+    
+    // Sincronizar tipoPago con tipoPagoSeleccionado
+    this.form.get('tipoPago')?.valueChanges.subscribe((value: any) => {
+      this.tipoPagoSeleccionado = parseInt(value, 10);
+    });
+    
+    // Establecer el valor inicial
+    const tipoPagoInicial = this.form.get('tipoPago')?.value;
+    if (tipoPagoInicial) {
+      this.tipoPagoSeleccionado = parseInt(tipoPagoInicial, 10);
+    }
   }
   FacturaCreada: FacturaRegistro = null!;
   subs: Subscription[] = [];
@@ -313,6 +324,10 @@ onModalClose(rep: any) {
   abono: number = 0;
   bufferSize: number = 5000;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
+
+  // Propiedades para Pago Mixto
+  detallesPagosActuales: any[] = [];
+  tipoPagoSeleccionado: number = 0;
 
   Imei: string = '';
 
@@ -1486,4 +1501,20 @@ printFacturaMini() {
     this.subs.push(sub);
   }
 
+  // ==================== MÉTODOS PARA PAGO MIXTO ====================
+
+  /**
+   * Recibe los cambios de detalles de pagos desde el componente hijo
+   */
+  onPagosMixtoChange(pagos: any[]) {
+    this.detallesPagosActuales = pagos;
+  }
+
+  /**
+   * Maneja el cambio de tipo de pago
+   */
+  onTipoPagoChange(idTipo: any) {
+    this.tipoPagoSeleccionado = parseInt(idTipo, 10);
+    this.form.patchValue({ tipoPago: this.tipoPagoSeleccionado });
+  }
 }

@@ -35,6 +35,14 @@ export interface AccesorioFactura {
     precio_Detalle?: number;
     precio_Por_Mayor?: number;
 }
+export interface DetallePago {
+    ID_Tipo_Pago: number;
+    Descripcion_Tipo_Pago?: string;
+    Monto_Pago: number;
+    Numero_Referencia?: string;
+    Observacion?: string;
+}
+
 export interface FacturaRegistro {
     numeroFactura: number;
     idCliente: number;
@@ -67,7 +75,8 @@ export interface FacturaRegistro {
     detalleFacturaList: DetalleFacturaList[];
     usuario: string;
 
-    Cliente?: ClienteRegistro
+    Cliente?: ClienteRegistro;
+    detallesPagos?: DetallePago[];
 }
 export interface FacturaRegistroRespuesta {
   numeroFactura: number;

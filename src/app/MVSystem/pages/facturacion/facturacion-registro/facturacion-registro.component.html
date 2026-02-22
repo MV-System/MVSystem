@@ -15,11 +15,16 @@
                             <div class="grid two-cols" *ngIf="isFactura">
                                 <div><strong>Tipo de pago:</strong></div>
                                 <div class="info">
-                                    <select formControlName="tipoPago" class="form-select modern-select" (change)="onChangeTipoPago()">
-                          <option *ngFor="let TipoPago of pagoTipos" [value]="TipoPago.iD_Tipo_Pagos">
-                            {{ TipoPago.descripcion_Tipo_Pagos }}
-                          </option>
-                        </select>
+                                    <!-- Selector de Tipo de Pago -->
+                                    <select class="form-select modern-select" formControlName="tipoPago" (change)="onTipoPagoChange($any($event.target).value)" [ngClass]="{'input-error': validarCampos('tipoPago')}">
+                                        <option value="">-- Seleccionar --</option>
+                                        <option *ngFor="let tipo of pagoTipos" [value]="tipo.iD_Tipo_Pagos">
+                                            {{ tipo.descripcion_Tipo_Pagos }}
+                                        </option>
+                                    </select>
+                                    <!-- Componente de Pago Mixto (desglose) -->
+                                    <app-pago-mixto [totalFactura]="total" [tiposPago]="pagoTipos" [tipoPagoSeleccionado]="tipoPagoSeleccionado" (pagosMixtoChange)="onPagosMixtoChange($event)" (tipoPagoChange)="onTipoPagoChange($event)">
+                                    </app-pago-mixto>
                                     <div class="required-field" *ngIf="validarCampos('tipoPago')">
                                         Este campo es requerido.
                                     </div>
