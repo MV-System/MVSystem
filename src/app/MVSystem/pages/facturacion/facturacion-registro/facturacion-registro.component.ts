@@ -989,8 +989,9 @@ else
       empresa: this.loginService.getUserEmpresa,
       IdEmpresa:this.loginService.getUserIdEmpresa,
       IdSucursal:this.loginService.getUserIdSucursal,
-
+      detallesPagos: this.detallesPagosActuales
     }
+    console.log('📋 MODELO FACTURA - idTipoPago:', model.idTipoPago, '- detallesPagos:', this.detallesPagosActuales);
 
     model.Cliente = {
       apellidos: this.form.get('apellido')?.value,
@@ -1238,7 +1239,15 @@ else
   onAcceptPrint(data: FacturaRegistro) {
     this.isLoading = !this.isLoading;
     this.submitted = true;
-    this.mantenimientoService.postFactura(data)
+
+    console.log('🚀 ENVIAR FACTURA - idTipoPago:', data.idTipoPago, '- detallesPagos:', data.detallesPagos);
+
+    // Usar el endpoint correcto según el tipo de pago
+    const request$ = data.idTipoPago === 6
+      ? (console.log('✅ Usando endpoint PAGO MIXTO'), this.mantenimientoService.postFacturaPagoMixto(data))
+      : (console.log('ℹ️ Usando endpoint PAGO NORMAL'), this.mantenimientoService.postFactura(data));
+
+    request$
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
 
@@ -1324,10 +1333,17 @@ printFacturaMini() {
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
-    this.mantenimientoService.postFactura(data)
+    console.log('📋 MODELO FACTURA - idTipoPago:', data.idTipoPago, '- detallesPagos:', data.detallesPagos);
+
+    // Usar el endpoint correcto según el tipo de pago
+    const request$ = data.idTipoPago === 6
+      ? (console.log('✅ Usando endpoint PAGO MIXTO'), this.mantenimientoService.postFacturaPagoMixto(data))
+      : (console.log('ℹ️ Usando endpoint PAGO NORMAL'), this.mantenimientoService.postFactura(data));
+
+    request$
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
-       this.facturaNumberReporte = resp.numeroFactura
+            this.facturaNumberReporte = resp.factura?.numeroFactura || resp.numeroFactura
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
             this.loadFacturaNumero();
@@ -1335,47 +1351,50 @@ printFacturaMini() {
             this.accesoriosBuffer = [];
             this.loadCatalogos();
 
+            // Agregar pequeña pausa para asegurar que la BD tiene los datos
+            setTimeout(() => {
+              // Verificar si es dispositivo móvil para cambiar el comportamiento
+              if (this.isMobileScreen()) {
+                // En móvil, preguntar si desea enviar la factura
+                this.rDialogService.openDialog("Aviso", '¿Desea enviar la factura?',
+                  () => {
+                    // Si acepta enviar, usar el método compartir
+                    this.compartirFactura(this.facturaNumberReporte);
+                    this.onClean();
+                  },
+                  () => {
+                    // Si no desea enviar, solo limpiar
+                    this.onClean();
+                  },
+                  "No",
+                  "Sí"
+                )
+              } else {
+                // En desktop, mantener el comportamiento original de impresión
+                this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+                  () => {
+                    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
+                      () => {
+                        this.printFacturaNormal(); this.onClean()
+                      },
+                      () => {this.printFacturaMini(); this.onClean()},
+                      "Mini",
+                      "Normal"
+                    )
+                  },
+                  () => {
+                    this.onClean();
+                  },
+                  "No",
+                  "Si"
+                )
+              }
+            }, 3000); // Esperar 3 segundos para asegurar que la BD tiene los detalles indexados
+
           }, error => {
            // this.isLoading = !this.isLoading;
             this.toastr.error(error)
           })
-
-    // Verificar si es dispositivo móvil para cambiar el comportamiento
-    if (this.isMobileScreen()) {
-      // En móvil, preguntar si desea enviar la factura
-      this.rDialogService.openDialog("Aviso", '¿Desea enviar la factura?',
-        () => {
-          // Si acepta enviar, usar el método compartir
-          this.compartirFactura(this.facturaNumberReporte);
-          this.onClean();
-        },
-        () => {
-          // Si no desea enviar, solo limpiar
-          this.onClean();
-        },
-        "No",
-        "Sí"
-      )
-    } else {
-      // En desktop, mantener el comportamiento original de impresión
-      this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
-        () => {
-          this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-            () => {
-              this.printFacturaNormal(); this.onClean()
-            },
-            () => {this.printFacturaMini(); this.onClean()},
-            "Mini",
-            "Normal"
-          )
-        },
-        () => {
-          this.onClean();
-        },
-        "No",
-        "Si"
-      )
-    }
 
   }
   loadDataToPrint() {
@@ -1516,5 +1535,7 @@ printFacturaMini() {
   onTipoPagoChange(idTipo: any) {
     this.tipoPagoSeleccionado = parseInt(idTipo, 10);
     this.form.patchValue({ tipoPago: this.tipoPagoSeleccionado });
+    // Actualizar si es crédito
+    this.onChangeTipoPago();
   }
 }

@@ -11,328 +11,200 @@
     </div>
     <!-- End Page Title -->
     <section class="section">
-        <div class="row justify-content-center">
-            <div class="col-lg-7 order-lg-1 order-2">
+        <div class="row">
+            <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+            <div class="col-lg-6">
                 <div class="card modern-card">
-                    <div class="card-body">
+                    <div class="card-body p-2">
                         <!-- Header moderno -->
-                        <div class="form-header mb-4">
-                            <h5 class="form-title">
-                                <i class="bi bi-phone-fill me-2 text-primary"></i> Datos del Equipo
+                        <div class="form-header mb-2">
+                            <h5 class="form-title small">
+                                <i class="bi bi-phone-fill me-2 text-primary"></i> Registro Equipos
                             </h5>
-                            <p class="form-subtitle">Complete la información del nuevo equipo</p>
                         </div>
-                        <div *ngIf="isLoading" class="text-center my-2">
-                            <div class="spinner-border text-primary" role="status">
+                        <div *ngIf="isLoading" class="text-center my-1">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
                                 <span class="visually-hidden">Guardando...</span>
                             </div>
-                            <div>Guardando equipo...</div>
+                            <div class="small">Guardando...</div>
                         </div>
                         <!-- Modern Form -->
                         <form [formGroup]="formRegistro" (ngSubmit)="registroEquipos()" class="modern-form" novalidate>
-                            <!-- Sección: Información Básica -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-info-circle me-2"></i> Información Básica
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
-                                    <!-- Factura No. -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-receipt me-1"></i>
-                                            Factura No.
-                                        </label>
-                                        <input type="text" class="form-control modern-input" formControlName="factura" maxlength="20" [class.is-invalid]="validarCampos('factura')">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('factura')">
-                                            {{facturaErrorMsg}}
-                                        </div>
-                                    </div>
+
+                            <!-- SECCIÓN 1: CAMPOS OBLIGATORIOS (GRID 2 COLUMNAS) -->
+                            <div class="form-section mb-2">
+                                <h6 class="small mb-2 text-danger"><i class="bi bi-asterisk"></i> Requeridos</h6>
+
+                                <div class="row g-2">
                                     <!-- IMEI -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label" for="imeiInput">
-                                            <i class="bi bi-upc me-1"></i>IMEI <span class="required-star">*</span>
-                                        </label>
-                                        <input type="text" class="form-control modern-input" formControlName="IMEI" maxlength="30" autocomplete="off" #ImeiInput [class.is-invalid]="validarCampos('IMEI')" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()" [attr.aria-invalid]="validarCampos('IMEI')">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('IMEI')">
-                                            {{imeiErrorMsg}}
-                                        </div>
+                                    <div class="col-12">
+                                        <label class="form-label modern-label small mb-1">IMEI <span class="required-star">*</span></label>
+                                        <input type="text" class="form-control form-control-sm" formControlName="IMEI" maxlength="30" autocomplete="off" #ImeiInput [class.is-invalid]="validarCampos('IMEI')" (keydown.enter)="ImeiInput.value='';ImeiInput.focus()">
+                                        <div class="invalid-feedback small" *ngIf="validarCampos('IMEI')">{{imeiErrorMsg}}</div>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- Sección: Precios y Costos -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-currency-dollar me-2"></i> Precios y Costos
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
-                                    <!-- Costo -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-tag me-1"></i>
-                                            Costo <span class="required-star">*</span>
-                                        </label>
-                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('costo')">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('costo')">
-                                            {{costoErrorMsg}}
-                                        </div>
-                                    </div>
-                                    <!-- Al por Mayor -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-bag-check me-1"></i>
-                                            Al por Mayor <span class="required-star">*</span>
-                                        </label>
-                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alPorMayor') || formRegistro.errors?.['precioMayorSuperaDetalle'] || formRegistro.errors?.['precioMayorMenorQueCosto']">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('alPorMayor')">
-                                            {{alPorMayorErrorMsg}}
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['precioMayorSuperaDetalle'] && formRegistro.get('alPorMayor')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Debe ser menor que el precio al detalle
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['precioMayorMenorQueCosto'] && formRegistro.get('alPorMayor')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> No puede ser menor que el costo
-                                        </div>
-                                    </div>
-                                    <!-- Al detalle -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-cart me-1"></i>
-                                            Al detalle <span class="required-star">*</span>
-                                        </label>
-                                        <input type="number" class="form-control modern-input" required placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alDetalle') || formRegistro.errors?.['precioDetalleMenorQueCosto']">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('alDetalle')">
-                                            {{alDetalleErrorMsg}}
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['precioDetalleMenorQueCosto'] && formRegistro.get('alDetalle')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> El precio al detalle no puede ser menor que el costo
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Sección: Comisiones -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-percent me-2"></i> Comisiones
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
-                                    <!-- Comision Detalle -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-cash-coin me-1"></i>
-                                            Comisión Detalle
-                                        </label>
-                                        <input type="number" class="form-control modern-input" placeholder="RD$" formControlName="comisionDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionDetalle') || formRegistro.errors?.['comisionDetalleSuperaPrecio']">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('comisionDetalle')">
-                                            {{comisionDetalleErrorMsg}}
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['comisionDetalleSuperaPrecio'] && formRegistro.get('comisionDetalle')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> No puede ser mayor que el precio al detalle
-                                        </div>
-                                    </div>
-                                    <!-- Comision Mayor -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-cash-stack me-1"></i>
-                                            Comisión Mayor
-                                        </label>
-                                        <input type="number" class="form-control modern-input" placeholder="RD$" formControlName="comisionMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionMayor') || formRegistro.errors?.['comisionMayorSuperaDetalle'] || formRegistro.errors?.['comisionMayorSuperaPrecio']">
-                                        <div class="invalid-feedback" *ngIf="validarCampos('comisionMayor')">
-                                            {{comisionMayorErrorMsg}}
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['comisionMayorSuperaDetalle'] && formRegistro.get('comisionMayor')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> No puede ser mayor que la comisión al detalle
-                                        </div>
-                                        <div class="text-danger small mt-1" *ngIf="formRegistro.errors?.['comisionMayorSuperaPrecio'] && formRegistro.get('comisionMayor')?.touched">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> No puede ser mayor que el precio por mayor
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Sección: Especificaciones -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-gear-wide-connected me-2"></i> Especificaciones
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
-                                    <!-- Tecnología -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-cpu me-1"></i>
-                                            Tecnología
-                                        </label>
-                                        <select formControlName="tecnologia" class="form-select modern-select">
-                                            <option *ngFor="let tecnologia of listaTecnologia" [value]="tecnologia.iD_Tecnologia">
-                                                {{tecnologia.descripcion}}
-                                            </option>
+
+                                    <!-- Almacén y Garantía -->
+                                    <div class="col-6">
+                                        <label class="form-label modern-label small mb-1">Almacén <span class="required-star">*</span></label>
+                                        <select formControlName="almacen" class="form-select form-select-sm" required [ngClass]="{'border-danger': validarCampos('almacen')}">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option *ngFor="let almacen of listaAlmacen" [value]="almacen.iD_Almacen">{{almacen.descripcion}}</option>
                                         </select>
+                                        <div class="small text-danger" *ngIf="validarCampos('almacen')">Requerido</div>
                                     </div>
-                                    <!-- Garantía -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-shield-check me-1"></i>
-                                            Garantía <span class="required-star">*</span>
-                                        </label>
-                                        <select formControlName="garantia" class="form-select modern-select" required [ngClass]="{'border-danger': validarCampos('garantia')}">
-                                            <option value="" disabled selected>Seleccione garantía</option>
-                                            <option *ngFor="let garantia of listaGarantia" [value]="garantia.iD_Garantia">
-                                                {{garantia.descripcion}}
-                                            </option>
+                                    <div class="col-6">
+                                        <label class="form-label modern-label small mb-1">Garantía <span class="required-star">*</span></label>
+                                        <select formControlName="garantia" class="form-select form-select-sm" required [ngClass]="{'border-danger': validarCampos('garantia')}">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option *ngFor="let garantia of listaGarantia" [value]="garantia.iD_Garantia">{{garantia.descripcion}}</option>
                                         </select>
-                                        <div class="small mt-1" [ngClass]="{'text-danger': validarCampos('garantia'), 'invisible': !validarCampos('garantia')}">
-                                            Debe seleccionar una garantía
-                                        </div>
+                                        <div class="small text-danger" *ngIf="validarCampos('garantia')">Requerido</div>
                                     </div>
-                                    <!-- Desbloqueado -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-unlock me-1"></i>
-                                            Desbloqueado
-                                        </label>
-                                        <select formControlName="idEstadoBloqueo" class="form-select modern-select">
-                                            <option *ngFor="let desbloqueo of listaDesbloqueo" [value]="desbloqueo.iD_Bloqueo">
-                                                {{desbloqueo.descripcion}}
-                                            </option>
-                                        </select>
+
+                                    <!-- Marca y Modelo -->
+                                    <div class="col-6">
+                                        <label class="form-label modern-label small mb-1">Marca <span class="required-star">*</span></label>
+                                        <ng-select [items]="listaMarca" bindLabel="descripcion" bindValue="iD_Marca" placeholder="Seleccionar" [class.is-invalid]="validarCampos('marca')" formControlName="marca" (change)="selectoresMarcaModeloValidator()" class="form-select-sm" required></ng-select>
+                                        <div class="small text-danger" *ngIf="validarCampos('marca')">Requerido</div>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- Sección: Inventario y Marca/Modelo -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-box-seam me-2"></i> Inventario y Marca/Modelo
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
-                                    <!-- Almacén -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-building me-1"></i>
-                                            Almacén <span class="required-star">*</span>
-                                        </label>
-                                        <select formControlName="almacen" class="form-select modern-select" required [ngClass]="{'border-danger': validarCampos('almacen')}">
-                                            <option value="" disabled selected>Seleccione un almacén</option>
-                                            <option *ngFor="let almacen of listaAlmacen" [value]="almacen.iD_Almacen">
-                                                {{almacen.descripcion}}
-                                            </option>
-                                        </select>
-                                        <div class="small mt-1" [ngClass]="{'text-danger': validarCampos('almacen'), 'invisible': !validarCampos('almacen')}">
-                                            Debe seleccionar un almacén
-                                        </div>
+                                    <div class="col-6">
+                                        <label class="form-label modern-label small mb-1">Modelo <span class="required-star">*</span></label>
+                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccionar" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" class="form-select-sm" required></ng-select>
+                                        <div class="small text-danger" *ngIf="validarCampos('modelo')">Requerido</div>
                                     </div>
-                                    <!-- Marca -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-award me-1"></i>
-                                            Marca <span class="required-star">*</span>
-                                        </label>
-                                        <ng-select [items]="listaMarca" bindLabel="descripcion" bindValue="iD_Marca" placeholder="Seleccione una marca" [class.is-invalid]="validarCampos('marca')" formControlName="marca" (change)="selectoresMarcaModeloValidator()" class="modern-select-ng" required>
-                                        </ng-select>
-                                        <div class="invalid-feedback" *ngIf="validarCampos('marca')">
-                                            {{marcaErrorMsg}}
-                                        </div>
-                                    </div>
-                                    <!-- Modelo -->
-                                    <div class="col-md-4">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-phone me-1"></i>
-                                            Modelo <span class="required-star">*</span>
-                                        </label>
-                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccione un modelo" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" class="modern-select-ng" required>
-                                        </ng-select>
-                                        <div class="invalid-feedback" *ngIf="validarCampos('modelo')">
-                                            {{modeloErrorMsg}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Sección: Suplidor y Nota Adicional -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h6 class="section-title">
-                                        <i class="bi bi-truck me-2"></i> Suplidor y Nota Adicional
-                                    </h6>
-                                </div>
-                                <div class="row g-3">
+
                                     <!-- Suplidor -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-truck me-1"></i>
-                                            Suplidor <span class="required-star">*</span>
-                                        </label>
-                                        <select class="form-select modern-select" formControlName="suplidor" required [ngClass]="{'border-danger': validarCampos('suplidor')}">
-                                            <option value="" disabled selected>Seleccione un suplidor</option>
-                                            <option *ngFor="let suplidor of listaSuplidor" [value]="suplidor.iD_Suplidor">
-                                                {{suplidor.descripcion}}
-                                            </option>
+                                    <div class="col-12">
+                                        <label class="form-label modern-label small mb-1">Suplidor <span class="required-star">*</span></label>
+                                        <select class="form-select form-select-sm" formControlName="suplidor" required [ngClass]="{'border-danger': validarCampos('suplidor')}">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option *ngFor="let suplidor of listaSuplidor" [value]="suplidor.iD_Suplidor">{{suplidor.descripcion}}</option>
                                         </select>
-                                        <div class="small mt-1" [ngClass]="{'text-danger': validarCampos('suplidor'), 'invisible': !validarCampos('suplidor')}">
-                                            Debe seleccionar un suplidor
-                                        </div>
+                                        <div class="small text-danger" *ngIf="validarCampos('suplidor')">Requerido</div>
                                     </div>
-                                    <!-- Nota adicional -->
-                                    <div class="col-md-6">
-                                        <label class="form-label modern-label">
-                                            <i class="bi bi-journal-text me-1"></i>
-                                            Nota adicional
-                                            <span class="text-muted small">({{formRegistro.get('notaAdicional')?.value?.length || 0}}/500)</span>
-                                        </label>
-                                        <textarea class="form-control modern-input" placeholder="Nota adicional (máx. 500 caracteres)" formControlName="notaAdicional" maxlength="500" style="height: 100px;" [class.is-invalid]="validarCampos('notaAdicional')"></textarea>
-                                        <div class="invalid-feedback" *ngIf="validarCampos('notaAdicional')">
-                                            {{notaAdicionalErrorMsg}}
+
+                                    <!-- Precios: Costo, Mayor, Detalle -->
+                                    <div class="col-4">
+                                        <label class="form-label modern-label small mb-1">Costo <span class="required-star">*</span></label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('costo')">
+                                        <div class="invalid-feedback small" *ngIf="validarCampos('costo')">{{costoErrorMsg}}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label modern-label small mb-1">Mayor <span class="required-star">*</span></label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alPorMayor') || formRegistro.errors?.['precioMayorSuperaDetalle'] || formRegistro.errors?.['precioMayorMenorQueCosto']">
+                                        <div class="invalid-feedback small" *ngIf="validarCampos('alPorMayor')">{{alPorMayorErrorMsg}}</div>
+                                        <div class="text-danger small" *ngIf="formRegistro.errors?.['precioMayorSuperaDetalle'] && formRegistro.get('alPorMayor')?.touched">Menor detalle</div>
+                                        <div class="text-danger small" *ngIf="formRegistro.errors?.['precioMayorMenorQueCosto'] && formRegistro.get('alPorMayor')?.touched">Mayor costo</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label modern-label small mb-1">Detalle <span class="required-star">*</span></label>
+                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alDetalle') || formRegistro.errors?.['precioDetalleMenorQueCosto']">
+                                        <div class="invalid-feedback small" *ngIf="validarCampos('alDetalle')">{{alDetalleErrorMsg}}</div>
+                                        <div class="text-danger small" *ngIf="formRegistro.errors?.['precioDetalleMenorQueCosto'] && formRegistro.get('alDetalle')?.touched">Mayor costo</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECCIÓN 2: CAMPOS OPCIONALES - ACCORDION -->
+                            <div class="accordion accordion-flush" id="opcionales">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed small" type="button" data-bs-toggle="collapse" data-bs-target="#opcionalBody">
+                                            <i class="bi bi-chevron-down me-2"></i> Opcionales
+                                        </button>
+                                    </h2>
+                                    <div id="opcionalBody" class="accordion-collapse collapse" data-bs-parent="#opcionales">
+                                        <div class="accordion-body p-2">
+                                            <div class="row g-2">
+                                                <!-- Factura -->
+                                                <div class="col-6">
+                                                    <label class="form-label modern-label small mb-1">Factura No.</label>
+                                                    <input type="text" class="form-control form-control-sm" formControlName="factura" maxlength="20" [class.is-invalid]="validarCampos('factura')">
+                                                    <div class="invalid-feedback small" *ngIf="validarCampos('factura')">{{facturaErrorMsg}}</div>
+                                                </div>
+
+                                                <!-- Tecnología -->
+                                                <div class="col-6">
+                                                    <label class="form-label modern-label small mb-1">Tecnología</label>
+                                                    <select formControlName="tecnologia" class="form-select form-select-sm">
+                                                        <option *ngFor="let tecnologia of listaTecnologia" [value]="tecnologia.iD_Tecnologia">{{tecnologia.descripcion}}</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Desbloqueado -->
+                                                <div class="col-6">
+                                                    <label class="form-label modern-label small mb-1">Desbloqueado</label>
+                                                    <select formControlName="idEstadoBloqueo" class="form-select form-select-sm">
+                                                        <option *ngFor="let desbloqueo of listaDesbloqueo" [value]="desbloqueo.iD_Bloqueo">{{desbloqueo.descripcion}}</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Comisión Detalle y Mayor -->
+                                                <div class="col-6">
+                                                    <label class="form-label modern-label small mb-1">Com. Detalle</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionDetalle') || formRegistro.errors?.['comisionDetalleSuperaPrecio']">
+                                                    <div class="invalid-feedback small" *ngIf="validarCampos('comisionDetalle')">{{comisionDetalleErrorMsg}}</div>
+                                                    <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionDetalleSuperaPrecio'] && formRegistro.get('comisionDetalle')?.touched">Mayor precio</div>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <label class="form-label modern-label small mb-1">Com. Mayor</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionMayor') || formRegistro.errors?.['comisionMayorSuperaDetalle'] || formRegistro.errors?.['comisionMayorSuperaPrecio']">
+                                                    <div class="invalid-feedback small" *ngIf="validarCampos('comisionMayor')">{{comisionMayorErrorMsg}}</div>
+                                                    <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionMayorSuperaDetalle'] && formRegistro.get('comisionMayor')?.touched">Mayor detalle</div>
+                                                    <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionMayorSuperaPrecio'] && formRegistro.get('comisionMayor')?.touched">Mayor precio</div>
+                                                </div>
+
+                                                <!-- Nota -->
+                                                <div class="col-12">
+                                                    <label class="form-label modern-label small mb-1">Nota <span class="text-muted">({{formRegistro.get('notaAdicional')?.value?.length || 0}}/500)</span></label>
+                                                    <textarea class="form-control form-control-sm" placeholder="Máx. 500" formControlName="notaAdicional" maxlength="500" style="height: 50px;" [class.is-invalid]="validarCampos('notaAdicional')"></textarea>
+                                                    <div class="invalid-feedback small" *ngIf="validarCampos('notaAdicional')">{{notaAdicionalErrorMsg}}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <button class="button-guardar w-100" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir</button>
+
+                            <div class="mt-2">
+                                <button class="button-guardar w-100 small" type="submit" [ngClass]="{'disabled':btnDisable()}">Añadir Equipo</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <!-- Tabla equipos agregados -->
-            <div class="col-lg-5 order-lg-2 order-1" *ngIf="equipoValorRetorno.length">
+
+            <!-- COLUMNA DERECHA: TABLA EQUIPOS -->
+            <div class="col-lg-6" *ngIf="equipoValorRetorno.length">
                 <div class="card modern-card">
                     <div class="card-body">
                         <div class="form-header mb-3">
-                            <h5 class="form-title">
-                                <i class="bi bi-list-check me-2 text-primary"></i> Equipos agregados
+                            <h5 class="form-title small">
+                                <i class="bi bi-list-check me-2 text-primary"></i> Equipos agregados ({{equipoValorRetorno.length}})
                             </h5>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover table-striped modern-table align-middle">
+                            <table class="table table-hover table-striped modern-table align-middle table-sm">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th>#</th>
-                                        <th>IMEI</th>
-                                        <!-- <th>Marca</th> -->
-                                        <th>Modelo</th>
-                                        <th>Costo</th>
-                                        <th>Precio x Mayor</th>
-                                        <th>Precio Detalle</th>
-                                        <th class="text-center">Acción</th>
+                                        <th style="width: 5%">#</th>
+                                        <th style="width: 25%">IMEI</th>
+                                        <th style="width: 20%">Modelo</th>
+                                        <th style="width: 15%">Costo</th>
+                                        <th style="width: 20%">Mayor/Det.</th>
+                                        <th style="width: 15%" class="text-center">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
                                         <td><span class="badge bg-primary">{{i + 1}}</span></td>
-                                        <td><span class="fw-semibold">{{equipo.imei}}</span></td>
-                                        <!-- <td>{{equipo?.marca}}</td> -->
-                                        <td>{{equipo?.modelo}}</td>
-                                        <td>{{equipo?.costo_Equipo | currency}}</td>
-                                        <td>{{equipo?.precioPorMayor | currency}}</td>
-                                        <td>{{equipo?.precioDetalle | currency}}</td>
+                                        <td><span class="fw-semibold small">{{equipo.imei}}</span></td>
+                                        <td class="small">{{equipo?.modelo}}</td>
+                                        <td class="small">{{equipo?.costo_Equipo | currency}}</td>
+                                        <td class="small">{{equipo?.precioPorMayor | currency}} / {{equipo?.precioDetalle | currency}}</td>
                                         <td class="text-center">
-                                            <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Equipo">
+                                            <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>

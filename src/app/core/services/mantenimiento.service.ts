@@ -71,6 +71,10 @@ export class MantenimientoService {
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
+  postFacturaPagoMixto(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
+    console.log('📡 SERVICIO: Llamando PostFacturaPagoMixto con:', { tipoPago: factura.idTipoPago, detallesPagos: factura.detallesPagos });
+    return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaPagoMixto, factura);
+  }
   exportFactura(factura: FacturaRegistro): Observable<Blob> {
     return this.http.post<Blob>(APIURL.Factura.Inserta.FacturacionReporte, factura, {
       responseType: 'blob' as 'json'

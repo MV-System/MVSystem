@@ -1,6 +1,6 @@
 <div class="pago-tipo-section">
     <!-- Desglose de Pago Mixto (solo si está seleccionado) -->
-    <div *ngIf="tipoPagoSeleccionado === 6" class="pago-mixto-detalles mt-3" [@expandCollapse]>
+    <div *ngIf="tipoPagoSeleccionado === 6" class="pago-mixto-detalles mt-3">
         <div class="card border-info">
             <div class="card-header bg-info text-white">
                 <h6 class="mb-0">
@@ -8,7 +8,7 @@
                 </h6>
             </div>
 
-            <div class="card-body">
+            <div class="card-body" [formGroup]="form">
                 <!-- Tabla de detalles de pago -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
@@ -20,7 +20,7 @@
                                 <th style="width: 10%" class="text-center">Acción</th>
                             </tr>
                         </thead>
-                        <tbody formArrayName="detallesPagos">
+                        <tbody formArrayName="detallesPagos" *ngIf="detallesPagos.length > 0">
                             <tr *ngFor="let i of getIndices()" [formGroupName]="i">
                                 <td>
                                     <select formControlName="ID_Tipo_Pago" class="form-select">
@@ -31,7 +31,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" formControlName="Monto_Pago" class="form-control" (change)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
+                                    <input type="number" formControlName="Monto_Pago" class="form-control" (input)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
                                 </td>
                                 <td>
                                     <input type="text" formControlName="Numero_Referencia" class="form-control" placeholder="Ej: TRF001" maxlength="100">

@@ -59,6 +59,8 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
           this.agregarFilaPago();
         }
         this.filasInicializadas = true;
+        // Actualizar totales después de crear las filas
+        this.actualizarTotales();
       } else {
         // Limpiar si NO es mixto
         this.detallesPagos.clear();
@@ -67,6 +69,10 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
         this.pagosMixtoChange.emit([]);
         this.filasInicializadas = false;
       }
+    }
+    // Recalcular saldo cuando cambia el total de la factura
+    if (changes['totalFactura'] && !changes['totalFactura'].firstChange) {
+      this.actualizarTotales();
     }
   }
 
