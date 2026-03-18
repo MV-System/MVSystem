@@ -1351,45 +1351,42 @@ printFacturaMini() {
             this.accesoriosBuffer = [];
             this.loadCatalogos();
 
-            // Agregar pequeña pausa para asegurar que la BD tiene los datos
-            setTimeout(() => {
-              // Verificar si es dispositivo móvil para cambiar el comportamiento
-              if (this.isMobileScreen()) {
-                // En móvil, preguntar si desea enviar la factura
-                this.rDialogService.openDialog("Aviso", '¿Desea enviar la factura?',
-                  () => {
-                    // Si acepta enviar, usar el método compartir
-                    this.compartirFactura(this.facturaNumberReporte);
-                    this.onClean();
-                  },
-                  () => {
-                    // Si no desea enviar, solo limpiar
-                    this.onClean();
-                  },
-                  "No",
-                  "Sí"
-                )
-              } else {
-                // En desktop, mantener el comportamiento original de impresión
-                this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
-                  () => {
-                    this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
-                      () => {
-                        this.printFacturaNormal(); this.onClean()
-                      },
-                      () => {this.printFacturaMini(); this.onClean()},
-                      "Mini",
-                      "Normal"
-                    )
-                  },
-                  () => {
-                    this.onClean();
-                  },
-                  "No",
-                  "Si"
-                )
-              }
-            }, 3000); // Esperar 3 segundos para asegurar que la BD tiene los detalles indexados
+            // Verificar si es dispositivo móvil para cambiar el comportamiento
+            if (this.isMobileScreen()) {
+              // En móvil, preguntar si desea enviar la factura
+              this.rDialogService.openDialog("Aviso", '¿Desea enviar la factura?',
+                () => {
+                  // Si acepta enviar, usar el método compartir
+                  this.compartirFactura(this.facturaNumberReporte);
+                  this.onClean();
+                },
+                () => {
+                  // Si no desea enviar, solo limpiar
+                  this.onClean();
+                },
+                "No",
+                "Sí"
+              )
+            } else {
+              // En desktop, mantener el comportamiento original de impresión
+              this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura?',
+                () => {
+                  this.rDialogService.openDialog("Aviso", 'Desea imprimir la factura mini o normal?',
+                    () => {
+                      this.printFacturaNormal(); this.onClean()
+                    },
+                    () => {this.printFacturaMini(); this.onClean()},
+                    "Mini",
+                    "Normal"
+                  )
+                },
+                () => {
+                  this.onClean();
+                },
+                "No",
+                "Si"
+              )
+            }
 
           }, error => {
            // this.isLoading = !this.isLoading;

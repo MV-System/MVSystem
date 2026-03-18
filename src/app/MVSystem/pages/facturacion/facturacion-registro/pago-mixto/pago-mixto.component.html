@@ -1,90 +1,108 @@
 <div class="pago-tipo-section">
     <!-- Desglose de Pago Mixto (solo si está seleccionado) -->
     <div *ngIf="tipoPagoSeleccionado === 6" class="pago-mixto-detalles mt-3">
-        <div class="card border-info">
+        <div class="card border-info pago-mixto-card">
             <div class="card-header bg-info text-white">
                 <h6 class="mb-0">
                     <i class="bi bi-cash-coin"></i> Desglose de Pagos Mixtos
                 </h6>
             </div>
 
-            <div class="card-body" [formGroup]="form">
-                <!-- Tabla de detalles de pago -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 35%">Tipo de Pago</th>
-                                <th style="width: 20%">Monto</th>
-                                <th style="width: 35%">Referencia</th>
-                                <th style="width: 10%" class="text-center">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody formArrayName="detallesPagos" *ngIf="detallesPagos.length > 0">
-                            <tr *ngFor="let i of getIndices()" [formGroupName]="i">
-                                <td>
-                                    <select formControlName="ID_Tipo_Pago" class="form-select">
-                                        <option value="">Seleccionar...</option>
-                                        <option *ngFor="let tipo of getTiposPagoExcluendoMixto()" [value]="tipo.iD_Tipo_Pagos">
-                                            {{ tipo.descripcion_Tipo_Pagos }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" formControlName="Monto_Pago" class="form-control" (input)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
-                                </td>
-                                <td>
-                                    <input type="text" formControlName="Numero_Referencia" class="form-control" placeholder="Ej: TRF001" maxlength="100">
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-danger" (click)="eliminarFilaPago(i)" [disabled]="detallesPagos.length <= 2" title="Eliminar fila">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card-body pago-mixto-body" [formGroup]="form">
+                <div class="pago-mixto-container">
+                    <!-- LADO IZQUIERDO: TABLA DE DETALLES -->
+                    <div class="pago-mixto-table-section">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 35%">Tipo de Pago</th>
+                                        <th style="width: 25%">Monto</th>
+                                        <th style="width: 30%">Referencia</th>
+                                        <th style="width: 10%" class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="detallesPagos" *ngIf="detallesPagos.length > 0">
+                                    <tr *ngFor="let i of getIndices()" [formGroupName]="i">
+                                        <td>
+                                            <select formControlName="ID_Tipo_Pago" class="form-select">
+                                                <option value="">Seleccionar...</option>
+                                                <option *ngFor="let tipo of getTiposPagoExcluendoMixto()" [value]="tipo.iD_Tipo_Pagos">
+                                                    {{ tipo.descripcion_Tipo_Pagos }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" formControlName="Monto_Pago" class="form-control" (input)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
+                                        </td>
+                                        <td>
+                                            <input type="text" formControlName="Numero_Referencia" class="form-control" placeholder="Ej: TRF001" maxlength="100">
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm" (click)="eliminarFilaPago(i)" [disabled]="detallesPagos.length <= 2" title="Eliminar fila">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                <!-- Botón agregar pago -->
-                <div class="d-flex gap-2 mb-3">
-                    <button type="button" class="btn btn-secondary btn-sm" (click)="agregarFilaPago()">
-                        <i class="bi bi-plus-circle"></i> Agregar Método de Pago
-                    </button>
-                </div>
-
-                <!-- Resumen de totales -->
-                <div class="mt-3 p-3 bg-light rounded border border-info">
-                    <div class="row text-center g-2">
-                        <div class="col-md-4">
-                            <small class="text-muted d-block" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Total Factura</small>
-                            <strong class="text-primary d-block" style="font-size: 0.95rem;">
-                                RD$ {{ totalFactura | number: '1.2-2' }}
-                            </strong>
-                        </div>
-                        <div class="col-md-4">
-                            <small class="text-muted d-block" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Total Pagos</small>
-                            <strong [class]="saldoPendiente === 0 ? 'text-success' : 'text-warning'" class="d-block" style="font-size: 0.95rem;">
-                                RD$ {{ pagosTotales | number: '1.2-2' }}
-                            </strong>
-                        </div>
-                        <div class="col-md-4">
-                            <small class="text-muted d-block" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Saldo Pendiente</small>
-                            <strong [class]="Math.abs(saldoPendiente) < 0.01 ? 'text-success' : 'text-danger'" class="d-block" style="font-size: 0.95rem;">
-                                RD$ {{ saldoPendiente | number: '1.2-2' }}
-                            </strong>
-                        </div>
+                        <!-- Botón agregar pago -->
+                        <button type="button" class="btn btn-secondary btn-sm mt-2" (click)="agregarFilaPago()">
+                            <i class="bi bi-plus-circle"></i> Agregar Método de Pago
+                        </button>
                     </div>
 
-                    <!-- Estado de validación -->
-                    <div class="mt-2">
-                        <div class="alert alert-warning mb-1" role="alert" *ngIf="Math.abs(saldoPendiente) > 0.01" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
-                            <i class="bi bi-exclamation-triangle"></i>
-                            <strong>Saldo Pendiente:</strong> RD$ {{ Math.abs(saldoPendiente) | number: '1.2-2' }}
-                        </div>
-                        <div class="alert alert-success mb-0" role="alert" *ngIf="Math.abs(saldoPendiente) < 0.01 && detallesPagos.valid" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
-                            <i class="bi bi-check-circle"></i>
-                            <strong>Pagos Balanceados</strong> - Los montos suman correctamente
+                    <!-- LADO DERECHO: RESUMEN VISUAL -->
+                    <div class="pago-mixto-summary-panel">
+                        <div class="summary-box">
+                            <div class="summary-item">
+                                <div class="summary-label">Total Factura</div>
+                                <div class="summary-value text-primary">
+                                    RD$ {{ totalFactura | number: '1.2-2' }}
+                                </div>
+                            </div>
+
+                            <div class="summary-item">
+                                <div class="summary-label">Total Pagos</div>
+                                <div class="summary-value" [class.text-success]="Math.abs(saldoPendiente) < 0.01" [class.text-warning]="Math.abs(saldoPendiente) >= 0.01">
+                                    RD$ {{ pagosTotales | number: '1.2-2' }}
+                                </div>
+                            </div>
+
+                            <div class="summary-item">
+                                <div class="summary-label">Saldo Pendiente</div>
+                                <div class="summary-value" [class.text-success]="Math.abs(saldoPendiente) < 0.01" [class.text-danger]="Math.abs(saldoPendiente) >= 0.01">
+                                    RD$ {{ saldoPendiente | number: '1.2-2' }}
+                                </div>
+                            </div>
+
+                            <!-- Estado de validación visual -->
+                            <div class="mt-3 status-indicator">
+                                <div *ngIf="Math.abs(saldoPendiente) > 0.01" class="status-warning">
+                                    <i class="bi bi-exclamation-circle-fill"></i>
+                                    <div class="status-text">
+                                        <strong>Incompleto</strong>
+                                        <small>Falta: RD$ {{ Math.abs(saldoPendiente) | number: '1.2-2' }}</small>
+                                    </div>
+                                </div>
+                                <div *ngIf="Math.abs(saldoPendiente) < 0.01 && detallesPagos.valid" class="status-success">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <div class="status-text">
+                                        <strong>Balanceado</strong>
+                                        <small>Pagos correctos</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Indicador de métodos de pago -->
+                            <div class="methods-indicator mt-3">
+                                <div class="method-count">
+                                    <i class="bi bi-list"></i>
+                                    <span>{{ detallesPagos.length }} método{{ detallesPagos.length !== 1 ? 's' : '' }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

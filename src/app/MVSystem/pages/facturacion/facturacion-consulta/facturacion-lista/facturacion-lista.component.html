@@ -80,21 +80,21 @@
                                 </thead>
                                 <tbody>
                                     <ng-container *ngFor="let factura of facturas; let i = index">
-                                        <!-- DESGLOSE DE PAGOS MIXTOS - COMPACTO HORIZONTAL -->
+                                        <!-- DESGLOSE DE PAGOS MIXTOS - TABLA MEJORADA -->
                                         <ng-container *ngIf="desgloseVisible[factura.numeroFactura] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0">
-                                            <tr class="animate__animated animate__fadeIn tr-collapse desglose-header">
-                                                <td colspan="16" style="background-color: #f8f9fa; padding: 6px 12px; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
-                                                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
-                                                            <i class="bi bi-cash-coin" style="color: #0d6efd;"></i>
-                                                            <span style="color: #495057; font-weight: 600;">DESGLOSE: #{{ factura.numeroFactura }}</span>
-                                                        </div>
-                                                        <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-                                                            <span *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #e7f1ff; border-radius: 12px; font-size: 0.8rem;">
-                                                                <span style="color: #0d6efd; font-weight: 600;">{{ pago.descripcion_Tipo_Pago }}</span>
-                                                            <span style="color: #495057; font-weight: 700;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
-                                                            <span *ngIf="pago.numero_Referencia" style="color: #666; font-size: 0.7rem; margin-left: 2px;">({{ pago.numero_Referencia }})</span>
-                                                            </span>
+                                            <tr class="animate__animated animate__fadeIn desglose-table-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0b5ae3 100%); border-top: 2px solid #0d6efd; border-bottom: 1px solid #dee2e6;">
+                                                <td colspan="16" style="padding: 8px 12px;">
+                                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                                        <i class="bi bi-pie-chart-fill" style="color: #96b8d5; font-size: 1.1rem;"></i>
+                                                        <span style="color: #96b8d5; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3px;">DESGLOSE DE PAGO - FACTURA #{{ factura.numeroFactura }} - {{ factura.nombres }} {{ factura.apellidos }}</span>
+                                                    </div>
+                                                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start;">
+                                                        <div *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(255, 255, 255, 0.95); padding: 8px 12px; border-radius: 6px; border-left: 4px solid #0d6efd; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); flex: 0 1 auto; min-width: 200px;">
+                                                            <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
+                                                                <span style="color: #0d6efd; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3px;">{{ pago.descripcion_Tipo_Pago }}</span>
+                                                                <span *ngIf="pago.numero_Referencia" style="color: #666; font-size: 0.7rem; font-family: 'Courier New', monospace;">Ref: {{ pago.numero_Referencia }}</span>
+                                                            </div>
+                                                            <span style="color: #0d6efd; font-weight: 800; font-size: 0.95rem; white-space: nowrap; margin-left: 12px;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -216,7 +216,7 @@
                                 <div class="desglose-card" *ngIf="desgloseVisible[factura.numeroFactura] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0" style="background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%); border-left: 5px solid #0d6efd; margin: 12px 0; padding: 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(13, 110, 253, 0.1);">
                                     <div class="desglose-header" style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: linear-gradient(135deg, #0d6efd 0%, #0b5ae3 100%); border-radius: 3px 0 0 0;">
                                         <i class="bi bi-pie-chart" style="font-size: 1.1em; color: white;"></i>
-                                        <span style="font-weight: 700; color: white; font-size: 0.9rem; letter-spacing: 0.3px;">DESGLOSE DE PAGO</span>
+                                        <span style="font-weight: 700; color: #ffeb3b; font-size: 0.9rem; letter-spacing: 0.3px;">DESGLOSE DE PAGO</span>
                                     </div>
                                     <div class="desglose-item" *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura); let last = last" [style.border-bottom]="last ? 'none' : '1px solid #e0e0e0'" style="padding: 10px 12px; background-color: white;">
                                         <div class="detalle-row" *ngIf="pago.descripcion_Tipo_Pago" style="margin-bottom: 6px;">

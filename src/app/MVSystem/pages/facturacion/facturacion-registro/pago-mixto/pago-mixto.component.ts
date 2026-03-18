@@ -82,7 +82,11 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       console.warn('tiposPago está vacío:', this.tiposPago);
       return;
     }
-    this.tiposPagoFiltrados = this.tiposPago.filter(t => t.iD_Tipo_Pagos !== this.ID_PAGO_MIXTO);
+    this.tiposPagoFiltrados = this.tiposPago.filter(t => 
+      t.iD_Tipo_Pagos !== this.ID_PAGO_MIXTO && 
+      !t.descripcion_Tipo_Pagos?.toLowerCase().includes('crédito') &&
+      !t.descripcion_Tipo_Pagos?.toLowerCase().includes('credito')
+    );
     console.log('tiposPagoFiltrados actualizado:', this.tiposPagoFiltrados);
   }
 
@@ -105,6 +109,7 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       Observacion: ['']
     });
     this.detallesPagos.push(grupo);
+    this.actualizarTotales();
   }
 
   /**
@@ -151,14 +156,6 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
    */
   getIndices(): number[] {
     const length = this.detallesPagos.length;
-    // Si la inicialización no terminó correctamente y hay más de 2, limpiar y re-agregar
-    if (this.tipoPagoSeleccionado === this.ID_PAGO_MIXTO && length > 2) {
-      console.warn('FormArray tiene más elementos de lo esperado:', length);
-      this.detallesPagos.clear();
-      this.agregarFilaPago();
-      this.agregarFilaPago();
-      return [0, 1];
-    }
     return Array.from({ length: length }, (_, i) => i);
   }
 }

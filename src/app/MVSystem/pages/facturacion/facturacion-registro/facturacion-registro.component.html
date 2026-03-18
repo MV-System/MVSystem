@@ -22,13 +22,15 @@
                                             {{ tipo.descripcion_Tipo_Pagos }}
                                         </option>
                                     </select>
-                                    <!-- Componente de Pago Mixto (desglose) -->
-                                    <app-pago-mixto [totalFactura]="total" [tiposPago]="pagoTipos" [tipoPagoSeleccionado]="tipoPagoSeleccionado" (pagosMixtoChange)="onPagosMixtoChange($event)" (tipoPagoChange)="onTipoPagoChange($event)">
-                                    </app-pago-mixto>
                                     <div class="required-field" *ngIf="validarCampos('tipoPago')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
+                            </div>
+                            <!-- Componente de Pago Mixto (desglose) - Ancho Completo -->
+                            <div style="grid-column: 1 / -1; margin-top: 0.5rem;">
+                                <app-pago-mixto [totalFactura]="total" [tiposPago]="pagoTipos" [tipoPagoSeleccionado]="tipoPagoSeleccionado" (pagosMixtoChange)="onPagosMixtoChange($event)" (tipoPagoChange)="onTipoPagoChange($event)">
+                                </app-pago-mixto>
                             </div>
                             <div class="grid two-cols" *ngIf="CambiarFechaFactura()">
                                 <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
