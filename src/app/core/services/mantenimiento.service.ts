@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, RegistroReparaciones } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel } from '../interfaces/mantenimiento';
+import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel, DetallePagoMixto } from '../interfaces/mantenimiento';
 import { CierreCajaReporteResumen } from '../interfaces/catalogo.interface';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { switchMap } from 'rxjs/operators';
@@ -178,6 +178,9 @@ export class MantenimientoService {
   }
   getDetalleFactura(numeroFactura: number, sucursal: number){
     return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
+  }
+  getDesglosePagos(numeroFactura: number): Observable<DetallePagoMixto[]> {
+    return this.http.get<DetallePagoMixto[]>(`${APIURL.Factura.Consulta.GetDesglosePagos}/${numeroFactura}`);
   }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);

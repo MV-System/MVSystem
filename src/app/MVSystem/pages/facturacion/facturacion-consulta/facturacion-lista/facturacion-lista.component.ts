@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
 import { VendedorService } from 'src/app/core/services/vendedor.service';
-import { FacturaConsulta, DetalleFacturaList } from '../../../../../core/interfaces/mantenimiento';
+import { FacturaConsulta, DetalleFacturaList, DetallePagoMixto } from '../../../../../core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
@@ -23,6 +23,12 @@ export class FacturacionListaComponent implements OnInit, OnChanges {
 selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
   facturaVisibility: { [key: number]: boolean } = {};
+  
+  // Rastrear visibilidad del desglose de pagos mixtos (separado del detalle de factura)
+  desgloseVisible: { [key: number]: boolean } = {};
+  
+  // Propiedades para el desglose de pagos mixtos
+  facturaSeleccionadaIdTipoPago: number = 0;
 
   // Este método se ejecuta cuando el select cambia
   onPageSizeChange(event: any) {
@@ -72,6 +78,15 @@ selectedRowIndex: number | null = null;
         this.searchSubject.next(this.criterio);
       }
     }
+
+    // Log cuando se reciben cambios en desglosePagosPorFactura
+    if (changes['desglosePagosPorFactura']) {
+      console.log('👁️ ListaComponent - desglosePagosPorFactura cambio detectado en ngOnChanges');
+      console.log('   Claves en el objeto:', Object.keys(this.desglosePagosPorFactura));
+      Object.entries(this.desglosePagosPorFactura).forEach(([numeroFactura, desglose]) => {
+        console.log(`     Factura ${numeroFactura}: ${desglose.length} items`);
+      });
+    }
   }
   @Input() pageSize!:    number;
   @Input() pageIndex!:   number;
@@ -82,11 +97,14 @@ selectedRowIndex: number | null = null;
   @Input() criterioInput!: string; // Nuevo Input para recibir criterio del padre
   @Input() facturas: FacturaConsulta[]=[];
   @Input() detalleFactura: DetalleFacturaList[]=[];
+  @Input() desglosePagos: DetallePagoMixto[]=[];
+  @Input() desglosePagosPorFactura: { [key: number]: DetallePagoMixto[] } = {}; // Objeto con desglose por factura
   @Output() onFacturaButton =new EventEmitter<boolean>();
   @Output() numerofactura =new EventEmitter<number>();
   @Output() onBuscarFacturas = new EventEmitter<{criterio: string, pageIndex: number}>();
   @Output() onCompartirFactura = new EventEmitter<FacturaConsulta>();
   @Output() pageChanged = new EventEmitter<number>();
+  @Output() onLoadDesgloseRequest = new EventEmitter<number>(); // Evento para solicitar carga de desglose
 
 
   vendedores: VendedorLista[] = []
@@ -114,6 +132,48 @@ selectedRowIndex: number | null = null;
     // Cambia el estado de visibilidad de los detalles de la factura
     this.facturaVisibility[facturaId] = !this.facturaVisibility[facturaId];
   }
+
+  /**
+   * Togglea la visibilidad del desglose de pagos mixtos
+   */
+  toggleDesgloseVisible(facturaId: number, event?: Event) {
+    console.log('🔘 CLICK en botón desglose - Factura:', facturaId);
+    
+    // Evitar que se propague el evento si viene de un clic directo
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    // Cerrar todos los demás desgloses (comportamiento de acordeón)
+    Object.keys(this.desgloseVisible).forEach(key => {
+      const numFactura = Number(key);
+      if (numFactura !== facturaId) {
+        this.desgloseVisible[numFactura] = false;
+      }
+    });
+    
+    const desgloseActual = this.desglosePagosPorFactura[facturaId];
+    console.log('   Desglose actual cargado:', desgloseActual ? `${desgloseActual.length} items` : 'NO CARGADO');
+    
+    // Si está a punto de abrirse y el desglose no está cargado, solicitar la carga
+    if (!this.desgloseVisible[facturaId] && (!this.desglosePagosPorFactura[facturaId] || this.desglosePagosPorFactura[facturaId].length === 0)) {
+      console.log('   📤 Emitiendo evento onLoadDesgloseRequest para cargar desglose');
+      this.onLoadDesgloseRequest.emit(facturaId);
+    }
+    
+    this.desgloseVisible[facturaId] = !this.desgloseVisible[facturaId];
+    console.log('   Desglose ahora está:', this.desgloseVisible[facturaId] ? 'VISIBLE' : 'OCULTO');
+  }
+
+  /**
+   * Verifica si una factura es de pago mixto
+   */
+  isMixtoPayment(factura: FacturaConsulta): boolean {
+    if (!factura || !factura.tipoPago) return false;
+    const tipoPago = factura.tipoPago.toUpperCase();
+    return tipoPago.includes('MIXTO') || tipoPago === '6';
+  }
+
  // Método para manejar la edición de un código
  onEdit(detalle: DetalleFacturaList) {
   // Guardar el valor original antes de editarlo
@@ -342,6 +402,12 @@ onCancel(detalle: DetalleFacturaList) {
     this.pageChanged.emit(newPage);
   }
 
+  /**
+   * Obtiene el desglose de pagos de una factura específica
+   */
+  getDesglosePagosPorFactura(numeroFactura: number): DetallePagoMixto[] {
+    return this.desglosePagosPorFactura[numeroFactura] || [];
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

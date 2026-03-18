@@ -190,4 +190,12 @@ export interface RebajaEquipoModel {
     mensaje?: string;
 }
 
+export interface DetallePagoMixto {
+  iD_Tipo_Pago: number;
+  descripcion_Tipo_Pago: string;
+  monto_Pago: number;
+  numero_Referencia: string;
+  observacion: string;
+}
+
 

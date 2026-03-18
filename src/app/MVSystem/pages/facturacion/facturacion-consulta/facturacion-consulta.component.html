@@ -192,10 +192,9 @@
 
                         <!-- Controles de Paginación -->
                         <!-- end form   -->
-                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas() | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }" [detalleFactura]="detalleFactura" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                        <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas() | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }" [detalleFactura]="detalleFactura" [desglosePagos]="desglosePagos" [desglosePagosPorFactura]="desglosePagosPorFactura" [pageIndex]="pageIndex" [pageSize]="pageSize"
                             [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" [criterioInput]="criterioActual" [estadoFactura]="EstadoFactura" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)"
-                            (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event.numeroFactura)">
-                            <!-- <div *ngIf="equiposVendidos.length > 0"> -->
+                            (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event.numeroFactura)" (onLoadDesgloseRequest)="onLoadDesglose($event)">
                             <pagination-controls (pageChange)="pageChanged($event)" previousLabel="Anterior" nextLabel="Siguiente">
                             </pagination-controls>
 

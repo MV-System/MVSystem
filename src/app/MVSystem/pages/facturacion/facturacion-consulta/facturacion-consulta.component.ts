@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { Pagination } from 'src/app/core/interfaces/pagination.interfaces';
 import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
-import { FacturaFilter, FacturaConsulta, DetalleFacturaList } from '../../../../core/interfaces/mantenimiento';
+import { FacturaFilter, FacturaConsulta, DetalleFacturaList, DetallePagoMixto } from '../../../../core/interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
@@ -23,6 +23,8 @@ import { UserTrackingService } from 'src/app/core/services/user-tracking.service
 })
 export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   detalleFactura: DetalleFacturaList[]=[];
+  desglosePagos: DetallePagoMixto[] = [];
+  desglosePagosPorFactura: { [key: number]: DetallePagoMixto[] } = {}; // Objeto con numeroFactura como clave
   vendedores: any[] = [];
 
   constructor(private fb: FormBuilder,
@@ -251,19 +253,93 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.facturaSeleccionada = numeroFactura; // Rastrear la factura seleccionada
     const { almacen } = this.form.value;
 
+    // Cargar detalle de la factura
     const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
     .subscribe({
       next: (detalle) => {
         this.detalleFactura = detalle;
+        
+        // Obtener la factura seleccionada para verificar si es pago mixto
+        const facturaSeleccionada = this.facturas.find(f => f.numeroFactura === numeroFactura);
+        
+        const tipoPago = this.getIdTipoPagoFactura(numeroFactura);
+        
+        // Si es pago mixto (idTipoPago = 6), cargar desglose de pagos
+        if (tipoPago === 6) {
+          this.loadDesglosePagos(numeroFactura);
+        } else {
+          // Si no es pago mixto, limpiar desglose
+          this.desglosePagos = [];
+        }
       },
       error: (err) => {
         console.error('Error al obtener detalle de factura:', err);
         this.toast.error('Error al cargar el detalle de la factura');
         this.detalleFactura = []; // Limpiar detalle en caso de error
+        this.desglosePagos = []; // Limpiar desglose también
       }
     });
     this.subs.push(sub);
   }
+
+  // Obtener el idTipoPago de una factura específica
+  getIdTipoPagoFactura(numeroFactura: number): number {
+    const factura = this.facturas.find(f => f.numeroFactura === numeroFactura);
+    if (!factura) return 0;
+    
+    // Verificar si es pago mixto por varios patrones
+    const tipoPago = factura.tipoPago ? factura.tipoPago.toString().toUpperCase() : '';
+    const esMixto = tipoPago.includes('MIXTO') || tipoPago === '6' || tipoPago.includes('MIX');
+    
+    console.log('🔍 Detectando pago mixto para factura', numeroFactura, '- tipoPago:', factura.tipoPago, 'esMixto:', esMixto);
+    return esMixto ? 6 : 0;
+  }
+
+  // Cargar desglose de pagos mixtos
+  loadDesglosePagos(numeroFactura: number) {
+    console.log('🔄 loadDesglosePagos - Iniciando petición HTTP para factura:', numeroFactura);
+    const sub = this.mantenimientoService.getDesglosePagos(numeroFactura).subscribe({
+      next: (desglose) => {
+        const desgloseArray = desglose || [];
+        console.log('✅ Respuesta recibida - Cantidad de items:', desgloseArray.length);
+        console.log('   Contenido:', JSON.stringify(desgloseArray, null, 2));
+        
+        // Actualizar el objeto de facturas Y reasignarlo para que Angular detecte el cambio
+        this.desglosePagosPorFactura[numeroFactura] = desgloseArray;
+        this.desglosePagosPorFactura = { ...this.desglosePagosPorFactura }; // Reasignar para trigger @Input
+        
+        console.log('📊 Objeto desglosePagosPorFactura actualizado - Claves:', Object.keys(this.desglosePagosPorFactura));
+        
+        // Mantener también el array global para compatibilidad
+        this.desglosePagos = desgloseArray;
+      },
+      error: (err) => {
+        console.error('❌ ERROR al cargar desglose de pagos:', err);
+        console.error('   Status:', err.status);
+        console.error('   Message:', err.message);
+        this.desglosePagosPorFactura[numeroFactura] = [];
+        this.desglosePagosPorFactura = { ...this.desglosePagosPorFactura }; // Reasignar para trigger @Input
+        this.desglosePagos = [];
+      }
+    });
+    this.subs.push(sub);
+  }
+
+  /**
+   * Manejador para cuando el usuario solicita cargar el desglose desde el botón
+   */
+  onLoadDesglose(numeroFactura: number) {
+    console.log('📥 onLoadDesglose - Recibida solicitud para factura:', numeroFactura);
+    this.loadDesglosePagos(numeroFactura);
+  }
+
+  // Getter para obtener el desglose de una factura específica
+  getDesglosePagosPorNumero(numeroFactura: number): DetallePagoMixto[] {
+    const desglose = this.desglosePagosPorFactura[numeroFactura];
+    console.log('🔍 getDesglosePagosPorNumero - Buscando desglose para factura:', numeroFactura, '-> encontrado:', !!desglose);
+    return desglose || [];
+  }
+
   printReportFacturaConsulta(){
     // Validar que haya facturas para imprimir
     if (!this.facturas || this.facturas.length === 0) {

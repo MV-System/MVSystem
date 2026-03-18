@@ -37,6 +37,7 @@ export let APIURL = {
         Consulta:{
             Facturas: API + 'Factura/GetFacturas',
             DetalleFactura: API + 'Factura/GetDetalleFactura',
+            GetDesglosePagos: API + 'Factura/GetDesglosePagos',
             FacturaNumero: API + 'Factura/GetFacturaNumeroUltimo',
         },
         Actualiza:{
