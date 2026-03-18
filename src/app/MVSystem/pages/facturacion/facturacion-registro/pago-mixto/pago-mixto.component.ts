@@ -82,8 +82,8 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       console.warn('tiposPago está vacío:', this.tiposPago);
       return;
     }
-    this.tiposPagoFiltrados = this.tiposPago.filter(t => 
-      t.iD_Tipo_Pagos !== this.ID_PAGO_MIXTO && 
+    this.tiposPagoFiltrados = this.tiposPago.filter(t =>
+      t.iD_Tipo_Pagos !== this.ID_PAGO_MIXTO &&
       !t.descripcion_Tipo_Pagos?.toLowerCase().includes('crédito') &&
       !t.descripcion_Tipo_Pagos?.toLowerCase().includes('credito')
     );
