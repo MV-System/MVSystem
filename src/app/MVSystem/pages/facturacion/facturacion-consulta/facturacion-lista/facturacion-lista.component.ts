@@ -23,10 +23,10 @@ export class FacturacionListaComponent implements OnInit, OnChanges {
 selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
   facturaVisibility: { [key: number]: boolean } = {};
-  
+
   // Rastrear visibilidad del desglose de pagos mixtos (separado del detalle de factura)
   desgloseVisible: { [key: number]: boolean } = {};
-  
+
   // Propiedades para el desglose de pagos mixtos
   facturaSeleccionadaIdTipoPago: number = 0;
 
@@ -138,12 +138,12 @@ selectedRowIndex: number | null = null;
    */
   toggleDesgloseVisible(facturaId: number, event?: Event) {
     console.log('🔘 CLICK en botón desglose - Factura:', facturaId);
-    
+
     // Evitar que se propague el evento si viene de un clic directo
     if (event) {
       event.stopPropagation();
     }
-    
+
     // Cerrar todos los demás desgloses (comportamiento de acordeón)
     Object.keys(this.desgloseVisible).forEach(key => {
       const numFactura = Number(key);
@@ -151,16 +151,16 @@ selectedRowIndex: number | null = null;
         this.desgloseVisible[numFactura] = false;
       }
     });
-    
+
     const desgloseActual = this.desglosePagosPorFactura[facturaId];
     console.log('   Desglose actual cargado:', desgloseActual ? `${desgloseActual.length} items` : 'NO CARGADO');
-    
+
     // Si está a punto de abrirse y el desglose no está cargado, solicitar la carga
     if (!this.desgloseVisible[facturaId] && (!this.desglosePagosPorFactura[facturaId] || this.desglosePagosPorFactura[facturaId].length === 0)) {
       console.log('   📤 Emitiendo evento onLoadDesgloseRequest para cargar desglose');
       this.onLoadDesgloseRequest.emit(facturaId);
     }
-    
+
     this.desgloseVisible[facturaId] = !this.desgloseVisible[facturaId];
     console.log('   Desglose ahora está:', this.desgloseVisible[facturaId] ? 'VISIBLE' : 'OCULTO');
   }

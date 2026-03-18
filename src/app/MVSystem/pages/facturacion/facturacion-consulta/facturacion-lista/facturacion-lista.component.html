@@ -103,7 +103,7 @@
                                                 </td>
                                             </tr>
                                         </ng-container>
-                                        
+
                                         <!-- FILA DE FACTURA -->
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
                                             <td class="fixed-item">
@@ -118,13 +118,8 @@
                                             <td>
                                                 <div style="display: flex; align-items: center; gap: 8px;">
                                                     <span>{{ factura.tipoPago }}</span>
-                                                    <button *ngIf="isMixtoPayment(factura)" 
-                                                        (click)="toggleDesgloseVisible(factura.numeroFactura, $event)"
-                                                        class="btn btn-sm"
-                                                        [style.background-color]="desgloseVisible[factura.numeroFactura] ? '#0d6efd' : '#e9ecef'"
-                                                        [style.color]="desgloseVisible[factura.numeroFactura] ? 'white' : '#666'"
-                                                        [title]="desgloseVisible[factura.numeroFactura] ? 'Ocultar desglose' : 'Ver desglose de pago'"
-                                                        style="border: 1px solid #dee2e6; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;">
+                                                    <button *ngIf="isMixtoPayment(factura)" (click)="toggleDesgloseVisible(factura.numeroFactura, $event)" class="btn btn-sm" [style.background-color]="desgloseVisible[factura.numeroFactura] ? '#0d6efd' : '#e9ecef'" [style.color]="desgloseVisible[factura.numeroFactura] ? 'white' : '#666'"
+                                                        [title]="desgloseVisible[factura.numeroFactura] ? 'Ocultar desglose' : 'Ver desglose de pago'" style="border: 1px solid #dee2e6; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;">
                                                         <i [class]="desgloseVisible[factura.numeroFactura] ? 'bi bi-chevron-up' : 'bi bi-chevron-down'" style="margin-right: 2px;"></i>
                                                         {{ desgloseVisible[factura.numeroFactura] ? 'Ocultar' : 'Ver' }}
                                                     </button>

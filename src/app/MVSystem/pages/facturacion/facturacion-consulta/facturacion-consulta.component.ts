@@ -258,12 +258,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (detalle) => {
         this.detalleFactura = detalle;
-        
+
         // Obtener la factura seleccionada para verificar si es pago mixto
         const facturaSeleccionada = this.facturas.find(f => f.numeroFactura === numeroFactura);
-        
+
         const tipoPago = this.getIdTipoPagoFactura(numeroFactura);
-        
+
         // Si es pago mixto (idTipoPago = 6), cargar desglose de pagos
         if (tipoPago === 6) {
           this.loadDesglosePagos(numeroFactura);
@@ -286,11 +286,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   getIdTipoPagoFactura(numeroFactura: number): number {
     const factura = this.facturas.find(f => f.numeroFactura === numeroFactura);
     if (!factura) return 0;
-    
+
     // Verificar si es pago mixto por varios patrones
     const tipoPago = factura.tipoPago ? factura.tipoPago.toString().toUpperCase() : '';
     const esMixto = tipoPago.includes('MIXTO') || tipoPago === '6' || tipoPago.includes('MIX');
-    
+
     console.log('🔍 Detectando pago mixto para factura', numeroFactura, '- tipoPago:', factura.tipoPago, 'esMixto:', esMixto);
     return esMixto ? 6 : 0;
   }
@@ -303,13 +303,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
         const desgloseArray = desglose || [];
         console.log('✅ Respuesta recibida - Cantidad de items:', desgloseArray.length);
         console.log('   Contenido:', JSON.stringify(desgloseArray, null, 2));
-        
+
         // Actualizar el objeto de facturas Y reasignarlo para que Angular detecte el cambio
         this.desglosePagosPorFactura[numeroFactura] = desgloseArray;
         this.desglosePagosPorFactura = { ...this.desglosePagosPorFactura }; // Reasignar para trigger @Input
-        
+
         console.log('📊 Objeto desglosePagosPorFactura actualizado - Claves:', Object.keys(this.desglosePagosPorFactura));
-        
+
         // Mantener también el array global para compatibilidad
         this.desglosePagos = desgloseArray;
       },
