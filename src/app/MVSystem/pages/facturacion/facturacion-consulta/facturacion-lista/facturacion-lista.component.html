@@ -90,11 +90,10 @@
                                                             <span style="color: #495057; font-weight: 600;">DESGLOSE: #{{ factura.numeroFactura }}</span>
                                                         </div>
                                                         <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-                                                            <span *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" 
-                                                                  style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #e7f1ff; border-radius: 12px; font-size: 0.8rem;">
+                                                            <span *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #e7f1ff; border-radius: 12px; font-size: 0.8rem;">
                                                                 <span style="color: #0d6efd; font-weight: 600;">{{ pago.descripcion_Tipo_Pago }}</span>
-                                                                <span style="color: #495057; font-weight: 700;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
-                                                                <span *ngIf="pago.numero_Referencia" style="color: #666; font-size: 0.7rem; margin-left: 2px;">({{ pago.numero_Referencia }})</span>
+                                                            <span style="color: #495057; font-weight: 700;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
+                                                            <span *ngIf="pago.numero_Referencia" style="color: #666; font-size: 0.7rem; margin-left: 2px;">({{ pago.numero_Referencia }})</span>
                                                             </span>
                                                         </div>
                                                     </div>
