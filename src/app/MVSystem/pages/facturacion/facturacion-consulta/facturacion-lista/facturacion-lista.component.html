@@ -80,24 +80,22 @@
                                 </thead>
                                 <tbody>
                                     <ng-container *ngFor="let factura of facturas; let i = index">
-                                        <!-- DESGLOSE DE PAGOS MIXTOS - MINIMALISTA -->
+                                        <!-- DESGLOSE DE PAGOS MIXTOS - COMPACTO HORIZONTAL -->
                                         <ng-container *ngIf="desgloseVisible[factura.numeroFactura] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0">
                                             <tr class="animate__animated animate__fadeIn tr-collapse desglose-header">
-                                                <td colspan="16" style="background-color: #f8f9fa; padding: 10px 12px; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
-                                                    <div style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
-                                                        <i class="bi bi-cash-coin" style="color: #0d6efd; font-size: 1.05em;"></i>
-                                                        <span style="color: #495057; font-weight: 600;">DESGLOSE DE PAGOS - Factura #{{ factura.numeroFactura }} - {{ factura.nombres }} {{ factura.apellidos }}</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="animate__animated animate__fadeIn tr-collapse desglose-row">
-                                                <td colspan="16" style="padding: 0; background-color: white;">
-                                                    <div style="display: flex; flex-direction: column; gap: 6px; padding: 8px 12px;">
-                                                        <div *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" style="display: flex; align-items: center; padding: 4px 0;">
-                                                            <span style="color: #495057; font-weight: 500;">{{ pago.descripcion_Tipo_Pago || '-' }}</span>
-                                                            <span style="color: #999; margin: 0 8px;">:</span>
-                                                            <span style="color: #0d6efd; font-weight: 700;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
-                                                            <span *ngIf="pago.numero_Referencia" style="color: #999; font-size: 0.75rem; margin-left: 16px; font-family: 'Courier New', monospace;">{{ pago.numero_Referencia }}</span>
+                                                <td colspan="16" style="background-color: #f8f9fa; padding: 6px 12px; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+                                                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+                                                            <i class="bi bi-cash-coin" style="color: #0d6efd;"></i>
+                                                            <span style="color: #495057; font-weight: 600;">DESGLOSE: #{{ factura.numeroFactura }}</span>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                                            <span *ngFor="let pago of getDesglosePagosPorFactura(factura.numeroFactura)" 
+                                                                  style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #e7f1ff; border-radius: 12px; font-size: 0.8rem;">
+                                                                <span style="color: #0d6efd; font-weight: 600;">{{ pago.descripcion_Tipo_Pago }}</span>
+                                                                <span style="color: #495057; font-weight: 700;">{{ pago.monto_Pago | currency:'RD$':'symbol':'1.0-0' }}</span>
+                                                                <span *ngIf="pago.numero_Referencia" style="color: #666; font-size: 0.7rem; margin-left: 2px;">({{ pago.numero_Referencia }})</span>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </td>
