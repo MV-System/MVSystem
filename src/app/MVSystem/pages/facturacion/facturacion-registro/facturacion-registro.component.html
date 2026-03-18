@@ -145,6 +145,20 @@
                           <option value=false>No</option>
                         </select>
                                 </div>
+                                <div class="col-12" *ngIf="form.get('aplicarItbis')?.value == 'true' || form.get('aplicarItbis')?.value === true">
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="checkbox" id="asumeITBISCheckbox" [(ngModel)]="asumeITBISValue" (change)="onAsumeITBISChange()" [ngModelOptions]="{standalone: true}">
+                                        <label class="form-check-label" for="asumeITBISCheckbox">
+                                            La tienda asume el ITBIS
+                                        </label>
+                                    </div>
+                                    <small class="text-muted d-block mt-2" *ngIf="asumeITBISValue">
+                                        El ITBIS será descontado del subtotal
+                                    </small>
+                                    <small class="text-muted d-block mt-2" *ngIf="!asumeITBISValue">
+                                        El ITBIS será sumado al total
+                                    </small>
+                                </div>
                                 <div class="col-12">
                                     <label class="form-label">Vendedor <span class="required-field">*</span></label>
                                     <select class="form-select modern-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">

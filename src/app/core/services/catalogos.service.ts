@@ -50,6 +50,10 @@ export class CatalogosService {
   getAsumeITBIS(): Observable<AsumeITBIS> {
     return this.http.get<AsumeITBIS>(APIURL.Catalogos.AsumeITBIS);
   }
+  updateAsumeITBIS(asumeITBIS: string, usuario: string): Observable<any> {
+    const payload = { AsumeITBIS: asumeITBIS, Usuario: usuario };
+    return this.http.post<any>(`${APIURL.Catalogos.AsumeITBIS}/Actualizar`, payload);
+  }
   getGarantiaLista(): Observable<Garantia[]> {
     return this.http.get<Garantia[]>(APIURL.Catalogos.garantiaLista);
   }

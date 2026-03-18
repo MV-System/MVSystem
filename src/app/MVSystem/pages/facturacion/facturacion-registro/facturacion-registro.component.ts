@@ -302,6 +302,7 @@ onModalClose(rep: any) {
   garantias: Garantia[] = [];
   asumeItbis: AsumeITBIS = null!;
    asumeITBIS: AsumeITBIS = null!;
+  asumeITBISValue: boolean = false; // Control para el checkbox
   accesorios: AccesorioLista[] = [];
   accesoriosBuffer: AccesorioLista[] = [];
   comprobanteTipos: TipoComprobante[] = [];
@@ -672,6 +673,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       .pipe(takeUntil(this.destroy$))
       .subscribe(itbis => {
         this.asumeItbis = itbis;
+        // Establecer el valor del checkbox basado en el valor de BD
+        // 'S' = true (tienda asume), otro valor = false (cliente paga)
+        this.asumeITBISValue = itbis.asumeITBIS === 'S';
       })
   }
 
@@ -1534,5 +1538,43 @@ printFacturaMini() {
     this.form.patchValue({ tipoPago: this.tipoPagoSeleccionado });
     // Actualizar si es crédito
     this.onChangeTipoPago();
+  }
+
+  /**
+   * Maneja el cambio del checkbox de AsumeITBIS
+   * Actualiza inmediatamente en BD y recalcula los totales
+   */
+  onAsumeITBISChange() {
+    // Valor a guardar: 'S' si está marcado, 'N' si no
+    const asumeValue = this.asumeITBISValue ? 'S' : 'N';
+
+    // Obtener usuario del loginService
+    const usuario = this.loginService.getUserName() || 'Sistema';
+
+    // Llamar al servicio para actualizar en BD
+    this.catalogosService.updateAsumeITBIS(asumeValue, usuario)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (response: any) => {
+          if (response.success) {
+            // Actualizar la propiedad local
+            this.asumeItbis.asumeITBIS = asumeValue;
+
+            // Recalcular los totales con el nuevo valor
+            this.refreshGeneralValues();
+
+            this.toastr.success('Se actualizó correctamente si la tienda asume el ITBIS');
+          } else {
+            this.toastr.error(response.message || 'Error al actualizar');
+            // Revertir el checkbox
+            this.asumeITBISValue = !this.asumeITBISValue;
+          }
+        },
+        error => {
+          this.toastr.error('Error al actualizar: ' + error);
+          // Revertir el checkbox
+          this.asumeITBISValue = !this.asumeITBISValue;
+        }
+      );
   }
 }
