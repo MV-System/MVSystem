@@ -101,6 +101,8 @@ export interface CierreCajaDetalleReporte {
   efectivoReal: number;
   saldoPendiente: number;
   porcentajeDelTotal: number;
+  montoDesdeDesgloseMixto?: number;
+  cantidadFacturasDesdeMixto?: number;
 }
 
 export interface CierreCajaReporteResumen {

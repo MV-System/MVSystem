@@ -130,6 +130,9 @@
                                     <span *ngIf="esCredito(detalle.tipoPago) && detalle.cantidadAbonosRecibidos > 0" class="badge bg-info ms-1">
                     {{ detalle.cantidadAbonosRecibidos }} abono(s)
                   </span>
+                                    <span *ngIf="detalle.montoDesdeDesgloseMixto && detalle.montoDesdeDesgloseMixto > 0" class="badge bg-warning text-dark ms-1">
+                    mixto: {{ formatearMoneda(detalle.montoDesdeDesgloseMixto) }}
+                  </span>
                                 </td>
                                 <td class="text-center">{{ detalle.cantidadFacturas }}</td>
                                 <td class="text-end">{{ formatearMoneda(detalle.montoAbonos) }}</td>
