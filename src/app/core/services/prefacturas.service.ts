@@ -78,6 +78,11 @@ export class PreFacturasService {
     return this.http.post(APIURL.PreFacturas.AgregarDetalle, detalle);
   }
 
+  // 2.5 Guardar detalles de pago mixto en pre-factura
+  guardarDetallesPagoPreFactura(numeroPreFactura: number, detallesPagos: any[]): Observable<any> {
+    return this.http.post(`${APIURL.PreFacturas.Detalle}/${numeroPreFactura}/detalles-pago`, detallesPagos);
+  }
+
   // 3. Listar pre-facturas (con filtro)
   listarPreFacturas(filtros: { Estado?: string; ID_Sucursal?: number; ID_Cliente?: number; criterio?: string }): Observable<PreFactura[]> {
     let params = new HttpParams();

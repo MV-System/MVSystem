@@ -91,6 +91,8 @@ reparaciones: any[] = [];
       return;
     }
     this.isLoading = true;
+    console.log('🔵 PREFACTURA: Iniciando creación de pre-factura...');
+    
     // Construir el objeto PreFactura con todos los campos requeridos
     const preFactura: PreFactura = {
       numero_PreFactura: 0,
@@ -130,6 +132,8 @@ reparaciones: any[] = [];
 
     this.preFacturasService.crearPreFactura(preFactura).subscribe({
       next: (resp) => {
+        console.log('✅ PREFACTURA: Pre-factura creada exitosamente', resp);
+        
         // Guardar detalles
         const detalles: PreDetalleFactura[] = this.articulos().controls.map(control => {
           return {
@@ -157,9 +161,36 @@ reparaciones: any[] = [];
             next: () => {
               detallesGuardados++;
               if (detallesGuardados === detalles.length) {
-                this.isLoading = false;
-                this.toastr.success('Pre-factura guardada correctamente');
-                this.onClean();
+                // Todos los detalles de artículos fueron guardados
+                // Ahora guardar detalles de pago si es MIXTO
+                const idTipoPago = Number(this.form.get('tipoPago')?.value);
+                const numeroPreFactura = resp.Numero_PreFactura || resp.numero_PreFactura || 0;
+
+                console.log(`📋 PREFACTURA: ID Tipo Pago = ${idTipoPago}, Número Pre-Factura = ${numeroPreFactura}`);
+
+                if (idTipoPago === 6 && this.detallesPagosActuales && this.detallesPagosActuales.length > 0) {
+                  // Guardar detalles de pago mixto
+                  console.log(`💳 PREFACTURA PAGO MIXTO: Guardando ${this.detallesPagosActuales.length} detalles de pago`, this.detallesPagosActuales);
+                  this.preFacturasService.guardarDetallesPagoPreFactura(numeroPreFactura, this.detallesPagosActuales).subscribe({
+                    next: () => {
+                      console.log('✅ PREFACTURA PAGO MIXTO: Detalles de pago guardados correctamente');
+                      this.isLoading = false;
+                      this.toastr.success('Pre-factura y pagos mixtos guardados correctamente');
+                      this.onClean();
+                    },
+                    error: (err) => {
+                      console.error('❌ PREFACTURA PAGO MIXTO: Error al guardar detalles de pago', err);
+                      this.isLoading = false;
+                      this.toastr.warning('Pre-factura guardada, pero hubo error al guardar detalles de pago');
+                      this.onClean();
+                    }
+                  });
+                } else {
+                  console.log('ℹ️ PREFACTURA: No es pago mixto o sin detalles de pago');
+                  this.isLoading = false;
+                  this.toastr.success('Pre-factura guardada correctamente');
+                  this.onClean();
+                }
               }
             },
             error: () => {
