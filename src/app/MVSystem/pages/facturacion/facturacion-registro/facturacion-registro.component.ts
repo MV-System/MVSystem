@@ -92,7 +92,7 @@ reparaciones: any[] = [];
     }
     this.isLoading = true;
     console.log('🔵 PREFACTURA: Iniciando creación de pre-factura...');
-    
+
     // Construir el objeto PreFactura con todos los campos requeridos
     const preFactura: PreFactura = {
       numero_PreFactura: 0,
@@ -133,7 +133,7 @@ reparaciones: any[] = [];
     this.preFacturasService.crearPreFactura(preFactura).subscribe({
       next: (resp) => {
         console.log('✅ PREFACTURA: Pre-factura creada exitosamente', resp);
-        
+
         // Guardar detalles
         const detalles: PreDetalleFactura[] = this.articulos().controls.map(control => {
           return {
