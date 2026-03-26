@@ -772,11 +772,18 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     this.clientesService.isOpeningForm$.next(false);
   }
   onSubmit() {
+    // ⛔ BLOQUEO INMEDIATO: Si ya está procesando, no permitir otro envío
+    if (this.isLoading) {
+      console.warn('⚠️ BLOQUEO: El formulario ya está siendo procesado');
+      return;
+    }
+
     if (this.form.valid) {
       // Validar que ningún equipo se facture por debajo de su costo
       if (!this.validarPrecioVsCosto()) {
         return;
       }
+      
       if (this.isFactura) {
         this.generateFactura();
       } else {
@@ -1365,6 +1372,7 @@ printFacturaMini() {
   this.subs.push(sub);
 }
   generateFactura() {
+    this.isLoading = true;
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
@@ -1424,7 +1432,7 @@ printFacturaMini() {
             }
 
           }, error => {
-           // this.isLoading = !this.isLoading;
+            this.isLoading = false;
             this.toastr.error(error)
           })
 
@@ -1437,9 +1445,8 @@ printFacturaMini() {
     return factura;
   }
   generateCotizacion() {
-
+    this.isLoading = true;
     const data = this.loadDataToPrint()
-    this.loading.showLoading('Procesando cotización...');
     this.mantenimientoService.postCotizacionReport(data)
     .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
@@ -1455,8 +1462,11 @@ printFacturaMini() {
         this.agregarArticulo()
 
         CreatorPDFFile(blobResponse);
+        this.isLoading = false;
+        this.onClean();
 
       },error=>{
+        this.isLoading = false;
         this.toastr.error(error)
       })
   }

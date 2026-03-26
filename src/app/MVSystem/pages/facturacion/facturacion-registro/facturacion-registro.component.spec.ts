@@ -714,13 +714,11 @@ describe('FacturacionRegistroComponent', () => {
     });
 
     it('should manage loading states', () => {
-      const mockLoadingService = TestBed.inject(LoadingService) as jasmine.SpyObj<LoadingService>;
-
       component.isLoading = true;
       expect(component.isLoading).toBeTrue();
 
-      // Loading service should be available
-      expect(mockLoadingService.showLoading).toBeDefined();
+      component.isLoading = false;
+      expect(component.isLoading).toBeFalse();
     });
 
     it('should manage modal visibility', () => {
@@ -886,7 +884,6 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should generate quotation successfully', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
-      const mockLoadingService = TestBed.inject(LoadingService) as jasmine.SpyObj<LoadingService>;
 
       const mockPdfBlob = new Blob(['PDF content'], { type: 'application/pdf' });
       mockMantenimientoService.postCotizacionReport.and.returnValue(of(mockPdfBlob));
@@ -898,7 +895,8 @@ describe('FacturacionRegistroComponent', () => {
 
       component.generateCotizacion();
 
-      expect(mockLoadingService.showLoading).toHaveBeenCalledWith('Procesando cotización...');
+      // After async operations complete, isLoading should be false
+      expect(component.isLoading).toBeFalse();
       expect(mockMantenimientoService.postCotizacionReport).toHaveBeenCalled();
     });
 
