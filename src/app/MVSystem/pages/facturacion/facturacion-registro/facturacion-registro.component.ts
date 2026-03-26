@@ -783,7 +783,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       if (!this.validarPrecioVsCosto()) {
         return;
       }
-      
+
       if (this.isFactura) {
         this.generateFactura();
       } else {
