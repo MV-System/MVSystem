@@ -366,7 +366,7 @@
                                     <div class="totals-item-modern" *ngIf="isCredit && isFactura">
                                         <span class="totals-label-modern">Abono</span>
                                         <div>
-                                            <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="4" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
+                                            <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="12" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
                                             <small class="text-danger" *ngIf="form.get('abono')?.value > total">No puede exceder RD$ {{total | number:'1.2-2'}}</small>
                                         </div>
                                     </div>
@@ -405,7 +405,7 @@
                                     <div class="totals-item-modern" *ngIf="isCredit && isFactura">
                                         <span class="totals-label-modern">Abono</span>
                                         <div>
-                                            <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="4" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
+                                            <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="12" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
                                             <small class="text-danger" *ngIf="form.get('abono')?.value > total">No puede exceder RD$ {{total | number:'1.2-2'}}</small>
                                         </div>
                                     </div>
