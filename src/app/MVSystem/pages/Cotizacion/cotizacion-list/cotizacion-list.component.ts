@@ -210,6 +210,20 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       currentArticulo.cantidad
     );
 
+    // Si la tienda asume ITBIS, el precio incluye ITBIS, entonces extraer ITBIS del subTotal
+    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+      // SubTotal sin ITBIS = subTotal / (1 + (itbis%/100))
+      const subTotalSinItbis = currentArticulo.subTotal / (itbisRate / 100 + 1);
+      currentArticulo.subTotal = Number(subTotalSinItbis.toFixed(2));
+      // ITBIS del artículo
+      const itbisArticulo = (currentArticulo.subTotal * itbisRate) / 100;
+      currentArticulo.itbis = Number(itbisArticulo.toFixed(2));
+    } else if (this.aplicarItbis) {
+      // Cuando la empresa suma ITBIS, se calcula más adelante en onApplyItbis
+      currentArticulo.itbis = 0;  // Se asignará en onApplyItbis
+    }
+
     let isValidDesc = this.validateDescuento(
       currentArticulo.descuento,
       currentArticulo.precio,
@@ -236,10 +250,17 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos.controls[index].value;
-    const subTotal = this.calcularSubTotalArticulo(
+    let subTotal = this.calcularSubTotalArticulo(
       currentArticulo.precio,
       currentArticulo.cantidad
     );
+
+    // Si la tienda asume ITBIS, extraer ITBIS del subTotal
+    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+      subTotal = subTotal / (itbisRate / 100 + 1);
+      subTotal = Number(subTotal.toFixed(2));
+    }
 
     if (!currentArticulo.articulo) {
       this.articulos.controls[index].patchValue({
@@ -283,6 +304,10 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       this.descuento += articulo.descuento;
       this.total += articulo.total;
     }
+
+    // 🆕 Guardar el total ANTES de modificarlo para la distribución del ITBIS
+    let totalOriginalParaDistribucion = this.total;
+
     if (this.aplicarItbis) {
       const itbis = this.asumeItbis.itbiS_Valor * 100;
 
@@ -298,6 +323,32 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
       this.itbis = Number(this.itbis.toFixed(2));
       this.total = Number(this.total.toFixed(2));
+
+      // 🆕 Distribuir ITBIS proporcionalmente a cada artículo
+      if (totalOriginalParaDistribucion > 0) {
+        for (let a = 0; a < this.articulos.length; a++) {
+          const control = this.articulos.controls[a] as FormGroup;
+          const articuloTotal = control.get('total')?.value || 0;
+
+          // Cuando la tienda asume ITBIS, los totales de artículos YA incluyen ITBIS
+          // Debemos extraer el ITBIS de cada artículo
+          if (this.asumeItbis.asumeITBIS == 'S') {
+            const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+            // Extraer ITBIS del artículo: itbis = (total / (1 + (itbis/100))) * (itbis/100)
+            const itbisArticulo = Number(((articuloTotal / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
+            control.patchValue({
+              itbis: itbisArticulo
+            });
+          } else {
+            // Cuando la empresa suma ITBIS, se distribuye proporcionalmente
+            // ITBIS del artículo = (total del artículo / total ORIGINAL) × ITBIS total
+            const itbisArticulo = (articuloTotal / totalOriginalParaDistribucion) * this.itbis;
+            control.patchValue({
+              itbis: Number(itbisArticulo.toFixed(2))
+            });
+          }
+        }
+      }
     }
   }
   agregarArticulo() {
@@ -314,6 +365,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       precio: [0],
       subTotal: [0],
       total: [0],
+      itbis: [0],
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],

@@ -220,8 +220,8 @@
                                             </ng-select>
                                         </td>
                                         <td class="col-md-1 align-center">
-                                            <input type="text" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
-                                        descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" [maxlen]="4" appNumeric>
+                                            <input type="number" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
+                                        descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" appNumeric [decimals]="0" [maxlen]="4">
                                         </td>
 
                                         <td class="col-md-1 align-center">
@@ -281,7 +281,7 @@
                                     <div class="articulo-grid" [class.hidden]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
                                         <div class="articulo-field">
                                             <label>Cantidad</label>
-                                            <input type="text" class="form-control align-center" placeholder="0" formControlName="cantidad" #cantidadInputMobile (keydown.enter)="$event.preventDefault(); precioInputMobile.focus()" (keyup)="obtenerDetalleFactura(i)" [maxlen]="4" appNumeric>
+                                            <input type="number" class="form-control align-center" placeholder="0" formControlName="cantidad" #cantidadInputMobile (keydown.enter)="$event.preventDefault(); precioInputMobile.focus()" (keyup)="obtenerDetalleFactura(i)" appNumeric [decimals]="0" [maxlen]="4">
                                         </div>
                                         <div class="articulo-field">
                                             <label>Precio</label>

@@ -180,6 +180,7 @@ export interface Articulo {
     precio: number;
     subTotal: number;
     total: number;
+    itbis?: number;
 }
 
 export interface RebajaEquipoModel {

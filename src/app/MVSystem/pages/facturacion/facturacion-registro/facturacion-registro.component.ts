@@ -1,7 +1,7 @@
 
 
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControlOptions } from '@angular/forms';
 import { forkJoin, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -91,7 +91,7 @@ reparaciones: any[] = [];
       return;
     }
     this.isLoading = true;
-    console.log('🔵 PREFACTURA: Iniciando creación de pre-factura...');
+
 
     // Construir el objeto PreFactura con todos los campos requeridos
     const preFactura: PreFactura = {
@@ -132,7 +132,7 @@ reparaciones: any[] = [];
 
     this.preFacturasService.crearPreFactura(preFactura).subscribe({
       next: (resp) => {
-        console.log('✅ PREFACTURA: Pre-factura creada exitosamente', resp);
+
 
         // Guardar detalles
         const detalles: PreDetalleFactura[] = this.articulos().controls.map(control => {
@@ -146,7 +146,7 @@ reparaciones: any[] = [];
             precio: control.get('precio')?.value,
             SubTotal: control.get('subTotal')?.value,
             Descuento: control.get('descuento')?.value,
-            Itbis: 0,
+            Itbis: control.get('itbis')?.value || 0,
             Total: control.get('total')?.value,
             Estado: 'P',
             Usuario: this.loginService.getUserName(),
@@ -166,14 +166,14 @@ reparaciones: any[] = [];
                 const idTipoPago = Number(this.form.get('tipoPago')?.value);
                 const numeroPreFactura = resp.Numero_PreFactura || resp.numero_PreFactura || 0;
 
-                console.log(`📋 PREFACTURA: ID Tipo Pago = ${idTipoPago}, Número Pre-Factura = ${numeroPreFactura}`);
+
 
                 if (idTipoPago === 6 && this.detallesPagosActuales && this.detallesPagosActuales.length > 0) {
                   // Guardar detalles de pago mixto
-                  console.log(`💳 PREFACTURA PAGO MIXTO: Guardando ${this.detallesPagosActuales.length} detalles de pago`, this.detallesPagosActuales);
+
                   this.preFacturasService.guardarDetallesPagoPreFactura(numeroPreFactura, this.detallesPagosActuales).subscribe({
                     next: () => {
-                      console.log('✅ PREFACTURA PAGO MIXTO: Detalles de pago guardados correctamente');
+
                       this.isLoading = false;
                       this.toastr.success('Pre-factura y pagos mixtos guardados correctamente');
                       this.onClean();
@@ -186,7 +186,7 @@ reparaciones: any[] = [];
                     }
                   });
                 } else {
-                  console.log('ℹ️ PREFACTURA: No es pago mixto o sin detalles de pago');
+
                   this.isLoading = false;
                   this.toastr.success('Pre-factura guardada correctamente');
                   this.onClean();
@@ -389,7 +389,7 @@ onModalClose(rep: any) {
     btnAddArticulo:'',
      articulo: [null],
     articulos: this.fb.array([this.fb.group({
-      cantidad: [1],
+      cantidad: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
       descripcion: [''],
       descuento: [0],
       fechaRegistro: [new Date().toDateString()],
@@ -400,6 +400,7 @@ onModalClose(rep: any) {
       precio: [0],
       subTotal: [0],
       total: [0],
+      itbis: [0],
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],
@@ -496,7 +497,14 @@ onModalClose(rep: any) {
     if (newPrecio !== precioOriginal) {
     // Recalcular el subtotal con el nuevo precio
     const cantidad = currentFormGroup.get('cantidad')?.value;
-    const subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
+    let subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
+
+    // Si la tienda asume ITBIS, extraer ITBIS del subTotal
+    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+      subTotal = subTotal / (itbisRate / 100 + 1);
+      subTotal = Number(subTotal.toFixed(2));
+    }
 
     // Actualizamos el subtotal en el formulario
     currentFormGroup.get('subTotal')?.setValue(subTotal);
@@ -509,7 +517,7 @@ onModalClose(rep: any) {
     currentFormGroup.get('total')?.setValue(total);
   } else {
     // Si el precio no ha sido modificado, no hacemos nada
-    console.log("El precio no ha sido modificado, se mantiene el valor original");
+
   }
     // Actualizamos los valores generales si es necesario
     this.refreshGeneralValues();
@@ -547,7 +555,16 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       const currentFormGroup: FormGroup = this.articulos().controls[index] as FormGroup
       const currentArticulo = currentFormGroup.getRawValue()
       currentArticulo.precio = this.calcularPrecioSegunTipofactura(currentArticulo.precioDetalle, currentArticulo.precioMayor);
-      currentArticulo.subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+      let subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+
+      // Si la tienda asume ITBIS, extraer ITBIS del subTotal
+      if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+        const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+        subTotal = subTotal / (itbisRate / 100 + 1);
+        subTotal = Number(subTotal.toFixed(2));
+      }
+
+      currentArticulo.subTotal = subTotal;
       this.articulos().controls[index].setValue(currentArticulo)
       this.obtenerCantidadArticulo(currentArticulo);
       this.obtenerCantidadArticuloStock(index)
@@ -798,14 +815,6 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
   const tipoFactura = this.form.get('tipoFactura')?.value;
   const precio = Number((tipoFactura == 1 ? precioDetalle : 0) ||
     (tipoFactura == 2 ? precioMayor : 0 || tipoFactura == 4 ? precioDetalle : 0));
-  // console.log(
-  //   '[ng-option] Descripción:',
-  //   this.accesoriosBuffer.find(a => a.precio_Detalle === precioDetalle && a.precio_Por_Mayor === precioMayor)?.accesorio_Descripcion,
-  //   '| Precio:',
-  //   precio,
-  //   '| tipoFactura:',
-  //   tipoFactura
-  // );
   return precio;
 }
   addArticuloImei = (imei: string) => {
@@ -908,6 +917,33 @@ else
 
   currentArticulo.total = currentArticulo.subTotal - (currentArticulo.descuento || 0);
 
+  const modoItbis = this.asumeItbis?.asumeITBIS === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA';
+  console.log(`\n🟢 [ESCENARIO] obtenerDetalleFactura [Artículo ${index}]`);
+  console.log(`   📌 Modo ITBIS: ${modoItbis}`);
+  console.log(`   📝 Descripción: ${currentArticulo.descripcion}`);
+  console.log(`   💰 precio=${currentArticulo.precio}, cantidad=${currentArticulo.cantidad}, descuento=${currentArticulo.descuento || 0}`);
+  console.log(`   📊 INICIAL: subTotal=${currentArticulo.subTotal}, total=${currentArticulo.total}`);
+
+  // Si la tienda asume ITBIS, el precio incluye ITBIS, entonces extraer ITBIS del total (DESPUÉS del descuento)
+  if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+    const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+    // El total YA tiene el descuento aplicado
+    const precioFinalConItbis = currentArticulo.total;
+    // SubTotal sin ITBIS = total / (1 + (itbis%/100))
+    const subTotalSinItbis = precioFinalConItbis / (itbisRate / 100 + 1);
+    currentArticulo.subTotal = Number(subTotalSinItbis.toFixed(2));
+    // El total seguirá siendo el subTotal sin ITBIS (sin descuento aplicado aquí, el descuento ya está en total)
+    currentArticulo.total = currentArticulo.subTotal - (currentArticulo.descuento || 0);
+    // ITBIS del artículo = precio final - subTotal (para exactitud, sin errores de redondeo)
+    currentArticulo.itbis = Number((precioFinalConItbis - currentArticulo.subTotal).toFixed(2));
+    console.log(`   ✅ CALCULADO: subTotal=${currentArticulo.subTotal}, total=${currentArticulo.total}, itbis=${currentArticulo.itbis}`);
+    console.log(`   🔍 Verificar: ${currentArticulo.subTotal} + ${currentArticulo.itbis} = ${currentArticulo.subTotal + currentArticulo.itbis} (debe ser ${precioFinalConItbis})`);
+  } else if (this.form.get('aplicarItbis')?.value == 'true') {
+    // Cuando la empresa suma ITBIS, se calcula más adelante en refreshGeneralValues
+    currentArticulo.itbis = 0;  // Se asignará en refreshGeneralValues
+    console.log(`   ⏳ PENDIENTE: itbis=0 (se calcula en refreshGeneralValues)`);
+  }
+
   // Validar duplicados
   for (let articuloAddIndex in this.articulos().controls) {
     if (articuloAddIndex == index.toString()) continue;
@@ -965,7 +1001,7 @@ else
     const isItemEmpty: boolean = this.articulos().controls.some(({ value }) => value.articulo == "");
     if (!isItemEmpty) {
       const articulo = this.fb.group({
-        cantidad: [1],
+        cantidad: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
         descripcion: [''],
         descuento: [0],
         fechaRegistro: [new Date().toDateString()],
@@ -976,6 +1012,7 @@ else
         precio: [0],
         subTotal: [0],
         total: [0],
+        itbis: [0],
         articulo: [''],
         precioDetalle: [0],
         precioMayor: [0],
@@ -1033,7 +1070,7 @@ else
       IdSucursal:this.loginService.getUserIdSucursal,
       detallesPagos: this.detallesPagosActuales
     }
-    console.log('📋 MODELO FACTURA - idTipoPago:', model.idTipoPago, '- detallesPagos:', this.detallesPagosActuales);
+
 
     model.Cliente = {
       apellidos: this.form.get('apellido')?.value,
@@ -1063,7 +1100,7 @@ else
       descuento: control.get('descuento')?.value,
       idVendedor: control.get('')?.value,
       idTipoFactura: control.get('')?.value,
-      itbis: 0,
+      itbis: control.get('itbis')?.value || 0,
       total: control.get('total')?.value,
       fechaRegistro: this.form.get('fechaFacturacion')?.value,
       Usuario: this.loginService.getUserName(),
@@ -1128,6 +1165,7 @@ else
             precio: [articulo.precio],
             subTotal: [articulo.subTotal],
             total: [articulo.total],
+            itbis: [articulo.itbis || 0],
             articulo: [''],
             precioDetalle: [0],
             precioMayor: [0],
@@ -1142,38 +1180,78 @@ else
   refreshGeneralValues() {
 
     this.subTotal = this.descuento = this.total = this.itbis = 0;
+    const modoItbis = this.asumeItbis?.asumeITBIS === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA';
 
+    console.log(`\n🔵 [TOTALES] refreshGeneralValues - Artículos en memoria:`);
+    console.log(`   📌 Modo ITBIS: ${modoItbis}`);
     for (let a = 0; a < this.articulos().length; a++) {
       const articulo = this.articulos().controls[a].value;
+      console.log(`   [${a}] ${articulo.descripcion}:`);
+      console.log(`       precio=${articulo.precio}, cantidad(x${articulo.cantidad}), desc=${articulo.descuento || 0}`);
+      console.log(`       subTotal=${articulo.subTotal}, itbis=${articulo.itbis}, total=${articulo.total}`);
       this.descuento += articulo.descuento || 0;
       this.total += articulo.total || 0;
+      this.itbis += articulo.itbis || 0;  // Sumar los ITBIS individuales
     }
+
+    console.log(`   📊 SUMAS ACUMULADAS: total_acumulado=${this.total}, itbis_acumulado=${this.itbis}, descuento_total=${this.descuento}`);
 
     if (this.form.get('aplicarItbis')?.value == 'true') {
-      //CALCULA EL ITBIS
-      const itbis = this.asumeItbis.itbiS_Valor * 100;
-          // si la factura lleva itbis pero ya el precio tiene incluido el itbis
-      if (this.asumeItbis.asumeITBIS == 'S') {
-            this.itbis = Number(((this.total / (itbis / 100 + 1)) * (itbis / 100)).toFixed(2));
-         const totalSinItbis = this.total  - this.itbis;
-        this.total = Number(this.total.toFixed(2));
-        this.subTotal = Number((totalSinItbis).toFixed(2));
-          // si la factura lleva itbis pero la empresa se lo suma al precio
-      }
-      else {
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
 
-        this.itbis = Number(((this.total * itbis) / 100).toFixed(2));
-        const totalSinItbis = this.total;
+      if (this.asumeItbis.asumeITBIS == 'S') {
+        // Tienda asume ITBIS: Los artículos YA tienen ITBIS extraído correctamente
+        // No recalcular, solo usar la suma de ITBISes de los artículos
+        // El ITBIS ya fue calculated con método de remainder en obtenerDetalleFactura
+        console.log(`   ✅ CASO: TIENDA ASUME ITBIS`);
+        console.log(`   💡 itbisTotal desde artículos = ${this.itbis}`);
+
+        // Calcular header totals
         this.total = Number((this.total + this.itbis).toFixed(2));
-        this.subTotal = Number((totalSinItbis + this.descuento).toFixed(2));
+        this.subTotal = Number((this.total - this.itbis).toFixed(2));
+        console.log(`\n   ✔️ RESULTADO FINAL:`);
+        console.log(`       subTotal=${this.subTotal}`);
+        console.log(`       itbis=${this.itbis}`);
+        console.log(`       total=${this.total}`);
+        console.log(`       descuento=${this.descuento}`);
+        console.log(`   🔍 Verificación: ${this.subTotal} + ${this.itbis} = ${this.subTotal + this.itbis} (debe ser ${this.total})\n`);
+      } else {
+        // Empresa suma ITBIS: Calcular y distribuir
+        console.log(`   ✅ CASO: EMPRESA SUMA ITBIS`);
+        const totalSinItbis = this.total;
+        this.itbis = Number(((this.total * itbisRate) / 100).toFixed(2));
+        this.total = Number((this.total + this.itbis).toFixed(2));
+        this.subTotal = this.total - this.itbis; // SubTotal es el total ANTES de agregar ITBIS
+        console.log(`   💡 Cálculo: SubTotal_acumulado=${totalSinItbis} x 18% = itbis=${this.itbis}`);
+        console.log(`   💡 Total final: ${totalSinItbis} + ${this.itbis} = ${this.total}`);
+
+        // Distribuir ITBIS proporcionalmente
+        if (totalSinItbis > 0) {
+          console.log(`   📤 Distribuyendo ITBIS proporcionalmente por artículo:`);
+          for (let a = 0; a < this.articulos().length; a++) {
+            const control = this.articulos().controls[a] as FormGroup;
+            const articuloTotal = control.get('total')?.value || 0;
+            const itbisArticulo = (articuloTotal / totalSinItbis) * this.itbis;
+            const itbisRedondeado = Number(itbisArticulo.toFixed(2));
+            console.log(`       [${a}] (${articuloTotal} / ${totalSinItbis}) × ${this.itbis} = ${itbisRedondeado}`);
+            control.patchValue({
+              itbis: itbisRedondeado
+            });
+          }
+        }
+
+        console.log(`\n   ✔️ RESULTADO FINAL:`);
+        console.log(`       subTotal=${this.subTotal}`);
+        console.log(`       itbis=${this.itbis}`);
+        console.log(`       total=${this.total}`);
+        console.log(`       descuento=${this.descuento}`);
+        console.log(`   🔍 Verificación: ${this.subTotal} + ${this.itbis} = ${this.subTotal + this.itbis} (debe ser ${this.total})\n`);
       }
+    } else {
+      console.log(`   ⚠️ ITBIS NO APLICADO`);
+      this.subTotal = Number((this.total + this.descuento).toFixed(2));
+      console.log(`   📊 subTotal=${this.subTotal}, total=${this.total}, descuento=${this.descuento}\n`);
     }
-    else
-    {
-     this.subTotal = Number((this.total + this.descuento).toFixed(2));
-     this.total = Number((this.total + this.itbis).toFixed(2));
-    }
-    // El subtotal es igual a total - descuento - itbis
   }
 
   borrarArticulo(index: number) {
@@ -1242,7 +1320,37 @@ else
   }
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos().controls[index].value
-    const subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+    let subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
+    const modoItbis = this.asumeItbis?.asumeITBIS === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA';
+
+    console.log(`\n🟡 [RECÁLCULO] obtenerCantidadArticuloStock [Artículo ${index}]`);
+    console.log(`   📌 Modo ITBIS: ${modoItbis}`);
+    console.log(`   📝 Descripción: ${currentArticulo.descripcion}`);
+    console.log(`   💰 precio=${currentArticulo.precio}, cantidad=${currentArticulo.cantidad}, descuento=${currentArticulo.descuento || 0}`);
+    console.log(`   📊 INICIAL: subTotal crudo=${subTotal}`);
+
+    // Aplicar descuento primero para obtener el precio final
+    const descuento = currentArticulo.descuento || 0;
+    let totalConDescuento = subTotal - descuento;
+
+    // Si la tienda asume ITBIS, extraer ITBIS del total CON descuento aplicado
+    let itbisArticulo = currentArticulo.itbis || 0;
+    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+      const precioFinalConItbis = totalConDescuento;
+      subTotal = precioFinalConItbis / (itbisRate / 100 + 1);
+      subTotal = Number(subTotal.toFixed(2));
+      // Calcular ITBIS como la diferencia (para exactitud)
+      itbisArticulo = Number((precioFinalConItbis - subTotal).toFixed(2));
+      totalConDescuento = subTotal; // Ahora totalConDescuento es el subTotal sin ITBIS
+      console.log(`   ✅ CALCULADO: subTotal=${subTotal}, itbis=${itbisArticulo}`);
+      console.log(`   🔍 Verificar: ${subTotal} + ${itbisArticulo} = ${subTotal + itbisArticulo} (debe ser ${precioFinalConItbis})`);
+    } else {
+      // EMPRESA SUMA: SubTotal debe estar actualizado con descuento aplicado
+      subTotal = totalConDescuento;
+      console.log(`   ✅ CALCULADO: subTotal=${subTotal}, itbis=0 (se calcula en refreshGeneralValues)`);
+      console.log(`   🔍 Verificar: subTotal actualizado con descuento: ${subTotal}`);
+    }
 
     if (!currentArticulo.articulo) {
       this.articulos().controls[index].patchValue({
@@ -1268,26 +1376,28 @@ else
       return;
     }
 
-    const total = this.calculoTotal(subTotal, currentArticulo.descuento);
+    const total = this.calculoTotal(subTotal, 0); // El descuento ya está incluido en el cálculo de ITBIS
+
+    console.log(`   📤 ACTUALIZANDO FormGroup: subTotal=${subTotal}, total=${total}, itbis=${itbisArticulo}`);
+
     this.articulos().controls[index].patchValue({
       total,
       subTotal,
-    })
+      itbis: itbisArticulo
+    });
 
+    console.log(`   ✔️ FormGroup actualizado correctamente\n`);
     this.refreshGeneralValues();
-    return Number(cantidadElegida);
   }
 
   onAcceptPrint(data: FacturaRegistro) {
     this.isLoading = !this.isLoading;
     this.submitted = true;
 
-    console.log('🚀 ENVIAR FACTURA - idTipoPago:', data.idTipoPago, '- detallesPagos:', data.detallesPagos);
-
     // Usar el endpoint correcto según el tipo de pago
     const request$ = data.idTipoPago === 6
-      ? (console.log('✅ Usando endpoint PAGO MIXTO'), this.mantenimientoService.postFacturaPagoMixto(data))
-      : (console.log('ℹ️ Usando endpoint PAGO NORMAL'), this.mantenimientoService.postFactura(data));
+      ? this.mantenimientoService.postFacturaPagoMixto(data)
+      : this.mantenimientoService.postFactura(data);
 
     request$
       .pipe(takeUntil(this.destroy$))
@@ -1376,12 +1486,10 @@ printFacturaMini() {
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
-    console.log('📋 MODELO FACTURA - idTipoPago:', data.idTipoPago, '- detallesPagos:', data.detallesPagos);
-
     // Usar el endpoint correcto según el tipo de pago
     const request$ = data.idTipoPago === 6
-      ? (console.log('✅ Usando endpoint PAGO MIXTO'), this.mantenimientoService.postFacturaPagoMixto(data))
-      : (console.log('ℹ️ Usando endpoint PAGO NORMAL'), this.mantenimientoService.postFactura(data));
+      ? this.mantenimientoService.postFacturaPagoMixto(data)
+      : this.mantenimientoService.postFactura(data);
 
     request$
           .pipe(takeUntil(this.destroy$))
@@ -1600,6 +1708,51 @@ printFacturaMini() {
           if (response.success) {
             // Actualizar la propiedad local
             this.asumeItbis.asumeITBIS = asumeValue;
+
+            // IMPORTANTE: Recalcular TODOS los artículos con el nuevo modo ITBIS
+            // porque los valores previos fueron calculados con la fórmula anterior
+            console.log(`\n🟣 [CAMBIO MODO] onAsumeITBISChange: Nuevo modo = ${asumeValue === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA'}`);
+            console.log(`   📤 Recalculando ${this.articulos().length} artículos...`);
+
+            for (let i = 0; i < this.articulos().length; i++) {
+              const articulo = this.articulos().controls[i].value;
+              const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+
+              if (asumeValue === 'S') {
+                // Cambio a TIENDA ASUME ITBIS
+                // El precio del artículo debe incluir ITBIS ahora
+                const precioConItbis = articulo.precio;
+                const descuento = articulo.descuento || 0;
+                const totalConDescuento = (precioConItbis * articulo.cantidad) - descuento;
+
+                const subTotalSinItbis = totalConDescuento / (itbisRate / 100 + 1);
+                const subTotalRedondeado = Number(subTotalSinItbis.toFixed(2));
+                const itbisArticulo = Number((totalConDescuento - subTotalRedondeado).toFixed(2));
+                // En TIENDA ASUME, el total del artículo es solo el subTotal (sin ITBIS)
+                // El ITBIS se suma después en refreshGeneralValues
+                const totalArticulo = subTotalRedondeado;
+
+                this.articulos().controls[i].patchValue({
+                  subTotal: subTotalRedondeado,
+                  total: totalArticulo,
+                  itbis: itbisArticulo
+                });
+
+                console.log(`   [${i}] ${articulo.descripcion}: TIENDA ASUME - subTotal=${subTotalRedondeado}, itbis=${itbisArticulo}`);
+              } else {
+                // Cambio a EMPRESA SUMA ITBIS
+                // Solo recalcular cuando se confirme en refreshGeneralValues
+                // Por ahora resetear itbis a 0
+                const subTotal = (articulo.precio * articulo.cantidad) - (articulo.descuento || 0);
+                this.articulos().controls[i].patchValue({
+                  subTotal: subTotal,
+                  total: subTotal,
+                  itbis: 0  // Se recalculará en refreshGeneralValues
+                });
+
+                console.log(`   [${i}] ${articulo.descripcion}: EMPRESA SUMA - itbis se recalculará en totales`);
+              }
+            }
 
             // Recalcular los totales con el nuevo valor
             this.refreshGeneralValues();

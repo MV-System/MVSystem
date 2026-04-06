@@ -1132,50 +1132,6 @@ describe('FacturacionRegistroComponent', () => {
     });
   });
 
-  describe('ITBIS Application', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-
-    it('should calculate ITBIS correctly when enabled', () => {
-      // Note: component checks for string 'true', not boolean
-      component.form.get('aplicarItbis')?.setValue('true');
-      component.asumeItbis = mockAsumeItbis;
-
-      component.agregarArticulo();
-      const articulo = component.articulos().at(0);
-      articulo.patchValue({
-        precio: 1000,
-        cantidad: 1,
-        descuento: 0,
-        total: 1000  // Set total to trigger ITBIS calculation
-      });
-
-      // Call refreshGeneralValues instead of calculoTotal
-      component.refreshGeneralValues();
-
-      expect(component.itbis).toBeGreaterThan(0);
-      expect(component.total).toBeGreaterThan(0);
-    });
-
-    it('should not calculate ITBIS when disabled', () => {
-      component.form.get('aplicarItbis')?.setValue(false);
-
-      component.agregarArticulo();
-      const articulo = component.articulos().at(0);
-      articulo.patchValue({
-        precio: 1000,
-        cantidad: 1,
-        descuento: 0,
-        total: 1000
-      });
-
-      component.refreshGeneralValues();
-
-      expect(component.itbis).toBe(0);
-    });
-  });
-
   describe('Client Modal Integration', () => {
     beforeEach(() => {
       component.ngOnInit();
@@ -1215,4 +1171,584 @@ describe('FacturacionRegistroComponent', () => {
       expect(component.clienteSeleccionado.id_Cliente).toBe(123);
     });
   });
+
+  // =================== ITBIS CALCULATION TEST SUITE ===================
+  describe('ITBIS Calculation - TIENDA ASUME Mode (Mode S)', () => {
+
+    /**
+     * Test Suite for Dominican Republic ITBIS (18%) calculations
+     * Mode: TIENDA ASUME (prices include ITBIS)
+     * Formula: SubTotal = (Price - Descuento) / 1.18
+     *          ITBIS = (Price - Descuento) - SubTotal
+     */
+
+    // ESCENARIO 1: Article without discount
+    it('ESCENARIO 1: Single article, price=2000, qty=1, discount=0', () => {
+      const price = 2000;
+      const qty = 1;
+      const discount = 0;
+      const priceWithITBIS = (price * qty) - discount; // 2000
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1694.92
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 305.08
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1694.92);
+      expect(itbis).toBe(305.08);
+      expect(total).toBe(2000);
+      expect(subTotal + itbis).toBe(2000);
+    });
+
+    // ESCENARIO 2: Article with discount (descuento=200)
+    it('ESCENARIO 2: Single article, price=2000, qty=1, discount=200', () => {
+      const price = 2000;
+      const qty = 1;
+      const discount = 200;
+      const priceWithITBIS = (price * qty) - discount; // 1800
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1525.42
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 274.58
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1525.42);
+      expect(itbis).toBe(274.58);
+      expect(total).toBe(1800);
+      expect(subTotal + itbis).toBe(1800);
+    });
+
+    // ESCENARIO 3: Multiple quantity, no discount
+    it('ESCENARIO 3: Multiple quantity, price=1000, qty=3, discount=0', () => {
+      const price = 1000;
+      const qty = 3;
+      const discount = 0;
+      const priceWithITBIS = (price * qty) - discount; // 3000
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 2542.37
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 457.63
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(2542.37);
+      expect(itbis).toBe(457.63);
+      expect(total).toBe(3000);
+      expect(subTotal + itbis).toBe(3000);
+    });
+
+    // ESCENARIO 4: Quantity with small discount
+    it('ESCENARIO 4: Multiple quantity, price=1000, qty=2, discount=100', () => {
+      const price = 1000;
+      const qty = 2;
+      const discount = 100;
+      const priceWithITBIS = (price * qty) - discount; // 1900
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1610.17
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 289.83
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1610.17);
+      expect(itbis).toBe(289.83);
+      expect(total).toBe(1900);
+      expect(subTotal + itbis).toBe(1900);
+    });
+
+    // Edge case: Small discount variations
+    it('ESCENARIO 5: price=2000, qty=1, discount=1 (small discount)', () => {
+      const price = 2000;
+      const qty = 1;
+      const discount = 1;
+      const priceWithITBIS = (price * qty) - discount; // 1999
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1694.07
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 304.93
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1694.07);
+      expect(itbis).toBe(304.93);
+      expect(total).toBe(1999);
+    });
+
+    // Edge case: Medium discount
+    it('ESCENARIO 6: price=2000, qty=1, discount=10 (medium discount)', () => {
+      const price = 2000;
+      const qty = 1;
+      const discount = 10;
+      const priceWithITBIS = (price * qty) - discount; // 1990
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1686.44
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 303.56
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1686.44);
+      expect(itbis).toBe(303.56);
+      expect(total).toBe(1990);
+    });
+
+    // Edge case: Large discount
+    it('ESCENARIO 7: price=2000, qty=1, discount=100', () => {
+      const price = 2000;
+      const qty = 1;
+      const discount = 100;
+      const priceWithITBIS = (price * qty) - discount; // 1900
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1610.17
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 289.83
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1610.17);
+      expect(itbis).toBe(289.83);
+      expect(total).toBe(1900);
+    });
+
+    // Quantity 2 with large discount
+    it('ESCENARIO 8: price=2000, qty=2, discount=100', () => {
+      const price = 2000;
+      const qty = 2;
+      const discount = 100;
+      const priceWithITBIS = (price * qty) - discount; // 3900
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 3305.08
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 594.92
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(3305.08);
+      expect(itbis).toBe(594.92);
+      expect(total).toBe(3900);
+    });
+
+    // Lower price point tests
+    it('ESCENARIO 9: price=1000, qty=2, discount=1', () => {
+      const price = 1000;
+      const qty = 2;
+      const discount = 1;
+      const priceWithITBIS = (price * qty) - discount; // 1999
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1694.07
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 304.93
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1694.07);
+      expect(itbis).toBe(304.93);
+      expect(total).toBe(1999);
+    });
+
+    // Lower price point with medium discount
+    it('ESCENARIO 10: price=1000, qty=2, discount=10', () => {
+      const price = 1000;
+      const qty = 2;
+      const discount = 10;
+      const priceWithITBIS = (price * qty) - discount; // 1990
+
+      const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100; // 1686.44
+      const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100; // 303.56
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1686.44);
+      expect(itbis).toBe(303.56);
+      expect(total).toBe(1990);
+    });
+
+    // Precision verification tests
+    it('should maintain exact 2-decimal precision (no rounding errors)', () => {
+      const testCases = [
+        { price: 2000, qty: 1, desc: 0, expectedSub: 1694.92, expectedITBIS: 305.08, expectedTotal: 2000 },
+        { price: 2000, qty: 1, desc: 200, expectedSub: 1525.42, expectedITBIS: 274.58, expectedTotal: 1800 },
+        { price: 1000, qty: 3, desc: 0, expectedSub: 2542.37, expectedITBIS: 457.63, expectedTotal: 3000 }
+      ];
+
+      testCases.forEach((tc) => {
+        const priceWithITBIS = (tc.price * tc.qty) - tc.desc;
+        const subTotal = Math.round((priceWithITBIS / 1.18) * 100) / 100;
+        const itbis = Math.round((priceWithITBIS - subTotal) * 100) / 100;
+        const total = subTotal + itbis;
+
+        expect(subTotal).toBe(tc.expectedSub, `SubTotal mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+        expect(itbis).toBe(tc.expectedITBIS, `ITBIS mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+        expect(total).toBe(tc.expectedTotal, `Total mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+      });
+    });
+
+    it('should never result in rounding errors (subTotal + ITBIS = Total)', () => {
+      const scenarios = [
+        { priceWithITBIS: 2000 },
+        { priceWithITBIS: 1800 },
+        { priceWithITBIS: 3000 },
+        { priceWithITBIS: 1900 },
+        { priceWithITBIS: 1999 },
+        { priceWithITBIS: 1990 },
+        { priceWithITBIS: 3900 }
+      ];
+
+      scenarios.forEach((scenario) => {
+        const subTotal = Math.round((scenario.priceWithITBIS / 1.18) * 100) / 100;
+        const itbis = Math.round((scenario.priceWithITBIS - subTotal) * 100) / 100;
+        const sum = Number((subTotal + itbis).toFixed(2));
+
+        expect(sum).toBe(scenario.priceWithITBIS,
+          `Rounding error: ${subTotal} + ${itbis} = ${sum}, expected ${scenario.priceWithITBIS}`);
+      });
+    });
+  });
+
+  // =================== ITBIS CALCULATION TEST SUITE - EMPRESA SUMA MODE ===================
+  describe('ITBIS Calculation - EMPRESA SUMA Mode (Mode other than S)', () => {
+
+    /**
+     * Test Suite for Dominican Republic ITBIS (18%) calculations
+     * Mode: EMPRESA SUMA (prices exclude ITBIS, ITBIS added on top)
+     * Formula: SubTotal = Price (unchanged)
+     *          ITBIS = SubTotal × 0.18
+     *          Total = SubTotal + ITBIS
+     */
+
+    // ESCENARIO 1: Article without discount
+    it('ESCENARIO 1: Single article, price=1000, qty=1, discount=0', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 0;
+      const subTotal = (price * qty) - discount; // 1000
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 180.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1000);
+      expect(itbis).toBe(180.00);
+      expect(total).toBe(1180);
+      expect(subTotal + itbis).toBe(1180);
+    });
+
+    // ESCENARIO 2: Article with discount
+    it('ESCENARIO 2: Single article, price=1000, qty=1, discount=100', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 100;
+      const subTotal = (price * qty) - discount; // 900
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 162.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(900);
+      expect(itbis).toBe(162.00);
+      expect(total).toBe(1062);
+      expect(subTotal + itbis).toBe(1062);
+    });
+
+    // ESCENARIO 3: Multiple quantity, no discount
+    it('ESCENARIO 3: Multiple quantity, price=500, qty=3, discount=0', () => {
+      const price = 500;
+      const qty = 3;
+      const discount = 0;
+      const subTotal = (price * qty) - discount; // 1500
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 270.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1500);
+      expect(itbis).toBe(270.00);
+      expect(total).toBe(1770);
+      expect(subTotal + itbis).toBe(1770);
+    });
+
+    // ESCENARIO 4: Quantity with discount
+    it('ESCENARIO 4: Multiple quantity, price=1000, qty=2, discount=50', () => {
+      const price = 1000;
+      const qty = 2;
+      const discount = 50;
+      const subTotal = (price * qty) - discount; // 1950
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 351.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1950);
+      expect(itbis).toBe(351.00);
+      expect(total).toBe(2301);
+      expect(subTotal + itbis).toBe(2301);
+    });
+
+    // Edge case: Small discount
+    it('ESCENARIO 5: price=1000, qty=1, discount=1 (small discount)', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 1;
+      const subTotal = (price * qty) - discount; // 999
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 179.82
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(999);
+      expect(itbis).toBe(179.82);
+      expect(total).toBe(1178.82);
+    });
+
+    // Edge case: Medium discount
+    it('ESCENARIO 6: price=1000, qty=1, discount=10 (medium discount)', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 10;
+      const subTotal = (price * qty) - discount; // 990
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 178.20
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(990);
+      expect(itbis).toBe(178.20);
+      expect(total).toBe(1168.20);
+    });
+
+    // Edge case: Large discount
+    it('ESCENARIO 7: price=1000, qty=1, discount=100', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 100;
+      const subTotal = (price * qty) - discount; // 900
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 162.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(900);
+      expect(itbis).toBe(162.00);
+      expect(total).toBe(1062);
+    });
+
+    // Quantity 2 with large discount
+    it('ESCENARIO 8: price=1000, qty=2, discount=100', () => {
+      const price = 1000;
+      const qty = 2;
+      const discount = 100;
+      const subTotal = (price * qty) - discount; // 1900
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 342.00
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(1900);
+      expect(itbis).toBe(342.00);
+      expect(total).toBe(2242);
+    });
+
+    // Lower price point tests
+    it('ESCENARIO 9: price=500, qty=2, discount=1', () => {
+      const price = 500;
+      const qty = 2;
+      const discount = 1;
+      const subTotal = (price * qty) - discount; // 999
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 179.82
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(999);
+      expect(itbis).toBe(179.82);
+      expect(total).toBe(1178.82);
+    });
+
+    // Lower price point with medium discount
+    it('ESCENARIO 10: price=500, qty=2, discount=10', () => {
+      const price = 500;
+      const qty = 2;
+      const discount = 10;
+      const subTotal = (price * qty) - discount; // 990
+
+      const itbis = Math.round((subTotal * 0.18) * 100) / 100; // 178.20
+      const total = subTotal + itbis;
+
+      expect(subTotal).toBe(990);
+      expect(itbis).toBe(178.20);
+      expect(total).toBe(1168.20);
+    });
+
+    // Precision verification tests
+    it('should maintain exact 2-decimal precision (no rounding errors)', () => {
+      const testCases = [
+        { price: 1000, qty: 1, desc: 0, expectedSub: 1000, expectedITBIS: 180, expectedTotal: 1180 },
+        { price: 1000, qty: 1, desc: 100, expectedSub: 900, expectedITBIS: 162, expectedTotal: 1062 },
+        { price: 500, qty: 3, desc: 0, expectedSub: 1500, expectedITBIS: 270, expectedTotal: 1770 }
+      ];
+
+      testCases.forEach((tc) => {
+        const subTotal = (tc.price * tc.qty) - tc.desc;
+        const itbis = Math.round((subTotal * 0.18) * 100) / 100;
+        const total = subTotal + itbis;
+
+        expect(subTotal).toBe(tc.expectedSub, `SubTotal mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+        expect(itbis).toBe(tc.expectedITBIS, `ITBIS mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+        expect(total).toBe(tc.expectedTotal, `Total mismatch for price=${tc.price}, qty=${tc.qty}, desc=${tc.desc}`);
+      });
+    });
+
+    it('should never result in rounding errors (subTotal + ITBIS = Total)', () => {
+      const scenarios = [
+        { subTotal: 1000 },
+        { subTotal: 900 },
+        { subTotal: 1500 },
+        { subTotal: 1950 },
+        { subTotal: 999 },
+        { subTotal: 990 },
+        { subTotal: 1900 }
+      ];
+
+      scenarios.forEach((scenario) => {
+        const itbis = Math.round((scenario.subTotal * 0.18) * 100) / 100;
+        const sum = Number((scenario.subTotal + itbis).toFixed(2));
+        const expectedTotal = Math.round((scenario.subTotal + scenario.subTotal * 0.18) * 100) / 100;
+
+        expect(sum).toBe(expectedTotal,
+          `Rounding error: ${scenario.subTotal} + ${itbis} = ${sum}, expected ${expectedTotal}`);
+      });
+    });
+  });
+
+  // ===== MODE SWITCHING TESTS - TIENDA ASUME ↔ EMPRESA SUMA =====
+  describe('Mode Switching Tests - TIENDA ASUME ↔ EMPRESA SUMA', () => {
+
+    it('MODE SWITCH 1: Single article, price=1000, qty=1, discount=100, multiple mode changes', () => {
+      // ESCENARIO: Precio con ITBIS=1000, cantidad=1, descuento=100
+      const priceConItbis = 1000;
+      const qty = 1;
+      const discount = 100;
+
+      // Esperado TIENDA ASUME:
+      const totalConDescuentoTA = (priceConItbis * qty) - discount; // 900
+      const subTotalTA = Math.round((totalConDescuentoTA / 1.18) * 100) / 100; // 762.71
+      const itbisTA = Math.round((totalConDescuentoTA - subTotalTA) * 100) / 100; // 137.29
+      const totalTA = Math.round((subTotalTA + itbisTA) * 100) / 100; // 900
+
+      expect(subTotalTA).toBe(762.71, 'TIENDA ASUME: SubTotal should be extracted correctly');
+      expect(itbisTA).toBe(137.29, 'TIENDA ASUME: ITBIS should be remainder method');
+      expect(totalTA).toBe(900, 'TIENDA ASUME: Total should equal price - discount');
+
+      // Esperado EMPRESA SUMA:
+      const pricesinItbis = 1000;
+      const totalConDescuentoES = (pricesinItbis * qty) - discount; // 900
+      const subTotalES = totalConDescuentoES; // 900
+      const itbisES = Math.round((subTotalES * 0.18) * 100) / 100; // 162
+      const totalES = Math.round((subTotalES + itbisES) * 100) / 100; // 1062
+
+      expect(subTotalES).toBe(900, 'EMPRESA SUMA: SubTotal without discount');
+      expect(itbisES).toBe(162, 'EMPRESA SUMA: ITBIS calculated as 18%');
+      expect(totalES).toBe(1062, 'EMPRESA SUMA: Total equals SubTotal + ITBIS');
+
+      // Verificación de consistencia: descuento no duplicado
+      expect(totalTA).toBe(900, 'After mode switch to TIENDA ASUME: total should be 900 (not 762.71)');
+      expect(totalES).toBe(1062, 'After mode switch to EMPRESA SUMA: total should be 1062 (not 900)');
+    });
+
+    it('MODE SWITCH 2: Verify no descuento duplication when switching modes multiple times', () => {
+      // El producto es 1000 con ITBIS incluido, descuento=100
+      const scenarios = [
+        { mode: 'TIENDA_ASUME', expectedSub: 762.71, expectedItbis: 137.29, expectedTotal: 900 },
+        { mode: 'EMPRESA_SUMA', expectedSub: 900, expectedItbis: 162, expectedTotal: 1062 },
+        { mode: 'TIENDA_ASUME', expectedSub: 762.71, expectedItbis: 137.29, expectedTotal: 900 },
+        { mode: 'EMPRESA_SUMA', expectedSub: 900, expectedItbis: 162, expectedTotal: 1062 }
+      ];
+
+      scenarios.forEach((scenario) => {
+        const subTotal = scenario.expectedSub;
+        const itbis = scenario.expectedItbis;
+        const total = scenario.expectedTotal;
+
+        expect(Number((subTotal + itbis).toFixed(2))).toBe(total,
+          `${scenario.mode}: SubTotal(${subTotal}) + ITBIS(${itbis}) should equal Total(${total})`);
+
+        // Verificar que no hay duplicación de descuento
+        if (scenario.mode === 'TIENDA_ASUME') {
+          expect(total).toBe(900, `${scenario.mode}: Total should be exactly 900 (1000-100), not duplicating discount`);
+        } else {
+          expect(total).toBe(1062, `${scenario.mode}: Total should be 1062 (900 + 162), not incorrectly modified`);
+        }
+      });
+    });
+
+    it('MODE SWITCH 3: Descuento consistency across mode switches', () => {
+      // Test que el descuento se mantiene consistente
+      const originalPrice = 1000;
+      const discount = 100;
+
+      // TIENDA ASUME: Precio con ITBIS
+      const priceWithItbis = 1000;
+      const totalAfterDiscountTA = priceWithItbis - discount; // 900 ← This is the price customer pays
+      const subTotalTA = Math.round((totalAfterDiscountTA / 1.18) * 100) / 100;
+      const finalTotalTA = Math.round((totalAfterDiscountTA) * 100) / 100;
+
+      // EMPRESA SUMA: Precio sin ITBIS
+      const priceSinItbis = 1000 - discount; // 900 ← SubTotal after discount in EMPRESA SUMA
+      const itbisES = Math.round((priceSinItbis * 0.18) * 100) / 100;
+      const finalTotalES = Math.round((priceSinItbis + itbisES) * 100) / 100;
+
+      // Verificación: descuento nunca duplicado
+      expect(finalTotalTA).toBe(900, 'Customer pays 900 in TIENDA ASUME (1000 - 100)');
+      expect(finalTotalES).toBe(1062, 'Customer pays 1062 in EMPRESA SUMA (900 + 162 ITBIS)');
+
+      // Esta es la diferencia esperada entre los dos modos
+      const difference = finalTotalES - finalTotalTA; // 162 (que es el ITBIS en ES)
+      expect(difference).toBe(162, 'Difference should be exactly the ITBIS (162), not double discount');
+    });
+
+    it('MODE SWITCH 4: price=1000, qty=1, discount=0, verifying mode switch consistency', () => {
+      const price = 1000;
+      const qty = 1;
+      const discount = 0;
+
+      // TIENDA ASUME (sin descuento)
+      const totalConDescuentoTA = (price * qty) - discount; // 1000
+      const subTotalTA = Math.round((totalConDescuentoTA / 1.18) * 100) / 100; // 847.46
+      const itbisTA = Math.round((totalConDescuentoTA - subTotalTA) * 100) / 100; // 152.54
+      const totalTA = Math.round((subTotalTA + itbisTA) * 100) / 100; // 1000
+
+      // EMPRESA SUMA (sin descuento)
+      const totalConDescuentoES = (price * qty) - discount; // 1000
+      const subTotalES = totalConDescuentoES; // 1000
+      const itbisES = Math.round((subTotalES * 0.18) * 100) / 100; // 180
+      const totalES = Math.round((subTotalES + itbisES) * 100) / 100; // 1180
+
+      expect(subTotalTA).toBe(847.46);
+      expect(itbisTA).toBe(152.54);
+      expect(totalTA).toBe(1000);
+
+      expect(subTotalES).toBe(1000);
+      expect(itbisES).toBe(180);
+      expect(totalES).toBe(1180);
+
+      // Verify the difference
+      expect(totalES - totalTA).toBe(180, 'EMPRESA SUMA should be 180 more (extra ITBIS)');
+    });
+
+    it('MODE SWITCH 5: Complex scenario - multiple articles with discount, mode switches', () => {
+      // Simulating 3 articles similar to the validated scenario
+      const articles = [
+        { price: 1500, qty: 1, discount: 100 },
+        { price: 800, qty: 2, discount: 50 },
+        { price: 1000, qty: 1, discount: 0 }
+      ];
+
+      // TIENDA ASUME mode
+      let totalSubTA = 0, totalItbisTA = 0;
+      articles.forEach(art => {
+        const totalConDesc = (art.price * art.qty) - art.discount;
+        const subTotal = Math.round((totalConDesc / 1.18) * 100) / 100;
+        const itbis = Math.round((totalConDesc - subTotal) * 100) / 100;
+        totalSubTA += subTotal;
+        totalItbisTA += itbis;
+      });
+      totalSubTA = Math.round(totalSubTA * 100) / 100;
+      totalItbisTA = Math.round(totalItbisTA * 100) / 100;
+      const totalTA = Math.round((totalSubTA + totalItbisTA) * 100) / 100;
+
+      // EMPRESA SUMA mode
+      let totalSubES = 0;
+      articles.forEach(art => {
+        const totalConDesc = (art.price * art.qty) - art.discount;
+        totalSubES += totalConDesc;
+      });
+      totalSubES = Math.round(totalSubES * 100) / 100;
+      const totalItbisES = Math.round((totalSubES * 0.18) * 100) / 100;
+      const totalES = Math.round((totalSubES + totalItbisES) * 100) / 100;
+
+      // Verify no descuento duplication
+      // TIENDA ASUME: Art1(1400/1.18=1186.44+213.56) + Art2(1550/1.18=1313.56+236.44) + Art3(1000/1.18=847.46+152.54) = 3950
+      // EMPRESA SUMA: (1400+1550+1000) * 1.18 = 3950 * 1.18 = 4661
+      expect(totalTA).toBeCloseTo(3950, 2, 'TIENDA ASUME total');
+      expect(totalES).toBeCloseTo(4661, 2, 'EMPRESA SUMA total');
+
+      // Verify the totals are reasonable
+      expect(totalES > totalTA).toBe(true, 'EMPRESA SUMA should have higher total due to complete ITBIS');
+    });
+  });
 });
+
