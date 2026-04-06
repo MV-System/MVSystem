@@ -374,7 +374,7 @@ onModalClose(rep: any) {
     tipoFactura: [1,],
     tipoPago: [1,],
     fechaFacturacion: this.currentDateTime(),
-    comprobante: [0,],
+    comprobante: [null,],  // Se asigna dinámicamente por visible_Venta
     fechaLimitePago: this.currentDateTime(),
     garantia: [8,],
     nota: ['',],
@@ -384,7 +384,7 @@ onModalClose(rep: any) {
     subTotal: [,],
     numConfirmacion: [,],
     abono: [0],
-    aplicarItbis: [false,],
+    aplicarItbis: [true,],
     usuario: this.loginService.getUserName(),
     btnAddArticulo:'',
      articulo: [null],
@@ -1279,6 +1279,8 @@ else
   onCheckboxChangeComprobante() {
     const { comprobante } = this.form.value;
     const typesNotRequireNCF = ['0', '32']  // 32 = Consumidor Final (cambió de 2 a 32)
+
+    // Mostrar/ocultar RNC según tipo de comprobante
     if (!typesNotRequireNCF.includes(comprobante)) {
       this.isNcfRequire = true;
     }
@@ -1286,6 +1288,10 @@ else
       this.isNcfRequire = false;
     }
 
+    // Si comprobante es 0 (NO REQUERIDO), desactivar aplicarItbis
+    // Si es diferente de 0, activar aplicarItbis
+    const aplicarItbis = comprobante !== '0' && comprobante !== 0;
+    this.form.get('aplicarItbis')?.setValue(aplicarItbis);
   }
   validarCampos(nombreCampo: string) {
     return this.form.get(nombreCampo)?.invalid &&
@@ -1313,6 +1319,14 @@ else
         this.vendedores = resp[3];
         this.pagoTipos = resp[4];
         this.accesorios = resp[5];
+
+        // Buscar comprobante con visible_Venta = true y establecerlo como default
+        const comprobanteDefault = this.comprobanteTipos.find(comp => comp.visible_Venta === true);
+        if (comprobanteDefault) {
+          this.form.get('comprobante')?.setValue(comprobanteDefault.nfcTipoNumero);
+          // Disparar el cambio de comprobante para actualizar aplicarItbis correctamente
+          this.onCheckboxChangeComprobante();
+        }
 
         this.loading.hideLoading();
 
