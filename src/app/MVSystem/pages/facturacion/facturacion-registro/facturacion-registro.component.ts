@@ -1278,7 +1278,7 @@ else
   }
   onCheckboxChangeComprobante() {
     const { comprobante } = this.form.value;
-    const typesNotRequireNCF = ['0', '2']
+    const typesNotRequireNCF = ['0', '32']  // 32 = Consumidor Final (cambió de 2 a 32)
     if (!typesNotRequireNCF.includes(comprobante)) {
       this.isNcfRequire = true;
     }
