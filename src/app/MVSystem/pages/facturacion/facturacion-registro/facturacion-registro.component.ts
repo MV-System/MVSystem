@@ -1754,7 +1754,7 @@ printFacturaMini() {
                 this.articulos().controls[i].patchValue({
                   subTotal: subTotalRedondeado,
                   total: totalArticulo,
-                  itbis: itbisArticulo
+                  itbis: 0
                 });
 
                 console.log(`   [${i}] ${articulo.descripcion}: TIENDA ASUME - subTotal=${subTotalRedondeado}, itbis=${itbisArticulo}`);

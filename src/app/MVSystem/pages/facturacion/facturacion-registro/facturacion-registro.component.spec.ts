@@ -1750,5 +1750,862 @@ describe('FacturacionRegistroComponent', () => {
       expect(totalES > totalTA).toBe(true, 'EMPRESA SUMA should have higher total due to complete ITBIS');
     });
   });
+
+  // ===== COMPONENT METHOD TESTS - ITBIS CALCULATIONS =====
+  describe('onCheckboxChangeComprobante - aplicarItbis logic', () => {
+
+    it('should set aplicarItbis=false when comprobante is 0 (NO REQUERIDO)', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('comprobante')?.setValue('0');
+      component.onCheckboxChangeComprobante();
+      expect(component.form.get('aplicarItbis')?.value).toBe(false);
+    });
+
+    it('should set aplicarItbis=true when comprobante is 32 (CONSUMIDOR FINAL)', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('comprobante')?.setValue('32');
+      component.onCheckboxChangeComprobante();
+      expect(component.form.get('aplicarItbis')?.value).toBe(true);
+    });
+
+    it('should set aplicarItbis=true when comprobante is any non-zero value', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('comprobante')?.setValue('31');
+      component.onCheckboxChangeComprobante();
+      expect(component.form.get('aplicarItbis')?.value).toBe(true);
+    });
+
+    it('should clear ITBIS from articles when switching to NO REQUERIDO', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      // Setup article with ITBIS
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ precio: 200, cantidad: 1, descuento: 0, subTotal: 169.49, itbis: 30.51, total: 200 });
+
+      // Switch to NO REQUERIDO
+      component.form.get('comprobante')?.setValue('0');
+      component.onCheckboxChangeComprobante();
+
+      expect(articulo.get('itbis')?.value).toBe(0);
+    });
+  });
+
+  describe('obtenerCantidadArticuloStock - TIENDA ASUME (S)', () => {
+
+    it('should extract ITBIS from price (200 -> subTotal=169.49, itbis=30.51)', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      component.obtenerCantidadArticuloStock(0);
+
+      expect(articulo.get('subTotal')?.value).toBeCloseTo(169.49, 1);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(30.51, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(200, 1);
+    });
+
+    it('should extract ITBIS with discount (200 - 20 = 180 -> subTotal=152.54, itbis=27.46)', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 20,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      component.obtenerCantidadArticuloStock(0);
+
+      expect(articulo.get('subTotal')?.value).toBeCloseTo(152.54, 1);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(27.46, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(180, 1);
+    });
+
+    it('should set itbis=0 when aplicarItbis is false', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(false);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      component.obtenerCantidadArticuloStock(0);
+
+      expect(articulo.get('itbis')?.value).toBe(0);
+      expect(articulo.get('subTotal')?.value).toBe(200);
+      expect(articulo.get('total')?.value).toBe(200);
+    });
+  });
+
+  describe('obtenerCantidadArticuloStock - EMPRESA SUMA (N)', () => {
+
+    it('should add ITBIS on top (200 -> subTotal=200, itbis=36, total=236)', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      component.obtenerCantidadArticuloStock(0);
+
+      expect(articulo.get('subTotal')?.value).toBe(200);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(36, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(236, 1);
+    });
+
+    it('should add ITBIS after discount (200 - 20 = 180 -> itbis=32.40, total=212.40)', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 20,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      component.obtenerCantidadArticuloStock(0);
+
+      expect(articulo.get('subTotal')?.value).toBe(180);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(32.40, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(212.40, 1);
+    });
+  });
+
+  describe('refreshGeneralValues - totals accumulation', () => {
+
+    it('should accumulate totals for TIENDA ASUME with 2 articles', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Article 1: precio=300
+      const art1 = component.articulos().at(0);
+      art1.patchValue({
+        precio: 300, cantidad: 1, descuento: 0,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Art1' }
+      });
+      component.obtenerCantidadArticuloStock(0);
+
+      // Article 2: precio=200
+      art1.get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      const art2 = component.articulos().at(0);
+      art2.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        articulo: { id: 2, cantidad: 10, accesorio_Descripcion: 'Art2' }
+      });
+      component.obtenerCantidadArticuloStock(0);
+
+      component.refreshGeneralValues();
+
+      // Total should be 500 (300 + 200), ITBIS extracted from it
+      expect(component.total).toBeCloseTo(500, 0);
+      expect(component.itbis).toBeCloseTo(76.27, 0);
+      expect(component.subTotal).toBeCloseTo(423.73, 0);
+    });
+
+    it('should accumulate totals for EMPRESA SUMA with 2 articles', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Article 1: precio=300
+      const art1 = component.articulos().at(0);
+      art1.patchValue({
+        precio: 300, cantidad: 1, descuento: 0,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Art1' }
+      });
+      component.obtenerCantidadArticuloStock(0);
+
+      // Article 2: precio=200
+      art1.get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      const art2 = component.articulos().at(0);
+      art2.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        articulo: { id: 2, cantidad: 10, accesorio_Descripcion: 'Art2' }
+      });
+      component.obtenerCantidadArticuloStock(0);
+
+      component.refreshGeneralValues();
+
+      // subTotal=500, itbis=90 (500*0.18), total=590
+      expect(component.subTotal).toBeCloseTo(500, 0);
+      expect(component.itbis).toBeCloseTo(90, 0);
+      expect(component.total).toBeCloseTo(590, 0);
+    });
+
+    it('should set itbis=0 and subTotal=total when aplicarItbis is false', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(false);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ subTotal: 200, total: 200, itbis: 0, descuento: 0 });
+
+      component.refreshGeneralValues();
+
+      expect(component.itbis).toBe(0);
+      expect(component.subTotal).toBe(200);
+    });
+  });
+
+  describe('onAsumeITBISChange - dynamic mode switch (BUG FIX)', () => {
+
+    it('should calculate ITBIS when switching from TIENDA ASUME to EMPRESA SUMA', () => {
+      const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
+      (mockCatalogosService as any).updateAsumeITBIS = jasmine.createSpy('updateAsumeITBIS')
+        .and.returnValue(of({ success: true }));
+
+      // Start in TIENDA ASUME mode
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        subTotal: 169.49, itbis: 30.51, total: 200,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      // Switch to EMPRESA SUMA
+      component.asumeITBISValue = false;
+      component.onAsumeITBISChange();
+
+      // EMPRESA SUMA: subTotal=200, itbis=36, total=236
+      expect(articulo.get('subTotal')?.value).toBe(200);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(36, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(236, 1);
+
+      // Verify general totals too
+      expect(component.itbis).toBeCloseTo(36, 1);
+      expect(component.total).toBeCloseTo(236, 1);
+    });
+
+    it('should extract ITBIS when switching from EMPRESA SUMA to TIENDA ASUME', () => {
+      const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
+      (mockCatalogosService as any).updateAsumeITBIS = jasmine.createSpy('updateAsumeITBIS')
+        .and.returnValue(of({ success: true }));
+
+      // Start in EMPRESA SUMA mode
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        subTotal: 200, itbis: 36, total: 236,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      // Switch to TIENDA ASUME
+      component.asumeITBISValue = true;
+      component.onAsumeITBISChange();
+
+      // TIENDA ASUME: total=200 (precio), subTotal=169.49, itbis=30.51
+      expect(articulo.get('total')?.value).toBeCloseTo(200, 1);
+      expect(articulo.get('subTotal')?.value).toBeCloseTo(169.49, 1);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(30.51, 1);
+    });
+
+    it('should handle mode switch with discount correctly', () => {
+      const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
+      (mockCatalogosService as any).updateAsumeITBIS = jasmine.createSpy('updateAsumeITBIS')
+        .and.returnValue(of({ success: true }));
+
+      // Start in TIENDA ASUME with discount
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 20,
+        subTotal: 152.54, itbis: 27.46, total: 180,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Test' }
+      });
+
+      // Switch to EMPRESA SUMA
+      component.asumeITBISValue = false;
+      component.onAsumeITBISChange();
+
+      // EMPRESA SUMA: subTotal = (200*1) - 20 = 180, itbis = 180*0.18 = 32.40, total = 212.40
+      expect(articulo.get('subTotal')?.value).toBe(180);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(32.40, 1);
+      expect(articulo.get('total')?.value).toBeCloseTo(212.40, 1);
+    });
+
+    it('should handle multiple articles on mode switch', () => {
+      const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
+      (mockCatalogosService as any).updateAsumeITBIS = jasmine.createSpy('updateAsumeITBIS')
+        .and.returnValue(of({ success: true }));
+
+      // Start in TIENDA ASUME
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Article 1
+      const art1 = component.articulos().at(0);
+      art1.patchValue({
+        precio: 300, cantidad: 1, descuento: 0,
+        subTotal: 254.24, itbis: 45.76, total: 300,
+        articulo: { id: 1, cantidad: 10, accesorio_Descripcion: 'Art1' }
+      });
+
+      // Article 2
+      art1.get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      const art2 = component.articulos().at(0);
+      art2.patchValue({
+        precio: 200, cantidad: 1, descuento: 0,
+        subTotal: 169.49, itbis: 30.51, total: 200,
+        articulo: { id: 2, cantidad: 10, accesorio_Descripcion: 'Art2' }
+      });
+
+      // Switch to EMPRESA SUMA
+      component.asumeITBISValue = false;
+      component.onAsumeITBISChange();
+
+      // Art1: subTotal=300, itbis=54, total=354
+      expect(art1.get('subTotal')?.value).toBe(300);
+      expect(art1.get('itbis')?.value).toBeCloseTo(54, 1);
+      expect(art1.get('total')?.value).toBeCloseTo(354, 1);
+
+      // Art2: subTotal=200, itbis=36, total=236
+      expect(art2.get('subTotal')?.value).toBe(200);
+      expect(art2.get('itbis')?.value).toBeCloseTo(36, 1);
+      expect(art2.get('total')?.value).toBeCloseTo(236, 1);
+
+      // General totals: subTotal=500, itbis=90, total=590
+      expect(component.subTotal).toBeCloseTo(500, 0);
+      expect(component.itbis).toBeCloseTo(90, 0);
+      expect(component.total).toBeCloseTo(590, 0);
+    });
+
+    it('should revert checkbox on API error', () => {
+      const mockCatalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
+      (mockCatalogosService as any).updateAsumeITBIS = jasmine.createSpy('updateAsumeITBIS')
+        .and.returnValue(throwError('API Error'));
+
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.asumeITBISValue = false; // User unchecks
+
+      component.onAsumeITBISChange();
+
+      // Should revert back to true on error
+      expect(component.asumeITBISValue).toBe(true);
+    });
+  });
+
+  // ===== HIGH PRIORITY: validarPrecioVsCosto =====
+  describe('validarPrecioVsCosto - prevent selling below cost', () => {
+
+    it('should return true when no equipment articles exist', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ idTipo: 2, precio: 100 }); // Accesorio, no equipo
+      expect(component.validarPrecioVsCosto()).toBeTrue();
+    });
+
+    it('should return true when equipment price >= cost', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        idTipo: 1, precio: 500,
+        articulo: { costo_Equipo: 300 }
+      });
+      expect(component.validarPrecioVsCosto()).toBeTrue();
+    });
+
+    it('should return false and show error when equipment price < cost', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        idTipo: 1, precio: 200,
+        articulo: { costo_Equipo: 500 }
+      });
+      expect(component.validarPrecioVsCosto()).toBeFalse();
+      expect(mockToastr.error).toHaveBeenCalled();
+    });
+
+    it('should return true when articulo object is null (no cost to compare)', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        idTipo: 1, precio: 100,
+        articulo: null
+      });
+      // articulo is null and costo_Equipo not in FormGroup, so costo=0, price > 0 → true
+      expect(component.validarPrecioVsCosto()).toBeTrue();
+    });
+
+    it('should return true when price equals cost exactly', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        idTipo: 1, precio: 300,
+        articulo: { costo_Equipo: 300 }
+      });
+      expect(component.validarPrecioVsCosto()).toBeTrue();
+    });
+
+    it('should skip validation for non-equipment types (idTipo != 1)', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        idTipo: 2, precio: 10,
+        articulo: { costo_Equipo: 500 }
+      });
+      expect(component.validarPrecioVsCosto()).toBeTrue();
+    });
+  });
+
+  // ===== HIGH PRIORITY: obtenerDetalleFactura =====
+  describe('obtenerDetalleFactura - article selection logic', () => {
+
+    it('should populate article fields when accessory selected', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 0, cantidad: 1, descuento: 0,
+        articulo: {
+          id: 100, idTipo: 2, accesorio_Descripcion: 'Cargador USB',
+          precio_Detalle: 500, precio_Por_Mayor: 400, cantidad: 10
+        }
+      });
+
+      component.obtenerDetalleFactura(0);
+
+      expect(articulo.get('descripcion')?.value).toBe('Cargador USB');
+      expect(articulo.get('idEquipo')?.value).toBe(100);
+      expect(articulo.get('precio')?.value).toBe(500);
+    });
+
+    it('should calculate ITBIS in TIENDA ASUME when selecting article', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 0, cantidad: 1, descuento: 0,
+        articulo: {
+          id: 100, idTipo: 2, accesorio_Descripcion: 'Test',
+          precio_Detalle: 200, precio_Por_Mayor: 180, cantidad: 10
+        }
+      });
+
+      component.obtenerDetalleFactura(0);
+
+      // TIENDA ASUME: 200 -> subTotal~169.49, itbis~30.51
+      expect(articulo.get('itbis')?.value).toBeGreaterThan(0);
+      expect(articulo.get('subTotal')?.value).toBeLessThan(200);
+    });
+
+    it('should set itbis=0 when aplicarItbis is false', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(false);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 0, cantidad: 1, descuento: 0,
+        articulo: {
+          id: 100, idTipo: 2, accesorio_Descripcion: 'Test',
+          precio_Detalle: 200, precio_Por_Mayor: 180, cantidad: 10
+        }
+      });
+
+      component.obtenerDetalleFactura(0);
+
+      expect(articulo.get('itbis')?.value).toBe(0);
+    });
+
+    it('should reject duplicate articles', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+
+      // First article
+      const art1 = component.articulos().at(0);
+      art1.patchValue({
+        precio: 0, cantidad: 1, descuento: 0, idEquipo: 100,
+        articulo: {
+          id: 100, idTipo: 2, accesorio_Descripcion: 'Test',
+          precio_Detalle: 200, precio_Por_Mayor: 180, cantidad: 10
+        }
+      });
+      component.obtenerDetalleFactura(0);
+
+      // Add second article with same idEquipo
+      art1.get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      const art2 = component.articulos().at(0);
+      art2.patchValue({
+        precio: 0, cantidad: 1, descuento: 0, idEquipo: 0,
+        articulo: {
+          id: 100, idTipo: 2, accesorio_Descripcion: 'Test Duplicado',
+          precio_Detalle: 200, precio_Por_Mayor: 180, cantidad: 10
+        }
+      });
+
+      component.obtenerDetalleFactura(0);
+
+      expect(mockToastr.error).toHaveBeenCalledWith('Este articulo ya fue registrado');
+    });
+
+    it('should handle repair type articles (idTipo=4)', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 0, cantidad: 1, descuento: 0,
+        articulo: {
+          id: 50, idTipo: 4, accesorio_Descripcion: 'Reparación #50',
+          precio_Detalle: 1500, precio_Por_Mayor: 1500, cantidad: 1,
+          mensaje: 'Pantalla rota'
+        }
+      });
+
+      component.obtenerDetalleFactura(0);
+
+      expect(articulo.get('descripcion')?.value).toBe('Reparación #50');
+      expect(articulo.get('precio')?.value).toBe(1500);
+      expect(component.form.get('nota')?.value).toBe('Pantalla rota');
+    });
+
+    it('should return early if no article selected', () => {
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ articulo: null });
+
+      // Should not throw
+      expect(() => component.obtenerDetalleFactura(0)).not.toThrow();
+    });
+  });
+
+  // ===== HIGH PRIORITY: borrarArticulo =====
+  describe('borrarArticulo - remove article and recalculate', () => {
+
+    it('should remove article and recalculate totals', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Setup 2 articles
+      const art1 = component.articulos().at(0);
+      art1.patchValue({
+        precio: 300, cantidad: 1, descuento: 0, subTotal: 300, itbis: 54, total: 354,
+        articulo: { id: 1, cantidad: 10 }
+      });
+
+      art1.get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      const art2 = component.articulos().at(0);
+      art2.patchValue({
+        precio: 200, cantidad: 1, descuento: 0, subTotal: 200, itbis: 36, total: 236,
+        articulo: { id: 2, cantidad: 10 }
+      });
+
+      expect(component.articulos().length).toBe(2);
+
+      // Remove first article (index 0)
+      component.borrarArticulo(0);
+
+      // Should have 1 article remaining
+      expect(component.articulos().length).toBe(1);
+    });
+
+    it('should add empty article if last one is removed', () => {
+      expect(component.articulos().length).toBe(1);
+
+      component.borrarArticulo(0);
+
+      // Should still have 1 article (empty one added)
+      expect(component.articulos().length).toBe(1);
+    });
+
+    it('should re-enable tipoFactura and tipoPago when total becomes 0', () => {
+      component.total = 0;
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ subTotal: 0, total: 0, itbis: 0, descuento: 0 });
+
+      component.borrarArticulo(0);
+
+      expect(component.form.get('tipoFactura')?.disabled).toBeFalse();
+      expect(component.form.get('tipoPago')?.disabled).toBeFalse();
+    });
+  });
+
+  // ===== HIGH PRIORITY: agregarAbono =====
+  describe('agregarAbono - payment validation', () => {
+
+    it('should accept valid abono less than total', () => {
+      component.total = 1000;
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('abono')?.setValue(500);
+
+      component.agregarAbono();
+
+      expect(component.abono).toBe(500);
+    });
+
+    it('should reject abono greater than total', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      component.total = 1000;
+      component.form.get('abono')?.setValue(1500);
+
+      component.agregarAbono();
+
+      expect(component.abono).toBe(0);
+      expect(component.form.get('abono')?.value).toBe(0);
+      expect(mockToastr.error).toHaveBeenCalledWith('El abono no puede ser mayor al total de la factura');
+    });
+
+    it('should reject negative abono', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      component.total = 1000;
+      component.form.get('abono')?.setValue(-100);
+
+      component.agregarAbono();
+
+      expect(component.abono).toBe(0);
+      expect(mockToastr.error).toHaveBeenCalledWith('El abono no puede ser negativo');
+    });
+
+    it('should accept abono equal to total', () => {
+      component.total = 1000;
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('abono')?.setValue(1000);
+
+      component.agregarAbono();
+
+      expect(component.abono).toBe(1000);
+    });
+
+    it('should accept abono of 0', () => {
+      component.total = 1000;
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('abono')?.setValue(0);
+
+      component.agregarAbono();
+
+      expect(component.abono).toBe(0);
+    });
+  });
+
+  // ===== HIGH PRIORITY: calculoTotal =====
+  describe('calculoTotal - discount validation', () => {
+
+    it('should return subtotal minus discount when valid', () => {
+      expect(component.calculoTotal(1000, 200)).toBe(800);
+    });
+
+    it('should return 0 and warn when discount > subtotal', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      const result = component.calculoTotal(500, 600);
+      expect(result).toBe(0);
+      expect(mockToastr.warning).toHaveBeenCalledWith('El descuento no puede ser mayor al subtotal!');
+    });
+
+    it('should return full subtotal when discount is 0', () => {
+      expect(component.calculoTotal(1000, 0)).toBe(1000);
+    });
+
+    it('should return 0 when discount equals subtotal', () => {
+      expect(component.calculoTotal(500, 500)).toBe(0);
+    });
+  });
+
+  // ===== HIGH PRIORITY: onPrecioChange =====
+  describe('onPrecioChange - manual price modification', () => {
+
+    it('should recalculate subtotal when price is changed manually', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 300, cantidad: 2, descuento: 0,
+        articulo: { precio_Detalle: 200 } // Original was 200, now 300
+      });
+
+      component.onPrecioChange(0);
+
+      // Price changed from 200->300, qty=2, so subTotal should be 600
+      expect(articulo.get('subTotal')?.value).toBe(600);
+    });
+
+    it('should extract ITBIS from subtotal in TIENDA ASUME mode', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 300, cantidad: 1, descuento: 0,
+        articulo: { precio_Detalle: 200 }
+      });
+
+      component.onPrecioChange(0);
+
+      // TIENDA ASUME: 300 / 1.18 = 254.24
+      expect(articulo.get('subTotal')?.value).toBeCloseTo(254.24, 1);
+    });
+
+    it('should revert discount if price - discount < cost for equipment', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 500, cantidad: 1, descuento: 300, idTipo: 1,
+        articulo: { precio_Detalle: 600, costo_Equipo: 400 }
+      });
+
+      component.onPrecioChange(0);
+
+      // precio(500) - descuento(300) = 200 < costo(400), so descuento reverted to 0
+      expect(articulo.get('descuento')?.value).toBe(0);
+      expect(mockToastr.error).toHaveBeenCalled();
+    });
+
+    it('should not recalculate if price equals original', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        precio: 200, cantidad: 1, descuento: 0, subTotal: 200, total: 200,
+        articulo: { precio_Detalle: 200 }
+      });
+
+      component.onPrecioChange(0);
+
+      // Price unchanged (200 === 200), subTotal should stay as is
+      expect(articulo.get('subTotal')?.value).toBe(200);
+    });
+  });
+
+  // ===== HIGH PRIORITY: onClean =====
+  describe('onClean - form reset', () => {
+
+    it('should reset amounts to 0', () => {
+      component.subTotal = 500;
+      component.descuento = 50;
+      component.total = 450;
+      component.itbis = 90;
+      component.abono = 100;
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, iD_Canal: 1 } as any;
+
+      // Mark form dirty so patchValue branch executes
+      component.form.markAsDirty();
+
+      component.onClean();
+
+      expect(component.subTotal).toBe(0);
+      expect(component.descuento).toBe(0);
+      expect(component.total).toBe(0);
+      expect(component.itbis).toBe(0);
+      expect(component.abono).toBe(0);
+    });
+
+    it('should reset state flags', () => {
+      component.isCredit = true;
+      component.isNcfRequire = true;
+      component.isLoading = true;
+      component.form.markAsDirty();
+
+      component.onClean();
+
+      expect(component.isCredit).toBeFalse();
+      expect(component.isNcfRequire).toBeFalse();
+      expect(component.isLoading).toBeFalse();
+    });
+
+    it('should clear articles and add one empty article', () => {
+      // Add a second article
+      component.articulos().at(0).get('articulo')?.setValue('filled');
+      component.agregarArticulo();
+      expect(component.articulos().length).toBe(2);
+
+      component.form.markAsDirty();
+      component.onClean();
+
+      // Should be back to 1 empty article
+      expect(component.articulos().length).toBe(1);
+    });
+
+    it('should reset form fields when dirty', () => {
+      component.form.get('nota')?.setValue('Some important note');
+      component.form.get('RNC')?.setValue('123456789');
+      component.form.markAsDirty();
+
+      component.onClean();
+
+      expect(component.form.get('nota')?.value).toBe('');
+      expect(component.form.get('RNC')?.value).toBe('');
+      expect(component.form.get('aplicarItbis')?.value).toBe(false);
+      expect(component.form.get('comprobante')?.value).toBe(0);
+    });
+
+    it('should clear customer data', () => {
+      component.customer = {
+        id_Cliente: 1, nombres: 'Juan', apellidos: 'Pérez',
+        numero_de_telefono: 8091234567, iD_Canal: 1
+      } as any;
+      component.form.markAsDirty();
+
+      component.onClean();
+
+      expect(component.customer!.nombres).toBe('');
+      expect(component.customer!.apellidos).toBe('');
+      expect(component.customer!.numero_de_telefono).toBe(0);
+    });
+  });
+
+  // ===== HIGH PRIORITY: onChangeTipoFactura =====
+  describe('onChangeTipoFactura - invoice type switching', () => {
+
+    it('should search repairs when type is Reparacion and article is INVALID', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      component.customer = { id_Cliente: 5, nombres: 'Test', iD_Canal: 1 } as any;
+
+      // Force article to INVALID status so else-if branch triggers
+      component.articulos().at(0).setErrors({ required: true });
+
+      const event = { target: { value: '4' } } as any;
+      component.onChangeTipoFactura(event);
+
+      expect(mockMantenimientoService.getReparacionesPendientes).toHaveBeenCalledWith({ IdCliente: 5 });
+    });
+
+    it('should show info message when Reparacion selected without client', () => {
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      component.customer = undefined;
+
+      // Force article to INVALID so else-if branch triggers
+      component.articulos().at(0).setErrors({ required: true });
+
+      const event = { target: { value: '4' } } as any;
+      component.onChangeTipoFactura(event);
+
+      expect(mockToastr.info).toHaveBeenCalledWith('Seleccione un cliente para buscar reparaciones pendientes.');
+    });
+
+    it('should show dialog when switching to wholesale with valid articles', () => {
+      const mockRDialogService = TestBed.inject(RDialogService) as jasmine.SpyObj<RDialogService>;
+      component.facturaTipos = [
+        { iD_Tipo_Factura: 1, descripcion_Factura_Tipo: 'Al Detalle' },
+        { iD_Tipo_Factura: 2, descripcion_Factura_Tipo: 'Al Por Mayor' }
+      ] as any;
+
+      // Make article valid by setting required fields
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        cantidad: 1, precio: 500,
+        articulo: { id: 1, accesorio_Descripcion: 'Test' }
+      });
+
+      const event = { target: { value: '2' } } as any;
+      component.onChangeTipoFactura(event);
+
+      expect(mockRDialogService.openDialog).toHaveBeenCalled();
+    });
+  });
 });
 
