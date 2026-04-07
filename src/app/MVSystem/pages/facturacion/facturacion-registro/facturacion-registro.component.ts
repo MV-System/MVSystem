@@ -1223,25 +1223,66 @@ else
       }
       // si la factura lleva itbis pero la empresa se lo suma al precio (EMPRESA SUMA)
       else {
-        // El ITBIS YA fue calculado en cada artículo (obtenerCantidadArticuloStock)
-        // Solo validar que los totales sean consistentes
+        // Recalcular ITBIS de cada artículo desde precio*cantidad
+        this.subTotal = 0;
+        this.descuento = 0;
+        this.itbis = 0;
+        this.total = 0;
+
+        for (let a = 0; a < this.articulos().length; a++) {
+          const control = this.articulos().controls[a] as FormGroup;
+          const precio = control.get('precio')?.value || 0;
+          const cantidad = control.get('cantidad')?.value || 1;
+          const descuento = control.get('descuento')?.value || 0;
+          const subTotalArticulo = this.calcularSubTotalArticulo(precio, cantidad) - descuento;
+          const itbisArticulo = Number(((subTotalArticulo * itbisRate) / 100).toFixed(2));
+          const totalArticulo = subTotalArticulo + itbisArticulo;
+
+          control.patchValue({
+            subTotal: subTotalArticulo,
+            itbis: itbisArticulo,
+            total: totalArticulo
+          });
+
+          this.subTotal += subTotalArticulo;
+          this.descuento += descuento;
+          this.itbis += itbisArticulo;
+          this.total += totalArticulo;
+        }
+
         this.itbis = Number(this.itbis.toFixed(2));
         this.subTotal = Number(this.subTotal.toFixed(2));
         this.total = Number(this.total.toFixed(2));
       }
     }
     else {
-      // ITBIS NO APLICADO
-      this.subTotal = Number(this.total.toFixed(2));
+      // ITBIS NO APLICADO - Recalcular cada artículo sin ITBIS
+      this.subTotal = 0;
+      this.descuento = 0;
+      this.total = 0;
       this.itbis = 0;
 
-      // Limpiar ITBIS de todos los artículos
       for (let a = 0; a < this.articulos().length; a++) {
         const control = this.articulos().controls[a] as FormGroup;
+        const precio = control.get('precio')?.value || 0;
+        const cantidad = control.get('cantidad')?.value || 1;
+        const descuento = control.get('descuento')?.value || 0;
+        const subTotalArticulo = this.calcularSubTotalArticulo(precio, cantidad);
+        const totalArticulo = subTotalArticulo - descuento;
+
         control.patchValue({
+          subTotal: subTotalArticulo,
+          total: totalArticulo,
           itbis: 0
         });
+
+        this.subTotal += subTotalArticulo;
+        this.descuento += descuento;
+        this.total += totalArticulo;
       }
+
+      this.subTotal = Number(this.subTotal.toFixed(2));
+      this.total = Number(this.total.toFixed(2));
     }
   }
 

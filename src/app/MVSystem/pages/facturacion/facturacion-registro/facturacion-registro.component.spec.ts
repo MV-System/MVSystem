@@ -1947,12 +1947,81 @@ describe('FacturacionRegistroComponent', () => {
       component.form.get('aplicarItbis')?.setValue(false);
 
       const articulo = component.articulos().at(0);
-      articulo.patchValue({ subTotal: 200, total: 200, itbis: 0, descuento: 0 });
+      articulo.patchValue({ precio: 200, cantidad: 1, subTotal: 200, total: 200, itbis: 0, descuento: 0 });
 
       component.refreshGeneralValues();
 
       expect(component.itbis).toBe(0);
       expect(component.subTotal).toBe(200);
+    });
+
+    it('should recalculate article totals without ITBIS when switching from EMPRESA SUMA to NO REQUERIDO', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Simular artículo con ITBIS calculado (EMPRESA SUMA: total incluye ITBIS)
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ precio: 200, cantidad: 1, descuento: 0, subTotal: 200, itbis: 36, total: 236 });
+
+      // Verificar estado con ITBIS
+      component.refreshGeneralValues();
+      expect(component.total).toBeCloseTo(236, 0);
+      expect(component.itbis).toBeCloseTo(36, 0);
+
+      // Cambiar a NO REQUERIDO (aplicarItbis = false)
+      component.form.get('aplicarItbis')?.setValue(false);
+      component.refreshGeneralValues();
+
+      // Total debe volver a 200 (sin ITBIS), no quedarse en 236
+      expect(component.itbis).toBe(0);
+      expect(component.total).toBe(200);
+      expect(component.subTotal).toBe(200);
+      // Artículo también debe estar limpio
+      expect(articulo.get('itbis')?.value).toBe(0);
+      expect(articulo.get('total')?.value).toBe(200);
+    });
+
+    it('should recalculate article totals without ITBIS when switching from TIENDA ASUME to NO REQUERIDO', () => {
+      component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
+
+      // Simular artículo con ITBIS extraído (TIENDA ASUME: subTotal tiene ITBIS extraído)
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ precio: 200, cantidad: 1, descuento: 0, subTotal: 169.49, itbis: 30.51, total: 200 });
+
+      // Verificar estado con ITBIS
+      component.refreshGeneralValues();
+      expect(component.itbis).toBeGreaterThan(0);
+
+      // Cambiar a NO REQUERIDO
+      component.form.get('aplicarItbis')?.setValue(false);
+      component.refreshGeneralValues();
+
+      // subTotal debe recalcularse desde precio*cantidad = 200, no quedarse en 169.49
+      expect(component.itbis).toBe(0);
+      expect(component.subTotal).toBe(200);
+      expect(component.total).toBe(200);
+      expect(articulo.get('subTotal')?.value).toBe(200);
+      expect(articulo.get('itbis')?.value).toBe(0);
+    });
+
+    it('should calculate ITBIS for EMPRESA SUMA when articles were added before activating comprobante', () => {
+      component.asumeItbis = { asumeITBIS: 'N', itbiS_Valor: 0.18 };
+
+      // Artículo fue agregado con aplicarItbis=false (NO REQUERIDO)
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({ precio: 200, cantidad: 1, descuento: 0, subTotal: 200, itbis: 0, total: 200 });
+
+      // Ahora usuario selecciona comprobante → aplicarItbis=true
+      component.form.get('aplicarItbis')?.setValue(true);
+      component.refreshGeneralValues();
+
+      // EMPRESA SUMA debe calcular: itbis = 200 * 18% = 36, total = 200 + 36 = 236
+      expect(component.itbis).toBeCloseTo(36, 0);
+      expect(component.subTotal).toBeCloseTo(200, 0);
+      expect(component.total).toBeCloseTo(236, 0);
+      expect(articulo.get('itbis')?.value).toBeCloseTo(36, 0);
+      expect(articulo.get('total')?.value).toBeCloseTo(236, 0);
     });
   });
 
@@ -2435,6 +2504,7 @@ describe('FacturacionRegistroComponent', () => {
 
     it('should extract ITBIS from subtotal in TIENDA ASUME mode', () => {
       component.asumeItbis = { asumeITBIS: 'S', itbiS_Valor: 0.18 };
+      component.form.get('aplicarItbis')?.setValue(true);
 
       const articulo = component.articulos().at(0);
       articulo.patchValue({

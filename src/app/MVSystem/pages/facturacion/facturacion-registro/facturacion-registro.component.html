@@ -138,13 +138,7 @@
                           </option>
                         </select>
                                 </div>
-                                <div class="col-12">
-                                    <label class="form-label">Aplicar ITBIS</label>
-                                    <select class="form-select modern-select" formControlName="aplicarItbis" (change)="refreshGeneralValues()">
-                          <option value=true>Si</option>
-                          <option value=false>No</option>
-                        </select>
-                                </div>
+
                                 <div class="col-12" *ngIf="form.get('aplicarItbis')?.value == 'true' || form.get('aplicarItbis')?.value === true">
                                     <div class="form-check mt-3">
                                         <input class="form-check-input" type="checkbox" id="asumeITBISCheckbox" [(ngModel)]="asumeITBISValue" (change)="onAsumeITBISChange()" [ngModelOptions]="{standalone: true}">
