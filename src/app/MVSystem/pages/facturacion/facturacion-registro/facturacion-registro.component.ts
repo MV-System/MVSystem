@@ -1309,20 +1309,15 @@ else
     }
   }
   onCheckboxChangeComprobante() {
-    const { comprobante } = this.form.value;
+    const comprobante = String(this.form.get('comprobante')?.value);
     const typesNotRequireNCF = ['0', '32']  // 32 = Consumidor Final (cambió de 2 a 32)
 
     // Mostrar/ocultar RNC según tipo de comprobante
-    if (!typesNotRequireNCF.includes(comprobante)) {
-      this.isNcfRequire = true;
-    }
-    else {
-      this.isNcfRequire = false;
-    }
+    this.isNcfRequire = !typesNotRequireNCF.includes(comprobante);
 
     // Si comprobante es 0 (NO REQUERIDO), desactivar aplicarItbis
     // Si es diferente de 0, activar aplicarItbis
-    const aplicarItbis = comprobante !== '0' && comprobante !== 0;
+    const aplicarItbis = comprobante !== '0';
     this.form.get('aplicarItbis')?.setValue(aplicarItbis);
 
     // Recalcular todos los valores de los artículos existentes
