@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="grid two-cols">
+                            <div class="grid two-cols" *ngIf="isCredit">
                                 <div><strong>Fecha límite de pago:</strong></div>
                                 <div class="info">
                                     <input class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
