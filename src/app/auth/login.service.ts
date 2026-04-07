@@ -93,6 +93,10 @@ export class LoginService implements OnInit{
   get getUserIdEmpresa(): string {
     return this.tokenDecoded.IdEmpresa
   }
+  get isCertificado(): boolean {
+    const val = this.tokenDecoded?.Certificado;
+    return val === true || val === 'True' || val === 'true';
+  }
   public getUserName(): string {
     return this.tokenDecoded.name
   }
