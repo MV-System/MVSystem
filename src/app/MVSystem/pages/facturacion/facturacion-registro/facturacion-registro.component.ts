@@ -132,8 +132,6 @@ reparaciones: any[] = [];
 
     this.preFacturasService.crearPreFactura(preFactura).subscribe({
       next: (resp) => {
-
-
         // Guardar detalles
         const detalles: PreDetalleFactura[] = this.articulos().controls.map(control => {
           return {

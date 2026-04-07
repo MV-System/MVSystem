@@ -187,34 +187,15 @@ export class CajaListaComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    console.log('🔄 Cargando prefacturas con filtro: Estado = P (Pendiente)');
-
     this.preFacturasService.listarPreFacturas({ Estado: 'P' }).subscribe({
       next: (data) => {
-        console.log('✅ Prefacturas recibidas:', data);
-        console.log('📊 Total de prefacturas:', data?.length || 0);
-
         this.preFacturas = data || [];
         this.loading = false;
-
-        if (this.preFacturas.length === 0) {
-          console.warn('⚠️ No se encontraron prefacturas pendientes');
-        }
       },
       error: (err) => {
-        console.error('❌ Error al cargar pre-facturas:', err);
-        console.error('📋 Detalles del error:', {
-          status: err.status,
-          statusText: err.statusText,
-          message: err.message,
-          url: err.url
-        });
-
         this.error = `Error al cargar pre-facturas: ${err.status || 'Error de conexión'}`;
         this.preFacturas = [];
         this.loading = false;
-
-        // Mostrar toast con el error
         this.toast.error(this.error);
       }
     });
