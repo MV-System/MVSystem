@@ -104,4 +104,39 @@ describe('PagoMixtoComponent', () => {
       expect(component.detallesPagos.length).toBe(10);
     });
   });
+
+  describe('requiereReferencia - muestra campo Ref solo para Tarjeta/Transferencia/Cheque', () => {
+
+    beforeEach(() => {
+      component.tipoPagoSeleccionado = 6;
+      component.ngOnChanges({
+        tiposPago: { currentValue: tiposPagoMock, previousValue: [], firstChange: true, isFirstChange: () => true },
+        tipoPagoSeleccionado: { currentValue: 6, previousValue: 0, firstChange: false, isFirstChange: () => false }
+      });
+    });
+
+    it('debe retornar false si no hay tipo seleccionado', () => {
+      expect(component.requiereReferencia(0)).toBeFalse();
+    });
+
+    it('debe retornar false para Efectivo', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(1);
+      expect(component.requiereReferencia(0)).toBeFalse();
+    });
+
+    it('debe retornar true para Tarjeta', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(2);
+      expect(component.requiereReferencia(0)).toBeTrue();
+    });
+
+    it('debe retornar true para Transferencia', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(3);
+      expect(component.requiereReferencia(0)).toBeTrue();
+    });
+
+    it('debe retornar true para Cheque', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(4);
+      expect(component.requiereReferencia(0)).toBeTrue();
+    });
+  });
 });

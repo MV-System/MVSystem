@@ -164,6 +164,18 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Determina si la fila necesita campo de referencia (Tarjeta, Transferencia, Cheque)
+   */
+  requiereReferencia(index: number): boolean {
+    const tipoPagoId = Number(this.detallesPagos.at(index)?.get('ID_Tipo_Pago')?.value);
+    if (!tipoPagoId) return false;
+    const tipo = this.tiposPago.find(t => t.iD_Tipo_Pagos === tipoPagoId);
+    if (!tipo) return false;
+    const desc = (tipo.descripcion_Tipo_Pagos || '').toLowerCase();
+    return desc.includes('tarjeta') || desc.includes('transferencia') || desc.includes('cheque');
+  }
+
+  /**
    * Obtiene los índices del FormArray para usar en *ngFor
    */
   getIndices(): number[] {
