@@ -14,12 +14,9 @@
                     {{ tipo.descripcion_Tipo_Pagos }}
                 </option>
             </select>
-            <input type="number" formControlName="Monto_Pago" class="form-control form-control-sm monto-input"
-                   (input)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
-            <input *ngIf="requiereReferencia(i)" type="text" formControlName="Numero_Referencia"
-                   class="form-control form-control-sm ref-input" placeholder="Ref." maxlength="100">
-            <button type="button" class="btn btn-outline-danger btn-sm btn-quitar"
-                    (click)="eliminarFilaPago(i)" [disabled]="detallesPagos.length <= 2" title="Quitar">
+            <input type="number" formControlName="Monto_Pago" class="form-control form-control-sm monto-input" (input)="actualizarTotales()" placeholder="0.00" step="0.01" min="0">
+            <input *ngIf="requiereReferencia(i)" type="text" formControlName="Numero_Referencia" class="form-control form-control-sm ref-input" placeholder="Ref." maxlength="100">
+            <button type="button" class="btn btn-outline-danger btn-sm btn-quitar" (click)="eliminarFilaPago(i)" [disabled]="detallesPagos.length <= 2" title="Quitar">
                 <i class="bi bi-x"></i>
             </button>
         </div>
@@ -27,8 +24,7 @@
 
     <!-- Saldo pendiente inline (solo si no cuadra) -->
     <div *ngIf="Math.abs(saldoPendiente) > 0.01" class="saldo-alerta">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        Faltan <strong>RD$ {{ Math.abs(saldoPendiente) | number: '1.2-2' }}</strong>
+        <i class="bi bi-exclamation-triangle-fill"></i> Faltan <strong>RD$ {{ Math.abs(saldoPendiente) | number: '1.2-2' }}</strong>
     </div>
     <div *ngIf="Math.abs(saldoPendiente) < 0.01 && detallesPagos.valid" class="saldo-ok">
         <i class="bi bi-check-circle-fill"></i> Pagos balanceados
