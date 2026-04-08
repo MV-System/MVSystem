@@ -180,7 +180,8 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
   /**
    * Retorna si una fila es de crédito
    */
-  esCredito(tipoPago: string): boolean {
+  esCredito(item: any): boolean {
+    const tipoPago = typeof item === 'string' ? item : item?.tipoPago || '';
     return tipoPago.toLowerCase().includes('crédito') || tipoPago.toLowerCase().includes('credito');
   }
 

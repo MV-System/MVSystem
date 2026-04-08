@@ -1448,12 +1448,7 @@ else
     this.isLoading = !this.isLoading;
     this.submitted = true;
 
-    // Usar el endpoint correcto según el tipo de pago
-    const request$ = data.idTipoPago === 6
-      ? this.mantenimientoService.postFacturaPagoMixto(data)
-      : this.mantenimientoService.postFactura(data);
-
-    request$
+    this.mantenimientoService.postFactura(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe((blobResponse) => {
 
@@ -1540,15 +1535,10 @@ printFacturaMini() {
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
-    // Usar el endpoint correcto según el tipo de pago
-    const request$ = data.idTipoPago === 6
-      ? this.mantenimientoService.postFacturaPagoMixto(data)
-      : this.mantenimientoService.postFactura(data);
-
-    request$
+    this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
-            this.facturaNumberReporte = resp.factura?.numeroFactura || resp.numeroFactura
+            this.facturaNumberReporte = resp.factura?.numeroFactura
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
             this.loadFacturaNumero();

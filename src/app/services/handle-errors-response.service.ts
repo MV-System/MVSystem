@@ -47,6 +47,10 @@ export class HandleErrorsResponseService {
         } else if (error.status === 403) {
             // Prohibido
             this.toastr.error('No tiene permisos para realizar esta acción.', '');
+        } else if (error.status === 400) {
+            // Bad Request - propagar mensaje del servidor al componente
+            const mensaje = error.error?.error || error.error?.message || 'Datos inválidos. Verifique la información enviada.';
+            return throwError(mensaje);
         } else {
             // Otros errores
             this.toastr.error('Ocurrió un error inesperado. Inténtelo de nuevo más tarde.', '');

@@ -145,6 +145,18 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Obtiene los tipos de pago excluyendo MIXTO y los ya seleccionados en otras filas
+   */
+  getTiposPagoDisponibles(index: number): any[] {
+    const seleccionados = this.detallesPagos.controls
+      .filter((_, i) => i !== index)
+      .map(c => Number(c.get('ID_Tipo_Pago')?.value))
+      .filter(v => v > 0);
+
+    return this.tiposPagoFiltrados.filter(t => !seleccionados.includes(t.iD_Tipo_Pagos));
+  }
+
+  /**
    * Obtiene los tipos de pago excluyendo MIXTO
    */
   getTiposPagoExcluendoMixto(): any[] {

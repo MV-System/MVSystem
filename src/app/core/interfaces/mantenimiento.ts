@@ -79,11 +79,9 @@ export interface FacturaRegistro {
     detallesPagos?: DetallePago[];
 }
 export interface FacturaRegistroRespuesta {
-  numeroFactura?: number;
-  idEmpresa?:     string;
-  idSucursal?:   string;
-  factura?: any;  // For pago mixto response { factura: Facturas, mensaje: string }
+  factura?: any;
   mensaje?: string;
+  advertencia?: string;
 }
 export interface DetalleFacturaList {
   cantidad: number;

@@ -150,7 +150,7 @@ describe('FacturacionRegistroComponent', () => {
     mockServices.catalogosService.buscarEquipoDisponible.and.returnValue(of({ disponible: 'S', modelo: 'Test', precioDetalle: 1000, precioPorMayor: 800 }));
     mockServices.catalogosService.getAsumeITBIS.and.returnValue(of(mockAsumeItbis));
     mockServices.mantenimientoService.getReparacionesPendientes.and.returnValue(of({ data: [] }));
-    mockServices.mantenimientoService.postFactura.and.returnValue(of({ numeroFactura: 12345 }));
+    mockServices.mantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 12345 }, mensaje: 'Factura guardada exitosamente' }));
     mockServices.mantenimientoService.getFacturaNumero.and.returnValue(of({ numero: 'F-001' }));
     mockServices.cotizacionService.getDetalleCotizacionConsulta.and.returnValue(of([]));
     mockServices.cotizacionService.postCotizacion.and.returnValue(of({ success: true }));
@@ -752,9 +752,8 @@ describe('FacturacionRegistroComponent', () => {
 
       // Mock successful invoice response
       const mockInvoiceResponse = {
-        numeroFactura: 12345,
-        idEmpresa: '1',
-        idSucursal: '1'
+        factura: { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' },
+        mensaje: 'Factura guardada exitosamente'
       };
       mockMantenimientoService.postFactura.and.returnValue(of(mockInvoiceResponse));
 
@@ -806,7 +805,7 @@ describe('FacturacionRegistroComponent', () => {
       // Spy on loadDataToPrint
       spyOn(component, 'loadDataToPrint').and.callThrough();
 
-      const mockInvoiceResponse = { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' };
+      const mockInvoiceResponse = { factura: { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' }, mensaje: 'Factura guardada exitosamente' };
       mockMantenimientoService.postFactura.and.returnValue(of(mockInvoiceResponse));
 
       // Generate invoice
@@ -826,7 +825,7 @@ describe('FacturacionRegistroComponent', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
       const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
 
-      const mockResponse = { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' };
+      const mockResponse = { factura: { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' }, mensaje: 'Factura guardada exitosamente' };
       mockMantenimientoService.postFactura.and.returnValue(of(mockResponse));
       mockMantenimientoService.getFacturaNumero.and.returnValue(of(12346));
 
@@ -860,7 +859,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should clear accessories buffer after successful invoice', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
 
-      mockMantenimientoService.postFactura.and.returnValue(of({ numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' }));
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 12345, idEmpresa: '1', idSucursal: '1' }, mensaje: 'Factura guardada exitosamente' }));
 
       // Add items to buffer
       component.accesoriosBuffer = [
@@ -2675,6 +2674,145 @@ describe('FacturacionRegistroComponent', () => {
       component.onChangeTipoFactura(event);
 
       expect(mockRDialogService.openDialog).toHaveBeenCalled();
+    });
+  });
+
+  // =================== UNIFIED POST FACTURA TEST SUITE ===================
+  describe('Unified PostFactura - All payment types use single endpoint', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.customer = {
+        id_Cliente: 1, nombres: 'Test', apellidos: 'Client',
+        numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1
+      };
+      component.form.patchValue({
+        telefono: '8091234567',
+        vendedor: 1,
+        tipoFactura: 1,
+        comprobante: 0,
+        garantia: 8,
+        aplicarItbis: true
+      });
+      component.agregarArticulo();
+      const articulo = component.articulos().at(0);
+      articulo.patchValue({
+        articulo: { id: 1, accesorio_Descripcion: 'Test Article', idTipo: 2 },
+        precio: 1000,
+        cantidad: 1
+      });
+    });
+
+    it('should call postFactura for pago Efectivo (tipoPago=1)', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 200 }, mensaje: 'Factura guardada exitosamente' }));
+
+      component.form.get('tipoPago')?.setValue(1); // Efectivo
+      component.generateFactura();
+
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalled();
+      const args = mockMantenimientoService.postFactura.calls.mostRecent().args[0];
+      expect(args.idTipoPago).toBe(1);
+    });
+
+    it('should call postFactura for pago Tarjeta (tipoPago=2)', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 201 }, mensaje: 'Factura guardada exitosamente' }));
+
+      component.form.get('tipoPago')?.setValue(2); // Tarjeta
+      component.generateFactura();
+
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalled();
+      const args = mockMantenimientoService.postFactura.calls.mostRecent().args[0];
+      expect(args.idTipoPago).toBe(2);
+    });
+
+    it('should call postFactura for pago Mixto (tipoPago=6) with detallesPagos', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 202 }, mensaje: 'Factura guardada exitosamente' }));
+
+      component.form.get('tipoPago')?.setValue(6); // Mixto
+      component.detallesPagosActuales = [
+        { ID_Tipo_Pago: 1, Monto_Pago: 600, Numero_Referencia: '' },
+        { ID_Tipo_Pago: 2, Monto_Pago: 400, Numero_Referencia: '' }
+      ];
+
+      component.generateFactura();
+
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalled();
+      const args = mockMantenimientoService.postFactura.calls.mostRecent().args[0];
+      expect(args.idTipoPago).toBe(6);
+      expect(args.detallesPagos).toBeDefined();
+      expect(args.detallesPagos!.length).toBe(2);
+    });
+
+    it('should NOT have postFacturaPagoMixto method in service', () => {
+      const mantenimientoService = TestBed.inject(MantenimientoService);
+      expect((mantenimientoService as any).postFacturaPagoMixto).toBeUndefined();
+    });
+
+    it('should read facturaNumberReporte from resp.factura.numeroFactura', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 9999 }, mensaje: 'Factura guardada exitosamente' }));
+
+      component.form.get('tipoPago')?.setValue(1);
+      component.generateFactura();
+
+      expect(component.facturaNumberReporte).toBe(9999);
+    });
+
+    it('should include detallesPagos as empty array when pago is not Mixto', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 203 }, mensaje: 'Factura guardada exitosamente' }));
+
+      component.form.get('tipoPago')?.setValue(1); // Efectivo
+      component.detallesPagosActuales = []; // Sin pagos mixtos
+
+      component.generateFactura();
+
+      const args = mockMantenimientoService.postFactura.calls.mostRecent().args[0];
+      expect(args.detallesPagos).toBeDefined();
+      expect(args.detallesPagos!.length).toBe(0);
+    });
+
+    it('should handle error response and show toastr error', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+      mockMantenimientoService.postFactura.and.returnValue(throwError('La suma de pagos no coincide con el total de la factura'));
+
+      component.form.get('tipoPago')?.setValue(6);
+      component.generateFactura();
+
+      expect(mockToastr.error).toHaveBeenCalledWith('La suma de pagos no coincide con el total de la factura');
+    });
+
+    it('should use same endpoint for all payment types via loadDataToPrint', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 204 }, mensaje: 'Factura guardada exitosamente' }));
+
+      // Test Efectivo
+      component.form.get('tipoPago')?.setValue(1);
+      component.generateFactura();
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalledTimes(1);
+
+      // Test Mixto - same method
+      mockMantenimientoService.postFactura.calls.reset();
+      component.form.get('tipoPago')?.setValue(6);
+      component.detallesPagosActuales = [
+        { ID_Tipo_Pago: 1, Monto_Pago: 500, Numero_Referencia: '' },
+        { ID_Tipo_Pago: 2, Monto_Pago: 500, Numero_Referencia: '' }
+      ];
+      component.generateFactura();
+      expect(mockMantenimientoService.postFactura).toHaveBeenCalledTimes(1);
+    });
+
+    it('should set isLoading to false on error', () => {
+      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
+      mockMantenimientoService.postFactura.and.returnValue(throwError('Error'));
+
+      component.form.get('tipoPago')?.setValue(1);
+      component.generateFactura();
+
+      expect(component.isLoading).toBeFalse();
     });
   });
 });

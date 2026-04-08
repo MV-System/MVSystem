@@ -25,9 +25,9 @@
                                 <tbody formArrayName="detallesPagos" *ngIf="detallesPagos.length > 0">
                                     <tr *ngFor="let i of getIndices()" [formGroupName]="i">
                                         <td>
-                                            <select formControlName="ID_Tipo_Pago" class="form-select">
+                                            <select formControlName="ID_Tipo_Pago" class="form-select" (change)="actualizarTotales()">
                                                 <option value="">Seleccionar...</option>
-                                                <option *ngFor="let tipo of getTiposPagoExcluendoMixto()" [value]="tipo.iD_Tipo_Pagos">
+                                                <option *ngFor="let tipo of getTiposPagoDisponibles(i)" [value]="tipo.iD_Tipo_Pagos">
                                                     {{ tipo.descripcion_Tipo_Pagos }}
                                                 </option>
                                             </select>
