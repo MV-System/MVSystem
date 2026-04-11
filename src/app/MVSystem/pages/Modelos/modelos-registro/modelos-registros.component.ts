@@ -80,7 +80,6 @@ export class ModelosRegistrosComponent implements OnInit {
   registroModelo(){
 
     const model: ModeloEquipo = this.modeloRegistroMarca();
-debugger;
     if (this.formRegistro.valid) {
         this.ModeloService.postModelo(model)
             .subscribe((ModeloInsertado: ModeloObjRetorno) =>{
