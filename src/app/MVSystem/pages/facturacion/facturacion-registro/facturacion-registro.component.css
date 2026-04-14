@@ -267,6 +267,13 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     background: #e3eafc;
 }
 
+.mv-table tr.resaltado-imei td {
+    background: #e3eafc;
+    border-top: 2px solid #467ff1;
+    border-bottom: 2px solid #467ff1;
+    transition: background 0.3s ease;
+}
+
 .separator-line {
     display: block;
     height: 1px;

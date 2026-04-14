@@ -190,9 +190,17 @@
 
                     <!-- Contador de modelos -->
                     <div class="d-flex flex-wrap gap-2 mb-2" *ngIf="contadorModelos.length > 0">
-                        <span *ngFor="let item of contadorModelos" class="badge bg-primary bg-opacity-75" style="font-size: 0.85rem; padding: 0.4em 0.7em;">
-                            {{ item.modelo }} <span class="badge bg-light text-dark ms-1">{{ item.cantidad }}</span>
+                        <span *ngFor="let item of contadorModelos" class="badge" style="font-size: 0.85rem; padding: 0.4em 0.7em; cursor: pointer; background: #2c3e50; color: #fff;" (click)="mostrarImeisModelo(item.modelo)">
+                            {{ item.modelo }} <span class="badge" style="background: #28a745; color: #fff;">{{ item.cantidad }}</span>
                         </span>
+                    </div>
+                    <!-- IMEIs del modelo seleccionado -->
+                    <div class="py-2 px-3 mb-2 d-flex align-items-center flex-wrap gap-2" style="background: #f5f7fa; border-left: 3px solid #467ff1; border-radius: 4px;" *ngIf="imeisModeloSeleccionado.length > 0">
+                        <strong class="me-2" style="color: #2c3e50;">{{ modeloSeleccionado }}:</strong>
+                        <span *ngFor="let imei of imeisModeloSeleccionado" class="badge" style="font-size: 0.82rem; cursor: pointer; background: #fff; color: #2c3e50; border: 1px solid #bfc9d1;" (click)="resaltarArticuloPorImei(imei)" [style.background]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#467ff1' : '#fff'" [style.color]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#fff' : '#2c3e50'">
+                            {{ imei }}
+                        </span>
+                        <button type="button" class="btn-close btn-close-sm ms-auto" aria-label="Cerrar" (click)="imeisModeloSeleccionado = []; modeloSeleccionado = ''; articuloResaltadoIndex = -1"></button>
                     </div>
 
                     <table class="mv-table">
@@ -209,7 +217,7 @@
                         </thead>
                         <tbody>
                             <ng-container formArrayName="articulos">
-                                <tr *ngFor="let detalleFactura of articulos().controls; let i = index">
+                                <tr *ngFor="let detalleFactura of articulos().controls; let i = index" [class.resaltado-imei]="i === articuloResaltadoIndex">
                                     <ng-container [formGroupName]="i">
                                         <td>
                                             <ng-select class="form-select modern-select-ng" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"

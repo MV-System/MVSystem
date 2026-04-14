@@ -353,6 +353,9 @@ onModalClose(rep: any) {
   itbis: number = 0;
   abono: number = 0;
   contadorModelos: { modelo: string, cantidad: number }[] = [];
+  imeisModeloSeleccionado: string[] = [];
+  modeloSeleccionado: string = '';
+  articuloResaltadoIndex: number = -1;
   bufferSize: number = 5000;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
 
@@ -916,13 +919,6 @@ else
 
   currentArticulo.total = currentArticulo.subTotal - (currentArticulo.descuento || 0);
 
-  const modoItbis = this.asumeItbis?.asumeITBIS === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA';
-  console.log(`\n🟢 [ESCENARIO] obtenerDetalleFactura [Artículo ${index}]`);
-  console.log(`   📌 Modo ITBIS: ${modoItbis}`);
-  console.log(`   📝 Descripción: ${currentArticulo.descripcion}`);
-  console.log(`   💰 precio=${currentArticulo.precio}, cantidad=${currentArticulo.cantidad}, descuento=${currentArticulo.descuento || 0}`);
-  console.log(`   📊 INICIAL: subTotal=${currentArticulo.subTotal}, total=${currentArticulo.total}`);
-
   // PRIMERO: Validar si se aplica ITBIS
   if (this.form.get('aplicarItbis')?.value === true) {
     // SEGUNDO: Si la tienda asume ITBIS, el precio incluye ITBIS, entonces extraer ITBIS del total (DESPUÉS del descuento)
@@ -936,17 +932,13 @@ else
       // MANTENER currentArticulo.total con el precio original (con ITBIS)
       // ITBIS del artículo = precio final - subTotal (para exactitud, sin errores de redondeo)
       currentArticulo.itbis = Number((precioFinalConItbis - currentArticulo.subTotal).toFixed(2));
-      console.log(`   ✅ CALCULADO: subTotal=${currentArticulo.subTotal}, total=${currentArticulo.total}, itbis=${currentArticulo.itbis}`);
-      console.log(`   🔍 Verificar: ${currentArticulo.subTotal} + ${currentArticulo.itbis} = ${currentArticulo.subTotal + currentArticulo.itbis} (debe ser ${precioFinalConItbis})`);
     } else {
       // Cuando la empresa suma ITBIS, se calcula más adelante en refreshGeneralValues
       currentArticulo.itbis = 0;  // Se asignará en refreshGeneralValues
-      console.log(`   ⏳ PENDIENTE: itbis=0 (se calcula en refreshGeneralValues)`);
     }
   } else {
     // NO APLICA ITBIS (comprobante NO REQUERIDO)
     currentArticulo.itbis = 0;
-    console.log(`   ⚠️ ITBIS NO APLICADO (comprobante NO REQUERIDO)`);
   }
 
   // Validar duplicados
@@ -1192,6 +1184,35 @@ else
       }
     }
     this.contadorModelos = Array.from(conteo.entries()).map(([modelo, cantidad]) => ({ modelo, cantidad }));
+    if (this.modeloSeleccionado) {
+      this.mostrarImeisModelo(this.modeloSeleccionado);
+    }
+  }
+
+  mostrarImeisModelo(modelo: string) {
+    this.modeloSeleccionado = modelo;
+    this.imeisModeloSeleccionado = [];
+    this.articuloResaltadoIndex = -1;
+    for (let i = 0; i < this.articulos().length; i++) {
+      const art = this.articulos().at(i).value;
+      if (art.articulo && art.articulo.modelo === modelo && art.articulo.id) {
+        this.imeisModeloSeleccionado.push(String(art.articulo.id));
+      }
+    }
+  }
+
+  resaltarArticuloPorImei(imei: string) {
+    for (let i = 0; i < this.articulos().length; i++) {
+      const art = this.articulos().at(i).value;
+      if (art.articulo && String(art.articulo.id) === imei) {
+        this.articuloResaltadoIndex = i;
+        setTimeout(() => {
+          const row = document.querySelector(`tr.resaltado-imei`);
+          row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 50);
+        return;
+      }
+    }
   }
 
   refreshGeneralValues() {
@@ -1376,13 +1397,6 @@ else
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos().controls[index].value
     let subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
-    const modoItbis = this.asumeItbis?.asumeITBIS === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA';
-
-    console.log(`\n🟡 [RECÁLCULO] obtenerCantidadArticuloStock [Artículo ${index}]`);
-    console.log(`   📌 Modo ITBIS: ${modoItbis}`);
-    console.log(`   📝 Descripción: ${currentArticulo.descripcion}`);
-    console.log(`   💰 precio=${currentArticulo.precio}, cantidad=${currentArticulo.cantidad}, descuento=${currentArticulo.descuento || 0}`);
-    console.log(`   📊 INICIAL: subTotal crudo=${subTotal}`);
 
     // Aplicar descuento primero para obtener el precio final
     const descuento = currentArticulo.descuento || 0;
@@ -1400,21 +1414,16 @@ else
         // Calcular ITBIS como la diferencia (para exactitud)
         itbisArticulo = Number((precioFinalConItbis - subTotal).toFixed(2));
         totalConDescuento = subTotal; // Ahora totalConDescuento es el subTotal sin ITBIS
-        console.log(`   ✅ CALCULADO: subTotal=${subTotal}, itbis=${itbisArticulo}`);
-        console.log(`   🔍 Verificar: ${subTotal} + ${itbisArticulo} = ${subTotal + itbisArticulo} (debe ser ${precioFinalConItbis})`);
       } else {
         // EMPRESA SUMA: Calcular ITBIS del artículo localmente
         subTotal = totalConDescuento;
         const itbisRate = this.asumeItbis.itbiS_Valor * 100;
         itbisArticulo = Number(((subTotal * itbisRate) / 100).toFixed(2));
-        console.log(`   ✅ CALCULADO: subTotal=${subTotal}, itbis=${itbisArticulo}`);
-        console.log(`   🔍 Verificar: ${subTotal} + ${itbisArticulo} = ${subTotal + itbisArticulo} (total con ITBIS)`);
       }
     } else {
       // NO APLICA ITBIS (comprobante NO REQUERIDO)
       subTotal = totalConDescuento;
       itbisArticulo = 0;
-      console.log(`   ⚠️ ITBIS NO APLICADO (comprobante NO REQUERIDO)`);
     }
 
     if (!currentArticulo.articulo) {
@@ -1442,10 +1451,8 @@ else
     }
 
     const total = this.form.get('aplicarItbis')?.value === true
-      ? subTotal + itbisArticulo  // Si aplica ITBIS (TIENDA ASUME o EMPRESA SUMA)
-      : subTotal;                 // Sin ITBIS
-
-    console.log(`   📤 ACTUALIZANDO FormGroup: subTotal=${subTotal}, total=${total}, itbis=${itbisArticulo}`);
+      ? subTotal + itbisArticulo
+      : subTotal;
 
     this.articulos().controls[index].patchValue({
       total,
@@ -1453,7 +1460,6 @@ else
       itbis: itbisArticulo
     });
 
-    console.log(`   ✔️ FormGroup actualizado correctamente\n`);
     this.refreshGeneralValues();
   }
 
@@ -1767,9 +1773,6 @@ printFacturaMini() {
             this.asumeItbis.asumeITBIS = asumeValue;
 
             // IMPORTANTE: Recalcular TODOS los artículos con el nuevo modo ITBIS
-            // porque los valores previos fueron calculados con la fórmula anterior
-            console.log(`\n🟣 [CAMBIO MODO] onAsumeITBISChange: Nuevo modo = ${asumeValue === 'S' ? 'TIENDA ASUME' : 'EMPRESA SUMA'}`);
-            console.log(`   📤 Recalculando ${this.articulos().length} artículos...`);
 
             for (let i = 0; i < this.articulos().length; i++) {
               const articulo = this.articulos().controls[i].value;
@@ -1793,8 +1796,6 @@ printFacturaMini() {
                   total: totalArticulo,
                   itbis: 0
                 });
-
-                console.log(`   [${i}] ${articulo.descripcion}: TIENDA ASUME - subTotal=${subTotalRedondeado}, itbis=${itbisArticulo}`);
               } else {
                 // Cambio a EMPRESA SUMA ITBIS
                 // Calcular ITBIS del artículo y sumarlo al total
@@ -1805,8 +1806,6 @@ printFacturaMini() {
                   total: Number((subTotal + itbisArticulo).toFixed(2)),
                   itbis: itbisArticulo
                 });
-
-                console.log(`   [${i}] ${articulo.descripcion}: EMPRESA SUMA - subTotal=${subTotal}, itbis=${itbisArticulo}, total=${subTotal + itbisArticulo}`);
               }
             }
 
