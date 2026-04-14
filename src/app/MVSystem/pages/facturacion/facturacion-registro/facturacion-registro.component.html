@@ -188,6 +188,13 @@
                         </div>
                     </div>
 
+                    <!-- Contador de modelos -->
+                    <div class="d-flex flex-wrap gap-2 mb-2" *ngIf="contadorModelos.length > 0">
+                        <span *ngFor="let item of contadorModelos" class="badge bg-primary bg-opacity-75" style="font-size: 0.85rem; padding: 0.4em 0.7em;">
+                            {{ item.modelo }} <span class="badge bg-light text-dark ms-1">{{ item.cantidad }}</span>
+                        </span>
+                    </div>
+
                     <table class="mv-table">
                         <thead>
                             <tr>

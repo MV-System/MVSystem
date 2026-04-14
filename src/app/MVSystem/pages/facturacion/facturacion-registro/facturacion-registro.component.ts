@@ -352,6 +352,7 @@ onModalClose(rep: any) {
   total: number = 0;
   itbis: number = 0;
   abono: number = 0;
+  contadorModelos: { modelo: string, cantidad: number }[] = [];
   bufferSize: number = 5000;
   numberOfItemsFromEndBeforeFetchingMore: number = 10;
 
@@ -1181,8 +1182,20 @@ else
 
       })
   }
-  refreshGeneralValues() {
+  actualizarContadorModelos() {
+    const conteo = new Map<string, number>();
+    for (let i = 0; i < this.articulos().length; i++) {
+      const art = this.articulos().at(i).value;
+      if (art.articulo && art.articulo.modelo) {
+        const modelo = art.articulo.modelo;
+        conteo.set(modelo, (conteo.get(modelo) || 0) + (art.cantidad || 1));
+      }
+    }
+    this.contadorModelos = Array.from(conteo.entries()).map(([modelo, cantidad]) => ({ modelo, cantidad }));
+  }
 
+  refreshGeneralValues() {
+    this.actualizarContadorModelos();
     this.subTotal = this.descuento = this.total = this.itbis = 0;
 
     // Acumular totales de artículos
