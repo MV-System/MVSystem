@@ -84,25 +84,23 @@
                     </div>
                     <!-- Tarjeta de Cliente -->
                     <div class="facturar-a">
-                        <div class="card-header-facturacion">
-                            <span class="header-title">
-                      <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
-                            </span>
-                        </div>
-                        <div class="card-body sm-padding">
-                            <div class="d-flex align-items-center gap-2">
+                        <div class="cliente-mobile-layout">
+                            <label class="cliente-label-mobile">
+                                <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
+                            </label>
+                            <div class="cliente-select-row">
                                 <ng-select formControlName="telefono" class="modern-select-ng flex-grow-1" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">
                                     <ng-option *ngFor="let customer of customers" [value]="getClienteTelefono(customer)">
                                         {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ getClienteTelefono(customer) }}
                                     </ng-option>
                                 </ng-select>
                                 <button class="btns icon primary" type="button" (click)="onAdd()">
-                        <i class="bx bx-plus"></i>
-                      </button>
+                                    <i class="bx bx-plus"></i>
+                                </button>
                             </div>
-                            <div class="clientDetail client-detail-row mt-2">
+                            <div class="clientDetail client-detail-row">
                                 <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer?.nombres + ' ' + customer?.apellidos | titlecase)}} </span>
-                                <span class="phones ms-3">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
+                                <span class="phones">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
                             </div>
                         </div>
                     </div>
@@ -169,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div id="invoice-wrapper" class="box singlecol" style="padding-left: 1.5rem; padding-right: 0.5rem;">
+            <div id="invoice-wrapper" class="box singlecol">
 
                 <span class="separator-line"></span>
                 <div class="DataTable">
