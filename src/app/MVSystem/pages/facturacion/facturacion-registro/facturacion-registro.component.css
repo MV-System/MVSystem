@@ -655,6 +655,15 @@ ng-select[readonly] ::ng-deep .ng-value {
    ============================================ */
 
 @media (max-width: 768px) {
+    /* Evitar que la pantalla crezca horizontalmente */
+    :host {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    form {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
     /* Layout general - Stack vertical */
     .invoice-row {
         flex-direction: column !important;
@@ -729,6 +738,9 @@ ng-select[readonly] ::ng-deep .ng-value {
     #invoice-wrapper {
         padding: 0.5rem !important;
         margin: 0 !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
     }
     /* Tabla de artículos - Ocultar en móvil */
     .mv-table {
@@ -741,6 +753,8 @@ ng-select[readonly] ::ng-deep .ng-value {
         gap: 1rem;
         margin-bottom: 1rem;
         padding: 0;
+        max-width: 100%;
+        overflow: hidden;
     }
     .articulo-card-mobile {
         background: #ffffff;
@@ -749,6 +763,8 @@ ng-select[readonly] ::ng-deep .ng-value {
         box-shadow: 0 3px 12px rgba(70, 127, 241, 0.12);
         padding: 1rem;
         transition: all 0.2s ease;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     .articulo-card-mobile:active {
         box-shadow: 0 5px 16px rgba(70, 127, 241, 0.18);
@@ -789,6 +805,7 @@ ng-select[readonly] ::ng-deep .ng-value {
         align-items: flex-start;
         margin-bottom: 0.75rem;
         gap: 0.5rem;
+        max-width: 100%;
     }
     .articulo-descripcion {
         flex: 1;
@@ -796,6 +813,24 @@ ng-select[readonly] ::ng-deep .ng-value {
     }
     .articulo-descripcion ng-select {
         font-size: 0.95rem;
+        max-width: 100%;
+    }
+    .articulo-descripcion ng-select ::ng-deep .ng-select-container {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .articulo-descripcion ng-select ::ng-deep .ng-value {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    /* Dropdown del ng-select en móvil - más espacio vertical */
+    .articulo-descripcion ng-select ::ng-deep .ng-dropdown-panel {
+        max-height: 350px !important;
+    }
+    .articulo-descripcion ng-select ::ng-deep .ng-dropdown-panel .scroll-host {
+        max-height: 340px !important;
     }
     .articulo-eliminar {
         flex-shrink: 0;
@@ -889,6 +924,11 @@ ng-select[readonly] ::ng-deep .ng-value {
         color: #2c3e50;
     }
     /* Nota de factura */
+    .DataTable {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
     .DataTable .form-control.modern-input {
         min-height: 44px !important;
         margin-bottom: 0.75rem !important;

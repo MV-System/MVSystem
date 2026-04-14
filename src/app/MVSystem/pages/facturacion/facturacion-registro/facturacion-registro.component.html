@@ -275,7 +275,7 @@
                                     <div class="articulo-card-header">
                                         <div class="articulo-descripcion">
                                             <ng-select class="form-select modern-select-ng" formControlName="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()"
-                                                (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()" (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required placeholder="Seleccionar artículo">
+                                                (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()" (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required placeholder="Seleccionar artículo" appendTo="body">
                                                 <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                     {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
                                                 </ng-option>
