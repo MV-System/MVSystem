@@ -56,6 +56,9 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     border-right: none;
     min-height: unset;
     padding-bottom: 0.5rem;
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .stats-card-facturacion.datos-facturacion {
@@ -292,7 +295,7 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 
 .DataTable .form-control.modern-input {
     min-height: 36px;
-    height: 36px;
+    height: 60px;
     padding: 0.4rem 0.7rem;
     font-size: 1rem;
 }
@@ -303,6 +306,7 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     padding: 0.3rem 1.1rem;
     font-size: 1rem;
     margin-left: 0.5rem;
+    margin-right: 0.7rem;
 }
 
 .clear-float {
@@ -499,6 +503,78 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 }
 
 
+/* Cliente layout - desktop */
+
+.cliente-mobile-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.cliente-info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.cliente-info-row .client-detail-row {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-top: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.cliente-info-row .client-detail-row .name,
+.cliente-info-row .client-detail-row .phones {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cliente-label-mobile {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+}
+
+.cliente-label-mobile i {
+    font-size: 1rem;
+    color: #467ff1;
+}
+
+.cliente-select-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.cliente-select-row ng-select {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.cliente-select-row ng-select ::ng-deep .ng-select-container {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
 /* Limitar altura del ng-select de cliente */
 
 .facturar-a ng-select ::ng-deep .ng-value-container {
@@ -680,11 +756,14 @@ ng-select[readonly] ::ng-deep .ng-value {
         flex-direction: column !important;
         margin: 0 !important;
         --bs-gutter-x: 0 !important;
+        min-width: 0 !important;
     }
     .invoice-row>div {
         width: 100% !important;
         flex: none !important;
         padding: 0 !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
     }
     .row {
         --bs-gutter-x: 0 !important;
@@ -752,6 +831,14 @@ ng-select[readonly] ::ng-deep .ng-value {
         flex-direction: column;
         gap: 0.2rem;
     }
+    .cliente-info-row {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
     .cliente-label-mobile {
         font-size: 0.8rem;
         font-weight: 700;
@@ -759,6 +846,7 @@ ng-select[readonly] ::ng-deep .ng-value {
         display: flex;
         align-items: center;
         gap: 0.3rem;
+        white-space: nowrap;
     }
     .cliente-label-mobile i {
         font-size: 0.9rem;
@@ -768,10 +856,12 @@ ng-select[readonly] ::ng-deep .ng-value {
         display: flex;
         align-items: center;
         gap: 0.3rem;
+        width: 100% !important;
     }
     .cliente-select-row ng-select {
         flex: 1;
         min-width: 0;
+        width: 100% !important;
     }
     /* Cliente detail */
     .client-detail-row {
@@ -833,7 +923,7 @@ ng-select[readonly] ::ng-deep .ng-value {
         border-radius: 8px;
         border-left: 4px solid #467ff1;
         box-shadow: 0 2px 8px rgba(70, 127, 241, 0.10);
-        padding: 0.6rem 0.7rem;
+        padding: 0.5rem 0.4rem;
         transition: all 0.2s ease;
         max-width: 100%;
         box-sizing: border-box;
@@ -873,10 +963,9 @@ ng-select[readonly] ::ng-deep .ng-value {
     }
     .articulo-card-header {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         margin-bottom: 0.4rem;
-        gap: 0.4rem;
+        gap: 0.3rem;
         max-width: 100%;
     }
     .articulo-descripcion {
@@ -885,7 +974,7 @@ ng-select[readonly] ::ng-deep .ng-value {
     }
     .articulo-descripcion ng-select {
         font-size: 0.95rem;
-        max-width: 100%;
+        width: 100%;
     }
     .articulo-descripcion ng-select ::ng-deep .ng-select-container {
         max-width: 100% !important;
@@ -904,21 +993,23 @@ ng-select[readonly] ::ng-deep .ng-value {
     .articulo-descripcion ng-select ::ng-deep .ng-dropdown-panel .scroll-host {
         max-height: 340px !important;
     }
-    .articulo-eliminar {
+    .articulo-eliminar-btn {
         flex-shrink: 0;
-        margin-top: 0.25rem;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: #fff5f5;
+        color: #dc3545;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        padding: 0;
+        cursor: pointer;
     }
-    .articulo-eliminar .btns {
-        min-width: 36px !important;
-        min-height: 36px !important;
-        padding: 0.4rem !important;
-        border-radius: 6px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    .articulo-eliminar .btns i {
-        font-size: 1.1rem !important;
+    .articulo-eliminar-btn:active {
+        background: #f8d7da;
     }
     .articulo-grid {
         display: grid;
@@ -1004,9 +1095,22 @@ ng-select[readonly] ::ng-deep .ng-value {
     .DataTable .me-3 {
         margin-right: 0 !important;
     }
+    .nota-articulo-row {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0 0.3rem !important;
+    }
+    .nota-articulo-row .flex-grow-1 {
+        width: 100% !important;
+    }
     .DataTable .form-control.modern-input {
+        width: 100% !important;
         min-height: 44px !important;
-        margin-bottom: 0.75rem !important;
+        height: 44px !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 0 !important;
+        box-sizing: border-box !important;
     }
     /* Botón agregar artículo */
     .DataTable .d-flex {
@@ -1017,10 +1121,18 @@ ng-select[readonly] ::ng-deep .ng-value {
         width: 100% !important;
         text-align: center !important;
     }
+    .nota-articulo-row .pull-right {
+        width: 100% !important;
+        float: none !important;
+        text-align: center !important;
+    }
     .btns.add-item {
         width: 100% !important;
         min-height: 44px !important;
         justify-content: center !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
     }
     /* Card de totales - Full width en móvil con botones integrados */
     .pull-right {

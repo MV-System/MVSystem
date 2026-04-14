@@ -85,11 +85,17 @@
                     <!-- Tarjeta de Cliente -->
                     <div class="facturar-a">
                         <div class="cliente-mobile-layout">
-                            <label class="cliente-label-mobile">
-                                <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
-                            </label>
+                            <div class="cliente-info-row">
+                                <label class="cliente-label-mobile">
+                                    <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
+                                </label>
+                                <div class="clientDetail client-detail-row">
+                                    <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer?.nombres + ' ' + customer?.apellidos | titlecase)}} </span>
+                                    <span class="phones">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
+                                </div>
+                            </div>
                             <div class="cliente-select-row">
-                                <ng-select formControlName="telefono" class="modern-select-ng flex-grow-1" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }">
+                                <ng-select formControlName="telefono" class="modern-select-ng flex-grow-1" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }" appendTo="body">
                                     <ng-option *ngFor="let customer of customers" [value]="getClienteTelefono(customer)">
                                         {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ getClienteTelefono(customer) }}
                                     </ng-option>
@@ -97,10 +103,6 @@
                                 <button class="btns icon primary" type="button" (click)="onAdd()">
                                     <i class="bx bx-plus"></i>
                                 </button>
-                            </div>
-                            <div class="clientDetail client-detail-row">
-                                <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer?.nombres + ' ' + customer?.apellidos | titlecase)}} </span>
-                                <span class="phones">{{ ( getClienteTelefono(customer) === 0 ? '[Teléfono]' : getClienteTelefono(customer)) }} </span>
                             </div>
                         </div>
                     </div>
@@ -171,10 +173,10 @@
 
                 <span class="separator-line"></span>
                 <div class="DataTable">
-                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 1.2rem;">
+                    <div class="d-flex justify-content-between align-items-center nota-articulo-row" style="margin-bottom: 1.2rem;">
                         <!-- Caja de texto -->
                         <div class="flex-grow-1 me-3">
-                            <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" style="width: 100%; height: 60px;" />
+                            <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" />
                         </div>
 
                         <!-- Botón -->
@@ -272,18 +274,16 @@
 
                                     <div class="articulo-card-header">
                                         <div class="articulo-descripcion">
-                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()"
-                                                (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()" (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required placeholder="Seleccionar artículo" appendTo="body">
+                                            <ng-select class="modern-select-ng" formControlName="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()" (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()"
+                                                (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required placeholder="Seleccionar artículo" appendTo="body">
                                                 <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                     {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
                                                 </ng-option>
                                             </ng-select>
                                         </div>
-                                        <div class="articulo-eliminar">
-                                            <button class="btns flat oorange" type="button" (click)="borrarArticulo(i)">
-                                                <i class="bx bx-trash-alt"></i>
-                                            </button>
-                                        </div>
+                                        <button class="articulo-eliminar-btn" type="button" (click)="borrarArticulo(i)">
+                                            <i class="bx bx-trash-alt"></i>
+                                        </button>
                                     </div>
 
                                     <div class="articulo-grid" [class.hidden]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
