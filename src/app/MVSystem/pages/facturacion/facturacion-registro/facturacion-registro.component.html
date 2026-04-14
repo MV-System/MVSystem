@@ -197,7 +197,8 @@
                     <!-- IMEIs del modelo seleccionado -->
                     <div class="py-2 px-3 mb-2 d-flex align-items-center flex-wrap gap-2" style="background: #f5f7fa; border-left: 3px solid #467ff1; border-radius: 4px;" *ngIf="imeisModeloSeleccionado.length > 0">
                         <strong class="me-2" style="color: #2c3e50;">{{ modeloSeleccionado }}:</strong>
-                        <span *ngFor="let imei of imeisModeloSeleccionado" class="badge" style="font-size: 0.82rem; cursor: pointer; background: #fff; color: #2c3e50; border: 1px solid #bfc9d1;" (click)="resaltarArticuloPorImei(imei)" [style.background]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#467ff1' : '#fff'" [style.color]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#fff' : '#2c3e50'">
+                        <span *ngFor="let imei of imeisModeloSeleccionado" class="badge" style="font-size: 0.82rem; cursor: pointer; background: #fff; color: #2c3e50; border: 1px solid #bfc9d1;" (click)="resaltarArticuloPorImei(imei)" [style.background]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#467ff1' : '#fff'"
+                            [style.color]="articuloResaltadoIndex >= 0 && articulos().at(articuloResaltadoIndex).value.articulo.id == imei ? '#fff' : '#2c3e50'">
                             {{ imei }}
                         </span>
                         <button type="button" class="btn-close btn-close-sm ms-auto" aria-label="Cerrar" (click)="imeisModeloSeleccionado = []; modeloSeleccionado = ''; articuloResaltadoIndex = -1"></button>
