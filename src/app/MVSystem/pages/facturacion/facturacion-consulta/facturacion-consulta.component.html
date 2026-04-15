@@ -193,8 +193,9 @@
                         <!-- Controles de Paginación -->
                         <!-- end form   -->
                         <app-facturacion-lista (pageSizeChanged)="onPageSizeChange($event)" [facturas]="facturasFiltradas() | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }" [detalleFactura]="detalleFactura" [desglosePagos]="desglosePagos"
-                            [desglosePagosPorFactura]="desglosePagosPorFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" [criterioInput]="criterioActual" [estadoFactura]="EstadoFactura" [sucursalActiva]="form.get('almacen')?.value"
-                            (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event.numeroFactura)" (onLoadDesgloseRequest)="onLoadDesglose($event)">
+                            [desglosePagosPorFactura]="desglosePagosPorFactura" [pageIndex]="pageIndex" [pageSize]="pageSize" [totalRecord]="totalRecord" [currentPage]="currentPage" [line]="line" [lastLine]="lastLine" [criterioInput]="criterioActual" [estadoFactura]="EstadoFactura"
+                            [sucursalActiva]="form.get('almacen')?.value" (onFacturaButton)="onFacturaButton = $event" (numerofactura)="getDetalleFactura($event)" (onBuscarFacturas)="onBuscarFacturas($event)" (onCompartirFactura)="compartirFactura($event.numeroFactura)"
+                            (onLoadDesgloseRequest)="onLoadDesglose($event)">
                             <pagination-controls (pageChange)="pageChanged($event)" previousLabel="Anterior" nextLabel="Siguiente">
                             </pagination-controls>
 
