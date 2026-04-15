@@ -95,6 +95,7 @@ selectedRowIndex: number | null = null;
   @Input() line!:  number;
   @Input() lastLine!:  number;
   @Input() criterioInput!: string; // Nuevo Input para recibir criterio del padre
+  @Input() sucursalActiva!: string; // Sucursal seleccionada en el dropdown del padre (o la del login si no tiene permiso)
   @Input() facturas: FacturaConsulta[]=[];
   @Input() detalleFactura: DetalleFacturaList[]=[];
   @Input() desglosePagos: DetallePagoMixto[]=[];
@@ -187,7 +188,7 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
   detalle.EquipoNuevo = `${detalle.idEquipo}`;
 
   // Verificar disponibilidad del equipo
-  this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.loginService.getUserIdSucursal)
+  this.catalogosService.buscarEquipoDisponible(detalle.EquipoNuevo, this.sucursalActiva)
     .pipe(takeUntil(this.destroy$)) // Para limpiar los recursos correctamente al destruir el componente
     .subscribe({
       next: (response) => {
@@ -197,7 +198,7 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
             detalle.EquipoActual,
             detalle.EquipoNuevo,
             detalle.numeroFactura,
-            this.loginService.getUserIdSucursal,
+            this.sucursalActiva,
             this.loginService.getUserName()
           ).subscribe({
             next: (respuesta) => {
@@ -263,7 +264,7 @@ onCancel(detalle: DetalleFacturaList) {
           numeroFactura = +(`${numeroFactura}`);
         // aqui va la logica para anular la factura
         this.isLoading = true; // Iniciar carga
-    const sub = this.mantenimientoService.postAnlaFactura(numeroFactura,this.loginService.getUserIdSucursal,this.loginService.getUserName())
+    const sub = this.mantenimientoService.postAnlaFactura(numeroFactura,this.sucursalActiva,this.loginService.getUserName())
     .subscribe(blob =>{
        this.isLoading = false; // Terminar carga
        this.toast.info(`Se anuló la factura #${numeroFactura}`);
@@ -293,7 +294,7 @@ onCancel(detalle: DetalleFacturaList) {
         const model = {
           NumeroFactura: detalle.numeroFactura,
           imei: detalle.idEquipo,
-          IDsucursal: this.loginService.getUserIdSucursal,
+          IDsucursal: this.sucursalActiva,
           Usuario: this.loginService.getUserName(),
         };
         this.isLoading = true;
