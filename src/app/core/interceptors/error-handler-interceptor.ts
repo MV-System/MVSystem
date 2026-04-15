@@ -9,8 +9,11 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+        // Solo reintentar en peticiones GET (lectura), nunca en POST/PUT/DELETE
+        const retryCount = req.method === 'GET' ? 2 : 0;
+
         return next.handle(req).pipe(
-            retry(2),
+            retry(retryCount),
             catchError((error : HttpErrorResponse)=>this.handleErrorsResponseService.handleError(error))
           );
 
