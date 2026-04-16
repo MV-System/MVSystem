@@ -179,10 +179,14 @@
             <div class="col-lg-6" *ngIf="equipoValorRetorno.length">
                 <div class="card modern-card">
                     <div class="card-body">
-                        <div class="form-header mb-3">
-                            <h5 class="form-title small">
+                        <div class="form-header mb-3 d-flex justify-content-between align-items-center">
+                            <h5 class="form-title small mb-0">
                                 <i class="bi bi-list-check me-2 text-primary"></i> Equipos agregados ({{equipoValorRetorno.length}})
                             </h5>
+                            <button class="btn-imprimir-reporte" (click)="imprimirReporte()" [disabled]="isPrinting" title="Imprimir reporte">
+                                <i class="bi" [ngClass]="isPrinting ? 'bi-hourglass-split spin' : 'bi-printer-fill'"></i>
+                                <span>{{ isPrinting ? 'Generando...' : 'Imprimir' }}</span>
+                            </button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-striped modern-table align-middle table-sm">

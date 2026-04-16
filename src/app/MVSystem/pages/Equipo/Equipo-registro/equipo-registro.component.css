@@ -100,3 +100,49 @@ main.main {
   align-items: center;
   min-height: 100vh;
 }
+
+/* Botón Imprimir Reporte */
+.btn-imprimir-reporte {
+  background: linear-gradient(135deg, #667eea 0%, #2c3e50 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.6em;
+  padding: 0.5em 1.2em;
+  font-weight: 600;
+  font-size: 0.82em;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.25s cubic-bezier(.4, 2, .6, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+
+.btn-imprimir-reporte:hover:not(:disabled) {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.btn-imprimir-reporte:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-imprimir-reporte:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn-imprimir-reporte i {
+  font-size: 1.1em;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

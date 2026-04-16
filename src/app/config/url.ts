@@ -83,7 +83,8 @@ export let APIURL = {
         Accion: {
           EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio=',
           EquipoReparadoReporte:  API + 'EquipoReporte/ReporteReparaciones',
-          PostEquipo_Delete:  API + 'Equipos/PostEquipo_Delete'
+          PostEquipo_Delete:  API + 'Equipos/PostEquipo_Delete',
+          EquipoRegistradosReporte: API + 'EquipoReporte/ReporteEquiposRegistrados'
         }
     },
     Marca: {

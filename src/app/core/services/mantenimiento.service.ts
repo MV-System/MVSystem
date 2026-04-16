@@ -194,6 +194,17 @@ export class MantenimientoService {
     return this.http.get<EquipoNumeroRegistro[]>(APIURL.Equipo.Consulta.EquipoNumeroRegistro)
   }
 
+  getReporteEquiposRegistrados(numeroRegistro: number, idEmpresa: number, idSucursal: number): Observable<Blob> {
+    const params = new HttpParams()
+      .set('numeroRegistro', numeroRegistro)
+      .set('idEmpresa', idEmpresa)
+      .set('idSucursal', idSucursal);
+    return this.http.get<Blob>(APIURL.Equipo.Accion.EquipoRegistradosReporte, {
+      params,
+      responseType: 'blob' as 'json'
+    });
+  }
+
   PostEquipo_Delete(imei: string, Usuario:string): Observable<EquipoEliminadoResponse> {
     // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
     const params = new HttpParams()
