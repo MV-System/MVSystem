@@ -1,2 +1,219 @@
-/* Limpieza total: se eliminan reglas comentadas, duplicadas o innecesarias. 
-   Todos los estilos relevantes deben estar en styles.css global. */
+/* ===============================================
+   EQUIPOS RECIBIDOS - MODERN STYLES
+   =============================================== */
+
+.box {
+    padding: 0 1rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #012970;
+    margin-bottom: 1rem;
+}
+
+
+/* Filter Card */
+
+.filter-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background: #fff;
+}
+
+.filter-title {
+    font-weight: 600;
+    color: #012970;
+    margin-bottom: 0;
+}
+
+.modern-label {
+    font-weight: 500;
+    color: #444;
+    font-size: 0.85rem;
+}
+
+.modern-input {
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modern-input:focus {
+    border-color: #4154f1;
+    box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.15);
+}
+
+
+/* Stats */
+
+.stats-horizontal-container {
+    display: flex;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.stats-horizontal-container:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.stats-card-horizontal {
+    flex: 1;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.stats-content-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stats-icon-horizontal {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, #4154f1, #6c7cff);
+    color: white;
+    box-shadow: 0 4px 10px rgba(65, 84, 241, 0.3);
+}
+
+.stats-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.stats-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #012970;
+}
+
+.stats-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+
+/* Results Card */
+
+.results-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Table */
+
+.modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.modern-table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 0.75rem;
+    white-space: nowrap;
+    border: none;
+}
+
+.modern-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.modern-table tbody tr:hover {
+    background-color: rgba(65, 84, 241, 0.04);
+}
+
+.modern-table tbody td {
+    padding: 0.65rem 0.75rem;
+    vertical-align: middle;
+    font-size: 0.875rem;
+}
+
+.nota-text {
+    max-width: 150px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Empty State */
+
+.empty-state {
+    background: #f8fafc;
+    border-radius: 1rem;
+    border: 2px dashed #dee2e6;
+}
+
+
+/* Loading */
+
+.loading-section .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+
+/* Pagination */
+
+.modern-pagination ::ng-deep .ngx-pagination {
+    padding: 0;
+    margin: 0;
+}
+
+.modern-pagination ::ng-deep .ngx-pagination li {
+    border-radius: 0.5rem;
+    margin: 0 2px;
+}
+
+.modern-pagination ::ng-deep .ngx-pagination .current {
+    background: #4154f1;
+    border-radius: 0.5rem;
+}
+
+
+/* Breadcrumb */
+
+.breadcrumb {
+    font-size: 0.85rem;
+}
+
+.breadcrumb-item a {
+    color: #4154f1;
+    text-decoration: none;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .box {
+        padding: 0 0.5rem;
+    }
+    .modern-table {
+        font-size: 0.8rem;
+    }
+    .nota-text {
+        max-width: 100px;
+    }
+}

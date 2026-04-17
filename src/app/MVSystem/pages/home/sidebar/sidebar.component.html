@@ -130,6 +130,11 @@
                         <i class="bi bi-circle"></i><span>Equipos Vendidos</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormConsultaRecepcionEquipos()">
+                    <a (click)="onMenuClick()" routerLink="./equipo/Recibidos">
+                        <i class="bi bi-circle"></i><span>Equipos Recibidos</span>
+                    </a>
+                </li>
                 <li *ngIf="VerFormConsultaAccesorios()">
                     <a (click)="onMenuClick()" routerLink="./accesorios/consulta">
                         <i class="bi bi-circle"></i><span>Accesorios</span>

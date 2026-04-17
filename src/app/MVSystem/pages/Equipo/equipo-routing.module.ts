@@ -12,6 +12,7 @@ import { EquiposConsultaTransferenciasComponent } from './Equipo-consulta/equipo
 import { ReparacionesComponent } from './taller/reparaciones/reparaciones.component';
 import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
 import { InventarioComponent } from './inventario/inventario.component';
+import { EquipoConsultaRecibidoComponent } from './equipo-consulta-recibido/equipo-consulta-recibido.component';
 
 const routes: Routes = [
   {
@@ -57,6 +58,10 @@ const routes: Routes = [
   {
     path:'inventario',
     component:InventarioComponent
+  },
+  {
+    path:'Recibidos',
+    component:EquipoConsultaRecibidoComponent
   }
 ];
 

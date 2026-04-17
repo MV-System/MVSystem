@@ -19,6 +19,7 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
   totalRegistros : number = 0;
   rangeDatePlaceholder: Date = new Date();
   generarReporteLoading: boolean = false;
+  isLoading: boolean = false;
   
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',
@@ -68,13 +69,19 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
 
 
   obtenerEquiposRecibidos(){
+    this.isLoading = true;
     this.equipoService.getEquiposRecibidos(this.formEquiposRecibidos.get('criterio')?.value, this.filtro).subscribe( res => {
+      this.isLoading = false;
       this.equiposRecibidos = res;
       if(this.equiposRecibidos.length){
         this.index = res[0].line
         this.ultimaLinea = res[0].lastLine
         this.totalRegistros = res[0].totalRecord
+      } else {
+        this.totalRegistros = 0;
       }
+    }, () => {
+      this.isLoading = false;
     })
   }
 
@@ -100,6 +107,14 @@ export class EquipoConsultaRecibidoComponent implements OnInit, OnChanges {
     this.formEquiposRecibidos.reset({
       criterio: ''
     })
+  }
+
+  limpiarBusqueda(){
+    this.formEquiposRecibidos.reset({ criterio: '' });
+    this.filtro.fechaInicio = '';
+    this.filtro.fechaFinal = '';
+    this.filtro.pageIndex = 1;
+    this.obtenerEquiposRecibidos();
   }
 
   pageChanged(index: number) {
