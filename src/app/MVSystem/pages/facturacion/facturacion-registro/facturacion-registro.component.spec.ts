@@ -375,6 +375,8 @@ describe('FacturacionRegistroComponent', () => {
       const vendedorControl = component.form.get('vendedor');
 
       expect(telefonoControl?.hasError('required')).toBeTrue();
+      // Vendedor gets a default value from loaded data, so clear it to test required
+      vendedorControl?.setValue(null);
       expect(vendedorControl?.hasError('required')).toBeTrue();
     });
 

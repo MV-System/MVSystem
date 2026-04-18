@@ -1390,6 +1390,11 @@ else
           this.onCheckboxChangeComprobante();
         }
 
+        // Establecer el primer vendedor como valor por defecto si hay vendedores
+        if (this.vendedores && this.vendedores.length > 0) {
+          this.form.get('vendedor')?.setValue(this.vendedores[0].iD_Vendedor);
+        }
+
         this.loading.hideLoading();
 
       })
