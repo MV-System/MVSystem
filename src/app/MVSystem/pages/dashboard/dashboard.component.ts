@@ -25,15 +25,19 @@ isDoughnut: boolean = false;
 data: Utilidades = {
   costo_Equipos: 0,
   venta_Equipos: 0,
+  itbis_Equipos: 0,
   ganancia_Equipos: 0,
   costo_Accesorios: 0,
   venta_Accesorios: 0,
+  itbis_Accesorios: 0,
   ganancia_Accesorios: 0,
   costo_Reparaciones: 0,
   venta_Reparaciones: 0,
+  itbis_Reparaciones: 0,
   ganancia_Reparaciones: 0,
   costo_Desbloqueos: 0,
   venta_Desbloqueos: 0,
+  itbis_Desbloqueos: 0,
   ganancia_Desbloqueos: 0,
   valida: 0
 }; // Inicializa data
@@ -113,7 +117,7 @@ setResponsiveView() {
 }
 ngOnInit(): void {
    this.setResponsiveView();
-  
+
   // 📊 TRACKING: Registrar vista del Dashboard
   this.tracking.trackPageView('DashBoard IA', 'PageView').subscribe();
 
@@ -225,7 +229,7 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
   { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
   { "name": "Reps.", "value": this.data.venta_Reparaciones }
           ];
-          this.loading.hideLoading();  
+          this.loading.hideLoading();
         } else {
           this.toastr.warning('No se encontraron utilidades.');
         }

@@ -710,6 +710,50 @@
     overflow-x: hidden;
 }
 
+.sales-breakdown-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.sales-breakdown-item {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border-left: 4px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.sales-breakdown-total {
+    border-left-color: #2563eb;
+}
+
+.sales-breakdown-itbis {
+    border-left-color: #ed8936;
+}
+
+.sales-breakdown-base {
+    border-left-color: #4a5568;
+}
+
+.sales-breakdown-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.sales-breakdown-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
 
 /* Optimización para gráficos en layout vertical */
 
@@ -737,6 +781,9 @@
     }
     .chart-total {
         font-size: 1.25rem;
+    }
+    .sales-breakdown-row {
+        grid-template-columns: 1fr;
     }
     /* Ajuste para gráficos en móvil */
     .chart-body ngx-charts-advanced-pie-chart {

@@ -42,18 +42,22 @@ export class UtilidadesComponent implements OnInit {
   isDoughnut: boolean = false;
   data: Utilidades = {
     costo_Equipos: 0,
-  venta_Equipos: 0,
-  ganancia_Equipos:0,
-  costo_Accesorios:0,
-  venta_Accesorios:0,
-  ganancia_Accesorios:0,
-  costo_Reparaciones:0,
-  venta_Reparaciones:0,
-  ganancia_Reparaciones:0,
-  costo_Desbloqueos:0,
-  venta_Desbloqueos:0,
-  ganancia_Desbloqueos:0,
-  valida: 0
+    venta_Equipos: 0,
+    itbis_Equipos: 0,
+    ganancia_Equipos: 0,
+    costo_Accesorios: 0,
+    venta_Accesorios: 0,
+    itbis_Accesorios: 0,
+    ganancia_Accesorios: 0,
+    costo_Reparaciones: 0,
+    venta_Reparaciones: 0,
+    itbis_Reparaciones: 0,
+    ganancia_Reparaciones: 0,
+    costo_Desbloqueos: 0,
+    venta_Desbloqueos: 0,
+    itbis_Desbloqueos: 0,
+    ganancia_Desbloqueos: 0,
+    valida: 0
   }; // Inicializa data
 
   // Datos del período anterior para comparación
@@ -906,6 +910,17 @@ setResponsiveView() {
            this.data.venta_Accesorios +
            this.data.venta_Desbloqueos +
            this.data.venta_Reparaciones;
+  }
+
+  getTotalItbis(): number {
+    return this.data.itbis_Equipos +
+           this.data.itbis_Accesorios +
+           this.data.itbis_Desbloqueos +
+           this.data.itbis_Reparaciones;
+  }
+
+  getTotalVentasSinItbis(): number {
+    return Math.max(this.getTotalVentas() - this.getTotalItbis(), 0);
   }
 
   /**

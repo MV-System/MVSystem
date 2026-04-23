@@ -408,6 +408,20 @@
                             </h5>
                             <span class="chart-total">${{ getTotalVentas() | number:'1.0-0' }}</span>
                         </div>
+                        <div class="sales-breakdown-row">
+                            <div class="sales-breakdown-item sales-breakdown-base">
+                                <span class="sales-breakdown-label">Venta Sin ITBIS</span>
+                                <span class="sales-breakdown-value">${{ getTotalVentasSinItbis() | number:'1.0-0' }}</span>
+                            </div>
+                            <div class="sales-breakdown-item sales-breakdown-itbis">
+                                <span class="sales-breakdown-label">ITBIS</span>
+                                <span class="sales-breakdown-value">${{ getTotalItbis() | number:'1.0-0' }}</span>
+                            </div>
+                            <div class="sales-breakdown-item sales-breakdown-total">
+                                <span class="sales-breakdown-label">Venta Total Con ITBIS</span>
+                                <span class="sales-breakdown-value">${{ getTotalVentas() | number:'1.0-0' }}</span>
+                            </div>
+                        </div>
                         <div class="chart-body">
                             <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleVentas" [gradient]="gradient" (select)="onSelect($event)">
                             </ngx-charts-advanced-pie-chart>

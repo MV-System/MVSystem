@@ -182,6 +182,62 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="stats-divider"></div>
+
+                                    <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalItbisCliente() === 0 && !isLoading}">
+                                        <div class="stats-content-horizontal">
+                                            <div class="stats-icon-horizontal">
+                                                <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-warning" role="status"></div>
+                                                <i *ngIf="!isLoading" class="bi bi-percent text-warning"></i>
+                                            </div>
+                                            <div class="stats-info-horizontal">
+                                                <h6 class="stats-title-horizontal">
+                                                    ITBIS
+                                                    <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                        <i class="bi bi-funnel-fill text-info"></i>
+                                                    </span>
+                                                </h6>
+                                                <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                    <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                                <span *ngIf="!isLoading">{{ getTotalItbisCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                                </span>
+                                                <small class="stats-subtitle-horizontal">
+                                                    <span *ngIf="!isLoading && getTotalItbisCliente() === 0" class="text-muted">Sin ITBIS</span>
+                                                    <span *ngIf="!isLoading && getTotalItbisCliente() > 0">Impuesto separado</span>
+                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="stats-divider"></div>
+
+                                    <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalVentaSinItbisCliente() === 0 && !isLoading}">
+                                        <div class="stats-content-horizontal">
+                                            <div class="stats-icon-horizontal">
+                                                <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-dark" role="status"></div>
+                                                <i *ngIf="!isLoading" class="bi bi-calculator text-dark"></i>
+                                            </div>
+                                            <div class="stats-info-horizontal">
+                                                <h6 class="stats-title-horizontal">
+                                                    Venta sin ITBIS
+                                                    <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                        <i class="bi bi-funnel-fill text-info"></i>
+                                                    </span>
+                                                </h6>
+                                                <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                    <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                                <span *ngIf="!isLoading">{{ getTotalVentaSinItbisCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                                </span>
+                                                <small class="stats-subtitle-horizontal">
+                                                    <span *ngIf="!isLoading && getTotalVentaSinItbisCliente() === 0" class="text-muted">Sin base gravada</span>
+                                                    <span *ngIf="!isLoading && getTotalVentaSinItbisCliente() > 0">Venta base</span>
+                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -620,6 +620,30 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     //return this.facturasFiltradas().reduce((acc, factura) => acc + (factura.total || 0), 0);
   }
 
+  getTotalItbisCliente(): number {
+    if (!this.facturas || this.facturas.length === 0) {
+      return 0;
+    }
+
+    // Usar directamente la columna Itbis que viene del SP
+    return this.facturas.reduce((total, factura) => {
+      const itbis = factura.itbis || 0;
+      return total + itbis;
+    }, 0);
+  }
+
+  getTotalVentaSinItbisCliente(): number {
+    if (!this.facturas || this.facturas.length === 0) {
+      return 0;
+    }
+
+    // Usar directamente la columna SubTotal que viene del SP
+    return this.facturas.reduce((total, factura) => {
+      const subTotal = factura.subTotal || 0;
+      return total + subTotal;
+    }, 0);
+  }
+
   /**
    * Devuelve la cantidad de facturas filtradas en el cliente
    */

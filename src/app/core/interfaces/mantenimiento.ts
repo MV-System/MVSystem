@@ -144,6 +144,8 @@ export interface FacturaConsulta {
     abono: number;
     total: number;
     totalFacturado: number;
+    totalItbis?: number;
+    totalSinItbis?: number;
     nota: string;
     fechaFacturacion: string;
     line: number;
