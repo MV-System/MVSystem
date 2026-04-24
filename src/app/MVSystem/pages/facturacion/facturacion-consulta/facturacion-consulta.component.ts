@@ -650,7 +650,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     // Esto garantiza consistencia matemática independiente de datos inconsistentes en SubTotal
     const totalFacturado = this.getTotalFacturadoCliente();
     const totalItbis = this.getTotalItbisCliente();
-    
+
     return Math.max(totalFacturado - totalItbis, 0);
   }
 

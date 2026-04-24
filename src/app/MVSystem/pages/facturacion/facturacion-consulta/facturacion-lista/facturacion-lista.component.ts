@@ -33,7 +33,7 @@ selectedRowIndex: number | null = null;
   // Este método se ejecuta cuando el select cambia
   onPageSizeChange(event: any) {
         const newSize = event.target.value;
-        
+
         // Manejar caso especial de "Todos"
         if (newSize === 'totalRecord') {
           this.pageSizeChanged.emit(this.totalRecord || 999999);
