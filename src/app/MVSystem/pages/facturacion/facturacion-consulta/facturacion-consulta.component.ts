@@ -43,15 +43,18 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     // Validar que pageSize sea válido
     const validPageSizes = [5, 10, 50, 100];
 
-    // Permitir también totalRecord si es un número válido
-    if (!validPageSizes.includes(newPageSize) && newPageSize !== this.totalRecord) {
+    // Permitir también totalRecord si es un número válido, o un número muy grande para "todos"
+    if (!validPageSizes.includes(newPageSize) && newPageSize !== this.totalRecord && newPageSize !== 999999) {
       console.warn('Tamaño de página inválido:', newPageSize);
       return;
     }
 
+    // Si es "todos" (999999), usar el totalRecord real
+    const finalPageSize = newPageSize === 999999 ? this.totalRecord : newPageSize;
+
     // Actualizar AMBAS propiedades
-    this.pageSize = newPageSize;
-    this.paginate.pageSize = newPageSize;
+    this.pageSize = finalPageSize;
+    this.paginate.pageSize = finalPageSize;
 
     // Resetear a la primera página al cambiar el tamaño
     this.pageIndex = 1;
@@ -625,7 +628,13 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       return 0;
     }
 
-    // Usar directamente la columna Itbis que viene del SP
+    // Usar el valor agregado que viene del SP si está disponible
+    const totalItbisFromSP = this.facturas[0]?.totalItbis;
+    if (typeof totalItbisFromSP === 'number' && !isNaN(totalItbisFromSP)) {
+      return totalItbisFromSP;
+    }
+
+    // Fallback: sumar manualmente si no viene del SP
     return this.facturas.reduce((total, factura) => {
       const itbis = factura.itbis || 0;
       return total + itbis;
@@ -637,11 +646,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       return 0;
     }
 
-    // Usar directamente la columna SubTotal que viene del SP
-    return this.facturas.reduce((total, factura) => {
-      const subTotal = factura.subTotal || 0;
-      return total + subTotal;
-    }, 0);
+    // Usar lógica más confiable: Total Facturado - ITBIS
+    // Esto garantiza consistencia matemática independiente de datos inconsistentes en SubTotal
+    const totalFacturado = this.getTotalFacturadoCliente();
+    const totalItbis = this.getTotalItbisCliente();
+    
+    return Math.max(totalFacturado - totalItbis, 0);
   }
 
   /**
