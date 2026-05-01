@@ -214,6 +214,9 @@ reparaciones: any[] = [];
      BotonPreFacturar(): boolean {
       return this.validatorPermissionService.validateUserRole("BotonPreFacturar");
     }
+    VerCheckAsumeITBIS(): boolean {
+      return this.validatorPermissionService.validateUserRole("VerCheckAsumeITBIS");
+    }
 
   /**
    * Detecta si la pantalla es móvil (ancho <= 768px)
