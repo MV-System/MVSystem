@@ -43,6 +43,8 @@ export interface TipoComprobante {
   nfcTipoNumero: number;
   nfcTipoDescripcion: string;
   visible_Venta: boolean;
+  nfcTipoCantidad?: number;
+  nfcTipoSecuencia?: number;
 }
 
 export interface AccesorioLista {

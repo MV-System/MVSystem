@@ -310,8 +310,8 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       barcodeSVG = ''; // Si falla, continuar sin código de barras
     }
 
-    // Determinar qué precio mostrar (Detalle si existe, sino Mayor)
-    const precioMostrar = equipo.precioDetalle > 0 ? equipo.precioDetalle : equipo.precioPorMayor;
+    // Determinar qué precio mostrar (Detalle si existe, sino Mayor) - OCULTO
+    // const precioMostrar = equipo.precioDetalle > 0 ? equipo.precioDetalle : equipo.precioPorMayor;
 
     const labelHTML = `
       <!DOCTYPE html>
@@ -514,10 +514,12 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
               <div class="footer-label">Fecha</div>
               <div class="footer-value">${fechaRegistro}</div>
             </div>
+            <!-- Precio oculto: RD$ 0.00
             <div class="footer-item">
               <div class="footer-label">Precio</div>
-              <div class="footer-value">RD$ ${precioMostrar.toFixed(0)}</div>
+              <div class="footer-value">RD$ 0.00</div>
             </div>
+            -->
           </div>
         </div>
       </body>

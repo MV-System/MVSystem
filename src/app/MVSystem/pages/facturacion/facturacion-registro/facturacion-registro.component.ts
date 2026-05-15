@@ -60,6 +60,23 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  private validarComprobante(): boolean {
+    const comprobanteId = String(this.form.get('comprobante')?.value);
+    if (!comprobanteId || comprobanteId === '0' || comprobanteId === 'null' || comprobanteId === 'undefined') {
+      return true;
+    }
+    const comp = this.comprobanteTipos.find(c => String(c.nfcTipoNumero) === comprobanteId);
+    if (!comp || comp.nfcTipoCantidad == null || comp.nfcTipoSecuencia == null) {
+      return true;
+    }
+    const restante = comp.nfcTipoCantidad - comp.nfcTipoSecuencia;
+    if (restante <= 0) {
+      this.toastr.error('No tiene comprobantes disponibles. Actualice la secuencia antes de continuar.');
+      return false;
+    }
+    return true;
+  }
+
 
   tipoFactura: string = '';
 clienteSeleccionado: any = null;
@@ -88,6 +105,9 @@ reparaciones: any[] = [];
   onPreFacturar() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
+      return;
+    }
+    if (!this.validarComprobante()) {
       return;
     }
     this.isLoading = true;
@@ -805,6 +825,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       if (!this.validarPrecioVsCosto()) {
         return;
       }
+      if (!this.validarComprobante()) {
+        return;
+      }
 
       if (this.isFactura) {
         this.generateFactura();
@@ -1357,6 +1380,19 @@ else
 
     // Recalcular todos los valores de los artículos existentes
     this.refreshGeneralValues();
+
+    // Validar disponibilidad de comprobantes
+    if (comprobante && comprobante !== '0' && comprobante !== 'null') {
+      const comp = this.comprobanteTipos.find(c => String(c.nfcTipoNumero) === comprobante);
+      if (comp && comp.nfcTipoCantidad != null && comp.nfcTipoSecuencia != null) {
+        const restante = comp.nfcTipoCantidad - comp.nfcTipoSecuencia;
+        if (restante <= 0) {
+          this.toastr.error('No tiene comprobantes disponibles. Actualice la secuencia antes de continuar.');
+        } else if (restante <= 10) {
+          this.toastr.warning(`Le quedan ${restante} comprobante(s) disponibles. Actualice la secuencia pronto.`);
+        }
+      }
+    }
   }
   validarCampos(nombreCampo: string) {
     return this.form.get(nombreCampo)?.invalid &&
