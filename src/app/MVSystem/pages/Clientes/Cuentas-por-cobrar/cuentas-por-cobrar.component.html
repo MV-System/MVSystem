@@ -100,7 +100,7 @@
                                     <input *ngIf="Cliente.showInput" type="number" class="form-control abono-input" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="monto" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
                                     />
 
-                                    <button *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbonoGeneral(Cliente)">
+                                    <button *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbonoGeneral(Cliente)" [disabled]="isProcesandoAbono">
 <i class="bx bx-check"></i> Procesar
 </button>
 
@@ -142,7 +142,7 @@
                                                     <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="monto" (keydown)="onEnterAbono($event, detalle)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
                                                     />
 
-                                                    <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)">
+                                                    <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)" [disabled]="isProcesandoAbono">
                                                 <i class="bx bx-check"></i> Procesar
                                               </button>
 
@@ -208,7 +208,7 @@
 
                             <!-- Botones de acción -->
                             <div class="acciones-cliente">
-                                <button class="btn-accion btn-procesar" *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" (click)="procesarAbonoGeneral(Cliente); $event.stopPropagation();">
+                                <button class="btn-accion btn-procesar" *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" (click)="procesarAbonoGeneral(Cliente); $event.stopPropagation();" [disabled]="isProcesandoAbono">
                                     <i class="bx bx-check"></i> Procesar Abono
                                 </button>
 
@@ -271,7 +271,7 @@
 
                                 <!-- Botones de acción de factura -->
                                 <div class="acciones-factura">
-                                    <button class="btn-accion-sm btn-procesar" *ngIf="detalle.montoAbono && detalle.montoAbono > 0" (click)="procesarAbono(detalle); $event.stopPropagation();">
+                                    <button class="btn-accion-sm btn-procesar" *ngIf="detalle.montoAbono && detalle.montoAbono > 0" (click)="procesarAbono(detalle); $event.stopPropagation();" [disabled]="isProcesandoAbono">
                                         <i class="bx bx-check"></i> Procesar
                                     </button>
 

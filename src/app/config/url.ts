@@ -130,6 +130,9 @@ export let APIURL = {
         },
         Edita: {
           ClienteUpdate: API + 'Clientes/Cliente_Update',
+        },
+        Accion: {
+          ReciboAbono: API + 'ClientesReporte/ReciboAbono',
         }
     },
     Suplidor: {

@@ -56,9 +56,19 @@ export class HandleErrorsResponseService {
             this.toastr.error('Ocurrió un error inesperado. Inténtelo de nuevo más tarde.', '');
         }
 
-        console.error(`Backend returned code ${error.status}, body was: `, error.error);
+        if (error.error instanceof Blob) {
+            error.error.text()
+                .then((blobText) => {
+                    console.error(`Backend returned code ${error.status}, body text was:`, blobText);
+                })
+                .catch(() => {
+                    console.error(`Backend returned code ${error.status}, body was: `, error.error);
+                });
+        } else {
+            console.error(`Backend returned code ${error.status}, body was: `, error.error);
+        }
 
-        // Devuelve un observable con un mensaje de error para el usuario
-        return throwError(() => new Error('Algo malo sucedió; por favor, inténtelo de nuevo más tarde.'));
+        // Propagar el HttpErrorResponse original para no perder status/body.
+        return throwError(() => error);
     }
 }

@@ -9,8 +9,11 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        // Solo reintentar en peticiones GET (lectura), nunca en POST/PUT/DELETE
-        const retryCount = req.method === 'GET' ? 2 : 0;
+        // Solo reintentar en peticiones GET de consulta. Los endpoints de reportes PDF
+        // pueden fallar de forma determinista (500) y no conviene triplicar la carga.
+        const normalizedUrl = (req.urlWithParams || req.url || '').toLowerCase();
+        const isReciboAbonoReport = normalizedUrl.includes('/clientesreporte/reciboabono');
+        const retryCount = req.method === 'GET' && !isReciboAbonoReport ? 2 : 0;
 
         return next.handle(req).pipe(
             retry(retryCount),

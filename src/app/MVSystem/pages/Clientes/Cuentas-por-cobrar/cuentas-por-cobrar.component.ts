@@ -11,8 +11,8 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
-import * as JSZip from 'jszip';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-cuentas-por-cobrar',
@@ -69,6 +69,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     Usuario: this.loginService.getUserName()
   };
   totalMontoPendiente: number =0;
+  isProcesandoAbono: boolean = false;
 
   constructor(
     private loading: LoadingService,
@@ -234,136 +235,10 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     }
   }
 
-  /**
-   * Comprimir y compartir todas las facturas pendientes de un cliente en un ZIP (solo móvil)
-   */
-  async compartirFacturasZip(cliente: any) {
-    const idCliente = cliente.id_Cliente;
-    if (!idCliente || idCliente <= 0) {
-      this.toastr.error('Cliente inválido');
-      return;
-    }
-    if (!navigator.share) {
-      this.toastr.warning('Tu navegador no soporta la función de compartir archivos. Usa un navegador moderno en tu dispositivo móvil.');
-      return;
-    }
-    this.loading.showLoading();
-    this.isLoading = true;
-    try {
-      // 1. Consultar facturas pendientes del cliente
-      const facturas: any[] = await new Promise((resolve, reject) => {
-        this.ClienteService.getFacturasPendientesPorCliente(idCliente).subscribe({
-          next: (res) => resolve(res),
-          error: (err) => reject(err)
-        });
-      });
-      if (!facturas || facturas.length === 0) {
-        this.toastr.warning('No hay facturas pendientes para este cliente.');
-        return;
-      }
-      // Limitar a 10 facturas para evitar problemas de tamaño (ajusta según necesidad)
-      const facturasLimitadas = facturas.slice(0, 10);
-      const filterBase: FacturaFilter = {
-        almacen: Number(this.loginService.getUserIdSucursal),
-        criterio: '',
-        empresa: this.loginService.getUserEmpresa,
-        IdEmpresa: this.loginService.getUserIdEmpresa,
-        IdSucursal: this.loginService.getUserIdSucursal,
-        ComprobanteCheck: 1,
-        EstadoFactura: 'A',
-        IdVendedor: 0,
-        pageIndex: 1,
-        pageSize: 1,
-        fechaInicio: '',
-        fechaFinal: '',
-        Usuario: this.loginService.getUserName(),
-      };
-      // Descargar todos los PDFs en paralelo
-      const pdfPromises = facturasLimitadas.map(detalle =>
-        new Promise<{name: string, blob: Blob}>((resolve, reject) => {
-          this.mantenimientoService.postFacturaReport(filterBase, detalle.numeroFactura).subscribe({
-            next: (blob: Blob) => {
-              resolve({ name: `Factura_${detalle.numeroFactura}.pdf`, blob });
-            },
-            error: (err) => reject(err)
-          });
-        })
-      );
-      const pdfs = await Promise.all(pdfPromises);
-      // Crear el ZIP
-      const zip = new JSZip();
-      pdfs.forEach(pdf => {
-        zip.file(pdf.name, pdf.blob);
-      });
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const zipFile = new File([zipBlob], `Facturas_Cliente_${idCliente}.zip`, { type: 'application/zip' });
-      // Compartir el ZIP
-      console.log('Intentando compartir ZIP:', zipFile);
-      if ((navigator as any).canShare && (navigator as any).canShare({ files: [zipFile] })) {
-        try {
-          await (navigator as any).share({
-            title: `Facturas del cliente #${idCliente}`,
-            text: `Facturas pendientes del cliente #${idCliente} - MVSystem`,
-            files: [zipFile]
-          });
-          console.log('ZIP compartido exitosamente');
-          this.toastr.success('ZIP compartido exitosamente');
-        } catch (shareError) {
-          console.error('Error al intentar compartir el ZIP:', shareError);
-          this.toastr.error('Error al intentar compartir el ZIP. Se intentará descargar.');
-          // Fallback a descarga
-          try {
-            const url = window.URL.createObjectURL(zipFile);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = zipFile.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            // Fallback extra para móviles: abrir el enlace si el click no funciona
-            setTimeout(() => {
-              window.open(url, '_blank');
-            }, 500);
-            this.toastr.info('Si no se descarga automáticamente, mantén presionado el enlace para descargar el ZIP.');
-            console.log('ZIP descargado por fallback tras error de compartir.');
-          } catch (downloadError) {
-            this.toastr.error('No se pudo descargar el ZIP. Intenta desde un navegador diferente.');
-            console.error('Error al intentar descargar el ZIP tras fallo de compartir:', downloadError);
-          }
-        }
-      } else {
-        console.warn('No se puede compartir el ZIP con Web Share API. Intentando descargar...');
-        this.toastr.warning('No se puede compartir el ZIP. Se descargará en su lugar.');
-        try {
-          const url = window.URL.createObjectURL(zipFile);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = zipFile.name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-          // Fallback extra para móviles: abrir el enlace si el click no funciona
-          setTimeout(() => {
-            window.open(url, '_blank');
-          }, 500);
-          this.toastr.info('Si no se descarga automáticamente, mantén presionado el enlace para descargar el ZIP.');
-          console.log('ZIP descargado correctamente.');
-        } catch (downloadError) {
-          this.toastr.error('No se pudo descargar el ZIP. Intenta desde un navegador diferente.');
-          console.error('Error al intentar descargar el ZIP:', downloadError);
-        }
-      }
-    } catch (error) {
-      this.toastr.error('Error al comprimir o compartir las facturas.');
-    } finally {
-      this.loading.hideLoading();
-      this.isLoading = false;
-    }
-  }
+
 
   ngOnInit(): void {
+    console.log('[CuentasPorCobrar] Componente inicializado');
     this.obtenerClientes();
 
     // 📊 Tracking: Registro de acceso al módulo
@@ -390,6 +265,15 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     return true;
   }
   procesarAbono(detalle: any): void {
+    if (this.isProcesandoAbono) {
+      return;
+    }
+
+    console.log('=== INICIO procesarAbono ===');
+    console.log('Detalle:', detalle);
+    console.log('filterParam antes:', this.filterParam);
+    console.log('idClienteSeleccionado:', this.idClienteSeleccionado);
+
     if (this.filterParam.MontoAbono === 0) {
 
       this.filterParam.MontoAbono = detalle.montoAbono;
@@ -413,23 +297,31 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     }
 
     if (monto) {
+      this.isProcesandoAbono = true;
       this.ClienteService.postAbonoFactura(filterParam).subscribe({
         next: (response) => {
+          console.log('=== ABONO FACTURA SUCCESS ===');
+          console.log('Response:', response);
           this.isLoading = false;  // Terminar carga
 
           const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+          console.log('Mensaje:', mensaje);
           this.toastr.info(mensaje);
-          this.idClienteSeleccionado = 0;
-          this.FacturasPorClientes = [];
 
-          // Limpiar filterParam después de procesar el abono
-          this.resetFilterParam(); // Llamamos a la función que limpia el filterParam
-           // Recargar la página para actualizar los datos
-        window.location.reload();
+          // Guardar datos antes de limpiar
+          const clienteId = filterParam.Id_Cliente;
+          const facturaNum = filterParam.NumeroFactura;
+
+          console.log('Datos guardados - clienteId:', clienteId, 'facturaNum:', facturaNum);
+
+          // Confirmar antes de imprimir recibo
+          this.confirmarImpresionRecibo(clienteId, facturaNum, false);
         },
         error: (err) => {
-          this.isLoading = false;  // Terminar carga en caso de error
+          console.error('=== ABONO FACTURA ERROR ===');
           console.error('Error Procesando el Abono:', err);
+          this.isLoading = false;  // Terminar carga en caso de error
+          this.isProcesandoAbono = false;
         },
       });
     } else {
@@ -437,6 +329,15 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     }
   }
   procesarAbonoGeneral(Abono: any): void {
+    if (this.isProcesandoAbono) {
+      return;
+    }
+
+    console.log('=== INICIO procesarAbonoGeneral ===');
+    console.log('Abono:', Abono);
+    console.log('filterParam antes:', this.filterParam);
+    console.log('idClienteSeleccionado:', this.idClienteSeleccionado);
+
     if (this.filterParam.MontoAbono === 0) {
 
       this.filterParam.MontoAbono = Abono.montoAbonoGeneral;
@@ -460,25 +361,32 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     }
 
     if (monto) {
+      this.isProcesandoAbono = true;
       this.ClienteService.postAbonoGeneral(filterParam).subscribe({
         next: (response) => {
+          console.log('=== ABONO GENERAL SUCCESS ===');
+          console.log('Response:', response);
           this.isLoading = false;  // Terminar carga
 
           const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
+          console.log('Mensaje:', mensaje);
           this.toastr.info(mensaje);
-          this.idClienteSeleccionado = 0;
-          this.FacturasPorClientes = [];
 
-          // Limpiar filterParam después de procesar el abono
-          this.resetFilterParam(); // Llamamos a la función que limpia el filterParam
-           // Recargar la página para actualizar los datos
-           setTimeout(() => {
-            window.location.reload(); // Recarga la página después de 2 segundos
-            }, 2000);
+          // Guardar datos antes de limpiar
+          const clienteId = filterParam.Id_Cliente;
+          const facturaNum = filterParam.NumeroFactura;
+
+          console.log('Datos guardados - clienteId:', clienteId, 'facturaNum:', facturaNum);
+
+          // Confirmar antes de imprimir recibo
+          this.confirmarImpresionRecibo(clienteId, facturaNum, true);
         },
         error: (err) => {
+          console.error('=== ABONO GENERAL ERROR ===');
+          console.error('Error Procesando el Abono:', err);
           this.isLoading = false;  // Terminar carga en caso de error
           console.error('Error Procesando el Abono:', err);
+          this.isProcesandoAbono = false;
         },
       });
     } else {
@@ -496,6 +404,144 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       IdSucursal: 0
       // Puedes reiniciar las demás propiedades según sea necesario
     };
+  }
+
+  private async extractHttpErrorDetail(error: any): Promise<string> {
+    const source = error?.error;
+
+    if (typeof source === 'string') {
+      return source;
+    }
+
+    if (source instanceof Blob) {
+      try {
+        return await source.text();
+      } catch {
+        return '';
+      }
+    }
+
+    if (source && typeof source === 'object') {
+      return source.message || source.error || JSON.stringify(source);
+    }
+
+    return error?.message || '';
+  }
+
+  private confirmarImpresionRecibo(idCliente: number, numeroFactura: number, debeRecargar: boolean): void {
+    this.rDialogService.openDialog(
+      'Aviso',
+      'Desea imprimir el recibo de abono?',
+      () => {
+        this.idClienteSeleccionado = 0;
+        this.FacturasPorClientes = [];
+        this.resetFilterParam();
+        this.imprimirReciboAbono(idCliente, numeroFactura, debeRecargar);
+      },
+      () => {
+        this.idClienteSeleccionado = 0;
+        this.FacturasPorClientes = [];
+        this.resetFilterParam();
+
+        if (debeRecargar) {
+          this.isProcesandoAbono = false;
+          window.location.reload();
+          return;
+        }
+
+        this.isProcesandoAbono = false;
+        this.obtenerClientes();
+      },
+      'No',
+      'Si'
+    );
+  }
+
+imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: boolean = false): void {
+    if (!idCliente || idCliente === 0) {
+      this.toastr.warning('No se puede generar recibo: cliente no válido');
+      return;
+    }
+
+    this.loading.showLoading();
+    this.isLoading = true;
+
+    this.ClienteService.getReciboAbono(
+      idCliente,
+      numeroFactura,
+      this.loginService.getUserIdSucursal,
+      this.loginService.getUserIdEmpresa
+    ).subscribe({
+      next: (blob) => {
+        if (!blob || blob.size === 0) {
+          this.toastr.warning('El recibo está vacío');
+          this.loading.hideLoading();
+          this.isLoading = false;
+          this.isProcesandoAbono = false;
+          return;
+        }
+
+        try {
+          if (debeRecargar) {
+            const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = blobUrl;
+
+            let recargaEjecutada = false;
+            const recargarPagina = () => {
+              if (recargaEjecutada) {
+                return;
+              }
+
+              recargaEjecutada = true;
+              URL.revokeObjectURL(blobUrl);
+              if (iframe.parentNode) {
+                iframe.parentNode.removeChild(iframe);
+              }
+              window.location.reload();
+            };
+
+            iframe.onload = () => {
+              const frameWindow = iframe.contentWindow;
+              if (!frameWindow) {
+                recargarPagina();
+                return;
+              }
+
+              frameWindow.focus();
+              frameWindow.print();
+
+              // Fallback fijo solicitado: recargar a los 5 segundos.
+              setTimeout(() => recargarPagina(), 5000);
+            };
+
+            document.body.appendChild(iframe);
+          } else {
+            CreatorPDFFile(blob);
+            this.isProcesandoAbono = false;
+          }
+
+          this.loading.hideLoading();
+          this.isLoading = false;
+        } catch (error) {
+          console.error('Error al abrir recibo:', error);
+          this.toastr.error('Error al abrir el recibo');
+          this.loading.hideLoading();
+          this.isLoading = false;
+          this.isProcesandoAbono = false;
+        }
+      },
+      error: async (error) => {
+        const detail = await this.extractHttpErrorDetail(error);
+        console.error('Error getReciboAbono:', error?.status, detail || error?.message);
+        this.toastr.warning('No se pudo generar el recibo: ' + (detail || error?.message || 'Error desconocido'));
+        this.loading.hideLoading();
+        this.isLoading = false;
+        this.isProcesandoAbono = false;
+      }
+    });
   }
 
   toggleDetalleInput(detalle: any, event: Event): void {
@@ -642,11 +688,7 @@ this.idClienteSeleccionado = idClienteSeleccionado;
     this.isLoading = false;
   }
 
- printReportTransferencia(): void {
-
-}
-
-onEnter(event: KeyboardEvent) {
+  onEnter(event: KeyboardEvent) {
 
   if (event.key === 'Enter') {  // Verifica si la tecla presionada es 'Enter'
 
@@ -660,14 +702,14 @@ onEnter(event: KeyboardEvent) {
 }
 onEnterAbono(event: KeyboardEvent, detalle: any) {
   // Verificar si la tecla presionada es Enter
-  if (event.key === 'Enter') {
+  if (event.key === 'Enter' && !this.isProcesandoAbono) {
     // Llamar a la misma función que el botón de "Procesar"
     this.procesarAbono(detalle);
   }
 }
 onEnterAbonoGeneral(event: KeyboardEvent, detalle: any) {
   // Verificar si la tecla presionada es Enter
-  if (event.key === 'Enter') {
+  if (event.key === 'Enter' && !this.isProcesandoAbono) {
     // Llamar a la misma función que el botón de "Procesar"
     this.procesarAbonoGeneral(detalle);
   }
