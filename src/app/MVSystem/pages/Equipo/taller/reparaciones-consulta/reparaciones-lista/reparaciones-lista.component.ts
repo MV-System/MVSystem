@@ -7,7 +7,7 @@ import { ReparacionConsulta } from 'src/app/core/interfaces/equipo.interface';
   styleUrls: ['./reparaciones-lista.component.css']
 })
 export class ReparacionesListaComponent {
-  
+
   @Input() reparaciones: ReparacionConsulta[] = [];
   @Input() pageSize: number = 10;
   @Input() pageIndex: number = 1;
@@ -15,20 +15,20 @@ export class ReparacionesListaComponent {
   @Input() line: number = 0;
   @Input() lastLine: number = 0;
   @Input() isLoading: boolean = false;
-  
+
   @Output() onReparacionClick = new EventEmitter<number>();
   @Output() onPageSizeChange = new EventEmitter<number>();
   @Output() onPageChange = new EventEmitter<number>();
-  
+
   selectedRowIndex: number | null = null;
-  
+
   /**
    * Detectar si es pantalla móvil
    */
   isMobileScreen(): boolean {
     return window.innerWidth < 768;
   }
-  
+
   /**
    * Manejar click en una reparación
    */
@@ -36,14 +36,21 @@ export class ReparacionesListaComponent {
     this.selectedRowIndex = index;
     this.onReparacionClick.emit(idReparacion);
   }
-  
+
   /**
    * Cambiar tamaño de página
    */
   handlePageSizeChange(): void {
-    this.onPageSizeChange.emit(this.pageSize);
+    this.onPageSizeChange.emit(Number(this.pageSize));
   }
-  
+
+  /**
+   * Cambiar página
+   */
+  handlePageChange(page: number): void {
+    this.onPageChange.emit(page);
+  }
+
   /**
    * Obtener clase de badge según el estatus
    */
@@ -57,7 +64,7 @@ export class ReparacionesListaComponent {
       default: return 'bg-secondary';
     }
   }
-  
+
   /**
    * Formatear precio/costo
    */

@@ -60,7 +60,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  private validarComprobante(): boolean {
+   private validarComprobante(): boolean {
     const comprobanteId = String(this.form.get('comprobante')?.value);
     if (!comprobanteId || comprobanteId === '0' || comprobanteId === 'null' || comprobanteId === 'undefined') {
       return true;
@@ -265,37 +265,35 @@ buscarReparacionesPendientes(clienteId: number) {
         const reparaciones = response?.data;
 
         if (Array.isArray(reparaciones) && reparaciones.length > 0) {
-          const reparacion = reparaciones[0];
+          let agregadas = 0;
+          reparaciones.forEach(reparacion => {
+            const articuloVisual = {
+              accesorio_Descripcion: `Reparación #${reparacion.idReparacion} - ${reparacion.detalle_Reparacion || 'Sin detalles'}`,
+              precio_Detalle: reparacion.precio,
+              precio_Por_Mayor: reparacion.precio,
+              costo_Equipo: reparacion.costo_Equipo,
+              cantidad: 1,
+              id: reparacion.idReparacion,
+              codigo_Barra: 0,
+              modelo: reparacion.modelo || '',
+              codigo: '',
+              idTipo: 4,
+              disponible: reparacion.disponible || 1,
+              mensaje: reparacion.detalle_Reparacion || '',
+              descuento: 0
+            };
 
-          // // Asignar la nota al control del formulario
-          // const notaControl = this.form.get('nota');
-          // if (notaControl) {
-          //   notaControl.setValue(reparacion.detalle_Reparacion || 'Sin detalles');
-          // }
+            const articuloExistente = this.accesoriosBuffer.find(a => a.id === reparacion.idReparacion);
+            if (!articuloExistente) {
+              this.accesoriosBuffer.unshift(articuloVisual);
+              agregadas++;
+            }
+          });
 
-          // Crear el objeto visual para el buffer
-          const articuloVisual = {
-            accesorio_Descripcion: `Reparación #${reparacion.idReparacion}`,
-            precio_Detalle: reparacion.precio,
-            precio_Por_Mayor: reparacion.precio,
-            costo_Equipo: reparacion.costo_Equipo,
-            cantidad: 1,
-            id: reparacion.idReparacion,
-            codigo_Barra: 0,
-            modelo: reparacion.modelo || '',
-            codigo: '',
-            idTipo: 4,
-            disponible: reparacion.disponible || 1,
-            mensaje: reparacion.detalle_Reparacion || '',
-            descuento: 0
-          };
-
-          // Evitar duplicados en el buffer usando id
-          const articuloExistente = this.accesoriosBuffer.find(a => a.id === reparacion.idReparacion);
-          if (!articuloExistente) {
-            this.accesoriosBuffer.unshift(articuloVisual); // Agrega al inicio del buffer
+          if (agregadas > 0) {
+            this.toastr.info(`Se encontraron ${agregadas} reparación(es) pendiente(s) para este cliente.`);
           } else {
-            this.toastr.warning(`La reparación con ID ${reparacion.idReparacion} ya está en la lista.`);
+            this.toastr.warning('Las reparaciones pendientes de este cliente ya están en la lista.');
           }
 
         } else {

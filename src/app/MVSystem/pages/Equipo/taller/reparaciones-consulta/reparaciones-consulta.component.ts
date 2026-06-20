@@ -183,9 +183,9 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
           this.reparaciones = response.data || [];
 
           if (this.reparaciones.length > 0) {
-            this.totalRecord = this.reparaciones[0].totalRecords;
-            this.line = this.reparaciones[0].line;
-            this.lastLine = this.reparaciones[0].lastLine;
+            this.totalRecord = this.reparaciones[0].totalRecords || 0;
+            this.line = this.reparaciones[0].line || 0;
+            this.lastLine = this.reparaciones[0].lastLine || 0;
             // Calcular el total de precios
             this.totalPrecioReparaciones = this.reparaciones.reduce((sum, rep) => sum + (rep.precio || 0), 0);
           } else {
@@ -268,16 +268,15 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
    * Cambiar tamaño de página
    */
   onPageSizeChange(newSize: number): void {
-    // Validar que pageSize sea válido
+    const normalizedSize = Number(newSize);
     const validPageSizes = [5, 10, 50, 100];
 
-    // Permitir también totalRecord si es un número válido
-    if (!validPageSizes.includes(newSize) && newSize !== this.totalRecord) {
+    if (!validPageSizes.includes(normalizedSize) && normalizedSize !== this.totalRecord) {
       console.warn('Tamaño de página inválido:', newSize);
       return;
     }
 
-    this.pageSize = newSize;
+    this.pageSize = normalizedSize;
     this.pageIndex = 1;
     this.buscarReparaciones();
   }
