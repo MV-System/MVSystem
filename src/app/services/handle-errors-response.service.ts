@@ -48,7 +48,7 @@ export class HandleErrorsResponseService {
             // Prohibido
             this.toastr.error('No tiene permisos para realizar esta acción.', '');
         } else if (error.status === 400) {
-            // Bad Request - propagar mensaje del servidor al componente
+            // Bad Request - preservar el HttpErrorResponse completo para mantener status/body en consumidores.
             const mensaje = error.error?.error || error.error?.message || 'Datos inválidos. Verifique la información enviada.';
             return throwError(mensaje);
         } else {
