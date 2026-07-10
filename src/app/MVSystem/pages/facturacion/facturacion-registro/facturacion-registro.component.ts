@@ -34,6 +34,10 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 export class FacturacionRegistroComponent implements OnInit, OnDestroy {
 
+  private isAsumeItbisActivo(): boolean {
+    return (this.asumeItbis?.asumeITBIS || '').toString().trim().toUpperCase() === 'S';
+  }
+
   /**
    * Valida que ningún equipo se facture por debajo de su costo
    * Si encuentra alguno, muestra error y retorna false
@@ -523,7 +527,7 @@ onModalClose(rep: any) {
     let subTotal = this.calcularSubTotalArticulo(newPrecio, cantidad);
 
     // Si la tienda asume ITBIS, extraer ITBIS del subTotal
-    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+    if (this.asumeItbis && this.isAsumeItbisActivo()) {
       const itbisRate = this.asumeItbis.itbiS_Valor * 100;
       subTotal = subTotal / (itbisRate / 100 + 1);
       subTotal = Number(subTotal.toFixed(2));
@@ -581,7 +585,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
       let subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
 
       // Si la tienda asume ITBIS, extraer ITBIS del subTotal
-      if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      if (this.asumeItbis && this.isAsumeItbisActivo()) {
         const itbisRate = this.asumeItbis.itbiS_Valor * 100;
         subTotal = subTotal / (itbisRate / 100 + 1);
         subTotal = Number(subTotal.toFixed(2));
@@ -746,7 +750,7 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         this.asumeItbis = itbis;
         // Establecer el valor del checkbox basado en el valor de BD
         // 'S' = true (tienda asume), otro valor = false (cliente paga)
-        this.asumeITBISValue = itbis.asumeITBIS === 'S';
+        this.asumeITBISValue = (itbis.asumeITBIS || '').toString().trim().toUpperCase() === 'S';
       })
   }
 
@@ -946,7 +950,7 @@ else
   // PRIMERO: Validar si se aplica ITBIS
   if (this.form.get('aplicarItbis')?.value === true) {
     // SEGUNDO: Si la tienda asume ITBIS, el precio incluye ITBIS, entonces extraer ITBIS del total (DESPUÉS del descuento)
-    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+    if (this.asumeItbis && this.isAsumeItbisActivo()) {
       const itbisRate = this.asumeItbis.itbiS_Valor * 100;
       // El total YA tiene el descuento aplicado
       const precioFinalConItbis = currentArticulo.total;
@@ -1257,7 +1261,7 @@ else
       const itbisRate = this.asumeItbis.itbiS_Valor * 100;
 
       // si la factura lleva itbis pero ya el precio tiene incluido el itbis (TIENDA ASUME)
-      if (this.asumeItbis.asumeITBIS == 'S') {
+      if (this.isAsumeItbisActivo()) {
         // El total YA incluye ITBIS, extraer
         this.itbis = Number(((this.total / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
         const totalSinItbis = this.total - this.itbis;
@@ -1448,7 +1452,7 @@ else
     let itbisArticulo = currentArticulo.itbis || 0;
     if (this.form.get('aplicarItbis')?.value === true) {
       // SEGUNDO: Si la tienda asume ITBIS, extraer ITBIS del total CON descuento aplicado
-      if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+      if (this.asumeItbis && this.isAsumeItbisActivo()) {
         const itbisRate = this.asumeItbis.itbiS_Valor * 100;
         const precioFinalConItbis = totalConDescuento;
         subTotal = precioFinalConItbis / (itbisRate / 100 + 1);
