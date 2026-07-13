@@ -64,6 +64,10 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   asumeItbis: AsumeITBIS = null!;
   isDescuentoValid: boolean = false;
 
+  private isAsumeItbisActivo(): boolean {
+    return (this.asumeItbis?.asumeITBIS || '').toString().trim().toUpperCase() === 'S';
+  }
+
   obtenerItbis() {
     this.catalogosService.getAsumeITBIS().subscribe((itbis) => {
       this.asumeItbis = itbis;
@@ -211,7 +215,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     );
 
     // Si la tienda asume ITBIS, el precio incluye ITBIS, entonces extraer ITBIS del subTotal
-    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
+    if (this.asumeItbis && this.isAsumeItbisActivo()) {
       const itbisRate = this.asumeItbis.itbiS_Valor * 100;
       // SubTotal sin ITBIS = subTotal / (1 + (itbis%/100))
       const subTotalSinItbis = currentArticulo.subTotal / (itbisRate / 100 + 1);
@@ -250,16 +254,30 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
   obtenerCantidadArticuloStock(index: number) {
     const currentArticulo = this.articulos.controls[index].value;
-    let subTotal = this.calcularSubTotalArticulo(
-      currentArticulo.precio,
-      currentArticulo.cantidad
-    );
+    let subTotal = this.calcularSubTotalArticulo(currentArticulo.precio, currentArticulo.cantidad);
 
-    // Si la tienda asume ITBIS, extraer ITBIS del subTotal
-    if (this.asumeItbis && this.asumeItbis.asumeITBIS == 'S') {
-      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
-      subTotal = subTotal / (itbisRate / 100 + 1);
-      subTotal = Number(subTotal.toFixed(2));
+    // Aplicar descuento primero para obtener el precio final
+    const descuento = currentArticulo.descuento || 0;
+    let totalConDescuento = subTotal - descuento;
+
+    // Calcular ITBIS según configuración
+    let itbisArticulo = currentArticulo.itbis || 0;
+    if (this.aplicarItbis === true) {
+      if (this.asumeItbis && this.isAsumeItbisActivo()) {
+        const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+        const precioFinalConItbis = totalConDescuento;
+        subTotal = precioFinalConItbis / (itbisRate / 100 + 1);
+        subTotal = Number(subTotal.toFixed(2));
+        itbisArticulo = Number((precioFinalConItbis - subTotal).toFixed(2));
+        totalConDescuento = subTotal;
+      } else {
+        subTotal = totalConDescuento;
+        const itbisRate = this.asumeItbis.itbiS_Valor * 100;
+        itbisArticulo = Number(((subTotal * itbisRate) / 100).toFixed(2));
+      }
+    } else {
+      subTotal = totalConDescuento;
+      itbisArticulo = 0;
     }
 
     if (!currentArticulo.articulo) {
@@ -271,10 +289,13 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     }
     let cantidadStockAccesorio = currentArticulo.articulo.cantidad;
     let cantidadElegida = currentArticulo.cantidad;
-    const total = this.calculoTotal(subTotal, currentArticulo.descuento);
+    const total = this.aplicarItbis === true
+      ? subTotal + itbisArticulo
+      : subTotal;
     this.articulos.controls[index].patchValue({
       total,
       subTotal,
+      itbis: itbisArticulo,
     });
     this.onApplyItbis();
     return Number(cantidadElegida) > cantidadStockAccesorio ?
@@ -300,55 +321,93 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     this.subTotal = this.descuento = this.total = this.itbis = 0;
     for (let a = 0; a < this.articulos.length; a++) {
       const articulo = this.articulos.controls[a].value;
-      this.subTotal += articulo.subTotal;
-      this.descuento += articulo.descuento;
-      this.total += articulo.total;
+      this.subTotal += articulo.subTotal || 0;
+      this.descuento += articulo.descuento || 0;
+      this.itbis += articulo.itbis || 0;
+      this.total += articulo.total || 0;
     }
 
-    // 🆕 Guardar el total ANTES de modificarlo para la distribución del ITBIS
-    let totalOriginalParaDistribucion = this.total;
-
     if (this.aplicarItbis) {
-      const itbis = this.asumeItbis.itbiS_Valor * 100;
+      const itbisRate = this.asumeItbis.itbiS_Valor * 100;
 
-      if (this.asumeItbis.asumeITBIS == 'S') {
-        const amountNew = this.total / (itbis / 100 + 1);
+      if (this.isAsumeItbisActivo()) {
+        // Total ya incluye ITBIS: extraerlo sin alterar el total final
+        this.itbis = Number(((this.total / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
+        const totalSinItbis = this.total - this.itbis;
+        this.total = Number(this.total.toFixed(2));
+        this.subTotal = Number(totalSinItbis.toFixed(2));
 
-        this.itbis = this.total - amountNew;
-        this.total = amountNew;
-      } else {
-        this.itbis = (this.total * itbis) / 100;
-        this.total = this.total + this.itbis;
-      }
-
-      this.itbis = Number(this.itbis.toFixed(2));
-      this.total = Number(this.total.toFixed(2));
-
-      // 🆕 Distribuir ITBIS proporcionalmente a cada artículo
-      if (totalOriginalParaDistribucion > 0) {
-        for (let a = 0; a < this.articulos.length; a++) {
-          const control = this.articulos.controls[a] as FormGroup;
-          const articuloTotal = control.get('total')?.value || 0;
-
-          // Cuando la tienda asume ITBIS, los totales de artículos YA incluyen ITBIS
-          // Debemos extraer el ITBIS de cada artículo
-          if (this.asumeItbis.asumeITBIS == 'S') {
-            const itbisRate = this.asumeItbis.itbiS_Valor * 100;
-            // Extraer ITBIS del artículo: itbis = (total / (1 + (itbis/100))) * (itbis/100)
-            const itbisArticulo = Number(((articuloTotal / (itbisRate / 100 + 1)) * (itbisRate / 100)).toFixed(2));
-            control.patchValue({
-              itbis: itbisArticulo
-            });
-          } else {
-            // Cuando la empresa suma ITBIS, se distribuye proporcionalmente
-            // ITBIS del artículo = (total del artículo / total ORIGINAL) × ITBIS total
-            const itbisArticulo = (articuloTotal / totalOriginalParaDistribucion) * this.itbis;
-            control.patchValue({
-              itbis: Number(itbisArticulo.toFixed(2))
-            });
+        // Distribuir ITBIS proporcionalmente por línea
+        if (this.total > 0) {
+          for (let a = 0; a < this.articulos.length; a++) {
+            const control = this.articulos.controls[a] as FormGroup;
+            const articuloTotal = control.get('total')?.value || 0;
+            const itbisLinea = Number(((articuloTotal / this.total) * this.itbis).toFixed(2));
+            control.patchValue({ itbis: itbisLinea });
           }
         }
+      } else {
+        // Empresa suma ITBIS: recalcular por línea para mantener consistencia
+        this.subTotal = 0;
+        this.descuento = 0;
+        this.itbis = 0;
+        this.total = 0;
+
+        for (let a = 0; a < this.articulos.length; a++) {
+          const control = this.articulos.controls[a] as FormGroup;
+          const precio = Number(control.get('precio')?.value || 0);
+          const cantidad = Number(control.get('cantidad')?.value || 1);
+          const descuentoLinea = Number(control.get('descuento')?.value || 0);
+
+          const subTotalLinea = this.calcularSubTotalArticulo(precio, cantidad) - descuentoLinea;
+          const itbisLinea = Number(((subTotalLinea * itbisRate) / 100).toFixed(2));
+          const totalLinea = subTotalLinea + itbisLinea;
+
+          control.patchValue({
+            subTotal: subTotalLinea,
+            itbis: itbisLinea,
+            total: totalLinea,
+          });
+
+          this.subTotal += subTotalLinea;
+          this.descuento += descuentoLinea;
+          this.itbis += itbisLinea;
+          this.total += totalLinea;
+        }
+
+        this.itbis = Number(this.itbis.toFixed(2));
+        this.subTotal = Number(this.subTotal.toFixed(2));
+        this.total = Number(this.total.toFixed(2));
       }
+    } else {
+      // ITBIS no aplicado: recalcular líneas sin impuesto
+      this.subTotal = 0;
+      this.descuento = 0;
+      this.total = 0;
+      this.itbis = 0;
+
+      for (let a = 0; a < this.articulos.length; a++) {
+        const control = this.articulos.controls[a] as FormGroup;
+        const precio = Number(control.get('precio')?.value || 0);
+        const cantidad = Number(control.get('cantidad')?.value || 1);
+        const descuentoLinea = Number(control.get('descuento')?.value || 0);
+
+        const subTotalLinea = this.calcularSubTotalArticulo(precio, cantidad);
+        const totalLinea = subTotalLinea - descuentoLinea;
+
+        control.patchValue({
+          subTotal: subTotalLinea,
+          total: totalLinea,
+          itbis: 0,
+        });
+
+        this.subTotal += subTotalLinea;
+        this.descuento += descuentoLinea;
+        this.total += totalLinea;
+      }
+
+      this.subTotal = Number(this.subTotal.toFixed(2));
+      this.total = Number(this.total.toFixed(2));
     }
   }
   agregarArticulo() {

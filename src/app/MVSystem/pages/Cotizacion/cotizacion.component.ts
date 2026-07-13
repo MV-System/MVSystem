@@ -282,7 +282,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
         subTotal: articulo.subTotal || 0,
         precio: articulo.precio || 0,
         descuento: articulo.descuento || 0,
-        itbis: 0,
+        itbis: articulo.itbis || 0,
         total: articulo.total || 0,
         fechaRegistro: articulo.fechaRegistro || new Date().toDateString(),
         usuario: 'admin',
