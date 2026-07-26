@@ -309,7 +309,7 @@ export class EquipoRegistroComponent implements OnInit {
             this.toastr.info(equipoRegistrado.mensaje);
             return;
           } else {
-            this.equipoValorRetorno.push(equipoRegistrado);
+            this.equipoValorRetorno.unshift(equipoRegistrado);
             this.toastr.success(equipoRegistrado.mensaje);
             this.formRegistro.get('IMEI')?.setValue('');
           }
