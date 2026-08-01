@@ -37,12 +37,15 @@ export interface AbonoFacturaParam {
   Id_Cliente: number;
   NumeroFactura: number;
   MontoAbono: number;
+  IdTipoPago: number;
+  Nota: string;
   IdSucursal: number;
   Usuario: string;
 
 }
 export interface AbonoFacturaResponse {
   mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
+  idLoteAbono?: string;
 }
 export interface Cliente {
   // Campos principales del API actualizado (formato nuevo)
@@ -84,6 +87,8 @@ export interface ClientesConFacturasPendientesRetorn {
   cliente:           string;
   montoPendiente:    string;
   montoAbonoGeneral: number;
+  idTipoPago?:       number;
+  notaAbono?:        string;
   showInput:         number;
 }
 export interface FacturasPorClienteRetorn {
@@ -93,6 +98,8 @@ export interface FacturasPorClienteRetorn {
   fechaFactura:   string;
   editMode:       boolean;// Agregar la propiedad editMode aquí
   montoAbono:     number;
+  idTipoPago?:    number;
+  notaAbono?:     string;
   showInput:      number;
   fechaLimitePagoFactura: string;
 }

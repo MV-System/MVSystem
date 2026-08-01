@@ -44,6 +44,13 @@
                             </div>
                         </div>
 
+                        <!-- Botón para actualizar manualmente los datos (ej. despues de imprimir un recibo de abono) -->
+                        <div class="form-group mb-4">
+                            <button type="button" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar montos y listado" (click)="obtenerClientes()" [disabled]="isLoading">
+                                <i class="bx bx-refresh"></i> Actualizar
+                            </button>
+                        </div>
+
                         <!-- Botón de Búsqueda (opcional) -->
                         <!-- <div class="form-group">
                 <button type="submit" class="btn btn-primary w-100"
@@ -100,16 +107,25 @@
                                     <input *ngIf="Cliente.showInput" type="number" class="form-control abono-input" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="monto" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
                                     />
 
+                                    <select *ngIf="Cliente.showInput" class="form-select" [(ngModel)]="Cliente.idTipoPago" (click)="$event.stopPropagation()" style="min-width: 140px; width: 20%; display: inline-block; margin-left: 8px;">
+                                        <option [ngValue]="0">Tipo de pago</option>
+                                        <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
+                                            {{ tipoPago.descripcion_Tipo_Pagos }}
+                                        </option>
+                                    </select>
+
+                                    <input *ngIf="Cliente.showInput" type="text" class="form-control" [(ngModel)]="Cliente.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" style="min-width: 180px; width: 25%; display: inline-block; margin-left: 8px;" />
+
                                     <button *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbonoGeneral(Cliente)" [disabled]="isProcesandoAbono">
 <i class="bx bx-check"></i> Procesar
 </button>
 
-                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(Cliente, $event)" style="display: inline-block;">
-<i class="bx bx-edit-alt"></i>
+                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" [title]="Cliente.showInput ? 'Cancelar' : 'Hacer Abono'" (click)="toggleDetalleInput(Cliente, $event)" style="display: inline-block;">
+<i class="bx" [ngClass]="Cliente.showInput ? 'bx-x' : 'bx-edit-alt'"></i>
 </button>
 
-                                    <!-- Botón para Saldar Todas las Facturas Pendientes de este cliente -->
-                                    <button (click)="SaldarCuentaTotal(Cliente)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar el total pendiente" style="display: inline-block;">
+                                    <!-- Botón para Saldar Todas las Facturas Pendientes de este cliente (oculto mientras se ingresa un abono para evitar clics accidentales) -->
+                                    <button *ngIf="!Cliente.showInput" (click)="SaldarCuentaTotal(Cliente)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar el total pendiente" style="display: inline-block;">
 <i class="bx bx-money"></i>
 </button>
 
@@ -142,16 +158,25 @@
                                                     <input *ngIf="detalle.showInput" type="number" class="form-control abono-input" [(ngModel)]="detalle.montoAbono" placeholder="monto" (keydown)="onEnterAbono($event, detalle)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
                                                     />
 
+                                                    <select *ngIf="detalle.showInput" class="form-select" [(ngModel)]="detalle.idTipoPago" (click)="$event.stopPropagation()" style="min-width: 140px; width: 20%; display: inline-block; margin-left: 8px;">
+                                                        <option [ngValue]="0">Tipo de pago</option>
+                                                        <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
+                                                            {{ tipoPago.descripcion_Tipo_Pagos }}
+                                                        </option>
+                                                    </select>
+
+                                                    <input *ngIf="detalle.showInput" type="text" class="form-control" [(ngModel)]="detalle.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" style="min-width: 180px; width: 25%; display: inline-block; margin-left: 8px;" />
+
                                                     <button *ngIf="detalle.montoAbono && detalle.montoAbono > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbono(detalle)" [disabled]="isProcesandoAbono">
                                                 <i class="bx bx-check"></i> Procesar
                                               </button>
 
-                                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Hacer Abono" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
-                                                <i class="bx bx-edit-alt"></i>
+                                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" [title]="detalle.showInput ? 'Cancelar' : 'Hacer Abono'" (click)="toggleDetalleInput(detalle, $event)" style="display: inline-block;">
+                                                <i class="bx" [ngClass]="detalle.showInput ? 'bx-x' : 'bx-edit-alt'"></i>
                                               </button>
 
-                                                    <!-- Botón para Saldar Factura -->
-                                                    <button (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
+                                                    <!-- Botón para Saldar Factura (oculto mientras se ingresa un abono para evitar clics accidentales) -->
+                                                    <button *ngIf="!detalle.showInput" (click)="SaldarFactura(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar Factura" style="display: inline-block;">
                                                 <i class="bx bx-money"></i>
                                               </button>
                                                 </div>
@@ -204,6 +229,13 @@
                             <!-- Input para abono general -->
                             <div class="abono-section" *ngIf="Cliente.showInput">
                                 <input type="number" class="form-control abono-input-mobile" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="Monto del abono" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" />
+                                <select class="form-select mt-2" [(ngModel)]="Cliente.idTipoPago" (click)="$event.stopPropagation()">
+                                    <option [ngValue]="0">Tipo de pago</option>
+                                    <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
+                                        {{ tipoPago.descripcion_Tipo_Pagos }}
+                                    </option>
+                                </select>
+                                <input type="text" class="form-control abono-input-mobile mt-2" [(ngModel)]="Cliente.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" />
                             </div>
 
                             <!-- Botones de acción -->
@@ -213,10 +245,10 @@
                                 </button>
 
                                 <button class="btn-accion btn-abono" (click)="toggleDetalleInput(Cliente, $event)">
-                                    <i class="bx bx-edit-alt"></i> Hacer Abono
+                                    <i class="bx" [ngClass]="Cliente.showInput ? 'bx-x' : 'bx-edit-alt'"></i> {{ Cliente.showInput ? 'Cancelar' : 'Hacer Abono' }}
                                 </button>
 
-                                <button class="btn-accion btn-saldar" (click)="SaldarCuentaTotal(Cliente); $event.stopPropagation();">
+                                <button class="btn-accion btn-saldar" *ngIf="!Cliente.showInput" (click)="SaldarCuentaTotal(Cliente); $event.stopPropagation();">
                                     <i class="bx bx-money"></i> Saldar Total
                                 </button>
                             </div>
@@ -267,6 +299,13 @@
                                 <!-- Input para abono de factura -->
                                 <div class="abono-factura-section" *ngIf="detalle.showInput">
                                     <input type="number" class="form-control abono-input-mobile" [(ngModel)]="detalle.montoAbono" placeholder="Monto del abono" (keydown)="onEnterAbono($event, detalle)" (click)="$event.stopPropagation()" />
+                                    <select class="form-select mt-2" [(ngModel)]="detalle.idTipoPago" (click)="$event.stopPropagation()">
+                                        <option [ngValue]="0">Tipo de pago</option>
+                                        <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
+                                            {{ tipoPago.descripcion_Tipo_Pagos }}
+                                        </option>
+                                    </select>
+                                    <input type="text" class="form-control abono-input-mobile mt-2" [(ngModel)]="detalle.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" />
                                 </div>
 
                                 <!-- Botones de acción de factura -->
@@ -276,10 +315,10 @@
                                     </button>
 
                                     <button class="btn-accion-sm btn-abono" (click)="toggleDetalleInput(detalle, $event)">
-                                        <i class="bx bx-edit-alt"></i> Abono
+                                        <i class="bx" [ngClass]="detalle.showInput ? 'bx-x' : 'bx-edit-alt'"></i> {{ detalle.showInput ? 'Cancelar' : 'Abono' }}
                                     </button>
 
-                                    <button class="btn-accion-sm btn-saldar" (click)="SaldarFactura(detalle); $event.stopPropagation();">
+                                    <button class="btn-accion-sm btn-saldar" *ngIf="!detalle.showInput" (click)="SaldarFactura(detalle); $event.stopPropagation();">
                                         <i class="bx bx-money"></i> Saldar
                                     </button>
 

@@ -13,6 +13,8 @@ import { MantenimientoService } from 'src/app/core/services/mantenimiento.servic
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { TipoPago } from 'src/app/core/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-cuentas-por-cobrar',
@@ -30,6 +32,9 @@ export class CuentasPorCobrarComponent implements OnInit {
     dateFormat: 'dd.mm.yyyy',
   };
   AbonoValorRetorno: AbonoFacturaResponse[] = [];
+  tiposPago: TipoPago[] = [];
+  idTipoPagoSeleccionado: number = 0;
+  notaAbono: string = '';
    // Obtener la fecha actual
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
@@ -65,11 +70,14 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     Id_Cliente:0,
     NumeroFactura:0,
     MontoAbono: 0,
+    IdTipoPago: 0,
+    Nota: '',
     IdSucursal:+this.loginService.getUserIdSucursal,
     Usuario: this.loginService.getUserName()
   };
   totalMontoPendiente: number =0;
   isProcesandoAbono: boolean = false;
+  idLoteAbonoActual: string = '';
 
   constructor(
     private loading: LoadingService,
@@ -79,7 +87,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     private toastr: ToastrService,
     private rDialogService: RDialogService,
     private mantenimientoService: MantenimientoService,
-    private tracking: UserTrackingService
+    private tracking: UserTrackingService,
+    private catalogosService: CatalogosService
   ) { }
   /**
    * Compartir factura pendiente (solo móvil) usando Web Share API
@@ -239,10 +248,32 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
   ngOnInit(): void {
     console.log('[CuentasPorCobrar] Componente inicializado');
+    this.cargarTiposPago();
     this.obtenerClientes();
 
     // 📊 Tracking: Registro de acceso al módulo
     this.tracking.trackPageView('MNU_CONS_CUENTAS_COBRAR', 'PageView').subscribe();
+  }
+
+  private cargarTiposPago(): void {
+    // Tipos de pago excluidos del abono: Credito (2) y Mixto (6).
+    // No aplican para un abono, que siempre debe registrarse con un
+    // medio de pago real (efectivo, transferencia, tarjeta, etc.).
+    const idsTipoPagoExcluidos = [2, 6];
+
+    this.catalogosService.getTipoPagoLista().subscribe({
+      next: (tipos) => {
+        this.tiposPago = (tipos || []).filter(tipo => !idsTipoPagoExcluidos.includes(tipo.iD_Tipo_Pagos));
+
+        // No se auto-selecciona un tipo de pago por defecto: el usuario debe
+        // elegir explícitamente uno para cada abono, de lo contrario la
+        // validación de "seleccione un tipo de pago" queda sin efecto.
+      },
+      error: (error) => {
+        console.error('Error al cargar tipos de pago:', error);
+        this.toastr.warning('No se pudo cargar el catálogo de tipos de pago.');
+      }
+    });
   }
 
   /**
@@ -281,11 +312,21 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     }
 
+    const idTipoPago = Number(detalle?.idTipoPago || this.idTipoPagoSeleccionado);
+    const notaAbono = (detalle?.notaAbono || this.notaAbono || '').trim();
+
+    if (!idTipoPago || idTipoPago <= 0) {
+      this.toastr.info('Seleccione un tipo de pago para continuar.');
+      return;
+    }
+
     // Asegúrate de que la propiedad Usuario esté correctamente asignada
     const filterParam: AbonoFacturaParam = {
       Id_Cliente: this.idClienteSeleccionado,
       NumeroFactura: this.filterParam.NumeroFactura,
       MontoAbono: this.filterParam.MontoAbono,
+      IdTipoPago: idTipoPago,
+      Nota: notaAbono,
       IdSucursal: +this.loginService.getUserIdSucursal,
       Usuario: this.loginService.getUserName(),  // Aquí asignamos Usuario correctamente
     };
@@ -298,6 +339,16 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (monto) {
       this.isProcesandoAbono = true;
+
+      // Reiniciamos de inmediato los campos del abono de esta factura
+      // (antes de esperar la respuesta del servidor). Esto oculta el botón
+      // "Procesar" y el panel de captura, evitando que un doble clic vuelva
+      // a enviar el mismo abono mientras la petición sigue en curso.
+      detalle.montoAbono = 0;
+      detalle.idTipoPago = 0;
+      detalle.notaAbono = '';
+      detalle.showInput = false;
+
       this.ClienteService.postAbonoFactura(filterParam).subscribe({
         next: (response) => {
           console.log('=== ABONO FACTURA SUCCESS ===');
@@ -345,11 +396,21 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     }
 
+    const idTipoPago = Number(Abono?.idTipoPago || this.idTipoPagoSeleccionado);
+    const notaAbono = (Abono?.notaAbono || this.notaAbono || '').trim();
+
+    if (!idTipoPago || idTipoPago <= 0) {
+      this.toastr.info('Seleccione un tipo de pago para continuar.');
+      return;
+    }
+
     // Asegúrate de que la propiedad Usuario esté correctamente asignada
     const filterParam: AbonoFacturaParam = {
       Id_Cliente: this.filterParam.Id_Cliente,
       NumeroFactura: 0,
       MontoAbono: this.filterParam.MontoAbono,
+      IdTipoPago: idTipoPago,
+      Nota: notaAbono,
       IdSucursal: +this.loginService.getUserIdSucursal,
       Usuario: this.loginService.getUserName(),  // Aquí asignamos Usuario correctamente
     };
@@ -362,6 +423,16 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (monto) {
       this.isProcesandoAbono = true;
+
+      // Reiniciamos de inmediato los campos del abono general de este
+      // cliente (antes de esperar la respuesta del servidor). Esto oculta el
+      // botón "Procesar" y el panel de captura, evitando que un doble clic
+      // vuelva a enviar el mismo abono mientras la petición sigue en curso.
+      Abono.montoAbonoGeneral = 0;
+      Abono.idTipoPago = 0;
+      Abono.notaAbono = '';
+      Abono.showInput = false;
+
       this.ClienteService.postAbonoGeneral(filterParam).subscribe({
         next: (response) => {
           console.log('=== ABONO GENERAL SUCCESS ===');
@@ -371,6 +442,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
           const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
           console.log('Mensaje:', mensaje);
           this.toastr.info(mensaje);
+
+          this.idLoteAbonoActual = response.idLoteAbono || '';
 
           // Guardar datos antes de limpiar
           const clienteId = filterParam.Id_Cliente;
@@ -399,11 +472,15 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.filterParam = {
       MontoAbono: 0,
       NumeroFactura: 0,
+      IdTipoPago: this.idTipoPagoSeleccionado,
+      Nota: '',
       Usuario: '', // Reestablecemos la propiedad Usuario si es necesario
       Id_Cliente: 0,
       IdSucursal: 0
       // Puedes reiniciar las demás propiedades según sea necesario
     };
+    this.notaAbono = '';
+    this.idLoteAbonoActual = '';
   }
 
   private async extractHttpErrorDetail(error: any): Promise<string> {
@@ -429,49 +506,63 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
   }
 
   private confirmarImpresionRecibo(idCliente: number, numeroFactura: number, debeRecargar: boolean): void {
+    // Capturar el lote antes de resetear el filterParam, ya que resetFilterParam
+    // limpia idLoteAbonoActual y necesitamos su valor para el recibo general.
+    const idLoteAbono = this.idLoteAbonoActual;
+
+    this.idClienteSeleccionado = 0;
+    this.FacturasPorClientes = [];
+    this.resetFilterParam();
+
+    // Primero actualizamos el listado/montos (el abono ya fue procesado en el
+    // servidor) y solo después preguntamos si desea imprimir el recibo, para
+    // que el formulario ya esté al día cuando aparezca el diálogo.
+    this.obtenerClientes();
+
     this.rDialogService.openDialog(
       'Aviso',
       'Desea imprimir el recibo de abono?',
       () => {
-        this.idClienteSeleccionado = 0;
-        this.FacturasPorClientes = [];
-        this.resetFilterParam();
-        this.imprimirReciboAbono(idCliente, numeroFactura, debeRecargar);
+        this.imprimirReciboAbono(idCliente, numeroFactura, debeRecargar, idLoteAbono);
       },
       () => {
-        this.idClienteSeleccionado = 0;
-        this.FacturasPorClientes = [];
-        this.resetFilterParam();
-
-        if (debeRecargar) {
-          this.isProcesandoAbono = false;
-          window.location.reload();
-          return;
-        }
-
         this.isProcesandoAbono = false;
-        this.obtenerClientes();
       },
       'No',
       'Si'
     );
   }
 
-imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: boolean = false): void {
+imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: boolean = false, idLoteAbono: string = ''): void {
     if (!idCliente || idCliente === 0) {
       this.toastr.warning('No se puede generar recibo: cliente no válido');
+      return;
+    }
+
+    const esAbonoGeneral = debeRecargar && !!idLoteAbono;
+
+    if (esAbonoGeneral && !idLoteAbono) {
+      this.toastr.warning('No se puede generar recibo: lote de abono no válido');
       return;
     }
 
     this.loading.showLoading();
     this.isLoading = true;
 
-    this.ClienteService.getReciboAbono(
-      idCliente,
-      numeroFactura,
-      this.loginService.getUserIdSucursal,
-      this.loginService.getUserIdEmpresa
-    ).subscribe({
+    const recibo$ = esAbonoGeneral
+      ? this.ClienteService.getReciboAbonoGeneral(
+          idLoteAbono,
+          this.loginService.getUserIdSucursal,
+          this.loginService.getUserIdEmpresa
+        )
+      : this.ClienteService.getReciboAbono(
+          idCliente,
+          numeroFactura,
+          this.loginService.getUserIdSucursal,
+          this.loginService.getUserIdEmpresa
+        );
+
+    recibo$.subscribe({
       next: (blob) => {
         if (!blob || blob.size === 0) {
           this.toastr.warning('El recibo está vacío');
@@ -489,32 +580,36 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
             iframe.style.display = 'none';
             iframe.src = blobUrl;
 
-            let recargaEjecutada = false;
-            const recargarPagina = () => {
-              if (recargaEjecutada) {
+            let limpiezaEjecutada = false;
+            const limpiarIframe = () => {
+              if (limpiezaEjecutada) {
                 return;
               }
 
-              recargaEjecutada = true;
+              limpiezaEjecutada = true;
               URL.revokeObjectURL(blobUrl);
               if (iframe.parentNode) {
                 iframe.parentNode.removeChild(iframe);
               }
-              window.location.reload();
+
+              // Ya no se recarga la página automáticamente. Los datos
+              // (montos, listado de clientes) se actualizan solo cuando
+              // el usuario lo solicite con el botón "Actualizar".
+              this.isProcesandoAbono = false;
             };
 
             iframe.onload = () => {
               const frameWindow = iframe.contentWindow;
               if (!frameWindow) {
-                recargarPagina();
+                limpiarIframe();
                 return;
               }
 
               frameWindow.focus();
               frameWindow.print();
 
-              // Fallback fijo solicitado: recargar a los 5 segundos.
-              setTimeout(() => recargarPagina(), 5000);
+              // Limpieza de recursos (iframe/blob) sin recargar la página.
+              setTimeout(() => limpiarIframe(), 30000);
             };
 
             document.body.appendChild(iframe);
@@ -550,6 +645,15 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
 
     // Alternar la propiedad `showInput` para mostrar/ocultar el input
     detalle.showInput = !detalle.showInput;
+
+    // Inicializar el tipo de pago en 0 (placeholder "Tipo de pago") si aún no
+    // tiene un valor. Sin esto, el objeto llega desde la API con
+    // idTipoPago === undefined, lo que impide que Angular haga match con el
+    // [ngValue]="0" del placeholder y el select se muestra en blanco cuando
+    // está cerrado (aunque sí se ve el texto al desplegar las opciones).
+    if (detalle.showInput && (detalle.idTipoPago === undefined || detalle.idTipoPago === null)) {
+      detalle.idTipoPago = 0;
+    }
   }
 
   SaldarFactura(detalle: any): void {
@@ -568,6 +672,8 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
           Id_Cliente: this.idClienteSeleccionado,
           NumeroFactura: detalle.numeroFactura,
           MontoAbono: detalle.montoPendiente,
+          IdTipoPago: Number(detalle?.idTipoPago || this.idTipoPagoSeleccionado),
+          Nota: (detalle?.notaAbono || this.notaAbono || '').trim(),
           IdSucursal: +this.loginService.getUserIdSucursal, // Asegúrate de llamar al método con paréntesis
           Usuario: this.loginService.getUserName()
         };
@@ -595,6 +701,8 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
       Id_Cliente:this.idClienteSeleccionado,
       NumeroFactura:0,
       MontoAbono: Saldar.montoPendiente,
+      IdTipoPago: Number(Saldar?.idTipoPago || this.idTipoPagoSeleccionado),
+      Nota: (Saldar?.notaAbono || this.notaAbono || '').trim(),
       IdSucursal:+this.loginService.getUserIdSucursal,
       Usuario: this.loginService.getUserName()
     };

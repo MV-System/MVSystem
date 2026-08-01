@@ -133,6 +133,7 @@ export let APIURL = {
         },
         Accion: {
           ReciboAbono: API + 'ClientesReporte/ReciboAbono',
+          ReciboAbonoGeneral: API + 'ClientesReporte/ReciboAbonoGeneral',
         }
     },
     Suplidor: {

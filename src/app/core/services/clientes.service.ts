@@ -47,6 +47,17 @@ export class ClientesService {
     );
   }
 
+  getReciboAbonoGeneral(idLoteAbono: string, idSucursal: string, idEmpresa: string): Observable<Blob> {
+    const params = new HttpParams()
+      .set('idLoteAbono', idLoteAbono)
+      .set('idSucursal', idSucursal)
+      .set('idEmpresa', idEmpresa);
+
+    return this.http.get(APIURL.Clientes.Accion.ReciboAbonoGeneral,
+      { params, responseType: 'blob' }
+    );
+  }
+
   getClientesPorNombreTelefono(criterio: any):Observable<Cliente[]>{
     // Usar HttpParams para manejar automáticamente la codificación de caracteres especiales
     const params = new HttpParams().set('criterio', criterio); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
