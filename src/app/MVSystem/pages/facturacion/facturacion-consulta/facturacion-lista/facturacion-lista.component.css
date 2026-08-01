@@ -49,6 +49,27 @@ tr.tr-hover:hover {
     transition: background 0.2s;
 }
 
+
+/* El CSS global posiciona .btns como absolute (right:12px), lo que hace que
+   varios botones dentro de .fixed-item queden apilados exactamente en el
+   mismo punto. Este contenedor toma esa posición absoluta y distribuye los
+   botones en fila con flex. */
+
+.fixed-item .btns-group {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.fixed-item .btns-group .btns {
+    position: static;
+    transform: none;
+}
+
 td,
 th {
     overflow: hidden;

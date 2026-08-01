@@ -11,6 +11,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -125,6 +126,10 @@ selectedRowIndex: number | null = null;
 
   btnAnulaFactura(): boolean {
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_ANULAR");
+  }
+
+  btnNotaCredito(): boolean {
+    return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_NOTA_CREDITO");
   }
 
   btnRebajaEquipo(): boolean {
@@ -290,6 +295,42 @@ onCancel(detalle: DetalleFacturaList) {
       "No, Fue un error" // fue un error
     );
 
+  }
+
+  emitirNotaCredito(numeroFactura: number) {
+    this.rDialogService.openDialog(
+      "Aviso",
+      "¿Desea emitir una Nota de Crédito para anular esta factura?",
+      () => {
+        this.toast.info("No se emitió la Nota de Crédito");
+      },
+      () => {
+        this.isLoading = true;
+        this.loading.showLoading('Emitiendo Nota de Crédito...');
+        const request = {
+          NumeroFacturaOrigen: +(`${numeroFactura}`),
+          IDsucursal: this.sucursalActiva,
+          Usuario: this.loginService.getUserName(),
+          Motivo: ''
+        };
+
+        const sub = this.mantenimientoService.postNotaCreditoProveedor2(request).subscribe({
+          next: (respuesta) => {
+            this.isLoading = false;
+            this.loading.hideLoading();
+            this.toast.info(`Nota de Crédito emitida: ${respuesta.ncf}`);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.loading.hideLoading();
+            this.toast.error(err?.error?.error ?? 'Error al emitir la Nota de Crédito');
+          }
+        });
+        this.subs.push(sub);
+      },
+      "Si",
+      "No, Fue un error"
+    );
   }
 
   rebajarEquipo(detalle: DetalleFacturaList) {

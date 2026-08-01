@@ -109,6 +109,19 @@ export interface FacturaEditaResponse {
   mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
 }
 
+export interface NotaCreditoProveedor2Request {
+  NumeroFacturaOrigen: number;
+  IDsucursal: string;
+  Usuario: string;
+  Motivo?: string;
+}
+
+export interface NotaCreditoProveedor2Respuesta {
+  numeroFactura: number;
+  ncf: string;
+  mensaje: string;
+}
+
 export interface MarcaObjRetorno {
     iD_Marca: number;
     descripcion: string;
