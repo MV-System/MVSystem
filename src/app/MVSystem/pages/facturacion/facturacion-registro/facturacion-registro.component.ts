@@ -198,6 +198,7 @@ reparaciones: any[] = [];
 
                       this.isLoading = false;
                       this.toastr.success('Pre-factura y pagos mixtos guardados correctamente');
+                      this.preguntarImpresionPreFactura(numeroPreFactura);
                       this.onClean();
                     },
                     error: (err) => {
@@ -211,6 +212,7 @@ reparaciones: any[] = [];
 
                   this.isLoading = false;
                   this.toastr.success('Pre-factura guardada correctamente');
+                  this.preguntarImpresionPreFactura(numeroPreFactura);
                   this.onClean();
                 }
               }
@@ -1547,7 +1549,62 @@ else
     }
     return model;
   }
-  printFacturaNormal() {
+  preguntarImpresionPreFactura(numeroPreFactura: number) {
+  this.rDialogService.openDialog("Aviso", '¿Desea imprimir la pre-factura mini o normal?',
+    () => { this.printPreFacturaNormal(numeroPreFactura); },
+    () => { this.printPreFacturaMini(numeroPreFactura); },
+    "Mini",
+    "Normal"
+  )
+}
+printPreFacturaNormal(numeroPreFactura: number) {
+  this.loading.showLoading();
+  const sub = this.preFacturasService.postPreFacturaReport(this.modelFacturaFilter(), numeroPreFactura)
+    .subscribe(blob => {
+      const newBlob = new Blob([blob], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(newBlob);
+
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+
+      iframe.onload = () => {
+        this.loading.hideLoading();
+        iframe.contentWindow?.print();
+      };
+
+      document.body.appendChild(iframe);
+    }, err => {
+      this.loading.hideLoading();
+      this.toast.error('Error al imprimir pre-factura');
+    });
+  this.subs.push(sub);
+}
+printPreFacturaMini(numeroPreFactura: number) {
+  this.loading.showLoading();
+  const sub = this.preFacturasService.postPreFacturaMiniReport(this.modelFacturaFilter(), numeroPreFactura)
+    .subscribe(blob => {
+      const newBlob = new Blob([blob], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(newBlob);
+
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+
+      iframe.onload = () => {
+        this.loading.hideLoading();
+        iframe.contentWindow?.print();
+      };
+
+      document.body.appendChild(iframe);
+    }, err => {
+      this.loading.hideLoading();
+      this.toast.error('Error al imprimir pre-factura');
+    });
+  this.subs.push(sub);
+}
+
+printFacturaNormal() {
   this.loading.showLoading();
   const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(), this.facturaNumberReporte)
     .subscribe(blob => {

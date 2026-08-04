@@ -86,6 +86,9 @@
                                         <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
           <i class="bi bi-check-circle"></i>
         </button>
+                                        <button class="btn btn-outline-light btn-sm me-1" title="Reimprimir" [disabled]="pf.numero_PreFactura == null" (click)="$event.stopPropagation(); reimprimirPreFactura(pf)">
+          <i class="bi bi-printer"></i>
+        </button>
                                         <button (click)="anularPreFactura(pf.numero_PreFactura); $event.stopPropagation();" class="btn btn-danger btn-sm" title="Anular pre-factura" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null">
           <i class="bi bi-x-circle"></i>
         </button>
@@ -192,6 +195,9 @@
                                             <td class="sticky-col left-col">
                                                 <button class="btn btn-success btn-sm me-1" title="Procesar" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && procesarPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-check-circle"></i>
+                                                </button>
+                                                <button class="btn btn-secondary btn-sm me-1" title="Reimprimir" [disabled]="pf.numero_PreFactura == null" (click)="$event.stopPropagation(); reimprimirPreFactura(pf)">
+                                                    <i class="bi bi-printer"></i>
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" title="Anular" [disabled]="accionEnCurso === pf.numero_PreFactura || pf.numero_PreFactura == null" (click)="$event.stopPropagation(); pf.numero_PreFactura != null && anularPreFactura(pf.numero_PreFactura)">
                                                     <i class="bi bi-x-circle"></i>

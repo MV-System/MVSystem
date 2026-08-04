@@ -182,6 +182,8 @@ export let APIURL = {
         Detalle: API + 'PreFacturas', // Usar como `${APIURL.PreFacturas.Detalle}/${id}/detalle`
         Procesar: API + 'PreFacturas', // Usar como `${APIURL.PreFacturas.Procesar}/${id}/procesar`
         Anular: API + 'PreFacturas',   // Usar como `${APIURL.PreFacturas.Anular}/${id}/anular`
+        Reporte: API + 'PreFacturas/reporte',
+        ReporteMini: API + 'PreFacturas/reporte-mini',
     },
     Inventario: {
         IniciarSesion: API + 'api/Inventario/IniciarSesion',

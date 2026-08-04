@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIURL } from 'src/app/config/url';
+import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 
 export interface PreFactura {
   numero_PreFactura: number;
@@ -106,5 +107,21 @@ export class PreFacturasService {
   // 6. Anular pre-factura
   anularPreFactura(id: number): Observable<any> {
     return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, {});
+  }
+
+  // 7. Reporte PDF de pre-factura
+  postPreFacturaReport(facturaReq: FacturaFilter, numeroPreFactura: number): Observable<Blob> {
+    facturaReq.numeroFactura = numeroPreFactura;
+    return this.http.post<Blob>(APIURL.PreFacturas.Reporte, facturaReq, {
+      responseType: 'blob' as 'json'
+    });
+  }
+
+  // 8. Reporte PDF mini (80mm) de pre-factura
+  postPreFacturaMiniReport(facturaReq: FacturaFilter, numeroPreFactura: number): Observable<Blob> {
+    facturaReq.numeroFactura = numeroPreFactura;
+    return this.http.post<Blob>(APIURL.PreFacturas.ReporteMini, facturaReq, {
+      responseType: 'blob' as 'json'
+    });
   }
 }

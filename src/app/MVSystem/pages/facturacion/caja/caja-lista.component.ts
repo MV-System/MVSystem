@@ -429,4 +429,59 @@ export class CajaListaComponent implements OnInit {
       }
     });
   }
+
+  reimprimirPreFactura(pf: PreFactura): void {
+    if (!pf.numero_PreFactura) return;
+    this.rDialogService.openDialog(
+      'Tipo de impresión',
+      '¿Cómo desea imprimir la pre-factura?',
+      () => { this.imprimirPreFacturaExistente(pf, true); },
+      () => { this.imprimirPreFacturaExistente(pf, false); },
+      'Mini',
+      'Normal'
+    );
+  }
+
+  private modelPreFacturaFilter(pf: PreFactura): FacturaFilter {
+    return {
+      almacen: Number(this.loginService.getUserIdSucursal),
+      criterio: '',
+      empresa: this.loginService.getUserEmpresa,
+      IdEmpresa: this.loginService.getUserIdEmpresa,
+      IdSucursal: pf.iD_Sucursal ? String(pf.iD_Sucursal) : this.loginService.getUserIdSucursal,
+      ComprobanteCheck: 1,
+      EstadoFactura: 'P',
+      IdVendedor: 0,
+      numeroFactura: pf.numero_PreFactura,
+      pageIndex: 1,
+      pageSize: 1,
+      fechaInicio: '',
+      fechaFinal: '',
+      Usuario: this.loginService.getUserName(),
+    };
+  }
+
+  private imprimirPreFacturaExistente(pf: PreFactura, normal: boolean): void {
+    this.loading = true;
+    const request$ = normal
+      ? this.preFacturasService.postPreFacturaReport(this.modelPreFacturaFilter(pf), pf.numero_PreFactura)
+      : this.preFacturasService.postPreFacturaMiniReport(this.modelPreFacturaFilter(pf), pf.numero_PreFactura);
+
+    const sub = request$.subscribe(blob => {
+      const newBlob = new Blob([blob], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(newBlob);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      iframe.onload = () => {
+        this.loading = false;
+        iframe.contentWindow?.print();
+      };
+      document.body.appendChild(iframe);
+    }, err => {
+      this.loading = false;
+      this.toast.error('Error al imprimir la pre-factura');
+    });
+    this.subs.push(sub);
+  }
 }
