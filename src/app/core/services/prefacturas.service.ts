@@ -109,7 +109,12 @@ export class PreFacturasService {
     return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, {});
   }
 
-  // 7. Reporte PDF de pre-factura
+  // 7. Actualizar tipo de pago de pre-factura
+  actualizarTipoPagoPreFactura(id: number, idTipoPagos: number): Observable<any> {
+    return this.http.put(`${APIURL.PreFacturas.Listar}/${id}`, { ID_Tipo_Pagos: idTipoPagos });
+  }
+
+  // 8. Reporte PDF de pre-factura
   postPreFacturaReport(facturaReq: FacturaFilter, numeroPreFactura: number): Observable<Blob> {
     facturaReq.numeroFactura = numeroPreFactura;
     return this.http.post<Blob>(APIURL.PreFacturas.Reporte, facturaReq, {

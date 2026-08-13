@@ -206,7 +206,15 @@
                                             <td class="sticky-col second-col">{{ pf.nombres }} {{ pf.apellidos }}</td>
                                             <td>{{ pf.numero_Telefono }}</td>
                                             <!-- <td>{{ pf.tipo_Factura }}</td> -->
-                                            <td>{{ pf.tipo_Pago }}</td>
+                                            <td>
+                                                <div class="input-group input-group-sm">
+                                                    <select class="form-select form-select-sm" [(ngModel)]="pf.iD_Tipo_Pagos" (change)="onTipoPagoChange($event, pf)" (click)="$event.stopPropagation()">
+                                                  <option *ngFor="let tipo of tiposPagos" [value]="tipo.iD_Tipo_Pagos">
+                                                    {{ tipo.descripcion_Tipo_Pagos }}
+                                                  </option>
+                                                </select>
+                                                </div>
+                                            </td>
                                             <td>{{ pf.total | currency:'DOP' }}</td>
                                             <td>{{ pf.subTotal | currency:'DOP' }}</td>
                                             <td>{{ pf.descuento | currency:'DOP' }}</td>

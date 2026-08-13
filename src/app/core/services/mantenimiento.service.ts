@@ -259,4 +259,12 @@ export class MantenimientoService {
       filtro
     );
   }
+
+  /**
+   * Obtiene el catálogo de tipos de pago en formato combo
+   * @returns Observable con la lista de tipos de pago
+   */
+  Tipos_Pagos_Cata_Consulta_Combo(): Observable<any[]> {
+    return this.http.get<any[]>(APIURL.Catalogos.tipoPagoLista);
+  }
 }

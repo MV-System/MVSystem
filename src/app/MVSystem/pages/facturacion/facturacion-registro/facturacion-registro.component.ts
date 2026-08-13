@@ -1550,13 +1550,25 @@ else
     return model;
   }
   preguntarImpresionPreFactura(numeroPreFactura: number) {
-  this.rDialogService.openDialog("Aviso", '¿Desea imprimir la pre-factura mini o normal?',
-    () => { this.printPreFacturaNormal(numeroPreFactura); },
-    () => { this.printPreFacturaMini(numeroPreFactura); },
-    "Mini",
-    "Normal"
-  )
-}
+    this.rDialogService.openDialog(
+      '¿Imprimir pre-factura?',
+      '¿Desea imprimir la pre-factura que acaba de crear?',
+      () => {
+        // Confirmó que desea imprimir, ahora pregunta el tipo
+        this.rDialogService.openDialog(
+          'Tipo de impresión',
+          '¿Cómo desea imprimir la pre-factura?',
+          () => { this.printPreFacturaNormal(numeroPreFactura); },
+          () => { this.printPreFacturaMini(numeroPreFactura); },
+          'Mini',
+          'Normal'
+        );
+      },
+      () => {}, // Cancelar: no hacer nada
+      'Cancelar',
+      'Sí'
+    );
+  }
 printPreFacturaNormal(numeroPreFactura: number) {
   this.loading.showLoading();
   const sub = this.preFacturasService.postPreFacturaReport(this.modelFacturaFilter(), numeroPreFactura)

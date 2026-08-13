@@ -69,6 +69,7 @@ export class CajaListaComponent implements OnInit {
   facturaNumberReporte: number | null = null;
   @Output() imprimirFactura = new EventEmitter<number>();
   preFacturas: PreFactura[] = [];
+  tiposPagos: any[] = [];
   loading = false;
   error: string | null = null;
   accionEnCurso: number | null = null;
@@ -177,10 +178,60 @@ export class CajaListaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.cargarTiposPagos();
     this.cargarPreFacturas();
 
     // 📊 Tracking: Registro de acceso al módulo
     this.tracking.trackPageView('MNU_CONS_PREFACTURAS', 'PageView').subscribe();
+  }
+
+  cargarTiposPagos(): void {
+    this.mantenimientoService.Tipos_Pagos_Cata_Consulta_Combo().subscribe({
+      next: (data: any[]) => {
+        // Excluir tipos de pago 2 (Crédito) y 6 (Mixto)
+        this.tiposPagos = (data || []).filter(tipo => tipo.iD_Tipo_Pagos !== 2 && tipo.iD_Tipo_Pagos !== 6);
+      },
+      error: (err: any) => {
+        this.toast.error('Error al cargar tipos de pago');
+      }
+    });
+  }
+
+  actualizarTipoPagoPreFactura(prefactura: PreFactura, nuevoIdTipoPago: number | string): void {
+    const idTipoPago = typeof nuevoIdTipoPago === 'string' ? parseInt(nuevoIdTipoPago) : nuevoIdTipoPago;
+    const tipoPagoAnterior = prefactura.iD_Tipo_Pagos; // Guardar el valor anterior
+
+    if (idTipoPago === tipoPagoAnterior) {
+      return; // Sin cambios
+    }
+
+    this.rDialogService.openDialog(
+      'Confirmar cambio',
+      `¿Está seguro que desea cambiar el tipo de pago?`,
+      () => {
+        this.preFacturasService.actualizarTipoPagoPreFactura(prefactura.numero_PreFactura, idTipoPago).subscribe({
+          next: (resp) => {
+            this.toast.success('Tipo de pago actualizado correctamente');
+          },
+          error: (err) => {
+            this.toast.error('Error al actualizar tipo de pago');
+            // Revertir el cambio en el dropdown si falla
+            prefactura.iD_Tipo_Pagos = tipoPagoAnterior;
+          }
+        });
+      },
+      () => {
+        // Si cancela, revertir el cambio en el dropdown
+        prefactura.iD_Tipo_Pagos = tipoPagoAnterior;
+      }
+    );
+  }
+
+  onTipoPagoChange(event: Event, prefactura: PreFactura): void {
+    const select = event.target as HTMLSelectElement;
+    if (select && select.value) {
+      this.actualizarTipoPagoPreFactura(prefactura, select.value);
+    }
   }
 
   cargarPreFacturas(): void {
@@ -433,12 +484,22 @@ export class CajaListaComponent implements OnInit {
   reimprimirPreFactura(pf: PreFactura): void {
     if (!pf.numero_PreFactura) return;
     this.rDialogService.openDialog(
-      'Tipo de impresión',
-      '¿Cómo desea imprimir la pre-factura?',
-      () => { this.imprimirPreFacturaExistente(pf, true); },
-      () => { this.imprimirPreFacturaExistente(pf, false); },
-      'Mini',
-      'Normal'
+      '¿Imprimir pre-factura?',
+      '¿Desea imprimir la pre-factura?',
+      () => {
+        // Confirmó que desea imprimir, ahora pregunta el tipo
+        this.rDialogService.openDialog(
+          'Tipo de impresión',
+          '¿Cómo desea imprimir la pre-factura?',
+          () => { this.imprimirPreFacturaExistente(pf, true); },
+          () => { this.imprimirPreFacturaExistente(pf, false); },
+          'Mini',
+          'Normal'
+        );
+      },
+      () => {}, // Cancelar: no hacer nada
+      'Cancelar',
+      'Sí'
     );
   }
 
