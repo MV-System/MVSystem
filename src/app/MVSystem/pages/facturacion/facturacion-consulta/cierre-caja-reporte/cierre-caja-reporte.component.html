@@ -127,7 +127,10 @@
                             <tr *ngFor="let detalle of cierreCajaResumen.detallesPorTipoPago" [style.border-left]="'4px solid ' + getColorTipoPago(detalle.tipoPago)">
                                 <td class="fw-bold">
                                     <i class="bi me-2" [ngClass]="getIconoTipoPago(detalle.tipoPago)"></i> {{ detalle.tipoPago }}
-                                    <span *ngIf="esCredito(detalle.tipoPago) && detalle.cantidadAbonosRecibidos > 0" class="badge bg-info ms-1">
+                                    <span *ngIf="detalle.isAbono" class="badge bg-info ms-1">
+                    ABONO
+                  </span>
+                                    <span *ngIf="esCredito(detalle.tipoPago) && detalle.cantidadAbonosRecibidos > 0 && !detalle.isAbono" class="badge bg-info ms-1">
                     {{ detalle.cantidadAbonosRecibidos }} abono(s)
                   </span>
                                     <span *ngIf="detalle.montoDesdeDesgloseMixto && detalle.montoDesdeDesgloseMixto > 0" class="badge bg-warning text-dark ms-1">

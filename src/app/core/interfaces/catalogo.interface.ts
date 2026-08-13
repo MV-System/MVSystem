@@ -106,6 +106,7 @@ export interface CierreCajaDetalleReporte {
   porcentajeDelTotal: number;
   montoDesdeDesgloseMixto?: number;
   cantidadFacturasDesdeMixto?: number;
+  isAbono?: boolean;
 }
 
 export interface CierreCajaReporteResumen {
