@@ -124,6 +124,7 @@ export let APIURL = {
             ClienteLista: API + 'Clientes/Get_Cliente',
             ClientesConFacturasPendientes: API + 'Clientes/GetClientesConFacturasPendientes',
             FacturasPendientesPorCliente: API + 'Clientes/GetFacturasPendientesPorCliente',
+            HistorialAbonos: API + 'Clientes/GetHistorialAbonos',
         },
         Inserta: {
           ClienteInserta: API + 'Clientes/Cliente_Insert',

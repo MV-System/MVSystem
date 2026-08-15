@@ -24,6 +24,7 @@ import { TipoPago } from 'src/app/core/interfaces/catalogo.interface';
 export class CuentasPorCobrarComponent implements OnInit {
   idClienteSeleccionado: number = 0; // Variable para almacenar el id de la transferencia seleccionada
   NombreClienteSeleccionado: string = ''; // Variable para almacenar el id de la transferencia seleccionada
+  mostrarDetalleAbonos: boolean = false; // Controla visibilidad del detalle de abonos
   CLientesPorCobrar: ClientesConFacturasPendientesRetorn[] = [];
   FacturasPorClientes: FacturasPorClienteRetorn[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
@@ -483,6 +484,13 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.idLoteAbonoActual = '';
   }
 
+  /**
+   * Toggle para mostrar/ocultar el historial de abonos del cliente seleccionado
+   */
+  toggleDetalleAbonos(): void {
+    this.mostrarDetalleAbonos = !this.mostrarDetalleAbonos;
+  }
+
   private async extractHttpErrorDetail(error: any): Promise<string> {
     const source = error?.error;
 
@@ -511,6 +519,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     const idLoteAbono = this.idLoteAbonoActual;
 
     this.idClienteSeleccionado = 0;
+    this.NombreClienteSeleccionado = '';
     this.FacturasPorClientes = [];
     this.resetFilterParam();
 
@@ -715,6 +724,8 @@ this.procesarAbonoGeneral(filterParam);
   pageChanged(index: number) {
 
     this.idClienteSeleccionado = 0;
+    this.NombreClienteSeleccionado = '';
+    this.mostrarDetalleAbonos = false;
     this.FacturasPorClientes = [];
     this.currentPage = index;
     this.filter.pageIndex = index;
@@ -738,10 +749,13 @@ this.procesarAbonoGeneral(filterParam);
   seleccionarFila(cliente: ClientesConFacturasPendientesRetorn): void {
     if (this.idClienteSeleccionado === cliente.id_Cliente) {
       this.idClienteSeleccionado = 0;
+      this.NombreClienteSeleccionado = '';
       this.FacturasPorClientes = [];
+      this.mostrarDetalleAbonos = false;
     } else {
+      this.NombreClienteSeleccionado = cliente.cliente;
+      this.mostrarDetalleAbonos = false;
       this.obtenerFacturasPorCLiente(cliente.id_Cliente);
-
     }
   }
   onEdit(detalle: FacturasPorClienteRetorn) {
@@ -768,6 +782,8 @@ this.idClienteSeleccionado = idClienteSeleccionado;
   }
   onPageSizeChange() {
     this.idClienteSeleccionado = 0;
+    this.NombreClienteSeleccionado = '';
+    this.mostrarDetalleAbonos = false;
     this.isLoading = true;
 
     // Si se selecciona "Todos", mostramos todos los registros
@@ -844,6 +860,8 @@ onDateRangeChanged(event: any) {
 
 obtenerClientes() {
   this.idClienteSeleccionado = 0;
+  this.NombreClienteSeleccionado = '';
+  this.mostrarDetalleAbonos = false;
   this.CLientesPorCobrar = []; // Limpiar los detalles cuando se deselecciona
   this.loading.showLoading();  // Mostrar el cargando
 
@@ -894,3 +912,4 @@ obtenerClientes() {
     this.toastr.error(message, 'Error');
   }
 }
+

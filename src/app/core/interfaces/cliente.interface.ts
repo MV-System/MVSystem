@@ -103,3 +103,22 @@ export interface FacturasPorClienteRetorn {
   showInput:      number;
   fechaLimitePagoFactura: string;
 }
+
+export interface HistorialAbonoDTO {
+  id: number;
+  idCliente: number;
+  numeroFactura: number;
+  totalFactura: number;
+  totalAbono: number;
+  montoPendiente: number;
+  idTipoFactura: number;
+  tipoFactura?: string;
+  fechaVencimiento: string;
+  estado: string;
+  usuario: string;
+  fechaRegistro: string;
+  idTipoPago: number;
+  tipoPago?: string;
+  nota?: string;
+  idLoteAbono?: string;
+}

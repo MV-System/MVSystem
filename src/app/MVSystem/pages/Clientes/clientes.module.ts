@@ -15,6 +15,7 @@ import { DirectiveModule } from '../../../core/directives/directives.module';
 import { CuentasPorCobrarComponent } from './Cuentas-por-cobrar/cuentas-por-cobrar.component';
 import { ClientesDetalleComponent } from './Clientes-detalle/clientes-detalle.component';
 import { ClientesEditarComponent } from './Clientes-editar/clientes-editar.component';
+import { DetalleAbonosComponent } from './Cuentas-por-cobrar/detalle-abonos/detalle-abonos.component';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -37,6 +38,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CuentasPorCobrarComponent,
     ClientesDetalleComponent,
     ClientesEditarComponent,
+    DetalleAbonosComponent,
   ],
   imports: [
     CommonModule,

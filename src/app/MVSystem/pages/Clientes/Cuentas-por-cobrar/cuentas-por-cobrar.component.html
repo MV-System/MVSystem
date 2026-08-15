@@ -138,7 +138,14 @@
                                 <tr class="animate__animated animate__fadeIn tr-collapse">
                                     <td colspan="5">
                                         <div *ngIf="FacturasPorClientes && FacturasPorClientes.length">
-                                            <h6>Facturas Del cliente {{idClienteSeleccionado}}</h6>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h6 class="mb-0">Facturas Del cliente: <strong>{{NombreClienteSeleccionado}}</strong></h6>
+                                                <button type="button" class="btn btn-sm btn-outline-info" (click)="toggleDetalleAbonos()">
+                                                    <i class="bi bi-clock-history me-2"></i>
+                                                    Ver Historial de Abonos
+                                                </button>
+                                            </div>
+
                                             <div *ngFor="let detalle of FacturasPorClientes" class="detalle-factura" [ngClass]="{
                                               'factura-vencida': isFacturaVencida(detalle.fechaLimitePagoFactura),
                                               'factura-no-vencida': !isFacturaVencida(detalle.fechaLimitePagoFactura)}">
@@ -256,9 +263,11 @@
 
                         <!-- Detalles de facturas (expandible) -->
                         <div class="facturas-detalle" *ngIf="idClienteSeleccionado === Cliente.id_Cliente && FacturasPorClientes && FacturasPorClientes.length">
-                            <div class="facturas-header">
-                                <i class="bi bi-receipt-cutoff"></i>
-                                <span>Facturas del cliente</span>
+                            <div class="facturas-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-receipt-cutoff"></i>
+                                    <span>Facturas del cliente <strong>{{NombreClienteSeleccionado}}</strong></span>
+                                </div>
                             </div>
 
                             <div class="factura-item" *ngFor="let detalle of FacturasPorClientes" [ngClass]="{
@@ -347,3 +356,23 @@
 
     </div>
 </div>
+
+<!-- Modal para Historial de Abonos -->
+<div class="modal" [class.show]="mostrarDetalleAbonos" [style.display]="mostrarDetalleAbonos ? 'block' : 'none'" tabindex="-1" role="dialog" (keydown.escape)="toggleDetalleAbonos()">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-clock-history me-2"></i> Historial de Abonos - {{ NombreClienteSeleccionado }}
+                </h5>
+                <button type="button" class="btn-close" (click)="toggleDetalleAbonos()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <app-detalle-abonos [idCliente]="idClienteSeleccionado" [visibleDetalle]="true"></app-detalle-abonos>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Backdrop del modal -->
+<div class="modal-backdrop fade" [class.show]="mostrarDetalleAbonos" (click)="toggleDetalleAbonos()" *ngIf="mostrarDetalleAbonos"></div>

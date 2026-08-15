@@ -1,0 +1,110 @@
+<!-- Contenedor de Historial de Abonos -->
+<div class="historial-abonos-container" *ngIf="visibleDetalle">
+    <!-- Encabezado -->
+    <div class="historial-header">
+        <h6 class="historial-title">
+            <i class="bi bi-clock-history me-2"></i> Historial de Abonos - Cliente #{{ idCliente }}
+        </h6>
+    </div>
+
+    <!-- Filtro Toggle -->
+    <div class="historial-filter mb-3" *ngIf="!isLoading && !noData">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="filterPendiente" [(ngModel)]="mostrarSoloConPendiente" (change)="aplicarFiltro()">
+            <label class="form-check-label" for="filterPendiente">
+                <i class="bi bi-funnel me-2"></i>Solo facturas con saldo pendiente
+            </label>
+        </div>
+    </div>
+
+    <!-- Estado de Carga -->
+    <div *ngIf="isLoading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando historial de abonos...</p>
+    </div>
+
+    <!-- Mensaje de No Datos -->
+    <div *ngIf="noData && !isLoading" class="alert alert-info text-center">
+        <i class="bi bi-info-circle me-2"></i> No hay historial de abonos disponible para este cliente
+    </div>
+
+    <!-- Tabla de Historial (Desktop) -->
+    <div class="table-responsive historial-table" *ngIf="!isLoading && !noData">
+        <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 15%">Factura #</th>
+                    <th style="width: 15%">Monto Anterior</th>
+                    <th style="width: 15%">Abono</th>
+                    <th style="width: 15%">Pendiente</th>
+                    <th style="width: 12%">Fecha Abono</th>
+                    <th style="width: 12%">Tipo Pago</th>
+                    <th style="width: 20%">Nota</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let abono of getHistorialFiltrado()" class="animate__animated animate__fadeIn">
+                    <td class="fw-bold text-primary">{{ abono.numeroFactura }}</td>
+                    <td class="text-muted">
+                        {{ formatCurrency(abono.montoPendiente + abono.totalAbono) }}
+                        <br>
+                        <small *ngIf="abono.totalAbono === 0" class="badge bg-warning text-dark">Factura sin abonos</small>
+                    </td>
+                    <td class="text-success fw-bold">{{ formatCurrency(abono.totalAbono) }}</td>
+                    <td [class.text-danger]="abono.montoPendiente > 0" [class.text-success]="abono.montoPendiente === 0" class="fw-bold">
+                        {{ formatCurrency(abono.montoPendiente) }}
+                    </td>
+                    <td class="text-muted small">{{ formatDate(abono.fechaRegistro) }}</td>
+                    <td>
+                        <span class="badge bg-info text-dark">{{ abono.tipoPago || 'N/A' }}</span>
+                    </td>
+                    <td class="small text-muted" [title]="abono.nota">
+                        {{ abono.nota ? (abono.nota | slice:0:20) + '...' : '-' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Cards de Historial (Mobile) -->
+    <div class="historial-cards" *ngIf="!isLoading && !noData && (getHistorialFiltrado() | slice:0:1)">
+        <div class="historial-card" *ngFor="let abono of getHistorialFiltrado()">
+            <div class="historial-card-header">
+                <strong>Factura #{{ abono.numeroFactura }}</strong>
+                <span *ngIf="abono.totalAbono === 0" class="badge bg-warning text-dark">Sin abonos</span>
+            </div>
+            <div class="historial-card-body">
+                <div class="info-item">
+                    <span class="label">Monto Anterior:</span>
+                    <span class="value">{{ formatCurrency(abono.montoPendiente + abono.totalAbono) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Monto Abonado:</span>
+                    <span class="value text-success fw-bold">{{ formatCurrency(abono.totalAbono) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Pendiente:</span>
+                    <span class="value" [class.text-danger]="abono.montoPendiente > 0" [class.text-success]="abono.montoPendiente === 0">
+                        {{ formatCurrency(abono.montoPendiente) }}
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Fecha:</span>
+                    <span class="value">{{ formatDate(abono.fechaRegistro) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Tipo Pago:</span>
+                    <span class="value">
+                        <span class="badge bg-info text-dark">{{ abono.tipoPago || 'N/A' }}</span>
+                    </span>
+                </div>
+                <div class="info-item" *ngIf="abono.nota">
+                    <span class="label">Nota:</span>
+                    <span class="value text-muted small">{{ abono.nota }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

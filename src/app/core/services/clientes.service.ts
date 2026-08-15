@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { APIURL } from 'src/app/config/url';
 import { Observable, Subject } from 'rxjs';
-import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse, ClienteActualizacion } from '../interfaces/cliente.interface';
+import {  TipoCliente, ClienteRegistro, Cliente, ClienteConsultaCriterio, ClientesConFacturasPendientesFiltros, ClientesConFacturasPendientesRetorn, FacturasPorClienteRetorn, AbonoFacturaParam, AbonoFacturaResponse, ClienteActualizacion, HistorialAbonoDTO } from '../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -83,5 +83,19 @@ export class ClientesService {
     const params = new HttpParams().set('cliente', cliente.toString()); // ✅ Angular maneja automáticamente el & y otros caracteres especiales
 
     return this.http.get<FacturasPorClienteRetorn[]>(APIURL.Clientes.Consultas.FacturasPendientesPorCliente, { params });
+  }
+
+  getHistorialAbonos(idCliente: number, fechaInicio?: string, fechaFinal?: string): Observable<HistorialAbonoDTO[]> {
+    let params = new HttpParams().set('idCliente', idCliente.toString());
+
+    if (fechaInicio) {
+      params = params.set('fechaInicio', fechaInicio);
+    }
+
+    if (fechaFinal) {
+      params = params.set('fechaFinal', fechaFinal);
+    }
+
+    return this.http.get<HistorialAbonoDTO[]>(APIURL.Clientes.Consultas.HistorialAbonos, { params });
   }
 }
