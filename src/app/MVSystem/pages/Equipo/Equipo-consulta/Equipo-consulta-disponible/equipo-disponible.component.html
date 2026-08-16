@@ -126,6 +126,11 @@
                             </ng-select>
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label modern-label"><i class="bi bi-collection me-1"></i> Grupo</label>
+                            <ng-select [items]="listaGrupos" bindLabel="descripcion" bindValue="iD_Grupo" placeholder="Selecciona un Grupo" formControlName="grupo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            </ng-select>
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label modern-label"><i class="bi bi-calendar-range me-1"></i> Rango de fecha</label>
                             <my-date-range-picker name="rangoFecha" [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ 01 / 01 / 2005 | date }} - {{ rangeDatePlaceholder | date }}"></my-date-range-picker>
                         </div>
@@ -184,6 +189,12 @@
                         <div class="sucursal-select-wrapper">
                             <i class="bi bi-cpu select-icon"></i>
                             <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            </ng-select>
+                        </div>
+                        <!-- Grupo -->
+                        <div class="sucursal-select-wrapper">
+                            <i class="bi bi-collection select-icon"></i>
+                            <ng-select [items]="listaGrupos" bindLabel="descripcion" bindValue="iD_Grupo" placeholder="Selecciona un Grupo" formControlName="grupo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
                             </ng-select>
                         </div>
                     </div>

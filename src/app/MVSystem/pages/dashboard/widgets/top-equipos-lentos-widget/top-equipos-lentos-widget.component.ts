@@ -108,6 +108,7 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
       suplidor: '',
       imei: '',
       modelo: '',
+      grupo: '',
       pageIndex: 1,
       pageSize: 999999, // Traer todos para análisis
       fechaInicio: '',

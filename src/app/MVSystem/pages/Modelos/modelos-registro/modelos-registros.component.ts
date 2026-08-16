@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ModeloObjRetorno } from 'src/app/core/interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { ModeloService } from 'src/app/core/services/modelo.service';
-import { MarcaEquipo, ModeloEquipo } from 'src/app/core/interfaces/catalogo.interface';
+import { MarcaEquipo, ModeloEquipo, Grupo } from 'src/app/core/interfaces/catalogo.interface';
 
 @Component({
   selector: 'app-modelos-registros',
@@ -18,6 +18,7 @@ export class ModelosRegistrosComponent implements OnInit {
   IdMarcaReg!: number;
   listaModelo: ModeloEquipo[] = [];
   marcaListado: MarcaEquipo[] = [];
+  grupoListado: Grupo[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -28,13 +29,15 @@ export class ModelosRegistrosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerMarcasLista();
+    this.obtenerGruposLista();
     this.formRegistro.get('descripcion')?.disable();
     this.formRegistro.get('modelo')?.disable();
   }
   formRegistro: FormGroup = this.fb.group({
     descripcion: ['', Validators.required],
     marca: [, Validators.required],
-    modelo: [, Validators.required]
+    modelo: [, Validators.required],
+    grupo: [1, Validators.required]
   });
   selectoresMarcaModeloValidator() {
     this.formRegistro.get('modelo')?.setValue('');
@@ -52,6 +55,11 @@ export class ModelosRegistrosComponent implements OnInit {
       this.marcaListado = marca;
     });
   }
+  obtenerGruposLista() {
+    this.catalogosService.getGruposLista().subscribe((grupos) => {
+      this.grupoListado = grupos;
+    });
+  }
   obtenerModeloLista() {
 
     let idMarca = this.formRegistro.get('marca')?.value;
@@ -64,9 +72,9 @@ export class ModelosRegistrosComponent implements OnInit {
     const registro: ModeloEquipo = {
       iD_Marca: this.formRegistro.get('marca')?.value,
       descripcion: this.formRegistro.get('descripcion')?.value,
-      usuario: "Ventura" //       this.formRegistro.get('usuario')?.value,
-      ,
-      iD_Modelo: 0
+      usuario: "Ventura",
+      iD_Modelo: 0,
+      iD_Grupo: this.formRegistro.get('grupo')?.value || 1
     }
       return registro;
   }

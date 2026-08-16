@@ -117,6 +117,7 @@ export let APIURL = {
         suplidorComboLista: API + 'Catalogos/Suplidor_Combo',
         AsumeITBIS: API + 'Catalogos/AsumeITBIS',
         statusTallerLista: API + 'Catalogos/GetStatusTaller',
+        gruposLista: API + 'Catalogos/Grupos_Combo',
     },
     Clientes: {
         Consultas: {

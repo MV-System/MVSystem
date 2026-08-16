@@ -9,6 +9,7 @@ import {
   Almacen,
   ModeloEquipo,
   Suplidor,
+  Grupo,
 } from 'src/app/core/interfaces/catalogo.interface';
 import { EquipoDisponible } from 'src/app/core/interfaces/equipo.interface';
 import { VendedorLista } from 'src/app/core/interfaces/vendedor.interface';
@@ -93,6 +94,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   modeloListado:  ModeloEquipo[] = [];
   listaVendedor:  VendedorLista[] = [];
   listaSuplidor:  Suplidor[] = [];
+  listaGrupos:    Grupo[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
 
@@ -100,6 +102,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   filter: any = {
     almacen: 0,
     modelo: 0,
+    grupo: null,
     imei: '',
     suplidor: '',
     pageIndex: 1,
@@ -118,6 +121,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     suplidor: [''],
     imei: [''],
     modelo: [0,],
+    grupo: [null],
     rangeDate: [''],
     totalEquipos: [0,],
     totalInventario: [0,]
@@ -628,6 +632,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
     this.filter.modelo = modeloValue == null ? 0 : modeloValue;
     this.filter.imei = imei == null ? '' : imei;
+    this.filter.grupo = this.form.get('grupo')?.value ?? null;
   }
   setDateRange(): void {
     let date = new Date();
@@ -667,15 +672,14 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
     this.loading.showLoading();
     forkJoin([
       this.catalogosService.getSucursales(),
-      //this.catalogosService.getAlmaceLista(),
       this.catalogosService.getModeloLista(),
       this.catalogosService.getSuplidorLista(),
+      this.catalogosService.getGruposLista(),
     ]).subscribe(resp =>{
       this.almacenListado = resp[0];
       this.modeloListado = resp[1];
       this.listaSuplidor = resp[2];
-
-
+      this.listaGrupos = resp[3];
     })
     this.loading.hideLoading();
   }

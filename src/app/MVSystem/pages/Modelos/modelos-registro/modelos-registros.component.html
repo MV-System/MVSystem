@@ -17,8 +17,7 @@
                     <div class="card-body">
                         <div class="form-header mb-4">
                             <h5 class="form-title">
-                                <i class="bi bi-phone me-2 text-primary"></i>
-                                Datos del Modelo
+                                <i class="bi bi-phone me-2 text-primary"></i> Datos del Modelo
                             </h5>
                             <p class="form-subtitle">Complete la información para registrar un nuevo modelo</p>
                         </div>
@@ -30,10 +29,7 @@
                                         <i class="bi bi-award me-1"></i>
                                         Marca
                                     </label>
-                                    <ng-select formControlName="marca" 
-                                               class="modern-select-ng"
-                                               placeholder="Seleccione una marca"
-                                               (change)="selectoresMarcaModeloValidator()">
+                                    <ng-select formControlName="marca" class="modern-select-ng" placeholder="Seleccione una marca" (change)="selectoresMarcaModeloValidator()">
                                         <ng-option *ngFor="let marca of marcaListado" [value]="marca.iD_Marca">
                                             {{ marca.descripcion }}
                                         </ng-option>
@@ -51,6 +47,18 @@
                                         Este campo es requerido.
                                     </div>
                                 </div>
+                                <!-- Grupo/Familia -->
+                                <div class="col-md-6">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-collection me-1"></i>
+                                        Grupo / Familia
+                                    </label>
+                                    <ng-select formControlName="grupo" class="modern-select-ng" placeholder="Seleccione un grupo">
+                                        <ng-option *ngFor="let grupo of grupoListado" [value]="grupo.iD_Grupo">
+                                            {{ grupo.descripcion }}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
                                 <!-- Botón -->
                                 <div class="col-12 text-end mt-3">
                                     <button class="button-guardar w-100" type="submit" [ngClass]="{'disabled':btnDisable()}" style="font-size:1.08rem; border-radius:0.6rem;">
@@ -67,8 +75,7 @@
                     <div class="card-body">
                         <div class="form-header mb-3">
                             <h5 class="form-title">
-                                <i class="bi bi-list-check me-2 text-primary"></i>
-                                Modelos agregados
+                                <i class="bi bi-list-check me-2 text-primary"></i> Modelos agregados
                             </h5>
                         </div>
                         <div class="table-responsive">

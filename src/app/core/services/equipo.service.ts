@@ -31,6 +31,7 @@ export class EquipoService{
             .set('suplidor', EquipoDisponible.suplidor || '')
             .set('imei', EquipoDisponible.imei || '') // ✅ Angular maneja automáticamente el & y otros caracteres especiales
             .set('modelo', EquipoDisponible.modelo || '')
+            .set('grupo', EquipoDisponible.grupo || '')
             .set('pageIndex', EquipoDisponible.pageIndex.toString())
             .set('pageSize', EquipoDisponible.pageSize.toString())
             .set('fechaInicio', EquipoDisponible.fechaInicio || '')

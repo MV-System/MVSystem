@@ -76,6 +76,7 @@ export class EquipoConsultaComponent implements OnInit {
     suplidor:'',//(this.formRegistro.get('suplidor')?.value),
     imei: '',//(this.formRegistro.get('search')?.value),
     modelo:'',// (this.formRegistro.get('modelo')?.value),
+    grupo:'',// (this.formRegistro.get('grupo')?.value),
     pageIndex: 1,
     pageSize: 10,
     fechaInicio: '',

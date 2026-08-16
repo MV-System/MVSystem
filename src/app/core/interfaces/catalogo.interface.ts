@@ -24,6 +24,7 @@ export interface CanalesLista {
 export interface ModeloEquipo {
   iD_Marca?: number;
   iD_Modelo: number;
+  iD_Grupo?: number;
   descripcion: string;
   usuario?: string;
 }
@@ -84,6 +85,11 @@ export interface Tecnologia {
 }
 export interface Suplidor {
   iD_Suplidor: number;
+  descripcion: string;
+}
+
+export interface Grupo {
+  iD_Grupo: number;
   descripcion: string;
 }
 
