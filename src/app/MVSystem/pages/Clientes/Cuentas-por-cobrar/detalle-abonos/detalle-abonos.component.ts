@@ -18,7 +18,7 @@ export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
   historialAbonos: HistorialAbonoDTO[] = [];
   isLoading: boolean = false;
   noData: boolean = false;
-  mostrarSoloConPendiente: boolean = false;
+  mostrarSoloConPendiente: boolean = true;
 
   private destroy$ = new Subject<boolean>();
 
@@ -43,6 +43,13 @@ export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+  }
+
+  /**
+   * Detecta si la pantalla es móvil (ancho <= 600px)
+   */
+  isMobileScreen(): boolean {
+    return window.innerWidth <= 600;
   }
 
   obtenerHistorialAbonos(): void {
@@ -122,13 +129,14 @@ export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Retorna el historial filtrado según la selección
+   * Usa TieneActualmentePendiente del backend que verifica el último movimiento de cada factura
    */
   getHistorialFiltrado(): HistorialAbonoDTO[] {
     if (!this.mostrarSoloConPendiente) {
       return this.historialAbonos;
     }
 
-    // Filtrar solo facturas con saldo pendiente > 0
-    return this.historialAbonos.filter(abono => abono.montoPendiente > 0);
+    // Filtrar solo facturas que actualmente tienen saldo pendiente (basado en último movimiento)
+    return this.historialAbonos.filter(abono => abono.tieneActualmentePendiente === 1);
   }
 }

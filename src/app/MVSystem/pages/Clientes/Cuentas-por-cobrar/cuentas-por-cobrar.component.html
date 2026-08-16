@@ -96,52 +96,51 @@
                         </thead>
                         <tbody>
                             <!-- Filas de equipos transferidos -->
-                            <tr [ngClass]="{'selected': isClienteSelect(Cliente.id_Cliente)}" class="animate__animated animate__fadeIn tr-hover" *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize,
-                              currentPage: filter.pageIndex, totalItems: totalRecord }" (click)="seleccionarFila(Cliente)" aria-expanded="false" tableTrselect>
+                            <ng-container *ngFor="let Cliente of CLientesPorCobrar | paginate : { itemsPerPage: filter.pageSize,
+                              currentPage: filter.pageIndex, totalItems: totalRecord }">
+                                <tr [ngClass]="{'selected': isClienteSelect(Cliente.id_Cliente)}" class="animate__animated animate__fadeIn tr-hover" (click)="seleccionarFila(Cliente)" aria-expanded="false" tableTrselect>
 
-                                <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
-                                <td>{{ Cliente.cliente }}</td>
-                                <td style="width: 40%">{{Cliente.montoPendiente |currency}}
-                                    <!-- Input que se muestra solo si el cliente seleccionado coincide -->
-                                    <!-- Input para el abono -->
-                                    <input *ngIf="Cliente.showInput" type="number" class="form-control abono-input" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="monto" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
-                                    />
+                                    <td class="fixed-item code">{{ Cliente.id_Cliente }}</td>
+                                    <td>{{ Cliente.cliente }}</td>
+                                    <td style="width: 40%">{{Cliente.montoPendiente |currency}}
+                                        <!-- Input que se muestra solo si el cliente seleccionado coincide -->
+                                        <!-- Input para el abono -->
+                                        <input *ngIf="Cliente.showInput" type="number" class="form-control abono-input" [(ngModel)]="Cliente.montoAbonoGeneral" placeholder="monto" (keydown)="onEnterAbonoGeneral($event, Cliente)" (click)="$event.stopPropagation()" style="min-width: 100px; width: 15%; display: inline-block;"
+                                        />
 
-                                    <select *ngIf="Cliente.showInput" class="form-select" [(ngModel)]="Cliente.idTipoPago" (click)="$event.stopPropagation()" style="min-width: 140px; width: 20%; display: inline-block; margin-left: 8px;">
+                                        <select *ngIf="Cliente.showInput" class="form-select" [(ngModel)]="Cliente.idTipoPago" (click)="$event.stopPropagation()" style="min-width: 140px; width: 20%; display: inline-block; margin-left: 8px;">
                                         <option [ngValue]="0">Tipo de pago</option>
                                         <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
                                             {{ tipoPago.descripcion_Tipo_Pagos }}
                                         </option>
                                     </select>
 
-                                    <input *ngIf="Cliente.showInput" type="text" class="form-control" [(ngModel)]="Cliente.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" style="min-width: 180px; width: 25%; display: inline-block; margin-left: 8px;" />
+                                        <input *ngIf="Cliente.showInput" type="text" class="form-control" [(ngModel)]="Cliente.notaAbono" placeholder="Nota (opcional)" (click)="$event.stopPropagation()" style="min-width: 180px; width: 25%; display: inline-block; margin-left: 8px;" />
 
-                                    <button *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbonoGeneral(Cliente)" [disabled]="isProcesandoAbono">
+                                        <button *ngIf="Cliente.montoPendiente && Cliente.montoAbonoGeneral > 0" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar Abono" (click)="procesarAbonoGeneral(Cliente)" [disabled]="isProcesandoAbono">
 <i class="bx bx-check"></i> Procesar
 </button>
 
-                                    <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" [title]="Cliente.showInput ? 'Cancelar' : 'Hacer Abono'" (click)="toggleDetalleInput(Cliente, $event)" style="display: inline-block;">
+                                        <button class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" [title]="Cliente.showInput ? 'Cancelar' : 'Hacer Abono'" (click)="toggleDetalleInput(Cliente, $event)" style="display: inline-block;">
 <i class="bx" [ngClass]="Cliente.showInput ? 'bx-x' : 'bx-edit-alt'"></i>
 </button>
 
-                                    <!-- Botón para Saldar Todas las Facturas Pendientes de este cliente (oculto mientras se ingresa un abono para evitar clics accidentales) -->
-                                    <button *ngIf="!Cliente.showInput" (click)="SaldarCuentaTotal(Cliente)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar el total pendiente" style="display: inline-block;">
+                                        <!-- Botón para Saldar Todas las Facturas Pendientes de este cliente (oculto mientras se ingresa un abono para evitar clics accidentales) -->
+                                        <button *ngIf="!Cliente.showInput" (click)="SaldarCuentaTotal(Cliente)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Saldar el total pendiente" style="display: inline-block;">
 <i class="bx bx-money"></i>
 </button>
 
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
 
-
-                            <!-- Fila de detalles de la transferencia -->
-                            <ng-container>
-                                <tr class="animate__animated animate__fadeIn tr-collapse">
-                                    <td colspan="5">
+                                <!-- Fila de detalles: se muestra justo debajo del cliente seleccionado -->
+                                <tr class="animate__animated animate__fadeIn tr-collapse" *ngIf="idClienteSeleccionado === Cliente.id_Cliente">
+                                    <td colspan="3">
                                         <div *ngIf="FacturasPorClientes && FacturasPorClientes.length">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h6 class="mb-0">Facturas Del cliente: <strong>{{NombreClienteSeleccionado}}</strong></h6>
-                                                <button type="button" class="btn btn-sm btn-outline-info" (click)="toggleDetalleAbonos()">
-                                                    <i class="bi bi-clock-history me-2"></i>
+                                                <button type="button" class="btn-historial-abonos" (click)="toggleDetalleAbonos()">
+                                                    <i class="bi bi-clock-history"></i>
                                                     Ver Historial de Abonos
                                                 </button>
                                             </div>
@@ -269,6 +268,10 @@
                                     <span>Facturas del cliente <strong>{{NombreClienteSeleccionado}}</strong></span>
                                 </div>
                             </div>
+                            <button type="button" class="btn-historial-abonos" (click)="toggleDetalleAbonos(); $event.stopPropagation();">
+                                <i class="bi bi-clock-history"></i>
+                                Ver Historial de Abonos
+                            </button>
 
                             <div class="factura-item" *ngFor="let detalle of FacturasPorClientes" [ngClass]="{
                                      'factura-vencida-mobile': isFacturaVencida(detalle.fechaLimitePagoFactura),
@@ -365,7 +368,15 @@
                 <h5 class="modal-title">
                     <i class="bi bi-clock-history me-2"></i> Historial de Abonos - {{ NombreClienteSeleccionado }}
                 </h5>
-                <button type="button" class="btn-close" (click)="toggleDetalleAbonos()" aria-label="Close"></button>
+                <div class="d-flex gap-2">
+                    <button *ngIf="!isMobileScreen()" type="button" class="btn btn-sm btn-outline-primary" (click)="imprimirHistorialAbonos()" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar PDF">
+                        <i class="bi bi-printer me-1"></i> Imprimir
+                    </button>
+                    <button *ngIf="isMobileScreen()" type="button" class="btn btn-sm btn-outline-primary" (click)="compartirHistorialAbonos()" data-bs-toggle="tooltip" data-bs-placement="top" title="Compartir PDF">
+                        <i class="bi bi-share-fill me-1"></i> Compartir
+                    </button>
+                    <button type="button" class="btn-close" (click)="toggleDetalleAbonos()" aria-label="Close"></button>
+                </div>
             </div>
             <div class="modal-body">
                 <app-detalle-abonos [idCliente]="idClienteSeleccionado" [visibleDetalle]="true"></app-detalle-abonos>

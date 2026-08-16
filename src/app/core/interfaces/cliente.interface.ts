@@ -121,4 +121,5 @@ export interface HistorialAbonoDTO {
   tipoPago?: string;
   nota?: string;
   idLoteAbono?: string;
+  tieneActualmentePendiente: number;
 }

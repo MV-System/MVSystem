@@ -98,4 +98,13 @@ export class ClientesService {
 
     return this.http.get<HistorialAbonoDTO[]>(APIURL.Clientes.Consultas.HistorialAbonos, { params });
   }
+
+  getPdfHistorialAbonos(idCliente: number, idSucursal: number, idEmpresa: number): Observable<Blob> {
+    const params = new HttpParams()
+      .set('idCliente', idCliente.toString())
+      .set('idSucursal', idSucursal.toString())
+      .set('idEmpresa', idEmpresa.toString());
+
+    return this.http.get(APIURL.Clientes.Accion.HistorialAbonos, { params, responseType: 'blob' }) as Observable<Blob>;
+  }
 }

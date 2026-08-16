@@ -31,7 +31,7 @@
     </div>
 
     <!-- Tabla de Historial (Desktop) -->
-    <div class="table-responsive historial-table" *ngIf="!isLoading && !noData">
+    <div class="table-responsive historial-table" *ngIf="!isLoading && !noData && !isMobileScreen()">
         <table class="table table-sm table-hover mb-0">
             <thead class="table-light">
                 <tr>
@@ -69,7 +69,7 @@
     </div>
 
     <!-- Cards de Historial (Mobile) -->
-    <div class="historial-cards" *ngIf="!isLoading && !noData && (getHistorialFiltrado() | slice:0:1)">
+    <div class="historial-cards" *ngIf="!isLoading && !noData && isMobileScreen() && (getHistorialFiltrado() | slice:0:1)">
         <div class="historial-card" *ngFor="let abono of getHistorialFiltrado()">
             <div class="historial-card-header">
                 <strong>Factura #{{ abono.numeroFactura }}</strong>

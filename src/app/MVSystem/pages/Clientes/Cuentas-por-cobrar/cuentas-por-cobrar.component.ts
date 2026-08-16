@@ -15,6 +15,7 @@ import { UserTrackingService } from 'src/app/core/services/user-tracking.service
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { TipoPago } from 'src/app/core/interfaces/catalogo.interface';
+import { APIURL } from 'src/app/config/url';
 
 @Component({
   selector: 'app-cuentas-por-cobrar',
@@ -491,6 +492,142 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.mostrarDetalleAbonos = !this.mostrarDetalleAbonos;
   }
 
+  /**
+   * Imprime el historial de abonos del cliente en PDF
+   */
+  imprimirHistorialAbonos(): void {
+    if (this.idClienteSeleccionado <= 0) {
+      this.toastr.error('Seleccione un cliente válido');
+      return;
+    }
+
+    this.loading.showLoading();
+
+    this.ClienteService.getPdfHistorialAbonos(
+      this.idClienteSeleccionado,
+      +this.loginService.getUserIdSucursal,
+      +this.loginService.getUserIdEmpresa
+    ).subscribe({
+      next: (blob) => {
+        if (!blob || blob.size === 0) {
+          this.toastr.warning('El reporte está vacío');
+          this.loading.hideLoading();
+          return;
+        }
+
+        try {
+          const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = blobUrl;
+
+          let limpiezaEjecutada = false;
+          const limpiarIframe = () => {
+            if (limpiezaEjecutada) {
+              return;
+            }
+
+            limpiezaEjecutada = true;
+            URL.revokeObjectURL(blobUrl);
+            if (iframe.parentNode) {
+              iframe.parentNode.removeChild(iframe);
+            }
+          };
+
+          iframe.onload = () => {
+            const frameWindow = iframe.contentWindow;
+            if (!frameWindow) {
+              limpiarIframe();
+              this.loading.hideLoading();
+              return;
+            }
+
+            frameWindow.focus();
+            frameWindow.print();
+
+            setTimeout(() => {
+              limpiarIframe();
+              this.loading.hideLoading();
+            }, 30000);
+          };
+
+          document.body.appendChild(iframe);
+          this.toastr.success('Abriendo reporte de histórico de abonos...');
+        } catch (error) {
+          this.toastr.error('Error al procesar el reporte');
+          console.error('Error:', error);
+          this.loading.hideLoading();
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Error al generar el reporte');
+        console.error('Error:', err);
+        this.loading.hideLoading();
+      }
+    });
+  }
+
+  /**
+   * Comparte el historial de abonos del cliente en PDF (solo móvil) usando Web Share API
+   */
+  compartirHistorialAbonos(): void {
+    if (this.idClienteSeleccionado <= 0) {
+      this.toastr.error('Seleccione un cliente válido');
+      return;
+    }
+
+    if (!navigator.share) {
+      this.toastr.warning('Tu navegador no soporta la función de compartir. Usa un navegador moderno en tu dispositivo móvil.');
+      return;
+    }
+
+    this.loading.showLoading();
+
+    this.ClienteService.getPdfHistorialAbonos(
+      this.idClienteSeleccionado,
+      +this.loginService.getUserIdSucursal,
+      +this.loginService.getUserIdEmpresa
+    ).subscribe({
+      next: async (blob) => {
+        if (!blob || blob.size === 0) {
+          this.toastr.warning('El reporte está vacío');
+          this.loading.hideLoading();
+          return;
+        }
+
+        try {
+          const fileName = `Historial_Abonos_${this.idClienteSeleccionado}.pdf`;
+          const file = new File([blob], fileName, { type: 'application/pdf' });
+          await (navigator as any).share({
+            title: `Historial de Abonos - ${this.NombreClienteSeleccionado}`,
+            text: `Historial de Abonos - ${this.NombreClienteSeleccionado} - MVSystem`,
+            files: [file]
+          });
+          this.toastr.success('Historial compartido exitosamente');
+        } catch (shareError: any) {
+          this.toastr.warning('No se pudo compartir el historial. Se descargará en su lugar.');
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Historial_Abonos_${this.idClienteSeleccionado}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        } finally {
+          this.loading.hideLoading();
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Error al generar el reporte');
+        console.error('Error:', err);
+        this.loading.hideLoading();
+      }
+    });
+  }
+
+
   private async extractHttpErrorDetail(error: any): Promise<string> {
     const source = error?.error;
 
@@ -912,4 +1049,5 @@ obtenerClientes() {
     this.toastr.error(message, 'Error');
   }
 }
+
 
