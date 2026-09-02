@@ -26,6 +26,7 @@ export class CuentasPorCobrarComponent implements OnInit {
   idClienteSeleccionado: number = 0; // Variable para almacenar el id de la transferencia seleccionada
   NombreClienteSeleccionado: string = ''; // Variable para almacenar el id de la transferencia seleccionada
   mostrarDetalleAbonos: boolean = false; // Controla visibilidad del detalle de abonos
+  filtroHistorialActual: boolean = true; // Estado del filtro: solo con pendiente
   CLientesPorCobrar: ClientesConFacturasPendientesRetorn[] = [];
   FacturasPorClientes: FacturasPorClienteRetorn[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
@@ -506,7 +507,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.ClienteService.getPdfHistorialAbonos(
       this.idClienteSeleccionado,
       +this.loginService.getUserIdSucursal,
-      +this.loginService.getUserIdEmpresa
+      +this.loginService.getUserIdEmpresa,
+      this.filtroHistorialActual
     ).subscribe({
       next: (blob) => {
         if (!blob || blob.size === 0) {
@@ -587,7 +589,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.ClienteService.getPdfHistorialAbonos(
       this.idClienteSeleccionado,
       +this.loginService.getUserIdSucursal,
-      +this.loginService.getUserIdEmpresa
+      +this.loginService.getUserIdEmpresa,
+      this.filtroHistorialActual
     ).subscribe({
       next: async (blob) => {
         if (!blob || blob.size === 0) {
@@ -1048,6 +1051,12 @@ obtenerClientes() {
     // Puedes usar una librería como ngx-toastr, o tu propio componente de notificación
     this.toastr.error(message, 'Error');
   }
-}
 
+  /**
+   * Recibe el cambio del filtro desde el componente detalle-abonos
+   */
+  onFiltroHistorialChanged(filtro: boolean): void {
+    this.filtroHistorialActual = filtro;
+  }
+}
 

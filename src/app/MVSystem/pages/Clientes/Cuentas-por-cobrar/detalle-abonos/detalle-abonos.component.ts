@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { HistorialAbonoDTO } from 'src/app/core/interfaces/cliente.interface';
 import { ClientesService } from 'src/app/core/services/clientes.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
   @Input() idCliente: number = 0;
   @Input() visibleDetalle: boolean = false;
+  @Output() filtroChanged = new EventEmitter<boolean>();
 
   historialAbonos: HistorialAbonoDTO[] = [];
   isLoading: boolean = false;
@@ -124,7 +125,8 @@ export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
    * Aplica el filtro de facturas (método llamado al cambiar el toggle)
    */
   aplicarFiltro(): void {
-    // Angular actualiza automáticamente la vista debido al change detection
+    // Emitir el estado actual del filtro al componente padre
+    this.filtroChanged.emit(this.mostrarSoloConPendiente);
   }
 
   /**

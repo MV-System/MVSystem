@@ -379,7 +379,7 @@
                 </div>
             </div>
             <div class="modal-body">
-                <app-detalle-abonos [idCliente]="idClienteSeleccionado" [visibleDetalle]="true"></app-detalle-abonos>
+                <app-detalle-abonos [idCliente]="idClienteSeleccionado" [visibleDetalle]="true" (filtroChanged)="onFiltroHistorialChanged($event)"></app-detalle-abonos>
             </div>
         </div>
     </div>
