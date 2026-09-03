@@ -15,6 +15,7 @@ import { LoginService } from 'src/app/auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-facturacion-consulta',
@@ -745,6 +746,95 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    */
   puedeReimprimir(): boolean {
     return this.onFacturaButton && this.facturaSeleccionada !== null;
+  }
+
+  /**
+   * Exporta las facturas actuales a un archivo Excel
+   * Si ComprobanteCheck = 2, solo exporta facturas con comprobantes
+   */
+  exportarFacturasExcel(): void {
+    if (!this.facturas || this.facturas.length === 0) {
+      this.toast.warning('No hay facturas para exportar');
+      return;
+    }
+
+    const filtroCompleto = this.modelFacturaFilter();
+    filtroCompleto.pageIndex = 1;
+    filtroCompleto.pageSize = this.totalRecord;
+
+    this.mantenimientoService.getFacturas(filtroCompleto).subscribe({
+      next: (facturas) => this.generarReporteExcel(facturas),
+      error: (error) => {
+        console.error('Error al obtener todas las facturas:', error);
+        this.toast.error('Error al obtener las facturas para exportar');
+      }
+    });
+  }
+
+  private generarReporteExcel(facturas: FacturaConsulta[]): void {
+    if (!facturas || facturas.length === 0) {
+      this.toast.warning('No hay facturas para exportar');
+      return;
+    }
+
+    try {
+      const encabezados = [
+        'Número Factura',
+        'NCF (Comprobante)',
+        'Cliente',
+        'Fecha Facturación',
+        'Sub Total',
+        'Descuento',
+        'ITBIS',
+        'Total',
+        'Vendedor',
+        'Sucursal'
+      ];
+
+      const filasPorTipo: { [tipo: string]: any[][] } = {};
+
+      facturas.forEach(factura => {
+        const tipo = factura.tipoComprobante ||
+          (factura.ncfTipoNumero ? `Tipo ${factura.ncfTipoNumero}` : 'Sin tipo');
+        if (!filasPorTipo[tipo]) {
+          filasPorTipo[tipo] = [encabezados];
+        }
+        filasPorTipo[tipo].push([
+          factura.numeroFactura || '',
+          factura.ncf || '',
+          (factura.nombres || '') + ' ' + (factura.apellidos || ''),
+          factura.fechaFacturacion || '',
+          factura.subTotal || 0,
+          factura.descuento || 0,
+          factura.itbis || 0,
+          factura.total || 0,
+          factura.vendedor || '',
+          factura.almacen || ''
+        ]);
+      });
+
+      const libro = XLSX.utils.book_new();
+      const nombresUsados: { [nombre: string]: number } = {};
+      Object.keys(filasPorTipo).forEach(tipo => {
+        const nombreBase = tipo.replace(/[\\/?*\[\]:]/g, '').substring(0, 31) || 'Sin tipo';
+        const vecesUsado = nombresUsados[nombreBase] || 0;
+        nombresUsados[nombreBase] = vecesUsado + 1;
+        const nombreHoja = vecesUsado === 0
+          ? nombreBase
+          : `${nombreBase.substring(0, 28)} (${vecesUsado + 1})`;
+        const hoja = XLSX.utils.aoa_to_sheet(filasPorTipo[tipo]);
+        XLSX.utils.book_append_sheet(libro, hoja, nombreHoja);
+      });
+
+      const empresa = this.loginService.getUserEmpresa.replace(/[\\/:*?"<>|]/g, '_');
+      const nombreArchivo = `Facturas_${empresa}_${this.ComprobanteCheck === 2 ? 'con_Comprobantes_' : ''}${new Date().toISOString().split('T')[0]}.xlsx`;
+      XLSX.writeFile(libro, nombreArchivo);
+
+      this.toast.success('Reporte exportado exitosamente');
+    } catch (error) {
+      console.error('Error al exportar facturas:', error);
+      this.toast.error('Error al exportar el reporte');
+    }
   }
 
 }

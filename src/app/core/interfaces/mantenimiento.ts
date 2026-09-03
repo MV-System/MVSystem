@@ -167,6 +167,8 @@ export interface FacturaConsulta {
     telefono: number;
     rnc: number;
     ncf: number;
+    ncfTipoNumero?: number;
+    tipoComprobante?: string;
     almacen: string;
 }
 export interface FacturaFilter extends DatePaging, Pagination {

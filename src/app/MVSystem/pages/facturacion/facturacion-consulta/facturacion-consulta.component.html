@@ -111,6 +111,16 @@
                                     </button>
                                 </div>
                             </div>
+
+                            <!-- Fila adicional para botón de exportación Excel si hay comprobantes seleccionados -->
+                            <div class="row g-3 mb-4 mt-2 d-none d-md-flex" *ngIf="ComprobanteCheck === 2">
+                                <div class="col-md-4">
+                                    <button class="button-imprimir-reporte w-100" [ngClass]="{'disabled': !facturas.length}" (click)="exportarFacturasExcel()" title="Exportar facturas a Excel">
+                                        <i class="bi bi-file-earmark-excel me-2"></i>
+                                        <span class="d-none d-sm-inline">Exportar Excel</span>
+                                    </button>
+                                </div>
+                            </div>
                         </form>
 
                         <!-- Cierre de Caja Section -->
