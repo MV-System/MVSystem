@@ -7,6 +7,7 @@ import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { DetallePago } from '../facturacion-registro/pago-mixto/pago-mixto.component';
 
 @Component({
   selector: 'app-caja-lista',
@@ -43,7 +44,7 @@ export class CajaListaComponent implements OnInit {
                 this.detallePrefactura = data;
                 this.detalleLoading = false;
                 // Refrescar la lista general para actualizar totales
-                this.cargarPreFacturas();
+                this.cargarPreFacturasConAjustePago(numeroPreFactura);
               },
               error: () => {
                 this.detalleError = 'Error al recargar el detalle.';
@@ -81,6 +82,9 @@ export class CajaListaComponent implements OnInit {
   selectedRowIndex: number | null = null;
     expandedRowIndex: number | null = null;
     detallePrefactura: any[] = [];
+    detallesPagosPorPrefactura: { [key: number]: DetallePago[] } = {};
+    pagosGuardadosPorPrefactura: { [key: number]: boolean } = {};
+    pagosLoadingPorPrefactura: { [key: number]: boolean } = {};
     detalleLoading: boolean = false;
     detalleError: string | null = null;
 
@@ -119,7 +123,109 @@ export class CajaListaComponent implements OnInit {
           this.detalleLoading = false;
         }
       });
+      const prefactura = this.preFacturas[index];
+      if (prefactura?.iD_Tipo_Pagos === 6) {
+        this.pagosLoadingPorPrefactura[numeroPreFactura] = true;
+        this.cargarDetallesPago(numeroPreFactura);
+      }
     }
+  }
+
+  cargarDetallesPago(numeroPreFactura: number): void {
+    this.mantenimientoService.getDesglosePagos(numeroPreFactura, 'P').subscribe({
+      next: (pagos) => {
+        this.pagosLoadingPorPrefactura[numeroPreFactura] = false;
+        this.pagosGuardadosPorPrefactura[numeroPreFactura] = !!pagos?.length;
+        this.detallesPagosPorPrefactura[numeroPreFactura] = (pagos || []).map(pago => ({
+          ID_Tipo_Pago: pago.iD_Tipo_Pago,
+          Descripcion_Tipo_Pago: pago.descripcion_Tipo_Pago,
+          Monto_Pago: pago.monto_Pago,
+          Numero_Referencia: pago.numero_Referencia,
+          Observacion: pago.observacion
+        }));
+      },
+      error: () => {
+        this.pagosLoadingPorPrefactura[numeroPreFactura] = false;
+        this.pagosGuardadosPorPrefactura[numeroPreFactura] = false;
+        this.detallesPagosPorPrefactura[numeroPreFactura] = [];
+      }
+    });
+  }
+
+  pagosCargando(numeroPreFactura: number): boolean {
+    return !!this.pagosLoadingPorPrefactura[numeroPreFactura];
+  }
+
+  getDetallesPago(numeroPreFactura: number): DetallePago[] {
+    return this.detallesPagosPorPrefactura[numeroPreFactura] || [];
+  }
+
+  onPagosMixtoChange(numeroPreFactura: number, pagos: DetallePago[]): void {
+    this.detallesPagosPorPrefactura[numeroPreFactura] = pagos;
+  }
+
+  guardarPagosMixtos(prefactura: PreFactura): void {
+    const pagos = (this.getDetallesPago(prefactura.numero_PreFactura) || []).map(pago => {
+      const idTipoPago = Number(pago?.ID_Tipo_Pago ?? 0);
+      const montoPago = Number(pago?.Monto_Pago ?? 0);
+
+      return {
+        ...pago,
+        ID_Tipo_Pago: idTipoPago,
+        Monto_Pago: Number.isFinite(montoPago) ? montoPago : 0,
+        Numero_Referencia: pago?.Numero_Referencia ?? '',
+        Observacion: pago?.Observacion ?? ''
+      };
+    });
+
+    const pagosConDatos = pagos.filter(pago => Number(pago.ID_Tipo_Pago) > 0 || Number(pago.Monto_Pago) > 0);
+
+    console.log('DEBUG_GUARDAR_PAGOS', {
+      numeroPreFactura: prefactura.numero_PreFactura,
+      totalFactura: prefactura.total,
+      pagos,
+      pagosConDatos
+    });
+
+    const suma = pagosConDatos.reduce((total, pago) => total + (Number.isFinite(pago.Monto_Pago) ? Number(pago.Monto_Pago) : 0), 0);
+    const totalFactura = Number(prefactura.total || 0);
+    const diferencia = Number((suma - totalFactura).toFixed(2));
+    const tipos = pagosConDatos.map(pago => Number(pago.ID_Tipo_Pago));
+
+    if (pagosConDatos.length < 2) {
+      this.toast.error('Debe definir al menos 2 métodos de pago para una prefactura mixta.');
+      return;
+    }
+
+    if (pagosConDatos.some(pago => {
+      const idTipoPago = Number(pago?.ID_Tipo_Pago ?? 0);
+      const montoPago = Number(pago?.Monto_Pago ?? 0);
+      return !Number.isFinite(idTipoPago) || idTipoPago <= 0 || !Number.isFinite(montoPago) || montoPago <= 0;
+    })) {
+      this.toast.error('Cada método de pago debe tener un tipo y un monto mayor que cero.');
+      return;
+    }
+
+    if (new Set(tipos).size !== tipos.length) {
+      this.toast.error('No se puede repetir el mismo tipo de pago en un pago mixto.');
+      return;
+    }
+
+    if (Math.abs(diferencia) > 0.01) {
+      const signo = diferencia > 0 ? 'sobran' : 'faltan';
+      const valor = Math.abs(diferencia).toFixed(2);
+      this.toast.error(`Los pagos mixtos no coinciden con el total. ${signo} RD$ ${valor}.`);
+      return;
+    }
+
+    this.preFacturasService.guardarDetallesPagoPreFactura(prefactura.numero_PreFactura, pagosConDatos).subscribe({
+      next: () => {
+        this.pagosGuardadosPorPrefactura[prefactura.numero_PreFactura] = true;
+        this.toast.success('Pagos mixtos guardados correctamente');
+        setTimeout(() => window.location.reload(), 500);
+      },
+      error: () => this.toast.error('No se pudieron guardar los pagos mixtos')
+    });
   }
 
   onSearchInput(event: Event): void {
@@ -188,8 +294,8 @@ export class CajaListaComponent implements OnInit {
   cargarTiposPagos(): void {
     this.mantenimientoService.Tipos_Pagos_Cata_Consulta_Combo().subscribe({
       next: (data: any[]) => {
-        // Excluir tipos de pago 2 (Crédito) y 6 (Mixto)
-        this.tiposPagos = (data || []).filter(tipo => tipo.iD_Tipo_Pagos !== 2 && tipo.iD_Tipo_Pagos !== 6);
+        // Excluir solo Crédito; Mixto se administra con el desglose existente.
+        this.tiposPagos = (data || []).filter(tipo => tipo.iD_Tipo_Pagos !== 2);
       },
       error: (err: any) => {
         this.toast.error('Error al cargar tipos de pago');
@@ -211,6 +317,16 @@ export class CajaListaComponent implements OnInit {
       () => {
         this.preFacturasService.actualizarTipoPagoPreFactura(prefactura.numero_PreFactura, idTipoPago).subscribe({
           next: (resp) => {
+            // Sincronizar el estado local inmediatamente para que la UI reaccione sin refrescar.
+            prefactura.iD_Tipo_Pagos = idTipoPago;
+
+            if (idTipoPago === 6) {
+              this.expandedRowIndex = this.preFacturas.indexOf(prefactura);
+              this.cargarDetallesPago(prefactura.numero_PreFactura);
+            } else {
+              delete this.detallesPagosPorPrefactura[prefactura.numero_PreFactura];
+              delete this.pagosGuardadosPorPrefactura[prefactura.numero_PreFactura];
+            }
             this.toast.success('Tipo de pago actualizado correctamente');
           },
           error: (err) => {
@@ -249,6 +365,57 @@ export class CajaListaComponent implements OnInit {
         this.loading = false;
         this.toast.error(this.error);
       }
+    });
+  }
+
+  private cargarPreFacturasConAjustePago(numeroPreFactura: number): void {
+    this.preFacturasService.listarPreFacturas({ Estado: 'P' }).subscribe({
+      next: (data) => {
+        this.preFacturas = data || [];
+        const prefactura = this.preFacturas.find(p => p.numero_PreFactura === numeroPreFactura);
+        if (prefactura?.iD_Tipo_Pagos === 6) {
+          this.cargarDetallesPagoYAjustar(numeroPreFactura, prefactura.total);
+        }
+      },
+      error: () => this.toast.error('No se pudo actualizar el total de la prefactura')
+    });
+  }
+
+  private cargarDetallesPagoYAjustar(numeroPreFactura: number, nuevoTotal: number): void {
+    this.mantenimientoService.getDesglosePagos(numeroPreFactura, 'P').subscribe({
+      next: (pagos) => {
+        const detalles = (pagos || []).map(pago => ({
+          ID_Tipo_Pago: Number(pago.iD_Tipo_Pago),
+          Descripcion_Tipo_Pago: pago.descripcion_Tipo_Pago,
+          Monto_Pago: Number(pago.monto_Pago),
+          Numero_Referencia: pago.numero_Referencia,
+          Observacion: pago.observacion
+        }));
+        this.detallesPagosPorPrefactura[numeroPreFactura] = detalles;
+        this.ajustarPagosPorNuevoTotal(numeroPreFactura, nuevoTotal);
+      },
+      error: () => this.toast.error('No se pudieron consultar los pagos de la prefactura')
+    });
+  }
+
+  private ajustarPagosPorNuevoTotal(numeroPreFactura: number, nuevoTotal: number): void {
+    const pagos = this.getDetallesPago(numeroPreFactura).map(pago => ({ ...pago }));
+    let diferencia = pagos.reduce((total, pago) => total + pago.Monto_Pago, 0) - Number(nuevoTotal);
+
+    if (diferencia <= 0.01) return;
+
+    pagos.sort((primerPago, segundoPago) => segundoPago.Monto_Pago - primerPago.Monto_Pago);
+    for (const pago of pagos) {
+      if (diferencia <= 0.01) break;
+      const descuento = Math.min(pago.Monto_Pago, diferencia);
+      pago.Monto_Pago = Number((pago.Monto_Pago - descuento).toFixed(2));
+      diferencia = Number((diferencia - descuento).toFixed(2));
+    }
+
+    this.detallesPagosPorPrefactura[numeroPreFactura] = pagos;
+    this.preFacturasService.guardarDetallesPagoPreFactura(numeroPreFactura, pagos).subscribe({
+      next: () => this.toast.success('Pagos mixtos ajustados al nuevo total'),
+      error: () => this.toast.error('No se pudieron ajustar los pagos mixtos')
     });
   }
 

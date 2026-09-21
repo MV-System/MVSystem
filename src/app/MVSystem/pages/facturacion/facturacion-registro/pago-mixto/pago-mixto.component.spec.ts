@@ -139,4 +139,39 @@ describe('PagoMixtoComponent', () => {
       expect(component.requiereReferencia(0)).toBeTrue();
     });
   });
+
+  describe('validación del total del pago mixto', () => {
+    beforeEach(() => {
+      component.tipoPagoSeleccionado = 6;
+      component.totalFactura = 1000;
+      component.ngOnChanges({
+        tiposPago: { currentValue: tiposPagoMock, previousValue: [], firstChange: true, isFirstChange: () => true },
+        tipoPagoSeleccionado: { currentValue: 6, previousValue: 0, firstChange: false, isFirstChange: () => false }
+      });
+    });
+
+    it('debe considerar válido cuando la suma de pagos coincide exactamente con el total', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(1);
+      component.detallesPagos.at(1).get('ID_Tipo_Pago')!.setValue(3);
+      component.detallesPagos.at(0).get('Monto_Pago')!.setValue(600.1);
+      component.detallesPagos.at(1).get('Monto_Pago')!.setValue(399.9);
+
+      component.actualizarTotales();
+
+      expect(component.saldoPendiente).toBe(0);
+      expect(component.esValido).toBeTrue();
+    });
+
+    it('debe marcar inválido cuando la suma no coincide con el total', () => {
+      component.detallesPagos.at(0).get('ID_Tipo_Pago')!.setValue(1);
+      component.detallesPagos.at(1).get('ID_Tipo_Pago')!.setValue(3);
+      component.detallesPagos.at(0).get('Monto_Pago')!.setValue(600.1);
+      component.detallesPagos.at(1).get('Monto_Pago')!.setValue(399.8);
+
+      component.actualizarTotales();
+
+      expect(component.saldoPendiente).toBe(0.1);
+      expect(component.esValido).toBeFalse();
+    });
+  });
 });

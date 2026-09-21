@@ -18,6 +18,7 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
   @Input() totalFactura: number = 0;
   @Input() tiposPago: any[] = [];
   @Input() tipoPagoSeleccionado: number = 0;
+  @Input() detallesIniciales: DetallePago[] = [];
   @Output() pagosMixtoChange = new EventEmitter<DetallePago[]>();
   @Output() tipoPagoChange = new EventEmitter<number>();
 
@@ -27,7 +28,18 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
   ID_PAGO_MIXTO = 6; // Constante para tipo Mixto
   Math = Math; // Para usar Math en el template
   private filasInicializadas = false;
+  private detallesInicialesCargados = false;
   tiposPagoFiltrados: any[] = [];
+
+  private normalizarMonto(valor: number): number {
+    const monto = Number(valor ?? 0);
+    return Number.isFinite(monto) ? Number(monto.toFixed(2)) : 0;
+  }
+
+  private getTotalFacturaNumerico(): number {
+    const total = Number(this.totalFactura ?? 0);
+    return Number.isFinite(total) ? this.normalizarMonto(total) : 0;
+  }
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -70,10 +82,25 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
         this.filasInicializadas = false;
       }
     }
+    if (changes['detallesIniciales'] && !this.detallesInicialesCargados && this.tipoPagoSeleccionado === this.ID_PAGO_MIXTO) {
+      this.cargarDetallesIniciales(changes['detallesIniciales'].currentValue || []);
+    }
     // Recalcular saldo cuando cambia el total de la factura
     if (changes['totalFactura'] && !changes['totalFactura'].firstChange) {
       this.actualizarTotales();
     }
+  }
+
+  private cargarDetallesIniciales(detalles: DetallePago[]) {
+    if (!detalles.length) return;
+
+    this.detallesInicialesCargados = true;
+    this.detallesPagos.clear();
+    detalles.forEach(detalle => {
+      this.agregarFilaPago(false);
+      this.detallesPagos.at(this.detallesPagos.length - 1).patchValue(detalle);
+    });
+    this.actualizarTotales();
   }
 
   private actualizarTiposPagoFiltrados() {
@@ -97,18 +124,60 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Agrega una nueva fila de pago
    */
-  agregarFilaPago() {
+  agregarFilaPago(emitirCambio: boolean = true) {
     if (this.detallesPagos.length >= 10) {
       console.warn('Máximo de 10 filas alcanzado');
       return;
     }
     const grupo = this.fb.group({
       ID_Tipo_Pago: [null, Validators.required],
-      Monto_Pago: [0, [Validators.required, Validators.min(0)]],
+      Monto_Pago: [0, [Validators.required, Validators.min(0.01)]],
       Numero_Referencia: [''],
       Observacion: ['']
     });
     this.detallesPagos.push(grupo);
+    if (emitirCambio) {
+      this.actualizarTotales();
+    }
+  }
+
+  onMontoInput(index: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const rawValue = input?.value ?? '';
+    const numericValue = rawValue === '' ? 0 : Number(rawValue);
+
+    this.detallesPagos.at(index)?.patchValue({
+      Monto_Pago: numericValue
+    }, { emitEvent: false });
+
+    console.log('DEBUG_MONTO_INPUT', {
+      index,
+      rawValue,
+      numericValue,
+      controlValue: this.detallesPagos.at(index)?.get('Monto_Pago')?.value,
+      totalFactura: this.getTotalFacturaNumerico()
+    });
+
+    this.actualizarTotales();
+  }
+
+  onTipoPagoChange(index: number, event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const rawValue = select?.value ?? '';
+    const numericValue = rawValue === '' ? 0 : Number(rawValue);
+
+    this.detallesPagos.at(index)?.patchValue({
+      ID_Tipo_Pago: numericValue
+    }, { emitEvent: false });
+
+    console.log('DEBUG_TIPO_PAGO_CHANGE', {
+      index,
+      rawValue,
+      numericValue,
+      controlValue: this.detallesPagos.at(index)?.get('ID_Tipo_Pago')?.value,
+      totalFactura: this.getTotalFacturaNumerico()
+    });
+
     this.actualizarTotales();
   }
 
@@ -126,13 +195,37 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
    * Actualiza los totales de pagos
    */
   actualizarTotales() {
-    this.pagosTotales = this.detallesPagos.controls
-      .reduce((suma, control) => suma + (Number(control.get('Monto_Pago')?.value) || 0), 0);
+    const pagos = this.detallesPagos.controls.map(control => {
+      const montoRaw = Number(control.get('Monto_Pago')?.value ?? 0);
+      const monto = Number.isFinite(montoRaw) ? this.normalizarMonto(montoRaw) : 0;
+      return {
+        ID_Tipo_Pago: Number(control.get('ID_Tipo_Pago')?.value ?? 0),
+        Monto_Pago: monto,
+        Numero_Referencia: control.get('Numero_Referencia')?.value ?? '',
+        Observacion: control.get('Observacion')?.value ?? ''
+      };
+    });
 
-    this.saldoPendiente = this.totalFactura - this.pagosTotales;
+    this.pagosTotales = pagos.reduce((suma, pago) => {
+      const monto = Number.isFinite(pago.Monto_Pago) ? this.normalizarMonto(pago.Monto_Pago) : 0;
+      return this.normalizarMonto(suma + monto);
+    }, 0);
 
-    // Emitir cambios
-    const pagos = this.detallesPagos.getRawValue();
+    const totalFactura = this.getTotalFacturaNumerico();
+    this.saldoPendiente = this.normalizarMonto(totalFactura - this.pagosTotales);
+
+    console.log('DEBUG_PAGO_MIXTO', {
+      totalFactura,
+      pagosTotales: this.pagosTotales,
+      saldoPendiente: this.saldoPendiente,
+      pagos,
+      controles: this.detallesPagos.controls.map(c => ({
+        id: c.get('ID_Tipo_Pago')?.value,
+        monto: c.get('Monto_Pago')?.value,
+        referencia: c.get('Numero_Referencia')?.value
+      }))
+    });
+
     this.pagosMixtoChange.emit(pagos);
   }
 
@@ -141,7 +234,8 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
    */
   get esValido(): boolean {
     if (this.tipoPagoSeleccionado !== this.ID_PAGO_MIXTO) return true;
-    return Math.abs(this.saldoPendiente) < 0.01 && this.detallesPagos.valid;
+    const diferencia = Math.abs(this.saldoPendiente);
+    return diferencia <= 0.01 && this.detallesPagos.valid;
   }
 
   /**

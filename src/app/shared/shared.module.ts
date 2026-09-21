@@ -1,6 +1,7 @@
 // shared.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RLoadingComponent } from './components/r-loading/r-loading.component';
 import { RModalComponent } from './components/r-modal/r-modal.component';
 import { RDropdownMenuComponent } from './components/r-dropdown-menu/r-dropdown-menu.component';
@@ -10,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { MainComponent } from './main/main.component';
 import { ReducePipe } from './pipes/reduce.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
+import { PagoMixtoComponent } from '../MVSystem/pages/facturacion/facturacion-registro/pago-mixto/pago-mixto.component';
 
 @NgModule({
   declarations: [
@@ -20,11 +22,13 @@ import { FilterPipe } from './pipes/filter.pipe';
     RToggleComponent,
     RDialogComponent,
     ReducePipe,
-    FilterPipe
+    FilterPipe,
+    PagoMixtoComponent
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule
   ],
   exports: [
     MainComponent,
@@ -34,7 +38,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     RToggleComponent,
     RDialogComponent,
     ReducePipe,
-    FilterPipe
+    FilterPipe,
+    PagoMixtoComponent
   ]
 })
 export class SharedModule { }

@@ -10,7 +10,6 @@
                     <div class="text-uppercase small text-muted fw-bold">PRE-FACTURAS</div>
                     <div class="fs-4 fw-bold">{{ preFacturas.length }}</div>
                     <div class="small text-muted">En el período</div>
-                </div>
             </div>
         </div>
     </div>
@@ -118,6 +117,14 @@
       {{ expandedRowIndex === i ? 'Ocultar' : 'Ver' }} Detalle
     </button>
                                 <div class="detalle-card" *ngIf="expandedRowIndex === i">
+                                    <div *ngIf="pagosCargando(pf.numero_PreFactura)" class="text-center py-3">
+                                        <span class="spinner-border spinner-border-sm text-primary"></span> Cargando pagos mixtos...
+                                    </div>
+                                    <app-pago-mixto *ngIf="pf.iD_Tipo_Pagos === 6 && !pagosCargando(pf.numero_PreFactura)" [totalFactura]="pf.total" [tiposPago]="tiposPagos" [tipoPagoSeleccionado]="pf.iD_Tipo_Pagos" [detallesIniciales]="getDetallesPago(pf.numero_PreFactura)" (pagosMixtoChange)="onPagosMixtoChange(pf.numero_PreFactura, $event)">
+                                    </app-pago-mixto>
+                                    <button *ngIf="pf.iD_Tipo_Pagos === 6 && !pagosCargando(pf.numero_PreFactura)" type="button" class="btn btn-primary btn-sm mb-3" (click)="$event.stopPropagation(); guardarPagosMixtos(pf)">
+                                        <i class="bi bi-save"></i> Guardar pagos mixtos
+                                    </button>
                                     <div class="detalle-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e5e7eb; color: #374151; font-weight: 600; font-size: 0.875rem;">
                                         <i class="bi bi-list-ul" style="color: #2563eb;"></i>
                                         <span>Artículos</span>
@@ -234,7 +241,15 @@
                                                     <span class="spinner-border spinner-border-sm text-primary"></span> Cargando detalle...
                                                 </div>
                                                 <div *ngIf="detalleError" class="alert alert-danger">{{ detalleError }}</div>
-                                                <div *ngIf="!detalleLoading && !detalleError">
+                                                <div *ngIf="pagosCargando(pf.numero_PreFactura)" class="text-center py-3">
+                                                    <span class="spinner-border spinner-border-sm text-primary"></span> Cargando pagos mixtos...
+                                                </div>
+                                                <div *ngIf="!detalleLoading && !detalleError && !pagosCargando(pf.numero_PreFactura)">
+                                                    <app-pago-mixto *ngIf="pf.iD_Tipo_Pagos === 6" [totalFactura]="pf.total" [tiposPago]="tiposPagos" [tipoPagoSeleccionado]="pf.iD_Tipo_Pagos" [detallesIniciales]="getDetallesPago(pf.numero_PreFactura)" (pagosMixtoChange)="onPagosMixtoChange(pf.numero_PreFactura, $event)">
+                                                    </app-pago-mixto>
+                                                    <button *ngIf="pf.iD_Tipo_Pagos === 6" type="button" class="btn btn-primary btn-sm mb-3" (click)="$event.stopPropagation(); guardarPagosMixtos(pf)">
+                                                        <i class="bi bi-save"></i> Guardar pagos mixtos
+                                                    </button>
                                                     <div *ngFor="let det of detallePrefactura" class="detalle-flex-row border-bottom py-2 px-3">
                                                         <div class="detalle-item">
                                                             <span class="fw-bold text-primary">Cod:</span> {{ det.iD_Equipo }}

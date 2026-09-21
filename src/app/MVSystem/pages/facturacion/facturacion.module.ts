@@ -18,7 +18,6 @@ import { FormClienteComponent } from './facturacion-registro/form-cliente/form-c
 import { CotizacionListComponent } from './facturacion-registro/cotizacion-list/cotizacion-list.component';
 import { ClientesModule } from '../Clientes/clientes.module'; // Importar el módulo de clientes
 import { CierreCajaReporteComponent } from './facturacion-consulta/cierre-caja-reporte/cierre-caja-reporte.component';
-import { PagoMixtoComponent } from './facturacion-registro/pago-mixto/pago-mixto.component';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -38,8 +37,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     FacturacionDetailComponent,
     FormClienteComponent,
     CotizacionListComponent,
-    CierreCajaReporteComponent,
-    PagoMixtoComponent
+    CierreCajaReporteComponent
   ],
   imports: [
     CommonModule,

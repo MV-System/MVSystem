@@ -1,7 +1,9 @@
 .pago-mixto-detalles {
     border: 1px solid #0dcaf0;
     border-radius: 0.5rem;
-    padding: 0.6rem;
+    width: min(100%, 560px);
+    box-sizing: border-box;
+    padding: 0.45rem 0.55rem;
     margin-top: 0.5rem;
     background: #f8fcff;
     animation: slideDown 0.2s ease;
@@ -22,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
     font-size: 0.8rem;
     font-weight: 700;
     color: #0a5568;
@@ -31,7 +33,7 @@
 .mixto-row {
     display: flex;
     gap: 0.4rem;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
     align-items: center;
 }
 
@@ -41,7 +43,7 @@
     padding: 0.3rem 0.45rem;
     border-radius: 0.3rem;
     border: 1px solid #cbd5e1;
-    height: 30px;
+    height: 28px;
 }
 
 .mixto-row .form-select-sm {
@@ -83,7 +85,7 @@
 .saldo-alerta {
     font-size: 0.75rem;
     color: #dc3545;
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
     padding: 0.25rem 0.5rem;
     background: #fff5f5;
     border-radius: 0.3rem;
@@ -93,7 +95,7 @@
 .saldo-ok {
     font-size: 0.75rem;
     color: #10b981;
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
     padding: 0.25rem 0.5rem;
     background: #f0fdf4;
     border-radius: 0.3rem;

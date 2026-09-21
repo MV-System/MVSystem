@@ -183,8 +183,8 @@ export class MantenimientoService {
   getDetalleFactura(numeroFactura: number, sucursal: number){
     return this.http.get<DetalleFacturaList[]>(`${APIURL.Factura.Consulta.DetalleFactura}/${numeroFactura}/${sucursal}`)
   }
-  getDesglosePagos(numeroFactura: number): Observable<DetallePagoMixto[]> {
-    return this.http.get<DetallePagoMixto[]>(`${APIURL.Factura.Consulta.GetDesglosePagos}/${numeroFactura}`);
+  getDesglosePagos(numeroFactura: number, tipoDocumento: string = 'F'): Observable<DetallePagoMixto[]> {
+    return this.http.get<DetallePagoMixto[]>(`${APIURL.Factura.Consulta.GetDesglosePagos}/${numeroFactura}?tipoDocumento=${tipoDocumento}`);
   }
   modificarEstatusEquipo(equipo: EquipoModificarEstatusSet): Observable<void> {
     return this.http.put<void>(APIURL.Equipo.Modifica.ModificarEstatusEquipo, equipo);
