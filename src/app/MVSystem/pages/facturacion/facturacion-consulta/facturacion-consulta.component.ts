@@ -147,7 +147,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   rangeDatePlaceholder: Date =new Date()
   onFacturaButton: boolean = false;
   printing: boolean = false;
-  facturaSeleccionada: number | null = null; // Para rastrear qué factura está seleccionada
+  facturaSeleccionada: FacturaConsulta | null = null; // Conserva la identidad sucursal+número de la factura seleccionada
   criterioActual: string = ''; // Nueva propiedad para sincronizar criterio
   mostrarCierreCaja: boolean = false; // Para mostrar/ocultar el componente de cierre de caja
   myDateRangePickerOptions: IMyDrpOptions = {
@@ -261,28 +261,39 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   });
     this.subs.push(sub);
   }
-  getDetalleFactura(numeroFactura: number){
+  getDetalleFactura(facturaONumero: FacturaConsulta | number){
+    const factura = typeof facturaONumero === 'number'
+      ? this.facturas.find(f => f.numeroFactura === facturaONumero)
+      : facturaONumero;
+    const numeroFactura = typeof facturaONumero === 'number' ? facturaONumero : facturaONumero.numeroFactura;
+
     // Validar numeroFactura
-    if (!numeroFactura || numeroFactura <= 0) {
+    if (!factura || !numeroFactura || numeroFactura <= 0) {
       this.toast.error('Número de factura inválido');
       return;
     }
 
-    //this.isLoading = true; // Iniciar carga
+    const almacen = factura.idSucursal || (typeof facturaONumero === 'number'
+      ? Number(this.form.get('almacen')?.value)
+      : 0);
+    if (!almacen) {
+      this.onFacturaButton = false;
+      this.toast.error('No se pudo identificar la sucursal de la factura seleccionada. Actualice la consulta e intente nuevamente.');
+      return;
+    }
+
     this.numerofactura = numeroFactura;
-    this.facturaSeleccionada = numeroFactura; // Rastrear la factura seleccionada
-    const { almacen } = this.form.value;
+    this.facturaSeleccionada = factura;
+    this.onFacturaButton = true;
 
     // Cargar detalle de la factura
-    const sub = this.mantenimientoService.getDetalleFactura(numeroFactura,Number(almacen))
+    const sub = this.mantenimientoService.getDetalleFactura(numeroFactura, almacen)
     .subscribe({
       next: (detalle) => {
         this.detalleFactura = detalle;
 
         // Obtener la factura seleccionada para verificar si es pago mixto
-        const facturaSeleccionada = this.facturas.find(f => f.numeroFactura === numeroFactura);
-
-        const tipoPago = this.getIdTipoPagoFactura(numeroFactura);
+        const tipoPago = this.getIdTipoPagoFactura(factura);
 
         // Si es pago mixto (idTipoPago = 6), cargar desglose de pagos
         if (tipoPago === 6) {
@@ -303,15 +314,17 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   // Obtener el idTipoPago de una factura específica
-  getIdTipoPagoFactura(numeroFactura: number): number {
-    const factura = this.facturas.find(f => f.numeroFactura === numeroFactura);
+  getIdTipoPagoFactura(facturaONumero: FacturaConsulta | number): number {
+    const factura = typeof facturaONumero === 'number'
+      ? this.facturas.find(f => f.numeroFactura === facturaONumero)
+      : facturaONumero;
     if (!factura) return 0;
 
     // Verificar si es pago mixto por varios patrones
     const tipoPago = factura.tipoPago ? factura.tipoPago.toString().toUpperCase() : '';
     const esMixto = tipoPago.includes('MIXTO') || tipoPago === '6' || tipoPago.includes('MIX');
 
-    console.log('🔍 Detectando pago mixto para factura', numeroFactura, '- tipoPago:', factura.tipoPago, 'esMixto:', esMixto);
+    console.log('🔍 Detectando pago mixto para factura', `${factura.idSucursal || 0}:${factura.numeroFactura}`, '- tipoPago:', factura.tipoPago, 'esMixto:', esMixto);
     return esMixto ? 6 : 0;
   }
 
@@ -380,8 +393,10 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.loading.hideLoading();
   }
   printFactura(){
-     this.loading.showLoading();
-    const sub = this.mantenimientoService.postFacturaReport(this.modelFacturaFilter(),this.numerofactura)
+    const filtro = this.modelFacturaFilterParaImpresion();
+    console.info('📤 Datos enviados para imprimir factura normal:', JSON.stringify(filtro, null, 2));
+    this.loading.showLoading();
+    const sub = this.mantenimientoService.postFacturaReport(filtro,this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
        this.loading.hideLoading();
@@ -406,7 +421,10 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     }
 
     // Validación adicional: verificar que la factura existe en la lista actual
-    const facturaExiste = this.facturas.some(f => f.numeroFactura === this.numerofactura);
+    const facturaExiste = this.facturaSeleccionada && this.facturas.some(f =>
+      f.numeroFactura === this.facturaSeleccionada?.numeroFactura &&
+      f.idSucursal === this.facturaSeleccionada?.idSucursal
+    );
     if (!facturaExiste) {
       this.toast.warning('La factura seleccionada ya no está disponible. Por favor, actualice la búsqueda.');
       return;
@@ -430,9 +448,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   printFacturaMini(){
-     this.loading.showLoading();
+    const filtro = this.modelFacturaFilterParaImpresion();
+    console.info('📤 Datos enviados para imprimir factura mini:', JSON.stringify(filtro, null, 2));
+    this.loading.showLoading();
     this.printing = !this.printing;
-    const sub = this.mantenimientoService.postFacturaMiniReport(this.modelFacturaFilter(),this.numerofactura)
+    const sub = this.mantenimientoService.postFacturaMiniReport(filtro,this.numerofactura)
     .subscribe(blob =>{
       CreatorPDFFile(blob);
    this.loading.hideLoading();
@@ -440,6 +460,21 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.toast.error('Error al imprimir factura');
     });
     this.subs.push(sub);
+  }
+
+  private modelFacturaFilterParaImpresion(): FacturaFilter {
+    const filtro = this.modelFacturaFilter();
+    const factura = this.facturaSeleccionada;
+
+    if (factura?.idSucursal) {
+      filtro.almacen = factura.idSucursal;
+      filtro.IdSucursal = String(factura.idSucursal);
+    }
+
+    filtro.fechaInicio = '';
+    filtro.fechaFinal = '';
+    filtro.numeroFactura = factura?.numeroFactura || this.numerofactura;
+    return filtro;
   }
 
   /**
@@ -761,7 +796,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    * Valida si se puede reimprimir la factura
    */
   puedeReimprimir(): boolean {
-    return this.onFacturaButton && this.facturaSeleccionada !== null;
+    return this.onFacturaButton && (this.facturaSeleccionada?.idSucursal || 0) > 0;
   }
 
   /**
@@ -854,3 +889,4 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
 }
+

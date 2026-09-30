@@ -81,7 +81,7 @@
                                 <tbody>
                                     <ng-container *ngFor="let factura of facturas; let i = index">
                                         <!-- DESGLOSE DE PAGOS MIXTOS - TABLA MEJORADA -->
-                                        <ng-container *ngIf="desgloseVisible[factura.numeroFactura] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0">
+                                        <ng-container *ngIf="desgloseVisible[getFacturaKey(factura)] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0">
                                             <tr class="animate__animated animate__fadeIn desglose-table-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0b5ae3 100%); border-top: 2px solid #0d6efd; border-bottom: 1px solid #dee2e6;">
                                                 <td colspan="16" style="padding: 8px 12px;">
                                                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
@@ -102,7 +102,7 @@
                                         </ng-container>
 
                                         <!-- FILA DE FACTURA -->
-                                        <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[factura.numeroFactura]}" (click)="handleClick(factura.numeroFactura, i)">
+                                        <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[getFacturaKey(factura)]}" (click)="handleClick(factura, i)">
                                             <td class="fixed-item">
                                                 <div class="btns-group">
                                                     <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
@@ -120,10 +120,10 @@
                                             <td>
                                                 <div style="display: flex; align-items: center; gap: 8px;">
                                                     <span>{{ factura.tipoPago }}</span>
-                                                    <button *ngIf="isMixtoPayment(factura)" (click)="toggleDesgloseVisible(factura.numeroFactura, $event)" class="btn btn-sm" [style.background-color]="desgloseVisible[factura.numeroFactura] ? '#0d6efd' : '#e9ecef'" [style.color]="desgloseVisible[factura.numeroFactura] ? 'white' : '#666'"
-                                                        [title]="desgloseVisible[factura.numeroFactura] ? 'Ocultar desglose' : 'Ver desglose de pago'" style="border: 1px solid #dee2e6; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;">
-                                                        <i [class]="desgloseVisible[factura.numeroFactura] ? 'bi bi-chevron-up' : 'bi bi-chevron-down'" style="margin-right: 2px;"></i>
-                                                        {{ desgloseVisible[factura.numeroFactura] ? 'Ocultar' : 'Ver' }}
+                                                    <button *ngIf="isMixtoPayment(factura)" (click)="toggleDesgloseVisible(factura, $event)" class="btn btn-sm" [style.background-color]="desgloseVisible[getFacturaKey(factura)] ? '#0d6efd' : '#e9ecef'" [style.color]="desgloseVisible[getFacturaKey(factura)] ? 'white' : '#666'"
+                                                        [title]="desgloseVisible[getFacturaKey(factura)] ? 'Ocultar desglose' : 'Ver desglose de pago'" style="border: 1px solid #dee2e6; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;">
+                                                        <i [class]="desgloseVisible[getFacturaKey(factura)] ? 'bi bi-chevron-up' : 'bi bi-chevron-down'" style="margin-right: 2px;"></i>
+                                                        {{ desgloseVisible[getFacturaKey(factura)] ? 'Ocultar' : 'Ver' }}
                                                     </button>
                                                 </div>
                                             </td>
@@ -140,7 +140,7 @@
                                             <td>{{ factura.fechaFacturacion | date }}</td>
                                         </tr>
                                         <!-- Detalle de factura con fondo diferenciado -->
-                                        <ng-container *ngIf="facturaVisibility[factura.numeroFactura] && i == index">
+                                        <ng-container *ngIf="facturaVisibility[getFacturaKey(factura)] && i == index">
                                             <tr class="animate__animated animate__fadeIn tr-collapse detalle-row" *ngFor="let detalle of detalleFactura; let d = index">
                                                 <td col="1">
                                                     <ng-container *ngIf="!detalle.editMode">
@@ -216,12 +216,12 @@
                                         <span><b>Fecha:</b> {{factura.fechaFacturacion | date}}</span>
                                     </div>
                                 </div>
-                                <button class="btn-ver-detalle" (click)="handleClick(factura.numeroFactura, i)">
+                                <button class="btn-ver-detalle" (click)="handleClick(factura, i)">
                                     <i class="bi bi-eye-fill me-1"></i>
-                                    {{ facturaVisibility[factura.numeroFactura] ? 'Ocultar' : 'Ver' }} Detalle
+                                    {{ facturaVisibility[getFacturaKey(factura)] ? 'Ocultar' : 'Ver' }} Detalle
                                 </button>
                                 <!-- DESGLOSE DE PAGO MIXTO EN MÓVIL -->
-                                <div class="desglose-card" *ngIf="desgloseVisible[factura.numeroFactura] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0" style="background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%); border-left: 5px solid #0d6efd; margin: 12px 0; padding: 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(13, 110, 253, 0.1);">
+                                <div class="desglose-card" *ngIf="desgloseVisible[getFacturaKey(factura)] && getDesglosePagosPorFactura(factura.numeroFactura).length > 0" style="background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%); border-left: 5px solid #0d6efd; margin: 12px 0; padding: 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(13, 110, 253, 0.1);">
                                     <div class="desglose-header" style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: linear-gradient(135deg, #0d6efd 0%, #0b5ae3 100%); border-radius: 3px 0 0 0;">
                                         <i class="bi bi-pie-chart" style="font-size: 1.1em; color: white;"></i>
                                         <span style="font-weight: 700; color: #ffeb3b; font-size: 0.9rem; letter-spacing: 0.3px;">DESGLOSE DE PAGO</span>
@@ -246,7 +246,7 @@
                                     </div>
                                 </div>
                                 <!-- Detalle de factura en tarjeta -->
-                                <div class="detalle-card" *ngIf="facturaVisibility[factura.numeroFactura]">
+                                <div class="detalle-card" *ngIf="facturaVisibility[getFacturaKey(factura)]">
                                     <div class="detalle-header">
                                         <i class="bi bi-list-ul"></i>
                                         <span>Artículos</span>

@@ -170,6 +170,7 @@ export interface FacturaConsulta {
     ncfTipoNumero?: number;
     tipoComprobante?: string;
     almacen: string;
+    idSucursal?: number;
 }
 export interface FacturaFilter extends DatePaging, Pagination {
     almacen: number;

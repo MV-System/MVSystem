@@ -200,14 +200,21 @@ describe('FacturacionListaComponent', () => {
   });
 
   describe('Factura Selection and Visibility', () => {
+    it('should create different keys for equal invoice numbers in different branches', () => {
+      const facturaSucursal1 = { ...mockFacturas[0], idSucursal: 1 };
+      const facturaSucursal2 = { ...mockFacturas[0], idSucursal: 2 };
+
+      expect(component.getFacturaKey(facturaSucursal1)).not.toBe(component.getFacturaKey(facturaSucursal2));
+    });
+
     it('should handle click and set selected row index', () => {
       spyOn(component, 'getIdFactura');
       spyOn(component, 'toggleDetalleFactura');
 
-      component.handleClick(1001, 0);
+      component.handleClick(mockFacturas[0], 0);
 
-      expect(component.getIdFactura).toHaveBeenCalledWith(1001, 0);
-      expect(component.toggleDetalleFactura).toHaveBeenCalledWith(1001);
+      expect(component.getIdFactura).toHaveBeenCalledWith(mockFacturas[0], 0);
+      expect(component.toggleDetalleFactura).toHaveBeenCalledWith(component.getFacturaKey(mockFacturas[0]));
       expect(component.selectedRowIndex).toBe(0);
     });
 
@@ -227,11 +234,13 @@ describe('FacturacionListaComponent', () => {
     it('should emit factura button and numero factura events', () => {
       spyOn(component.onFacturaButton, 'emit');
       spyOn(component.numerofactura, 'emit');
+      spyOn(component.facturaSeleccionada, 'emit');
 
-      component.getIdFactura(1001, 0);
+      component.getIdFactura(mockFacturas[0], 0);
 
       expect(component.onFacturaButton.emit).toHaveBeenCalledWith(true);
       expect(component.numerofactura.emit).toHaveBeenCalledWith(1001);
+      expect(component.facturaSeleccionada.emit).toHaveBeenCalledWith(mockFacturas[0]);
       expect(component.selectedRowIndex).toBe(0);
       expect(component.index).toBe(0);
     });

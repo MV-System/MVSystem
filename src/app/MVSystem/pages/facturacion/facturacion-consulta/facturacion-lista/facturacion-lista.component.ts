@@ -21,12 +21,13 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 export class FacturacionListaComponent implements OnInit, OnChanges {
   @Input() estadoFactura: string = 'A';
   @Output() pageSizeChanged = new EventEmitter<number>(); // Emitir evento para el cambio de pageSize
+  @Output() facturaSeleccionada = new EventEmitter<FacturaConsulta>();
 selectedRowIndex: number | null = null;
   // Aquí seguimos teniendo la propiedad facturaVisibility
-  facturaVisibility: { [key: number]: boolean } = {};
+  facturaVisibility: { [key: string]: boolean } = {};
 
   // Rastrear visibilidad del desglose de pagos mixtos (separado del detalle de factura)
-  desgloseVisible: { [key: number]: boolean } = {};
+  desgloseVisible: { [key: string]: boolean } = {};
 
   // Propiedades para el desglose de pagos mixtos
   facturaSeleccionadaIdTipoPago: number = 0;
@@ -44,12 +45,12 @@ selectedRowIndex: number | null = null;
     }
 
   // La función para manejar ambos clics
-  handleClick(facturaId: number, index: number) {
+  handleClick(factura: FacturaConsulta, index: number) {
     // Primero, llama a la función que obtiene la factura
-    this.getIdFactura(facturaId, index);
+    this.getIdFactura(factura, index);
 
     // Luego, alterna la visibilidad de los detalles
-    this.toggleDetalleFactura(facturaId);
+    this.toggleDetalleFactura(this.getFacturaKey(factura));
 
     // Cambia el índice de la fila seleccionada para aplicar el color de fondo
     this.selectedRowIndex = index;
@@ -140,16 +141,23 @@ selectedRowIndex: number | null = null;
     return this.validatorPermissionService.validateUserRole("VNT_DETALLE_FACTURA_BTN_CAMBIA_IMEI");
   }
 
-  toggleDetalleFactura(facturaId: number) {
+  getFacturaKey(factura: FacturaConsulta): string {
+    return `${factura.idSucursal || 0}:${factura.numeroFactura}`;
+  }
+
+  toggleDetalleFactura(facturaKey: string | number) {
     // Cambia el estado de visibilidad de los detalles de la factura
-    this.facturaVisibility[facturaId] = !this.facturaVisibility[facturaId];
+    const key = String(facturaKey);
+    this.facturaVisibility[key] = !this.facturaVisibility[key];
   }
 
   /**
    * Togglea la visibilidad del desglose de pagos mixtos
    */
-  toggleDesgloseVisible(facturaId: number, event?: Event) {
-    console.log('🔘 CLICK en botón desglose - Factura:', facturaId);
+  toggleDesgloseVisible(factura: FacturaConsulta, event?: Event) {
+    const facturaId = factura.numeroFactura;
+    const facturaKey = this.getFacturaKey(factura);
+    console.log('🔘 CLICK en botón desglose - Factura:', facturaKey);
 
     // Evitar que se propague el evento si viene de un clic directo
     if (event) {
@@ -158,9 +166,8 @@ selectedRowIndex: number | null = null;
 
     // Cerrar todos los demás desgloses (comportamiento de acordeón)
     Object.keys(this.desgloseVisible).forEach(key => {
-      const numFactura = Number(key);
-      if (numFactura !== facturaId) {
-        this.desgloseVisible[numFactura] = false;
+      if (key !== facturaKey) {
+        this.desgloseVisible[key] = false;
       }
     });
 
@@ -168,13 +175,13 @@ selectedRowIndex: number | null = null;
     console.log('   Desglose actual cargado:', desgloseActual ? `${desgloseActual.length} items` : 'NO CARGADO');
 
     // Si está a punto de abrirse y el desglose no está cargado, solicitar la carga
-    if (!this.desgloseVisible[facturaId] && (!this.desglosePagosPorFactura[facturaId] || this.desglosePagosPorFactura[facturaId].length === 0)) {
+    if (!this.desgloseVisible[facturaKey] && (!this.desglosePagosPorFactura[facturaId] || this.desglosePagosPorFactura[facturaId].length === 0)) {
       console.log('   📤 Emitiendo evento onLoadDesgloseRequest para cargar desglose');
       this.onLoadDesgloseRequest.emit(facturaId);
     }
 
-    this.desgloseVisible[facturaId] = !this.desgloseVisible[facturaId];
-    console.log('   Desglose ahora está:', this.desgloseVisible[facturaId] ? 'VISIBLE' : 'OCULTO');
+    this.desgloseVisible[facturaKey] = !this.desgloseVisible[facturaKey];
+    console.log('   Desglose ahora está:', this.desgloseVisible[facturaKey] ? 'VISIBLE' : 'OCULTO');
   }
 
   /**
@@ -246,12 +253,15 @@ onCancel(detalle: DetalleFacturaList) {
 }
 
 
-  getIdFactura(numerofactura: number,index: number){
+  getIdFactura(factura: FacturaConsulta,index: number){
     this.selectedRowIndex = index; // Guarda el índice de la fila seleccionada
     this.index= index;
     //this.onSelectFactura();
-    if(numerofactura > 0){this.onFacturaButton.emit(true);}
-    this.numerofactura.emit(numerofactura);
+    if (factura.numeroFactura > 0) {
+      this.onFacturaButton.emit(true);
+      this.numerofactura.emit(factura.numeroFactura);
+      this.facturaSeleccionada.emit(factura);
+    }
 
   }
   isMobileScreen(): boolean {

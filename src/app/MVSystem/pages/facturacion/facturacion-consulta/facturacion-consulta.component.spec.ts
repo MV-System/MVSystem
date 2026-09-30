@@ -226,6 +226,17 @@ describe('FacturacionConsultaComponent', () => {
       expect(component.numerofactura).toBe(1001);
     });
 
+    it('should load details using the selected branch when invoice numbers repeat', () => {
+      const facturaOtraSucursal = { ...mockFacturas[0], idSucursal: 3 };
+      const facturaSeleccionada = { ...mockFacturas[0], idSucursal: 9 };
+      component.facturas = [facturaOtraSucursal, facturaSeleccionada];
+
+      component.getDetalleFactura(facturaSeleccionada);
+
+      expect(mockMantenimientoService.getDetalleFactura).toHaveBeenCalledWith(1001, 9);
+      expect(component.facturaSeleccionada).toBe(facturaSeleccionada);
+    });
+
     it('should load almacenes successfully', () => {
       component.getAlmacenes();
 
@@ -443,6 +454,22 @@ describe('FacturacionConsultaComponent', () => {
       expect(result.IdEmpresa).toBe('1');
       expect(result.IdSucursal).toBe('1');
     });
+
+    it('should use invoice branch and clear dates for reprint', () => {
+      const facturaSucursal1 = { ...mockFacturas[0], idSucursal: 5 };
+      const facturaSucursal2 = { ...mockFacturas[0], idSucursal: 7 };
+      component.facturas = [facturaSucursal1, facturaSucursal2];
+      component.facturaSeleccionada = facturaSucursal2;
+      component.numerofactura = 1001;
+
+      const result = (component as any).modelFacturaFilterParaImpresion() as FacturaFilter;
+
+      expect(result.almacen).toBe(7);
+      expect(result.IdSucursal).toBe('7');
+      expect(result.fechaInicio).toBe('');
+      expect(result.fechaFinal).toBe('');
+      expect(result.numeroFactura).toBe(1001);
+    });
   });
 
   describe('Checkbox Functionality', () => {
@@ -559,3 +586,4 @@ describe('FacturacionConsultaComponent', () => {
     });
   });
 });
+
