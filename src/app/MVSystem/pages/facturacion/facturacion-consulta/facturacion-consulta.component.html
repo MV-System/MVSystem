@@ -53,6 +53,18 @@
                                         {{ vendedorErrorMsg }}
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="form-label modern-label">
+                                        <i class="bi bi-credit-card me-1"></i>
+                                        Tipo de pago
+                                    </label>
+                                    <select class="form-select modern-select" formControlName="idTipoPago" (change)="getFacturas()">
+                                        <option [ngValue]="0">Todos</option>
+                                        <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
+                                            {{ tipoPago.descripcion_Tipo_Pagos }}
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="col-md-4" *ngIf="SelectSucursal()">
                                     <label class="form-label modern-label">
                                         <i class="bi bi-building me-1"></i>

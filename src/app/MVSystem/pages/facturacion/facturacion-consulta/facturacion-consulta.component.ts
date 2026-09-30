@@ -6,7 +6,7 @@ import { MantenimientoService } from '../../../../core/services/mantenimiento.se
 import { FacturaFilter, FacturaConsulta, DetalleFacturaList, DetallePagoMixto } from '../../../../core/interfaces/mantenimiento';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { VendedorService } from 'src/app/core/services/vendedor.service';
-import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { Almacen, TipoPago } from 'src/app/core/interfaces/catalogo.interface';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from '../../../../helpers/helper';
@@ -27,6 +27,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   desglosePagos: DetallePagoMixto[] = [];
   desglosePagosPorFactura: { [key: number]: DetallePagoMixto[] } = {}; // Objeto con numeroFactura como clave
   vendedores: any[] = [];
+  tiposPago: TipoPago[] = [];
 
   constructor(private fb: FormBuilder,
     private loading: LoadingService,
@@ -85,6 +86,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     this.getFacturas();
     this.getAlmacenes();
     this.getVendedores();
+    this.getTiposPago();
 
     // Suscribirse a cambios en el campo criterio para sincronizar con el componente hijo
     this.form.get('criterio')?.valueChanges.subscribe(value => {
@@ -104,6 +106,18 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
         console.error('Error al obtener vendedores:', err);
         this.toast.error('Error al cargar la lista de vendedores');
         this.vendedores = []; // Array vacío en caso de error
+      }
+    });
+    this.subs.push(sub);
+  }
+
+  getTiposPago() {
+    const sub = this.catalogosService.getTipoPagoLista().subscribe({
+      next: (tiposPago) => this.tiposPago = tiposPago,
+      error: (err) => {
+        console.error('Error al obtener tipos de pago:', err);
+        this.toast.error('Error al cargar la lista de tipos de pago');
+        this.tiposPago = [];
       }
     });
     this.subs.push(sub);
@@ -157,7 +171,8 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     almacen: [this.loginService.getUserIdSucursal, [Validators.required]],
     criterio: ['', [Validators.minLength(1), Validators.maxLength(100), Validators.pattern(/^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ-]*$/)]],
     rangeDate: [''],
-    iD_Vendedor: ['', [Validators.pattern(/^[0-9]*$/)]]
+    iD_Vendedor: ['', [Validators.pattern(/^[0-9]*$/)]],
+    idTipoPago: [0]
   });
 
   /**
@@ -190,11 +205,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
 
   modelFacturaFilter(){
-    const {criterio,almacen,iD_Vendedor} = this.form.value;
+    const {criterio,almacen,iD_Vendedor,idTipoPago} = this.form.value;
     const model:FacturaFilter = {
       almacen: Number(almacen),
       criterio: criterio,
       IdVendedor: Number(iD_Vendedor),
+      IdTipoPago: Number(idTipoPago || 0),
       fechaInicio: this.paginate.fechaInicio,
       fechaFinal: this.paginate.fechaFinal,
       pageIndex: this.paginate.pageIndex,

@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -16,7 +18,7 @@ import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.serv
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { FacturaConsulta, DetalleFacturaList, FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
-import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { Almacen, TipoPago } from 'src/app/core/interfaces/catalogo.interface';
 
 describe('FacturacionConsultaComponent', () => {
   let component: FacturacionConsultaComponent;
@@ -97,6 +99,10 @@ describe('FacturacionConsultaComponent', () => {
     }
   ];
 
+  const mockTiposPago: TipoPago[] = [
+    { iD_Tipo_Pagos: 1, descripcion_Tipo_Pagos: 'Efectivo' }
+  ];
+
   beforeEach(async () => {
     // Crear spies para todos los servicios
     mockMantenimientoService = jasmine.createSpyObj('MantenimientoService', [
@@ -106,7 +112,7 @@ describe('FacturacionConsultaComponent', () => {
       'postFacturaReport',
       'postFacturaMiniReport'
     ]);
-    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales']);
+    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales', 'getTipoPagoLista']);
     mockVendedorService = jasmine.createSpyObj('VendedorService', ['getVendedorLista']);
     mockLoginService = jasmine.createSpyObj('LoginService', ['getUserName'], {
       getUserIdSucursal: '1',
@@ -125,6 +131,7 @@ describe('FacturacionConsultaComponent', () => {
     mockMantenimientoService.getFacturas.and.returnValue(of(mockFacturas));
     mockMantenimientoService.getDetalleFactura.and.returnValue(of(mockDetalleFactura));
     mockCatalogosService.getSucursales.and.returnValue(of(mockAlmacenes));
+    mockCatalogosService.getTipoPagoLista.and.returnValue(of(mockTiposPago));
     mockVendedorService.getVendedorLista.and.returnValue(of(mockVendedores));
     mockLoginService.getUserName.and.returnValue('testuser');
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
@@ -182,12 +189,14 @@ describe('FacturacionConsultaComponent', () => {
       spyOn(component, 'getFacturas');
       spyOn(component, 'getAlmacenes');
       spyOn(component, 'getVendedores');
+      spyOn(component, 'getTiposPago');
 
       component.ngOnInit();
 
       expect(component.getFacturas).toHaveBeenCalled();
       expect(component.getAlmacenes).toHaveBeenCalled();
       expect(component.getVendedores).toHaveBeenCalled();
+      expect(component.getTiposPago).toHaveBeenCalled();
     });
 
     it('should initialize form with correct default values', () => {
@@ -229,6 +238,13 @@ describe('FacturacionConsultaComponent', () => {
 
       expect(mockVendedorService.getVendedorLista).toHaveBeenCalled();
       expect(component.vendedores).toEqual(mockVendedores);
+    });
+
+    it('should load payment types successfully', () => {
+      component.getTiposPago();
+
+      expect(mockCatalogosService.getTipoPagoLista).toHaveBeenCalled();
+      expect(component.tiposPago).toEqual(mockTiposPago);
     });
   });
 
