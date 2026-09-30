@@ -260,6 +260,24 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
 
   }
+
+  private getFiltroBusquedaEquipos() {
+    const filtro = { ...this.filter };
+    const imei = String(filtro.imei || '').trim();
+
+    if (imei) {
+      // El SP interpreta Almacen=4 como todas las sucursales.
+      filtro.almacen = 4;
+      filtro.fechaInicio = '';
+      filtro.fechaFinal = '';
+      filtro.fechaInicioFactura = '';
+      filtro.fechaFinalFactura = '';
+      filtro.imei = imei;
+    }
+
+    return filtro;
+  }
+
   onSearchByTelefono(){
     let telefonoFormValue = this.form.controls.telefono.value;
     if(telefonoFormValue.length == 10){
@@ -312,7 +330,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     // OPTIMIZADO: Una sola llamada al servidor para obtener TODOS los datos
     // Guardamos los filtros originales
     const filtroCompleto = {
-      ...this.filter,
+      ...this.getFiltroBusquedaEquipos(),
       pageIndex: 1,
       pageSize: 999999 // Traer todos los datos de una vez
     };
@@ -386,7 +404,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   }
   printReportEquipoVendido(){
     this.isLoading = true; // Iniciar carga
-    this.equipoService.postEquipoVendido(this.filter)
+    this.equipoService.postEquipoVendido(this.getFiltroBusquedaEquipos())
     .subscribe((blobResp)=>{
       this.isPrint = !this.isPrint;
       this.isLoading = false; // Terminar carga
