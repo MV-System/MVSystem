@@ -17,8 +17,7 @@
                     <div class="card-body">
                         <div class="form-header mb-4">
                             <h5 class="form-title">
-                                <i class="bi bi-arrow-repeat me-2 text-primary"></i>
-                                Consulta IMEI de equipo
+                                <i class="bi bi-arrow-repeat me-2 text-primary"></i> Consulta IMEI de equipo
                             </h5>
                             <p class="form-subtitle">Modifique el estatus y valores del equipo</p>
                         </div>
@@ -41,7 +40,7 @@
                             <!-- Costo -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Costo <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('costoEquipo') && existeEquipo">
                                     {{mensajeErrorCampoCosto}}
                                 </div>
@@ -49,7 +48,7 @@
                             <!-- Precio Por Mayor -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Precio Por Mayor  <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
                                     {{mensajeErrorCampoPrecioMayor}}
                                 </div>
@@ -57,7 +56,7 @@
                             <!-- Precio de Detalle -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Precio de Detalle  <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('precioDetalle') && existeEquipo">
                                     {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
@@ -83,10 +82,10 @@
                             </div>
                         </form>
                         <div class="pt-3 text-end">
-                             <button class="button-guardar w-100" (click)="cambiarEstatus()" [disabled]=!existeEquipo>
+                            <button class="button-guardar w-100" (click)="cambiarEstatus()" [disabled]=!existeEquipo>
                                 <i class="bi bi-save me-1"></i> Guardar
                             </button>
-                           
+
                         </div>
                         <!-- End  Form -->
                     </div>
