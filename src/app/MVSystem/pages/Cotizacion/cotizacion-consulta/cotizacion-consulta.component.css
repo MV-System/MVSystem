@@ -1,0 +1,12 @@
+.table th {
+    white-space: nowrap;
+}
+
+.table td {
+    white-space: nowrap;
+}
+
+form small {
+    display: block;
+    margin-top: 0.35rem;
+}

@@ -1,0 +1,139 @@
+<app-main [title]="'Consulta Cotizaciones'" [breadcrumb]="'Consulta'" [breadcrumbItem]="'Cotizaciones'">
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="form" (ngSubmit)="buscar()">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-5 col-md-12">
+                            <label class="form-label" for="criterioCotizacion">Buscar cliente, teléfono o número</label>
+                            <input id="criterioCotizacion" class="form-control" type="search" formControlName="criterio" maxlength="100" placeholder="Ej. nombre del cliente, teléfono o # de cotización">
+                            <small class="text-muted">Al ingresar un criterio, se buscan cotizaciones históricas sin limitar por fecha o sucursal.</small>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label" for="fechaInicioCotizacion">Desde</label>
+                            <input id="fechaInicioCotizacion" class="form-control" type="date" formControlName="fechaInicio">
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label" for="fechaFinalCotizacion">Hasta</label>
+                            <input id="fechaFinalCotizacion" class="form-control" type="date" formControlName="fechaFinal">
+                        </div>
+                        <div class="col-lg-1 col-md-12">
+                            <button class="btn btn-primary w-100" type="submit" [disabled]="isLoading" aria-label="Buscar cotizaciones">
+                <i class="bi bi-search"></i>
+              </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Cotizaciones</h5>
+                    <span class="badge bg-primary" *ngIf="totalRecord">{{ totalRecord }} resultado{{ totalRecord === 1 ? '' : 's' }}</span>
+                </div>
+
+                <div *ngIf="isLoading" class="text-center py-4" role="status">
+                    <div class="spinner-border text-primary" aria-hidden="true"></div>
+                    <div class="mt-2">Consultando cotizaciones...</div>
+                </div>
+
+                <div class="table-responsive" *ngIf="!isLoading">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Acciones</th>
+                                <th>No.</th>
+                                <th>Cliente</th>
+                                <th>Teléfono</th>
+                                <th>Vendedor</th>
+                                <th>Sucursal</th>
+                                <th>Fecha</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end">Descuento</th>
+                                <th class="text-end">ITBIS</th>
+                                <th class="text-end">Total</th>
+                                <th>Facturada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cotizacion of cotizaciones">
+                                <td class="text-nowrap">
+                                    <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="toggleDetalle(cotizacion)" [attr.aria-expanded]="detallesVisibles[cotizacion.codigo]" title="Ver detalle">
+                    <i [class]="detallesVisibles[cotizacion.codigo] ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="reimprimir(cotizacion)" [disabled]="reimprimiendoCodigo === cotizacion.codigo" title="Reimprimir cotización">
+                    <span *ngIf="reimprimiendoCodigo === cotizacion.codigo" class="spinner-border spinner-border-sm" role="status"></span>
+                    <i *ngIf="reimprimiendoCodigo !== cotizacion.codigo" class="bi bi-printer"></i>
+                  </button>
+                                </td>
+                                <td><span class="badge bg-light text-dark">{{ cotizacion.literal }}{{ cotizacion.numeroFactura }}</span></td>
+                                <td>{{ cotizacion.nombres }} {{ cotizacion.apellidos }}</td>
+                                <td>{{ cotizacion.telefono || '—' }}</td>
+                                <td>{{ cotizacion.vendedor || '—' }}</td>
+                                <td>{{ cotizacion.idSucursal }}</td>
+                                <td>{{ cotizacion.fechaFacturacion | date:'shortDate' }}</td>
+                                <td class="text-end">{{ cotizacion.subTotal | currency }}</td>
+                                <td class="text-end">{{ cotizacion.descuento | currency }}</td>
+                                <td class="text-end">{{ cotizacion.itbis | currency }}</td>
+                                <td class="text-end fw-semibold">{{ cotizacion.total | currency }}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="cotizacion.facturado === 'S' ? 'bg-success' : 'bg-secondary'">
+                    {{ cotizacion.facturado === 'S' ? 'Sí' : 'No' }}
+                  </span>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let cotizacion of cotizaciones" [hidden]="!detallesVisibles[cotizacion.codigo]">
+                                <td colspan="12" class="bg-light">
+                                    <div *ngIf="cargandoDetalle[cotizacion.codigo]" class="text-center py-2">
+                                        <span class="spinner-border spinner-border-sm text-primary" role="status"></span> Cargando detalle...
+                                    </div>
+                                    <div class="table-responsive" *ngIf="!cargandoDetalle[cotizacion.codigo]">
+                                        <table class="table table-sm mb-0" *ngIf="detalles[cotizacion.codigo]?.length">
+                                            <thead>
+                                                <tr>
+                                                    <th>Código</th>
+                                                    <th>Descripción</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Subtotal</th>
+                                                    <th>Descuento</th>
+                                                    <th>ITBIS</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let detalle of detalles[cotizacion.codigo]">
+                                                    <td>{{ detalle.idEquipo }}</td>
+                                                    <td>{{ detalle.descripcion }}</td>
+                                                    <td>{{ detalle.cantidad }}</td>
+                                                    <td>{{ detalle.precio | currency }}</td>
+                                                    <td>{{ detalle.subTotal | currency }}</td>
+                                                    <td>{{ detalle.descuento | currency }}</td>
+                                                    <td>{{ detalle.itbis | currency }}</td>
+                                                    <td>{{ detalle.total | currency }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div *ngIf="!detalles[cotizacion.codigo]?.length" class="text-muted py-2">
+                                            No hay detalle activo asociado a esta cotización.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="!cotizaciones.length">
+                                <td colspan="12" class="text-center text-muted py-4">No se encontraron cotizaciones.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center" *ngIf="!isLoading && totalRecord">
+                    <small class="text-muted">Mostrando {{ cotizaciones[0]?.line }} al {{ lastLine }} de {{ totalRecord }}</small>
+                    <div class="btn-group" role="group" aria-label="Paginación de cotizaciones">
+                        <button type="button" class="btn btn-outline-secondary" (click)="paginaAnterior()" [disabled]="pageIndex <= 1">Anterior</button>
+                        <span class="btn btn-outline-secondary disabled">{{ pageIndex }}</span>
+                        <button type="button" class="btn btn-outline-secondary" (click)="paginaSiguiente()" [disabled]="pageIndex * pageSize >= totalRecord">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</app-main>

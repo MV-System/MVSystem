@@ -19,6 +19,9 @@ export let APIURL = {
     },
     Cotizacion:{
         Consulta:{
+            Cotizaciones: API + 'Cotizacion/Consulta',
+            CotizacionDetalle: API + 'Cotizacion/Detalle',
+            CotizacionReimpresion: API + 'FacturacionReporte/ReportCotizacionConsulta',
             CotizacionFacturaConsulta: API + 'Cotizacion/GetCotizacionFacturaConsulta',
             DetalleCotizacionConsulta: API + 'Cotizacion/GetDetalleCotizacionConsulta',
         }

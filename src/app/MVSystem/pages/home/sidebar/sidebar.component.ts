@@ -86,6 +86,9 @@ export class SidebarComponent implements OnInit {
   VerFormConsultaFacturas(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_CONS_FACTURAS");
   }
+  VerFormConsultaCotizaciones(): boolean {
+    return this.validatorPermissionService.validateUserRole("MNU_CONS_COTIZACIONES");
+  }
   CajaPreFacturas(): boolean {
     return this.validatorPermissionService.validateUserRole("CajaPreFacturas");
   }

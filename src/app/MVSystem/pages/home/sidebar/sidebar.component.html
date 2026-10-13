@@ -166,6 +166,11 @@
                         <i class="bi bi-circle"></i><span>Clientes</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormConsultaCotizaciones()">
+                    <a (click)="onMenuClick()" routerLink="./cotizacion/consulta">
+                        <i class="bi bi-circle"></i><span>Cotizaciones</span>
+                    </a>
+                </li>
 
             </ul>
         </li>
