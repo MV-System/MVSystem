@@ -95,7 +95,8 @@ describe('FacturacionRegistroComponent', () => {
         'getAccesorioLista',
         'buscarEquipoDisponible',
         'getTipoComprobanteLista',
-        'getAsumeITBIS'
+        'getAsumeITBIS',
+        'updateAsumeITBIS'
       ]),
       mantenimientoService: jasmine.createSpyObj('MantenimientoService', [
         'getReparacionesPendientes',
@@ -149,6 +150,7 @@ describe('FacturacionRegistroComponent', () => {
     mockServices.catalogosService.getTipoComprobanteLista.and.returnValue(of([]));
     mockServices.catalogosService.buscarEquipoDisponible.and.returnValue(of({ disponible: 'S', modelo: 'Test', precioDetalle: 1000, precioPorMayor: 800 }));
     mockServices.catalogosService.getAsumeITBIS.and.returnValue(of(mockAsumeItbis));
+    mockServices.catalogosService.updateAsumeITBIS.and.returnValue(of({ success: true }));
     mockServices.mantenimientoService.getReparacionesPendientes.and.returnValue(of({ data: [] }));
     mockServices.mantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 12345 }, mensaje: 'Factura guardada exitosamente' }));
     mockServices.mantenimientoService.getFacturaNumero.and.returnValue(of({ numero: 'F-001' }));

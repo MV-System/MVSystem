@@ -218,7 +218,7 @@ describe('FacturacionConsultaComponent', () => {
       expect(mockLoadingService.hideLoading).toHaveBeenCalled();
     });
 
-    it('should load detalle factura successfully', () => {
+    it('should load detalle factura successfully', () => {      component.facturas = mockFacturas;
       component.getDetalleFactura(1001);
 
       expect(mockMantenimientoService.getDetalleFactura).toHaveBeenCalledWith(1001, 1);

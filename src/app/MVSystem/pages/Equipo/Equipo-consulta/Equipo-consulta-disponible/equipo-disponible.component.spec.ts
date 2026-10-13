@@ -13,7 +13,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoDisponible } from 'src/app/core/interfaces/equipo.interface';
-import { Almacen, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
+import { Almacen, Grupo, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
 
 describe('EquipoDisponibleComponent', () => {
   let component: EquipoDisponibleComponent;
@@ -95,10 +95,15 @@ describe('EquipoDisponibleComponent', () => {
     { iD_Suplidor: 2, descripcion: 'Samsung' } as Suplidor
   ];
 
+  const mockGrupos: Grupo[] = [
+    { iD_Grupo: 1, descripcion: 'Grupo A' } as Grupo,
+    { iD_Grupo: 2, descripcion: 'Grupo B' } as Grupo
+  ];
+
   beforeEach(async () => {
     // Create spy objects
     mockEquipoService = jasmine.createSpyObj('EquipoService', ['getEquipoDisponible', 'postEquipoDisponible']);
-    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales', 'getModeloLista', 'getSuplidorLista']);
+    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales', 'getModeloLista', 'getSuplidorLista', 'getGruposLista']);
     mockLoadingService = jasmine.createSpyObj('LoadingService', ['showLoading', 'hideLoading']);
     mockLoginService = jasmine.createSpyObj('LoginService', [], {
       getUserEmpresa: 'MV System',
@@ -114,6 +119,7 @@ describe('EquipoDisponibleComponent', () => {
     mockCatalogosService.getSucursales.and.returnValue(of(mockAlmacenes));
     mockCatalogosService.getModeloLista.and.returnValue(of(mockModelos));
     mockCatalogosService.getSuplidorLista.and.returnValue(of(mockSuplidores));
+    mockCatalogosService.getGruposLista.and.returnValue(of(mockGrupos));
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
     mockTrackingService.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
     mockTrackingService.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));
