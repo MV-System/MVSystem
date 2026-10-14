@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { ToastrService } from 'ngx-toastr';
-import { throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { LoadingService } from '../shared/components/r-loading/loading.service';
 import { LoginService } from '../auth/login.service';
 
@@ -28,6 +28,11 @@ export class HandleErrorsResponseService {
    public handleError(error: HttpErrorResponse) {
         this.loadingService.hideLoading();
 
+        if (error.status === 400) {
+            const mensaje = this.extraerMensajeHttp400(error);
+            return throwError(mensaje);
+        }
+
         if (error.status === 0) {
             // Error de red o no se pudo conectar al API
             console.error('No se pudo conectar al API:', error.error);
@@ -47,9 +52,6 @@ export class HandleErrorsResponseService {
         } else if (error.status === 403) {
             // Prohibido
             this.toastr.error('No tiene permisos para realizar esta acción.', '');
-        } else if (error.status === 400) {
-            // Conservar el cuerpo original, que puede contener el mensaje devuelto por SQL.
-            return throwError(() => error);
         } else {
             // Otros errores
             this.toastr.error('Ocurrió un error inesperado. Inténtelo de nuevo más tarde.', '');
@@ -68,6 +70,35 @@ export class HandleErrorsResponseService {
         }
 
         // Propagar el HttpErrorResponse original para no perder status/body.
-        return throwError(() => error);
+        return throwError(error);
+    }
+
+    private extraerMensajeHttp400(error: HttpErrorResponse): string {
+        const payload = error?.error;
+        if (typeof payload === 'string' && payload.trim()) {
+            return payload;
+        }
+
+        if (payload && typeof payload === 'object') {
+            if (typeof payload.error === 'string' && payload.error.trim()) {
+                return payload.error;
+            }
+
+            if (payload.error && typeof payload.error === 'object') {
+                if (typeof payload.error.error === 'string' && payload.error.error.trim()) {
+                    return payload.error.error;
+                }
+
+                if (typeof payload.error.message === 'string' && payload.error.message.trim()) {
+                    return payload.error.message;
+                }
+            }
+
+            if (typeof payload.message === 'string' && payload.message.trim()) {
+                return payload.message;
+            }
+        }
+
+        return 'Datos inválidos. Verifique la información enviada.';
     }
 }
