@@ -89,7 +89,10 @@ export let APIURL = {
           EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio=',
           EquipoReparadoReporte:  API + 'EquipoReporte/ReporteReparaciones',
           PostEquipo_Delete:  API + 'Equipos/PostEquipo_Delete',
-          EquipoRegistradosReporte: API + 'EquipoReporte/ReporteEquiposRegistrados'
+          EquipoRegistradosReporte: API + 'EquipoReporte/ReporteEquiposRegistrados',
+          ValidarEliminacionEquipo: API + 'Equipos/ValidarEliminacionEquipo',
+          GestionarEquipoEliminarRegistro: API + 'Equipos/GestionarEquipo_EliminarRegistro',
+          GestionarEquipoConsultaSql: API + 'Equipos/GestionarEquipo/ConsultaSql'
         }
     },
     Marca: {

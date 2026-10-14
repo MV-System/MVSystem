@@ -140,4 +140,8 @@ export class SidebarComponent implements OnInit {
     return this.validatorPermissionService.validateUserRole("cambiarclave");
   }
 
+  VerGestionarEquipo(): boolean {
+    return this.validatorPermissionService.validateUserRole("GESTIONEQUIPO");
+  }
+
 }

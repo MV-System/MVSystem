@@ -8,6 +8,7 @@ import { ModulosComponent } from './componentes/modulos/modulos.component';
 import { SistemasComponent } from './componentes/sistemas/sistemas.component';
 import { AsignacionesComponent } from './componentes/asignaciones/asignaciones.component';
 import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
+import { GestionarEquipoComponent } from './componentes/gestionar-equipo/gestionar-equipo.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,15 @@ const routes: Routes = [
   {
     path: 'cambiar-clave',
     component: CambiarClaveComponent
+  },
+  {
+    path: 'gestionar-equipo',
+    component: GestionarEquipoComponent
+  },
+  {
+    path: 'eliminar-equipo',
+    redirectTo: 'gestionar-equipo',
+    pathMatch: 'full'
   },
   {
     path: '',

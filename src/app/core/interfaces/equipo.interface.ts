@@ -230,6 +230,37 @@ export interface EquipoEliminadoResponse {
   mensaje: string;  // La respuesta contiene una propiedad 'mensaje'
 }
 
+export interface EquipoValidacionEliminacion {
+  existe: boolean;
+    servidorConsultado: string;
+    baseDatosConsultada: string;
+  tablas: string[];
+  detalle: {
+    Equipos: boolean;
+    InventarioEquipo: boolean;
+    Detalle_Facturas: boolean;
+        Equipos_Historico: boolean;
+    };
+    registros: {
+        Equipos: Array<Record<string, unknown>>;
+        InventarioEquipo: Array<Record<string, unknown>>;
+        Detalle_Facturas: Array<Record<string, unknown>>;
+        Equipos_Historico: Array<Record<string, unknown>>;
+  };
+  mensaje: string;
+}
+
+export interface ConsultaSqlResultado {
+    tipoOperacion: string;
+    servidorConsultado: string;
+    baseDatosConsultada: string;
+    columnas: string[];
+    filas: unknown[][];
+    resultadosLimitados: boolean;
+    filasAfectadas?: number | null;
+    mensaje: string;
+}
+
 export interface EquipoModificarEstatus{
     imei: string;
     condicionId: number;

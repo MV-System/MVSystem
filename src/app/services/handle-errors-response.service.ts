@@ -48,9 +48,8 @@ export class HandleErrorsResponseService {
             // Prohibido
             this.toastr.error('No tiene permisos para realizar esta acción.', '');
         } else if (error.status === 400) {
-            // Bad Request - preservar el HttpErrorResponse completo para mantener status/body en consumidores.
-            const mensaje = error.error?.error || error.error?.message || 'Datos inválidos. Verifique la información enviada.';
-            return throwError(mensaje);
+            // Conservar el cuerpo original, que puede contener el mensaje devuelto por SQL.
+            return throwError(() => error);
         } else {
             // Otros errores
             this.toastr.error('Ocurrió un error inesperado. Inténtelo de nuevo más tarde.', '');
