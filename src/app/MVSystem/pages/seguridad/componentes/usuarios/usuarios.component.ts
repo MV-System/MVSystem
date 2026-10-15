@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SeguridadService } from '../../servicios/seguridad.service';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs/operators';
+import { CatalogosService } from 'src/app/core/services/catalogos.service';
+import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
+import { LoginService } from 'src/app/auth/login.service';
 
 interface FormularioUsuario {
   nombre: string;
@@ -9,6 +13,7 @@ interface FormularioUsuario {
   descripcion: string;
   perfil: number | null;
   departamento: number | null;
+  sucursal: number | null;
   estado: number;
 }
 
@@ -92,49 +97,59 @@ interface FormularioUsuario {
                 <div class="mb-3">
                   <label for="nombre" class="form-label">Nombre</label>
                   <input type="text" class="form-control" id="nombre" [(ngModel)]="formularioUsuario.nombre"
-                         name="nombre" required>
+                        name="nombre" required maxlength="50">
                 </div>
 
                 <div class="mb-3">
                   <label for="login" class="form-label">Login</label>
                   <input type="text" class="form-control" id="login" [(ngModel)]="formularioUsuario.login"
-                         name="login" required [disabled]="usuarioEnEdicion.codigo">
+                        name="login" required maxlength="30" [disabled]="usuarioEnEdicion.codigo">
                 </div>
 
                 <div class="mb-3" *ngIf="!usuarioEnEdicion.codigo">
                   <label for="password" class="form-label">Contraseña</label>
                   <input type="password" class="form-control" id="password" [(ngModel)]="formularioUsuario.password"
-                         name="password" required>
+                        name="password" required minlength="6" maxlength="200">
                 </div>
 
                 <div class="mb-3">
                   <label for="descripcion" class="form-label">Descripción</label>
                   <input type="text" class="form-control" id="descripcion" [(ngModel)]="formularioUsuario.descripcion"
-                         name="descripcion">
+                        name="descripcion" maxlength="200">
                 </div>
 
                 <div class="mb-3">
                   <label for="perfil" class="form-label">Perfil</label>
-                  <select class="form-control" id="perfil" [(ngModel)]="formularioUsuario.perfil" name="perfil">
-                    <option [value]="null">Seleccionar...</option>
-                    <option *ngFor="let perfil of perfiles" [value]="perfil.codigo">{{ perfil.nombre }}</option>
+                  <select class="form-control" id="perfil" [(ngModel)]="formularioUsuario.perfil" name="perfil" required>
+                    <option [ngValue]="null">Seleccionar...</option>
+                    <option *ngFor="let perfil of perfiles" [ngValue]="perfil.codigo">{{ perfil.nombre }}</option>
                   </select>
                 </div>
 
                 <div class="mb-3">
                   <label for="departamento" class="form-label">Departamento</label>
                   <select class="form-control" id="departamento" [(ngModel)]="formularioUsuario.departamento"
-                          name="departamento">
-                    <option [value]="null">Seleccionar...</option>
-                    <option *ngFor="let dept of departamentos" [value]="dept.codigo">{{ dept.nombre }}</option>
+                      name="departamento" required>
+                    <option [ngValue]="null">Seleccionar...</option>
+                    <option *ngFor="let dept of departamentos" [ngValue]="dept.codigo">{{ dept.nombre }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="sucursal" class="form-label">Sucursal</label>
+                  <select class="form-control" id="sucursal" [(ngModel)]="formularioUsuario.sucursal" name="sucursal" required>
+                    <option [ngValue]="null">Seleccionar...</option>
+                    <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal.iD_Almacen">
+                      {{ sucursal.descripcion }}
+                    </option>
                   </select>
                 </div>
 
                 <div class="mb-3">
                   <label for="estado" class="form-label">Estado</label>
                   <select class="form-control" id="estado" [(ngModel)]="formularioUsuario.estado" name="estado">
-                    <option [value]="1">Activo</option>
-                    <option [value]="0">Inactivo</option>
+                    <option [ngValue]="1">Activo</option>
+                    <option [ngValue]="0">Inactivo</option>
                   </select>
                 </div>
 
@@ -207,6 +222,7 @@ export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
   perfiles: any[] = [];
   departamentos: any[] = [];
+  sucursales: Almacen[] = [];
   permisos: any[] = [];
   loading = true;
   mostrarModal = false;
@@ -222,6 +238,8 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private seguridadService: SeguridadService,
+    private catalogosService: CatalogosService,
+    private loginService: LoginService,
     private toastr: ToastrService
   ) {
     this.formularioUsuario = {
@@ -231,6 +249,7 @@ export class UsuariosComponent implements OnInit {
       descripcion: '',
       perfil: null,
       departamento: null,
+      sucursal: this.obtenerSucursalPredeterminada(),
       estado: 1
     };
   }
@@ -239,6 +258,7 @@ export class UsuariosComponent implements OnInit {
     this.cargarUsuarios();
     this.cargarPerfiles();
     this.cargarDepartamentos();
+    this.cargarSucursales();
     this.cargarPermisos();
   }
 
@@ -281,6 +301,23 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
+  cargarSucursales(): void {
+    this.catalogosService.getSucursales().subscribe({
+      next: (data) => {
+        this.sucursales = data;
+      },
+      error: (error) => {
+        console.error('Error cargando sucursales:', error);
+        this.toastr.error('Error al cargar sucursales', 'Error');
+      }
+    });
+  }
+
+  private obtenerSucursalPredeterminada(): number | null {
+    const idSucursal = Number(this.loginService.getUserIdSucursal);
+    return Number.isInteger(idSucursal) && idSucursal > 0 ? idSucursal : null;
+  }
+
   cargarPermisos(): void {
     this.seguridadService.getPermisos().subscribe({
       next: (data) => {
@@ -306,6 +343,7 @@ export class UsuariosComponent implements OnInit {
       descripcion: '',
       perfil: null,
       departamento: null,
+      sucursal: this.obtenerSucursalPredeterminada(),
       estado: 1
     };
     this.mostrarModal = true;
@@ -320,16 +358,33 @@ export class UsuariosComponent implements OnInit {
       descripcion: usuario.descripcion || '',
       perfil: usuario.perfil,
       departamento: usuario.departamento,
-      estado: usuario.estado || 1
+      sucursal: this.normalizarIdSucursal(usuario.id_Sucursal ?? usuario.idSucursal ?? usuario.Id_Sucursal),
+      estado: usuario.estado ?? 1
     };
     this.mostrarModal = true;
   }
 
   esFormularioValido(): boolean {
-    return this.formularioUsuario.nombre.trim().length > 0 &&
-           this.formularioUsuario.login.trim().length > 0 &&
-           (!this.usuarioEnEdicion.codigo || this.formularioUsuario.login.trim().length > 0) &&
-           (this.usuarioEnEdicion.codigo || this.formularioUsuario.password.length >= 6);
+    const nombre = this.formularioUsuario.nombre.trim();
+    const esEdicion = !!this.usuarioEnEdicion.codigo;
+
+    return nombre.length > 0 &&
+           nombre.length <= 50 &&
+           this.formularioUsuario.perfil !== null && this.formularioUsuario.perfil > 0 &&
+           this.formularioUsuario.departamento !== null && this.formularioUsuario.departamento > 0 &&
+           this.formularioUsuario.sucursal !== null && this.formularioUsuario.sucursal > 0 &&
+           (esEdicion || (
+             this.formularioUsuario.login.trim().length > 0 &&
+             this.formularioUsuario.login.trim().length <= 30 &&
+             this.formularioUsuario.password.length >= 6 &&
+             this.formularioUsuario.password.length <= 200
+           )) &&
+           this.formularioUsuario.descripcion.length <= 200;
+  }
+
+  private normalizarIdSucursal(idSucursal: any): number | null {
+    const id = Number(idSucursal);
+    return Number.isInteger(id) && id > 0 ? id : null;
   }
 
   guardarUsuario(): void {
@@ -354,10 +409,13 @@ export class UsuariosComponent implements OnInit {
       descripcion: this.formularioUsuario.descripcion.trim(),
       perfil: this.formularioUsuario.perfil,
       departamento: this.formularioUsuario.departamento,
+      id_Sucursal: this.formularioUsuario.sucursal,
       estado: this.formularioUsuario.estado
     };
 
-    this.seguridadService.crearUsuario(nuevoUsuario).subscribe({
+    this.seguridadService.crearUsuario(nuevoUsuario).pipe(
+      finalize(() => this.guardando = false)
+    ).subscribe({
       next: () => {
         this.toastr.success('Usuario creado exitosamente', 'Éxito');
         this.cerrarModal();
@@ -367,9 +425,6 @@ export class UsuariosComponent implements OnInit {
         console.error('Error creando usuario:', error);
         this.toastr.error(error.error?.mensaje || 'Error al crear el usuario', 'Error');
       },
-      complete: () => {
-        this.guardando = false;
-      }
     });
   }
 
@@ -381,10 +436,13 @@ export class UsuariosComponent implements OnInit {
       descripcion: this.formularioUsuario.descripcion.trim(),
       perfil: this.formularioUsuario.perfil,
       departamento: this.formularioUsuario.departamento,
+      id_Sucursal: this.formularioUsuario.sucursal,
       estado: this.formularioUsuario.estado
     };
 
-    this.seguridadService.actualizarUsuario(usuarioActualizado).subscribe({
+    this.seguridadService.actualizarUsuario(usuarioActualizado).pipe(
+      finalize(() => this.guardando = false)
+    ).subscribe({
       next: () => {
         this.toastr.success('Usuario actualizado exitosamente', 'Éxito');
         this.cerrarModal();
@@ -394,9 +452,6 @@ export class UsuariosComponent implements OnInit {
         console.error('Error actualizando usuario:', error);
         this.toastr.error(error.error?.mensaje || 'Error al actualizar el usuario', 'Error');
       },
-      complete: () => {
-        this.guardando = false;
-      }
     });
   }
 
@@ -410,6 +465,7 @@ export class UsuariosComponent implements OnInit {
       descripcion: '',
       perfil: null,
       departamento: null,
+      sucursal: this.obtenerSucursalPredeterminada(),
       estado: 1
     };
   }
