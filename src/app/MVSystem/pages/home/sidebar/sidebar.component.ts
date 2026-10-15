@@ -144,4 +144,8 @@ export class SidebarComponent implements OnInit {
     return this.validatorPermissionService.validateUserRole("GESTIONEQUIPO");
   }
 
+  VerModoDesarrollador(): boolean {
+    return this.validatorPermissionService.validateUserRole("ModoDesarrollador");
+  }
+
 }

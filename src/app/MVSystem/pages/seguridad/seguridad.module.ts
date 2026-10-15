@@ -10,6 +10,7 @@ import { SistemasComponent } from './componentes/sistemas/sistemas.component';
 import { AsignacionesComponent } from './componentes/asignaciones/asignaciones.component';
 import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
 import { GestionarEquipoComponent } from './componentes/gestionar-equipo/gestionar-equipo.component';
+import { ModoDesarrolladorComponent } from './componentes/modo-desarrollador/modo-desarrollador.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,6 +28,7 @@ import { GroupByPipe } from './pipes/group-by.pipe';
     AsignacionesComponent,
     CambiarClaveComponent,
     GestionarEquipoComponent,
+    ModoDesarrolladorComponent,
     GroupByPipe
   ],
   imports: [

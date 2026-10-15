@@ -9,6 +9,8 @@ import { SistemasComponent } from './componentes/sistemas/sistemas.component';
 import { AsignacionesComponent } from './componentes/asignaciones/asignaciones.component';
 import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
 import { GestionarEquipoComponent } from './componentes/gestionar-equipo/gestionar-equipo.component';
+import { ModoDesarrolladorComponent } from './componentes/modo-desarrollador/modo-desarrollador.component';
+import { ModoDesarrolladorGuard } from 'src/app/core/guards/modo-desarrollador.guard';
 
 const routes: Routes = [
   {
@@ -46,6 +48,11 @@ const routes: Routes = [
   {
     path: 'gestionar-equipo',
     component: GestionarEquipoComponent
+  },
+  {
+    path: 'modo-desarrollador',
+    component: ModoDesarrolladorComponent,
+    canActivate: [ModoDesarrolladorGuard]
   },
   {
     path: 'eliminar-equipo',

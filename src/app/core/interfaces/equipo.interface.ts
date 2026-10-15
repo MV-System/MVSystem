@@ -261,6 +261,11 @@ export interface ConsultaSqlResultado {
     mensaje: string;
 }
 
+export interface ConsultaSqlConexion {
+    servidorConsultado: string;
+    baseDatosConsultada: string;
+}
+
 export interface EquipoModificarEstatus{
     imei: string;
     condicionId: number;

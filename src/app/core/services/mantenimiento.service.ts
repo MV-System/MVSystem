@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
-import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, EquipoValidacionEliminacion, ConsultaSqlResultado, RegistroReparaciones } from '../interfaces/equipo.interface';
+import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, EquipoValidacionEliminacion, ConsultaSqlConexion, ConsultaSqlResultado, RegistroReparaciones } from '../interfaces/equipo.interface';
 import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel, DetallePagoMixto, NotaCreditoProveedor2Request, NotaCreditoProveedor2Respuesta } from '../interfaces/mantenimiento';
 import { CierreCajaReporteResumen } from '../interfaces/catalogo.interface';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
@@ -228,6 +228,10 @@ export class MantenimientoService {
 
   ejecutarConsultaSqlGestionarEquipo(consulta: string): Observable<ConsultaSqlResultado> {
     return this.http.post<ConsultaSqlResultado>(APIURL.Equipo.Accion.GestionarEquipoConsultaSql, { consulta });
+  }
+
+  obtenerConexionActualGestionarEquipo(): Observable<ConsultaSqlConexion> {
+    return this.http.get<ConsultaSqlConexion>(APIURL.Equipo.Accion.GestionarEquipoConexionActual);
   }
 
   PostEquipo_Delete(imei: string, Usuario:string): Observable<EquipoEliminadoResponse> {

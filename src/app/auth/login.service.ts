@@ -114,7 +114,9 @@ export class LoginService implements OnInit{
     )
   }
   public getUserRoles(): string[] {
-    return this.tokenDecoded.role
+    const roles = this.tokenDecoded?.role;
+    if (Array.isArray(roles)) return roles;
+    return typeof roles === 'string' && roles.length > 0 ? [roles] : [];
   }
   changePwdUser( user: User ){
     user.codigo =Number(this.getUserId);

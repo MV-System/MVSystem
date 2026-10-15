@@ -92,6 +92,7 @@ export let APIURL = {
           EquipoRegistradosReporte: API + 'EquipoReporte/ReporteEquiposRegistrados',
           ValidarEliminacionEquipo: API + 'Equipos/ValidarEliminacionEquipo',
           GestionarEquipoEliminarRegistro: API + 'Equipos/GestionarEquipo_EliminarRegistro',
+          GestionarEquipoConexionActual: API + 'Equipos/GestionarEquipo/ConexionActual',
           GestionarEquipoConsultaSql: API + 'Equipos/GestionarEquipo/ConsultaSql'
         }
     },
