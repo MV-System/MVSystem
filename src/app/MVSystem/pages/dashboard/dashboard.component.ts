@@ -39,6 +39,7 @@ data: Utilidades = {
   venta_Desbloqueos: 0,
   itbis_Desbloqueos: 0,
   ganancia_Desbloqueos: 0,
+  abonos_Credito: 0,
   valida: 0
 }; // Inicializa data
 

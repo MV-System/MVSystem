@@ -65,13 +65,21 @@
         <!-- Panel de Insights con IA - Mejorado -->
         <div class="insights-section" *ngIf="!isLoading && aiInsights.length > 0">
             <div class="section-header mb-3">
-                <h4 class="section-title">
-                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Insights Inteligentes
-                </h4>
-                <span class="badge bg-primary">{{ aiInsights.length }} insights generados</span>
+                <div class="d-flex align-items-center gap-2">
+                    <h4 class="section-title mb-0">
+                        <i class="bi bi-lightbulb-fill text-warning me-2"></i> Insights Inteligentes
+                    </h4>
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="alternarInsights()" [attr.aria-expanded]="mostrarInsights" aria-controls="utilidades-insights-lista">
+                        <i class="bi" [ngClass]="mostrarInsights ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        {{ mostrarInsights ? 'Ocultar' : 'Mostrar' }}
+                    </button>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">{{ aiInsights.length }} insights generados</span>
+                </div>
             </div>
 
-            <div class="insights-grid">
+            <div id="utilidades-insights-lista" class="insights-grid" *ngIf="mostrarInsights">
                 <div *ngFor="let insight of aiInsights; let i = index" class="insight-card-modern" [ngClass]="'insight-' + insight.tipo" [@fadeInUp] [title]="'Click para ver más detalles'" (click)="mostrarDetalleInsight(insight)" style="cursor: pointer;">
                     <div class="insight-header">
                         <span class="insight-emoji">{{ insight.icono }}</span>
@@ -330,7 +338,7 @@
         <!-- Resumen de Totales -->
         <div class="totals-section" *ngIf="!isLoading && data">
             <div class="row g-3 mb-4">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-xl col-md-4 col-sm-6">
                     <div class="stat-card stat-ventas">
                         <div class="stat-icon">
                             <i class="bi bi-cart-check"></i>
@@ -344,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-xl col-md-4 col-sm-6">
                     <div class="stat-card stat-ganancias">
                         <div class="stat-icon">
                             <i class="bi bi-cash-stack"></i>
@@ -358,7 +366,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-xl col-md-4 col-sm-6">
                     <div class="stat-card stat-costos">
                         <div class="stat-icon">
                             <i class="bi bi-calculator"></i>
@@ -372,7 +380,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-xl col-md-4 col-sm-6">
                     <div class="stat-card stat-margen">
                         <div class="stat-icon">
                             <i class="bi bi-percent"></i>
@@ -387,8 +395,86 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl col-md-4 col-sm-6">
+                    <div class="stat-card stat-ventas stat-card-clickable" role="button" tabindex="0" aria-label="Mostrar detalle de abonos recibidos de crédito" (click)="abrirDetalleAbonos()" (keydown.enter)="abrirDetalleAbonos()" (keydown.space)="$event.preventDefault(); abrirDetalleAbonos()">
+                        <div class="stat-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Abonos recibidos de crédito</p>
+                            <h4 class="stat-value">${{ data.abonos_Credito | number:'1.2-2' }}</h4>
+                            <small class="stat-change text-muted">
+                                <i class="bi bi-info-circle"></i> Ingresos del período, mostrados por separado
+                            </small>
+                            <small class="stat-card-hint">
+                                <i class="bi bi-hand-index-thumb me-1"></i> Presiona para ver el detalle
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="detalle-abonos-titulo" *ngIf="mostrarDetalleAbonos">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div>
+                            <h5 class="modal-title" id="detalle-abonos-titulo">Abonos recibidos de crédito</h5>
+                            <small class="text-muted">Detalle correspondiente al período y sucursal seleccionados</small>
+                        </div>
+                        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalleAbonos()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="cargandoDetalleAbonos" class="text-center py-4" role="status">
+                            <span class="spinner-border text-primary" aria-hidden="true"></span>
+                            <div class="mt-2">Cargando abonos...</div>
+                        </div>
+                        <div *ngIf="errorDetalleAbonos && !cargandoDetalleAbonos" class="alert alert-danger" role="alert">
+                            {{ errorDetalleAbonos }}
+                        </div>
+                        <div *ngIf="!cargandoDetalleAbonos && !errorDetalleAbonos && detalleAbonos.length === 0" class="alert alert-info mb-0">
+                            No hay abonos de crédito en el período seleccionado.
+                        </div>
+                        <div class="table-responsive" *ngIf="!cargandoDetalleAbonos && detalleAbonos.length > 0">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha del abono</th>
+                                        <th>Cliente</th>
+                                        <th>Factura</th>
+                                        <th class="text-end">Monto abonado</th>
+                                        <th>Usuario</th>
+                                        <th>Nota</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let abono of detalleAbonos">
+                                        <td class="text-nowrap">{{ formatearFechaAbono(abono.fechaAbono) }}</td>
+                                        <td>{{ abono.cliente || ('Cliente #' + abono.idCliente) }}</td>
+                                        <td class="text-nowrap">#{{ abono.numeroFactura }}</td>
+                                        <td class="text-end text-nowrap fw-semibold text-success">{{ formatearMontoAbono(abono.montoAbono) }}</td>
+                                        <td>{{ abono.usuario || '—' }}</td>
+                                        <td class="abono-nota">{{ abono.nota || '—' }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="table-light fw-bold">
+                                    <tr>
+                                        <td colspan="3">Total de abonos listados ({{ detalleAbonos.length }})</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalDetalleAbonos()) }}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="cerrarDetalleAbonos()">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show" *ngIf="mostrarDetalleAbonos" (click)="cerrarDetalleAbonos()"></div>
 
         <!-- Gráficos en diseño mejorado -->
         <div class="charts-section" *ngIf="!isLoading">

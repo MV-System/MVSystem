@@ -583,6 +583,36 @@
     width: 8px;
 }
 
+.stat-card-clickable {
+    cursor: pointer;
+}
+
+.stat-card-clickable:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.stat-card-hint {
+    display: block;
+    margin-top: 0.35rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.stat-card-clickable:hover .stat-card-hint {
+    color: #2563eb;
+    opacity: 1;
+}
+
+.abono-nota {
+    min-width: 180px;
+    max-width: 320px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .stat-ventas::before {
     background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
 }

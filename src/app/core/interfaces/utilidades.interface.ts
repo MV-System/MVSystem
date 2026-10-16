@@ -20,5 +20,17 @@ export interface Utilidades {
   venta_Desbloqueos: number;
   itbis_Desbloqueos: number;
   ganancia_Desbloqueos: number;
+  abonos_Credito: number;
   valida: number;
+}
+
+export interface UtilidadAbonoDetalle {
+  id: number;
+  idCliente: number;
+  cliente: string;
+  numeroFactura: number;
+  fechaAbono: string;
+  montoAbono: number;
+  usuario: string;
+  nota: string;
 }

@@ -167,6 +167,7 @@ export let APIURL = {
     },
     Utilidades: {
       GetUtilidades: API + 'Utilidades/GetUtilidades',
+            GetDetalleAbonos: API + 'Utilidades/GetDetalleAbonos',
   },
     Dashboard: {
         ResumenInteligente: API + 'Dashboard/ResumenInteligente',

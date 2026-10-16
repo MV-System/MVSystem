@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
-import { Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
+import { UtilidadAbonoDetalle, Utilidades, utilidadesFiltros } from 'src/app/core/interfaces/utilidades.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { UtilidadesService } from 'src/app/core/services/utilidades.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
@@ -57,11 +57,17 @@ export class UtilidadesComponent implements OnInit {
     venta_Desbloqueos: 0,
     itbis_Desbloqueos: 0,
     ganancia_Desbloqueos: 0,
+    abonos_Credito: 0,
     valida: 0
   }; // Inicializa data
 
   // Datos del período anterior para comparación
   dataAnterior: Utilidades | null = null;
+
+  mostrarDetalleAbonos = false;
+  cargandoDetalleAbonos = false;
+  errorDetalleAbonos: string | null = null;
+  detalleAbonos: UtilidadAbonoDetalle[] = [];
 
   isLoading: boolean = false; // Variable para controlar el estado de carga
 
@@ -117,6 +123,7 @@ export class UtilidadesComponent implements OnInit {
   ];
 
   // IA - Insights automáticos
+  mostrarInsights = false;
   aiInsights: Array<{
     tipo: 'success' | 'warning' | 'info' | 'danger';
     icono: string;
@@ -138,6 +145,65 @@ export class UtilidadesComponent implements OnInit {
 
   // Variable para el insight seleccionado en el modal
   insightSeleccionado: any = null;
+
+  alternarInsights(): void {
+    this.mostrarInsights = !this.mostrarInsights;
+  }
+
+  abrirDetalleAbonos(): void {
+    this.mostrarDetalleAbonos = true;
+    this.cargandoDetalleAbonos = true;
+    this.errorDetalleAbonos = null;
+    this.detalleAbonos = [];
+
+    this.UtilidadesServices.GetDetalleAbonos(this.filter).subscribe({
+      next: detalle => {
+        this.detalleAbonos = detalle || [];
+        this.cargandoDetalleAbonos = false;
+      },
+      error: error => {
+        console.error('Error al cargar el detalle de abonos:', error);
+        const mensajeError = typeof error?.error === 'string'
+          ? error.error
+          : 'No se pudo cargar el detalle de abonos.';
+        this.errorDetalleAbonos = mensajeError;
+        this.cargandoDetalleAbonos = false;
+        this.toastr.error(mensajeError);
+      }
+    });
+  }
+
+  cerrarDetalleAbonos(): void {
+    this.mostrarDetalleAbonos = false;
+  }
+
+  formatearFechaAbono(fecha: string): string {
+    if (!fecha) return '—';
+    const valorFecha = new Date(fecha);
+    return isNaN(valorFecha.getTime())
+      ? fecha
+      : new Intl.DateTimeFormat('es-DO', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(valorFecha);
+  }
+
+  formatearMontoAbono(monto: number | string | null | undefined): string {
+    const valor = Number(monto);
+    return new Intl.NumberFormat('es-DO', {
+      style: 'currency',
+      currency: 'DOP',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number.isFinite(valor) ? valor : 0);
+  }
+
+  getTotalDetalleAbonos(): number {
+    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.montoAbono) || 0), 0);
+  }
 
   constructor(
     private loading: LoadingService,
@@ -778,7 +844,7 @@ setResponsiveView() {
                 totalGanancias: cat.gananciaActual,
                 totalCostos: cat.ventaActual - cat.gananciaActual,
                 margen: margenCat,
-                comparacion: `Ganancias anteriores: $${this.formatNumber(cat.gananciaAnterior)}, Ventas crecieron: +${crecimientoVentas.toFixed(1)}%`
+                comparacion: `Ganancias anteriores: $${this.formatNumber(cat.gananciaAnterior)}. Ventas crecieron: +${crecimientoVentas.toFixed(1)}%`
               }
             });
           }
