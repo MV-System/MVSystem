@@ -33,6 +33,12 @@ import { CreatorPDFFile } from 'src/app/helpers/helper';
 })
 
 export class FacturacionRegistroComponent implements OnInit, OnDestroy {
+  private readonly garantiaNoAplicaId = 7;
+
+  private obtenerIdGarantiaSeleccionada(): number {
+    const idGarantia = Number(this.form.get('garantia')?.value);
+    return Number.isInteger(idGarantia) && idGarantia > 0 ? idGarantia : this.garantiaNoAplicaId;
+  }
 
   private isAsumeItbisActivo(): boolean {
     return (this.asumeItbis?.asumeITBIS || '').toString().trim().toUpperCase() === 'S';
@@ -163,7 +169,7 @@ reparaciones: any[] = [];
             ID_Equipo: control.get('idEquipo')?.value,
             Descripcion: control.get('descripcion')?.value,
             ID_Tipo: control.get('idTipo')?.value,
-            ID_Garantia: control.get('idGarantia')?.value,
+            ID_Garantia: this.obtenerIdGarantiaSeleccionada(),
             cantidad: control.get('cantidad')?.value,
             precio: control.get('precio')?.value,
             SubTotal: control.get('subTotal')?.value,
@@ -405,7 +411,7 @@ onModalClose(rep: any) {
     fechaFacturacion: this.currentDateTime(),
     comprobante: [null,],  // Se asigna dinámicamente por visible_Venta
     fechaLimitePago: this.currentDateTime(),
-    garantia: [8,],
+    garantia: [7,],
     nota: ['',],
     empresa: ['',],
     // codigo: [,],
@@ -1081,7 +1087,7 @@ else
       ncfTipoNumero: Number(this.form.get('comprobante')?.value),
       RNC: this.form.get('RNC')?.value,
       fechaLimitePago: this.form.get('fechaLimitePago')?.value,
-      garantia: this.form.get('garantia')?.value,
+      garantia: String(this.obtenerIdGarantiaSeleccionada()),
       nota: this.form.get('nota')?.value,
       descripcion: "",
       itbis: this.itbis,
@@ -1121,7 +1127,7 @@ else
       numeroFactura: this.facturaNumber,
       idEquipo: control.get('idEquipo')?.value,
       idTipo: control.get('idTipo')?.value,
-      idGarantia: control.get('idGarantia')?.value,
+      idGarantia: this.obtenerIdGarantiaSeleccionada(),
       subTotal: control.get('subTotal')?.value,
       precio: control.get('precio')?.value,
       descuento: control.get('descuento')?.value,
@@ -1740,7 +1746,7 @@ printFacturaMini() {
           tipoFactura: 1,
           tipoPago: 1,
           comprobante: 0,
-          garantia: 8,
+          garantia: 7,
           aplicarItbis: false,
         })
 

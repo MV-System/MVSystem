@@ -385,7 +385,7 @@ describe('FacturacionRegistroComponent', () => {
     it('should initialize form with default values', () => {
       expect(component.form.get('tipoFactura')?.value).toBe(1);
       expect(component.form.get('tipoPago')?.value).toBe(1);
-      expect(component.form.get('garantia')?.value).toBe(8);
+      expect(component.form.get('garantia')?.value).toBe(7);
       expect(component.form.get('abono')?.value).toBe(0);
       expect(component.form.get('aplicarItbis')?.value).toBeFalse();
       expect(component.form.get('usuario')?.value).toBe('testuser');
@@ -792,7 +792,7 @@ describe('FacturacionRegistroComponent', () => {
         tipoFactura: 1,
         tipoPago: 1,
         comprobante: 0,
-        garantia: 8,
+        garantia: 7,
         aplicarItbis: true
       });
 
@@ -925,7 +925,7 @@ describe('FacturacionRegistroComponent', () => {
       expect(component.form.get('tipoFactura')?.value).toBe(1);
       expect(component.form.get('tipoPago')?.value).toBe(1);
       expect(component.form.get('comprobante')?.value).toBe(0);
-      expect(component.form.get('garantia')?.value).toBe(8);
+      expect(component.form.get('garantia')?.value).toBe(7);
       expect(component.form.get('aplicarItbis')?.value).toBe(false);
     });
 
@@ -1074,7 +1074,7 @@ describe('FacturacionRegistroComponent', () => {
         tipoFactura: 1,
         tipoPago: 1,
         comprobante: 0,
-        garantia: 8,
+        garantia: 7,
         aplicarItbis: true
       });
 
@@ -1097,6 +1097,16 @@ describe('FacturacionRegistroComponent', () => {
       expect(detail.cantidad).toBe(2);
       expect(detail.precio).toBe(1000);
       expect(detail.descuento).toBe(10);
+    });
+
+    it('should send No Aplica (ID 7) when no warranty is selected', () => {
+      component.form.get('garantia')?.setValue(null);
+
+      const invoice = component.modeloRegistroFacturacion();
+      const detail = component.modeloArticulos(component.articulos().at(0));
+
+      expect(invoice.garantia).toBe('7');
+      expect(detail.idGarantia).toBe(7);
     });
 
     it('should include multiple articles in invoice data', () => {
@@ -2694,7 +2704,7 @@ describe('FacturacionRegistroComponent', () => {
         vendedor: 1,
         tipoFactura: 1,
         comprobante: 0,
-        garantia: 8,
+        garantia: 7,
         aplicarItbis: true
       });
       component.agregarArticulo();
