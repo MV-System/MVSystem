@@ -443,7 +443,10 @@
                                         <th>Fecha del abono</th>
                                         <th>Cliente</th>
                                         <th>Factura</th>
+                                        <th class="text-end">Costo factura</th>
+                                        <th class="text-end">Total factura</th>
                                         <th class="text-end">Monto abonado</th>
+                                        <th class="text-end">Ganancia del abono</th>
                                         <th>Usuario</th>
                                         <th>Nota</th>
                                     </tr>
@@ -453,7 +456,12 @@
                                         <td class="text-nowrap">{{ formatearFechaAbono(abono.fechaAbono) }}</td>
                                         <td>{{ abono.cliente || ('Cliente #' + abono.idCliente) }}</td>
                                         <td class="text-nowrap">#{{ abono.numeroFactura }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.costoFactura) }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.totalFactura) }}</td>
                                         <td class="text-end text-nowrap fw-semibold text-success">{{ formatearMontoAbono(abono.montoAbono) }}</td>
+                                        <td class="text-end text-nowrap fw-semibold" [class.text-success]="isFacturaSaldada(abono) && getGananciaVisible(abono) >= 0" [class.text-danger]="isFacturaSaldada(abono) && getGananciaVisible(abono) < 0">
+                                            {{ isFacturaSaldada(abono) ? formatearMontoAbono(getGananciaVisible(abono)) : '—' }}
+                                        </td>
                                         <td>{{ abono.usuario || '—' }}</td>
                                         <td class="abono-nota">{{ abono.nota || '—' }}</td>
                                     </tr>
@@ -461,7 +469,10 @@
                                 <tfoot class="table-light fw-bold">
                                     <tr>
                                         <td colspan="3">Total de abonos listados ({{ detalleAbonos.length }})</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalCostoDetalleAbonos()) }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalFacturaDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalDetalleAbonos()) }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalGananciaDetalleAbonos()) }}</td>
                                         <td colspan="2"></td>
                                     </tr>
                                 </tfoot>

@@ -201,8 +201,32 @@ export class UtilidadesComponent implements OnInit {
     }).format(Number.isFinite(valor) ? valor : 0);
   }
 
+  getTotalCostoDetalleAbonos(): number {
+    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.costoFactura) || 0), 0);
+  }
+
+  getTotalFacturaDetalleAbonos(): number {
+    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.totalFactura) || 0), 0);
+  }
+
+  isFacturaSaldada(abono: any): boolean {
+    const montoAbono = Number(abono?.montoAbono) || 0;
+    const totalFactura = Number(abono?.totalFactura) || 0;
+    return totalFactura > 0 && montoAbono >= totalFactura;
+  }
+
+  getGananciaVisible(abono: any): number {
+    return this.isFacturaSaldada(abono) ? (Number(abono?.gananciaAbono) || 0) : 0;
+  }
+
   getTotalDetalleAbonos(): number {
     return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.montoAbono) || 0), 0);
+  }
+
+  getTotalGananciaDetalleAbonos(): number {
+    return this.detalleAbonos
+      .filter(abono => this.isFacturaSaldada(abono))
+      .reduce((total, abono) => total + (Number(abono.gananciaAbono) || 0), 0);
   }
 
   constructor(
