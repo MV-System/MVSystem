@@ -79,6 +79,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    this.conteoModelosSubscription?.unsubscribe();
   }
   @Input() clearFilter: any;
   subscription!: Subscription;
@@ -96,7 +97,9 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   listaSuplidor:  Suplidor[] = [];
   listaGrupos:    Grupo[] = [];
   equiposDisponibles: EquipoDisponible[] = [];
+  equiposPorModelo: { idModelo: number; modelo: string; cantidad: number }[] = [];
   isLoading: boolean = false; // Variable para controlar el estado de carga
+  private conteoModelosSubscription?: Subscription;
 
 
   filter: any = {
@@ -176,6 +179,10 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
   if (this.subscription) {
     this.subscription.unsubscribe();
   }
+  if (resetPage) {
+    this.conteoModelosSubscription?.unsubscribe();
+    this.equiposPorModelo = [];
+  }
 
 
 
@@ -198,6 +205,39 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       }
 
       this.equiposDisponibles = equipo;
+
+      // El endpoint pagina los resultados; consultar el mismo filtro sin paginación
+      // para que los conteos representen toda la consulta y no solo la página visible.
+      if (resetPage) {
+        if (record === 0) {
+          this.equiposPorModelo = [];
+        } else {
+          this.conteoModelosSubscription = this.equipoService
+            .getEquipoDisponible({ ...this.filter, pageIndex: 1, pageSize: record })
+            .subscribe({
+              next: (todosLosEquipos) => {
+                const conteos = new Map<number, { idModelo: number; modelo: string; cantidad: number }>();
+                todosLosEquipos.forEach((item) => {
+                  const modelo = conteos.get(item.idModelo);
+                  if (modelo) {
+                    modelo.cantidad++;
+                  } else {
+                    conteos.set(item.idModelo, {
+                      idModelo: item.idModelo,
+                      modelo: item.descripcion || 'Modelo sin descripción',
+                      cantidad: 1
+                    });
+                  }
+                });
+                this.equiposPorModelo = Array.from(conteos.values())
+                  .sort((a, b) => a.modelo.localeCompare(b.modelo, 'es'));
+              },
+              error: () => {
+                this.equiposPorModelo = [];
+              }
+            });
+        }
+      }
     });
 }
   printReportEquipoDisponibles() {
