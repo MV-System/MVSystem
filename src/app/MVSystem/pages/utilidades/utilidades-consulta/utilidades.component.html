@@ -459,8 +459,8 @@
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.costoFactura) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.totalFactura) }}</td>
                                         <td class="text-end text-nowrap fw-semibold text-success">{{ formatearMontoAbono(abono.montoAbono) }}</td>
-                                        <td class="text-end text-nowrap fw-semibold" [class.text-success]="isFacturaSaldada(abono) && getGananciaVisible(abono) >= 0" [class.text-danger]="isFacturaSaldada(abono) && getGananciaVisible(abono) < 0">
-                                            {{ isFacturaSaldada(abono) ? formatearMontoAbono(getGananciaVisible(abono)) : '—' }}
+                                        <td class="text-end text-nowrap fw-semibold" [class.text-success]="esAbonoQueSaldaFactura(abono) && getGananciaVisible(abono) >= 0" [class.text-danger]="esAbonoQueSaldaFactura(abono) && getGananciaVisible(abono) < 0">
+                                            {{ esAbonoQueSaldaFactura(abono) ? formatearMontoAbono(getGananciaVisible(abono)) : '—' }}
                                         </td>
                                         <td>{{ abono.usuario || '—' }}</td>
                                         <td class="abono-nota">{{ abono.nota || '—' }}</td>

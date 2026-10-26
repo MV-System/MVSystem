@@ -209,14 +209,12 @@ export class UtilidadesComponent implements OnInit {
     return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.totalFactura) || 0), 0);
   }
 
-  isFacturaSaldada(abono: any): boolean {
-    const montoAbono = Number(abono?.montoAbono) || 0;
-    const totalFactura = Number(abono?.totalFactura) || 0;
-    return totalFactura > 0 && montoAbono >= totalFactura;
+  esAbonoQueSaldaFactura(abono: any): boolean {
+    return abono?.esAbonoQueSaldaFactura === true;
   }
 
   getGananciaVisible(abono: any): number {
-    return this.isFacturaSaldada(abono) ? (Number(abono?.gananciaAbono) || 0) : 0;
+    return this.esAbonoQueSaldaFactura(abono) ? (Number(abono?.gananciaAbono) || 0) : 0;
   }
 
   getTotalDetalleAbonos(): number {
@@ -225,7 +223,7 @@ export class UtilidadesComponent implements OnInit {
 
   getTotalGananciaDetalleAbonos(): number {
     return this.detalleAbonos
-      .filter(abono => this.isFacturaSaldada(abono))
+      .filter(abono => this.esAbonoQueSaldaFactura(abono))
       .reduce((total, abono) => total + (Number(abono.gananciaAbono) || 0), 0);
   }
 
