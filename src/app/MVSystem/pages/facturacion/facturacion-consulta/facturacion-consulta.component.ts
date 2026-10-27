@@ -145,6 +145,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   iD_Vendedor!:  number;
   facturasCantidad:number = 0;
   rangeDatePlaceholder: Date =new Date()
+  periodoRapido: 'hoy' | 'semana' | 'mes' | 'personalizado' = 'mes';
   onFacturaButton: boolean = false;
   printing: boolean = false;
   facturaSeleccionada: FacturaConsulta | null = null; // Conserva la identidad sucursal+número de la factura seleccionada
@@ -159,6 +160,21 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
  fechaHoy = new Date();
   // Crear una nueva fecha para el primer día del mes actual
   FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+
+  get rangoFechasFactura(): string {
+    return `${this.formatearFechaVisible(this.paginate.fechaInicio)} - ${this.formatearFechaVisible(this.paginate.fechaFinal)}`;
+  }
+
+  private formatearFechaVisible(valor: string): string {
+    if (!valor) return '';
+    const partes = valor.split(/[\/.-]/).map(Number);
+    if (partes.length === 3 && partes.every(Number.isFinite)) {
+      const [anio, mes, dia] = partes;
+      const fecha = new Date(anio, mes - 1, dia);
+      if (!isNaN(fecha.getTime())) return fecha.toLocaleDateString();
+    }
+    return valor;
+  }
 
   // Utiliza el mismo formato que el filtro (YYYY/M/D)
   paginate: Pagination = {
@@ -558,9 +574,11 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    */
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
+      this.periodoRapido = 'personalizado';
       this.paginate.fechaInicio = '';
       this.paginate.fechaFinal = '';
     } else {
+      this.periodoRapido = 'personalizado';
       // Crear objetos Date para las validaciones
       const fechaInicio = new Date(event.beginDate.year, event.beginDate.month - 1, event.beginDate.day);
       const fechaFinal = new Date(event.endDate.year, event.endDate.month - 1, event.endDate.day);
@@ -592,6 +610,31 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
       this.paginate.fechaFinal = `${event.endDate.year}/${event.endDate.month}/${event.endDate.day}`;
     }
     this.getFacturas();
+  }
+
+  seleccionarPeriodoRapido(periodo: 'hoy' | 'semana' | 'mes'): void {
+    const hoy = new Date();
+    let inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+    if (periodo === 'semana') {
+      const diasDesdeLunes = (hoy.getDay() + 6) % 7;
+      inicio.setDate(inicio.getDate() - diasDesdeLunes);
+    } else if (periodo === 'mes') {
+      inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    }
+
+    this.periodoRapido = periodo;
+    this.paginate.fechaInicio = this.formatearFechaFiltro(inicio);
+    this.paginate.fechaFinal = this.formatearFechaFiltro(hoy);
+    this.paginate.pageIndex = 1;
+    this.pageIndex = 1;
+    this.currentPage = 1;
+    this.resetearSeleccionFactura();
+    this.getFacturas();
+  }
+
+  private formatearFechaFiltro(fecha: Date): string {
+    return `${fecha.getFullYear()}/${fecha.getMonth() + 1}/${fecha.getDate()}`;
   }
 
   getAlmacenes() {

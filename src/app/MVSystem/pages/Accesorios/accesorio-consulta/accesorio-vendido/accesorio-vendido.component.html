@@ -6,78 +6,77 @@
             <div class="col-12">
                 <div class="card filter-card">
                     <div class="card-body">
-                       
-                          <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <div class="stats-content">
-                        <div class="stats-icon">
-                            <i class="bi bi-bag-check-fill text-primary"></i>
+
+                        <!-- Statistics Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card stats-card">
+                                    <div class="card-body">
+                                        <div class="stats-content">
+                                            <div class="stats-icon">
+                                                <i class="bi bi-bag-check-fill text-primary"></i>
+                                            </div>
+                                            <div class="stats-info">
+                                                <h6 class="stats-title">Total Vendidos</h6>
+                                                <h3 class="stats-number">{{ accesorioQuantity }}</h3>
+                                                <small class="stats-subtitle">Accesorios vendidos</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card stats-card">
+                                    <div class="card-body">
+                                        <div class="stats-content">
+                                            <div class="stats-icon">
+                                                <i class="bi bi-currency-dollar text-success"></i>
+                                            </div>
+                                            <div class="stats-info">
+                                                <h6 class="stats-title">Total Facturado</h6>
+                                                <h3 class="stats-number">{{ totalFacturado | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                                                <small class="stats-subtitle">Ingresos por ventas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card stats-card">
+                                    <div class="card-body">
+                                        <div class="stats-content">
+                                            <div class="stats-icon">
+                                                <i class="bi bi-graph-up-arrow text-info"></i>
+                                            </div>
+                                            <div class="stats-info">
+                                                <h6 class="stats-title">Total Ganancias</h6>
+                                                <h3 class="stats-number">{{ totalGanancia | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                                                <small class="stats-subtitle">Ganancias netas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card stats-card">
+                                    <div class="card-body">
+                                        <div class="stats-content">
+                                            <div class="stats-icon">
+                                                <i class="bi bi-percent text-warning"></i>
+                                            </div>
+                                            <div class="stats-info">
+                                                <h6 class="stats-title">Total ITBIS</h6>
+                                                <h3 class="stats-number">{{ totalItbis | currency:'RD$':'symbol':'1.2-2' }}</h3>
+                                                <small class="stats-subtitle">Impuestos recaudados</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stats-info">
-                            <h6 class="stats-title">Total Vendidos</h6>
-                            <h3 class="stats-number">{{ accesorioQuantity }}</h3>
-                            <small class="stats-subtitle">Accesorios vendidos</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <div class="stats-content">
-                        <div class="stats-icon">
-                            <i class="bi bi-currency-dollar text-success"></i>
-                        </div>
-                        <div class="stats-info">
-                            <h6 class="stats-title">Total Facturado</h6>
-                            <h3 class="stats-number">{{ totalFacturado | currency:'RD$':'symbol':'1.2-2' }}</h3>
-                            <small class="stats-subtitle">Ingresos por ventas</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <div class="stats-content">
-                        <div class="stats-icon">
-                            <i class="bi bi-graph-up-arrow text-info"></i>
-                        </div>
-                        <div class="stats-info">
-                            <h6 class="stats-title">Total Ganancias</h6>
-                            <h3 class="stats-number">{{ totalGanancia | currency:'RD$':'symbol':'1.2-2' }}</h3>
-                            <small class="stats-subtitle">Ganancias netas</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <div class="stats-content">
-                        <div class="stats-icon">
-                            <i class="bi bi-percent text-warning"></i>
-                        </div>
-                        <div class="stats-info">
-                            <h6 class="stats-title">Total ITBIS</h6>
-                            <h3 class="stats-number">{{ totalItbis | currency:'RD$':'symbol':'1.2-2' }}</h3>
-                            <small class="stats-subtitle">Impuestos recaudados</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-     <div class="filter-header mb-3">
+                        <div class="filter-header mb-3">
                             <h6 class="filter-title">
-                                <i class="bi bi-funnel me-2 text-primary"></i>
-                                Filtros de Búsqueda
+                                <i class="bi bi-funnel me-2 text-primary"></i> Filtros de Búsqueda
                             </h6>
                         </div>
                         <!-- Search Form -->
@@ -88,19 +87,14 @@
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por descripción
                                     </label>
-                                    <input class="form-control modern-input busqueda-input"
-                                           placeholder="Ej: Cover iPhone, Cargador..."
-                                           formControlName="filter"
-                                           (keyup)="getAccesoriosVendidos()">
+                                    <input class="form-control modern-input busqueda-input" placeholder="Ej: Cover iPhone, Cargador..." formControlName="filter" (keyup)="getAccesoriosVendidos()">
                                 </div>
                                 <div class="col-md-4" *ngIf="SelectSucursal()">
                                     <label class="form-label modern-label">
                                         <i class="bi bi-building me-1"></i>
                                         Sucursal
                                     </label>
-                                    <select class="form-select modern-select" 
-                                            formControlName="almacen" 
-                                            (change)="getAccesoriosVendidos()">
+                                    <select class="form-select modern-select" formControlName="almacen" (change)="getAccesoriosVendidos()">
                                         <option value="" disabled>Seleccione una sucursal</option>
                                         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                                             {{almacen.descripcion}}
@@ -108,16 +102,18 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label modern-label">
-                                        <i class="bi bi-calendar-range me-1"></i>
-                                        Rango de fechas
+                                    <label class="form-label modern-label accessory-date-period-label">
+                                        <span class="sold-accessory-date-label">
+                                            <i class="bi bi-calendar-range me-1"></i>
+                                            Rango de fechas
+                                        </span>
+                                        <span class="btn-group btn-group-sm accessory-period-buttons" role="group" aria-label="Períodos rápidos">
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'hoy'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'semana'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'mes'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                                        </span>
                                     </label>
-                                    <my-date-range-picker
-                                        [options]="myDateRangePickerOptions"
-                                        formControlName="rangeDate"
-                                        (dateRangeChanged)="onDateRangeChanged($event)"
-                                        placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}"
-                                        class="modern-date-picker">
+                                    <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas" class="modern-date-picker">
                                     </my-date-range-picker>
                                 </div>
                             </div>
@@ -128,16 +124,15 @@
         </div>
     </div>
 
-  
+
 </div>
-  <section class="section">
+<section class="section">
     <div class="row">
         <div class="col-lg-12">
             <!-- Results Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h6 class="results-title mb-0">
-                    <i class="bi bi-bag-check-fill me-2 text-primary"></i>
-                    Lista de Accesorios Vendidos
+                    <i class="bi bi-bag-check-fill me-2 text-primary"></i> Lista de Accesorios Vendidos
                     <span class="badge bg-primary ms-2 count-badge" *ngIf="accesorios.length > 0">
                         {{totalRecord}} vendido{{totalRecord !== 1 ? 's' : ''}}
                     </span>
@@ -167,44 +162,34 @@
                         <thead class="table-dark">
                             <tr>
                                 <th scope="col">
-                                    <i class="bi bi-receipt me-1"></i>
-                                    Factura
+                                    <i class="bi bi-receipt me-1"></i> Factura
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-gear me-1"></i>
-                                    Descripción
+                                    <i class="bi bi-gear me-1"></i> Descripción
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-person me-1"></i>
-                                    Cliente
+                                    <i class="bi bi-person me-1"></i> Cliente
                                 </th>
                                 <th scope="col" class="text-center">
-                                    <i class="bi bi-hash me-1"></i>
-                                    Cantidad
+                                    <i class="bi bi-hash me-1"></i> Cantidad
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-currency-dollar me-1"></i>
-                                    Precio
+                                    <i class="bi bi-currency-dollar me-1"></i> Precio
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-percent me-1"></i>
-                                    ITBIS
+                                    <i class="bi bi-percent me-1"></i> ITBIS
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-calculator me-1"></i>
-                                    Total
+                                    <i class="bi bi-calculator me-1"></i> Total
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-building me-1"></i>
-                                    Sucursal
+                                    <i class="bi bi-building me-1"></i> Sucursal
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-person-badge me-1"></i>
-                                    Vendedor
+                                    <i class="bi bi-person-badge me-1"></i> Vendedor
                                 </th>
                                 <th scope="col">
-                                    <i class="bi bi-calendar me-1"></i>
-                                    Fecha
+                                    <i class="bi bi-calendar me-1"></i> Fecha
                                 </th>
                             </tr>
                         </thead>
@@ -257,7 +242,7 @@
                             </div>
                             <span class="id-badge-mobile">#{{ accesorio.factura }}</span>
                         </div>
-                        
+
                         <div class="row g-2 mb-3">
                             <!-- Columna izquierda: Precio, Total, ITBIS -->
                             <div class="col-6 border-end">
@@ -318,7 +303,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="card-footer-info">
                             <small class="text-muted">
                                 <i class="bi bi-calendar me-1"></i>
@@ -331,12 +316,7 @@
 
             <!-- Modern Pagination -->
             <div class="pagination-wrapper d-flex justify-content-center mt-4" *ngIf="totalRecord > filter.pageSize && accesorios.length">
-                <pagination-controls 
-                    (pageChange)="pageChanged($event)" 
-                    [responsive]="true"
-                    previousLabel="Anterior" 
-                    nextLabel="Siguiente" 
-                    class="modern-pagination">
+                <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" class="modern-pagination">
                 </pagination-controls>
             </div>
         </div>

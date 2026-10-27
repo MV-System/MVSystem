@@ -22,7 +22,7 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-8">
-                                    <label class="form-label modern-label">
+                                    <label class="form-label modern-label fecha-periodo-header">
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por cliente, # de factura
                                     </label>
@@ -33,10 +33,17 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label modern-label">
-                                        <i class="bi bi-calendar-range me-1"></i>
-                                        Fecha de facturación
+                                        <span class="fecha-filtro-label">
+                                            <i class="bi bi-calendar-range me-1"></i>
+                                            Fecha de facturación
+                                        </span>
+                                        <div class="btn-group btn-group-sm fecha-periodos-rapidos" role="group" aria-label="Períodos rápidos">
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'hoy'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'semana'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                            <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'mes'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                                        </div>
                                     </label>
-                                    <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="{{ FechaInicio | date }} - {{ fechaHoy | date }}" class="modern-datepicker"></my-date-range-picker>
+                                    <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechasFactura" class="modern-datepicker"></my-date-range-picker>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label modern-label">

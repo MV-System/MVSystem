@@ -234,24 +234,38 @@
                     <div class="date-filter-section">
                         <!-- Desktop: Label y datepicker en línea -->
                         <div class="d-none d-md-flex align-items-center">
-                            <label class="form-label mb-0 me-3 d-flex align-items-center">
-                                <i class="bi bi-calendar-event me-2 text-info"></i>
-                                Fecha de facturación:
+                            <label class="form-label mb-0 me-3 date-period-label">
+                                <span class="date-period-label-text">
+                                    <i class="bi bi-calendar-event me-2 text-info"></i>
+                                    Fecha de facturación:
+                                </span>
+                                <span class="btn-group btn-group-sm sold-period-buttons" role="group" aria-label="Períodos rápidos">
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'hoy'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'semana'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'mes'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                                </span>
                             </label>
                             <div class="date-picker-wrapper">
-                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" [placeholder]="rangoFechasFactura">
                                 </my-date-range-picker>
                             </div>
                         </div>
 
                         <!-- Mobile: Label y datepicker en columna -->
                         <div class="d-block d-md-none">
-                            <label class="form-label mb-2 d-flex align-items-center">
-                                <i class="bi bi-calendar-event me-2 text-info"></i>
-                                Fecha de facturación:
+                            <label class="form-label mb-2 date-period-label">
+                                <span class="date-period-label-text">
+                                    <i class="bi bi-calendar-event me-2 text-info"></i>
+                                    Fecha de facturación:
+                                </span>
+                                <span class="btn-group btn-group-sm sold-period-buttons" role="group" aria-label="Períodos rápidos">
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'hoy'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'semana'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                    <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'mes'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                                </span>
                             </label>
                             <div class="date-picker-wrapper">
-                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" placeholder="{{ FechaInicio | date }} - {{fechaHoy | date}}">
+                                <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDateFactura" (dateRangeChanged)="onDateRangeFacturaChanged($event)" [placeholder]="rangoFechasFactura">
                                 </my-date-range-picker>
                             </div>
                         </div>

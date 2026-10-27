@@ -51,12 +51,13 @@ export class AccesorioVendidoComponent implements OnInit, OnDestroy {
  fechaHoy = new Date();
  // Crear una nueva fecha para el primer día del mes actual
 FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1);
+  periodoRapido: 'hoy' | 'semana' | 'mes' | 'personalizado' = 'mes';
 
   filter: any = {
     pageIndex: 1,
     pageSize: 10,
-    fechaInicio: this.FechaInicio.toISOString().split('T')[0],
-    fechaFinal:this.fechaHoy.toISOString().split('T')[0]
+    fechaInicio: this.formatearFechaISO(this.FechaInicio),
+    fechaFinal: this.formatearFechaISO(this.fechaHoy)
   };
   form: FormGroup = this.fb.group({
     almacen: [this.loginService.getUserIdSucursal,],
@@ -115,6 +116,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.getAccesoriosVendidos();
   }
   onDateRangeChanged(event: any) {
+    this.periodoRapido = 'personalizado';
     if (event.beginDate.year === 0) {
       this.filter.fechaInicio = '';
       this.filter.fechaFinal = '';
@@ -123,6 +125,42 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       this.filter.fechaFinal = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
     }
     this.getAccesoriosVendidos();
+  }
+
+  seleccionarPeriodoRapido(periodo: 'hoy' | 'semana' | 'mes'): void {
+    const hoy = new Date();
+    let inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+    if (periodo === 'semana') {
+      const diasDesdeLunes = (hoy.getDay() + 6) % 7;
+      inicio.setDate(inicio.getDate() - diasDesdeLunes);
+    } else if (periodo === 'mes') {
+      inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    }
+
+    this.periodoRapido = periodo;
+    this.filter.fechaInicio = this.formatearFechaISO(inicio);
+    this.filter.fechaFinal = this.formatearFechaISO(hoy);
+    this.filter.pageIndex = 1;
+    this.currentPage = 1;
+    this.getAccesoriosVendidos();
+  }
+
+  get rangoFechas(): string {
+    return `${this.formatearFechaVisible(this.filter.fechaInicio)} - ${this.formatearFechaVisible(this.filter.fechaFinal)}`;
+  }
+
+  private formatearFechaISO(fecha: Date): string {
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${fecha.getFullYear()}-${mes}-${dia}`;
+  }
+
+  private formatearFechaVisible(valor: string): string {
+    if (!valor) return '';
+    const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
+    if (!partes) return valor;
+    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString();
   }
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',

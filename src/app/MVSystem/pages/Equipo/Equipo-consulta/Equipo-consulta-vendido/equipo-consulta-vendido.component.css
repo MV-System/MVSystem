@@ -566,6 +566,20 @@ td {
     align-items: center;
 }
 
+.date-period-label {
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.date-period-label-text {
+    display: inline-flex;
+    align-items: center;
+}
+
+.sold-period-buttons {
+    flex-shrink: 0;
+}
+
 .date-picker-wrapper {
     max-width: 300px;
 }
@@ -598,6 +612,17 @@ td {
     }
     .date-filter-section .form-label {
         margin-bottom: 0.5rem;
+    }
+    .date-period-label {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+    .sold-period-buttons {
+        align-self: stretch;
+    }
+    .sold-period-buttons .btn {
+        flex: 1 1 auto;
+        white-space: nowrap;
     }
     .date-picker-wrapper {
         max-width: 100%;

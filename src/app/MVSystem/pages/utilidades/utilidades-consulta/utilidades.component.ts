@@ -29,8 +29,17 @@ import { UserTrackingService } from 'src/app/core/services/user-tracking.service
 export class UtilidadesComponent implements OnInit {
 
   get rangoFechas(): string {
-  return `${this.FechaInicio.toLocaleDateString()} - ${this.fechaHoy.toLocaleDateString()}`;
+  return `${this.formatearFechaVisible(this.filter?.FI)} - ${this.formatearFechaVisible(this.filter?.FF)}`;
 }
+
+  private formatearFechaVisible(valor: string): string {
+    if (!valor) return '';
+    const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
+    const fecha = iso
+      ? new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]))
+      : new Date(valor);
+    return isNaN(fecha.getTime()) ? valor : fecha.toLocaleDateString();
+  }
 
   almacenes!: Almacen[];
   subs: Subscription[] = [];
@@ -66,6 +75,7 @@ export class UtilidadesComponent implements OnInit {
 
   mostrarDetalleAbonos = false;
   mostrarSoloFacturasSaldadas = false;
+  periodoRapido: 'hoy' | 'semana' | 'mes' | 'personalizado' = 'mes';
   cargandoDetalleAbonos = false;
   errorDetalleAbonos: string | null = null;
   detalleAbonos: UtilidadAbonoDetalle[] = [];
@@ -307,11 +317,13 @@ setResponsiveView() {
 }
   onDateRangeChanged(event: any) {
     if (event.beginDate.year === 0) {
-      this.filter.FI = this.FechaInicio.toISOString().split('T')[0],
-      this.filter.FF = this.fechaHoy.toISOString().split('T')[0]
+      this.periodoRapido = 'mes';
+      this.filter.FI = this.formatearFechaFiltro(this.FechaInicio);
+      this.filter.FF = this.formatearFechaFiltro(this.fechaHoy);
       this.filter.sucursal = this.form.get('almacen')?.value
 
     } else {
+      this.periodoRapido = 'personalizado';
       this.filter.FI = `${event.beginDate.month}/${event.beginDate.day}/${event.beginDate.year}`;
       this.filter.FF = `${event.endDate.month}/${event.endDate.day}/${event.endDate.year}`;
       this.filter.sucursal = this.form.get('almacen')?.value
@@ -320,6 +332,34 @@ setResponsiveView() {
     // Llama a GetUtilidades después de actualizar los filtros
     this.GetUtilidades();
     this.cargarGananciaAbonos();
+  }
+
+  seleccionarPeriodoRapido(periodo: 'hoy' | 'semana' | 'mes'): void {
+    const hoy = new Date();
+    let inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+    if (periodo === 'semana') {
+      const diasDesdeLunes = (hoy.getDay() + 6) % 7;
+      inicio.setDate(inicio.getDate() - diasDesdeLunes);
+    } else if (periodo === 'mes') {
+      inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    }
+
+    this.periodoRapido = periodo;
+    this.filter.FI = this.formatearFechaFiltro(inicio);
+    this.filter.FF = this.formatearFechaFiltro(hoy);
+    this.filter.sucursal = Number(this.form.get('almacen')?.value ?? this.loginService.getUserIdSucursal);
+    this.form.get('fechainicio')?.setValue(this.filter.FI);
+    this.form.get('fechafin')?.setValue(this.filter.FF);
+    this.GetUtilidades();
+    this.cargarGananciaAbonos();
+  }
+
+  private formatearFechaFiltro(fecha: Date): string {
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${anio}-${mes}-${dia}`;
   }
   sucursalOnChange() {
     this.form.get('almacen')?.valueChanges.subscribe((value) => {

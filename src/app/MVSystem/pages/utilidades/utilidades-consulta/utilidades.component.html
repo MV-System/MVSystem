@@ -26,13 +26,20 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">
-              <i class="bi bi-calendar-range text-primary me-2"></i>
-              Período de Análisis
-            </label>
+                            <span class="periodo-label-text">
+                                <i class="bi bi-calendar-range text-primary me-2"></i>
+                                Período de Análisis
+                            </span>
+                            <div class="btn-group btn-group-sm periodo-rapido-buttons" role="group" aria-label="Períodos rápidos">
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'hoy'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'semana'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="periodoRapido === 'mes'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                            </div>
+                        </label>
                         <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas" class="modern-datepicker">
                         </my-date-range-picker>
                         <small class="form-text text-muted">
-              Selecciona el rango de fechas a analizar
+                            Usa un período rápido o selecciona un rango personalizado
             </small>
                     </div>
                     <div class="col-md-6" *ngIf="SelectSucursal()">
