@@ -31,6 +31,7 @@ export interface UtilidadAbonoDetalle {
   numeroFactura: number;
   fechaAbono: string;
   montoAbono: number;
+  facturaSaldada: boolean;
   esAbonoQueSaldaFactura: boolean;
   costoFactura: number;
   totalFactura: number;

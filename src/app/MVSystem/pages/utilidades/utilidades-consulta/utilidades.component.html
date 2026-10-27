@@ -412,6 +412,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl col-md-4 col-sm-6">
+                    <div class="stat-card stat-ganancia-abonos stat-card-clickable" role="button" tabindex="0" aria-label="Mostrar solo facturas saldadas y su ganancia" (click)="abrirDetalleAbonos(true)" (keydown.enter)="abrirDetalleAbonos(true)" (keydown.space)="$event.preventDefault(); abrirDetalleAbonos(true)">
+                        <div class="stat-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Ganancia de abonos saldados</p>
+                            <h4 class="stat-value">{{ formatearMontoAbono(getTotalGananciaDetalleAbonos()) }}</h4>
+                            <small class="stat-change text-muted">
+                                <i class="bi bi-info-circle"></i> Ganancia total de facturas saldadas en el período
+                            </small>
+                            <small class="stat-card-hint">
+                                <i class="bi bi-hand-index-thumb me-1"></i> Presiona para ver solo las facturas saldadas
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -420,8 +437,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <div>
-                            <h5 class="modal-title" id="detalle-abonos-titulo">Abonos recibidos de crédito</h5>
-                            <small class="text-muted">Detalle correspondiente al período y sucursal seleccionados</small>
+                            <h5 class="modal-title" id="detalle-abonos-titulo">{{ mostrarSoloFacturasSaldadas ? 'Ganancia de facturas saldadas' : 'Abonos recibidos de crédito' }}</h5>
+                            <small class="text-muted">{{ mostrarSoloFacturasSaldadas ? 'Solo se muestran los abonos que saldaron cada factura' : 'Detalle correspondiente al período y sucursal seleccionados' }}</small>
                         </div>
                         <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalleAbonos()"></button>
                     </div>
@@ -433,10 +450,10 @@
                         <div *ngIf="errorDetalleAbonos && !cargandoDetalleAbonos" class="alert alert-danger" role="alert">
                             {{ errorDetalleAbonos }}
                         </div>
-                        <div *ngIf="!cargandoDetalleAbonos && !errorDetalleAbonos && detalleAbonos.length === 0" class="alert alert-info mb-0">
-                            No hay abonos de crédito en el período seleccionado.
+                        <div *ngIf="!cargandoDetalleAbonos && !errorDetalleAbonos && getDetalleAbonosVisible().length === 0" class="alert alert-info mb-0">
+                            {{ mostrarSoloFacturasSaldadas ? 'No hay abonos que hayan saldado facturas en el período seleccionado.' : 'No hay abonos de crédito en el período seleccionado.' }}
                         </div>
-                        <div class="table-responsive" *ngIf="!cargandoDetalleAbonos && detalleAbonos.length > 0">
+                        <div class="table-responsive tabla-detalle-abonos-scroll" *ngIf="!cargandoDetalleAbonos && getDetalleAbonosVisible().length > 0">
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
@@ -452,7 +469,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let abono of detalleAbonos">
+                                    <tr *ngFor="let abono of getDetalleAbonosVisible()">
                                         <td class="text-nowrap">{{ formatearFechaAbono(abono.fechaAbono) }}</td>
                                         <td>{{ abono.cliente || ('Cliente #' + abono.idCliente) }}</td>
                                         <td class="text-nowrap">#{{ abono.numeroFactura }}</td>
@@ -468,7 +485,7 @@
                                 </tbody>
                                 <tfoot class="table-light fw-bold">
                                     <tr>
-                                        <td colspan="3">Total de abonos listados ({{ detalleAbonos.length }})</td>
+                                        <td colspan="3">Total de abonos listados ({{ getDetalleAbonosVisible().length }})</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalCostoDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalFacturaDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalDetalleAbonos()) }}</td>

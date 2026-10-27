@@ -65,6 +65,7 @@ export class UtilidadesComponent implements OnInit {
   dataAnterior: Utilidades | null = null;
 
   mostrarDetalleAbonos = false;
+  mostrarSoloFacturasSaldadas = false;
   cargandoDetalleAbonos = false;
   errorDetalleAbonos: string | null = null;
   detalleAbonos: UtilidadAbonoDetalle[] = [];
@@ -150,8 +151,9 @@ export class UtilidadesComponent implements OnInit {
     this.mostrarInsights = !this.mostrarInsights;
   }
 
-  abrirDetalleAbonos(): void {
+  abrirDetalleAbonos(soloFacturasSaldadas: boolean = false): void {
     this.mostrarDetalleAbonos = true;
+    this.mostrarSoloFacturasSaldadas = soloFacturasSaldadas;
     this.cargandoDetalleAbonos = true;
     this.errorDetalleAbonos = null;
     this.detalleAbonos = [];
@@ -175,6 +177,13 @@ export class UtilidadesComponent implements OnInit {
 
   cerrarDetalleAbonos(): void {
     this.mostrarDetalleAbonos = false;
+    this.mostrarSoloFacturasSaldadas = false;
+  }
+
+  getDetalleAbonosVisible(): UtilidadAbonoDetalle[] {
+    return this.mostrarSoloFacturasSaldadas
+      ? this.detalleAbonos.filter(abono => this.esAbonoQueSaldaFactura(abono))
+      : this.detalleAbonos;
   }
 
   formatearFechaAbono(fecha: string): string {
@@ -202,11 +211,11 @@ export class UtilidadesComponent implements OnInit {
   }
 
   getTotalCostoDetalleAbonos(): number {
-    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.costoFactura) || 0), 0);
+    return this.getDetalleAbonosVisible().reduce((total, abono) => total + (Number(abono.costoFactura) || 0), 0);
   }
 
   getTotalFacturaDetalleAbonos(): number {
-    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.totalFactura) || 0), 0);
+    return this.getDetalleAbonosVisible().reduce((total, abono) => total + (Number(abono.totalFactura) || 0), 0);
   }
 
   esAbonoQueSaldaFactura(abono: any): boolean {
@@ -218,13 +227,23 @@ export class UtilidadesComponent implements OnInit {
   }
 
   getTotalDetalleAbonos(): number {
-    return this.detalleAbonos.reduce((total, abono) => total + (Number(abono.montoAbono) || 0), 0);
+    return this.getDetalleAbonosVisible().reduce((total, abono) => total + (Number(abono.montoAbono) || 0), 0);
   }
 
   getTotalGananciaDetalleAbonos(): number {
-    return this.detalleAbonos
+    return this.getDetalleAbonosVisible()
       .filter(abono => this.esAbonoQueSaldaFactura(abono))
       .reduce((total, abono) => total + (Number(abono.gananciaAbono) || 0), 0);
+  }
+
+  cargarGananciaAbonos(): void {
+    this.UtilidadesServices.GetDetalleAbonos(this.filter).subscribe({
+      next: detalle => this.detalleAbonos = detalle || [],
+      error: error => {
+        console.error('Error al cargar la ganancia de abonos:', error);
+        this.detalleAbonos = [];
+      }
+    });
   }
 
   constructor(
@@ -274,6 +293,7 @@ createForm(){
 
     // Cargar datos iniciales SIN tracking (solo PageView)
     this.cargarDatosIniciales();
+    this.cargarGananciaAbonos();
 
     // 📊 Tracking: Registro de acceso al módulo
     this.tracking.trackPageView('verUtilidadesToolStripMenuItem', 'PageView').subscribe();
@@ -299,12 +319,14 @@ setResponsiveView() {
 
     // Llama a GetUtilidades después de actualizar los filtros
     this.GetUtilidades();
+    this.cargarGananciaAbonos();
   }
   sucursalOnChange() {
     this.form.get('almacen')?.valueChanges.subscribe((value) => {
       if (value) { // Verificar que 'value' tiene un valor válido
         this.filter.sucursal = value;
         this.GetUtilidades(); // Llama a la función de consulta al cambiar la sucursal
+        this.cargarGananciaAbonos();
       }
     });
   }
