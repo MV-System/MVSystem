@@ -1,0 +1,203 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Cambio de pieza de laptop</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Mantenimiento</li>
+                <li class="breadcrumb-item active">Cambio de pieza</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <!-- COLUMNA IZQUIERDA: búsqueda + datos de la laptop + cambio -->
+            <div class="col-lg-6">
+                <!-- 1. Buscar laptop -->
+                <div class="card">
+                    <div class="card-body p-3">
+                        <h5 class="card-title small mb-2"><i class="bi bi-upc-scan me-2 text-primary"></i>1. Serial de la laptop</h5>
+                        <form [formGroup]="formBusqueda" (ngSubmit)="buscarLaptop()" class="d-flex gap-2" novalidate>
+                            <input type="text" class="form-control form-control-sm" formControlName="imei" maxlength="30"
+                                   placeholder="Escanee o escriba el serial" autocomplete="off" [readonly]="!!laptop">
+                            <button *ngIf="!laptop" type="submit" class="btn btn-primary btn-sm" [disabled]="isBuscando || formBusqueda.invalid">
+                                <span *ngIf="!isBuscando">Buscar</span>
+                                <span *ngIf="isBuscando" class="spinner-border spinner-border-sm"></span>
+                            </button>
+                            <button *ngIf="laptop" type="button" class="btn btn-outline-secondary btn-sm" (click)="nuevaBusqueda()">Otra laptop</button>
+                        </form>
+
+                        <div *ngIf="laptop" class="mt-3 border rounded p-2 bg-light">
+                            <div class="fw-bold">{{laptop.marca}} {{laptop.modelo}}</div>
+                            <div class="small text-muted">Serial: {{laptop.imei}} · Almacén: {{laptop.descripcion_Almacen}}</div>
+                            <div class="small mt-1">Configuración actual:
+                                <strong>{{laptop.configuracion || 'Sin configuración registrada'}}</strong>
+                            </div>
+                            <div class="small">Costo actual: <strong>{{laptop.costo_Equipo | currency}}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Cambio de pieza -->
+                <div class="card" *ngIf="laptop">
+                    <div class="card-body p-3">
+                        <h5 class="card-title small mb-2"><i class="bi bi-memory me-2 text-primary"></i>2. Pieza a cambiar</h5>
+
+                        <form [formGroup]="formCambio" (ngSubmit)="confirmarCambio()" novalidate>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">Tipo de pieza <span class="text-danger">*</span></label>
+                                    <ng-select [items]="tiposPieza" bindLabel="texto" bindValue="valor" formControlName="tipoPieza"
+                                               placeholder="Seleccionar" [clearable]="false" (change)="onTipoPiezaChange()"
+                                               [class.is-invalid]="campoInvalido('tipoPieza')"></ng-select>
+                                    <div class="small text-danger" *ngIf="campoInvalido('tipoPieza')">Requerido</div>
+                                </div>
+
+                                <ng-container *ngIf="tipoPieza">
+                                    <!-- Pieza instalada -->
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">Pieza que se instala (con existencia) <span class="text-danger">*</span></label>
+                                        <ng-select [items]="accesoriosInstalar" bindLabel="etiqueta" bindValue="iD_Accesorio"
+                                                   formControlName="accesorioInstalado" placeholder="Seleccionar accesorio"
+                                                   notFoundText="No hay componentes con existencia en este almacén"
+                                                   (change)="onAccesorioInstaladoChange()"
+                                                   [class.is-invalid]="campoInvalido('accesorioInstalado')"></ng-select>
+                                        <div class="small text-danger" *ngIf="campoInvalido('accesorioInstalado')">Requerido</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small mb-1">Capacidad nueva (GB) <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control form-control-sm" formControlName="capacidadGB" min="1"
+                                               [class.is-invalid]="campoInvalido('capacidadGB')">
+                                        <div class="invalid-feedback small">Requerido (1 - 16000)</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small mb-1">Tipo <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-sm" formControlName="tipoNuevo"
+                                                [class.is-invalid]="campoInvalido('tipoNuevo')">
+                                            <option [ngValue]="null" disabled>Seleccionar</option>
+                                            <option *ngFor="let t of tiposNuevos" [value]="t">{{t}}</option>
+                                        </select>
+                                        <div class="small text-danger" *ngIf="campoInvalido('tipoNuevo')">Requerido</div>
+                                    </div>
+
+                                    <!-- Pieza retirada -->
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">Pieza que se retira (opcional)</label>
+                                        <ng-select [items]="accesoriosRetirar" bindLabel="etiqueta" bindValue="iD_Accesorio"
+                                                   formControlName="accesorioRetirado" placeholder="Sin pieza retirada (slot libre)"
+                                                   (change)="onAccesorioRetiradoChange()"></ng-select>
+                                    </div>
+                                    <div class="col-12" *ngIf="hayRetirada">
+                                        <label class="form-label small mb-1">Destino de la pieza retirada <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-sm" formControlName="destinoRetirada"
+                                                [class.is-invalid]="campoInvalido('destinoRetirada')">
+                                            <option *ngFor="let d of destinos" [value]="d.valor">{{d.texto}}</option>
+                                        </select>
+                                        <div class="small text-danger" *ngIf="campoInvalido('destinoRetirada')">Requerido</div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">Técnico <span class="text-danger">*</span></label>
+                                    <ng-select [items]="tecnicos" bindLabel="etiqueta" bindValue="login" formControlName="tecnico"
+                                               placeholder="Seleccionar técnico" [class.is-invalid]="campoInvalido('tecnico')"></ng-select>
+                                    <div class="small text-danger" *ngIf="campoInvalido('tecnico')">Requerido</div>
+                                    <div *ngIf="vencidosTecnico.length" class="alert mt-2 mb-0 p-2 small" [ngClass]="tecnicoBloqueado ? 'alert-danger' : 'alert-warning'">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                        Este técnico tiene {{vencidosTecnico.length}} pieza(s) retirada(s) pendiente(s) de recibir por más de {{configCustodia?.horasMax}} horas.
+                                        <strong *ngIf="tecnicoBloqueado">No puede registrar nuevos cambios hasta que se reciban.</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resumen -->
+                            <div *ngIf="instalada" class="resumen mt-3 border rounded p-2">
+                                <div class="fw-bold small mb-1">Resumen del cambio</div>
+                                <table class="table table-sm mb-1 small">
+                                    <tbody>
+                                        <tr><td>Costo actual de la laptop</td><td class="text-end">{{laptop.costo_Equipo | currency}}</td></tr>
+                                        <tr *ngIf="hayRetirada">
+                                            <td>(−) Pieza retirada
+                                                <span class="text-muted" *ngIf="destino === 'CLIENTE'">(se la lleva el cliente, no se descuenta)</span>
+                                            </td>
+                                            <td class="text-end">{{costoRetiradoDescontado | currency}}</td>
+                                        </tr>
+                                        <tr><td>(+) Pieza instalada</td><td class="text-end">{{instalada.costo_Equipo | currency}}</td></tr>
+                                        <tr class="fw-bold"><td>Costo nuevo</td><td class="text-end">{{costoNuevo | currency}}</td></tr>
+                                    </tbody>
+                                </table>
+                                <div class="small text-muted" *ngIf="hayRetirada && destino === 'CUSTODIA'">
+                                    La pieza retirada queda en custodia del técnico y no suma al inventario hasta que otro usuario confirme su recepción.
+                                </div>
+
+                                <!-- El costo nuevo supera el precio de venta: se piden precios nuevos -->
+                                <div *ngIf="requierePrecios" class="alert alert-warning mt-2 mb-0 p-2 small">
+                                    <div class="fw-bold mb-1">El costo nuevo supera el precio de venta actual</div>
+                                    <div class="mb-2">
+                                        Precios actuales: detalle {{laptop.precio_Detalle | currency}} · por mayor {{laptop.precio_Por_Mayor | currency}}.
+                                        Indique los precios nuevos (no pueden ser menores al costo nuevo).
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label small mb-1">Precio al detalle nuevo <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control form-control-sm" formControlName="precioDetalle" min="0">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small mb-1">Precio por mayor nuevo <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control form-control-sm" formControlName="precioMayor" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="text-danger mt-1" *ngIf="!preciosValidos">{{mensajePrecios}}</div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-success w-100 btn-sm" [disabled]="isLoading">
+                                    <span *ngIf="!isLoading">Confirmar cambio de pieza</span>
+                                    <span *ngIf="isLoading"><span class="spinner-border spinner-border-sm me-2"></span>Guardando...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: historial -->
+            <div class="col-lg-6" *ngIf="laptop">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <h5 class="card-title small mb-2"><i class="bi bi-clock-history me-2 text-primary"></i>Historial de cambios</h5>
+                        <div *ngIf="!historial.length" class="small text-muted">Esta laptop no tiene cambios de pieza registrados.</div>
+                        <div class="table-responsive" *ngIf="historial.length">
+                            <table class="table table-sm table-striped align-middle small">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cambio</th>
+                                        <th class="text-end">Costo</th>
+                                        <th>Custodia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let h of historial">
+                                        <td>{{h.fecha_Registro | date:'dd/MM/yyyy HH:mm'}}<div class="text-muted">{{h.tecnico}}</div></td>
+                                        <td>
+                                            <div><strong>{{h.tipo_Pieza}}</strong> · {{h.config_Anterior || 'Sin config.'}} → {{h.config_Nueva}}</div>
+                                            <div class="text-muted">+ {{h.pieza_Instalada}}<span *ngIf="h.pieza_Retirada"> / − {{h.pieza_Retirada}}</span></div>
+                                        </td>
+                                        <td class="text-end">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
+                                        <td>
+                                            <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
+                                            <div class="text-muted" *ngIf="h.usuario_Recepcion">Recibió: {{h.usuario_Recepcion}}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

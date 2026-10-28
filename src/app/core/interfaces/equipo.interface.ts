@@ -26,6 +26,7 @@ export interface Equipo {
     precioPorMayor: number;
     precioDetalle: number;
     mensaje: string;
+    configuracion?: string | null;
     idEquipo?: number;
 }
 export interface RegistroReparaciones{
@@ -123,6 +124,7 @@ export interface EquipoDisponible {
     line: number;
     totalRecord: number;
     totalInventario: number;
+    configuracion?: string | null;
 }
 export interface EquipoDisponibleParam extends DatePaging ,Pagination{
     almacen: number;
@@ -163,6 +165,7 @@ export interface EquipoTransferenciaReporte{
 export interface EquipoVendido {
     imei: string;
     descripcion: string;
+    configuracion?: string | null;
     precioPorMayor: number;
     precioVendido: number;
     precioDetalle: number;

@@ -96,6 +96,17 @@ export let APIURL = {
           GestionarEquipoConsultaSql: API + 'Equipos/GestionarEquipo/ConsultaSql'
         }
     },
+    Laptops: {
+        Configuracion: API + 'api/Laptops/Configuracion',
+        Equipo: API + 'api/Laptops/Equipo',
+        Accesorios: API + 'api/Laptops/Accesorios',
+        CambioPieza: API + 'api/Laptops/CambioPieza',
+        Historial: API + 'api/Laptops/Historial',
+        CustodiaConfiguracion: API + 'api/Laptops/Custodia/Configuracion',
+        CustodiaPendientes: API + 'api/Laptops/Custodia/Pendientes',
+        CustodiaRecibir: API + 'api/Laptops/Custodia/Recibir',
+        CustodiaEntregarCliente: API + 'api/Laptops/Custodia/EntregarCliente',
+    },
     Marca: {
         Inserta: {
             MarcaInserta: API + 'Marcas/Marca_Insert',

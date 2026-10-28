@@ -1,0 +1,42 @@
+<div class="modal-fondo" (click)="cerrar.emit()">
+    <div class="modal-caja" (click)="$event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Cambios de pieza · {{imei}}</h6>
+            <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrar.emit()"></button>
+        </div>
+
+        <div *ngIf="isLoading" class="text-center p-3"><span class="spinner-border spinner-border-sm"></span></div>
+        <div *ngIf="!isLoading && !historial.length" class="small text-muted">Esta laptop no tiene cambios de pieza registrados.</div>
+
+        <div class="table-responsive" *ngIf="historial.length">
+            <table class="table table-sm table-striped align-middle small">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cambio</th>
+                        <th class="text-end">Costo</th>
+                        <th>Custodia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of historial">
+                        <td>{{h.fecha_Registro | date:'dd/MM/yyyy HH:mm'}}<div class="text-muted">{{h.tecnico}}</div></td>
+                        <td>
+                            <div><strong>{{h.tipo_Pieza}}</strong> · {{h.config_Anterior || 'Sin config.'}} → {{h.config_Nueva}}</div>
+                            <div class="text-muted">+ {{h.pieza_Instalada}}<span *ngIf="h.pieza_Retirada"> / − {{h.pieza_Retirada}}</span></div>
+                        </td>
+                        <td class="text-end">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
+                        <td>
+                            <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
+                            <div class="text-muted" *ngIf="h.usuario_Recepcion">{{h.estado_Custodia === 'RECIBIDA' ? 'Recibió' : 'Entregó'}}: {{h.usuario_Recepcion}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-end">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cerrar.emit()">Cerrar</button>
+        </div>
+    </div>
+</div>

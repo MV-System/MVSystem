@@ -866,7 +866,7 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
 
             // Crear el artículo con la información del equipo
             const articulo: AccesorioLista = {
-              accesorio_Descripcion: `${equipo.modelo}`,
+              accesorio_Descripcion: equipo.configuracion ? `${equipo.modelo} · ${equipo.configuracion}` : `${equipo.modelo}`,
               cantidad: 1,
               id: equipo.imei,
               codigo_Barra: 0,

@@ -27,6 +27,9 @@ import { ClientesModule } from '../Clientes/clientes.module';
 import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
 import { ReparacionesListaComponent } from './taller/reparaciones-consulta/reparaciones-lista/reparaciones-lista.component';
 import { InventarioComponent } from './inventario/inventario.component';
+import { LaptopCambioPiezaComponent } from './laptop-cambio-pieza/laptop-cambio-pieza.component';
+import { LaptopCustodiaComponent } from './laptop-custodia/laptop-custodia.component';
+import { LaptopHistorialComponent } from './laptop-historial/laptop-historial.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -51,7 +54,10 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ReparacionesComponent,
     ReparacionesConsultaComponent,
     ReparacionesListaComponent,
-    InventarioComponent
+    InventarioComponent,
+    LaptopCambioPiezaComponent,
+    LaptopCustodiaComponent,
+    LaptopHistorialComponent
   ],
   imports: [
     CommonModule,

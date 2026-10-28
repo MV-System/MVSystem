@@ -34,6 +34,9 @@ interface SalesInsight {
 })
 export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChanges {
 
+  /** Serial de la laptop cuyo historial de cambios de pieza se está mostrando. */
+  historialImei: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private equipoService: EquipoService,
@@ -50,6 +53,11 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
 
   SelectSucursal(): boolean {
     return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
+  }
+
+  puedeVerHistorialLaptop(): boolean {
+    return this.validatorPermissionService.validateUserRole("LAPTOP_CAMBIO_PIEZA")
+      || this.validatorPermissionService.validateUserRole("LAPTOP_CUSTODIA_CONSULTA");
   }
 
   ngOnInit(): void {

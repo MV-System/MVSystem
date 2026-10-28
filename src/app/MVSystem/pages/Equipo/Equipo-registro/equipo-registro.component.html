@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label modern-label small mb-1">Modelo <span class="required-star">*</span></label>
-                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccionar" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" class="form-select-sm" required></ng-select>
+                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccionar" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" (change)="onModeloChange()" class="form-select-sm" required></ng-select>
                                         <div class="small text-danger" *ngIf="validarCampos('modelo')">Requerido</div>
                                     </div>
 
@@ -82,6 +82,40 @@
                                         </select>
                                         <div class="small text-danger" *ngIf="validarCampos('suplidor')">Requerido</div>
                                     </div>
+
+                                    <!-- Configuración de laptop (solo modelos del grupo Laptops) -->
+                                    <ng-container *ngIf="esLaptop">
+                                        <div class="col-6">
+                                            <label class="form-label modern-label small mb-1">RAM (GB) <span class="required-star">*</span></label>
+                                            <input type="number" class="form-control form-control-sm" formControlName="ramGB" min="1" max="512" [class.is-invalid]="validarCampos('ramGB')">
+                                            <div class="invalid-feedback small" *ngIf="validarCampos('ramGB')">Requerido (1 - 512)</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label modern-label small mb-1">Tipo RAM <span class="required-star">*</span></label>
+                                            <select formControlName="ramTipo" class="form-select form-select-sm" [ngClass]="{'border-danger': validarCampos('ramTipo')}">
+                                                <option [ngValue]="null" disabled>Seleccionar</option>
+                                                <option *ngFor="let tipo of tiposRam" [value]="tipo">{{tipo}}</option>
+                                            </select>
+                                            <div class="small text-danger" *ngIf="validarCampos('ramTipo')">Requerido</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label modern-label small mb-1">Almacenamiento (GB) <span class="required-star">*</span></label>
+                                            <input type="number" class="form-control form-control-sm" formControlName="almacenamientoGB" min="1" max="16000" [class.is-invalid]="validarCampos('almacenamientoGB')">
+                                            <div class="invalid-feedback small" *ngIf="validarCampos('almacenamientoGB')">Requerido (1 - 16000)</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label modern-label small mb-1">Tipo almacenamiento <span class="required-star">*</span></label>
+                                            <select formControlName="almacenamientoTipo" class="form-select form-select-sm" [ngClass]="{'border-danger': validarCampos('almacenamientoTipo')}">
+                                                <option [ngValue]="null" disabled>Seleccionar</option>
+                                                <option *ngFor="let tipo of tiposAlmacenamiento" [value]="tipo">{{tipo}}</option>
+                                            </select>
+                                            <div class="small text-danger" *ngIf="validarCampos('almacenamientoTipo')">Requerido</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label modern-label small mb-1">Notas de configuración</label>
+                                            <input type="text" class="form-control form-control-sm" formControlName="configNotas" maxlength="250" placeholder="Opcional">
+                                        </div>
+                                    </ng-container>
 
                                     <!-- Precios: Costo, Mayor, Detalle -->
                                     <div class="col-4">

@@ -399,7 +399,11 @@
                         totalItems: totalRecord
                       } ">
                                 <td class="fixed-item code">{{equipo.imei}}</td>
-                                <td class="fixed-item desc">{{equipo.descripcion}}</td>
+                                <td class="fixed-item desc">{{equipo.descripcion}}<ng-container *ngIf="equipo.configuracion"> · {{equipo.configuracion}}</ng-container>
+                                    <button *ngIf="equipo.configuracion && puedeVerHistorialLaptop()" type="button" class="btn btn-sm btn-link p-0 ms-1" title="Historial de cambios de pieza" (click)="historialImei = equipo.imei">
+                                        <i class="bi bi-clock-history"></i>
+                                    </button>
+                                </td>
                                 <td>{{ equipo.cliente }}</td>
                                 <td>{{ equipo.precioVendido | currency }}</td>
                                 <td>{{ equipo.fechaFacturado}}</td>
@@ -428,7 +432,7 @@
                     <div class="equipo-cards">
                         <div class="card-equipo" *ngFor="let equipo of equiposVendidos | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
                             <div class="card-header">
-                                <span class="codigo">{{equipo.descripcion | titlecase}}</span>
+                                <span class="codigo">{{equipo.descripcion | titlecase}}<ng-container *ngIf="equipo.configuracion"> · {{equipo.configuracion}}</ng-container></span>
                             </div>
 
                             <div class="card-body">
@@ -484,6 +488,11 @@
                                         <span class="label">Fecha Registro:</span>
                                         <span class="valor">{{equipo.fechaRegistro | date:'dd/MM/yyyy'}}</span>
                                     </div>
+                                    <div class="item item-full-width mt-3" *ngIf="equipo.configuracion && puedeVerHistorialLaptop()">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary w-100" (click)="historialImei = equipo.imei">
+                                            <i class="bi bi-clock-history me-2"></i> Cambios de pieza
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -501,6 +510,7 @@
         <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
         </pagination-controls>
     </div>
+    <app-laptop-historial *ngIf="historialImei" [imei]="historialImei" (cerrar)="historialImei = null"></app-laptop-historial>
 </div>
 
 <!-- End #main -->

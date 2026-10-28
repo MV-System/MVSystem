@@ -1,0 +1,27 @@
+.fila-vencida {
+  background-color: #fdecea !important;
+}
+
+.antiguedad-vencida {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-caja {
+  background: #fff;
+  border-radius: 6px;
+  max-width: 460px;
+  width: 100%;
+  padding: 16px;
+}

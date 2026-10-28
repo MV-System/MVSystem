@@ -48,6 +48,16 @@
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormLaptopCambioPieza()">
+                    <a (click)="onMenuClick()" routerLink="./equipo/laptop-cambio-pieza">
+                        <i class="bi bi-circle"></i><span>Cambio de pieza (laptop)</span>
+                    </a>
+                </li>
+                <li *ngIf="VerFormLaptopCustodia()">
+                    <a (click)="onMenuClick()" routerLink="./equipo/laptop-custodia">
+                        <i class="bi bi-circle"></i><span>Custodia de piezas (laptop)</span>
+                    </a>
+                </li>
                 <li *ngIf="VerFormTransferenciasEquipos()">
                     <a (click)="onMenuClick()" routerLink="./equipo/transferencia">
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
