@@ -204,18 +204,47 @@
                         <label class="form-label fw-bold">Fecha de Registro</label>
                         <p class="form-control-plaintext">{{ reparacionSeleccionada.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}</p>
                     </div>
+
+                    <!-- Datos de la cancelación (reparación ya cancelada) -->
+                    <div class="col-12" *ngIf="estaCancelada()">
+                        <div class="alert alert-danger mb-0 small">
+                            <strong><i class="bi bi-x-octagon me-1"></i> Reparación cancelada</strong>
+                            <span *ngIf="reparacionSeleccionada?.usuarioCancelacion"> por {{ reparacionSeleccionada?.usuarioCancelacion }}</span>
+                            <span *ngIf="reparacionSeleccionada?.fechaCancelacion"> el {{ reparacionSeleccionada?.fechaCancelacion | date: 'dd/MM/yyyy HH:mm' }}</span>
+                            <div *ngIf="reparacionSeleccionada?.motivoCancelacion" class="mt-1">Motivo: {{ reparacionSeleccionada?.motivoCancelacion }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Motivo de la cancelación (obligatorio) -->
+                    <div class="col-12" *ngIf="cancelando">
+                        <label class="form-label fw-bold text-danger">Motivo de la cancelación <span class="text-danger">*</span></label>
+                        <textarea class="form-control" rows="3" maxlength="500" [(ngModel)]="motivoCancelacion" placeholder="Indique por qué se cancela esta reparación"></textarea>
+                        <small class="text-muted">Mínimo {{ minMotivoCancelacion }} caracteres. Queda registrado con su usuario y la fecha.</small>
+                    </div>
                 </div>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer" *ngIf="!cancelando">
                 <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
           <i class="bi bi-x-lg me-1"></i> Cerrar
+        </button>
+                <button type="button" class="btn btn-outline-danger" *ngIf="puedeCancelar()" (click)="iniciarCancelacion()">
+          <i class="bi bi-slash-circle me-1"></i> Cancelar reparación
         </button>
                 <button type="button" class="btn btn-info" (click)="imprimirRecibo()">
           <i class="bi bi-printer me-1"></i> Imprimir
         </button>
                 <button type="button" class="btn btn-primary" (click)="guardarCambios()" [disabled]="!puedeEditarCostoPrecio()">
           <i class="bi bi-save me-1"></i> Guardar Cambios
+        </button>
+            </div>
+
+            <div class="modal-footer" *ngIf="cancelando">
+                <button type="button" class="btn btn-secondary" (click)="abortarCancelacion()">
+          <i class="bi bi-arrow-left me-1"></i> Volver
+        </button>
+                <button type="button" class="btn btn-danger" (click)="confirmarCancelacion()" [disabled]="!motivoValido">
+          <i class="bi bi-slash-circle me-1"></i> Confirmar cancelación
         </button>
             </div>
         </div>

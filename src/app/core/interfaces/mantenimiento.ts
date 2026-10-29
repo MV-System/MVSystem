@@ -160,6 +160,9 @@ export interface FacturaConsulta {
     totalItbis?: number;
     totalSinItbis?: number;
     nota: string;
+    motivoAnulacion?: string | null;
+    usuarioAnulacion?: string | null;
+    fechaAnulacion?: string | null;
     fechaFacturacion: string;
     line: number;
     lastLine: number;

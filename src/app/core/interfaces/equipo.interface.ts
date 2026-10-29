@@ -55,6 +55,9 @@ export interface ReparacionConsulta {
     detalle_Reparacion: string;
     observaciones: string;
     usuario: string;
+    motivoCancelacion?: string | null;
+    usuarioCancelacion?: string | null;
+    fechaCancelacion?: string | null;
     totalRecords: number;
     line: number;
     lastLine: number;

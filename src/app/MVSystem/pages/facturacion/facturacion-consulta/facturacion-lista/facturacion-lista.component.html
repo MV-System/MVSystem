@@ -136,7 +136,10 @@
                                             <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
                                             <td>{{ factura.vendedor }}</td>
                                             <td>{{ factura.almacen }}</td>
-                                            <td>{{ !factura.nota ?'*':factura.nota }}</td>
+                                            <td>
+                                                {{ !factura.nota ?'*':factura.nota }}
+                                                <div *ngIf="factura.motivoAnulacion" class="text-danger small"><b>Motivo:</b> {{ factura.motivoAnulacion }}</div>
+                                            </td>
                                             <td>{{ factura.fechaFacturacion | date }}</td>
                                         </tr>
                                         <!-- Detalle de factura con fondo diferenciado -->
@@ -210,6 +213,10 @@
                                     <div class="factura-info-item">
                                         <i class="bi bi-cash-coin"></i>
                                         <span><b>Total:</b> {{factura.total | currency}}</span>
+                                    </div>
+                                    <div class="factura-info-item text-danger" *ngIf="factura.motivoAnulacion">
+                                        <i class="bi bi-x-octagon"></i>
+                                        <span><b>Motivo de anulación:</b> {{factura.motivoAnulacion}}</span>
                                     </div>
                                     <div class="factura-info-item">
                                         <i class="bi bi-calendar-event"></i>
@@ -298,4 +305,29 @@
         </div>
     </div>
 </section>
+
+<!-- Modal: motivo de la anulación de la factura (obligatorio) -->
+<div *ngIf="facturaPorAnular !== null" class="modal fade show" style="display: block; background: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-x-octagon me-2"></i> Anular factura #{{ facturaPorAnular }}</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="cerrarModalAnulacion()" [disabled]="isLoading"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Esta acción devuelve al inventario los artículos de la factura y no se puede deshacer.</p>
+                <label class="form-label fw-bold">Motivo de la anulación <span class="text-danger">*</span></label>
+                <textarea class="form-control" rows="3" maxlength="500" [(ngModel)]="motivoAnulacion" placeholder="Indique por qué se anula esta factura" [disabled]="isLoading"></textarea>
+                <small class="text-muted">Mínimo {{ minMotivoAnulacion }} caracteres. Queda registrado con su usuario y la fecha.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarModalAnulacion()" [disabled]="isLoading">No, fue un error</button>
+                <button type="button" class="btn btn-danger" (click)="confirmarAnulacion()" [disabled]="!motivoAnulacionValido || isLoading">
+                    <span *ngIf="!isLoading">Sí, anular factura</span>
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <ng-content></ng-content>

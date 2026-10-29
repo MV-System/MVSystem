@@ -309,6 +309,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],
+      precioManual: [false],
     });
 
     this.articulos.insert(0, articulo);

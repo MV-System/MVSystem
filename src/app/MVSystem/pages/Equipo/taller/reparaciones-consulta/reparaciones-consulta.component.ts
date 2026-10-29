@@ -12,6 +12,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { StatusTaller } from 'src/app/core/interfaces/catalogo.interface';
 import { EquipoService } from 'src/app/core/services/equipo.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 @Component({
   selector: 'app-reparaciones-consulta',
@@ -37,6 +38,11 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
 
   // Modal
   showModalDetalle: boolean = false;
+
+  // Cancelación de la reparación seleccionada
+  cancelando: boolean = false;
+  motivoCancelacion: string = '';
+  readonly minMotivoCancelacion = 5;
 
   // Búsqueda optimizada
   private searchSubject = new Subject<string>();
@@ -81,7 +87,8 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private toastr: ToastrService,
     private loading: LoadingService,
-    private tracking: UserTrackingService
+    private tracking: UserTrackingService,
+    private validatorPermissionService: ValidatorPermissionService
   ) {}
 
   ngOnInit(): void {
@@ -310,6 +317,72 @@ export class ReparacionesConsultaComponent implements OnInit, OnDestroy {
   cerrarModal(): void {
     this.showModalDetalle = false;
     this.reparacionSeleccionada = null;
+    this.abortarCancelacion();
+  }
+
+  /**
+   * Se puede cancelar una reparación abierta (Pendiente / En Proceso) si el usuario tiene el permiso.
+   * El backend vuelve a validar estado, factura y permiso.
+   */
+  puedeCancelar(): boolean {
+    if (!this.reparacionSeleccionada) return false;
+    if (!this.validatorPermissionService.validateUserRole('REPARACION_CANCELAR')) return false;
+    const estatus = (this.reparacionSeleccionada.estatus || '').trim().toLowerCase();
+    return estatus === 'pendiente' || estatus === 'en proceso';
+  }
+
+  estaCancelada(): boolean {
+    return (this.reparacionSeleccionada?.estatus || '').trim().toLowerCase() === 'cancelado';
+  }
+
+  iniciarCancelacion(): void {
+    this.cancelando = true;
+    this.motivoCancelacion = '';
+  }
+
+  abortarCancelacion(): void {
+    this.cancelando = false;
+    this.motivoCancelacion = '';
+  }
+
+  get motivoValido(): boolean {
+    return this.motivoCancelacion.trim().length >= this.minMotivoCancelacion;
+  }
+
+  /**
+   * Cancela la reparación seleccionada con el motivo indicado
+   */
+  confirmarCancelacion(): void {
+    if (!this.reparacionSeleccionada || !this.puedeCancelar()) return;
+
+    if (!this.motivoValido) {
+      this.toastr.warning(`Indique el motivo de la cancelación (mínimo ${this.minMotivoCancelacion} caracteres)`);
+      return;
+    }
+
+    const idReparacion = this.reparacionSeleccionada.idReparacion;
+    this.loading.showLoading();
+
+    this.mantenimientoService.cancelarReparacion(
+      idReparacion,
+      this.motivoCancelacion.trim(),
+      this.loginService.getUserName()
+    ).pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.loading.hideLoading();
+          this.toastr.success(`Reparación #${idReparacion} cancelada satisfactoriamente`);
+          this.cerrarModal();
+          this.buscarReparaciones(); // Recargar lista
+        },
+        error: (error) => {
+          this.loading.hideLoading();
+          // El interceptor devuelve el mensaje del API como texto en los errores 400
+          const mensaje = typeof error === 'string' && error ? error
+            : (typeof error?.error === 'string' && error.error ? error.error : 'No se pudo cancelar la reparación');
+          this.toastr.error(mensaje, '', { closeButton: true, progressBar: true });
+        }
+      });
   }
 
   /**

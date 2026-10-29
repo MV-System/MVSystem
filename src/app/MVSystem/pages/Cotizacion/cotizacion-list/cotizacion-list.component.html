@@ -20,7 +20,7 @@
                             <tr *ngFor="let detalleFactura of articulos.controls; let i = index" class="table-row">
                                 <ng-container [formGroupName]="i">
                                     <td class="name-cell">
-                                        <ng-select formControlName="articulo" [items]="accesoriosBuffer" id="articulo" required [clearable]="false" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (keydown.enter)="cantidadInput.focus()"
+                                        <ng-select formControlName="articulo" [items]="accesoriosBuffer" id="articulo" required [clearable]="false" [readonly]="isArticuloReadonly(i)" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (keydown.enter)="cantidadInput.focus()"
                                             (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
                                             <ng-template ng-label-tmp ng-option-tmp let-articulo="item">
                                                 <span>{{ articulo.accesorio_Descripcion | titlecase }}</span>
@@ -32,7 +32,9 @@
                                             appNumeric [maxlen]="4" />
                                     </td>
                                     <td class="text-center">
-                                        {{detalleFactura.value.precio | currency:'RD$':'symbol':'1.2-2'}}
+                                        <!-- Precio editable (igual que en facturación): sin decimales, se recalcula al salir del campo -->
+                                        <input type="text" class="form-control form-control-sm text-center" placeholder="Precio" formControlName="precio" appNumeric [maxlen]="7" [readonly]="!detalleFactura.value.articulo" (blur)="onPrecioChange(i)" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"
+                                        />
                                     </td>
                                     <td class="text-center">
                                         {{detalleFactura.value.subTotal | currency:'RD$':'symbol':'1.2-2'}}
@@ -44,7 +46,7 @@
                                         {{detalleFactura.value.total | currency:'RD$':'symbol':'1.2-2'}}
                                     </td>
                                     <td class="text-center actions-cell">
-                                        <button type="button" class="btn btn-outline-danger btn-sm action-btn" title="Eliminar artículo" (click)="deleteArticulo(i)" *ngIf="articulos.length > 1">
+                                        <button type="button" class="btn btn-outline-danger btn-sm action-btn" title="Eliminar artículo (para cambiar de artículo, borre el renglón y agregue otro)" (click)="deleteArticulo(i)" *ngIf="articulos.length > 1 || detalleFactura.value.articulo">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -95,7 +97,7 @@
                                 <div class="card-title">
                                     <h6 class="mb-0">Artículo {{i + 1}}</h6>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-close-mobile" (click)="deleteArticulo(i)" title="Eliminar" *ngIf="articulos.length > 1">
+                                <button type="button" class="btn btn-sm btn-close-mobile" (click)="deleteArticulo(i)" title="Eliminar" *ngIf="articulos.length > 1 || detalleFactura.value.articulo">
                                 <i class="bi bi-trash text-danger"></i>
                             </button>
                             </div>
@@ -105,7 +107,7 @@
                                 <!-- Descripción/Artículo -->
                                 <div class="mobile-field mb-3">
                                     <label class="mobile-label">Artículo</label>
-                                    <ng-select formControlName="articulo" [items]="accesoriosBuffer" required [clearable]="false" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (change)="obtenerDetalleFactura(i)"
+                                    <ng-select formControlName="articulo" [items]="accesoriosBuffer" required [clearable]="false" [readonly]="isArticuloReadonly(i)" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)" (change)="obtenerDetalleFactura(i)"
                                         placeholder="Seleccionar artículo...">
                                     </ng-select>
                                 </div>
@@ -120,9 +122,7 @@
                                 <div class="row g-2 mb-3">
                                     <div class="col-6">
                                         <label class="mobile-label">Precio</label>
-                                        <div class="mobile-value">
-                                            {{detalleFactura.value.precio | currency:'RD$':'symbol':'1.2-2'}}
-                                        </div>
+                                        <input type="text" class="form-control form-control-mobile" placeholder="Precio" formControlName="precio" appNumeric [maxlen]="7" [readonly]="!detalleFactura.value.articulo" (blur)="onPrecioChange(i)" />
                                     </div>
                                     <div class="col-6">
                                         <label class="mobile-label">Subtotal</label>
