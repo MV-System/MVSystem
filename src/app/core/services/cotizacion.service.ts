@@ -38,6 +38,10 @@ export class CotizacionService{
         return this.http.get<CotizacionDetalle[]>(`${APIURL.Cotizacion.Consulta.CotizacionDetalle}/${codigo}`);
     }
 
+    cancelar(codigo: number, usuario: string): Observable<any> {
+        return this.http.put<any>(APIURL.Cotizacion.Consulta.CotizacionCancelar, { codigo, usuario });
+    }
+
     reimprimir(codigo: number, idEmpresa: number): Observable<Blob> {
         return this.http.get(`${APIURL.Cotizacion.Consulta.CotizacionReimpresion}/${codigo}/${idEmpresa}`, {
             responseType: 'blob'

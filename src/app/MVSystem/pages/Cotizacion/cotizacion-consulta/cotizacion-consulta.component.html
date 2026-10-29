@@ -22,6 +22,10 @@
               </button>
                         </div>
                     </div>
+                    <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="verCanceladasCotizacion" formControlName="verCanceladas" (change)="buscar()">
+                        <label class="form-check-label" for="verCanceladasCotizacion">Ver canceladas</label>
+                    </div>
                 </form>
 
                 <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
@@ -62,6 +66,17 @@
                     <span *ngIf="reimprimiendoCodigo === cotizacion.codigo" class="spinner-border spinner-border-sm" role="status"></span>
                     <i *ngIf="reimprimiendoCodigo !== cotizacion.codigo" class="bi bi-printer"></i>
                   </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger ms-1" *ngIf="puedeCancelar(cotizacion) && confirmandoCodigo !== cotizacion.codigo" (click)="pedirConfirmacion(cotizacion)" title="Cancelar cotización">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                                    <span *ngIf="confirmandoCodigo === cotizacion.codigo" class="ms-2">
+                    <small class="text-danger fw-semibold me-1">¿Cancelar?</small>
+                    <button type="button" class="btn btn-sm btn-danger me-1" (click)="confirmarCancelacion(cotizacion)" [disabled]="cancelandoCodigo === cotizacion.codigo">
+                      <span *ngIf="cancelandoCodigo === cotizacion.codigo" class="spinner-border spinner-border-sm" role="status"></span>
+                      <span *ngIf="cancelandoCodigo !== cotizacion.codigo">Sí</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="cancelarConfirmacion()" [disabled]="cancelandoCodigo === cotizacion.codigo">No</button>
+                  </span>
                                 </td>
                                 <td><span class="badge bg-light text-dark">{{ cotizacion.literal }}{{ cotizacion.numeroFactura }}</span></td>
                                 <td>{{ cotizacion.nombres }} {{ cotizacion.apellidos }}</td>
@@ -74,7 +89,8 @@
                                 <td class="text-end">{{ cotizacion.itbis | currency }}</td>
                                 <td class="text-end fw-semibold">{{ cotizacion.total | currency }}</td>
                                 <td>
-                                    <span class="badge" [ngClass]="cotizacion.facturado === 'S' ? 'bg-success' : 'bg-secondary'">
+                                    <span class="badge bg-danger" *ngIf="estaCancelada(cotizacion)">Cancelada</span>
+                                    <span class="badge" *ngIf="!estaCancelada(cotizacion)" [ngClass]="cotizacion.facturado === 'S' ? 'bg-success' : 'bg-secondary'">
                     {{ cotizacion.facturado === 'S' ? 'Sí' : 'No' }}
                   </span>
                                 </td>

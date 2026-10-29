@@ -24,6 +24,7 @@ export let APIURL = {
             CotizacionReimpresion: API + 'FacturacionReporte/ReportCotizacionConsulta',
             CotizacionFacturaConsulta: API + 'Cotizacion/GetCotizacionFacturaConsulta',
             DetalleCotizacionConsulta: API + 'Cotizacion/GetDetalleCotizacionConsulta',
+            CotizacionCancelar: API + 'Cotizacion/Cancelar',
         }
     },
     Factura: {

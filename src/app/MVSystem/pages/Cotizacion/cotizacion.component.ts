@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CreatorPDFFile } from '../../../helpers/helper';
-import { Garantia, TipoComprobante, TipoFactura, TipoPago } from '../../../core/interfaces/catalogo.interface';
+import { Garantia, TipoFactura, TipoPago } from '../../../core/interfaces/catalogo.interface';
 import { ClienteConsultaCriterio, Cliente } from '../../../core/interfaces/cliente.interface';
 import { DetalleFacturaList, FacturaFilter } from '../../../core/interfaces/mantenimiento';
 import { VendedorLista } from '../../../core/interfaces/vendedor.interface';
@@ -47,7 +47,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.getClientes();
     this.getGarantia();
-    this.getTipoComprobante();
     this.getTipoFactura();
     this.getTipoPago();
     this.getVendedor();
@@ -64,13 +63,14 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   aplicarItbis!: boolean;
   onArticuloValue: boolean = false;
   printing: boolean = false;
-  comprobanteTipos: TipoComprobante[] = [];
   clientes: Cliente[] = []
   clienteSeleccionado: Cliente | undefined;
   facturaTipos: TipoFactura[] = [];
   vendedores: VendedorLista[] = []
   pagoTipos: TipoPago[] = [];
   garantias: Garantia[] = [];
+  // ID de la garantía "No Aplica"; se actualiza al cargar el catálogo
+  private garantiaNoAplicaId = 7;
   form: FormGroup = this.fb.group({
     idCliente: [''],
     nombre: [''],
@@ -81,13 +81,10 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     tipoFactura: [1,],
     tipoPago: [1,],
     fechaFacturacion: ['',],
-    comprobante: [0,],
     fechaLimitePago: [,],
-    garantia: [8,],
+    garantia: [7,],
     nota: ['',],
-    empresa: [,],
     codigo: [,],
-    rnc: ['',],
     itbis: ['',],
     cantidad:[,],
     articulo:[,],
@@ -204,10 +201,9 @@ export class CotizacionComponent implements OnInit,OnDestroy {
           this.form.reset();
           this.form.patchValue({
             vendedor: vendedorActual,
-            garantia: 8, // No aplica
+            garantia: this.garantiaNoAplicaId,
             tipoFactura: 1,
             tipoPago: 1,
-            comprobante: 0,
             aplicarItbis: false,
           });
           this.getDateCurrentDay();
@@ -250,10 +246,11 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       idTipoPago: Number(this.form.get('tipoPago')?.value) || 1,
       fechaFacturacion: this.form.get('fechaFacturacion')?.value,
       fechaRegistro: this.form.get('fechaFacturacion')?.value,
-      ncfTipoNumero: Number(this.form.get('comprobante')?.value) || 0,
-      rnc: this.form.get('rnc')?.value || '',
+      // Las cotizaciones no llevan comprobante fiscal: 0 = no requerido
+      ncfTipoNumero: 0,
+      rnc: '',
       fechaLimitePago: this.form.get('fechaLimitePago')?.value,
-      garantia: this.form.get('garantia')?.value || 8,
+      garantia: this.form.get('garantia')?.value || this.garantiaNoAplicaId,
       nota: this.form.get('nota')?.value || '',
       descripcion: "",
       itbis: this.cotizacionList.itbis,
@@ -324,16 +321,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
     return this.aplicarItbis = aplicarItbis
   }
 
-  onCheckboxChangeFactura() {
-    if (this.form.get('comprobante')?.value !== '0') {
-      this.form.get('rnc')?.enable();
-      this.form.get('empresa')?.enable();
-    }
-    else {
-      this.form.get('rnc')?.disable();
-      this.form.get('empresa')?.disable();
-    }
-  }
   desactivarActivarFechaLimitepago() {
     if (this.form.get('tipoPago')?.value == 2) {
       this.form.get('fechaLimitePago')?.enable()
@@ -358,6 +345,12 @@ export class CotizacionComponent implements OnInit,OnDestroy {
    this.sub = this.catalogosService.getGarantiaLista()
       .subscribe(garantias => {
         this.garantias = garantias;
+        // Garantía por defecto: "No Aplica" (se busca por descripción porque el ID cambia entre catálogos)
+        const noAplica = garantias.find(g => (g.descripcion || '').trim().toLowerCase() === 'no aplica');
+        if (noAplica) {
+          this.garantiaNoAplicaId = noAplica.iD_Garantia;
+          this.form.get('garantia')?.setValue(this.garantiaNoAplicaId);
+        }
       })
   }
   getTipoFactura() {
@@ -373,18 +366,14 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       });
 
   }
-  getTipoComprobante() {
-    this.form.get('rnc')?.disable();
-    this.form.get('empresa')?.disable();
-    this.sub = this.catalogosService.getTipoComprobanteLista()
-      .subscribe(comprobanteTipos => {
-        this.comprobanteTipos = comprobanteTipos;
-      });
-  }
   getVendedor() {
     this.sub = this.vendedorService.getVendedorLista()
       .subscribe((vendedor) => {
         this.vendedores = vendedor;
+        // Por defecto se selecciona el primer vendedor de la lista
+        if (!this.form.get('vendedor')?.value && vendedor.length > 0) {
+          this.form.get('vendedor')?.setValue(vendedor[0].iD_Vendedor);
+        }
       })
   }
 

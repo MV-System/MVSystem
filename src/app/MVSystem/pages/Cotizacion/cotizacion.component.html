@@ -1,131 +1,101 @@
 <app-main [title]="'Cotización'" [breadcrumbItem]="'Cotización'">
     <section class="section">
-        <form [formGroup]="form">
-            <!-- Header de cotización -->
-            <div class="cotizacion-header mb-4">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="header-title">Nueva Cotización</h4>
-                        <p class="header-subtitle">Complete los datos para crear una nueva cotización</p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <small class="text-muted">ID: <strong>{{ form.controls.idCliente.value || 'N/A' }}</strong></small>
-                    </div>
+        <form [formGroup]="form" class="cot-wrap">
+            <!-- Encabezado -->
+            <div class="cot-title">
+                <div>
+                    <h4 class="cot-title-text"><i class="bi bi-file-earmark-text"></i> Nueva Cotización</h4>
+                    <p class="cot-title-sub">Complete los datos para crear una nueva cotización</p>
                 </div>
+                <span class="cot-chip" *ngIf="form.controls.idCliente.value">
+                    <i class="bi bi-person-badge"></i> Cliente #{{ form.controls.idCliente.value }}
+                </span>
             </div>
 
-            <!-- Datos del Cliente -->
-            <div class="row mb-4">
-                <div class="col-lg-6">
-                    <div class="card form-card">
-                        <div class="card-header form-card-header">
-                            <h6 class="mb-0">
-                                <i class="bi bi-person-circle me-2"></i>Datos del Cliente
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Seleccionar Cliente <span class="text-danger">*</span></label>
-                                <ng-select formControlName="telefono" placeholder="Buscar por nombre o teléfono..." [clearable]="false" (change)="obtenerClientesPorNombreTelefono()" [ngClass]="{ 'is-invalid': validarCampos('telefono') }">
-                                    <ng-option *ngFor="let cliente of clientes" [value]="getClienteTelefono(cliente)">
-                                        {{ cliente.nombres | titlecase }} {{ cliente.apellidos | titlecase }} - {{ getClienteTelefono(cliente) }}
-                                    </ng-option>
-                                </ng-select>
-                                <div class="invalid-feedback d-block" *ngIf="validarCampos('telefono')">
-                                    Este campo es requerido
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" [value]="clienteSeleccionado?.nombres || '-'" readonly />
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Apellido</label>
-                                    <input type="text" class="form-control" [value]="clienteSeleccionado?.apellidos || '-'" readonly />
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Teléfono <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" [value]="getClienteTelefono(clienteSeleccionado) || '-'" readonly />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Datos de Cotización -->
-                <div class="col-lg-6">
-                    <div class="card form-card">
-                        <div class="card-header form-card-header">
-                            <h6 class="mb-0">
-                                <i class="bi bi-receipt me-2"></i>Datos de Cotización
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
+            <div class="row g-3 mb-3">
+                <!-- Columna izquierda: datos de la cotización y cliente -->
+                <div class="col-lg-6 d-flex flex-column gap-3">
+                    <div class="cot-card cot-card-green">
+                        <div class="cot-card-header"><i class="bi bi-receipt"></i> Datos de Cotización</div>
+                        <div class="cot-card-body">
+                            <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Vendedor <span class="text-danger">*</span></label>
-                                    <select class="form-select" formControlName="vendedor" [ngClass]="{ 'is-invalid': validarCampos('vendedor') }">
-                                        <option value="" disabled>Seleccionar...</option>
-                                        <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
-                                            {{ vendedor.nombres }}
-                                        </option>
-                                    </select>
-                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('vendedor')">
-                                        Este campo es requerido
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Tipo Factura</label>
-                                    <select class="form-select" formControlName="tipoFactura" [ngClass]="{ 'is-invalid': validarCampos('tipoFactura') }">
-                                        <option value="" disabled>Seleccionar...</option>
-                                        <option *ngFor="let tipoFact of facturaTipos" [value]="tipoFact.iD_Tipo_Factura">
-                                            {{ tipoFact.descripcion_Factura_Tipo }}
-                                        </option>
-                                    </select>
-                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('tipoFactura')">
-                                        Este campo es requerido
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Fecha de Cotización <span class="text-danger">*</span></label>
+                                    <label class="form-label">Fecha de cotización</label>
                                     <input type="date" class="form-control" formControlName="fechaFacturacion" [ngClass]="{ 'is-invalid': validarCampos('fechaFacturacion') }" />
-                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('fechaFacturacion')">
-                                        Este campo es requerido
-                                    </div>
+                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('fechaFacturacion')">Este campo es requerido</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Fecha Límite de Pago</label>
+                                    <label class="form-label">Fecha límite de pago</label>
                                     <input type="date" class="form-control" formControlName="fechaLimitePago" [ngClass]="{ 'is-invalid': validarCampos('fechaLimitePago') }" />
-                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('fechaLimitePago')">
-                                        Este campo es requerido
-                                    </div>
+                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('fechaLimitePago')">Este campo es requerido</div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tipo de Pago</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo de pago</label>
                                     <select class="form-select" formControlName="tipoPago" (change)="desactivarActivarFechaLimitepago()">
                                         <option value="" disabled>Seleccionar...</option>
-                                        <option *ngFor="let tipoPago of pagoTipos" [value]="tipoPago.iD_Tipo_Pagos">
-                                            {{ tipoPago.descripcion_Tipo_Pagos }}
-                                        </option>
+                                        <option *ngFor="let tipoPago of pagoTipos" [value]="tipoPago.iD_Tipo_Pagos">{{ tipoPago.descripcion_Tipo_Pagos }}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6">
                                     <label class="form-label">Garantía</label>
                                     <select class="form-select" formControlName="garantia">
                                         <option value="" disabled>Seleccionar...</option>
-                                        <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
-                                            {{ garantia.descripcion }}
-                                        </option>
+                                        <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">{{ garantia.descripcion }}</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cot-card cot-card-green">
+                        <div class="cot-card-header"><i class="bi bi-person-circle"></i> Cliente <span class="text-danger">*</span></div>
+                        <div class="cot-card-body">
+                            <ng-select formControlName="telefono" placeholder="Buscar por nombre o teléfono..." [clearable]="false" (change)="obtenerClientesPorNombreTelefono()" [ngClass]="{ 'is-invalid': validarCampos('telefono') }">
+                                <ng-option *ngFor="let cliente of clientes" [value]="getClienteTelefono(cliente)">
+                                    {{ cliente.nombres | titlecase }} {{ cliente.apellidos | titlecase }} - {{ getClienteTelefono(cliente) }}
+                                </ng-option>
+                            </ng-select>
+                            <div class="invalid-feedback d-block" *ngIf="validarCampos('telefono')">Este campo es requerido</div>
+
+                            <div class="cot-client-detail">
+                                <span class="cot-client-name">
+                                    {{ clienteSeleccionado?.nombres ? ((clienteSeleccionado?.nombres + ' ' + (clienteSeleccionado?.apellidos || '')) | titlecase) : '[Nombre cliente]' }}
+                                </span>
+                                <span class="cot-client-phone">
+                                    <i class="bi bi-telephone"></i> {{ getClienteTelefono(clienteSeleccionado) || '[Teléfono]' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: configuración -->
+                <div class="col-lg-6">
+                    <div class="cot-card cot-card-orange h-100">
+                        <div class="cot-card-header"><i class="bi bi-sliders"></i> Configuración</div>
+                        <div class="cot-card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Tipo de factura</label>
+                                    <select class="form-select" formControlName="tipoFactura" [ngClass]="{ 'is-invalid': validarCampos('tipoFactura') }">
+                                        <option value="" disabled>Seleccionar...</option>
+                                        <option *ngFor="let tipoFact of facturaTipos" [value]="tipoFact.iD_Tipo_Factura">{{ tipoFact.descripcion_Factura_Tipo }}</option>
+                                    </select>
+                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('tipoFactura')">Este campo es requerido</div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Vendedor</label>
+                                    <select class="form-select" formControlName="vendedor" [ngClass]="{ 'is-invalid': validarCampos('vendedor') }">
+                                        <option value="" disabled>Seleccionar...</option>
+                                        <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">{{ vendedor.nombres }}</option>
+                                    </select>
+                                    <div class="invalid-feedback d-block" *ngIf="validarCampos('vendedor')">Este campo es requerido</div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check form-switch cot-itbis">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="aplicarItbis" formControlName="aplicarItbis" (change)="onApplyItbis()" />
+                                        <label class="form-check-label" for="aplicarItbis">Aplicar ITBIS</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -133,74 +103,31 @@
                 </div>
             </div>
 
-            <!-- Detalle de Cotización -->
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="card form-card">
-                        <div class="card-header form-card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">
-                                    <i class="bi bi-list-check me-2"></i>Artículos de Cotización
-                                </h6>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="aplicarItbis" formControlName="aplicarItbis" (change)="onApplyItbis()" />
-                                    <label class="form-check-label" for="aplicarItbis">
-                                        Aplicar ITBIS
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">Tipo de Comprobante</label>
-                                    <select class="form-select" formControlName="comprobante" (change)="onCheckboxChangeFactura()">
-                                        <option *ngFor="let tipoComprobante of comprobanteTipos" [value]="tipoComprobante.nfcTipoNumero">
-                                            {{ tipoComprobante.nfcTipoDescripcion }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">RNC</label>
-                                    <input type="text" class="form-control" formControlName="rnc" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Empresa</label>
-                                    <input type="text" class="form-control" formControlName="empresa" />
-                                </div>
-                            </div>
-
-                            <div class="btn-toolbar mb-3" role="toolbar">
-                                <button type="button" class="btn btn-primary btn-sm" (click)="agregarArticulo()">
-                                    <i class="bi bi-plus-circle me-2"></i>Agregar Artículo
-                                </button>
-                            </div>
-
-                            <app-cotizacion-list [aplicarItbis]="aplicarItbis" [articulos]="articulos" [tipoFactura]="tipoFactura" [form]="form" [itbis]="itbis" (onArticuloValue)="onArticuloValue = $event">
-                            </app-cotizacion-list>
-                        </div>
-                    </div>
+            <!-- Artículos -->
+            <div class="cot-card cot-card-blue mb-3">
+                <div class="cot-card-header cot-card-header-split">
+                    <span><i class="bi bi-list-check"></i> Artículos de la cotización</span>
+                    <button type="button" class="btn btn-primary btn-sm cot-add-btn" (click)="agregarArticulo()">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar artículo
+                    </button>
+                </div>
+                <div class="cot-card-body">
+                    <app-cotizacion-list [aplicarItbis]="aplicarItbis" [articulos]="articulos" [tipoFactura]="tipoFactura" [form]="form" [itbis]="itbis" (onArticuloValue)="onArticuloValue = $event">
+                    </app-cotizacion-list>
                 </div>
             </div>
 
             <!-- Acciones -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="d-flex gap-2 justify-content-end">
-                        <button type="button" class="btn btn-outline-secondary btn-action" routerLink="/cotizacion" [disabled]="printing">
-                            <i class="bi bi-x-circle me-2"></i>Cancelar
-                        </button>
-                        <button type="button" class="btn btn-success btn-action btn-print-main" [disabled]="form.invalid || printing" (click)="imprimir()">
-                            <span *ngIf="!printing">
-                                <i class="bi bi-printer me-2"></i>Generar Cotización
-                            </span>
-                            <span *ngIf="printing">
-                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                Generando...
-                            </span>
-                        </button>
-                    </div>
-                </div>
+            <div class="cot-actions">
+                <button type="button" class="btn cot-btn-cancel" routerLink="/cotizacion" [disabled]="printing">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn cot-btn-main" [disabled]="form.invalid || printing" (click)="imprimir()">
+                    <span *ngIf="!printing"><i class="bi bi-printer me-2"></i>Generar cotización</span>
+                    <span *ngIf="printing">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando...
+                    </span>
+                </button>
             </div>
         </form>
     </section>
