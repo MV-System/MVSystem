@@ -22,3 +22,33 @@
 .detalle-usuarios > td {
   background: #f8f9fa;
 }
+
+.tarjeta-vista {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.tarjeta-vista:hover {
+  transform: translateY(-1px);
+}
+
+.tarjeta-vista.activa {
+  border-color: #4154f1;
+}
+
+.tarjeta-icono {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.tarjeta-numero {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.tarjeta-titulo {
+  font-size: 0.9rem;
+  color: #444;
+}

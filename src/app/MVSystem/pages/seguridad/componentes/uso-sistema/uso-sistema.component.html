@@ -1,24 +1,42 @@
 <app-main title="Uso del sistema" breadcrumb="Seguridad" breadcrumbItem="Uso del sistema">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-white">
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <button type="button" class="nav-link" [class.active]="vista === 'conectados'" (click)="cambiarVista('conectados')">
-            <i class="bi bi-people me-1"></i>Conectados ahora
-          </button>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="nav-link" [class.active]="vista === 'masUsadas'" (click)="cambiarVista('masUsadas')">
-            <i class="bi bi-bar-chart me-1"></i>Mas usadas
-          </button>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="nav-link" [class.active]="vista === 'sinUso'" (click)="cambiarVista('sinUso')">
-            <i class="bi bi-slash-circle me-1"></i>Sin uso
-          </button>
-        </li>
-      </ul>
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-md-4">
+      <div class="card tarjeta-vista shadow-sm" [class.activa]="vista === 'conectados'" (click)="cambiarVista('conectados')" role="button">
+        <div class="card-body d-flex align-items-center">
+          <i class="bi bi-people tarjeta-icono text-success"></i>
+          <div>
+            <div class="tarjeta-numero">{{ conectados.length }}</div>
+            <div class="tarjeta-titulo">Conectados ahora</div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="col-12 col-md-4">
+      <div class="card tarjeta-vista shadow-sm" [class.activa]="vista === 'masUsadas'" (click)="cambiarVista('masUsadas')" role="button">
+        <div class="card-body d-flex align-items-center">
+          <i class="bi bi-bar-chart tarjeta-icono text-primary"></i>
+          <div>
+            <div class="tarjeta-numero">{{ filasPantallas.length }}</div>
+            <div class="tarjeta-titulo">Mas usadas <span class="text-muted">(pantallas con uso)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card tarjeta-vista shadow-sm" [class.activa]="vista === 'sinUso'" (click)="cambiarVista('sinUso')" role="button">
+        <div class="card-body d-flex align-items-center">
+          <i class="bi bi-slash-circle tarjeta-icono text-danger"></i>
+          <div>
+            <div class="tarjeta-numero">{{ sinUso.length }}</div>
+            <div class="tarjeta-titulo">Sin uso <span class="text-muted">(pantallas)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white fw-bold">{{ tituloLista }}</div>
 
     <div class="card-body">
       <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>

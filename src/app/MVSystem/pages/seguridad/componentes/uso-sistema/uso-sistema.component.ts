@@ -43,8 +43,12 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
   cargandoDetalle = false;
 
   private refresco: any;
-  private consultando = false;
+  private consultandoConectados = false;
+  private consultandoResumen = false;
+  private ciclos = 0;
   private readonly refrescoMs = 2000;
+  // Mientras se ve otra pestana, el resumen (que es la consulta mas pesada) se refresca cada 5 ciclos (10 s)
+  private readonly cicloResumenSegundoPlano = 5;
 
   constructor(private uso: UsoSistemaService) { }
 
@@ -54,7 +58,9 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
       next: r => this.desdeDatos = r.fecha ? new Date(r.fecha) : null,
       error: () => { }
     });
-    this.cambiarVista('conectados');
+    this.consultar(true);
+    // Mientras se este en esta pantalla los datos se actualizan solos
+    this.refresco = setInterval(() => this.consultar(false), this.refrescoMs);
   }
 
   ngOnDestroy(): void {
@@ -66,20 +72,25 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
     this.error = '';
     this.seleccion = null;
     this.detalleUsuarios = [];
-    clearInterval(this.refresco);
-    this.consultar(true);
-    // Mientras se este en esta pantalla los datos se actualizan solos
-    this.refresco = setInterval(() => this.consultar(false), this.refrescoMs);
   }
 
-  /** Consulta la vista actual; en los refrescos automaticos no muestra el "Cargando" ni se encima con una consulta en curso */
+  /**
+   * Actualiza los datos de las tarjetas y de la lista abierta. En los refrescos automaticos no muestra el
+   * "Cargando" ni se encima con una consulta que siga en curso.
+   */
   consultar(mostrarCarga: boolean): void {
-    if (this.consultando) return;
-    if (this.vista === 'conectados') this.cargarConectados(mostrarCarga);
-    else {
-      this.cargarResumen(mostrarCarga);
-      if (this.seleccion) this.cargarDetalle();
+    this.ciclos++;
+    this.cargarConectados(mostrarCarga && this.vista === 'conectados');
+
+    const resumenVisible = this.vista !== 'conectados';
+    if (mostrarCarga || resumenVisible || this.ciclos % this.cicloResumenSegundoPlano === 0) {
+      this.cargarResumen(mostrarCarga && resumenVisible);
     }
+    if (this.seleccion) this.cargarDetalle();
+  }
+
+  get tituloLista(): string {
+    return this.vista === 'conectados' ? 'Conectados ahora' : this.vista === 'masUsadas' ? 'Mas usadas' : 'Sin uso';
   }
 
   /** Abre o cierra el detalle de quien uso una pantalla o boton */
@@ -117,24 +128,26 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
   }
 
   cargarConectados(mostrarCarga = true): void {
+    if (this.consultandoConectados) return;
     if (mostrarCarga) this.cargando = true;
-    this.consultando = true;
+    this.consultandoConectados = true;
     this.uso.conectados(5).subscribe({
-      next: lista => { this.conectados = lista; this.error = ''; this.cargando = false; this.consultando = false; },
-      error: () => { this.error = 'No se pudo consultar los usuarios conectados.'; this.cargando = false; this.consultando = false; }
+      next: lista => { this.conectados = lista; this.error = ''; this.cargando = false; this.consultandoConectados = false; },
+      error: () => { this.error = 'No se pudo consultar los usuarios conectados.'; this.cargando = false; this.consultandoConectados = false; }
     });
   }
 
   cargarResumen(mostrarCarga = true): void {
+    if (this.consultandoResumen) return;
     if (mostrarCarga) this.cargando = true;
-    this.consultando = true;
+    this.consultandoResumen = true;
     const hasta = this.ahoraRD();
     const desde = this.ahoraRD();
     desde.setDate(desde.getDate() - (this.dias - 1));
 
     this.uso.resumen(this.formatoFecha(desde), this.formatoFecha(hasta), this.empresa).subscribe({
-      next: datos => { this.armarTablas(datos); this.error = ''; this.cargando = false; this.consultando = false; },
-      error: () => { this.error = 'No se pudo consultar el uso del sistema.'; this.cargando = false; this.consultando = false; }
+      next: datos => { this.armarTablas(datos); this.error = ''; this.cargando = false; this.consultandoResumen = false; },
+      error: () => { this.error = 'No se pudo consultar el uso del sistema.'; this.cargando = false; this.consultandoResumen = false; }
     });
   }
 
