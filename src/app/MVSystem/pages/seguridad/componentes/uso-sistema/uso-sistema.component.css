@@ -1,0 +1,24 @@
+.barra {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barra-relleno {
+  height: 100%;
+  background: #4154f1;
+  border-radius: 4px;
+}
+
+.nav-pills .nav-link {
+  font-size: 0.9rem;
+}
+
+.fila-clic {
+  cursor: pointer;
+}
+
+.detalle-usuarios > td {
+  background: #f8f9fa;
+}

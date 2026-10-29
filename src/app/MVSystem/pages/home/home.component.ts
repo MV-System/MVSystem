@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from 'src/app/auth/login.service';
 import { ToastrService } from 'ngx-toastr';
+import { UsoSistemaService } from 'src/app/core/services/uso-sistema.service';
 
 @Component({
   selector: 'app-home',
@@ -19,10 +20,12 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private toastr: ToastrService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private usoSistema: UsoSistemaService
   ) {}
 
   ngOnInit(): void {
+    this.usoSistema.iniciar();
     // Oculta el sidebar por defecto en pantallas pequeñas
     if (window.innerWidth < 992) {
       this.sidebarVisible = false;

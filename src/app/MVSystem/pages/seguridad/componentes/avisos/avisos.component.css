@@ -1,0 +1,10 @@
+.texto-corto {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detalle-vistos > td {
+  background: #f8f9fa;
+}

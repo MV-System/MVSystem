@@ -232,6 +232,16 @@
                         <i class="bi bi-terminal"></i><span>Modo Desarrollador</span>
                     </a>
                 </li>
+                <li *ngIf="VerModoDesarrollador()">
+                    <a (click)="onMenuClick()" routerLink="./seguridad/uso-sistema">
+                        <i class="bi bi-graph-up"></i><span>Uso del sistema</span>
+                    </a>
+                </li>
+                <li *ngIf="VerModoDesarrollador()">
+                    <a (click)="onMenuClick()" routerLink="./seguridad/avisos">
+                        <i class="bi bi-megaphone"></i><span>Avisos</span>
+                    </a>
+                </li>
             </ul>
         </li>
         <!-- End Seguridad Nav -->

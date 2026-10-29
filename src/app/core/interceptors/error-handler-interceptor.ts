@@ -15,6 +15,11 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
         const isReciboAbonoReport = normalizedUrl.includes('/clientesreporte/reciboabono');
         const retryCount = req.method === 'GET' && !isReciboAbonoReport ? 2 : 0;
 
+        // El registro de uso del sistema nunca debe mostrar avisos ni cerrar la sesion
+        if (req.headers.has('X-Uso-Silencioso')) {
+            return next.handle(req);
+        }
+
         return next.handle(req).pipe(
             retry(retryCount),
             catchError((error : HttpErrorResponse)=>this.handleErrorsResponseService.handleError(error))

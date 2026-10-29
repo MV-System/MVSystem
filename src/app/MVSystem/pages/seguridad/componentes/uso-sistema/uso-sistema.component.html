@@ -1,0 +1,200 @@
+<app-main title="Uso del sistema" breadcrumb="Seguridad" breadcrumbItem="Uso del sistema">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <button type="button" class="nav-link" [class.active]="vista === 'conectados'" (click)="cambiarVista('conectados')">
+            <i class="bi bi-people me-1"></i>Conectados ahora
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="nav-link" [class.active]="vista === 'masUsadas'" (click)="cambiarVista('masUsadas')">
+            <i class="bi bi-bar-chart me-1"></i>Mas usadas
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="nav-link" [class.active]="vista === 'sinUso'" (click)="cambiarVista('sinUso')">
+            <i class="bi bi-slash-circle me-1"></i>Sin uso
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+
+      <!-- Conectados ahora -->
+      <ng-container *ngIf="vista === 'conectados'">
+        <p class="text-muted small mb-3">
+          Usuarios con actividad en los ultimos 5 minutos. Se actualiza solo cada 2 segundos.
+          <strong>{{ conectados.length }}</strong> conectado(s).
+        </p>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Empresa</th>
+                <th>Pantalla actual</th>
+                <th>Conectado desde</th>
+                <th>Ultima actividad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of conectados">
+                <td>
+                  {{ c.nombreUsuario || c.usuario }}
+                  <span *ngIf="c.nombreUsuario" class="text-muted small ms-1">({{ c.usuario }})</span>
+                </td>
+                <td>{{ c.empresa }}</td>
+                <td>{{ nombreDePantalla(c.ruta) }}</td>
+                <td>{{ c.inicio | date:'dd/MM HH:mm' }}</td>
+                <td>{{ hace(c.ultimaActividad) }}</td>
+              </tr>
+              <tr *ngIf="!cargando && conectados.length === 0">
+                <td colspan="5" class="text-center text-muted py-4">No hay usuarios conectados en este momento.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      <!-- Filtros de las vistas por periodo -->
+      <ng-container *ngIf="vista !== 'conectados'">
+        <div class="row g-2 align-items-end mb-3">
+          <div class="col-6 col-md-3">
+            <label class="form-label small mb-1">Periodo</label>
+            <select class="form-select form-select-sm" [(ngModel)]="dias" (change)="cargarResumen()">
+              <option [ngValue]="1">Hoy</option>
+              <option [ngValue]="7">Ultimos 7 dias</option>
+              <option [ngValue]="30">Ultimos 30 dias</option>
+              <option [ngValue]="60">Ultimos 60 dias</option>
+              <option [ngValue]="90">Ultimos 90 dias</option>
+              <option [ngValue]="180">Ultimos 180 dias</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label small mb-1">Empresa</label>
+            <select class="form-select form-select-sm" [(ngModel)]="empresa" (change)="cargarResumen()">
+              <option value="">Todas</option>
+              <option *ngFor="let e of empresas" [value]="e">{{ e }}</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 text-md-end" *ngIf="vista === 'masUsadas'">
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-outline-primary" [class.active]="!verBotones" (click)="verBotones = false; seleccion = null">Pantallas</button>
+              <button type="button" class="btn btn-outline-primary" [class.active]="verBotones" (click)="verBotones = true; seleccion = null">Botones</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="periodoMayorQueDatos" class="alert alert-warning py-2 small">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          El uso se registra desde hace solo {{ diasDeDatos }} dia(s). Con un periodo de {{ dias }} dias,
+          los resultados todavia no son concluyentes: una pantalla puede aparecer sin uso solo por falta de tiempo.
+        </div>
+      </ng-container>
+
+      <!-- Mas usadas -->
+      <ng-container *ngIf="vista === 'masUsadas'">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead>
+              <tr>
+                <th style="width: 40px">#</th>
+                <th>{{ verBotones ? 'Boton' : 'Pantalla' }}</th>
+                <th *ngIf="verBotones">Pantalla</th>
+                <th class="text-end">Veces</th>
+                <th class="text-end">Usuarios</th>
+                <th>Ultima vez</th>
+                <th style="width: 20%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let f of filas; let i = index">
+                <tr class="fila-clic" [class.table-active]="esSeleccionada(f)" (click)="seleccionar(f)" title="Ver quien lo uso">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <i class="bi me-1" [ngClass]="esSeleccionada(f) ? 'bi-chevron-down' : 'bi-chevron-right'"></i>{{ f.nombre }}
+                    <span *ngIf="!f.catalogada" class="badge bg-secondary ms-1" title="Ruta que no esta en el catalogo de pantallas">no catalogada</span>
+                  </td>
+                  <td *ngIf="verBotones">{{ nombreDePantalla(f.ruta) }}</td>
+                  <td class="text-end">{{ f.visitas | number }}</td>
+                  <td class="text-end">{{ f.usuarios }}</td>
+                  <td>{{ f.ultima | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>
+                    <div class="barra"><div class="barra-relleno" [style.width.%]="f.porcentaje"></div></div>
+                  </td>
+                </tr>
+                <tr *ngIf="esSeleccionada(f)" class="detalle-usuarios">
+                  <td></td>
+                  <td [attr.colspan]="verBotones ? 6 : 5">
+                    <div *ngIf="cargandoDetalle" class="text-muted small py-2">Cargando...</div>
+                    <table *ngIf="!cargandoDetalle" class="table table-sm table-borderless mb-0">
+                      <thead>
+                        <tr class="text-muted small">
+                          <th>Usuario</th>
+                          <th>Empresa</th>
+                          <th class="text-end">Veces</th>
+                          <th>Ultima vez</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let u of detalleUsuarios">
+                          <td>
+                            {{ u.nombreUsuario || u.usuario }}
+                            <span *ngIf="u.nombreUsuario" class="text-muted small ms-1">({{ u.usuario }})</span>
+                          </td>
+                          <td>{{ u.empresa }}</td>
+                          <td class="text-end">{{ u.veces | number }}</td>
+                          <td>{{ u.ultima | date:'dd/MM/yyyy HH:mm' }}</td>
+                        </tr>
+                        <tr *ngIf="detalleUsuarios.length === 0">
+                          <td colspan="4" class="text-muted">Sin datos.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="!cargando && filas.length === 0">
+                <td [attr.colspan]="verBotones ? 7 : 6" class="text-center text-muted py-4">Sin registros en este periodo.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      <!-- Sin uso -->
+      <ng-container *ngIf="vista === 'sinUso'">
+        <p class="text-muted small mb-3">
+          Pantallas del menu que nadie abrio en el periodo: <strong>{{ sinUso.length }}</strong>.
+          Es una lista para investigar, no para borrar: hay pantallas poco frecuentes pero necesarias (cierres, anulaciones).
+        </p>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Pantalla</th>
+                <th>Grupo</th>
+                <th>Ruta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of sinUso">
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.grupo }}</td>
+                <td class="text-muted small">{{ p.ruta }}</td>
+              </tr>
+              <tr *ngIf="!cargando && sinUso.length === 0">
+                <td colspan="3" class="text-center text-muted py-4">Todas las pantallas del menu se usaron en este periodo.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      <div *ngIf="cargando" class="text-center text-muted py-3">Cargando...</div>
+    </div>
+  </div>
+</app-main>
