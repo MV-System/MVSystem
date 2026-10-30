@@ -150,6 +150,16 @@
                         <i class="bi bi-circle"></i><span>Accesorios</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormConsultaAccesorios()">
+                    <a (click)="onMenuClick()" routerLink="./accesorios/kardex">
+                        <i class="bi bi-circle"></i><span>Kardex de accesorios</span>
+                    </a>
+                </li>
+                <li *ngIf="VerFormLaptopConsumo()">
+                    <a (click)="onMenuClick()" routerLink="./accesorios/consumo-componentes">
+                        <i class="bi bi-circle"></i><span>Consumo de componentes</span>
+                    </a>
+                </li>
                 <li *ngIf="VerFormConsultaUtilidades()">
                     <a (click)="onMenuClick()" routerLink="./utilidades/consulta">
                         <i class="bi bi-circle"></i><span>Utilidades</span>

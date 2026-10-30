@@ -1,0 +1,141 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Consumo de componentes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">Consultas</li>
+                <li class="breadcrumb-item active">Consumo de componentes</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-body p-3">
+                <h5 class="card-title small mb-2"><i class="bi bi-funnel me-2 text-primary"></i>Filtros</h5>
+                <form [formGroup]="form" (ngSubmit)="consultar()" class="row g-2">
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small mb-1">Desde</label>
+                        <input type="date" class="form-control form-control-sm" formControlName="fechaInicio">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small mb-1">Hasta</label>
+                        <input type="date" class="form-control form-control-sm" formControlName="fechaFinal">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Almacén</label>
+                        <ng-select [items]="almacenes" bindLabel="descripcion" bindValue="iD_Almacen" formControlName="almacen"
+                                   placeholder="Todos"></ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Técnico</label>
+                        <ng-select [items]="tecnicos" bindLabel="etiqueta" bindValue="login" formControlName="tecnico"
+                                   placeholder="Todos"></ng-select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small mb-1">Tipo de pieza</label>
+                        <ng-select [items]="tiposPieza" bindLabel="texto" bindValue="valor" formControlName="tipoPieza"
+                                   placeholder="Todos"></ng-select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Movimiento</label>
+                        <ng-select [items]="motivos" bindLabel="texto" bindValue="valor" formControlName="motivo"
+                                   placeholder="Todos"></ng-select>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-end justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-success btn-sm" (click)="exportarExcel()" [disabled]="!movimientos.length">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Exportar a Excel
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="isCargando">
+                            <span *ngIf="!isCargando">Consultar</span>
+                            <span *ngIf="isCargando" class="spinner-border spinner-border-sm"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div *ngIf="consultado && !movimientos.length" class="alert alert-light border small">No hay movimientos de componentes con esos filtros.</div>
+
+        <ng-container *ngIf="movimientos.length">
+            <!-- Totales -->
+            <div class="row g-2 mb-3 text-center small">
+                <div class="col-6 col-md-3"><div class="border rounded p-2 bg-white">Movimientos<br><strong>{{movimientos.length}}</strong></div></div>
+                <div class="col-6 col-md-3"><div class="border rounded p-2 bg-white text-success">Entradas<br><strong>{{totalEntradas}}</strong></div></div>
+                <div class="col-6 col-md-3"><div class="border rounded p-2 bg-white text-danger">Salidas<br><strong>{{totalSalidas}}</strong></div></div>
+                <div class="col-6 col-md-3"><div class="border rounded p-2 bg-white">Costo de lo que salió<br><strong>{{costoSalidas | currency}}</strong></div></div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <h5 class="card-title small mb-2">Por movimiento</h5>
+                            <table class="table table-sm align-middle small mb-0">
+                                <thead class="table-light"><tr><th>Movimiento</th><th class="text-end">Entradas</th><th class="text-end">Salidas</th></tr></thead>
+                                <tbody>
+                                    <tr *ngFor="let l of porMotivo"><td>{{l.clave}}</td><td class="text-end">{{l.entradas}}</td><td class="text-end">{{l.salidas}}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <h5 class="card-title small mb-2">Por accesorio</h5>
+                            <div class="table-responsive resumen-accesorio">
+                                <table class="table table-sm align-middle small mb-0">
+                                    <thead class="table-light"><tr><th>Accesorio</th><th class="text-end">Entradas</th><th class="text-end">Salidas</th></tr></thead>
+                                    <tbody>
+                                        <tr *ngFor="let l of porAccesorio"><td>{{l.clave}}</td><td class="text-end">{{l.entradas}}</td><td class="text-end">{{l.salidas}}</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalle -->
+            <div class="card">
+                <div class="card-body p-3">
+                    <h5 class="card-title small mb-2">Detalle</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped align-middle small mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Movimiento</th>
+                                    <th>Documento</th>
+                                    <th>Accesorio</th>
+                                    <th>Almacén</th>
+                                    <th class="text-end">Entrada</th>
+                                    <th class="text-end">Salida</th>
+                                    <th class="text-end">Costo</th>
+                                    <th>Usuario</th>
+                                    <th>Técnico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let m of movimientos">
+                                    <td>{{m.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+                                    <td>{{textoMotivo(m.motivo)}}</td>
+                                    <td>{{m.documento || '—'}}</td>
+                                    <td>{{m.modelo}} · {{m.descripcion_Accesorio}}</td>
+                                    <td>{{m.descripcion_Almacen}}</td>
+                                    <td class="text-end text-success">{{m.entrada || ''}}</td>
+                                    <td class="text-end text-danger">{{m.salida || ''}}</td>
+                                    <td class="text-end">{{m.costo | currency}}</td>
+                                    <td>{{m.usuario || ''}}</td>
+                                    <td>{{m.tecnico || ''}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </section>
+</main>

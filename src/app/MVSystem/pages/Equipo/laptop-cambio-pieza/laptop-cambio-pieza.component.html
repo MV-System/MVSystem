@@ -10,6 +10,18 @@
         </nav>
     </div>
 
+    <!-- Comprobante de custodia: la pieza retirada quedo en custodia del tecnico -->
+    <div *ngIf="comprobante" class="alert alert-success d-flex justify-content-between align-items-center flex-wrap gap-2 py-2 small">
+        <span><i class="bi bi-receipt me-2"></i>La pieza retirada quedó en custodia de {{comprobante.tecnicoNombre}}. ¿Desea imprimir el comprobante?</span>
+        <span class="text-nowrap">
+            <button type="button" class="btn btn-success btn-sm me-1" (click)="imprimirComprobante()" [disabled]="isImprimiendo">
+                <span *ngIf="!isImprimiendo"><i class="bi bi-printer me-1"></i>Imprimir comprobante</span>
+                <span *ngIf="isImprimiendo" class="spinner-border spinner-border-sm"></span>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="comprobante = null" [disabled]="isImprimiendo">No, gracias</button>
+        </span>
+    </div>
+
     <section class="section">
         <div class="row">
             <!-- COLUMNA IZQUIERDA: búsqueda + datos de la laptop + cambio -->
@@ -61,32 +73,28 @@
                                         <ng-select [items]="accesoriosInstalar" bindLabel="etiqueta" bindValue="iD_Accesorio"
                                                    formControlName="accesorioInstalado" placeholder="Seleccionar accesorio"
                                                    notFoundText="No hay componentes con existencia en este almacén"
-                                                   (change)="onAccesorioInstaladoChange()"
                                                    [class.is-invalid]="campoInvalido('accesorioInstalado')"></ng-select>
                                         <div class="small text-danger" *ngIf="campoInvalido('accesorioInstalado')">Requerido</div>
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label small mb-1">Capacidad nueva (GB) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control form-control-sm" formControlName="capacidadGB" min="1"
-                                               [class.is-invalid]="campoInvalido('capacidadGB')">
-                                        <div class="invalid-feedback small">Requerido (1 - 16000)</div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label small mb-1">Tipo <span class="text-danger">*</span></label>
-                                        <select class="form-select form-select-sm" formControlName="tipoNuevo"
-                                                [class.is-invalid]="campoInvalido('tipoNuevo')">
-                                            <option [ngValue]="null" disabled>Seleccionar</option>
-                                            <option *ngFor="let t of tiposNuevos" [value]="t">{{t}}</option>
-                                        </select>
-                                        <div class="small text-danger" *ngIf="campoInvalido('tipoNuevo')">Requerido</div>
+                                    <!-- Capacidad y tipo calculados de la pieza que se instala -->
+                                    <div class="col-12" *ngIf="instalada">
+                                        <div class="small text-muted" *ngIf="capacidadInstalada !== null">
+                                            Se instala: <strong>{{capacidadInstalada}}GB {{tipoInstalada}}</strong>
+                                        </div>
+                                        <div class="small text-danger" *ngIf="capacidadInstalada === null">
+                                            No se pudo determinar la capacidad de la pieza; revise la descripción del accesorio.
+                                        </div>
                                     </div>
 
-                                    <!-- Pieza retirada -->
+                                    <!-- Pieza retirada: un modulo de esta laptop -->
                                     <div class="col-12">
-                                        <label class="form-label small mb-1">Pieza que se retira (opcional)</label>
-                                        <ng-select [items]="accesoriosRetirar" bindLabel="etiqueta" bindValue="iD_Accesorio"
-                                                   formControlName="accesorioRetirado" placeholder="Sin pieza retirada (slot libre)"
-                                                   (change)="onAccesorioRetiradoChange()"></ng-select>
+                                        <label class="form-label small mb-1">Pieza que se retira <span class="text-danger">*</span></label>
+                                        <ng-select [items]="opcionesRetirada" bindLabel="etiqueta" bindValue="id"
+                                                   formControlName="moduloRetirado" placeholder="Seleccionar la pieza que sale" [clearable]="false"
+                                                   (change)="onModuloRetiradoChange()"
+                                                   [class.is-invalid]="campoInvalido('moduloRetirado')"></ng-select>
+                                        <div class="small text-danger" *ngIf="campoInvalido('moduloRetirado')">Requerido (elija la pieza o "Ninguna")</div>
+                                        <div class="small text-warning" *ngIf="avisoRanura">{{avisoRanura}}</div>
                                     </div>
                                     <div class="col-12" *ngIf="hayRetirada">
                                         <label class="form-label small mb-1">Destino de la pieza retirada <span class="text-danger">*</span></label>
@@ -114,11 +122,14 @@
                             <!-- Resumen -->
                             <div *ngIf="instalada" class="resumen mt-3 border rounded p-2">
                                 <div class="fw-bold small mb-1">Resumen del cambio</div>
+                                <div class="small mb-1" *ngIf="resumenConfiguracion as r">
+                                    <strong>{{tipoPieza === 'RAM' ? 'RAM' : 'Almacenamiento'}}:</strong> {{r.antes}} → {{r.despues}}
+                                </div>
                                 <table class="table table-sm mb-1 small">
                                     <tbody>
                                         <tr><td>Costo actual de la laptop</td><td class="text-end">{{laptop.costo_Equipo | currency}}</td></tr>
                                         <tr *ngIf="hayRetirada">
-                                            <td>(−) Pieza retirada
+                                            <td>(−) Pieza retirada (usada)
                                                 <span class="text-muted" *ngIf="destino === 'CLIENTE'">(se la lleva el cliente, no se descuenta)</span>
                                             </td>
                                             <td class="text-end">{{costoRetiradoDescontado | currency}}</td>
@@ -127,6 +138,9 @@
                                         <tr class="fw-bold"><td>Costo nuevo</td><td class="text-end">{{costoNuevo | currency}}</td></tr>
                                     </tbody>
                                 </table>
+                                <div class="alert alert-warning p-2 small mb-1" *ngIf="retiradaSinCosto">
+                                    Esta pieza no tiene costo registrado; no se descuenta de la laptop.
+                                </div>
                                 <div class="small text-muted" *ngIf="hayRetirada && destino === 'CUSTODIA'">
                                     La pieza retirada queda en custodia del técnico y no suma al inventario hasta que otro usuario confirme su recepción.
                                 </div>
@@ -177,6 +191,7 @@
                                         <th>Cambio</th>
                                         <th class="text-end">Costo</th>
                                         <th>Custodia</th>
+                                        <th *ngIf="puedeAnular"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -190,6 +205,10 @@
                                         <td>
                                             <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
                                             <div class="text-muted" *ngIf="h.usuario_Recepcion">Recibió: {{h.usuario_Recepcion}}</div>
+                                            <div class="text-muted" *ngIf="h.estado_Custodia === 'ANULADO'">{{h.usuario_Anula}}: {{h.motivo_Anula}}</div>
+                                        </td>
+                                        <td class="text-end" *ngIf="puedeAnular">
+                                            <button type="button" class="btn btn-outline-danger btn-sm py-0" *ngIf="h.puede_Anular" (click)="cambioAnular = h">Anular</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -200,4 +219,6 @@
             </div>
         </div>
     </section>
+
+    <app-laptop-anular-cambio *ngIf="cambioAnular" [cambio]="cambioAnular" (anulado)="alAnular()" (cancelar)="cambioAnular = null"></app-laptop-anular-cambio>
 </main>

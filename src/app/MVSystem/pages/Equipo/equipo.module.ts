@@ -30,6 +30,7 @@ import { InventarioComponent } from './inventario/inventario.component';
 import { LaptopCambioPiezaComponent } from './laptop-cambio-pieza/laptop-cambio-pieza.component';
 import { LaptopCustodiaComponent } from './laptop-custodia/laptop-custodia.component';
 import { LaptopHistorialComponent } from './laptop-historial/laptop-historial.component';
+import { LaptopAnularCambioComponent } from './laptop-anular-cambio/laptop-anular-cambio.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -57,7 +58,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     InventarioComponent,
     LaptopCambioPiezaComponent,
     LaptopCustodiaComponent,
-    LaptopHistorialComponent
+    LaptopHistorialComponent,
+    LaptopAnularCambioComponent
   ],
   imports: [
     CommonModule,

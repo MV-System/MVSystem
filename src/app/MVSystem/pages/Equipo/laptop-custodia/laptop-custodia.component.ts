@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { LaptopCustodiaAccion, LaptopCustodiaPendiente } from 'src/app/core/interfaces/laptop.interface';
 import { LaptopsService } from 'src/app/core/services/laptops.service';
+import { ImprimirPdfBlob } from 'src/app/helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { SeguridadService } from '../../seguridad/servicios/seguridad.service';
 
@@ -40,6 +41,11 @@ export class LaptopCustodiaComponent implements OnInit {
   precioDetalle: number | null = null;
   precioMayor: number | null = null;
   mensajePrecio = '';
+  // Al recibir: costo y precios del accesorio cuando aun no los tiene (la pieza se creo al retirarla)
+  pedirPreciosAccesorio = false;
+  accCosto: number | null = null;
+  accMayor: number | null = null;
+  accDetalle: number | null = null;
 
   constructor(
     private toastr: ToastrService,
@@ -114,6 +120,32 @@ export class LaptopCustodiaComponent implements OnInit {
     this.precioDetalle = null;
     this.precioMayor = null;
     this.mensajePrecio = '';
+    this.pedirPreciosAccesorio = accion === 'RECIBIR' && !!p.requiere_Precios;
+    // El costo de la pieza usada ya viene calculado por el sistema; el usuario lo confirma o lo ajusta
+    this.accCosto = p.costo_Retirado > 0 ? Number(p.costo_Retirado) : null;
+    this.accMayor = null;
+    this.accDetalle = null;
+  }
+
+  /** Reimprime el comprobante de custodia de una pieza pendiente. */
+  imprimirComprobante(p: LaptopCustodiaPendiente) {
+    const etiqueta = this.tecnicos.find(t => t.login === p.tecnico)?.etiqueta || p.tecnico;
+    const nombre = etiqueta.replace(/\s*\([^)]*\)\s*$/, '');
+    this.laptopsService.obtenerComprobanteCustodia(
+      p.iD_Cambio,
+      this.loginService.getUserIdEmpresa,
+      this.loginService.getUserIdSucursal,
+      nombre
+    ).subscribe({
+      next: (blob) => {
+        if (!blob || blob.size === 0) {
+          this.toastr.warning('El comprobante está vacío.');
+          return;
+        }
+        ImprimirPdfBlob(blob);
+      },
+      error: () => this.toastr.warning('No se pudo generar el comprobante de custodia.')
+    });
   }
 
   cancelarAccion() {
@@ -122,7 +154,22 @@ export class LaptopCustodiaComponent implements OnInit {
   }
 
   get preciosCompletos(): boolean {
-    return !this.pedirPrecios || (!!this.precioDetalle && !!this.precioMayor && this.precioMayor <= this.precioDetalle);
+    return (!this.pedirPrecios || (!!this.precioDetalle && !!this.precioMayor && this.precioMayor <= this.precioDetalle))
+      && this.preciosAccesorioValidos;
+  }
+
+  /** Costo <= precio por mayor <= precio al detalle, todos mayores a 0. */
+  get preciosAccesorioValidos(): boolean {
+    if (!this.pedirPreciosAccesorio) { return true; }
+    return !!this.accCosto && !!this.accMayor && !!this.accDetalle
+      && this.accCosto > 0 && this.accCosto <= this.accMayor && this.accMayor <= this.accDetalle;
+  }
+
+  get mensajePreciosAccesorio(): string {
+    if (!this.accCosto || !this.accMayor || !this.accDetalle) { return 'Indique el costo, el precio por mayor y el precio al detalle.'; }
+    if (this.accCosto > this.accMayor) { return 'El costo no puede ser mayor que el precio por mayor.'; }
+    if (this.accMayor > this.accDetalle) { return 'El precio por mayor no puede ser mayor que el precio al detalle.'; }
+    return '';
   }
 
   confirmarAccion() {
@@ -136,6 +183,11 @@ export class LaptopCustodiaComponent implements OnInit {
     if (this.accion === 'ENTREGAR_CLIENTE' && this.pedirPrecios) {
       datos.nuevo_Precio_Detalle = this.precioDetalle;
       datos.nuevo_Precio_Por_Mayor = this.precioMayor;
+    }
+    if (this.accion === 'RECIBIR' && this.pedirPreciosAccesorio) {
+      datos.accesorio_Costo = this.accCosto;
+      datos.accesorio_Precio_Por_Mayor = this.accMayor;
+      datos.accesorio_Precio_Detalle = this.accDetalle;
     }
 
     const llamada = this.accion === 'RECIBIR'

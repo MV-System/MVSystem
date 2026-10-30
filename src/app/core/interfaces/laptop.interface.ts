@@ -8,6 +8,57 @@ export interface EquipoConfiguracion {
   usuario: string;
   configuracion?: string;
   mensaje?: string;
+  /** Memorias y discos de la laptop. Si viene, el API los usa en vez de ram_GB / almacenamiento_GB. */
+  modulos?: EquipoModuloRequest[];
+}
+
+/** Una memoria o un disco al registrar la laptop. */
+export interface EquipoModuloRequest {
+  tipoPieza: TipoPieza;
+  capacidadGB: number;
+  idModeloComponente: number;
+}
+
+/** Módulo instalado en una laptop (respuesta del API). */
+export interface LaptopModulo {
+  iD_Modulo: number;
+  imei: string;
+  tipo_Pieza: TipoPieza;
+  capacidad_GB: number;
+  iD_Modelo_Componente: number;
+  modelo_Componente: string;
+  tipo: string;
+  iD_Accesorio: number | null;
+  estado: string;
+  usuario: string;
+  fecha_Registro: string;
+}
+
+/** Modelo de componente (RAM / disco) con su tipo. */
+export interface ModeloComponente {
+  iD_Modelo: number;
+  descripcion: string;
+  tipo_Pieza: TipoPieza;
+  tipo: string;
+}
+
+export interface LaptopCorreccion {
+  iD_Correccion: number;
+  imei: string;
+  iD_Modulo: number;
+  antes: string;
+  despues: string;
+  motivo: string;
+  usuario: string;
+  fecha: string;
+}
+
+export interface LaptopModuloCorreccionRequest {
+  iD_Modulo: number;
+  iD_Modelo_Componente: number;
+  capacidad_GB: number;
+  motivo: string;
+  usuario: string;
 }
 
 export interface LaptopEquipo {
@@ -40,9 +91,12 @@ export interface LaptopCambioPiezaRequest {
   imei: string;
   tipo_Pieza: TipoPieza;
   iD_Accesorio_Instalado: number;
-  nueva_Capacidad_GB: number;
-  nuevo_Tipo: string;
-  iD_Accesorio_Retirado: number | null;
+  /** Modulo de la laptop que sale; null = slot libre. El SP resuelve el accesorio de la pieza retirada. */
+  iD_Modulo_Retirado: number | null;
+  /** Opcionales: el SP los calcula de la pieza instalada. */
+  nueva_Capacidad_GB?: number | null;
+  nuevo_Tipo?: string | null;
+  iD_Accesorio_Retirado?: number | null;
   destino_Retirada: DestinoRetirada | null;
   tecnico: string;
   iD_Almacen: number;
@@ -69,11 +123,15 @@ export interface LaptopCustodiaPendiente {
   fecha_Registro: string;
   horas_Transcurridas: number;
   vencido: boolean;
+  /** El accesorio retirado no tiene costo y precios: la recepcion debe pedirlos. */
+  requiere_Precios: boolean;
 }
 
 export interface LaptopCustodiaConfig {
   horasMax: number;
   bloquearVencidos: boolean;
+  /** % del costo de una pieza nueva que se toma como costo de la pieza usada (appsettings). */
+  porcentajeCostoUsado: number;
 }
 
 export interface LaptopCustodiaAccion {
@@ -82,6 +140,10 @@ export interface LaptopCustodiaAccion {
   nota?: string | null;
   nuevo_Precio_Detalle?: number | null;
   nuevo_Precio_Por_Mayor?: number | null;
+  /** Solo al recibir una pieza cuyo accesorio no tiene costo y precios registrados. */
+  accesorio_Costo?: number | null;
+  accesorio_Precio_Por_Mayor?: number | null;
+  accesorio_Precio_Detalle?: number | null;
 }
 
 export interface LaptopCambioHistorial {
@@ -102,4 +164,63 @@ export interface LaptopCambioHistorial {
   fecha_Registro: string;
   usuario_Recepcion: string | null;
   fecha_Recepcion: string | null;
+  /** Es el último cambio vigente de la laptop. */
+  es_Ultimo?: boolean;
+  laptop_Disponible?: string;
+  /** Último cambio, pieza sin recibir, laptop disponible: se puede anular. */
+  puede_Anular?: boolean;
+  usuario_Anula?: string | null;
+  fecha_Anula?: string | null;
+  motivo_Anula?: string | null;
+}
+
+/** Accesorio encontrado para consultar su kardex. */
+export interface AccesorioKardexBusqueda {
+  iD_Accesorio: number;
+  descripcion_Accesorio: string;
+  modelo: string;
+  iD_Almacen: number;
+  descripcion_Almacen: string;
+  cantidad: number;
+  estado: string;
+}
+
+export type MotivoMovimiento = 'VENTA' | 'CAMBIO_PIEZA' | 'RECEPCION' | 'SALDO_INICIAL';
+
+/** Línea del kardex de un accesorio. */
+export interface KardexMovimiento {
+  fecha: string;
+  motivo: MotivoMovimiento;
+  documento: string | null;
+  entrada: number;
+  salida: number;
+  usuario: string | null;
+  saldo: number;
+  descripcion_Accesorio: string;
+  descripcion_Almacen: string;
+  existencia_Actual: number;
+}
+
+/** Línea del reporte general de consumo de componentes. */
+export interface ConsumoComponente {
+  fecha: string;
+  motivo: MotivoMovimiento;
+  documento: string | null;
+  iD_Accesorio: number;
+  descripcion_Accesorio: string;
+  modelo: string;
+  tipo_Pieza: TipoPieza;
+  iD_Almacen: number;
+  descripcion_Almacen: string;
+  entrada: number;
+  salida: number;
+  costo: number;
+  usuario: string | null;
+  tecnico: string | null;
+}
+
+export interface LaptopAnularCambioRequest {
+  iD_Cambio: number;
+  motivo: string;
+  usuario: string;
 }

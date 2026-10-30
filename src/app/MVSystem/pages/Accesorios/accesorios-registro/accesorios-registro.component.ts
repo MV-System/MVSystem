@@ -82,7 +82,8 @@ export class AccesoriosRegistroComponent implements OnInit {
       this.validadorCantidadMinMax(),
       this.validadorPrecioDetalleMayor(),
       this.validadorPrecioDetalleCosto(),
-      this.validadorPrecioMayorCosto()  // Precio por mayor no puede ser menor que costo
+      this.validadorPrecioMayorCosto(),  // Precio por mayor no puede ser menor que costo
+      this.validadorDescripcionComponente()  // Marca Componentes: la descripcion empieza con la capacidad
     ]
   });
   /**
@@ -163,6 +164,29 @@ export class AccesoriosRegistroComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  /**
+   * Validador personalizado: si la marca es Componentes (RAM / discos de laptops), la descripcion
+   * debe empezar con la capacidad (8GB 3200, 256GB, 1TB) porque el cambio de pieza la lee de ahi.
+   */
+  validadorDescripcionComponente() {
+    return (formGroup: FormGroup) => {
+      const idMarca = formGroup.get('marca')?.value;
+      const descripcion = String(formGroup.get('descripcion')?.value ?? '').trim();
+      const marca = this.marcaListado.find(m => m.iD_Marca === idMarca);
+
+      if (marca?.descripcion?.trim().toUpperCase() === 'COMPONENTES' && descripcion &&
+          !/^\d+([.,]\d+)?\s*(GB|TB)\b/i.test(descripcion)) {
+        return { descripcionComponenteSinCapacidad: true };
+      }
+      return null;
+    };
+  }
+
+  get descripcionComponenteInvalida(): boolean {
+    return !!this.formRegistro.errors?.['descripcionComponenteSinCapacidad'] &&
+      !!this.formRegistro.get('descripcion')?.dirty;
   }
 
   obtenerMarcasLista() {

@@ -69,6 +69,9 @@
                                         <i *ngIf="p.vencido" class="bi bi-exclamation-triangle-fill ms-1"></i>
                                     </td>
                                     <td class="text-end text-nowrap" *ngIf="puedeRecibir">
+                                        <button type="button" class="btn btn-outline-primary btn-sm me-1" (click)="imprimirComprobante(p)" title="Imprimir comprobante de custodia">
+                                            <i class="bi bi-printer"></i>
+                                        </button>
                                         <button type="button" class="btn btn-success btn-sm me-1" (click)="abrirAccion(p, 'RECIBIR')">
                                             Recibir
                                         </button>
@@ -105,6 +108,26 @@
 
             <label class="form-label small mb-1">Nota (opcional)</label>
             <input type="text" class="form-control form-control-sm mb-2" [(ngModel)]="nota" maxlength="250" autocomplete="off">
+
+            <!-- Recibir: el accesorio de la pieza se creo al retirarla y aun no tiene costo ni precios -->
+            <div *ngIf="pedirPreciosAccesorio" class="border rounded p-2 bg-light mb-2">
+                <div class="small mb-2">Esta pieza aún no tiene costo y precios registrados. Indíquelos para ingresarla al inventario.</div>
+                <div class="row g-2">
+                    <div class="col-4">
+                        <label class="form-label small mb-1">Costo <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="accCosto" min="0">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label small mb-1">Precio por mayor <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="accMayor" min="0">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label small mb-1">Precio al detalle <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="accDetalle" min="0">
+                    </div>
+                </div>
+                <div class="small text-danger mt-1" *ngIf="mensajePreciosAccesorio">{{mensajePreciosAccesorio}}</div>
+            </div>
 
             <div *ngIf="pedirPrecios" class="border rounded p-2 bg-light mb-2">
                 <div class="small text-danger mb-2">{{mensajePrecio}}</div>

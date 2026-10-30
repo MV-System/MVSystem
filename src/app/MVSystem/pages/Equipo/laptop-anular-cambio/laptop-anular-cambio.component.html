@@ -1,0 +1,31 @@
+<div class="modal-fondo">
+    <div class="modal-caja">
+        <h6 class="mb-2"><i class="bi bi-arrow-counterclockwise me-2 text-danger"></i>Anular cambio de pieza</h6>
+        <div class="small mb-2">
+            <div><strong>{{cambio.tipo_Pieza}}</strong> · {{cambio.config_Anterior || 'Sin config.'}} → {{cambio.config_Nueva}}</div>
+            <div class="text-muted">+ {{cambio.pieza_Instalada}}<span *ngIf="cambio.pieza_Retirada"> / − {{cambio.pieza_Retirada}}</span> · {{cambio.tecnico}}</div>
+        </div>
+
+        <div class="alert alert-warning p-2 small">
+            Al anular se revierte:
+            <ul class="mb-0">
+                <li>La pieza instalada vuelve al inventario (+1).</li>
+                <li>El costo de la laptop vuelve a {{cambio.costo_Equipo_Anterior | currency}}.</li>
+                <li>La configuración vuelve a {{cambio.config_Anterior || 'sin configuración'}}.</li>
+                <li *ngIf="cambio.pieza_Retirada">La pieza retirada deja de estar en custodia.</li>
+            </ul>
+        </div>
+
+        <label class="form-label small mb-1">Motivo <span class="text-danger">*</span></label>
+        <input type="text" class="form-control form-control-sm mb-3" [(ngModel)]="motivo" maxlength="250" autocomplete="off"
+               placeholder="Ej. Se eligió la pieza equivocada">
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelar.emit()" [disabled]="isProcesando">Cancelar</button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="confirmar()" [disabled]="isProcesando || !motivoValido">
+                <span *ngIf="!isProcesando">Anular cambio</span>
+                <span *ngIf="isProcesando" class="spinner-border spinner-border-sm"></span>
+            </button>
+        </div>
+    </div>
+</div>

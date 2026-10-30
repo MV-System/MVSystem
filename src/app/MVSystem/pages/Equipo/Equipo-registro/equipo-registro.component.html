@@ -85,31 +85,42 @@
 
                                     <!-- Configuración de laptop (solo modelos del grupo Laptops) -->
                                     <ng-container *ngIf="esLaptop">
-                                        <div class="col-6">
-                                            <label class="form-label modern-label small mb-1">RAM (GB) <span class="required-star">*</span></label>
-                                            <input type="number" class="form-control form-control-sm" formControlName="ramGB" min="1" max="512" [class.is-invalid]="validarCampos('ramGB')">
-                                            <div class="invalid-feedback small" *ngIf="validarCampos('ramGB')">Requerido (1 - 512)</div>
+                                        <!-- Memorias: tipo de RAM (uno para todas) y la capacidad de cada modulo -->
+                                        <div class="col-12">
+                                            <label class="form-label modern-label small mb-1">Memorias instaladas <span class="required-star">*</span></label>
+                                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                                <select formControlName="ramTipo" class="form-select form-select-sm w-auto" [ngClass]="{'border-danger': validarCampos('ramTipo')}">
+                                                    <option [ngValue]="null" disabled>Tipo RAM</option>
+                                                    <option *ngFor="let tipo of tiposRam" [value]="tipo">{{tipo}}</option>
+                                                </select>
+                                                <div class="input-group input-group-sm w-auto" *ngFor="let memoria of memorias; let i = index; trackBy: trackByIndex">
+                                                    <input type="number" class="form-control" style="width: 85px" placeholder="GB" min="1" max="512"
+                                                           [ngModel]="memorias[i]" (ngModelChange)="memorias[i] = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                    <span class="input-group-text">GB</span>
+                                                    <button type="button" class="btn btn-outline-danger" *ngIf="memorias.length > 1" (click)="quitarMemoria(i)" title="Quitar memoria"><i class="bi bi-x-lg"></i></button>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="agregarMemoria()"><i class="bi bi-plus-lg"></i> Agregar memoria</button>
+                                            </div>
+                                            <div class="small text-muted mt-1">Total RAM: <strong>{{totalRam}}GB</strong></div>
                                         </div>
-                                        <div class="col-6">
-                                            <label class="form-label modern-label small mb-1">Tipo RAM <span class="required-star">*</span></label>
-                                            <select formControlName="ramTipo" class="form-select form-select-sm" [ngClass]="{'border-danger': validarCampos('ramTipo')}">
-                                                <option [ngValue]="null" disabled>Seleccionar</option>
-                                                <option *ngFor="let tipo of tiposRam" [value]="tipo">{{tipo}}</option>
-                                            </select>
-                                            <div class="small text-danger" *ngIf="validarCampos('ramTipo')">Requerido</div>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label modern-label small mb-1">Almacenamiento (GB) <span class="required-star">*</span></label>
-                                            <input type="number" class="form-control form-control-sm" formControlName="almacenamientoGB" min="1" max="16000" [class.is-invalid]="validarCampos('almacenamientoGB')">
-                                            <div class="invalid-feedback small" *ngIf="validarCampos('almacenamientoGB')">Requerido (1 - 16000)</div>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label modern-label small mb-1">Tipo almacenamiento <span class="required-star">*</span></label>
-                                            <select formControlName="almacenamientoTipo" class="form-select form-select-sm" [ngClass]="{'border-danger': validarCampos('almacenamientoTipo')}">
-                                                <option [ngValue]="null" disabled>Seleccionar</option>
-                                                <option *ngFor="let tipo of tiposAlmacenamiento" [value]="tipo">{{tipo}}</option>
-                                            </select>
-                                            <div class="small text-danger" *ngIf="validarCampos('almacenamientoTipo')">Requerido</div>
+
+                                        <!-- Discos: capacidad y modelo de cada uno -->
+                                        <div class="col-12">
+                                            <label class="form-label modern-label small mb-1">Discos instalados <span class="required-star">*</span></label>
+                                            <div class="d-flex flex-wrap align-items-center gap-2 mb-1" *ngFor="let disco of discos; let i = index; trackBy: trackByIndex">
+                                                <div class="input-group input-group-sm w-auto">
+                                                    <input type="number" class="form-control" style="width: 95px" placeholder="GB" min="1" max="16000"
+                                                           [ngModel]="disco.capacidad" (ngModelChange)="disco.capacidad = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                    <span class="input-group-text">GB</span>
+                                                </div>
+                                                <select class="form-select form-select-sm w-auto" [ngModel]="disco.idModelo" (ngModelChange)="disco.idModelo = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                    <option [ngValue]="null" disabled>Modelo de disco</option>
+                                                    <option *ngFor="let modelo of modelosDisco" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
+                                                </select>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="discos.length > 1" (click)="quitarDisco(i)" title="Quitar disco"><i class="bi bi-x-lg"></i></button>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="agregarDisco()"><i class="bi bi-plus-lg"></i> Agregar disco</button>
+                                            <div class="small text-danger mt-1" *ngIf="configIntentada && errorConfigLaptop">{{errorConfigLaptop}}</div>
                                         </div>
                                         <div class="col-12">
                                             <label class="form-label modern-label small mb-1">Notas de configuración</label>

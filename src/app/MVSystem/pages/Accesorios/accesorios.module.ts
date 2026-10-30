@@ -14,6 +14,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { DirectiveModule } from '../../../core/directives/directives.module';
 import { AccesorioVendidoComponent } from './accesorio-consulta/accesorio-vendido/accesorio-vendido.component';
+import { AccesorioKardexComponent } from './accesorio-kardex/accesorio-kardex.component';
+import { ComponentesConsumoComponent } from './componentes-consumo/componentes-consumo.component';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -31,7 +33,9 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     AccesorioConsultaComponent,
     AccesorioListComponent,
     AccesorioEditComponent,
-    AccesorioVendidoComponent
+    AccesorioVendidoComponent,
+    AccesorioKardexComponent,
+    ComponentesConsumoComponent
   ],
   imports: [
     AccesoriosRoutingModule,
