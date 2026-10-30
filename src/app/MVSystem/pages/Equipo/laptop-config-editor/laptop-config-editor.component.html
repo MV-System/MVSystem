@@ -1,0 +1,35 @@
+<div class="d-flex flex-wrap align-items-center gap-1">
+    <span class="small fw-semibold me-1" style="min-width: 62px">RAM <span class="required-star">*</span></span>
+    <select class="form-select form-select-sm" style="width: 190px" [class.is-invalid]="intentado && !ramTipo" [(ngModel)]="ramTipo" [ngModelOptions]="{standalone: true}">
+        <option [ngValue]="null" disabled>Tipo de RAM</option>
+        <option *ngFor="let tipo of tiposRam" [ngValue]="tipo">{{tipo}}</option>
+    </select>
+    <div class="input-group input-group-sm w-auto" *ngFor="let memoria of memorias; let i = index; trackBy: trackByIndex">
+        <input type="number" class="form-control" [class.is-invalid]="memoriaInvalida(i)" style="width: 66px" placeholder="GB" min="1" max="512"
+               [(ngModel)]="memorias[i]" [ngModelOptions]="{standalone: true}">
+        <span class="input-group-text px-1">GB</span>
+        <button type="button" class="btn btn-outline-danger px-2" *ngIf="memorias.length > 1" (click)="quitarMemoria(i)" title="Quitar módulo"><i class="bi bi-x"></i></button>
+    </div>
+    <button type="button" class="btn btn-outline-primary btn-sm px-2" (click)="agregarMemoria()" title="Agregar módulo de memoria"><i class="bi bi-plus-lg"></i></button>
+    <span class="small text-muted ms-1">Total: <strong>{{totalRam}}GB</strong></span>
+</div>
+
+<div class="mt-1">
+    <div class="d-flex flex-wrap align-items-center gap-1" [class.mt-1]="i > 0" *ngFor="let disco of discos; let i = index; trackBy: trackByIndex">
+        <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}} <span class="required-star" *ngIf="i === 0">*</span></span>
+        <select class="form-select form-select-sm" [class.is-invalid]="discoModeloInvalido(i)" style="width: 190px" [(ngModel)]="disco.idModelo" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="null" disabled>Modelo de disco</option>
+            <option *ngFor="let modelo of modelosDisco" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
+        </select>
+        <div class="input-group input-group-sm w-auto">
+            <input type="number" class="form-control" [class.is-invalid]="discoCapacidadInvalida(i)" style="width: 76px" placeholder="GB" min="1" max="16000"
+                   [(ngModel)]="disco.capacidad" [ngModelOptions]="{standalone: true}">
+            <span class="input-group-text px-1">GB</span>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm px-2" *ngIf="discos.length > 1" (click)="quitarDisco(i)" title="Quitar disco"><i class="bi bi-x"></i></button>
+        <button type="button" class="btn btn-outline-primary btn-sm px-2" *ngIf="i === discos.length - 1" (click)="agregarDisco()" title="Agregar disco"><i class="bi bi-plus-lg"></i></button>
+    </div>
+</div>
+
+<input type="text" class="form-control form-control-sm mt-1" [(ngModel)]="notas" [ngModelOptions]="{standalone: true}" maxlength="250" placeholder="Notas de configuración (opcional)">
+<div class="small text-danger mt-1" *ngIf="intentado && error">{{error}}</div>

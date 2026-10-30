@@ -33,6 +33,8 @@ export class EquipoRegistroComponent implements OnInit {
   listaAlmacen: Almacen[] = [];
   listaModelo: ModeloEquipo[] = [];
   equipoValorRetorno: EquipoObjRetorno[] = [];
+  /** Configuración guardada de cada laptop registrada en esta sesión (por IMEI), para mostrarla en el resumen. */
+  configuracionesGuardadas: { [imei: string]: string } = {};
 
   // Laptops: el ID del grupo se obtiene una vez por descripción y luego se compara por ID (R2)
   idGrupoLaptops: number | null = null;
@@ -82,6 +84,32 @@ export class EquipoRegistroComponent implements OnInit {
     if (this.discos.some(d => !d.capacidad || Number(d.capacidad) < 1 || Number(d.capacidad) > 16000)) { return 'Cada disco debe tener entre 1 y 16000 GB.'; }
     if (this.discos.some(d => !d.idModelo)) { return 'Seleccione el modelo de cada disco.'; }
     return '';
+  }
+
+  /** Marca en rojo el campo de configuración que falta, solo después de intentar guardar. */
+  memoriaInvalida(i: number): boolean {
+    const m = Number(this.memorias[i]);
+    return this.configIntentada && (!m || m < 1 || m > 512);
+  }
+  discoCapacidadInvalida(i: number): boolean {
+    const c = Number(this.discos[i]?.capacidad);
+    return this.configIntentada && (!c || c < 1 || c > 16000);
+  }
+  discoModeloInvalido(i: number): boolean {
+    return this.configIntentada && !this.discos[i]?.idModelo;
+  }
+
+  /** Nombres de los campos que impiden guardar, para decírselos al usuario. */
+  private camposFaltantes(): string[] {
+    const etiquetas: { [campo: string]: string } = {
+      IMEI: 'IMEI', almacen: 'Almacén', garantia: 'Garantía', marca: 'Marca', modelo: 'Modelo',
+      suplidor: 'Suplidor', costo: 'Costo', alPorMayor: 'Precio por mayor', alDetalle: 'Precio al detalle',
+      factura: 'Factura', comisionDetalle: 'Comisión detalle', comisionMayor: 'Comisión por mayor',
+      notaAdicional: 'Nota', configNotas: 'Notas de configuración'
+    };
+    const faltan = Object.keys(etiquetas).filter(c => this.formRegistro.get(c)?.invalid).map(c => etiquetas[c]);
+    if (this.esLaptop && this.errorConfigLaptop) { faltan.push(this.errorConfigLaptop.replace(/.$/, '')); }
+    return faltan;
   }
 
   validadorConfigLaptop() {
@@ -401,7 +429,9 @@ export class EquipoRegistroComponent implements OnInit {
     });
 
     // Notificar al usuario que hay campos vacíos o incompletos
-    this.toastr.error('Hay campos vacíos o incompletos en el formulario. Por favor, verifique los campos resaltados en rojo.', '', {
+    const faltantes = this.camposFaltantes();
+    const detalle = faltantes.length ? ' Revise: ' + faltantes.join(', ') + '.' : ' Por favor, verifique los campos resaltados en rojo.';
+    this.toastr.error('Hay campos vacíos o incompletos en el formulario.' + detalle, '', {
       closeButton: true,
       progressBar: true,
     });
@@ -627,7 +657,11 @@ if (registroElement) {
 
   guardarConfiguracionLaptop(configuracion: EquipoConfiguracion) {
     this.laptopsService.guardarConfiguracion(configuracion).subscribe({
-      next: () => this.toastr.success('Configuración de la laptop guardada.'),
+      next: (guardada) => {
+        const texto = guardada && guardada.length ? guardada[0].configuracion : null;
+        if (texto) { this.configuracionesGuardadas[configuracion.imei] = texto; }
+        this.toastr.success('Configuración de la laptop guardada.');
+      },
       error: (err) => {
         this.toastr.error(`El equipo se registró, pero no se pudo guardar su configuración (${configuracion.imei}). Regístrela nuevamente.`, '', {
           closeButton: true,

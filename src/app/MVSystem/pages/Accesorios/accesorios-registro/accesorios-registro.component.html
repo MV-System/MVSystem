@@ -47,9 +47,7 @@
                                             <span *ngIf="formRegistro.get('descripcion')?.errors?.['required']">Este campo es requerido</span>
                                             <span *ngIf="formRegistro.get('descripcion')?.errors?.['minlength']">Mínimo 3 caracteres</span>
                                         </div>
-                                        <div class="small text-danger mt-1" *ngIf="descripcionComponenteInvalida">
-                                            Para la marca Componentes, la descripción debe empezar con la capacidad (ej. 8GB 3200, 256GB, 1TB).
-                                        </div>
+                                        <div class="small text-danger mt-1" *ngIf="descripcionComponenteMensaje">{{descripcionComponenteMensaje}}</div>
                                     </div>
 
                                     <!-- Cantidad -->

@@ -176,17 +176,45 @@ export class AccesoriosRegistroComponent implements OnInit {
       const descripcion = String(formGroup.get('descripcion')?.value ?? '').trim();
       const marca = this.marcaListado.find(m => m.iD_Marca === idMarca);
 
-      if (marca?.descripcion?.trim().toUpperCase() === 'COMPONENTES' && descripcion &&
-          !/^\d+([.,]\d+)?\s*(GB|TB)\b/i.test(descripcion)) {
-        return { descripcionComponenteSinCapacidad: true };
+      if (marca?.descripcion?.trim().toUpperCase() === 'COMPONENTES' && descripcion) {
+        if (!/^\d+([.,]\d+)?\s*(GB|TB)\b/i.test(descripcion)) {
+          return { descripcionComponenteSinCapacidad: true };
+        }
+        // La descripcion tambien debe indicar el tipo del componente (DDR3 / DDR4 / SSD NVMe...), para distinguirlo
+        // de otros de la misma capacidad en cualquier pantalla donde solo se muestre la descripcion
+        const faltan = this.palabrasTipoComponente(formGroup.get('modelo')?.value)
+          .filter(p => !descripcion.toUpperCase().includes(p.toUpperCase()));
+        if (faltan.length) {
+          return { descripcionComponenteSinTipo: faltan.join(' ') };
+        }
       }
       return null;
     };
   }
 
-  get descripcionComponenteInvalida(): boolean {
-    return !!this.formRegistro.errors?.['descripcionComponenteSinCapacidad'] &&
-      !!this.formRegistro.get('descripcion')?.dirty;
+  /** Palabras que la descripcion de un componente debe llevar segun su modelo (ej. RAM DDR4 SODIMM -> DDR4). */
+  private palabrasTipoComponente(idModelo: any): string[] {
+    const modelo = (this.modeloListado.find(m => m.iD_Modelo === Number(idModelo))?.descripcion || '').toUpperCase();
+    const ddr = modelo.match(/DDR[345]/);
+    if (ddr) { return [ddr[0]]; }
+    if (modelo.includes('NVME')) { return ['SSD', 'NVMe']; }
+    if (modelo.includes('M.2')) { return ['SSD', 'M.2']; }
+    if (modelo.includes('SSD')) { return ['SSD', '2.5']; }
+    if (modelo.includes('HDD')) { return ['HDD']; }
+    return [];
+  }
+
+  /** Mensaje del problema de la descripcion de un componente, o '' si esta bien. */
+  get descripcionComponenteMensaje(): string {
+    if (!this.formRegistro.get('descripcion')?.dirty) { return ''; }
+    const errores = this.formRegistro.errors;
+    if (errores?.['descripcionComponenteSinCapacidad']) {
+      return 'Para la marca Componentes, la descripción debe empezar con la capacidad (ej. 16GB DDR4 3200, 256GB SSD NVMe, 1TB HDD 2.5).';
+    }
+    if (errores?.['descripcionComponenteSinTipo']) {
+      return 'La descripción debe incluir el tipo del componente: ' + errores['descripcionComponenteSinTipo'] + ' (ej. 16GB DDR4 3200).';
+    }
+    return '';
   }
 
   obtenerMarcasLista() {

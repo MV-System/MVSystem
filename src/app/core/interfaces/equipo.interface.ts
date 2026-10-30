@@ -283,6 +283,8 @@ export interface EquipoModificarEstatus{
     precioDetalle: number;
     estadoBloqueoId: number;
     estadoBloqueoDescripcion?: string;
+    marca?: string;
+    modelo?: string;
 }
 
 export interface EquipoModificarEstatusSet{
