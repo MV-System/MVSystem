@@ -46,9 +46,9 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
   private consultandoConectados = false;
   private consultandoResumen = false;
   private ciclos = 0;
-  private readonly refrescoMs = 2000;
-  // Mientras se ve otra pestana, el resumen (que es la consulta mas pesada) se refresca cada 5 ciclos (10 s)
-  private readonly cicloResumenSegundoPlano = 5;
+  private readonly refrescoMs = 10000;
+  // Mientras se ve otra pestana, el resumen (que es la consulta mas pesada) se refresca cada 3 ciclos (30 s)
+  private readonly cicloResumenSegundoPlano = 3;
 
   constructor(private uso: UsoSistemaService) { }
 

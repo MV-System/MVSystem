@@ -48,6 +48,15 @@
   line-height: 1.1;
 }
 
+.girando {
+  display: inline-block;
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
 .tarjeta-titulo {
   font-size: 0.9rem;
   color: #444;
