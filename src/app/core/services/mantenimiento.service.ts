@@ -68,6 +68,15 @@ export class MantenimientoService {
     };
     return this.http.put<{ mensaje: string }>(APIURL.Equipo.Actualiza.ReparacionCostoPrecio, body);
   }
+  // Cancelar una reparación abierta (Pendiente / En Proceso). Requiere el permiso REPARACION_CANCELAR
+  cancelarReparacion(idReparacion: number, motivo: string, usuario: string): Observable<any[]> {
+    const body = {
+      ID_Reparacion: idReparacion,
+      Motivo: motivo,
+      Usuario: usuario
+    };
+    return this.http.put<any[]>(APIURL.Equipo.Actualiza.ReparacionCancelar, body);
+  }
   postFactura(factura: FacturaRegistro): Observable<FacturaRegistroRespuesta> {
     return this.http.post<FacturaRegistroRespuesta>(APIURL.Factura.Inserta.FacturaInserta, factura);
   }
@@ -87,16 +96,16 @@ export class MantenimientoService {
       responseType: 'blob' as 'json'
     });
   }
-  postAnlaFactura(NumeroFactura: number,IDsucursal: string, Usuario:string): Observable<Blob> {
+  postAnlaFactura(NumeroFactura: number,IDsucursal: string, Usuario:string, Motivo: string): Observable<any> {
     const body = {
       NumeroFactura,
       IDsucursal,
-      Usuario
+      Usuario,
+      Motivo
   };
 
-    return this.http.post<Blob>(APIURL.Factura.Inserta.AnulaFactura,body,{
-      responseType: 'blob' as 'json'
-    });
+    // Respuesta JSON normal: así los mensajes de error (400) del API llegan como texto
+    return this.http.post<any>(APIURL.Factura.Inserta.AnulaFactura, body);
   }
   postNotaCreditoProveedor2(request: NotaCreditoProveedor2Request): Observable<NotaCreditoProveedor2Respuesta> {
     return this.http.post<NotaCreditoProveedor2Respuesta>(APIURL.Factura.Inserta.NotaCredito, request);

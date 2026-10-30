@@ -273,38 +273,53 @@ onCancel(detalle: DetalleFacturaList) {
         this.vendedores = vendedor;
       });
   }
+  // --- Anulación de factura con motivo obligatorio ---
+  facturaPorAnular: number | null = null;
+  motivoAnulacion: string = '';
+  readonly minMotivoAnulacion = 5;
+
+  get motivoAnulacionValido(): boolean {
+    return this.motivoAnulacion.trim().length >= this.minMotivoAnulacion;
+  }
+
+  /** Abre el modal que pide el motivo de la anulación */
   anulaFactura(numeroFactura: number){
-    this.rDialogService.openDialog(
-      "Aviso",
-      "¿Desea Anular esta factura?",
-      () => {
-        this.toast.info("no se anula la factura");
-      },
-      () => {
+    this.facturaPorAnular = +(`${numeroFactura}`);
+    this.motivoAnulacion = '';
+  }
 
-          numeroFactura = +(`${numeroFactura}`);
-        // aqui va la logica para anular la factura
-        this.isLoading = true; // Iniciar carga
-    const sub = this.mantenimientoService.postAnlaFactura(numeroFactura,this.sucursalActiva,this.loginService.getUserName())
-    .subscribe(blob =>{
-       this.isLoading = false; // Terminar carga
-       this.toast.info(`Se anuló la factura #${numeroFactura}`);
-       setTimeout(() => {
-        window.location.reload(); // Recarga la página después de 2 segundos
-      }, 2000);
-      // console.log("factura seleccionada",numeroFactura);
-    },err=>{
+  cerrarModalAnulacion(): void {
+    if (this.isLoading) { return; }
+    this.facturaPorAnular = null;
+    this.motivoAnulacion = '';
+  }
 
-      this.toast.error('Error al Anular la factura');
-    });
+  confirmarAnulacion(): void {
+    if (this.facturaPorAnular === null) { return; }
+
+    if (!this.motivoAnulacionValido) {
+      this.toast.warning(`Indique el motivo de la anulación (mínimo ${this.minMotivoAnulacion} caracteres)`);
+      return;
+    }
+
+    const numeroFactura = this.facturaPorAnular;
+    this.isLoading = true; // Iniciar carga
+    const sub = this.mantenimientoService.postAnlaFactura(numeroFactura, this.sucursalActiva, this.loginService.getUserName(), this.motivoAnulacion.trim())
+      .subscribe(() => {
+        this.isLoading = false; // Terminar carga
+        this.facturaPorAnular = null;
+        this.motivoAnulacion = '';
+        this.toast.info(`Se anuló la factura #${numeroFactura}`);
+        setTimeout(() => {
+          window.location.reload(); // Recarga la página después de 2 segundos
+        }, 2000);
+      }, err => {
+        this.isLoading = false;
+        // El interceptor devuelve el mensaje del API como texto en los errores 400
+        const mensaje = typeof err === 'string' && err ? err : 'Error al Anular la factura';
+        this.toast.error(mensaje);
+      });
     this.subs.push(sub);
-
-
-      },
-      "Si", // Etiqueta del botón para Anular la factura
-      "No, Fue un error" // fue un error
-    );
-
   }
 
   emitirNotaCredito(numeroFactura: number) {

@@ -24,6 +24,7 @@ export let APIURL = {
             CotizacionReimpresion: API + 'FacturacionReporte/ReportCotizacionConsulta',
             CotizacionFacturaConsulta: API + 'Cotizacion/GetCotizacionFacturaConsulta',
             DetalleCotizacionConsulta: API + 'Cotizacion/GetDetalleCotizacionConsulta',
+            CotizacionCancelar: API + 'Cotizacion/Cancelar',
         }
     },
     Factura: {
@@ -83,7 +84,8 @@ export let APIURL = {
             EstadoActualiza: API + 'Equipos/EstadoActualiza'
         },
         Actualiza: {
-            ReparacionCostoPrecio: API + 'Equipos/ActualizarCostoPrecioReparacion'
+            ReparacionCostoPrecio: API + 'Equipos/ActualizarCostoPrecioReparacion',
+            ReparacionCancelar: API + 'Equipos/CancelarReparacion'
         },
         Accion: {
           EquipoRecibidosReporte:  API + 'EquipoReporte/GetEquiposRecibidoVistaReporte?criterio=',

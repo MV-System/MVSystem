@@ -1,0 +1,20 @@
+<div class="novedades-overlay" *ngIf="show">
+  <div class="novedades-card" [class.urgente]="hayUrgente" role="dialog" aria-modal="true" aria-labelledby="novedades-titulo">
+    <div class="novedades-header">
+      <i class="bi" [class.bi-exclamation-triangle-fill]="hayUrgente" [class.bi-stars]="!hayUrgente"></i>
+      <h5 id="novedades-titulo">{{ titulo }}</h5>
+    </div>
+
+    <div class="novedades-body">
+      <div class="novedad" *ngFor="let a of avisos" [class.novedad-urgente]="a.prioridad === 'U'">
+        <div class="novedad-titulo">{{ a.titulo }}</div>
+        <div class="novedad-descripcion">{{ a.mensaje }}</div>
+        <div class="novedad-donde" *ngIf="a.donde"><i class="bi bi-geo-alt"></i> {{ a.donde }}</div>
+      </div>
+    </div>
+
+    <div class="novedades-footer">
+      <button type="button" class="btn btn-primary" (click)="entendido()">Entendido</button>
+    </div>
+  </div>
+</div>

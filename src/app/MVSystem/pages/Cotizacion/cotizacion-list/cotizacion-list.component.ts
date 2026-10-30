@@ -193,10 +193,13 @@ export class CotizacionListComponent implements OnInit, OnChanges {
     this.onClearArticuloDropdown(articulo,index);
     this.onDetectValueArticulo(articulo);
     if (!currentArticulo || !articulo) return;
-    currentArticulo.idTipo = 2;
+    // Tipo real del artículo (1 = equipo, 2 = accesorio), igual que facturación.
+    // Así la cotización guarda qué se cotizó, para poder facturarla después.
+    currentArticulo.idTipo = articulo.idTipo ?? 2;
     currentArticulo.idGarantia = 1;
-    // Si tiene idEquipo (entero), usarlo; si no, usar 0
-    currentArticulo.idEquipo = articulo.idEquipo || 0;
+    // Identificador real: IMEI en equipos, código del accesorio en accesorios (texto, no número:
+    // un IMEI de 15 dígitos pierde precisión como número).
+    currentArticulo.idEquipo = articulo.id ?? articulo.idEquipo ?? 0;
     currentArticulo.descripcion =
       articulo.accesorio_Descripcion + '  ' + articulo.modelo;
     currentArticulo.precioDetalle = articulo.precio_Detalle;
@@ -204,10 +207,17 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
     this.validateSameArticulo(this.articulos,index,currentArticulo);
 
+    // Precio editado a mano (incluido 0 en accesorios): se respeta al cambiar cantidad, descuento o ITBIS.
+    // El artículo del renglón queda bloqueado después de elegirlo, así que el precio manual
+    // siempre corresponde al artículo del renglón.
+    if (!currentArticulo.precioManual) {
       currentArticulo.precio = this.calcularPrecioSegunTipofactura(
-      currentArticulo.precioDetalle,
-      currentArticulo.precioMayor
-    );
+        currentArticulo.precioDetalle,
+        currentArticulo.precioMayor
+      );
+    } else {
+      currentArticulo.precio = Number(currentArticulo.precio);
+    }
 
       currentArticulo.subTotal = this.calcularSubTotalArticulo(
       currentArticulo.precio,
@@ -250,6 +260,66 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       (this.tipoFactura == 1 ? precioDetalle : 0) ||
         (this.tipoFactura == 2 ? precioMayor : 0)
     );
+  }
+
+  /** Los equipos (idTipo 1 del artículo) tienen la regla del costo; los accesorios pueden ir en cero. */
+  private esEquipo(articulo: any): boolean {
+    return articulo?.idTipo === 1;
+  }
+
+  /** Una vez elegido el artículo, el selector se bloquea (igual que facturación): para cambiarlo se borra el renglón. */
+  isArticuloReadonly(index: number): boolean {
+    const articulo = this.articulos.controls[index]?.value;
+    return !!(articulo && articulo.articulo && articulo.articulo !== '');
+  }
+
+  /**
+   * El usuario editó el precio del renglón (igual que en facturación).
+   * - Un campo vacío restablece el precio de lista. El 0 es válido para accesorios.
+   * - Si cambia respecto al de lista, el renglón queda marcado como "precio manual" para que
+   *   cambiar cantidad o descuento no lo pise.
+   * - Recalcula subtotal, ITBIS y totales; solo en equipos valida el precio contra el costo.
+   */
+  onPrecioChange(index: number): void {
+    const group = this.articulos.controls[index] as FormGroup;
+    const articulo = group.get('articulo')?.value;
+
+    // Sin artículo elegido todavía no hay precio que editar
+    if (!articulo) {
+      group.get('precio')?.setValue(0);
+      return;
+    }
+
+    const precioLista = this.calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor);
+    const bruto = group.get('precio')?.value;
+
+    if (bruto === '' || bruto === null || bruto === undefined || isNaN(Number(bruto))) {
+      group.patchValue({ precio: precioLista, precioManual: false });
+    } else {
+      const nuevoPrecio = Number(bruto);
+      // Un descuento igual o mayor al nuevo precio borraría el renglón; se revierte con aviso
+      const descuento = Number(group.get('descuento')?.value || 0);
+      if (descuento > 0 && descuento >= nuevoPrecio) {
+        this.toastr.warning('El descuento no puede ser mayor o igual al precio. Se revirtió el descuento.');
+        group.patchValue({ descuento: 0 });
+      }
+      group.patchValue({ precio: nuevoPrecio, precioManual: nuevoPrecio !== precioLista });
+    }
+
+    // Recalcula subtotal, ITBIS y totales del renglón y generales
+    this.obtenerDetalleFactura(index);
+
+    // Regla del costo: solo aplica a equipos (misma regla que facturación)
+    if (this.esEquipo(articulo)) {
+      const actual = group.getRawValue();
+      const costo = Number(articulo.costo_Equipo ?? 0);
+      const precioVenta = Number(actual.precio) - Number(actual.descuento || 0);
+      if (costo > 0 && precioVenta < costo) {
+        this.toastr.error(`El precio final del equipo ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será revertido.`);
+        group.patchValue({ descuento: 0 });
+        this.obtenerDetalleFactura(index);
+      }
+    }
   }
 
   obtenerCantidadArticuloStock(index: number) {
@@ -428,6 +498,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       articulo: [''],
       precioDetalle: [0],
       precioMayor: [0],
+      precioManual: [false],
     });
 
     this.articulos.insert(0, articulo);
@@ -544,30 +615,22 @@ export class CotizacionListComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Valida que el precio de venta no sea menor al costo del artículo
-   * @returns true si todos los precios son válidos, false si alguno es menor al costo
+   * Valida que el precio de venta de los EQUIPOS no sea menor a su costo (igual que facturación).
+   * Los accesorios no tienen esta regla y pueden cotizarse incluso en cero.
+   * @returns true si todos los precios son válidos, false si algún equipo está por debajo del costo
    */
   validarPrecioVsCosto(): boolean {
     for (let i = 0; i < this.articulos.length; i++) {
       const articulo = this.articulos.at(i).value;
 
-      // Solo valida accesorios/artículos (idTipo == 2)
-      if (articulo.idTipo === 2 || articulo.idTipo === 1) {
-        let costo = 0;
-
-        // Buscar costo en el objeto articulo
-        if (articulo.articulo && articulo.articulo.costo_Equipo !== undefined) {
-          costo = Number(articulo.articulo.costo_Equipo);
-        } else if (articulo.costo_Equipo !== undefined) {
-          costo = Number(articulo.costo_Equipo);
-        }
-
+      // Solo equipos: el tipo real viene en el objeto del artículo (el renglón siempre se guarda como tipo 2)
+      if (this.esEquipo(articulo.articulo)) {
+        const costo = Number(articulo.articulo.costo_Equipo ?? 0);
         const precioVenta = Number(articulo.precio);
 
-        // Validar que el precio no sea menor al costo
-        if (precioVenta > 0 && costo > 0 && precioVenta < costo) {
+        if (costo > 0 && precioVenta < costo) {
           this.toastr.error(
-            `Artículo en línea ${i+1}: El precio de venta (${precioVenta}) no puede ser menor al costo (${costo})`
+            `El equipo (línea ${i+1}) no puede cotizarse por debajo de su costo. Costo: $${costo}, Precio: $${precioVenta}`
           );
           return false;
         }
@@ -619,9 +682,14 @@ export class CotizacionListComponent implements OnInit, OnChanges {
         return false;
       }
 
-      // Validar precio
-      if (!articulo.precio || articulo.precio <= 0) {
-        this.toastr.error(`Línea ${i+1}: El precio debe ser mayor a 0`);
+      // Validar precio: los equipos deben tener precio; los accesorios pueden ir en cero
+      const precio = Number(articulo.precio);
+      if (isNaN(precio) || precio < 0) {
+        this.toastr.error(`Línea ${i+1}: El precio no es válido`);
+        return false;
+      }
+      if (this.esEquipo(articulo.articulo) && precio <= 0) {
+        this.toastr.error(`Línea ${i+1}: El precio del equipo debe ser mayor a 0`);
         return false;
       }
     }

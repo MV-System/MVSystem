@@ -10,6 +10,8 @@ import { AsignacionesComponent } from './componentes/asignaciones/asignaciones.c
 import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
 import { GestionarEquipoComponent } from './componentes/gestionar-equipo/gestionar-equipo.component';
 import { ModoDesarrolladorComponent } from './componentes/modo-desarrollador/modo-desarrollador.component';
+import { UsoSistemaComponent } from './componentes/uso-sistema/uso-sistema.component';
+import { AvisosComponent } from './componentes/avisos/avisos.component';
 import { ModoDesarrolladorGuard } from 'src/app/core/guards/modo-desarrollador.guard';
 
 const routes: Routes = [
@@ -52,6 +54,16 @@ const routes: Routes = [
   {
     path: 'modo-desarrollador',
     component: ModoDesarrolladorComponent,
+    canActivate: [ModoDesarrolladorGuard]
+  },
+  {
+    path: 'uso-sistema',
+    component: UsoSistemaComponent,
+    canActivate: [ModoDesarrolladorGuard]
+  },
+  {
+    path: 'avisos',
+    component: AvisosComponent,
     canActivate: [ModoDesarrolladorGuard]
   },
   {

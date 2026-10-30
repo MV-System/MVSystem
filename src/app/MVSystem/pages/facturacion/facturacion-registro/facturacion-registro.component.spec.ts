@@ -608,14 +608,38 @@ describe('FacturacionRegistroComponent', () => {
     });
 
     it('should submit valid form for invoice', () => {
-      // Make form valid
+      // Make form valid (la factura exige un cliente válido)
       component.form.get('telefono')?.setValue('8091234567');
       component.form.get('vendedor')?.setValue(1);
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
       spyOn(component, 'generateFactura');
 
       component.onSubmit();
 
       expect(component.generateFactura).toHaveBeenCalled();
+    });
+
+    it('should not submit an invoice without a valid customer', () => {
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+      component.customer = undefined;
+      spyOn(component, 'generateFactura');
+
+      component.onSubmit();
+
+      expect(component.generateFactura).not.toHaveBeenCalled();
+    });
+
+    it('should not submit an invoice while the customer is still loading', () => {
+      component.form.get('telefono')?.setValue('8091234567');
+      component.form.get('vendedor')?.setValue(1);
+      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
+      component.buscandoCliente = true;
+      spyOn(component, 'generateFactura');
+
+      component.onSubmit();
+
+      expect(component.generateFactura).not.toHaveBeenCalled();
     });
 
     it('should submit valid form for quotation', () => {

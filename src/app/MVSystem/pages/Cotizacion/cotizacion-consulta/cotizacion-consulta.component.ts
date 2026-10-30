@@ -26,6 +26,9 @@ export class CotizacionConsultaComponent implements OnInit, OnDestroy {
   detallesVisibles: { [codigo: number]: boolean } = {};
   cargandoDetalle: { [codigo: number]: boolean } = {};
   reimprimiendoCodigo: number | null = null;
+  // Cotización que espera confirmación de cancelación / la que se está cancelando
+  confirmandoCodigo: number | null = null;
+  cancelandoCodigo: number | null = null;
   private readonly sucursal: number;
 
   constructor(
@@ -39,6 +42,7 @@ export class CotizacionConsultaComponent implements OnInit, OnDestroy {
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     this.form = this.fb.group({
       criterio: [''],
+      verCanceladas: [false],
       fechaInicio: [this.toDateInput(firstDay)],
       fechaFinal: [this.toDateInput(today)]
     });
@@ -62,7 +66,8 @@ export class CotizacionConsultaComponent implements OnInit, OnDestroy {
       sucursal: this.sucursal,
       vendedor: 0,
       idTipoPago: 0,
-      estado: '',
+      // Por defecto solo las activas; "Ver canceladas" muestra únicamente las canceladas
+      estado: this.form.get('verCanceladas')?.value ? 'X' : 'A',
       fechaInicio: this.form.get('fechaInicio')?.value,
       fechaFinal: this.form.get('fechaFinal')?.value
     };
@@ -114,6 +119,45 @@ export class CotizacionConsultaComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  puedeCancelar(cotizacion: CotizacionConsulta): boolean {
+    return cotizacion.estado === 'A' && cotizacion.facturado === 'N';
+  }
+
+  estaCancelada(cotizacion: CotizacionConsulta): boolean {
+    return cotizacion.estado === 'X';
+  }
+
+  pedirConfirmacion(cotizacion: CotizacionConsulta): void {
+    this.confirmandoCodigo = cotizacion.codigo;
+  }
+
+  cancelarConfirmacion(): void {
+    this.confirmandoCodigo = null;
+  }
+
+  confirmarCancelacion(cotizacion: CotizacionConsulta): void {
+    if (!this.puedeCancelar(cotizacion) || this.cancelandoCodigo !== null) return;
+
+    this.cancelandoCodigo = cotizacion.codigo;
+    this.cotizacionService.cancelar(cotizacion.codigo, this.loginService.getUserName())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.cancelandoCodigo = null;
+          this.confirmandoCodigo = null;
+          this.toast.success(`Cotización ${cotizacion.literal}${cotizacion.numeroFactura} cancelada`);
+          // Si era el último registro de la página, volver a la anterior
+          const quedanEnPagina = this.cotizaciones.length > 1;
+          this.buscar(!quedanEnPagina && this.pageIndex > 1 ? this.pageIndex - 1 : this.pageIndex);
+        },
+        error: () => {
+          // El mensaje del servidor ya lo muestra el interceptor de errores
+          this.cancelandoCodigo = null;
+          this.confirmandoCodigo = null;
+        }
+      });
   }
 
   reimprimir(cotizacion: CotizacionConsulta): void {

@@ -120,6 +120,9 @@ reparaciones: any[] = [];
     if (!this.validarComprobante()) {
       return;
     }
+    if (!this.validarCliente()) {
+      return;
+    }
     this.isLoading = true;
 
 
@@ -355,6 +358,7 @@ onModalClose(rep: any) {
   destroy$: Subject<any> = new Subject<any>();
   printing: boolean = false;
   customer?: Cliente;
+  buscandoCliente: boolean = false; // true mientras se resuelve el cliente elegido (evita facturar con cliente en cero)
   cotizaciones!: CotizacionAmount[];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
   customers: Cliente[] = []
@@ -839,6 +843,11 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         return;
       }
 
+      // Solo la factura exige cliente válido (la cotización conserva su comportamiento)
+      if (this.isFactura && !this.validarCliente()) {
+        return;
+      }
+
       if (this.isFactura) {
         this.generateFactura();
       } else {
@@ -1150,12 +1159,23 @@ else
   // Si se proporciona el teléfono como argumento, úsalo; si no, toma el del formulario.
   const telefono = tel ?? this.form.value.telefono;
 
+  // Mientras se resuelve el cliente no se debe poder facturar (si no, se factura con cliente en cero)
+  this.buscandoCliente = true;
+
   this.clientesService.getClientesPorNombreTelefono(telefono)
     .pipe(takeUntil(this.destroy$))
     .subscribe(
-      customer => {
-        // Asigna el primer cliente encontrado.
-        this.customer = customer[0];
+      clientes => {
+        this.buscandoCliente = false;
+
+        // Prefiere el cliente cuyo teléfono coincide exactamente con el elegido; si no hay, el primero.
+        const lista = clientes || [];
+        const exacto = lista.find(c => Number(c.numero_de_telefono) === Number(telefono));
+        this.customer = exacto ?? lista[0];
+
+        if (!this.customer?.id_Cliente) {
+          this.toastr.warning('No se encontró un cliente con ese teléfono. Seleccione otro cliente o agréguelo.');
+        }
 
         // Busca el tipo de factura por ID.
         const tipoReparaciones = this.facturaTipos.find(
@@ -1175,11 +1195,28 @@ else
         }
       },
       error => {
+        this.buscandoCliente = false;
         // Muestra un mensaje de error si ocurre algún problema.
         this.toastr.error(error);
       }
     );
 }
+
+  /**
+   * Una factura/pre-factura sin cliente (ID en cero) se guarda pero no aparece en la lista de facturas.
+   * Se bloquea el envío mientras el cliente se está cargando o si no hay un cliente válido.
+   */
+  validarCliente(): boolean {
+    if (this.buscandoCliente) {
+      this.toastr.warning('Espere un momento: se está cargando el cliente seleccionado.');
+      return false;
+    }
+    if (!this.customer?.id_Cliente || this.customer.id_Cliente <= 0) {
+      this.toastr.error('Seleccione un cliente válido antes de continuar.');
+      return false;
+    }
+    return true;
+  }
   loadDetalleCotizacion(numeroRegistro: number) {
 
     this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro, Number(this.loginService.getUserIdSucursal))

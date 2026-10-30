@@ -12,6 +12,7 @@ import { CatalogosService } from '../core/services/catalogos.service';
 import { Almacen } from '../core/interfaces/catalogo.interface';
 import { currentDate, transformDate } from "../helpers/helper";
 import { NgxPermissionsService } from "ngx-permissions";
+import { UsoSistemaService } from "../core/services/uso-sistema.service";
 interface userToken{
   Empresa:string,
   aud:string,
@@ -33,7 +34,8 @@ export class LoginService implements OnInit{
     private httpClient: HttpClient,
     private handleErrorsRespService: HandleErrorsResponseService,
     private router:Router,
-    private permisosService: NgxPermissionsService) { }
+    private permisosService: NgxPermissionsService,
+    private usoSistema: UsoSistemaService) { }
 
   ngOnInit(): void {
     this.LoadPermisos(); // Llama a LoadPermisos cuando se inicie el componente
@@ -125,6 +127,7 @@ export class LoginService implements OnInit{
   }
 
   logout() {
+    this.usoSistema.salir();
     localStorage.clear();
     this.router.navigate(['/'])
   }

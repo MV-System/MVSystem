@@ -1,0 +1,170 @@
+<app-main title="Avisos y novedades" breadcrumb="Seguridad" breadcrumbItem="Avisos">
+  <div class="row g-3">
+
+    <!-- Nuevo aviso -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold"><i class="bi bi-megaphone me-2"></i>Nuevo aviso</div>
+        <div class="card-body">
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label small mb-1">Tipo</label>
+              <select class="form-select form-select-sm" [(ngModel)]="form.tipo" name="tipo">
+                <option value="AVISO">Aviso</option>
+                <option value="NOVEDAD">Novedad</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label small mb-1">Prioridad</label>
+              <select class="form-select form-select-sm" [(ngModel)]="form.prioridad" name="prioridad">
+                <option value="N">Normal</option>
+                <option value="U">Urgente</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small mb-1">Titulo</label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="form.titulo" name="titulo" maxlength="150">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small mb-1">Mensaje <span class="text-muted">({{ form.mensaje.length }}/1000)</span></label>
+              <textarea class="form-control form-control-sm" rows="4" [(ngModel)]="form.mensaje" name="mensaje" maxlength="1000"></textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small mb-1">Donde encontrarlo <span class="text-muted">(opcional)</span></label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="form.donde" name="donde" maxlength="150" placeholder="Ej. Cotizaciones">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small mb-1">Dirigido a</label>
+              <select class="form-select form-select-sm" [(ngModel)]="form.destino" name="destino">
+                <option value="TODOS">Todos los usuarios</option>
+                <option value="EMPRESA">Una empresa</option>
+                <option value="USUARIOS">Usuarios concretos</option>
+              </select>
+            </div>
+
+            <div class="col-12" *ngIf="form.destino === 'EMPRESA'">
+              <label class="form-label small mb-1">Empresa</label>
+              <select class="form-select form-select-sm" [(ngModel)]="form.destinoValor" name="empresa">
+                <option value="">Seleccione...</option>
+                <option *ngFor="let e of empresas" [value]="e">{{ e }}</option>
+              </select>
+            </div>
+
+            <div class="col-12" *ngIf="form.destino === 'USUARIOS'">
+              <label class="form-label small mb-1">Usuarios <span class="text-muted">(logins separados por coma)</span></label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="form.destinoValor" name="usuarios" placeholder="Ej. lgomezp, paulino123">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small mb-1">Solo para quien tenga el permiso <span class="text-muted">(opcional)</span></label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="form.permiso" name="permiso" maxlength="100">
+            </div>
+
+            <div class="col-6">
+              <label class="form-label small mb-1">Mostrar desde <span class="text-muted">(vacio = ahora)</span></label>
+              <input type="datetime-local" class="form-control form-control-sm" [(ngModel)]="form.fechaInicio" name="fechaInicio">
+            </div>
+            <div class="col-6">
+              <label class="form-label small mb-1">Vence <span class="text-muted">(vacio = no vence)</span></label>
+              <input type="datetime-local" class="form-control form-control-sm" [(ngModel)]="form.fechaVence" name="fechaVence">
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-primary btn-sm" [disabled]="!puedeEnviar" (click)="enviar()">
+              <i class="bi bi-send me-1"></i>{{ enviando ? 'Publicando...' : 'Publicar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <span class="fw-bold"><i class="bi bi-list-ul me-2"></i>Publicados</span>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cargar()">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+          <p class="text-muted small">
+            Cada usuario lo ve una sola vez, en un maximo de 45 segundos si tiene el sistema abierto, o al entrar si el aviso sigue vigente.
+          </p>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Aviso</th>
+                  <th>Dirigido a</th>
+                  <th>Vigencia</th>
+                  <th class="text-end">Vistos</th>
+                  <th>Estado</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let a of avisos">
+                  <tr>
+                    <td>
+                      <span class="badge me-1" [ngClass]="a.tipo === 'NOVEDAD' ? 'bg-primary' : 'bg-dark'">{{ a.tipo === 'NOVEDAD' ? 'Novedad' : 'Aviso' }}</span>
+                      <span *ngIf="a.prioridad === 'U'" class="badge bg-danger me-1">Urgente</span>
+                      <div class="fw-semibold">{{ a.titulo }}</div>
+                      <div class="text-muted small texto-corto">{{ a.mensaje }}</div>
+                    </td>
+                    <td class="small">{{ destinoTexto(a) }}<span *ngIf="a.permiso" class="d-block text-muted">Permiso: {{ a.permiso }}</span></td>
+                    <td class="small">
+                      {{ a.fechaInicio | date:'dd/MM/yy HH:mm' }}
+                      <span class="d-block text-muted">{{ a.fechaVence ? ('hasta ' + (a.fechaVence | date:'dd/MM/yy HH:mm')) : 'sin vencimiento' }}</span>
+                    </td>
+                    <td class="text-end">
+                      <button type="button" class="btn btn-link btn-sm p-0" (click)="verVistos(a)" title="Ver quien lo vio">{{ a.vistos }}</button>
+                    </td>
+                    <td><span class="badge" [ngClass]="estado(a).clase">{{ estado(a).texto }}</span></td>
+                    <td class="text-end">
+                      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cambiarActivo(a)">
+                        {{ a.activo ? 'Desactivar' : 'Activar' }}
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="avisoSeleccionado === a" class="detalle-vistos">
+                    <td colspan="6">
+                      <div *ngIf="cargandoVistos" class="text-muted small">Cargando...</div>
+                      <table *ngIf="!cargandoVistos" class="table table-sm table-borderless mb-0">
+                        <thead>
+                          <tr class="text-muted small"><th>Usuario</th><th>Lo vio</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let v of vistos">
+                            <td>
+                              {{ v.nombreUsuario || v.usuario }}
+                              <span *ngIf="v.nombreUsuario" class="text-muted small ms-1">({{ v.usuario }})</span>
+                            </td>
+                            <td>{{ v.fechaVisto | date:'dd/MM/yyyy HH:mm' }}</td>
+                          </tr>
+                          <tr *ngIf="vistos.length === 0"><td colspan="2" class="text-muted">Nadie lo ha visto todavia.</td></tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </ng-container>
+                <tr *ngIf="!cargando && avisos.length === 0">
+                  <td colspan="6" class="text-center text-muted py-4">Todavia no hay avisos publicados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="cargando" class="text-center text-muted py-2">Cargando...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</app-main>
