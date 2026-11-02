@@ -1,0 +1,20 @@
+.filter-card,
+.results-card {
+    border: 1px solid #e3f2fd;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filter-title {
+    font-weight: 600;
+}
+
+.movimientos-table td {
+    font-size: 0.9rem;
+}
+
+.nota-celda {
+    max-width: 220px;
+    white-space: normal;
+    font-size: 0.8rem;
+}

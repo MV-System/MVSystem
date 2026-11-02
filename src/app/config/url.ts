@@ -12,6 +12,7 @@ export let APIURL = {
         Consulta: {
             Accesorio: API + 'Accesorios/GetAccesorios',
             AccesorioById: API + 'Accesorios/GetAccesorioById',
+            AccesorioMovimientos: API + 'Accesorios/Accesorio_Movimientos',
             AccesorioCoincidencias: API + 'Accesorios/Accesorio_Coincidencias',
             AccesorioVendidos: API + 'Accesorios/GetAccesoriosVendidos',
         },
@@ -106,9 +107,6 @@ export let APIURL = {
         Accesorios: API + 'api/Laptops/Accesorios',
         CambioPieza: API + 'api/Laptops/CambioPieza',
         CambioPiezaAnular: API + 'api/Laptops/CambioPieza/Anular',
-        KardexBuscar: API + 'api/Laptops/Kardex/Buscar',
-        Kardex: API + 'api/Laptops/Kardex',
-        Consumo: API + 'api/Laptops/Consumo',
         ComprobanteCustodia: API + 'EquipoReporte/ComprobanteCustodia',
         Historial: API + 'api/Laptops/Historial',
         ConfiguracionModulos: API + 'api/Laptops/Configuracion/Modulos',

@@ -172,51 +172,6 @@ export interface LaptopCambioHistorial {
   motivo_Anula?: string | null;
 }
 
-/** Accesorio encontrado para consultar su kardex. */
-export interface AccesorioKardexBusqueda {
-  iD_Accesorio: number;
-  descripcion_Accesorio: string;
-  modelo: string;
-  iD_Almacen: number;
-  descripcion_Almacen: string;
-  cantidad: number;
-  estado: string;
-}
-
-export type MotivoMovimiento = 'VENTA' | 'CAMBIO_PIEZA' | 'RECEPCION' | 'SALDO_INICIAL';
-
-/** Línea del kardex de un accesorio. */
-export interface KardexMovimiento {
-  fecha: string;
-  motivo: MotivoMovimiento;
-  documento: string | null;
-  entrada: number;
-  salida: number;
-  usuario: string | null;
-  saldo: number;
-  descripcion_Accesorio: string;
-  descripcion_Almacen: string;
-  existencia_Actual: number;
-}
-
-/** Línea del reporte general de consumo de componentes. */
-export interface ConsumoComponente {
-  fecha: string;
-  motivo: MotivoMovimiento;
-  documento: string | null;
-  iD_Accesorio: number;
-  descripcion_Accesorio: string;
-  modelo: string;
-  tipo_Pieza: TipoPieza;
-  iD_Almacen: number;
-  descripcion_Almacen: string;
-  entrada: number;
-  salida: number;
-  costo: number;
-  usuario: string | null;
-  tecnico: string | null;
-}
-
 export interface LaptopAnularCambioRequest {
   iD_Cambio: number;
   motivo: string;

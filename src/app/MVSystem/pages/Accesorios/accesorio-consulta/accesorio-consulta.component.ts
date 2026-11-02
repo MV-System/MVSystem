@@ -54,6 +54,10 @@ export class AccesorioConsultaComponent implements OnInit {
     totalAccesorio: [0,],
     totalInventario: [0,]
   });
+  /** La vista Movimientos solo se muestra con el permiso ACCESORIOS_MOVIMIENTOS. */
+  VerMovimientos(): boolean {
+    return this.validatorPermissionService.validateUserRole("ACCESORIOS_MOVIMIENTOS");
+  }
   SelectSucursal(): boolean {
     return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
   }

@@ -1,9 +1,0 @@
-.resumen-accesorio {
-  max-height: 260px;
-  overflow-y: auto;
-}
-
-.table td,
-.table th {
-  white-space: nowrap;
-}

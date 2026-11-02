@@ -44,9 +44,6 @@ export class SidebarComponent implements OnInit {
   VerFormLaptopCambioPieza(): boolean {
     return this.validatorPermissionService.validateUserRole("LAPTOP_CAMBIO_PIEZA");
   }
-  VerFormLaptopConsumo(): boolean {
-    return this.validatorPermissionService.validateUserRole("LAPTOP_CONSUMO_COMPONENTES");
-  }
   VerFormLaptopCustodia(): boolean {
     return this.validatorPermissionService.validateUserRole("LAPTOP_CUSTODIA_CONSULTA");
   }

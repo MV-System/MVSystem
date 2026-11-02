@@ -56,6 +56,13 @@
                                                         Vendidos
                                                     </label>
                                             </div>
+                                            <div class="form-check form-check-inline" *ngIf="VerMovimientos()">
+                                                <input class="form-check-input modern-radio" type="radio" name="accesorio" id="movimientos" value="3" (change)="onCheckboxAccesorioChange($event)">
+                                                <label class="form-check-label modern-radio-label" for="movimientos">
+                                                        <i class="bi bi-arrow-left-right me-1 text-primary"></i>
+                                                        Movimientos
+                                                    </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -196,6 +203,12 @@
                                 </div>
                             </ng-container>
                             <!-- End Accesorios Vendidos Component -->
+
+                            <!-- Movimientos de stock (requiere ACCESORIOS_MOVIMIENTOS) -->
+                            <ng-container *ngIf="accesorioTipo === 3 && VerMovimientos()">
+                                <app-accesorio-movimientos></app-accesorio-movimientos>
+                            </ng-container>
+                            <!-- End Movimientos -->
                         </div>
                     </div>
                 </div>

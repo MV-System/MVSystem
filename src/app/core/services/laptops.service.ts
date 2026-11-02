@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APIURL } from 'src/app/config/url';
-import { AccesorioKardexBusqueda, ConsumoComponente, EquipoConfiguracion, KardexMovimiento, LaptopAccesorio, LaptopAnularCambioRequest, LaptopCambioHistorial, LaptopCambioPiezaRequest, LaptopCorreccion, LaptopCustodiaAccion, LaptopCustodiaConfig, LaptopCustodiaPendiente, LaptopEquipo, LaptopModulo, LaptopModuloCorreccionRequest, ModeloComponente, TipoPieza } from '../interfaces/laptop.interface';
+import { EquipoConfiguracion, LaptopAccesorio, LaptopAnularCambioRequest, LaptopCambioHistorial, LaptopCambioPiezaRequest, LaptopCorreccion, LaptopCustodiaAccion, LaptopCustodiaConfig, LaptopCustodiaPendiente, LaptopEquipo, LaptopModulo, LaptopModuloCorreccionRequest, ModeloComponente, TipoPieza } from '../interfaces/laptop.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -54,30 +54,6 @@ export class LaptopsService {
 
   registrarCambioPieza(cambio: LaptopCambioPiezaRequest): Observable<any[]> {
     return this.http.post<any[]>(APIURL.Laptops.CambioPieza, cambio);
-  }
-
-  buscarAccesoriosKardex(idAlmacen: number | null, filtro: string): Observable<AccesorioKardexBusqueda[]> {
-    let params = new HttpParams().set('filtro', filtro || '');
-    if (idAlmacen) { params = params.set('idAlmacen', String(idAlmacen)); }
-    return this.http.get<AccesorioKardexBusqueda[]>(APIURL.Laptops.KardexBuscar, { params });
-  }
-
-  consultarKardex(idAccesorio: number, fechaInicio: string, fechaFinal: string): Observable<KardexMovimiento[]> {
-    const params = new HttpParams()
-      .set('idAccesorio', String(idAccesorio))
-      .set('fechaInicio', fechaInicio)
-      .set('fechaFinal', fechaFinal);
-    return this.http.get<KardexMovimiento[]>(APIURL.Laptops.Kardex, { params });
-  }
-
-  consultarConsumo(fechaInicio: string, fechaFinal: string, idAlmacen: number | null, tecnico: string | null,
-                   tipoPieza: string | null, motivo: string | null): Observable<ConsumoComponente[]> {
-    let params = new HttpParams().set('fechaInicio', fechaInicio).set('fechaFinal', fechaFinal);
-    if (idAlmacen) { params = params.set('idAlmacen', String(idAlmacen)); }
-    if (tecnico) { params = params.set('tecnico', tecnico); }
-    if (tipoPieza) { params = params.set('tipoPieza', tipoPieza); }
-    if (motivo) { params = params.set('motivo', motivo); }
-    return this.http.get<ConsumoComponente[]>(APIURL.Laptops.Consumo, { params });
   }
 
   /** Ticket (PDF de 80 mm) de la pieza retirada que queda en custodia del técnico. */
