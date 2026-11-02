@@ -7,10 +7,12 @@ export let APIURL = {
     Accesorio: {
         Inserta: {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
+            AccesorioSumarExistencia: API + 'Accesorios/Accesorio_Sumar_Existencia',
         },
         Consulta: {
             Accesorio: API + 'Accesorios/GetAccesorios',
             AccesorioById: API + 'Accesorios/GetAccesorioById',
+            AccesorioCoincidencias: API + 'Accesorios/Accesorio_Coincidencias',
             AccesorioVendidos: API + 'Accesorios/GetAccesoriosVendidos',
         },
         Edita:{

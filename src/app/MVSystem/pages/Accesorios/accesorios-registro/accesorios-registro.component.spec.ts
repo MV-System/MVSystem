@@ -50,7 +50,7 @@ describe('AccesoriosRegistroComponent', () => {
       'getModeloByMarcaLista',
       'getAlmaceLista'
     ]);
-    const mantenimientoServiceSpy = jasmine.createSpyObj('MantenimientoService', ['postAccesorio']);
+    const mantenimientoServiceSpy = jasmine.createSpyObj('MantenimientoService', ['postAccesorio', 'getAccesorioCoincidencias', 'postAccesorioSumarExistencia']);
     const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
     const loginServiceSpy = jasmine.createSpyObj('LoginService', ['getUserName']);
     const trackingServiceSpy = jasmine.createSpyObj('UserTrackingService', ['trackPageView', 'trackAction', 'trackError']);
@@ -60,6 +60,7 @@ describe('AccesoriosRegistroComponent', () => {
     catalogosServiceSpy.getModeloByMarcaLista.and.returnValue(of(mockModelos));
     catalogosServiceSpy.getAlmaceLista.and.returnValue(of(mockAlmacenes));
     mantenimientoServiceSpy.postAccesorio.and.returnValue(of(mockAccesorioRegistrado));
+    mantenimientoServiceSpy.getAccesorioCoincidencias.and.returnValue(of([]));   // sin coincidencias: se registra normal
     loginServiceSpy.getUserName.and.returnValue('testuser');
     trackingServiceSpy.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
     trackingServiceSpy.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));

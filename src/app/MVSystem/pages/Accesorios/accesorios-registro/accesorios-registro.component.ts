@@ -6,7 +6,7 @@ import {
   MarcaEquipo,
   ModeloEquipo,
 } from '../../../../core/interfaces/catalogo.interface';
-import { Accesorio, AccesorioLista} from '../../../../core/interfaces/mantenimiento';
+import { Accesorio, AccesorioLista, AccesorioCoincidencia, AccesorioSumarRespuesta } from '../../../../core/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import * as $ from"jquery";
@@ -27,6 +27,15 @@ export class AccesoriosRegistroComponent implements OnInit {
   btnDisabled: boolean = true;
   AccesorioValorRetorno: AccesorioLista[]=[];
   AccesorioRegistrado!: number;
+
+  // Accesorio que ya existe: lista para elegir a cual sumarle la cantidad
+  mostrarCoincidencias = false;
+  coincidencias: AccesorioCoincidencia[] = [];
+  coincidenciaElegida: AccesorioCoincidencia | null = null;
+  modeloPendiente: Accesorio | null = null;
+  cantidadSumar: number | string = '';
+  actualizarPrecios = false;
+  sumando = false;
 
 
   constructor(
@@ -361,24 +370,118 @@ export class AccesoriosRegistroComponent implements OnInit {
     if (this.formRegistro.valid && !hasCustomErrors) {
       const model: Accesorio = this.modeloRegistroAccesorio();
 
-      // 📊 Tracking: Registro de creación de accesorio
-      this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'Registro').subscribe();
-
-      this.mantenimientoService.postAccesorio(model)
-          .subscribe({
-            next: (accesorio: AccesorioLista) => {
-              this.AccesorioValorRetorno.push(accesorio);
-              this.toastr.success('Accesorio registrado con exito!');
-              this.formRegistro.reset({});
-            },
-            error: (error) => {
-              console.error('Error al registrar accesorio:', error);
-              // Opcionalmente mostrar un mensaje de error al usuario
-              // this.toastr.error('Error al registrar el accesorio');
+      // Si ya existe un accesorio con el mismo modelo y descripcion en el almacen, no se registra de nuevo:
+      // se le muestra la lista para que elija a cual sumarle la cantidad.
+      this.mantenimientoService
+        .getAccesorioCoincidencias(model.id_Modelo, model.descripcion_Accesorio, Number(model.id_Almacen))
+        .subscribe({
+          next: (coincidencias: AccesorioCoincidencia[]) => {
+            if (coincidencias && coincidencias.length) {
+              this.abrirCoincidencias(coincidencias, model);
+            } else {
+              this.guardarNuevoAccesorio(model);
             }
-          });
+          },
+          error: (error) => {
+            console.error('Error al buscar accesorios existentes:', error);
+            this.toastr.error('No se pudo verificar si el accesorio ya existe. Intente de nuevo.');
+          }
+        });
+    }
   }
-}
+
+  private guardarNuevoAccesorio(model: Accesorio) {
+    // 📊 Tracking: Registro de creación de accesorio
+    this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'Registro').subscribe();
+
+    this.mantenimientoService.postAccesorio(model)
+        .subscribe({
+          next: (accesorio: AccesorioLista) => {
+            this.AccesorioValorRetorno.push(accesorio);
+            this.toastr.success('Accesorio registrado con exito!');
+            this.formRegistro.reset({});
+          },
+          error: (error) => {
+            console.error('Error al registrar accesorio:', error);
+            // Opcionalmente mostrar un mensaje de error al usuario
+            // this.toastr.error('Error al registrar el accesorio');
+          }
+        });
+  }
+
+  // ---- Accesorio que ya existe: sumarle la cantidad en lugar de registrarlo de nuevo ----
+  abrirCoincidencias(coincidencias: AccesorioCoincidencia[], model: Accesorio) {
+    this.coincidencias = coincidencias;
+    this.modeloPendiente = model;
+    // Si hay una sola y esta activa, ya viene elegida
+    const activas = coincidencias.filter(c => c.estado === 'A');
+    this.coincidenciaElegida = coincidencias.length === 1 && activas.length === 1 ? activas[0] : null;
+    this.cantidadSumar = model.cantidad;
+    this.actualizarPrecios = false;
+    this.mostrarCoincidencias = true;
+  }
+
+  cerrarCoincidencias() {
+    if (this.sumando) { return; }
+    this.mostrarCoincidencias = false;
+    this.coincidencias = [];
+    this.coincidenciaElegida = null;
+    this.modeloPendiente = null;
+  }
+
+  elegirCoincidencia(c: AccesorioCoincidencia) {
+    if (c.estado === 'A') { this.coincidenciaElegida = c; }
+  }
+
+  get cantidadSumarValida(): boolean {
+    const n = Number(this.cantidadSumar);
+    return Number.isInteger(n) && n > 0 && n <= 9999;
+  }
+
+  get existenciaResultante(): number {
+    return (this.coincidenciaElegida?.cantidad ?? 0) + Number(this.cantidadSumar);
+  }
+
+  sumarCantidadAlExistente() {
+    if (!this.coincidenciaElegida || !this.modeloPendiente || !this.cantidadSumarValida || this.sumando) { return; }
+
+    const m = this.modeloPendiente;
+    const elegida = this.coincidenciaElegida;
+    this.sumando = true;
+
+    this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'SumarCantidad').subscribe();
+
+    this.mantenimientoService.postAccesorioSumarExistencia({
+      idAccesorio: elegida.idAccesorio,
+      cantidad: Number(this.cantidadSumar),
+      usuario: this.loginService.getUserName(),
+      actualizarPrecios: this.actualizarPrecios,
+      costoEquipo: this.actualizarPrecios ? m.costo_Equipo : undefined,
+      precioPorMayor: this.actualizarPrecios ? m.precio_Por_Mayor : undefined,
+      precioDetalle: this.actualizarPrecios ? m.precio_Detalle : undefined,
+    }).subscribe({
+      next: (r: AccesorioSumarRespuesta) => {
+        this.sumando = false;
+        this.AccesorioValorRetorno.push({
+          descripcion_Accesorio: elegida.descripcion,
+          precio_Por_Mayor: this.actualizarPrecios ? m.precio_Por_Mayor : elegida.precioPorMayor,
+          precio_Detalle: this.actualizarPrecios ? m.precio_Detalle : elegida.precioDetalle,
+          cantidad: Number(this.cantidadSumar),
+        });
+        this.toastr.success(`Se sumó la cantidad al accesorio existente. Existencia actual: ${r?.cantidad}`);
+        this.mostrarCoincidencias = false;
+        this.coincidencias = [];
+        this.coincidenciaElegida = null;
+        this.modeloPendiente = null;
+        this.formRegistro.reset({});
+      },
+      error: (error) => {
+        this.sumando = false;
+        console.error('Error al sumar la cantidad al accesorio:', error);
+        this.toastr.error(typeof error?.error === 'string' ? error.error : 'No se pudo sumar la cantidad.');
+      }
+    });
+  }
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,

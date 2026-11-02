@@ -21,6 +21,38 @@ export interface Accesorio {
 }
 
 
+/** Accesorio que ya existe con el mismo modelo y descripcion que el que se intenta registrar. */
+export interface AccesorioCoincidencia {
+    idAccesorio: number;
+    descripcion: string;
+    modelo: string;
+    idAlmacen: number;
+    almacen: string;
+    cantidad: number;
+    costoEquipo: number;
+    precioPorMayor: number;
+    precioDetalle: number;
+    estado: string;
+    codigoBarra?: number;
+}
+
+export interface AccesorioSumarRequest {
+    idAccesorio: number;
+    cantidad: number;
+    usuario: string;
+    actualizarPrecios: boolean;
+    costoEquipo?: number;
+    precioPorMayor?: number;
+    precioDetalle?: number;
+}
+
+export interface AccesorioSumarRespuesta {
+    idAccesorio: number;
+    descripcion: string;
+    cantidad: number;
+    mensaje: string;
+}
+
 export interface AccesorioLista {
     descripcion_Accesorio: string;
     precio_Por_Mayor: number;

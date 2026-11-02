@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
 import { Equipo, EquipoObjRetorno, EquipoModificarEstatus, EquipoModificarEstatusSet, EquipoRecepcion, EquipoEstadoUpdate, EquipoTransferencia, EquipoEliminadoResponse, EquipoValidacionEliminacion, ConsultaSqlConexion, ConsultaSqlResultado, RegistroReparaciones } from '../interfaces/equipo.interface';
-import { Accesorio, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel, DetallePagoMixto, NotaCreditoProveedor2Request, NotaCreditoProveedor2Respuesta } from '../interfaces/mantenimiento';
+import { Accesorio, AccesorioCoincidencia, AccesorioSumarRequest, AccesorioSumarRespuesta, FacturaFilter, FacturaRegistro, FacturaConsulta, DetalleFacturaList, AccesorioLista, FacturaRegistroRespuesta, FacturaEditaResponse, RebajaEquipoModel, DetallePagoMixto, NotaCreditoProveedor2Request, NotaCreditoProveedor2Respuesta } from '../interfaces/mantenimiento';
 import { CierreCajaReporteResumen } from '../interfaces/catalogo.interface';
 import { EquipoNumeroRegistro } from "../../MVSystem/pages/Equipo/Equipo-registro/equipo-registro.component";
 import { switchMap } from 'rxjs/operators';
@@ -22,6 +22,18 @@ export class MantenimientoService {
   // Post's
   postAccesorio(accesorio: Accesorio): Observable<AccesorioLista> {
     return this.http.post<AccesorioLista>(APIURL.Accesorio.Inserta.AccesorioInserta, accesorio);
+  }
+  /** Accesorios que ya existen con el mismo modelo y descripcion en el almacen (antes de registrar uno nuevo). */
+  getAccesorioCoincidencias(idModelo: number, descripcion: string, idAlmacen: number): Observable<AccesorioCoincidencia[]> {
+    const params = new HttpParams()
+      .set('idModelo', String(idModelo))
+      .set('descripcion', descripcion)
+      .set('idAlmacen', String(idAlmacen));
+    return this.http.get<AccesorioCoincidencia[]>(APIURL.Accesorio.Consulta.AccesorioCoincidencias, { params });
+  }
+  /** Suma cantidad a un accesorio que ya existe (en lugar de registrarlo de nuevo). */
+  postAccesorioSumarExistencia(datos: AccesorioSumarRequest): Observable<AccesorioSumarRespuesta> {
+    return this.http.post<AccesorioSumarRespuesta>(APIURL.Accesorio.Inserta.AccesorioSumarExistencia, datos);
   }
   postEquipo(equipo: Equipo): Observable<EquipoObjRetorno[]> {
     return this.http.post<EquipoObjRetorno[]>(APIURL.Equipo.Inserta.EquipoInserta, equipo);

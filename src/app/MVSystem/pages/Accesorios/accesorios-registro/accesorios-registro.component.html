@@ -293,3 +293,95 @@
         </div>
     </section>
 </main>
+
+<!-- Modal: el accesorio ya existe -> elegir a cual sumarle la cantidad -->
+<div class="modal" [class.show]="mostrarCoincidencias" [style.display]="mostrarCoincidencias ? 'block' : 'none'" tabindex="-1" role="dialog" (keydown.escape)="cerrarCoincidencias()">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Este accesorio ya existe
+                </h5>
+                <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarCoincidencias()" [disabled]="sumando"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">
+                    Ya hay un accesorio con el mismo modelo y la misma descripción en este almacén. No se registra de nuevo:
+                    elija a cuál le quiere sumar la cantidad.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>Descripción</th>
+                                <th class="text-center">Existencia</th>
+                                <th class="text-end">Costo</th>
+                                <th class="text-end">Por mayor</th>
+                                <th class="text-end">Al detalle</th>
+                                <th class="text-center">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of coincidencias"
+                                [class.table-active]="coincidenciaElegida?.idAccesorio === c.idAccesorio"
+                                [class.text-muted]="c.estado !== 'A'"
+                                (click)="elegirCoincidencia(c)" style="cursor: pointer;">
+                                <td>
+                                    <input type="radio" name="coincidencia" [checked]="coincidenciaElegida?.idAccesorio === c.idAccesorio"
+                                        [disabled]="c.estado !== 'A'" (change)="elegirCoincidencia(c)">
+                                </td>
+                                <td>{{c.idAccesorio}}</td>
+                                <td class="fw-semibold">{{c.descripcion}}</td>
+                                <td class="text-center"><span class="badge bg-info">{{c.cantidad}}</span></td>
+                                <td class="text-end">{{c.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</td>
+                                <td class="text-end">{{c.precioPorMayor | currency:'RD$':'symbol':'1.2-2'}}</td>
+                                <td class="text-end">{{c.precioDetalle | currency:'RD$':'symbol':'1.2-2'}}</td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="c.estado === 'A' ? 'bg-success' : 'bg-secondary'">{{c.estado === 'A' ? 'Activo' : 'Inactivo'}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="small text-muted mb-3" *ngIf="coincidencias.length && !coincidenciaElegida">
+                    Los accesorios inactivos no se pueden elegir; actívelos primero desde la edición de accesorios.
+                </div>
+
+                <div class="row g-3 align-items-end" *ngIf="coincidenciaElegida">
+                    <div class="col-md-4">
+                        <label class="form-label modern-label">Cantidad a sumar</label>
+                        <input type="number" class="form-control modern-input" min="1" max="9999" [value]="cantidadSumar"
+                            (input)="cantidadSumar = $any($event.target).value" [class.is-invalid]="!cantidadSumarValida">
+                        <div class="invalid-feedback">Indique una cantidad entera entre 1 y 9999</div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chkActualizarPrecios" [checked]="actualizarPrecios"
+                                (change)="actualizarPrecios = $any($event.target).checked">
+                            <label class="form-check-label" for="chkActualizarPrecios">
+                                Actualizar el costo y los precios con los del formulario
+                            </label>
+                        </div>
+                        <div class="small text-muted">Si no lo marca, el costo y los precios del accesorio no cambian.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="alert alert-info py-2 mb-0">
+                            Existencia actual: <strong>{{coincidenciaElegida.cantidad}}</strong>
+                            <ng-container *ngIf="cantidadSumarValida"> → quedará en <strong>{{existenciaResultante}}</strong></ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarCoincidencias()" [disabled]="sumando">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="sumarCantidadAlExistente()"
+                    [disabled]="!coincidenciaElegida || !cantidadSumarValida || sumando">
+                    <i class="bi bi-plus-circle me-1"></i> Sumar cantidad
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="mostrarCoincidencias" *ngIf="mostrarCoincidencias"></div>
