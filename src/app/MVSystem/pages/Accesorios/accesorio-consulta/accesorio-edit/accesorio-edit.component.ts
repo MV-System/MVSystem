@@ -159,7 +159,12 @@ export class AccesorioEditComponent implements OnInit, OnChanges {
         error: (error) => {
           this.isLoading = false;
           console.error('Error updating accessory:', error);
-          this.toastr.error('Error al actualizar el accesorio. Por favor intente nuevamente.', 'Error', {
+          // El interceptor entrega los errores 400 como texto
+          const detalle = typeof error === 'string' ? error : error?.error;
+          const mensaje = typeof detalle === 'string' && detalle
+            ? detalle
+            : 'Error al actualizar el accesorio. Por favor intente nuevamente.';
+          this.toastr.error(mensaje, 'Error', {
             timeOut: 5000,
             progressBar: true,
             closeButton: true

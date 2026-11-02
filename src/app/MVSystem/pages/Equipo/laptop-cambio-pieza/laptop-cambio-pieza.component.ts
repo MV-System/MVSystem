@@ -386,6 +386,11 @@ export class LaptopCambioPiezaComponent implements OnInit {
           this.toastr.error('La laptop no está disponible (vendida o no disponible). Solo se permiten cambios en laptops disponibles.');
           return;
         }
+        if (equipo.preFactura_Pendiente) {
+          this.limpiarLaptop();
+          this.toastr.error(`La laptop está en la prefactura pendiente #${equipo.preFactura_Pendiente}. Anule la prefactura antes de cambiar piezas.`);
+          return;
+        }
         this.laptop = equipo;
         this.resetFormCambio();
         this.cargarModulos();

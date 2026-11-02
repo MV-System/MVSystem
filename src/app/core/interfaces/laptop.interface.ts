@@ -73,6 +73,8 @@ export interface LaptopEquipo {
   descripcion_Almacen: string;
   disponible: string;
   es_Laptop: boolean;
+  /** Número de la prefactura pendiente que incluye la laptop (null si no está en ninguna). */
+  preFactura_Pendiente?: number | null;
 }
 
 export interface LaptopAccesorio {

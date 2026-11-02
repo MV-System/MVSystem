@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { IMyDrpOptions } from 'mydaterangepicker';
 import { LoginService } from 'src/app/auth/login.service';
 import { AccesorioMovimiento, AccesorioMovimientoResumen } from 'src/app/core/interfaces/accesorio.interface';
 import { Almacen } from 'src/app/core/interfaces/catalogo.interface';
@@ -44,7 +45,10 @@ export class AccesorioMovimientosComponent implements OnInit {
     usuario: [''],
     fechaInicio: [this.formatearFechaISO(this.inicioDeMes())],
     fechaFinal: [this.formatearFechaISO(new Date())],
+    rangeDate: [''],
   });
+
+  myDateRangePickerOptions: IMyDrpOptions = { dateFormat: 'dd.mm.yyyy' };
 
   constructor(
     private fb: FormBuilder,
@@ -100,9 +104,28 @@ export class AccesorioMovimientosComponent implements OnInit {
     this.buscar(false);
   }
 
-  fechaCambiada(): void {
+  onDateRangeChanged(event: any): void {
     this.periodoRapido = 'personalizado';
+    if (event.beginDate.year === 0) {
+      this.form.patchValue({ fechaInicio: '', fechaFinal: '' });
+    } else {
+      const b = event.beginDate, e = event.endDate;
+      this.form.patchValue({
+        fechaInicio: `${b.year}-${String(b.month).padStart(2, '0')}-${String(b.day).padStart(2, '0')}`,
+        fechaFinal: `${e.year}-${String(e.month).padStart(2, '0')}-${String(e.day).padStart(2, '0')}`
+      });
+    }
     this.buscar();
+  }
+
+  get rangoFechas(): string {
+    const v = this.form.value;
+    return `${this.fechaVisible(v.fechaInicio)} - ${this.fechaVisible(v.fechaFinal)}`;
+  }
+
+  private fechaVisible(valor: string): string {
+    const p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor || '');
+    return p ? new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3])).toLocaleDateString() : '';
   }
 
   seleccionarPeriodoRapido(periodo: 'hoy' | 'semana' | 'mes'): void {

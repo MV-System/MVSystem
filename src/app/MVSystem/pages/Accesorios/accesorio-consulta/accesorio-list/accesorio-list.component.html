@@ -1,7 +1,5 @@
 <!-- Modal Editar accesorio -->
-<r-modal [show]="isOpenModal" (close)="onCancel()" [title]="title">
-    <app-accesorio-edit [accesorio]="accesorio" (closeModal)="putAccesorio()"></app-accesorio-edit>
-</r-modal>
+<app-accesorio-edit *ngIf="isOpenModal" [accesorio]="accesorio" (closeModal)="putAccesorio()"></app-accesorio-edit>
 
 <!-- Modal Ver Detalles del accesorio -->
 <r-modal [show]="isOpenDetalleModal" (close)="closeDetalleModal()" [title]="'Detalles del Accesorio'">
@@ -257,6 +255,7 @@
                                             </td>
                                             <td class="name-cell">
                                                 <span class="accesorio-name">{{accesorio.descripcionAccesorio | titlecase}}</span>
+                                                <small class="d-block text-muted" *ngIf="isValidValue(accesorio.modelo)">{{accesorio.modelo}}</small>
                                             </td>
                                             <td class="text-center">
                                                 {{accesorio.cantidad}}
@@ -293,6 +292,7 @@
                             <div class="card-accesorio" *ngFor="let accesorio of accesorios | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecord }">
                                 <div class="card-header">
                                     <span class="codigo">{{accesorio.descripcionAccesorio | titlecase}}</span>
+                                    <small class="d-block text-muted" *ngIf="isValidValue(accesorio.modelo)">{{accesorio.modelo}}</small>
                                     <div class="acciones">
                                         <button type="button" class="btn-icon" (click)="generarLabelAccesorio(accesorio)" title="Imprimir etiqueta" *ngIf="accesorio.codBarra">
                                 <i class="bi bi-printer"></i>

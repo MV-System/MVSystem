@@ -354,6 +354,12 @@ main.main {
 .results-card {
     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     border-left: 4px solid #17a2b8;
+    /* backdrop-filter y transform convierten la tarjeta en el contenedor de los modales (position: fixed) y los dejan dentro de la lista */
+    backdrop-filter: none;
+}
+
+.results-card:hover {
+    transform: none;
 }
 
 

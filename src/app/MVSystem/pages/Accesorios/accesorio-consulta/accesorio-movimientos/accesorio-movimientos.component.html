@@ -39,14 +39,8 @@
                                 <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
                             </span>
                         </label>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <input type="date" class="form-control modern-input" formControlName="fechaInicio" aria-label="Desde" (change)="fechaCambiada()">
-                            </div>
-                            <div class="col-6">
-                                <input type="date" class="form-control modern-input" formControlName="fechaFinal" aria-label="Hasta" (change)="fechaCambiada()">
-                            </div>
-                        </div>
+                        <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas" class="modern-date-picker">
+                        </my-date-range-picker>
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
