@@ -130,8 +130,6 @@ export interface LaptopCustodiaPendiente {
 export interface LaptopCustodiaConfig {
   horasMax: number;
   bloquearVencidos: boolean;
-  /** % del costo de una pieza nueva que se toma como costo de la pieza usada (appsettings). */
-  porcentajeCostoUsado: number;
 }
 
 export interface LaptopCustodiaAccion {

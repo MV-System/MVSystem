@@ -59,12 +59,12 @@ export class LaptopCambioPiezaComponent implements OnInit {
   accesoriosInstalarTodos: LaptopAccesorio[] = [];
   accesoriosInstalar: LaptopAccesorio[] = [];
   accesoriosRetirar: LaptopAccesorio[] = [];
+  actualizandoLista = false;
   opcionesRetirada: OpcionRetirada[] = [];
   tecnicos: TecnicoItem[] = [];
   historial: LaptopCambioHistorial[] = [];
   configCustodia: LaptopCustodiaConfig | null = null;
   vencidosTecnico: LaptopCustodiaPendiente[] = [];
-  porcentajeCostoUsado = 50;
   cambioAnular: LaptopCambioHistorial | null = null;
 
   // Comprobante de custodia: se ofrece al registrar un cambio cuya pieza retirada queda en custodia
@@ -99,7 +99,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
 
     // Tarea 16: aviso (y bloqueo si está activo) cuando el técnico tiene piezas en custodia vencidas
     this.laptopsService.consultarConfiguracionCustodia().subscribe({
-      next: (cfg) => { this.configCustodia = cfg; this.porcentajeCostoUsado = cfg.porcentajeCostoUsado ?? 50; },
+      next: (cfg) => { this.configCustodia = cfg; },
       error: () => { /* sin configuración solo se pierde el aviso; el SP valida igual */ }
     });
     this.formCambio.get('tecnico')!.valueChanges.subscribe((tecnico) => this.consultarVencidosTecnico(tecnico));
@@ -202,32 +202,22 @@ export class LaptopCambioPiezaComponent implements OnInit {
     return this.formCambio.get('destinoRetirada')?.value;
   }
 
-  private esPiezaUsada(a: LaptopAccesorio): boolean {
-    return /(usado)s*$/i.test(a.descripcion_Accesorio || '');
-  }
-
   /**
-   * Costo de la pieza que sale (igual que el SP). La pieza retirada es USADA:
-   *  - si el accesorio del módulo ya es una pieza usada, su propio costo;
-   *  - si existe la variante usada del mismo modelo y capacidad, su costo;
-   *  - si no, el % configurado (Laptops:PorcentajeCostoUsado) del costo de la pieza nueva.
-   * null = no hay forma de saberlo (la pieza no está en el catálogo): el SP la crea con costo 0.
+   * Costo de la pieza que sale (igual que el SP): el costo de catalogo del mismo accesorio
+   * (el del modulo o, si el modulo no tiene accesorio, el del mismo modelo y capacidad).
+   * null = no hay forma de saberlo (la pieza no esta en el catalogo): el SP la crea con costo 0.
    */
   get costoRetirada(): number | null {
     const m = this.moduloRetirado;
     if (!m) { return null; }
-    const lista = this.accesoriosRetirar;
+    const lista = this.accesoriosRetirar.filter(a => !/\(usado\)\s*$/i.test(a.descripcion_Accesorio || ''));
     const delModulo = lista.find(a => a.iD_Accesorio === m.iD_Accesorio);
-    if (delModulo && this.esPiezaUsada(delModulo)) { return Number(delModulo.costo_Equipo); }
-    const mismoModeloYCapacidad = (a: LaptopAccesorio) =>
-      a.modelo === m.modelo_Componente && this.capacidadDeDescripcion(a.descripcion_Accesorio) === m.capacidad_GB;
-    const usada = lista.find(a => this.esPiezaUsada(a) && mismoModeloYCapacidad(a));
-    if (usada) { return Number(usada.costo_Equipo); }
-    const nueva = delModulo || lista.find(a => !this.esPiezaUsada(a) && mismoModeloYCapacidad(a));
-    return nueva ? Math.round(Number(nueva.costo_Equipo) * this.porcentajeCostoUsado) / 100 : null;
+    const accesorio = delModulo || lista.find(a =>
+      a.modelo === m.modelo_Componente && this.capacidadDeDescripcion(a.descripcion_Accesorio) === m.capacidad_GB);
+    return accesorio ? Number(accesorio.costo_Equipo) : null;
   }
 
-  /** R4 / R10: si la pieza se queda en custodia se resta su costo (de pieza usada); si se la lleva el cliente no. */
+  /** R4 / R10: si la pieza se queda en custodia se resta su costo de catálogo; si se la lleva el cliente no. */
   get costoRetiradoDescontado(): number {
     return this.destino === 'CUSTODIA' ? (this.costoRetirada || 0) : 0;
   }
@@ -482,6 +472,37 @@ export class LaptopCambioPiezaComponent implements OnInit {
     this.laptopsService.consultarAccesorios(almacen, tipo, false).subscribe({
       next: (lista) => this.accesoriosRetirar = this.conEtiqueta(lista),
       error: (err) => this.toastr.error(this.mensajeError(err, 'Error al cargar los accesorios.'))
+    });
+  }
+
+  /**
+   * Vuelve a cargar las listas de piezas sin tocar el formulario (ej. el encargado acaba de registrar la pieza en Accesorios).
+   * Si la pieza elegida ya no esta disponible, se limpia solo ese campo.
+   */
+  actualizarLista() {
+    if (!this.laptop || !this.tipoPieza || this.actualizandoLista) { return; }
+    const tipo = this.tipoPieza;
+    const almacen = this.laptop.iD_Almacen;
+    let pendientes = 2;
+    const terminar = () => { if (--pendientes === 0) { this.actualizandoLista = false; } };
+    this.actualizandoLista = true;
+
+    this.laptopsService.consultarAccesorios(almacen, tipo, true).subscribe({
+      next: (lista) => {
+        this.accesoriosInstalarTodos = this.conEtiqueta(lista);
+        this.refiltrarInstalables();
+        const elegido = this.formCambio.get('accesorioInstalado')?.value;
+        if (elegido && !this.accesoriosInstalar.some(a => a.iD_Accesorio === elegido)) {
+          this.formCambio.get('accesorioInstalado')?.setValue(null);
+          this.toastr.warning('La pieza elegida ya no tiene existencia en este almacén; seleccione otra.');
+        }
+        terminar();
+      },
+      error: (err) => { this.toastr.error(this.mensajeError(err, 'Error al actualizar la lista de piezas.')); terminar(); }
+    });
+    this.laptopsService.consultarAccesorios(almacen, tipo, false).subscribe({
+      next: (lista) => { this.accesoriosRetirar = this.conEtiqueta(lista); terminar(); },
+      error: (err) => { this.toastr.error(this.mensajeError(err, 'Error al actualizar la lista de piezas.')); terminar(); }
     });
   }
 

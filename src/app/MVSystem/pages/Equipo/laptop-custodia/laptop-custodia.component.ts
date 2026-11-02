@@ -121,7 +121,7 @@ export class LaptopCustodiaComponent implements OnInit {
     this.precioMayor = null;
     this.mensajePrecio = '';
     this.pedirPreciosAccesorio = accion === 'RECIBIR' && !!p.requiere_Precios;
-    // El costo de la pieza usada ya viene calculado por el sistema; el usuario lo confirma o lo ajusta
+    // El costo de la pieza ya viene del catálogo; el usuario lo confirma o lo ajusta
     this.accCosto = p.costo_Retirado > 0 ? Number(p.costo_Retirado) : null;
     this.accMayor = null;
     this.accDetalle = null;

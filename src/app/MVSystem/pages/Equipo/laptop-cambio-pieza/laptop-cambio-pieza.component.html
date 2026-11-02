@@ -69,7 +69,13 @@
                                 <ng-container *ngIf="tipoPieza">
                                     <!-- Pieza instalada -->
                                     <div class="col-12">
-                                        <label class="form-label small mb-1">Pieza que se instala (con existencia) <span class="text-danger">*</span></label>
+                                        <label class="form-label small mb-1">Pieza que se instala (con existencia) <span class="text-danger">*</span>
+                                            <button type="button" class="btn btn-link btn-sm p-0 ms-2 align-baseline" title="Actualizar lista"
+                                                    (click)="actualizarLista()" [disabled]="!laptop || !tipoPieza || actualizandoLista">
+                                                <span *ngIf="actualizandoLista" class="spinner-border spinner-border-sm"></span>
+                                                <i *ngIf="!actualizandoLista" class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                        </label>
                                         <ng-select [items]="accesoriosInstalar" bindLabel="etiqueta" bindValue="iD_Accesorio"
                                                    formControlName="accesorioInstalado" placeholder="Seleccionar accesorio"
                                                    notFoundText="No hay componentes con existencia en este almacén"
@@ -129,7 +135,7 @@
                                     <tbody>
                                         <tr><td>Costo actual de la laptop</td><td class="text-end">{{laptop.costo_Equipo | currency}}</td></tr>
                                         <tr *ngIf="hayRetirada">
-                                            <td>(−) Pieza retirada (usada)
+                                            <td>(−) Pieza retirada
                                                 <span class="text-muted" *ngIf="destino === 'CLIENTE'">(se la lleva el cliente, no se descuenta)</span>
                                             </td>
                                             <td class="text-end">{{costoRetiradoDescontado | currency}}</td>
