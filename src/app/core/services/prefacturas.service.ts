@@ -95,8 +95,10 @@ export class PreFacturasService {
   }
 
   // 4. Obtener detalles de una pre-factura
-  obtenerDetallePreFactura(id: number): Observable<PreDetalleFactura[]> {
-    return this.http.get<PreDetalleFactura[]>(`${APIURL.PreFacturas.Detalle}/${id}/detalle`);
+  // El numero de prefactura se repite entre literales: con la literal se trae solo el detalle de esa prefactura
+  obtenerDetallePreFactura(id: number, literal?: string | null): Observable<PreDetalleFactura[]> {
+    const params = literal ? new HttpParams().set('literal', literal) : undefined;
+    return this.http.get<PreDetalleFactura[]>(`${APIURL.PreFacturas.Detalle}/${id}/detalle`, { params });
   }
 
   // 5. Procesar pre-factura
@@ -105,8 +107,9 @@ export class PreFacturasService {
   }
 
   // 6. Anular pre-factura
-  anularPreFactura(id: number): Observable<any> {
-    return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, {});
+  anularPreFactura(id: number, literal?: string | null): Observable<any> {
+    const params = literal ? new HttpParams().set('literal', literal) : undefined;
+    return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, {}, { params });
   }
 
   // 7. Actualizar tipo de pago de pre-factura

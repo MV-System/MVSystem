@@ -9,12 +9,6 @@ import {
 import { LaptopsService } from 'src/app/core/services/laptops.service';
 import { ImprimirPdfBlob } from 'src/app/helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
-import { SeguridadService } from '../../seguridad/servicios/seguridad.service';
-
-interface TecnicoItem {
-  login: string;
-  etiqueta: string;
-}
 
 /** Opción de "Pieza que se retira": un módulo instalado en la laptop, o "Ninguna" (slot libre, id 0). */
 interface OpcionRetirada {
@@ -32,10 +26,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     { valor: 'RAM', texto: 'Memoria RAM' },
     { valor: 'ALMACENAMIENTO', texto: 'Almacenamiento (SSD / HDD)' }
   ];
-  readonly destinos: { valor: DestinoRetirada; texto: string }[] = [
-    { valor: 'CUSTODIA', texto: 'Queda en custodia del técnico' },
-    { valor: 'CLIENTE', texto: 'Se la lleva el cliente' }
-  ];
 
   formBusqueda: FormGroup = this.fb.group({
     imei: ['', [Validators.required, Validators.maxLength(30)]]
@@ -46,8 +36,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     accesorioInstalado: [null, Validators.required],
     // Módulo de la laptop que sale (id) o 0 = "Ninguna (slot libre)"; null = aún sin elegir
     moduloRetirado: [null, Validators.required],
-    destinoRetirada: [null],
-    tecnico: [null, Validators.required],
     // Solo se piden cuando el costo nuevo supera el precio de venta actual
     precioDetalle: [null],
     precioMayor: [null]
@@ -61,7 +49,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
   accesoriosRetirar: LaptopAccesorio[] = [];
   actualizandoLista = false;
   opcionesRetirada: OpcionRetirada[] = [];
-  tecnicos: TecnicoItem[] = [];
   historial: LaptopCambioHistorial[] = [];
   configCustodia: LaptopCustodiaConfig | null = null;
   vencidosTecnico: LaptopCustodiaPendiente[] = [];
@@ -78,13 +65,11 @@ export class LaptopCambioPiezaComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private laptopsService: LaptopsService,
-    private seguridadService: SeguridadService,
     private loginService: LoginService,
     private validatorPermissionService: ValidatorPermissionService
   ) { }
 
   ngOnInit(): void {
-    this.cargarTecnicos();
     this.laptopsService.consultarModelosComponente().subscribe({
       next: (modelos) => { this.modelosComponente = modelos || []; this.refiltrarInstalables(); },
       error: (err) => this.toastr.error(this.mensajeError(err, 'Error al cargar los modelos de componentes.'))
@@ -93,36 +78,33 @@ export class LaptopCambioPiezaComponent implements OnInit {
     // Los precios sugeridos se recalculan siempre que cambie algo que afecte el costo nuevo
     merge(
       this.formCambio.get('accesorioInstalado')!.valueChanges,
-      this.formCambio.get('moduloRetirado')!.valueChanges,
-      this.formCambio.get('destinoRetirada')!.valueChanges
+      this.formCambio.get('moduloRetirado')!.valueChanges
     ).subscribe(() => this.sugerirPrecios());
 
     // Tarea 16: aviso (y bloqueo si está activo) cuando el técnico tiene piezas en custodia vencidas
     this.laptopsService.consultarConfiguracionCustodia().subscribe({
-      next: (cfg) => { this.configCustodia = cfg; },
+      next: (cfg) => { this.configCustodia = cfg; this.aplicarBloqueo(); },
       error: () => { /* sin configuración solo se pierde el aviso; el SP valida igual */ }
     });
-    this.formCambio.get('tecnico')!.valueChanges.subscribe((tecnico) => this.consultarVencidosTecnico(tecnico));
+    this.consultarVencidosTecnico();
   }
 
-  private consultarVencidosTecnico(tecnico: string | null) {
+  /** El técnico es siempre el usuario que registra el cambio (el API lo toma del token). */
+  private consultarVencidosTecnico() {
     this.vencidosTecnico = [];
-    if (!tecnico) { return; }
-    this.laptopsService.consultarPendientes(tecnico, null).subscribe({
-      next: (lista) => {
-        // Se ignora la respuesta si el técnico cambió mientras tanto
-        if (this.formCambio.get('tecnico')?.value === tecnico) {
-          this.vencidosTecnico = (lista || []).filter(p => p.vencido);
-        }
-      },
-      error: () => this.vencidosTecnico = []
+    this.laptopsService.consultarPendientes(this.loginService.getUserName(), null).subscribe({
+      next: (lista) => { this.vencidosTecnico = (lista || []).filter(p => p.vencido); this.aplicarBloqueo(); },
+      error: () => { this.vencidosTecnico = []; this.aplicarBloqueo(); }
     });
   }
 
-  /** Nombre del técnico sin el " (login)" de la etiqueta de la lista. */
-  private nombreTecnico(login: string): string {
-    const etiqueta = this.tecnicos.find(t => t.login === login)?.etiqueta || login;
-    return etiqueta.replace(/\s*\([^)]*\)\s*$/, '');
+  /** Con piezas vencidas sin recibir (y el bloqueo activo) no se puede llenar el cambio: se evita perder tiempo. */
+  private aplicarBloqueo() {
+    if (this.tecnicoBloqueado) {
+      this.formCambio.disable({ emitEvent: false });
+    } else if (this.formCambio.disabled) {
+      this.formCambio.enable({ emitEvent: false });
+    }
   }
 
   imprimirComprobante() {
@@ -198,8 +180,9 @@ export class LaptopCambioPiezaComponent implements OnInit {
     return !!this.moduloRetirado;
   }
 
+  /** Toda pieza retirada queda en custodia del técnico; la entrega al cliente la registra el encargado desde Custodia. */
   get destino(): DestinoRetirada | null {
-    return this.formCambio.get('destinoRetirada')?.value;
+    return this.hayRetirada ? 'CUSTODIA' : null;
   }
 
   /**
@@ -301,7 +284,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
 
   get puedeConfirmar(): boolean {
     if (!this.laptop || !this.formCambio.valid) { return false; }
-    if (this.hayRetirada && !this.destino) { return false; }
     if (this.instalada && this.capacidadInstalada === null) { return false; }
     if (!this.preciosValidos) { return false; }
     if (this.tecnicoBloqueado) { return false; }
@@ -438,7 +420,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     this.formCambio.patchValue({
       accesorioInstalado: null,
       moduloRetirado: null,
-      destinoRetirada: null,
       precioDetalle: null,
       precioMayor: null
     });
@@ -447,7 +428,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     // Si la laptop tiene un solo módulo de ese tipo, queda preseleccionado
     if (this.modulosDelTipo.length === 1) {
       this.formCambio.get('moduloRetirado')?.setValue(this.modulosDelTipo[0].iD_Modulo);
-      this.onModuloRetiradoChange();
     }
   }
 
@@ -529,18 +509,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     }));
   }
 
-  onModuloRetiradoChange() {
-    const destinoCtrl = this.formCambio.get('destinoRetirada');
-    if (this.hayRetirada) {
-      destinoCtrl?.setValidators(Validators.required);
-      if (!destinoCtrl?.value) { destinoCtrl?.setValue('CUSTODIA'); }
-    } else {
-      destinoCtrl?.clearValidators();
-      destinoCtrl?.setValue(null);
-    }
-    destinoCtrl?.updateValueAndValidity();
-  }
-
   // ---------------------------------------------------------------
   // Confirmación
   // ---------------------------------------------------------------
@@ -562,8 +530,8 @@ export class LaptopCambioPiezaComponent implements OnInit {
       tipo_Pieza: f.tipoPieza,
       iD_Accesorio_Instalado: Number(f.accesorioInstalado),
       iD_Modulo_Retirado: this.moduloRetirado ? this.moduloRetirado.iD_Modulo : null,
-      destino_Retirada: this.moduloRetirado ? f.destinoRetirada : null,
-      tecnico: f.tecnico,
+      destino_Retirada: this.moduloRetirado ? 'CUSTODIA' : null,
+      tecnico: this.loginService.getUserName(),
       iD_Almacen: this.laptop.iD_Almacen,
       nuevo_Precio_Detalle: this.requierePrecios ? this.precioDetalleNuevo : null,
       nuevo_Precio_Por_Mayor: this.requierePrecios ? this.precioMayorNuevo : null,
@@ -571,7 +539,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
     };
 
     this.isLoading = true;
-    const tecnicoNombre = this.nombreTecnico(cambio.tecnico);
+    const tecnicoNombre = cambio.tecnico;
     this.laptopsService.registrarCambioPieza(cambio).subscribe({
       next: (resultado) => {
         this.isLoading = false;
@@ -604,8 +572,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
     const etiquetas: { campo: string; texto: string }[] = [
       { campo: 'tipoPieza', texto: 'Tipo de pieza' },
       { campo: 'accesorioInstalado', texto: 'Pieza que se instala' },
-      { campo: 'moduloRetirado', texto: 'Pieza que se retira (o Ninguna)' },
-      { campo: 'tecnico', texto: 'Técnico' }
+      { campo: 'moduloRetirado', texto: 'Pieza que se retira (o Ninguna)' }
     ];
     const faltantes = etiquetas
       .filter(e => {
@@ -613,9 +580,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
         return !!c && c.enabled && c.invalid;
       })
       .map(e => e.texto);
-    if (this.hayRetirada && !this.destino) {
-      faltantes.push('Destino de la pieza retirada');
-    }
     if (this.instalada && this.capacidadInstalada === null) {
       faltantes.push('Capacidad de la pieza (revise la descripción del accesorio)');
     }
@@ -628,10 +592,8 @@ export class LaptopCambioPiezaComponent implements OnInit {
   private resetFormCambio() {
     this.formCambio.reset({
       tipoPieza: null, accesorioInstalado: null, moduloRetirado: null,
-      destinoRetirada: null, tecnico: null, precioDetalle: null, precioMayor: null
+      precioDetalle: null, precioMayor: null
     });
-    this.formCambio.get('destinoRetirada')?.clearValidators();
-    this.formCambio.get('destinoRetirada')?.updateValueAndValidity();
     this.accesoriosInstalarTodos = [];
     this.accesoriosInstalar = [];
     this.accesoriosRetirar = [];
@@ -646,17 +608,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     this.laptopsService.consultarHistorial(this.laptop.imei).subscribe({
       next: (h) => this.historial = h || [],
       error: (err) => this.toastr.error(this.mensajeError(err, 'Error al cargar el historial.'))
-    });
-  }
-
-  private cargarTecnicos() {
-    this.seguridadService.getUsuarios().subscribe({
-      next: (usuarios) => {
-        this.tecnicos = (usuarios || [])
-          .filter(u => u.estado === 1 && u.login)
-          .map(u => ({ login: u.login, etiqueta: `${u.nombre} (${u.login})` }));
-      },
-      error: () => this.toastr.error('No se pudo cargar la lista de técnicos.')
     });
   }
 

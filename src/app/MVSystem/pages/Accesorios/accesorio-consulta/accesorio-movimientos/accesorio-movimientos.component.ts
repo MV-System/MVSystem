@@ -20,7 +20,9 @@ export class AccesorioMovimientosComponent implements OnInit {
     { valor: 'ENTRADA', texto: 'Entrada' },
     { valor: 'AJUSTE', texto: 'Ajuste' },
     { valor: 'AJUSTE_INVENTARIO', texto: 'Ajuste de inventario' },
-    { valor: 'VENTA', texto: 'Venta' },
+    { valor: 'VENTA_PF', texto: 'Venta por prefactura' },
+    { valor: 'VENTA_D', texto: 'Venta directa' },
+    { valor: 'VENTA', texto: 'Venta (histórico)' },
     { valor: 'ANULACION_FACTURA', texto: 'Anulación de factura' },
     { valor: 'TRANSFERENCIA', texto: 'Transferencia' },
     { valor: 'CAMBIO_PIEZA', texto: 'Cambio de pieza' },
@@ -31,6 +33,12 @@ export class AccesorioMovimientosComponent implements OnInit {
   almacenes: Almacen[] = [];
   movimientos: AccesorioMovimiento[] = [];
   resumen: AccesorioMovimientoResumen[] = [];
+  existenciaInicial: number | null = null;
+  existenciaFinal: number | null = null;
+  entradasRegistradas = 0;
+  salidasRegistradas = 0;
+  entradasHistoricas = 0;
+  salidasHistoricas = 0;
   total = 0;
   pageIndex = 1;
   pageSize = 20;
@@ -86,6 +94,12 @@ export class AccesorioMovimientosComponent implements OnInit {
       next: r => {
         this.movimientos = r.items;
         this.resumen = r.resumen;
+        this.existenciaInicial = r.existenciaInicial ?? null;
+        this.existenciaFinal = r.existenciaFinal ?? null;
+        this.entradasRegistradas = r.entradasRegistradas ?? 0;
+        this.salidasRegistradas = r.salidasRegistradas ?? 0;
+        this.entradasHistoricas = r.entradasHistoricas ?? 0;
+        this.salidasHistoricas = r.salidasHistoricas ?? 0;
         this.total = r.total;
         this.cargando = false;
       },
@@ -93,6 +107,8 @@ export class AccesorioMovimientosComponent implements OnInit {
         this.cargando = false;
         this.movimientos = [];
         this.resumen = [];
+        this.existenciaInicial = null;
+        this.existenciaFinal = null;
         this.total = 0;
         this.error = typeof e?.error === 'string' && e.error ? e.error : 'No se pudieron cargar los movimientos.';
       }

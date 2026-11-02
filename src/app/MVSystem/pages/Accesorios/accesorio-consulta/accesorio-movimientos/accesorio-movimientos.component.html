@@ -80,6 +80,17 @@
                             <td class="text-center text-success">{{totalEntradas | number}}</td>
                             <td class="text-center text-danger">{{totalSalidas | number}}</td>
                         </tr>
+                        <tr *ngIf="existenciaInicial !== null && existenciaFinal !== null" class="text-muted">
+                            <td colspan="4">
+                                Existencia al inicio del período: <strong>{{existenciaInicial | number}}</strong>
+                                + entradas {{entradasRegistradas | number}} − salidas {{salidasRegistradas | number}}
+                                = existencia al final: <strong>{{existenciaFinal | number}}</strong>
+                                <div class="small" *ngIf="entradasHistoricas || salidasHistoricas">
+                                    No incluye {{entradasHistoricas | number}} entradas y {{salidasHistoricas | number}} salidas históricas
+                                    (anteriores al registro de movimientos): ya estaban reflejadas en la existencia inicial.
+                                </div>
+                            </td>
+                        </tr>
                     </tfoot>
                 </table>
             </div>

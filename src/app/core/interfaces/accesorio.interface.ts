@@ -91,6 +91,14 @@ export interface AccesorioMovimientosRespuesta {
     total:   number;
     items:   AccesorioMovimiento[];
     resumen: AccesorioMovimientoResumen[];
+    /** Existencia al inicio y al final del periodo; null cuando se filtra por tipo o usuario. */
+    existenciaInicial: number | null;
+    existenciaFinal:   number | null;
+    /** Entradas y salidas registradas (con saldo) e historicas (anteriores al registro de movimientos, sin saldo). */
+    entradasRegistradas: number;
+    salidasRegistradas:  number;
+    entradasHistoricas:  number;
+    salidasHistoricas:   number;
 }
 
 export interface AccesorioMovimientosFiltro {

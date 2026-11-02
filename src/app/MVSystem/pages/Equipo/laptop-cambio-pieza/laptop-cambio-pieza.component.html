@@ -56,6 +56,12 @@
                     <div class="card-body p-3">
                         <h5 class="card-title small mb-2"><i class="bi bi-memory me-2 text-primary"></i>2. Pieza a cambiar</h5>
 
+                        <div *ngIf="vencidosTecnico.length" class="alert mb-2 p-2 small" [ngClass]="tecnicoBloqueado ? 'alert-danger' : 'alert-warning'">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                            Usted tiene {{vencidosTecnico.length}} pieza(s) retirada(s) pendiente(s) de recibir por más de {{configCustodia?.horasMax}} horas.
+                            <strong *ngIf="tecnicoBloqueado">No puede registrar nuevos cambios hasta que se reciban.</strong>
+                        </div>
+
                         <form [formGroup]="formCambio" (ngSubmit)="confirmarCambio()" novalidate>
                             <div class="row g-2">
                                 <div class="col-12">
@@ -97,32 +103,12 @@
                                         <label class="form-label small mb-1">Pieza que se retira <span class="text-danger">*</span></label>
                                         <ng-select [items]="opcionesRetirada" bindLabel="etiqueta" bindValue="id"
                                                    formControlName="moduloRetirado" placeholder="Seleccionar la pieza que sale" [clearable]="false"
-                                                   (change)="onModuloRetiradoChange()"
                                                    [class.is-invalid]="campoInvalido('moduloRetirado')"></ng-select>
                                         <div class="small text-danger" *ngIf="campoInvalido('moduloRetirado')">Requerido (elija la pieza o "Ninguna")</div>
                                         <div class="small text-warning" *ngIf="avisoRanura">{{avisoRanura}}</div>
                                     </div>
-                                    <div class="col-12" *ngIf="hayRetirada">
-                                        <label class="form-label small mb-1">Destino de la pieza retirada <span class="text-danger">*</span></label>
-                                        <select class="form-select form-select-sm" formControlName="destinoRetirada"
-                                                [class.is-invalid]="campoInvalido('destinoRetirada')">
-                                            <option *ngFor="let d of destinos" [value]="d.valor">{{d.texto}}</option>
-                                        </select>
-                                        <div class="small text-danger" *ngIf="campoInvalido('destinoRetirada')">Requerido</div>
-                                    </div>
                                 </ng-container>
 
-                                <div class="col-12">
-                                    <label class="form-label small mb-1">Técnico <span class="text-danger">*</span></label>
-                                    <ng-select [items]="tecnicos" bindLabel="etiqueta" bindValue="login" formControlName="tecnico"
-                                               placeholder="Seleccionar técnico" [class.is-invalid]="campoInvalido('tecnico')"></ng-select>
-                                    <div class="small text-danger" *ngIf="campoInvalido('tecnico')">Requerido</div>
-                                    <div *ngIf="vencidosTecnico.length" class="alert mt-2 mb-0 p-2 small" [ngClass]="tecnicoBloqueado ? 'alert-danger' : 'alert-warning'">
-                                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                        Este técnico tiene {{vencidosTecnico.length}} pieza(s) retirada(s) pendiente(s) de recibir por más de {{configCustodia?.horasMax}} horas.
-                                        <strong *ngIf="tecnicoBloqueado">No puede registrar nuevos cambios hasta que se reciban.</strong>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Resumen -->
@@ -135,9 +121,7 @@
                                     <tbody>
                                         <tr><td>Costo actual de la laptop</td><td class="text-end">{{laptop.costo_Equipo | currency}}</td></tr>
                                         <tr *ngIf="hayRetirada">
-                                            <td>(−) Pieza retirada
-                                                <span class="text-muted" *ngIf="destino === 'CLIENTE'">(se la lleva el cliente, no se descuenta)</span>
-                                            </td>
+                                            <td>(−) Pieza retirada</td>
                                             <td class="text-end">{{costoRetiradoDescontado | currency}}</td>
                                         </tr>
                                         <tr><td>(+) Pieza instalada</td><td class="text-end">{{instalada.costo_Equipo | currency}}</td></tr>
@@ -155,17 +139,17 @@
                                 <div *ngIf="requierePrecios" class="alert alert-warning mt-2 mb-0 p-2 small">
                                     <div class="fw-bold mb-1">El costo nuevo supera el precio de venta actual</div>
                                     <div class="mb-2">
-                                        Precios actuales: detalle {{laptop.precio_Detalle | currency}} · por mayor {{laptop.precio_Por_Mayor | currency}}.
+                                        Precios actuales: por mayor {{laptop.precio_Por_Mayor | currency}} · detalle {{laptop.precio_Detalle | currency}}.
                                         Indique los precios nuevos (no pueden ser menores al costo nuevo).
                                     </div>
                                     <div class="row g-2">
                                         <div class="col-6">
-                                            <label class="form-label small mb-1">Precio al detalle nuevo <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control form-control-sm" formControlName="precioDetalle" min="0">
-                                        </div>
-                                        <div class="col-6">
                                             <label class="form-label small mb-1">Precio por mayor nuevo <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control form-control-sm" formControlName="precioMayor" min="0">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small mb-1">Precio al detalle nuevo <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control form-control-sm" formControlName="precioDetalle" min="0">
                                         </div>
                                     </div>
                                     <div class="text-danger mt-1" *ngIf="!preciosValidos">{{mensajePrecios}}</div>
@@ -173,7 +157,7 @@
                             </div>
 
                             <div class="mt-3">
-                                <button type="submit" class="btn btn-success w-100 btn-sm" [disabled]="isLoading">
+                                <button type="submit" class="btn btn-success w-100 btn-sm" [disabled]="isLoading || tecnicoBloqueado">
                                     <span *ngIf="!isLoading">Confirmar cambio de pieza</span>
                                     <span *ngIf="isLoading"><span class="spinner-border spinner-border-sm me-2"></span>Guardando...</span>
                                 </button>
