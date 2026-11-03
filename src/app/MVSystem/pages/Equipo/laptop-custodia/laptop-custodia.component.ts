@@ -3,7 +3,6 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { LaptopCustodiaAccion, LaptopCustodiaPendiente } from 'src/app/core/interfaces/laptop.interface';
 import { LaptopsService } from 'src/app/core/services/laptops.service';
-import { ImprimirPdfBlob } from 'src/app/helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { SeguridadService } from '../../seguridad/servicios/seguridad.service';
 
@@ -125,27 +124,6 @@ export class LaptopCustodiaComponent implements OnInit {
     this.accCosto = p.costo_Retirado > 0 ? Number(p.costo_Retirado) : null;
     this.accMayor = null;
     this.accDetalle = null;
-  }
-
-  /** Reimprime el comprobante de custodia de una pieza pendiente. */
-  imprimirComprobante(p: LaptopCustodiaPendiente) {
-    const etiqueta = this.tecnicos.find(t => t.login === p.tecnico)?.etiqueta || p.tecnico;
-    const nombre = etiqueta.replace(/\s*\([^)]*\)\s*$/, '');
-    this.laptopsService.obtenerComprobanteCustodia(
-      p.iD_Cambio,
-      this.loginService.getUserIdEmpresa,
-      this.loginService.getUserIdSucursal,
-      nombre
-    ).subscribe({
-      next: (blob) => {
-        if (!blob || blob.size === 0) {
-          this.toastr.warning('El comprobante está vacío.');
-          return;
-        }
-        ImprimirPdfBlob(blob);
-      },
-      error: () => this.toastr.warning('No se pudo generar el comprobante de custodia.')
-    });
   }
 
   cancelarAccion() {

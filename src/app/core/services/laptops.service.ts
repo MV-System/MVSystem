@@ -56,16 +56,6 @@ export class LaptopsService {
     return this.http.post<any[]>(APIURL.Laptops.CambioPieza, cambio);
   }
 
-  /** Ticket (PDF de 80 mm) de la pieza retirada que queda en custodia del técnico. */
-  obtenerComprobanteCustodia(idCambio: number, idEmpresa: string, idSucursal: string, tecnicoNombre: string): Observable<Blob> {
-    const params = new HttpParams()
-      .set('idCambio', String(idCambio))
-      .set('idEmpresa', idEmpresa)
-      .set('idSucursal', idSucursal)
-      .set('tecnicoNombre', tecnicoNombre || '');
-    return this.http.get(APIURL.Laptops.ComprobanteCustodia, { params, responseType: 'blob' });
-  }
-
   anularCambio(anulacion: LaptopAnularCambioRequest): Observable<any[]> {
     return this.http.post<any[]>(APIURL.Laptops.CambioPiezaAnular, anulacion);
   }

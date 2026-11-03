@@ -1,27 +1,3 @@
-<main id="main" class="main">
-    <div class="pagetitle">
-        <h1>Cambio de pieza de laptop</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">Mantenimiento</li>
-                <li class="breadcrumb-item active">Cambio de pieza</li>
-            </ol>
-        </nav>
-    </div>
-
-    <!-- Comprobante de custodia: la pieza retirada quedo en custodia del tecnico -->
-    <div *ngIf="comprobante" class="alert alert-success d-flex justify-content-between align-items-center flex-wrap gap-2 py-2 small">
-        <span><i class="bi bi-receipt me-2"></i>La pieza retirada quedó en custodia de {{comprobante.tecnicoNombre}}. ¿Desea imprimir el comprobante?</span>
-        <span class="text-nowrap">
-            <button type="button" class="btn btn-success btn-sm me-1" (click)="imprimirComprobante()" [disabled]="isImprimiendo">
-                <span *ngIf="!isImprimiendo"><i class="bi bi-printer me-1"></i>Imprimir comprobante</span>
-                <span *ngIf="isImprimiendo" class="spinner-border spinner-border-sm"></span>
-            </button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="comprobante = null" [disabled]="isImprimiendo">No, gracias</button>
-        </span>
-    </div>
-
     <section class="section">
         <div class="row">
             <!-- COLUMNA IZQUIERDA: búsqueda + datos de la laptop + cambio -->
@@ -211,4 +187,3 @@
     </section>
 
     <app-laptop-anular-cambio *ngIf="cambioAnular" [cambio]="cambioAnular" (anulado)="alAnular()" (cancelar)="cambioAnular = null"></app-laptop-anular-cambio>
-</main>

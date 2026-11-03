@@ -107,7 +107,6 @@ export let APIURL = {
         Accesorios: API + 'api/Laptops/Accesorios',
         CambioPieza: API + 'api/Laptops/CambioPieza',
         CambioPiezaAnular: API + 'api/Laptops/CambioPieza/Anular',
-        ComprobanteCustodia: API + 'EquipoReporte/ComprobanteCustodia',
         Historial: API + 'api/Laptops/Historial',
         ConfiguracionModulos: API + 'api/Laptops/Configuracion/Modulos',
         ConfiguracionModulosCorregir: API + 'api/Laptops/Configuracion/Modulos/Corregir',

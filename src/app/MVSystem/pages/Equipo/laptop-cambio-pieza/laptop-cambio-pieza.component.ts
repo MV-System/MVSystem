@@ -7,7 +7,6 @@ import {
   DestinoRetirada, LaptopAccesorio, LaptopCambioHistorial, LaptopCambioPiezaRequest, LaptopCustodiaConfig, LaptopCustodiaPendiente, LaptopEquipo, LaptopModulo, ModeloComponente, TipoPieza
 } from 'src/app/core/interfaces/laptop.interface';
 import { LaptopsService } from 'src/app/core/services/laptops.service';
-import { ImprimirPdfBlob } from 'src/app/helpers/helper';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 /** Opción de "Pieza que se retira": un módulo instalado en la laptop, o "Ninguna" (slot libre, id 0). */
@@ -53,10 +52,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
   configCustodia: LaptopCustodiaConfig | null = null;
   vencidosTecnico: LaptopCustodiaPendiente[] = [];
   cambioAnular: LaptopCambioHistorial | null = null;
-
-  // Comprobante de custodia: se ofrece al registrar un cambio cuya pieza retirada queda en custodia
-  comprobante: { idCambio: number; tecnicoNombre: string } | null = null;
-  isImprimiendo = false;
 
   isLoading = false;
   isBuscando = false;
@@ -105,31 +100,6 @@ export class LaptopCambioPiezaComponent implements OnInit {
     } else if (this.formCambio.disabled) {
       this.formCambio.enable({ emitEvent: false });
     }
-  }
-
-  imprimirComprobante() {
-    if (!this.comprobante || this.isImprimiendo) { return; }
-    this.isImprimiendo = true;
-    this.laptopsService.obtenerComprobanteCustodia(
-      this.comprobante.idCambio,
-      this.loginService.getUserIdEmpresa,
-      this.loginService.getUserIdSucursal,
-      this.comprobante.tecnicoNombre
-    ).subscribe({
-      next: (blob) => {
-        this.isImprimiendo = false;
-        if (!blob || blob.size === 0) {
-          this.toastr.warning('El comprobante está vacío.');
-          return;
-        }
-        ImprimirPdfBlob(blob);
-        this.comprobante = null;
-      },
-      error: () => {
-        this.isImprimiendo = false;
-        this.toastr.warning('No se pudo generar el comprobante de custodia.');
-      }
-    });
   }
 
   get puedeAnular(): boolean {
@@ -539,16 +509,10 @@ export class LaptopCambioPiezaComponent implements OnInit {
     };
 
     this.isLoading = true;
-    const tecnicoNombre = cambio.tecnico;
     this.laptopsService.registrarCambioPieza(cambio).subscribe({
-      next: (resultado) => {
+      next: () => {
         this.isLoading = false;
         this.toastr.success('Cambio de pieza registrado satisfactoriamente.');
-        // Si la pieza retirada queda en custodia, se ofrece imprimir el comprobante
-        const registrado = resultado && resultado.length ? resultado[0] : null;
-        this.comprobante = registrado && registrado.estado_Custodia === 'PENDIENTE'
-          ? { idCambio: Number(registrado.iD_Cambio), tecnicoNombre }
-          : null;
         // Se refrescan los datos de la laptop (costo y configuración nuevos), sus módulos, el historial y las existencias
         this.laptopsService.consultarEquipo(cambio.imei).subscribe(eq => {
           if (eq && eq.length) { this.laptop = eq[0]; }
