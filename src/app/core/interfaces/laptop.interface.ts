@@ -84,6 +84,8 @@ export interface LaptopAccesorio {
   cantidad: number;
   costo_Equipo: number;
   etiqueta?: string;
+  /** Encabezado de grupo en la lista (Memorias / Discos). */
+  grupo?: string;
 }
 
 export type TipoPieza = 'RAM' | 'ALMACENAMIENTO';

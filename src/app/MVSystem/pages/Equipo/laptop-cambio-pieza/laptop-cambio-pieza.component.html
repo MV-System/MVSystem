@@ -40,55 +40,43 @@
 
                         <form [formGroup]="formCambio" (ngSubmit)="confirmarCambio()" novalidate>
                             <div class="row g-2">
+                                <!-- Pieza que entra: memorias y discos con existencia -->
                                 <div class="col-12">
-                                    <label class="form-label small mb-1">Tipo de pieza <span class="text-danger">*</span></label>
-                                    <ng-select [items]="tiposPieza" bindLabel="texto" bindValue="valor" formControlName="tipoPieza"
-                                               placeholder="Seleccionar" [clearable]="false" (change)="onTipoPiezaChange()"
-                                               [class.is-invalid]="campoInvalido('tipoPieza')"></ng-select>
-                                    <div class="small text-danger" *ngIf="campoInvalido('tipoPieza')">Requerido</div>
+                                    <label class="form-label small mb-1">Pieza que entra (con existencia) <span class="text-danger">*</span>
+                                        <button type="button" class="btn btn-link btn-sm p-0 ms-2 align-baseline" title="Actualizar lista"
+                                                (click)="actualizarLista()" [disabled]="!laptop || actualizandoLista">
+                                            <span *ngIf="actualizandoLista" class="spinner-border spinner-border-sm"></span>
+                                            <i *ngIf="!actualizandoLista" class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </label>
+                                    <ng-select [items]="accesoriosInstalar" bindLabel="etiqueta" bindValue="iD_Accesorio" groupBy="grupo"
+                                               formControlName="accesorioInstalado" placeholder="Seleccionar accesorio"
+                                               notFoundText="No hay componentes con existencia en este almacén"
+                                               (change)="onInstaladaChange()"
+                                               [class.is-invalid]="campoInvalido('accesorioInstalado')"></ng-select>
+                                    <div class="small text-danger" *ngIf="campoInvalido('accesorioInstalado')">Requerido</div>
+                                    <!-- Capacidad y tipo calculados de la pieza que entra -->
+                                    <div class="small text-muted" *ngIf="instalada && capacidadInstalada !== null">
+                                        Entra: <strong>{{capacidadInstalada}}GB {{tipoInstalada}}</strong>
+                                    </div>
+                                    <div class="small text-danger" *ngIf="instalada && capacidadInstalada === null">
+                                        No se pudo determinar la capacidad de la pieza; revise la descripción del accesorio.
+                                    </div>
                                 </div>
 
-                                <ng-container *ngIf="tipoPieza">
-                                    <!-- Pieza instalada -->
-                                    <div class="col-12">
-                                        <label class="form-label small mb-1">Pieza que se instala (con existencia) <span class="text-danger">*</span>
-                                            <button type="button" class="btn btn-link btn-sm p-0 ms-2 align-baseline" title="Actualizar lista"
-                                                    (click)="actualizarLista()" [disabled]="!laptop || !tipoPieza || actualizandoLista">
-                                                <span *ngIf="actualizandoLista" class="spinner-border spinner-border-sm"></span>
-                                                <i *ngIf="!actualizandoLista" class="bi bi-arrow-clockwise"></i>
-                                            </button>
-                                        </label>
-                                        <ng-select [items]="accesoriosInstalar" bindLabel="etiqueta" bindValue="iD_Accesorio"
-                                                   formControlName="accesorioInstalado" placeholder="Seleccionar accesorio"
-                                                   notFoundText="No hay componentes con existencia en este almacén"
-                                                   [class.is-invalid]="campoInvalido('accesorioInstalado')"></ng-select>
-                                        <div class="small text-danger" *ngIf="campoInvalido('accesorioInstalado')">Requerido</div>
-                                    </div>
-                                    <!-- Capacidad y tipo calculados de la pieza que se instala -->
-                                    <div class="col-12" *ngIf="instalada">
-                                        <div class="small text-muted" *ngIf="capacidadInstalada !== null">
-                                            Se instala: <strong>{{capacidadInstalada}}GB {{tipoInstalada}}</strong>
-                                        </div>
-                                        <div class="small text-danger" *ngIf="capacidadInstalada === null">
-                                            No se pudo determinar la capacidad de la pieza; revise la descripción del accesorio.
-                                        </div>
-                                    </div>
-
-                                    <!-- Pieza retirada: un modulo de esta laptop -->
-                                    <div class="col-12">
-                                        <label class="form-label small mb-1">Pieza que se retira <span class="text-danger">*</span></label>
-                                        <ng-select [items]="opcionesRetirada" bindLabel="etiqueta" bindValue="id"
-                                                   formControlName="moduloRetirado" placeholder="Seleccionar la pieza que sale" [clearable]="false"
-                                                   [class.is-invalid]="campoInvalido('moduloRetirado')"></ng-select>
-                                        <div class="small text-danger" *ngIf="campoInvalido('moduloRetirado')">Requerido (elija la pieza o "Ninguna")</div>
-                                        <div class="small text-warning" *ngIf="avisoRanura">{{avisoRanura}}</div>
-                                    </div>
-                                </ng-container>
-
+                                <!-- Pieza que sale: un modulo de la laptop del mismo tipo, o "Ninguna" -->
+                                <div class="col-12" *ngIf="instalada">
+                                    <label class="form-label small mb-1">Pieza que sale <span class="text-danger">*</span></label>
+                                    <ng-select [items]="opcionesRetirada" bindLabel="etiqueta" bindValue="id"
+                                               formControlName="moduloRetirado" placeholder="Seleccionar la pieza que sale" [clearable]="false"
+                                               [class.is-invalid]="campoInvalido('moduloRetirado')"></ng-select>
+                                    <div class="small text-danger" *ngIf="campoInvalido('moduloRetirado')">Requerido (elija la pieza o "Ninguna")</div>
+                                    <div class="small text-warning" *ngIf="avisoRanura">{{avisoRanura}}</div>
+                                </div>
                             </div>
 
                             <!-- Resumen -->
-                            <div *ngIf="instalada" class="resumen mt-3 border rounded p-2">
+                            <div *ngIf="instalada && retiradaElegida" class="resumen mt-3 border rounded p-2">
                                 <div class="fw-bold small mb-1">Resumen del cambio</div>
                                 <div class="small mb-1" *ngIf="resumenConfiguracion as r">
                                     <strong>{{tipoPieza === 'RAM' ? 'RAM' : 'Almacenamiento'}}:</strong> {{r.antes}} → {{r.despues}}

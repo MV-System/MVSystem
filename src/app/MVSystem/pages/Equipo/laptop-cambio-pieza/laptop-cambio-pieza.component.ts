@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { merge } from 'rxjs';
+import { forkJoin, merge } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import {
   DestinoRetirada, LaptopAccesorio, LaptopCambioHistorial, LaptopCambioPiezaRequest, LaptopCustodiaConfig, LaptopCustodiaPendiente, LaptopEquipo, LaptopModulo, ModeloComponente, TipoPieza
@@ -21,20 +21,14 @@ interface OpcionRetirada {
   styleUrls: ['./laptop-cambio-pieza.component.css']
 })
 export class LaptopCambioPiezaComponent implements OnInit {
-  readonly tiposPieza: { valor: TipoPieza; texto: string }[] = [
-    { valor: 'RAM', texto: 'Memoria RAM' },
-    { valor: 'ALMACENAMIENTO', texto: 'Almacenamiento (SSD / HDD)' }
-  ];
-
   formBusqueda: FormGroup = this.fb.group({
     imei: ['', [Validators.required, Validators.maxLength(30)]]
   });
 
   formCambio: FormGroup = this.fb.group({
-    tipoPieza: [null, Validators.required],
-    accesorioInstalado: [null, Validators.required],
     // Módulo de la laptop que sale (id) o 0 = "Ninguna (slot libre)"; null = aún sin elegir
     moduloRetirado: [null, Validators.required],
+    accesorioInstalado: [null, Validators.required],
     // Solo se piden cuando el costo nuevo supera el precio de venta actual
     precioDetalle: [null],
     precioMayor: [null]
@@ -116,6 +110,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
     });
     this.resetFormCambio();
     this.cargarModulos();
+    this.cargarAccesorios();
     this.cargarHistorial();
   }
 
@@ -126,13 +121,28 @@ export class LaptopCambioPiezaComponent implements OnInit {
   // ---------------------------------------------------------------
   // Getters de apoyo
   // ---------------------------------------------------------------
+  /** El tipo de pieza (RAM / almacenamiento) se deduce de la pieza que entra. */
   get tipoPieza(): TipoPieza | null {
-    return this.formCambio.get('tipoPieza')?.value;
+    return this.instalada ? this.tipoPiezaDe(this.instalada) : null;
+  }
+
+  /** Ya se eligió qué sale (un módulo o "Ninguna"). */
+  get retiradaElegida(): boolean {
+    const v = this.formCambio.get('moduloRetirado')?.value;
+    return v !== null && v !== undefined;
   }
 
   get instalada(): LaptopAccesorio | undefined {
     const id = this.formCambio.get('accesorioInstalado')?.value;
     return this.accesoriosInstalar.find(a => a.iD_Accesorio === id);
+  }
+
+  /** RAM o almacenamiento de un accesorio, según su modelo (igual que el SP: modelos RAM*, SSD*, HDD*). */
+  private tipoPiezaDe(a: LaptopAccesorio): TipoPieza | null {
+    const delCatalogo = this.modelosComponente.find(m => m.descripcion === a.modelo)?.tipo_Pieza;
+    if (delCatalogo) { return delCatalogo; }
+    if (/^RAM/i.test(a.modelo || '')) { return 'RAM'; }
+    return /^(SSD|HDD)/i.test(a.modelo || '') ? 'ALMACENAMIENTO' : null;
   }
 
   /** Módulos activos de la laptop del tipo de pieza elegido. */
@@ -253,7 +263,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
   }
 
   get puedeConfirmar(): boolean {
-    if (!this.laptop || !this.formCambio.valid) { return false; }
+    if (!this.laptop || !this.formCambio.valid || !this.tipoPieza) { return false; }
     if (this.instalada && this.capacidadInstalada === null) { return false; }
     if (!this.preciosValidos) { return false; }
     if (this.tecnicoBloqueado) { return false; }
@@ -346,6 +356,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
         this.laptop = equipo;
         this.resetFormCambio();
         this.cargarModulos();
+        this.cargarAccesorios();
         this.cargarHistorial();
       },
       error: (err) => {
@@ -386,47 +397,65 @@ export class LaptopCambioPiezaComponent implements OnInit {
   // ---------------------------------------------------------------
   // Selección de pieza
   // ---------------------------------------------------------------
-  onTipoPiezaChange() {
-    this.formCambio.patchValue({
-      accesorioInstalado: null,
-      moduloRetirado: null,
-      precioDetalle: null,
-      precioMayor: null
-    });
+  /**
+   * Al elegir la pieza que entra se arma la lista de lo que puede salir (los módulos de la laptop del mismo tipo + "Ninguna")
+   * y se preselecciona: el único módulo, o uno cuando todos son iguales (ej. 8+8). Con módulos distintos, el usuario elige.
+   */
+  onInstaladaChange() {
+    const retirada = this.formCambio.get('moduloRetirado');
+    retirada?.setValue(null);
     this.armarOpcionesRetirada();
-    this.cargarAccesorios();
-    // Si la laptop tiene un solo módulo de ese tipo, queda preseleccionado
-    if (this.modulosDelTipo.length === 1) {
-      this.formCambio.get('moduloRetirado')?.setValue(this.modulosDelTipo[0].iD_Modulo);
+    if (!this.tipoPieza) { return; }
+    const modulos = this.modulosDelTipo;
+    const iguales = modulos.length > 0
+      && modulos.every(m => m.capacidad_GB === modulos[0].capacidad_GB && m.iD_Modelo_Componente === modulos[0].iD_Modelo_Componente);
+    if (iguales) {
+      retirada?.setValue(modulos[0].iD_Modulo);
+    } else if (!modulos.length) {
+      retirada?.setValue(0);
     }
   }
 
-  /** "Pieza que se retira": los módulos de la laptop del tipo elegido + "Ninguna (slot libre)". */
+  /** "Pieza que sale": los módulos de la laptop del mismo tipo que la pieza que entra + "Ninguna (agregar en slot libre)". */
   private armarOpcionesRetirada() {
-    const modulos = this.modulosDelTipo.map(m => ({
+    const tipo = this.tipoPieza;
+    if (!this.laptop || !tipo) {
+      this.opcionesRetirada = [];
+      return;
+    }
+    const delTipo = this.modulos.filter(m => m.tipo_Pieza === tipo);
+    const nombre = tipo === 'RAM' ? 'Memoria' : 'Disco';
+    const modulos = delTipo.map((m, i) => ({
       id: m.iD_Modulo,
-      etiqueta: `${this.textoCapacidad(m.capacidad_GB)} · ${m.modelo_Componente} (${m.tipo})`
+      etiqueta: `${nombre}${delTipo.length > 1 ? ' ' + (i + 1) : ''} · ${this.textoCapacidad(m.capacidad_GB)} · ${m.modelo_Componente} (${m.tipo})`
     }));
-    this.opcionesRetirada = this.tipoPieza ? [...modulos, { id: 0, etiqueta: 'Ninguna (slot libre)' }] : [];
+    this.opcionesRetirada = [...modulos, { id: 0, etiqueta: 'Ninguna (agregar en slot libre)' }];
   }
 
-  private cargarAccesorios() {
-    this.accesoriosInstalarTodos = [];
-    this.accesoriosInstalar = [];
-    this.accesoriosRetirar = [];
-    if (!this.laptop || !this.tipoPieza) { return; }
-    const tipo = this.tipoPieza;
+  /**
+   * Piezas de componentes del almacén de la laptop, de memorias y de discos:
+   * con existencia (las que se pueden instalar) y todas (para conocer el costo de la que sale).
+   */
+  private cargarAccesorios(alTerminar?: () => void) {
+    if (!this.laptop) { return; }
     const almacen = this.laptop.iD_Almacen;
+    const tipos: TipoPieza[] = ['RAM', 'ALMACENAMIENTO'];
+    const unir = (listas: LaptopAccesorio[][]) => this.conEtiqueta(listas.reduce((t, l) => t.concat(l || []), [] as LaptopAccesorio[]));
 
-    // Pieza instalada: solo con existencia en el almacén de la laptop
-    this.laptopsService.consultarAccesorios(almacen, tipo, true).subscribe({
-      next: (lista) => { this.accesoriosInstalarTodos = this.conEtiqueta(lista); this.refiltrarInstalables(); },
-      error: (err) => this.toastr.error(this.mensajeError(err, 'Error al cargar los accesorios.'))
-    });
-    // Para conocer el costo de la pieza que sale: todos los componentes del catálogo del tipo
-    this.laptopsService.consultarAccesorios(almacen, tipo, false).subscribe({
-      next: (lista) => this.accesoriosRetirar = this.conEtiqueta(lista),
-      error: (err) => this.toastr.error(this.mensajeError(err, 'Error al cargar los accesorios.'))
+    forkJoin([
+      forkJoin(tipos.map(t => this.laptopsService.consultarAccesorios(almacen, t, true))),
+      forkJoin(tipos.map(t => this.laptopsService.consultarAccesorios(almacen, t, false)))
+    ]).subscribe({
+      next: ([conStock, catalogo]) => {
+        this.accesoriosInstalarTodos = unir(conStock);
+        this.accesoriosRetirar = unir(catalogo);
+        this.refiltrarInstalables();
+        if (alTerminar) { alTerminar(); }
+      },
+      error: (err) => {
+        this.toastr.error(this.mensajeError(err, 'Error al cargar los accesorios.'));
+        if (alTerminar) { alTerminar(); }
+      }
     });
   }
 
@@ -435,47 +464,34 @@ export class LaptopCambioPiezaComponent implements OnInit {
    * Si la pieza elegida ya no esta disponible, se limpia solo ese campo.
    */
   actualizarLista() {
-    if (!this.laptop || !this.tipoPieza || this.actualizandoLista) { return; }
-    const tipo = this.tipoPieza;
-    const almacen = this.laptop.iD_Almacen;
-    let pendientes = 2;
-    const terminar = () => { if (--pendientes === 0) { this.actualizandoLista = false; } };
+    if (!this.laptop || this.actualizandoLista) { return; }
     this.actualizandoLista = true;
-
-    this.laptopsService.consultarAccesorios(almacen, tipo, true).subscribe({
-      next: (lista) => {
-        this.accesoriosInstalarTodos = this.conEtiqueta(lista);
-        this.refiltrarInstalables();
-        const elegido = this.formCambio.get('accesorioInstalado')?.value;
-        if (elegido && !this.accesoriosInstalar.some(a => a.iD_Accesorio === elegido)) {
-          this.formCambio.get('accesorioInstalado')?.setValue(null);
-          this.toastr.warning('La pieza elegida ya no tiene existencia en este almacén; seleccione otra.');
-        }
-        terminar();
-      },
-      error: (err) => { this.toastr.error(this.mensajeError(err, 'Error al actualizar la lista de piezas.')); terminar(); }
-    });
-    this.laptopsService.consultarAccesorios(almacen, tipo, false).subscribe({
-      next: (lista) => { this.accesoriosRetirar = this.conEtiqueta(lista); terminar(); },
-      error: (err) => { this.toastr.error(this.mensajeError(err, 'Error al actualizar la lista de piezas.')); terminar(); }
+    this.cargarAccesorios(() => {
+      this.actualizandoLista = false;
+      const elegido = this.formCambio.get('accesorioInstalado')?.value;
+      if (elegido && !this.accesoriosInstalar.some(a => a.iD_Accesorio === elegido)) {
+        this.formCambio.get('accesorioInstalado')?.setValue(null);
+        this.onInstaladaChange();
+        this.toastr.warning('La pieza elegida ya no tiene existencia en este almacén; seleccione otra.');
+      }
     });
   }
 
-  /** RAM: solo del mismo DDR que ya tiene la laptop (no se ofrece DDR3 a una laptop DDR4). */
+  /** Pieza que entra: memorias (solo del mismo DDR que ya tiene la laptop) y discos. */
   private refiltrarInstalables() {
-    const tipoRam = this.tipoPieza === 'RAM' ? this.tipoRamLaptop : null;
-    this.accesoriosInstalar = !tipoRam
-      ? this.accesoriosInstalarTodos
-      : this.accesoriosInstalarTodos.filter(a => {
-          const tipo = this.modelosComponente.find(m => m.descripcion === a.modelo)?.tipo;
-          return !tipo || tipo === tipoRam;
-        });
+    const tipoRam = this.tipoRamLaptop;
+    this.accesoriosInstalar = this.accesoriosInstalarTodos.filter(a => {
+      if (this.tipoPiezaDe(a) !== 'RAM' || !tipoRam) { return true; }
+      const ddr = this.modelosComponente.find(m => m.descripcion === a.modelo)?.tipo;
+      return !ddr || ddr === tipoRam;
+    });
   }
 
   private conEtiqueta(lista: LaptopAccesorio[]): LaptopAccesorio[] {
     return (lista || []).map(a => ({
       ...a,
-      etiqueta: `${a.modelo} · ${a.descripcion_Accesorio} (stock ${a.cantidad})`
+      etiqueta: `${a.modelo} · ${a.descripcion_Accesorio} (stock ${a.cantidad})`,
+      grupo: this.tipoPiezaDe(a) === 'RAM' ? 'Memorias' : 'Discos'
     }));
   }
 
@@ -497,7 +513,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
     // La capacidad y el tipo de la pieza nueva los calcula el SP; el módulo que sale identifica la pieza retirada
     const cambio: LaptopCambioPiezaRequest = {
       imei: this.laptop.imei,
-      tipo_Pieza: f.tipoPieza,
+      tipo_Pieza: this.tipoPieza as TipoPieza,
       iD_Accesorio_Instalado: Number(f.accesorioInstalado),
       iD_Modulo_Retirado: this.moduloRetirado ? this.moduloRetirado.iD_Modulo : null,
       destino_Retirada: this.moduloRetirado ? 'CUSTODIA' : null,
@@ -519,6 +535,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
         });
         this.resetFormCambio();
         this.cargarModulos();
+        this.cargarAccesorios();
         this.cargarHistorial();
       },
       error: (err) => {
@@ -534,9 +551,8 @@ export class LaptopCambioPiezaComponent implements OnInit {
   /** Nombres de los campos que impiden confirmar, para avisar al usuario. */
   private camposFaltantes(): string[] {
     const etiquetas: { campo: string; texto: string }[] = [
-      { campo: 'tipoPieza', texto: 'Tipo de pieza' },
-      { campo: 'accesorioInstalado', texto: 'Pieza que se instala' },
-      { campo: 'moduloRetirado', texto: 'Pieza que se retira (o Ninguna)' }
+      { campo: 'accesorioInstalado', texto: 'Pieza que entra' },
+      { campo: 'moduloRetirado', texto: 'Pieza que sale (o Ninguna)' }
     ];
     const faltantes = etiquetas
       .filter(e => {
@@ -555,7 +571,7 @@ export class LaptopCambioPiezaComponent implements OnInit {
 
   private resetFormCambio() {
     this.formCambio.reset({
-      tipoPieza: null, accesorioInstalado: null, moduloRetirado: null,
+      accesorioInstalado: null, moduloRetirado: null,
       precioDetalle: null, precioMayor: null
     });
     this.accesoriosInstalarTodos = [];
