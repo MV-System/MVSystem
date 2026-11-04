@@ -430,7 +430,11 @@ export class AccesoriosRegistroComponent implements OnInit {
   }
 
   elegirCoincidencia(c: AccesorioCoincidencia) {
-    if (c.estado === 'A') { this.coincidenciaElegida = c; }
+    this.coincidenciaElegida = c;
+  }
+
+  get elegidaInactiva(): boolean {
+    return !!this.coincidenciaElegida && this.coincidenciaElegida.estado !== 'A';
   }
 
   get cantidadSumarValida(): boolean {
