@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, throwError } from "rxjs";
 import { LoadingService } from '../shared/components/r-loading/loading.service';
 import { LoginService } from '../auth/login.service';
+import { sesionVigente } from '../helpers/helper';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +34,12 @@ export class HandleErrorsResponseService {
             return throwError(mensaje);
         }
 
-        if (error.status === 0) {
+        if (error.status === 0 && !sesionVigente()) {
+            // Sin conexion pero con la sesion vencida: se trata como sesion expirada (no como falla de red)
+            localStorage.clear();
+            this.toastr.error('Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
+            this.router.navigate(['/']);
+        } else if (error.status === 0) {
             // Error de red o no se pudo conectar al API
             console.error('No se pudo conectar al API:', error.error);
             this.toastr.error('Error: Por favor verifique su conexión a internet, inténtelo de nuevo más tarde.', '');

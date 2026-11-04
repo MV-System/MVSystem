@@ -1,4 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { sesionVigente } from '../../helpers/helper';
 
 @Component({
     selector: 'app-page-not-found',
@@ -11,7 +14,7 @@ import { Component, OnInit } from '@angular/core';
             </h2>
            
            
-            <a class="btn" routerLink="/">Reintentar</a>
+            <a class="btn" role="button" (click)="reintentar()">Reintentar</a>
             <img src="assets/img/not-found.svg" class="img-fluid py-5" alt="Page Not Found">
         </section>
     </div>`,
@@ -19,9 +22,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageNotFoundComponent implements OnInit {
 
-    constructor() { }
+    constructor(private location: Location, private router: Router) { }
 
     ngOnInit(): void {
+    }
+
+    /** Con la sesion vigente vuelve a la pantalla donde estaba; con la sesion vencida limpia y va al login. */
+    reintentar(): void {
+        if (!sesionVigente()) {
+            localStorage.clear();
+            this.router.navigate(['/']);
+            return;
+        }
+        if (window.history.length > 1) {
+            this.location.back();
+        } else {
+            this.router.navigate(['/']);
+        }
     }
 
 }

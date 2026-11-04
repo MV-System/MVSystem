@@ -1,3 +1,17 @@
+import jwt_decode from 'jwt-decode';
+
+/** La sesion es vigente si hay un token legible y su vencimiento (exp, en segundos) aun no pasa. */
+export function sesionVigente(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) { return false; }
+    try {
+        const { exp } = jwt_decode<{ exp?: number }>(token);
+        return typeof exp === 'number' && exp * 1000 > Date.now();
+    } catch {
+        return false;
+    }
+}
+
 export function CreatorPDFFile(blob: Blob){
     var blob = new Blob([blob], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);

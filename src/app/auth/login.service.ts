@@ -3,14 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { catchError, retry, switchMap } from 'rxjs/operators';
 import { HandleErrorsResponseService } from '../services/handle-errors-response.service';
 import { LoginDTO, User } from "../core/interfaces/loginDTO.interface";
 import { APIURL } from "../config/url";
 import { Router } from '@angular/router';
 import { CatalogosService } from '../core/services/catalogos.service';
 import { Almacen } from '../core/interfaces/catalogo.interface';
-import { currentDate, transformDate } from "../helpers/helper";
+import { currentDate, sesionVigente, transformDate } from "../helpers/helper";
 import { NgxPermissionsService } from "ngx-permissions";
 import { UsoSistemaService } from "../core/services/uso-sistema.service";
 interface userToken{
@@ -99,6 +98,9 @@ export class LoginService implements OnInit{
     const val = this.tokenDecoded?.Certificado;
     return val === true || val === 'True' || val === 'true';
   }
+  public sesionVigente(): boolean {
+    return sesionVigente();
+  }
   public getUserName(): string {
     return this.tokenDecoded.name
   }
@@ -110,10 +112,6 @@ export class LoginService implements OnInit{
       userName,
       password,
     })
-    .pipe(
-      retry(2),
-      catchError(this.handleErrorsRespService.handleError)
-    )
   }
   public getUserRoles(): string[] {
     const roles = this.tokenDecoded?.role;
