@@ -326,12 +326,18 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     return filtro;
   }
 
-  onSearchByTelefono(){
-    let telefonoFormValue = this.form.controls.telefono.value;
-    if(telefonoFormValue.length == 10){
+  // Busca solo con los 10 digitos del telefono, al presionar Enter o al dejar el campo vacio
+  onSearchByTelefono(event?: KeyboardEvent) {
+    const telefono = (this.form.controls.telefono.value || '').toString().replace(/\D/g, '');
+    if (event && event.key === 'Enter') {
       this.obtenerEquiposVendidos();
+      return;
     }
-    else if(telefonoFormValue.length <= 0){
+    // Flechas, Tab, Shift, etc. no cambian el texto: no buscar
+    if (event && event.key.length > 1 && event.key !== 'Backspace' && event.key !== 'Delete') {
+      return;
+    }
+    if (telefono.length === 10 || telefono.length === 0) {
       this.obtenerEquiposVendidos();
     }
   }
