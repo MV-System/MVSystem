@@ -77,8 +77,8 @@
                                     <ng-container *ngIf="esLaptop">
                                         <!-- Memoria RAM: primero el tipo y despues la capacidad de cada modulo -->
                                         <div class="col-12 d-flex flex-wrap align-items-center gap-1">
-                                            <span class="small fw-semibold me-1" style="min-width: 62px">RAM <span class="required-star">*</span></span>
-                                            <select formControlName="ramTipo" class="form-select form-select-sm" style="width: 190px" [ngClass]="{'border-danger': validarCampos('ramTipo')}">
+                                            <span class="small fw-semibold me-1" style="min-width: 62px">RAM</span>
+                                            <select formControlName="ramTipo" class="form-select form-select-sm" style="width: 190px" [ngClass]="{'border-danger': ramTipoFaltante}">
                                                 <option [ngValue]="null" disabled>Tipo de RAM</option>
                                                 <option *ngFor="let tipo of tiposRam" [value]="tipo">{{tipo}}</option>
                                             </select>
@@ -95,7 +95,7 @@
                                         <!-- Almacenamiento: primero la capacidad y despues el modelo de cada disco -->
                                         <div class="col-12">
                                             <div class="d-flex flex-wrap align-items-center gap-1" [class.mt-1]="i > 0" *ngFor="let disco of discos; let i = index; trackBy: trackByIndex">
-                                                <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}} <span class="required-star" *ngIf="i === 0">*</span></span>
+                                                <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}}</span>
                                                 <select class="form-select form-select-sm" [class.is-invalid]="discoModeloInvalido(i)" style="width: 190px" [ngModel]="disco.idModelo" (ngModelChange)="disco.idModelo = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
                                                     <option [ngValue]="null" disabled>Modelo de disco</option>
                                                     <option *ngFor="let modelo of modelosDisco" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
@@ -108,6 +108,7 @@
                                                 <button type="button" class="btn btn-outline-danger btn-sm px-2" *ngIf="discos.length > 1" (click)="quitarDisco(i)" title="Quitar disco"><i class="bi bi-x"></i></button>
                                                 <button type="button" class="btn btn-outline-primary btn-sm px-2" *ngIf="i === discos.length - 1" (click)="agregarDisco()" title="Agregar disco"><i class="bi bi-plus-lg"></i></button>
                                             </div>
+                                            <div class="small text-muted mt-1">Opcional: déjelo vacío si la laptop llega sin memoria o sin disco.</div>
                                             <div class="small text-danger mt-1" *ngIf="configIntentada && errorConfigLaptop">{{errorConfigLaptop}}</div>
                                         </div>
                                         <div class="col-12">

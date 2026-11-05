@@ -1,6 +1,6 @@
 <div class="d-flex flex-wrap align-items-center gap-1">
-    <span class="small fw-semibold me-1" style="min-width: 62px">RAM <span class="required-star">*</span></span>
-    <select class="form-select form-select-sm" style="width: 190px" [class.is-invalid]="intentado && !ramTipo" [(ngModel)]="ramTipo" [ngModelOptions]="{standalone: true}">
+    <span class="small fw-semibold me-1" style="min-width: 62px">RAM</span>
+    <select class="form-select form-select-sm" style="width: 190px" [class.is-invalid]="ramTipoInvalido()" [(ngModel)]="ramTipo" [ngModelOptions]="{standalone: true}">
         <option [ngValue]="null" disabled>Tipo de RAM</option>
         <option *ngFor="let tipo of tiposRam" [ngValue]="tipo">{{tipo}}</option>
     </select>
@@ -16,7 +16,7 @@
 
 <div class="mt-1">
     <div class="d-flex flex-wrap align-items-center gap-1" [class.mt-1]="i > 0" *ngFor="let disco of discos; let i = index; trackBy: trackByIndex">
-        <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}} <span class="required-star" *ngIf="i === 0">*</span></span>
+        <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}}</span>
         <select class="form-select form-select-sm" [class.is-invalid]="discoModeloInvalido(i)" style="width: 190px" [(ngModel)]="disco.idModelo" [ngModelOptions]="{standalone: true}">
             <option [ngValue]="null" disabled>Modelo de disco</option>
             <option *ngFor="let modelo of modelosDisco" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
@@ -32,4 +32,5 @@
 </div>
 
 <input type="text" class="form-control form-control-sm mt-1" [(ngModel)]="notas" [ngModelOptions]="{standalone: true}" maxlength="250" placeholder="Notas de configuración (opcional)">
+<div class="small text-muted mt-1">Opcional: déjelo vacío si la laptop llega sin memoria o sin disco.</div>
 <div class="small text-danger mt-1" *ngIf="intentado && error">{{error}}</div>

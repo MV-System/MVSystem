@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { EquipoConfiguracion, EquipoModuloRequest, ModeloComponente } from 'src/app/core/interfaces/laptop.interface';
+import { EquipoConfiguracion, ModeloComponente } from 'src/app/core/interfaces/laptop.interface';
+import { armarConfiguracionLaptop, DatosConfigLaptop, discosVacios, errorConfigLaptop, ramVacia } from './laptop-config.validacion';
 
 /**
  * Editor compacto de la configuración de una laptop (memorias y discos). Se usa para agregar la configuración
@@ -38,47 +39,42 @@ export class LaptopConfigEditorComponent {
   agregarDisco() { this.discos.push({ capacidad: null, idModelo: null }); }
   quitarDisco(i: number) { if (this.discos.length > 1) { this.discos.splice(i, 1); } }
 
+  private get datos(): DatosConfigLaptop {
+    return { ramTipo: this.ramTipo, memorias: this.memorias, discos: this.discos, notas: this.notas };
+  }
+
+  get sinRam(): boolean { return ramVacia(this.datos); }
+  get sinDiscos(): boolean { return discosVacios(this.datos); }
+
+  /** RAM y discos son opcionales: solo se marca en rojo la seccion que se empezo a llenar. */
+  ramTipoInvalido(): boolean {
+    return this.intentado && !this.sinRam && !this.ramTipo;
+  }
   memoriaInvalida(i: number): boolean {
     const m = Number(this.memorias[i]);
-    return this.intentado && (!m || m < 1 || m > 512);
+    return this.intentado && !this.sinRam && (!m || m < 1 || m > 512);
   }
   discoCapacidadInvalida(i: number): boolean {
     const c = Number(this.discos[i]?.capacidad);
-    return this.intentado && (!c || c < 1 || c > 16000);
+    return this.intentado && !this.sinDiscos && (!c || c < 1 || c > 16000);
   }
   discoModeloInvalido(i: number): boolean {
-    return this.intentado && !this.discos[i]?.idModelo;
+    return this.intentado && !this.sinDiscos && !this.discos[i]?.idModelo;
   }
 
-  /** Mensaje del primer problema de la configuración, o '' si está completa. */
+  /** Mensaje del primer problema, o '' si se puede guardar. Aqui no hay nada que guardar si las dos secciones estan vacias. */
   get error(): string {
-    if (!this.ramTipo) { return 'Seleccione el tipo de RAM.'; }
-    if (this.memorias.some(m => !m || Number(m) < 1 || Number(m) > 512)) { return 'Cada memoria debe tener entre 1 y 512 GB.'; }
-    if (this.discos.some(d => !d.capacidad || Number(d.capacidad) < 1 || Number(d.capacidad) > 16000)) { return 'Cada disco debe tener entre 1 y 16000 GB.'; }
-    if (this.discos.some(d => !d.idModelo)) { return 'Seleccione el modelo de cada disco.'; }
+    const e = errorConfigLaptop(this.datos);
+    if (e) { return e; }
+    if (this.sinRam && this.sinDiscos) { return 'Indique al menos una memoria o un disco.'; }
     return '';
   }
 
-  /** Devuelve la configuración lista para guardar, o null (y marca en rojo lo que falta) si está incompleta. */
+  /** Devuelve la configuracion lista para guardar, o null (y marca en rojo lo que falta) si no se puede guardar. */
   armarConfiguracion(imei: string, usuario: string): EquipoConfiguracion | null {
     this.intentado = true;
     if (this.error) { return null; }
-
-    const idModeloRam = this.modelosComponente.find(m => m.tipo_Pieza === 'RAM' && m.tipo === this.ramTipo)?.iD_Modelo ?? 0;
-    const modulos: EquipoModuloRequest[] = [
-      ...this.memorias.map(m => ({ tipoPieza: 'RAM' as const, capacidadGB: Number(m), idModeloComponente: idModeloRam })),
-      ...this.discos.map(d => ({ tipoPieza: 'ALMACENAMIENTO' as const, capacidadGB: Number(d.capacidad), idModeloComponente: Number(d.idModelo) }))
-    ];
-    return {
-      imei,
-      ram_GB: this.totalRam,
-      ram_Tipo: this.ramTipo,
-      almacenamiento_GB: modulos.filter(x => x.tipoPieza === 'ALMACENAMIENTO').reduce((t, x) => t + x.capacidadGB, 0),
-      almacenamiento_Tipo: this.modelosComponente.find(m => m.iD_Modelo === Number(this.discos[0]?.idModelo))?.tipo ?? null,
-      modulos,
-      notas: this.notas || null,
-      usuario
-    };
+    return armarConfiguracionLaptop(this.datos, this.modelosComponente, imei, usuario);
   }
 
   limpiar() {
