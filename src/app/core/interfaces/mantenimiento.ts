@@ -149,8 +149,12 @@ export interface NotaCreditoProveedor2Request {
 }
 
 export interface NotaCreditoProveedor2Respuesta {
-  numeroFactura: number;
+  numeroFactura?: number;
   ncf: string;
+  /** APROBADA | PENDIENTE | RECHAZADA */
+  estado?: 'APROBADA' | 'PENDIENTE' | 'RECHAZADA' | 'ANULADA';
+  /** true si la factura quedó anulada por la nota de crédito */
+  anulada?: boolean;
   mensaje: string;
 }
 

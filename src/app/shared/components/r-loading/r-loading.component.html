@@ -1,4 +1,4 @@
-<div id="r-loading" [ngClass]="{'is-shown': isLoading }"> 
+<div id="r-loading" [ngClass]="{'is-shown': isLoading }">
     <img src="">
     <div class="ellipsis">
         <div></div>
@@ -6,5 +6,6 @@
         <div></div>
         <div></div>
     </div>
-    <p >Loading</p>
+    <p class="r-loading-mensaje">{{ message || 'Cargando...' }}</p>
+    <p class="r-loading-detalle" *ngIf="detail">{{ detail }}</p>
 </div>

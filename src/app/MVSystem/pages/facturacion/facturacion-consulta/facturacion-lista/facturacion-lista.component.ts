@@ -11,6 +11,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
+import { DETALLE_ESPERA_DGII, ETAPAS_ESPERA_DGII } from 'src/app/shared/components/r-loading/espera-dgii.mensajes';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 
 @Component({
@@ -322,7 +323,33 @@ onCancel(detalle: DetalleFacturaList) {
     this.subs.push(sub);
   }
 
+  /**
+   * Empresa certificada y factura con e-NCF (el comprobante empieza con E): se muestra solo la Nota de crédito.
+   * Factura sin e-NCF o empresa no certificada: solo Anular, como siempre.
+   */
+  usaNotaCredito(factura: FacturaConsulta): boolean {
+    return this.loginService.isCertificado && String(factura?.ncf ?? '').trim().toUpperCase().startsWith('E');
+  }
+
+  /**
+   * Muestra el resultado de la nota de crédito con tiempo para leerlo (15 s, se cierra al tocarlo o con la X).
+   * Si la factura quedó anulada, la página se recarga cuando el aviso se cierra, no antes.
+   */
+  private mostrarResultadoNotaCredito(tipo: 'success' | 'warning' | 'error' | 'info', mensaje: string, recargarAlCerrar: boolean) {
+    const aviso = this.toast[tipo](mensaje, '', {
+      timeOut: 15000,
+      extendedTimeOut: 5000,
+      closeButton: true,
+      progressBar: true,
+      tapToDismiss: true
+    });
+    if (recargarAlCerrar) {
+      aviso.onHidden.subscribe(() => window.location.reload());
+    }
+  }
+
   emitirNotaCredito(numeroFactura: number) {
+    if (this.isLoading) { return; }   // evita un segundo clic mientras la solicitud sigue en curso
     this.rDialogService.openDialog(
       "Aviso",
       "¿Desea emitir una Nota de Crédito para anular esta factura?",
@@ -331,7 +358,7 @@ onCancel(detalle: DetalleFacturaList) {
       },
       () => {
         this.isLoading = true;
-        this.loading.showLoading('Emitiendo Nota de Crédito...');
+        this.loading.showLoadingEscalonado(ETAPAS_ESPERA_DGII, DETALLE_ESPERA_DGII);
         const request = {
           NumeroFacturaOrigen: +(`${numeroFactura}`),
           IDsucursal: this.sucursalActiva,
@@ -343,12 +370,29 @@ onCancel(detalle: DetalleFacturaList) {
           next: (respuesta) => {
             this.isLoading = false;
             this.loading.hideLoading();
-            this.toast.info(`Nota de Crédito emitida: ${respuesta.ncf}`);
+            const detalle = respuesta?.mensaje ? ` ${respuesta.mensaje}` : '';
+            // Con la factura anulada se refresca la lista, pero SOLO cuando el usuario cierra el aviso (o se agota su tiempo),
+            // para que pueda leer el mensaje completo.
+            const recargar = !!respuesta?.anulada;
+            if (respuesta?.estado === 'ANULADA') {
+              // La factura ya estaba rechazada por la DGII: se anuló directamente, sin nota de crédito
+              this.mostrarResultadoNotaCredito('warning', respuesta.mensaje, recargar);
+            } else if (respuesta?.estado === 'APROBADA') {
+              this.mostrarResultadoNotaCredito('success', `Nota de Crédito ${respuesta.ncf}.${detalle}`, recargar);
+            } else if (respuesta?.estado === 'RECHAZADA') {
+              this.mostrarResultadoNotaCredito('error', `Nota de Crédito ${respuesta.ncf}.${detalle}`, recargar);
+            } else if (respuesta?.estado === 'PENDIENTE') {
+              this.mostrarResultadoNotaCredito('warning', `Nota de Crédito ${respuesta.ncf}.${detalle}`, recargar);
+            } else {
+              this.mostrarResultadoNotaCredito('info', `Nota de Crédito emitida: ${respuesta?.ncf}`, recargar);
+            }
           },
           error: (err) => {
             this.isLoading = false;
             this.loading.hideLoading();
-            this.toast.error(err?.error?.error ?? 'Error al emitir la Nota de Crédito');
+            // El interceptor puede devolver el mensaje del API como texto en los errores 400
+            const mensaje = typeof err === 'string' && err ? err : (err?.error?.error ?? 'Error al emitir la Nota de Crédito');
+            this.toast.error(mensaje);
           }
         });
         this.subs.push(sub);
