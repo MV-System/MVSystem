@@ -88,6 +88,33 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  /** El RNC y el nombre de la empresa del cliente son obligatorios en toda factura con comprobante, salvo consumidor final. */
+  rncVacio(): boolean {
+    return !(this.form.get('RNC')?.value ?? '').toString().trim();
+  }
+
+  empresaVacia(): boolean {
+    return !(this.form.get('empresa')?.value ?? '').toString().trim();
+  }
+
+  private validarRncComprobante(): boolean {
+    if (!this.isFactura || !this.isNcfRequire) {
+      return true;
+    }
+    const rncVacio = this.rncVacio();
+    const empresaVacia = this.empresaVacia();
+    if (!rncVacio && !empresaVacia) {
+      return true;
+    }
+    this.form.get('RNC')?.markAsTouched();
+    this.form.get('empresa')?.markAsTouched();
+    this.toastr.error(
+      rncVacio && empresaVacia ? 'El RNC y el nombre de la empresa del cliente son obligatorios para este tipo de comprobante.'
+        : rncVacio ? 'El RNC del cliente es obligatorio para este tipo de comprobante.'
+          : 'El nombre de la empresa del cliente es obligatorio para este tipo de comprobante.');
+    return false;
+  }
+
 
   tipoFactura: string = '';
 clienteSeleccionado: any = null;
@@ -841,6 +868,9 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         return;
       }
       if (!this.validarComprobante()) {
+        return;
+      }
+      if (!this.validarRncComprobante()) {
         return;
       }
 

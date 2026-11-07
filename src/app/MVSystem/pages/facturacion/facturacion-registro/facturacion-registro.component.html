@@ -68,16 +68,18 @@
                             </div>
 
                             <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>RNC:</strong></div>
+                                <div><strong>RNC:</strong> <span class="required-field" *ngIf="isFactura">*</span></div>
                                 <div>
-                                    <input type="text" class="form-control" placeholder="101000000" formControlName="RNC">
+                                    <input type="text" class="form-control" placeholder="101000000" formControlName="RNC" [ngClass]="{'is-invalid': isFactura && form.get('RNC')?.touched && rncVacio()}">
+                                    <div class="required-field" *ngIf="isFactura && form.get('RNC')?.touched && rncVacio()">Este campo es requerido.</div>
                                 </div>
                             </div>
 
                             <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>Empresa:</strong></div>
+                                <div><strong>Empresa:</strong> <span class="required-field" *ngIf="isFactura">*</span></div>
                                 <div>
-                                    <input type="text" class="form-control" formControlName="empresa" placeholder="Nombre Empresa">
+                                    <input type="text" class="form-control" formControlName="empresa" placeholder="Nombre Empresa" [ngClass]="{'is-invalid': isFactura && form.get('empresa')?.touched && empresaVacia()}">
+                                    <div class="required-field" *ngIf="isFactura && form.get('empresa')?.touched && empresaVacia()">Este campo es requerido.</div>
                                 </div>
                             </div>
                         </div>
