@@ -31,6 +31,10 @@ export class LaptopHistorialComponent implements OnInit {
   // Anulacion de un cambio de pieza
   cambioAnular: LaptopCambioHistorial | null = null;
 
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
+
   constructor(
     private laptopsService: LaptopsService,
     private toastr: ToastrService,

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipoService } from 'src/app/core/services/equipo.service';
@@ -86,8 +87,13 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
 
   constructor(
     private equipoService: EquipoService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private validatorPermissionService: ValidatorPermissionService
   ) { }
+
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
 
   ngOnInit(): void {
     this.seleccionarMensajeAleatorio();

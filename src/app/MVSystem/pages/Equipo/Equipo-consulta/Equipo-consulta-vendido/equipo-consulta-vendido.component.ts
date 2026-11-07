@@ -55,6 +55,10 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
     return this.validatorPermissionService.validateUserRole("CB_SUCURSAL");
   }
 
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
+
   puedeVerHistorialLaptop(): boolean {
     return this.validatorPermissionService.validateUserRole("LAPTOP_CAMBIO_PIEZA")
       || this.validatorPermissionService.validateUserRole("LAPTOP_CUSTODIA_CONSULTA");

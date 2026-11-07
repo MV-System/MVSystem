@@ -96,7 +96,7 @@
                                 <i class="bi bi-currency-dollar me-2"></i> Información de Precios
                             </div>
                             <div class="info-card-body">
-                                <div class="info-row">
+                                <div class="info-row" *ngIf="puedeVerCosto()">
                                     <span class="info-label">Costo:</span>
                                     <span class="badge badge-costo-detail" *ngIf="isValidValue(accesorioDetalle.costoEquipo); else noCosto">
                                         {{ accesorioDetalle.costoEquipo | currency:'RD$':'symbol':'1.2-2' }}
@@ -242,7 +242,7 @@
                                             <th scope="col" class="text-center">ID</th>
                                             <th scope="col">Descripción</th>
                                             <th scope="col" class="text-center">Cantidad</th>
-                                            <th scope="col" class="text-center">Costo</th>
+                                            <th scope="col" class="text-center" *ngIf="puedeVerCosto()">Costo</th>
                                             <th scope="col" class="text-center">P. Detalle</th>
                                             <th scope="col" class="text-center">P. Mayor</th>
                                             <th scope="col" class="text-center">Acciones</th>
@@ -260,7 +260,7 @@
                                             <td class="text-center">
                                                 {{accesorio.cantidad}}
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" *ngIf="puedeVerCosto()">
                                                 {{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}
                                             </td>
                                             <td class="text-center">
@@ -315,7 +315,7 @@
                                     {{accesorio.cantidad}} unidades
                                 </span>
                                         </div>
-                                        <div class="item">
+                                        <div class="item" *ngIf="puedeVerCosto()">
                                             <span class="label">Costo:</span>
                                             <span class="valor">{{accesorio.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
                                         </div>

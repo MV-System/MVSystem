@@ -59,7 +59,7 @@
                         <!-- <th>Tipo</th> -->
                         <th>Estado</th>
                         <th class="align-center">Tecnología</th>
-                        <th class="align-right">Costo</th>
+                        <th class="align-right" *ngIf="puedeVerCosto()">Costo</th>
                         <th class="align-right">Precio Detalle<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Al por mayor">
 								<i class='bx bxs-info-circle'></i>
 							</span>
@@ -90,7 +90,7 @@
                         <!-- <td>Equipo</td> -->
                         <td>{{Equipo.estadoBloqueo}}</td>
                         <td class="align-center">{{Equipo.tecnologia}}</td>
-                        <td class="align-right">{{Equipo.costoEquipo|currency}}</td>
+                        <td class="align-right" *ngIf="puedeVerCosto()">{{Equipo.costoEquipo|currency}}</td>
                         <td class="align-right">{{Equipo.precioDetalle|currency}}</td>
                         <td class="align-right">{{Equipo.precioPorMayor|currency}}</td>
                         <!-- <td class="align-center">30</td> -->

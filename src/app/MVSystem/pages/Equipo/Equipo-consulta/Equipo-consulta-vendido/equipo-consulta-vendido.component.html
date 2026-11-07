@@ -376,7 +376,7 @@
                                 <th scope="col">Fecha facturado</th>
                                 <th scope="col">Precio Mayor</th>
                                 <th scope="col">Precio Detalle</th>
-                                <th scope="col">Costo</th>
+                                <th scope="col" *ngIf="puedeVerCosto()">Costo</th>
                                 <th scope="col">Itbis</th>
                                 <th scope="col">Tipo Pago</th>
                                 <th scope="col">Desbloq.</th>
@@ -409,7 +409,7 @@
                                 <td>{{ equipo.fechaFacturado}}</td>
                                 <td>{{ equipo.precioPorMayor | currency }}</td>
                                 <td>{{ equipo.precioDetalle | currency }}</td>
-                                <td>{{ equipo.costoEquipo | currency }}</td>
+                                <td *ngIf="puedeVerCosto()">{{ equipo.costoEquipo | currency }}</td>
                                 <td>{{ equipo.itbis | currency }}</td>
 
                                 <td>{{ equipo.tipoFactura }}</td>
@@ -460,7 +460,7 @@
                                         <span class="label">Fecha Facturado:</span>
                                         <span class="valor">{{equipo.fechaFacturado | date:'dd/MM/yyyy'}}</span>
                                     </div>
-                                    <div class="item">
+                                    <div class="item" *ngIf="puedeVerCosto()">
                                         <span class="label">Costo:</span>
                                         <span class="valor">{{equipo.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
                                     </div>

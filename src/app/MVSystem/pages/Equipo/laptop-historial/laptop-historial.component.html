@@ -67,7 +67,7 @@
                     <tr>
                         <th>Fecha</th>
                         <th>Cambio</th>
-                        <th class="text-end">Costo</th>
+                        <th class="text-end" *ngIf="puedeVerCosto()">Costo</th>
                         <th>Custodia</th>
                         <th *ngIf="puedeAnular"></th>
                     </tr>
@@ -79,7 +79,7 @@
                             <div><strong>{{h.tipo_Pieza}}</strong> · {{h.config_Anterior || 'Sin config.'}} → {{h.config_Nueva}}</div>
                             <div class="text-muted">+ {{h.pieza_Instalada}}<span *ngIf="h.pieza_Retirada"> / − {{h.pieza_Retirada}}</span></div>
                         </td>
-                        <td class="text-end">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
+                        <td class="text-end" *ngIf="puedeVerCosto()">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
                         <td>
                             <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
                             <div class="text-muted" *ngIf="h.usuario_Recepcion">{{h.estado_Custodia === 'RECIBIDA' ? 'Recibió' : 'Entregó'}}: {{h.usuario_Recepcion}}</div>

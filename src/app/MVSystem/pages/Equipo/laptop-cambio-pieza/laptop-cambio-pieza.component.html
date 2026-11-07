@@ -22,7 +22,7 @@
                             <div class="small mt-1">Configuración actual:
                                 <strong>{{laptop.configuracion || 'Sin configuración registrada'}}</strong>
                             </div>
-                            <div class="small">Costo actual: <strong>{{laptop.costo_Equipo | currency}}</strong></div>
+                            <div class="small" *ngIf="puedeVerCosto()">Costo actual: <strong>{{laptop.costo_Equipo | currency}}</strong></div>
                         </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                                 <div class="small mb-1" *ngIf="resumenConfiguracion as r">
                                     <strong>{{tipoPieza === 'RAM' ? 'RAM' : 'Almacenamiento'}}:</strong> {{r.antes}} → {{r.despues}}
                                 </div>
-                                <table class="table table-sm mb-1 small">
+                                <table class="table table-sm mb-1 small" *ngIf="puedeVerCosto()">
                                     <tbody>
                                         <tr><td>Costo actual de la laptop</td><td class="text-end">{{laptop.costo_Equipo | currency}}</td></tr>
                                         <tr *ngIf="hayRetirada">
@@ -143,7 +143,7 @@
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Cambio</th>
-                                        <th class="text-end">Costo</th>
+                                        <th class="text-end" *ngIf="puedeVerCosto()">Costo</th>
                                         <th>Custodia</th>
                                         <th *ngIf="puedeAnular"></th>
                                     </tr>
@@ -155,7 +155,7 @@
                                             <div><strong>{{h.tipo_Pieza}}</strong> · {{h.config_Anterior || 'Sin config.'}} → {{h.config_Nueva}}</div>
                                             <div class="text-muted">+ {{h.pieza_Instalada}}<span *ngIf="h.pieza_Retirada"> / − {{h.pieza_Retirada}}</span></div>
                                         </td>
-                                        <td class="text-end">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
+                                        <td class="text-end" *ngIf="puedeVerCosto()">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
                                         <td>
                                             <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
                                             <div class="text-muted" *ngIf="h.usuario_Recepcion">Recibió: {{h.usuario_Recepcion}}</div>

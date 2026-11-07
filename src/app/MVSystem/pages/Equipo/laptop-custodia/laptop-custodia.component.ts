@@ -46,6 +46,10 @@ export class LaptopCustodiaComponent implements OnInit {
   accMayor: number | null = null;
   accDetalle: number | null = null;
 
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
+
   constructor(
     private toastr: ToastrService,
     private laptopsService: LaptopsService,
