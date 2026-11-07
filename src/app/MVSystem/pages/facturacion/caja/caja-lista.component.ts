@@ -39,7 +39,8 @@ export class CajaListaComponent implements OnInit {
           next: (resp) => {
             this.toast.success(resp?.Mensaje || 'Ítem rebajado correctamente.');
             // Refrescar el detalle de la prefactura
-            this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura).subscribe({
+            const literal = this.selectedRowIndex !== null ? this.preFacturas[this.selectedRowIndex]?.literal : null;
+            this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura, literal).subscribe({
               next: (data) => {
                 this.detallePrefactura = data;
                 this.detalleLoading = false;
@@ -113,7 +114,7 @@ export class CajaListaComponent implements OnInit {
       this.expandedRowIndex = index;
       this.detalleLoading = true;
       this.detalleError = null;
-      this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura).subscribe({
+      this.preFacturasService.obtenerDetallePreFactura(numeroPreFactura, this.preFacturas[index]?.literal).subscribe({
         next: (data) => {
           this.detallePrefactura = data;
           this.detalleLoading = false;
@@ -632,10 +633,10 @@ export class CajaListaComponent implements OnInit {
     return null; // Implementa la referencia real aquí
   }
 
-  anularPreFactura(id: number): void {
+  anularPreFactura(id: number, literal?: string | null): void {
     this.accionEnCurso = id;
     this.mensaje = null;
-    this.preFacturasService.anularPreFactura(id).subscribe({
+    this.preFacturasService.anularPreFactura(id, literal).subscribe({
       next: () => {
         this.mensaje = 'Pre-factura anulada correctamente.';
         this.accionEnCurso = null;

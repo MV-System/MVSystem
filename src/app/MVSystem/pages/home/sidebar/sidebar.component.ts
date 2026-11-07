@@ -41,6 +41,10 @@ export class SidebarComponent implements OnInit {
   VerFormEquipos(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_EQUIPOS");
   }
+  VerFormLaptops(): boolean {
+    return this.validatorPermissionService.validateUserRole("LAPTOP_CAMBIO_PIEZA")
+      || this.validatorPermissionService.validateUserRole("LAPTOP_CUSTODIA_CONSULTA");
+  }
   VerFormAccesorios(): boolean {
     return this.validatorPermissionService.validateUserRole("MNU_MANT_ACCESORIOS");
   }

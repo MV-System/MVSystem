@@ -59,3 +59,55 @@ export interface AccesorioObjRetorno {
     costoEquipo:          number;
     estado:               string;
 }
+
+/** Línea de la vista "Movimientos" de la consulta de accesorios. */
+export interface AccesorioMovimiento {
+    fecha:          string;
+    motivo:         string;
+    documento:      string | null;
+    idAccesorio:    number;
+    descripcion:    string;
+    modelo:         string;
+    idAlmacen:      number;
+    almacen:        string | null;
+    entrada:        number;
+    salida:         number;
+    saldo:          number | null;
+    usuario:        string | null;
+    nota:           string | null;
+    origen:         'REGISTRO' | 'HISTORICO';
+    totalRegistros: number;
+}
+
+/** Totales por motivo de la vista "Movimientos". */
+export interface AccesorioMovimientoResumen {
+    motivo:      string;
+    movimientos: number;
+    entradas:    number;
+    salidas:     number;
+}
+
+export interface AccesorioMovimientosRespuesta {
+    total:   number;
+    items:   AccesorioMovimiento[];
+    resumen: AccesorioMovimientoResumen[];
+    /** Existencia al inicio y al final del periodo; null cuando se filtra por tipo o usuario. */
+    existenciaInicial: number | null;
+    existenciaFinal:   number | null;
+    /** Entradas y salidas registradas (con saldo) e historicas (anteriores al registro de movimientos, sin saldo). */
+    entradasRegistradas: number;
+    salidasRegistradas:  number;
+    entradasHistoricas:  number;
+    salidasHistoricas:   number;
+}
+
+export interface AccesorioMovimientosFiltro {
+    fechaInicio: string;
+    fechaFinal:  string;
+    sucursal:    number;
+    filtro:      string;
+    motivo:      string;
+    usuario:     string;
+    pageIndex:   number;
+    pageSize:    number;
+}

@@ -1,0 +1,153 @@
+<div class="animate__animated animate__fadeIn">
+    <!-- Filtros -->
+    <div class="card filter-card mb-3">
+        <div class="card-body">
+            <div class="filter-header mb-3">
+                <h6 class="filter-title mb-0">
+                    <i class="bi bi-funnel me-2 text-primary"></i> Filtros de movimientos
+                </h6>
+            </div>
+            <form [formGroup]="form" (ngSubmit)="buscar()" role="search">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-search me-1"></i> Accesorio</label>
+                        <input class="form-control modern-input" formControlName="filtro" placeholder="Descripción, modelo, código o ID" autocomplete="off" (keyup.enter)="buscar()">
+                    </div>
+                    <div class="col-md-4" *ngIf="SelectSucursal()">
+                        <label class="form-label modern-label"><i class="bi bi-building me-1"></i> Sucursal</label>
+                        <select class="form-select modern-select" formControlName="sucursal" (change)="buscar()">
+                            <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">{{almacen.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-arrow-left-right me-1"></i> Tipo de movimiento</label>
+                        <select class="form-select modern-select" formControlName="motivo" (change)="buscar()">
+                            <option value="">Todos</option>
+                            <option *ngFor="let m of motivos" [value]="m.valor">{{m.texto}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label modern-label"><i class="bi bi-person me-1"></i> Usuario</label>
+                        <input class="form-control modern-input" formControlName="usuario" placeholder="Usuario que hizo el movimiento" autocomplete="off" (keyup.enter)="buscar()">
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label modern-label d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <span><i class="bi bi-calendar-range me-1"></i> Rango de fechas</span>
+                            <span class="btn-group btn-group-sm" role="group" aria-label="Períodos rápidos">
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'hoy' ? 'btn-primary' : 'btn-outline-primary'" (click)="seleccionarPeriodoRapido('hoy')">Hoy</button>
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'semana' ? 'btn-primary' : 'btn-outline-primary'" (click)="seleccionarPeriodoRapido('semana')">Esta semana</button>
+                                <button type="button" class="btn" [ngClass]="periodoRapido === 'mes' ? 'btn-primary' : 'btn-outline-primary'" (click)="seleccionarPeriodoRapido('mes')">Este mes</button>
+                            </span>
+                        </label>
+                        <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechas" class="modern-date-picker">
+                        </my-date-range-picker>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search me-1"></i> Buscar</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="limpiar()"><i class="bi bi-arrow-clockwise me-1"></i> Limpiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Totales por tipo de movimiento -->
+    <div class="card filter-card mb-3" *ngIf="resumen.length">
+        <div class="card-body">
+            <h6 class="filter-title mb-3"><i class="bi bi-bar-chart-line me-2 text-success"></i> Totales por tipo de movimiento</h6>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tipo</th>
+                            <th class="text-center">Movimientos</th>
+                            <th class="text-center">Entradas</th>
+                            <th class="text-center">Salidas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let r of resumen">
+                            <td>{{textoMotivo(r.motivo)}}</td>
+                            <td class="text-center">{{r.movimientos | number}}</td>
+                            <td class="text-center text-success">{{r.entradas | number}}</td>
+                            <td class="text-center text-danger">{{r.salidas | number}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td>Total</td>
+                            <td class="text-center">{{total | number}}</td>
+                            <td class="text-center text-success">{{totalEntradas | number}}</td>
+                            <td class="text-center text-danger">{{totalSalidas | number}}</td>
+                        </tr>
+                        <tr *ngIf="existenciaInicial !== null && existenciaFinal !== null" class="text-muted">
+                            <td colspan="4">
+                                Existencia al inicio del período: <strong>{{existenciaInicial | number}}</strong>
+                                + entradas {{entradasRegistradas | number}} − salidas {{salidasRegistradas | number}}
+                                = existencia al final: <strong>{{existenciaFinal | number}}</strong>
+                                <div class="small" *ngIf="entradasHistoricas || salidasHistoricas">
+                                    No incluye {{entradasHistoricas | number}} entradas y {{salidasHistoricas | number}} salidas históricas
+                                    (anteriores al registro de movimientos): ya estaban reflejadas en la existencia inicial.
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="card results-card">
+        <div class="card-body">
+            <div class="alert alert-danger py-2" *ngIf="error">{{error}}</div>
+            <div class="text-center text-muted py-4" *ngIf="cargando">Cargando movimientos...</div>
+            <div class="text-center text-muted py-4" *ngIf="!cargando && !error && !movimientos.length">
+                No hay movimientos con esos filtros.
+            </div>
+
+            <div class="table-responsive" *ngIf="movimientos.length">
+                <table class="table table-hover table-striped align-middle movimientos-table">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Movimiento</th>
+                            <th>Documento</th>
+                            <th>Accesorio</th>
+                            <th>Almacén</th>
+                            <th class="text-center">Entrada</th>
+                            <th class="text-center">Salida</th>
+                            <th class="text-center">Saldo</th>
+                            <th>Usuario</th>
+                            <th>Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let m of movimientos | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: total }">
+                            <td class="text-nowrap">{{m.fecha | date:'dd/MM/yyyy hh:mm a'}}</td>
+                            <td class="text-nowrap">
+                                <span class="badge" [ngClass]="claseMotivo(m)">{{textoMotivo(m.motivo)}}</span>
+                                <span class="badge bg-warning text-dark ms-1" *ngIf="m.origen === 'HISTORICO'" title="Anterior al registro de movimientos: reconstruido de ventas y cambios de pieza">Histórico</span>
+                            </td>
+                            <td>{{m.documento || '—'}}</td>
+                            <td>
+                                <div class="fw-semibold">{{m.descripcion}}</div>
+                                <small class="text-muted">{{m.modelo}}</small>
+                            </td>
+                            <td>{{m.almacen || '—'}}</td>
+                            <td class="text-center text-success">{{m.entrada ? '+' + m.entrada : ''}}</td>
+                            <td class="text-center text-danger">{{m.salida ? '-' + m.salida : ''}}</td>
+                            <td class="text-center">{{m.saldo !== null ? m.saldo : '—'}}</td>
+                            <td>{{m.usuario || '—'}}</td>
+                            <td class="nota-celda">{{m.nota || ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3" *ngIf="total > pageSize">
+                <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>

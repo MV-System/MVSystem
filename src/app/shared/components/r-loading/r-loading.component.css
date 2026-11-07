@@ -27,6 +27,29 @@
             margin-top: 0px;
         }
 
+        /* Mensaje principal (p. ej. "Esperando respuesta de la DGII") con un latido suave para que se note que sigue trabajando */
+        #r-loading p.r-loading-mensaje {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+            padding: 0 16px;
+            animation: r-loading-latido 1.8s ease-in-out infinite;
+        }
+
+        #r-loading p.r-loading-detalle {
+            color: #6c757d;
+            font-size: 13px;
+            margin-bottom: 0;
+            text-align: center;
+            padding: 0 16px;
+        }
+
+        @keyframes r-loading-latido {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
         #r-loading img {
             width: 80px;
         }

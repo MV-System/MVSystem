@@ -1,0 +1,102 @@
+<div class="modal-fondo" (click)="cerrar.emit()">
+    <div class="modal-caja" (click)="$event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Cambios de pieza · {{imei}}</h6>
+            <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrar.emit()"></button>
+        </div>
+
+        <div *ngIf="isLoading" class="text-center p-3"><span class="spinner-border spinner-border-sm"></span></div>
+        <!-- Modulos instalados -->
+        <div class="mb-3" *ngIf="modulos.length">
+            <h6 class="small fw-bold mb-1"><i class="bi bi-cpu me-1 text-primary"></i>Configuración actual</h6>
+            <table class="table table-sm align-middle small mb-1">
+                <thead class="table-light">
+                    <tr><th>Pieza</th><th class="text-end">Capacidad</th><th>Modelo</th><th *ngIf="puedeCorregir"></th></tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let m of modulos">
+                        <td>{{m.tipo_Pieza === 'RAM' ? 'Memoria' : 'Disco'}}</td>
+                        <td class="text-end">{{m.capacidad_GB >= 1024 && m.capacidad_GB % 1024 === 0 ? (m.capacidad_GB / 1024) + 'TB' : m.capacidad_GB + 'GB'}}</td>
+                        <td>{{m.modelo_Componente}} <span class="text-muted">({{m.tipo}})</span></td>
+                        <td class="text-end" *ngIf="puedeCorregir">
+                            <button type="button" class="btn btn-outline-secondary btn-sm py-0" (click)="abrirCorreccion(m)">Corregir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Correccion de un modulo -->
+            <div *ngIf="moduloEnCorreccion" class="border rounded p-2 bg-light small">
+                <div class="fw-bold mb-2">Corregir {{moduloEnCorreccion.tipo_Pieza === 'RAM' ? 'memoria' : 'disco'}} (no mueve inventario ni costo)</div>
+                <div class="row g-2">
+                    <div class="col-7">
+                        <label class="form-label small mb-1">Modelo</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="correccionModelo">
+                            <option *ngFor="let modelo of modelosDelModulo" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label small mb-1">Capacidad (GB)</label>
+                        <input type="number" class="form-control form-control-sm" min="1" max="16000" [(ngModel)]="correccionCapacidad">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small mb-1">Motivo <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" maxlength="250" [(ngModel)]="correccionMotivo" placeholder="Ej. Se registró como SSD 2.5 pero es M.2">
+                    </div>
+                </div>
+                <div class="text-end mt-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm me-1" (click)="cancelarCorreccion()" [disabled]="isGuardando">Cancelar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="guardarCorreccion()" [disabled]="isGuardando || !correccionValida">Guardar corrección</button>
+                </div>
+            </div>
+
+            <!-- Correcciones anteriores -->
+            <div *ngIf="correcciones.length" class="mt-2">
+                <div class="small fw-bold mb-1">Correcciones realizadas</div>
+                <div class="small text-muted" *ngFor="let c of correcciones">
+                    {{c.fecha | date:'dd/MM/yyyy HH:mm'}} · {{c.usuario}}: {{c.antes}} → {{c.despues}} <em>({{c.motivo}})</em>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isLoading && !historial.length" class="small text-muted">Esta laptop no tiene cambios de pieza registrados.</div>
+
+        <div class="table-responsive" *ngIf="historial.length">
+            <table class="table table-sm table-striped align-middle small">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cambio</th>
+                        <th class="text-end">Costo</th>
+                        <th>Custodia</th>
+                        <th *ngIf="puedeAnular"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of historial">
+                        <td>{{h.fecha_Registro | date:'dd/MM/yyyy HH:mm'}}<div class="text-muted">{{h.tecnico}}</div></td>
+                        <td>
+                            <div><strong>{{h.tipo_Pieza}}</strong> · {{h.config_Anterior || 'Sin config.'}} → {{h.config_Nueva}}</div>
+                            <div class="text-muted">+ {{h.pieza_Instalada}}<span *ngIf="h.pieza_Retirada"> / − {{h.pieza_Retirada}}</span></div>
+                        </td>
+                        <td class="text-end">{{h.costo_Equipo_Anterior | currency}}<br>→ {{h.costo_Equipo_Nuevo | currency}}</td>
+                        <td>
+                            <span class="badge" [ngClass]="claseCustodia(h.estado_Custodia)">{{h.estado_Custodia}}</span>
+                            <div class="text-muted" *ngIf="h.usuario_Recepcion">{{h.estado_Custodia === 'RECIBIDA' ? 'Recibió' : 'Entregó'}}: {{h.usuario_Recepcion}}</div>
+                            <div class="text-muted" *ngIf="h.estado_Custodia === 'ANULADO'">{{h.usuario_Anula}}: {{h.motivo_Anula}}</div>
+                        </td>
+                        <td class="text-end" *ngIf="puedeAnular">
+                            <button type="button" class="btn btn-outline-danger btn-sm py-0" *ngIf="h.puede_Anular" (click)="cambioAnular = h">Anular</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-end">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cerrar.emit()">Cerrar</button>
+        </div>
+    </div>
+
+    <app-laptop-anular-cambio (click)="$event.stopPropagation()" *ngIf="cambioAnular" [cambio]="cambioAnular" (anulado)="alAnular()" (cancelar)="cambioAnular = null"></app-laptop-anular-cambio>
+</div>

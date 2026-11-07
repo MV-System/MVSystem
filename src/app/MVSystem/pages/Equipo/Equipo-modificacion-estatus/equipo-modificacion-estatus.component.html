@@ -26,7 +26,12 @@
                             <!-- --------------- IMEI  --------------- -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">IMEI <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="30" placeholder="Enter para realizar búsqueda" formControlName="imei" (keyup.enter)="obtenerEquipoByImei()" [readonly]="existeEquipo">
+                                <input type="text" class="form-control modern-input" maxlength="30" placeholder="Enter para realizar búsqueda" formControlName="imei" (keyup.enter)="obtenerEquipoByImei()" (input)="onImeiCambio()">
+                            </div>
+                            <!-- Modelo (solo lectura) -->
+                            <div class="col-12" *ngIf="existeEquipo">
+                                <label class="form-label modern-label">Modelo</label>
+                                <input type="text" class="form-control modern-input" [value]="equipoModelo + (configuracionActual ? ' · ' + configuracionActual : '')" readonly>
                             </div>
                             <!-- Estatus -->
                             <div class="col-md-6">
@@ -40,7 +45,7 @@
                             <!-- Costo -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Costo <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="costoEquipo" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
+                                <input type="text" inputmode="decimal" autocomplete="off" class="form-control modern-input" formControlName="costoEquipo" appMoney placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('costoEquipo') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('costoEquipo') && existeEquipo">
                                     {{mensajeErrorCampoCosto}}
                                 </div>
@@ -48,7 +53,7 @@
                             <!-- Precio Por Mayor -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Precio Por Mayor  <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="precioPorMayor" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
+                                <input type="text" inputmode="decimal" autocomplete="off" class="form-control modern-input" formControlName="precioPorMayor" appMoney placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioPorMayor') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('precioPorMayor') && existeEquipo">
                                     {{mensajeErrorCampoPrecioMayor}}
                                 </div>
@@ -56,7 +61,7 @@
                             <!-- Precio de Detalle -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Precio de Detalle  <span class="required-star">*</span></label>
-                                <input type="text" class="form-control modern-input" maxlength="15" formControlName="precioDetalle" currencyMask placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
+                                <input type="text" inputmode="decimal" autocomplete="off" class="form-control modern-input" formControlName="precioDetalle" appMoney placeholder="RD$" required [ngClass]="{'is-invalid':validarCampos('precioDetalle') && existeEquipo}">
                                 <div class="invalid-feedback" *ngIf="validarCampos('precioDetalle') && existeEquipo">
                                     {{mensajeErrorCampoPrecioDetalle}}
                                 </div>
@@ -64,12 +69,12 @@
                             <!-- Comision Por Mayor -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Comisión Por Mayor</label>
-                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="comisionMayor" currencyMask placeholder="RD$">
+                                <input type="text" inputmode="decimal" autocomplete="off" class="form-control modern-input" formControlName="comisionMayor" appMoney placeholder="RD$">
                             </div>
                             <!-- Comision de Detalle -->
                             <div class="col-md-6">
                                 <label class="form-label modern-label">Comisión de Detalle</label>
-                                <input type="text" class="form-control modern-input" maxlength="13" formControlName="comisionDetalle" currencyMask placeholder="RD$">
+                                <input type="text" inputmode="decimal" autocomplete="off" class="form-control modern-input" formControlName="comisionDetalle" appMoney placeholder="RD$">
                             </div>
                             <!-- DropDown Desbloqueado -->
                             <div class="col-md-6">
@@ -79,6 +84,17 @@
                                         {{estado?.descripcion}}
                                     </option>
                                 </select>
+                            </div>
+                            <!-- Laptop sin configuracion: se puede agregar aqui (si ya la tiene, se muestra junto al modelo) -->
+                            <div class="col-12" *ngIf="existeEquipo && esLaptop && !configuracionActual">
+                                <label class="form-label modern-label">Configuración de la laptop</label>
+                                <div class="small text-muted mb-1">Esta laptop aún no tiene configuración registrada.</div>
+                                <app-laptop-config-editor [modelosComponente]="modelosComponente"></app-laptop-config-editor>
+                                <div class="text-end mt-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="guardarConfiguracionLaptop()" [disabled]="guardandoConfig">
+                                        <i class="bi bi-cpu me-1"></i> Guardar configuración
+                                    </button>
+                                </div>
                             </div>
                         </form>
                         <div class="pt-3 text-end">

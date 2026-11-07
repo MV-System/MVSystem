@@ -106,8 +106,10 @@ export class AccesorioListComponent implements OnInit, OnChanges {
    */
   editarAccesorio(accesorioId: number) {
     console.log('Editando accesorio:', accesorioId);
-    this.getIdAccesorio(accesorioId);
-    this.putAccesorio();
+    this.accesoriosService.getAccesorioById(accesorioId).subscribe(accesorio => {
+      this.accesorio = accesorio;
+      this.isOpenModal = true;
+    });
   }
 
   /**

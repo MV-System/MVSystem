@@ -53,8 +53,8 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('expires', res.expires.toString())
       this.router.navigateByUrl('/home')
       this.isLoading =false;
-    }),(err: any)=>{
+    }, (err: any) => {
       this.isLoading =false;
-    }
+    });
   }
 }

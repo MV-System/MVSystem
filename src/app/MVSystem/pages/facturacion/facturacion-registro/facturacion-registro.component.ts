@@ -18,6 +18,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { MantenimientoService } from '../../../../core/services/mantenimiento.service';
 import { PreFacturasService, PreFactura, PreDetalleFactura } from '../../../../core/services/prefacturas.service';
 import { LoadingService } from '../../../../shared/components/r-loading/loading.service';
+import { DETALLE_ESPERA_DGII, ETAPAS_ESPERA_DGII } from '../../../../shared/components/r-loading/espera-dgii.mensajes';
 import { CotizacionService } from '../../../../core/services/cotizacion.service';
 import { LoginService } from '../../../../auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
@@ -875,7 +876,7 @@ calcularPrecioSegunTipofactura(precioDetalle: number, precioMayor: number) {
 
             // Crear el artículo con la información del equipo
             const articulo: AccesorioLista = {
-              accesorio_Descripcion: `${equipo.modelo}`,
+              accesorio_Descripcion: equipo.configuracion ? `${equipo.modelo} · ${equipo.configuracion}` : `${equipo.modelo}`,
               cantidad: 1,
               id: equipo.imei,
               codigo_Barra: 0,
@@ -1712,9 +1713,17 @@ printFacturaMini() {
     const data = this.loadDataToPrint()
     this.FacturaCreada = data;
 
+    // Con comprobante electrónico (empresa certificada y tipo distinto de "no requerido") el API espera la respuesta de la DGII
+    // antes de contestar: se avisa en pantalla para que el usuario no se desespere.
+    const esperaDgii = this.loginService.isCertificado && Number(data.ncfTipoNumero) !== 0;
+    if (esperaDgii) {
+      this.loading.showLoadingEscalonado(ETAPAS_ESPERA_DGII, DETALLE_ESPERA_DGII);
+    }
+
     this.mantenimientoService.postFactura(data)
           .pipe(takeUntil(this.destroy$))
           .subscribe(resp => {
+            if (esperaDgii) { this.loading.hideLoading(); }
             this.facturaNumberReporte = resp.factura?.numeroFactura
             this.agregarArticulo();
             this.toastr.success('Factura generada con exito!');
@@ -1761,6 +1770,7 @@ printFacturaMini() {
             }
 
           }, error => {
+            if (esperaDgii) { this.loading.hideLoading(); }
             this.isLoading = false;
             this.toastr.error(error)
           })

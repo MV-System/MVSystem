@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 import {Pagination} from "../interfaces/pagination.interfaces"
 import { Observable } from 'rxjs';
-import { Accesorio, AccesorioVendido } from "../interfaces/accesorio.interface";
+import { Accesorio, AccesorioMovimientosFiltro, AccesorioMovimientosRespuesta, AccesorioVendido } from "../interfaces/accesorio.interface";
 import { APIURL } from '../../config/url';
 @Injectable({
     providedIn:'root'
@@ -37,6 +37,19 @@ export class AccesoriosService{
   }
   getAccesorioById(id: number):Observable<Accesorio>{
      return this.http.get<Accesorio>(APIURL.Accesorio.Consulta.AccesorioById + id)
+  }
+  /** Movimientos de stock de accesorios (requiere el permiso ACCESORIOS_MOVIMIENTOS). */
+  getMovimientos(f: AccesorioMovimientosFiltro):Observable<AccesorioMovimientosRespuesta>{
+    let params = new HttpParams()
+      .set('fechaInicio', f.fechaInicio)
+      .set('fechaFinal', f.fechaFinal)
+      .set('sucursal', String(f.sucursal))
+      .set('filtro', f.filtro || '')
+      .set('motivo', f.motivo || '')
+      .set('usuario', f.usuario || '')
+      .set('pageIndex', String(f.pageIndex))
+      .set('pageSize', String(f.pageSize));
+    return this.http.get<AccesorioMovimientosRespuesta>(APIURL.Accesorio.Consulta.AccesorioMovimientos, { params })
   }
   putAccesorio(accesorio: Accesorio):Observable<Accesorio>{
     return this.http.put<Accesorio>(APIURL.Accesorio.Edita.AccesorioEdita , accesorio)

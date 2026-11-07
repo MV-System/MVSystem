@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CondicionEquipo, Desbloqueo } from 'src/app/core/interfaces/catalogo.interface';
@@ -8,6 +8,9 @@ import { EquipoModificarEstatus } from 'src/app/core/interfaces/equipo.interface
 import { FormValidatorService } from '../../../../services/form-validator.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { LaptopsService } from 'src/app/core/services/laptops.service';
+import { ModeloComponente } from 'src/app/core/interfaces/laptop.interface';
+import { LaptopConfigEditorComponent } from '../laptop-config-editor/laptop-config-editor.component';
 
 @Component({
   selector: 'app-equipo-modificacion-estatus',
@@ -20,7 +23,15 @@ export class EquipoModificacionEstatusComponent implements OnInit {
   equipoEstadosBloqueoCatalogo: Desbloqueo[] = [];
   imeiRegex  = new RegExp('^[0-9]+$');
   equipoImei: string = "";
+  equipoModelo: string = "";
   toastrDefaultConfig: any = {progressBar: true, closeButton: true}
+
+  // Laptops: solo para agregar la configuración a las que aún no la tienen; si ya la tienen, se muestra de solo lectura
+  esLaptop = false;
+  configuracionActual: string | null = null;
+  modelosComponente: ModeloComponente[] = [];
+  guardandoConfig = false;
+  @ViewChild(LaptopConfigEditorComponent) editorConfig?: LaptopConfigEditorComponent;
 
   get existeEquipo(){return this.equipoImei;}
   get campoCosto(){return this.cambiarEstadoForm.get('costoEquipo');}
@@ -68,7 +79,8 @@ export class EquipoModificacionEstatusComponent implements OnInit {
               private mantenimientoService: MantenimientoService,
               private formValidatorsService: FormValidatorService,
               private loginService: LoginService,
-              private tracking: UserTrackingService
+              private tracking: UserTrackingService,
+              private laptopsService: LaptopsService
              ) { }
 
   ngOnInit(): void {
@@ -121,7 +133,9 @@ export class EquipoModificacionEstatusComponent implements OnInit {
     this.mantenimientoService.getEquipoByImei(this.cambiarEstadoForm.get('imei')?.value)
         .subscribe( res => {
           this.equipoImei = res.imei;
+          this.equipoModelo = [res.marca, res.modelo].filter(x => !!x).join(" ");
           this.cargarDatosEquipoEnFormulario(res);
+          this.consultarConfiguracionLaptop(res.imei);
         }, err => {
           this.toastr.error('Este Equipo no esta disponible, favor verifique que este registrado y que no este vendido.', '', this.toastrDefaultConfig)
         })
@@ -152,8 +166,72 @@ export class EquipoModificacionEstatusComponent implements OnInit {
         this.equipoEstadosBloqueoCatalogo = estadosBloqueoCatalogo;
       })
   }
-  resetForm(){
+  /** Identifica si el equipo es una laptop y si ya tiene configuración. */
+  private consultarConfiguracionLaptop(imei: string) {
+    this.esLaptop = false;
+    this.configuracionActual = null;
+    this.laptopsService.consultarEquipo(imei).subscribe({
+      next: (equipos) => {
+        const equipo = equipos && equipos.length ? equipos[0] : null;
+        this.esLaptop = !!equipo?.es_Laptop;
+        this.configuracionActual = equipo?.configuracion || null;
+        if (this.esLaptop && !this.configuracionActual && !this.modelosComponente.length) {
+          this.laptopsService.consultarModelosComponente().subscribe({
+            next: (modelos) => this.modelosComponente = modelos || [],
+            error: () => this.toastr.error('No se pudieron cargar los modelos de componentes.', '', this.toastrDefaultConfig)
+          });
+        }
+      },
+      error: () => { this.esLaptop = false; }
+    });
+  }
+
+  guardarConfiguracionLaptop() {
+    if (!this.esLaptop || this.configuracionActual || this.guardandoConfig || !this.editorConfig) { return; }
+    const configuracion = this.editorConfig.armarConfiguracion(this.equipoImei, this.loginService.getUserName());
+    if (!configuracion) {
+      this.toastr.error('Complete la configuración: ' + this.editorConfig.error, '', this.toastrDefaultConfig);
+      return;
+    }
+    this.guardandoConfig = true;
+    this.laptopsService.guardarConfiguracion(configuracion).subscribe({
+      next: (guardada) => {
+        this.guardandoConfig = false;
+        this.configuracionActual = (guardada && guardada.length ? guardada[0].configuracion : null) || 'Configuración guardada';
+        this.toastr.success('Configuración de la laptop guardada.', '', this.toastrDefaultConfig);
+      },
+      error: (err) => {
+        this.guardandoConfig = false;
+        this.toastr.error('No se pudo guardar la configuración de la laptop.', '', this.toastrDefaultConfig);
+        console.error('Error guardando configuración de laptop:', err);
+      }
+    });
+  }
+
+  /**
+   * El IMEI se puede editar para buscar otro equipo sin refrescar. Al cambiarlo se descartan los datos del equipo
+   * cargado (para no guardar sus precios en el IMEI nuevo) y hay que volver a buscar con Enter.
+   */
+  onImeiCambio() {
+    const imeiEscrito = (this.cambiarEstadoForm.get('imei')?.value ?? '').toString().trim();
+    if (!this.equipoImei || imeiEscrito === this.equipoImei) { return; }
     this.equipoImei = "";
+    this.equipoModelo = "";
+    this.esLaptop = false;
+    this.configuracionActual = null;
+    this.cambiarEstadoForm.patchValue({
+      condicionId: null, costoEquipo: '', comisionDetalle: '', comisionMayor: '',
+      precioPorMayor: '', precioDetalle: '', estadoBloqueoId: null
+    });
+    this.cambiarEstadoForm.markAsUntouched();
+    this.cambiarEstadoForm.markAsPristine();
+  }
+
+  resetForm(){
+    this.esLaptop = false;
+    this.configuracionActual = null;
+    this.equipoImei = "";
+    this.equipoModelo = "";
     this.cambiarEstadoForm.reset();
   }
 

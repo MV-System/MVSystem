@@ -105,10 +105,10 @@
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[getFacturaKey(factura)]}" (click)="handleClick(factura, i)">
                                             <td class="fixed-item">
                                                 <div class="btns-group">
-                                                    <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
+                                                    <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
                                                         <i class="bx bx-trash-alt"></i>
                                                     </button>
-                                                    <button *ngIf="estadoFactura !== 'X' && btnNotaCredito()" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Emitir Nota de Crédito">
+                                                    <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Emitir Nota de Crédito">
                                                         <i class="bi bi-file-earmark-minus"></i>
                                                     </button>
                                                 </div>
@@ -193,10 +193,10 @@
                                         <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura">
                                             <i class="bi bi-share-fill"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura()" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
+                                        <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura !== 'X' && btnNotaCredito()" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Emitir Nota de Crédito">
+                                        <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Emitir Nota de Crédito">
                                             <i class="bi bi-file-earmark-minus"></i>
                                         </button>
                                     </div>

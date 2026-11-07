@@ -13,6 +13,7 @@ import { ReparacionesComponent } from './taller/reparaciones/reparaciones.compon
 import { ReparacionesConsultaComponent } from './taller/reparaciones-consulta/reparaciones-consulta.component';
 import { InventarioComponent } from './inventario/inventario.component';
 import { EquipoConsultaRecibidoComponent } from './equipo-consulta-recibido/equipo-consulta-recibido.component';
+import { LaptopsComponent } from './laptops/laptops.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,18 @@ const routes: Routes = [
   {
     path:'Recibidos',
     component:EquipoConsultaRecibidoComponent
+  },
+  {
+    path:'laptops',
+    component:LaptopsComponent
+  },
+  {
+    path:'laptop-cambio-pieza',
+    redirectTo:'laptops'
+  },
+  {
+    path:'laptop-custodia',
+    redirectTo:'laptops'
   }
 ];
 

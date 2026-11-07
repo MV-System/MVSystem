@@ -6,7 +6,7 @@ import {
   MarcaEquipo,
   ModeloEquipo,
 } from '../../../../core/interfaces/catalogo.interface';
-import { Accesorio, AccesorioLista} from '../../../../core/interfaces/mantenimiento';
+import { Accesorio, AccesorioLista, AccesorioCoincidencia, AccesorioSumarRespuesta } from '../../../../core/interfaces/mantenimiento';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import * as $ from"jquery";
@@ -27,6 +27,15 @@ export class AccesoriosRegistroComponent implements OnInit {
   btnDisabled: boolean = true;
   AccesorioValorRetorno: AccesorioLista[]=[];
   AccesorioRegistrado!: number;
+
+  // Accesorio que ya existe: lista para elegir a cual sumarle la cantidad
+  mostrarCoincidencias = false;
+  coincidencias: AccesorioCoincidencia[] = [];
+  coincidenciaElegida: AccesorioCoincidencia | null = null;
+  modeloPendiente: Accesorio | null = null;
+  cantidadSumar: number | string = '';
+  actualizarPrecios = false;
+  sumando = false;
 
 
   constructor(
@@ -82,7 +91,8 @@ export class AccesoriosRegistroComponent implements OnInit {
       this.validadorCantidadMinMax(),
       this.validadorPrecioDetalleMayor(),
       this.validadorPrecioDetalleCosto(),
-      this.validadorPrecioMayorCosto()  // Precio por mayor no puede ser menor que costo
+      this.validadorPrecioMayorCosto(),  // Precio por mayor no puede ser menor que costo
+      this.validadorDescripcionComponente()  // Marca Componentes: la descripcion empieza con la capacidad
     ]
   });
   /**
@@ -163,6 +173,57 @@ export class AccesoriosRegistroComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  /**
+   * Validador personalizado: si la marca es Componentes (RAM / discos de laptops), la descripcion
+   * debe empezar con la capacidad (8GB 3200, 256GB, 1TB) porque el cambio de pieza la lee de ahi.
+   */
+  validadorDescripcionComponente() {
+    return (formGroup: FormGroup) => {
+      const idMarca = formGroup.get('marca')?.value;
+      const descripcion = String(formGroup.get('descripcion')?.value ?? '').trim();
+      const marca = this.marcaListado.find(m => m.iD_Marca === idMarca);
+
+      if (marca?.descripcion?.trim().toUpperCase() === 'COMPONENTES' && descripcion) {
+        if (!/^\d+([.,]\d+)?\s*(GB|TB)\b/i.test(descripcion)) {
+          return { descripcionComponenteSinCapacidad: true };
+        }
+        // La descripcion tambien debe indicar el tipo del componente (DDR3 / DDR4 / SSD NVMe...), para distinguirlo
+        // de otros de la misma capacidad en cualquier pantalla donde solo se muestre la descripcion
+        const faltan = this.palabrasTipoComponente(formGroup.get('modelo')?.value)
+          .filter(p => !descripcion.toUpperCase().includes(p.toUpperCase()));
+        if (faltan.length) {
+          return { descripcionComponenteSinTipo: faltan.join(' ') };
+        }
+      }
+      return null;
+    };
+  }
+
+  /** Palabras que la descripcion de un componente debe llevar segun su modelo (ej. RAM DDR4 SODIMM -> DDR4). */
+  private palabrasTipoComponente(idModelo: any): string[] {
+    const modelo = (this.modeloListado.find(m => m.iD_Modelo === Number(idModelo))?.descripcion || '').toUpperCase();
+    const ddr = modelo.match(/DDR[345]/);
+    if (ddr) { return [ddr[0]]; }
+    if (modelo.includes('NVME')) { return ['SSD', 'NVMe']; }
+    if (modelo.includes('M.2')) { return ['SSD', 'M.2']; }
+    if (modelo.includes('SSD')) { return ['SSD', '2.5']; }
+    if (modelo.includes('HDD')) { return ['HDD']; }
+    return [];
+  }
+
+  /** Mensaje del problema de la descripcion de un componente, o '' si esta bien. */
+  get descripcionComponenteMensaje(): string {
+    if (!this.formRegistro.get('descripcion')?.dirty) { return ''; }
+    const errores = this.formRegistro.errors;
+    if (errores?.['descripcionComponenteSinCapacidad']) {
+      return 'Para la marca Componentes, la descripción debe empezar con la capacidad (ej. 16GB DDR4 3200, 256GB SSD NVMe, 1TB HDD 2.5).';
+    }
+    if (errores?.['descripcionComponenteSinTipo']) {
+      return 'La descripción debe incluir el tipo del componente: ' + errores['descripcionComponenteSinTipo'] + ' (ej. 16GB DDR4 3200).';
+    }
+    return '';
   }
 
   obtenerMarcasLista() {
@@ -309,24 +370,122 @@ export class AccesoriosRegistroComponent implements OnInit {
     if (this.formRegistro.valid && !hasCustomErrors) {
       const model: Accesorio = this.modeloRegistroAccesorio();
 
-      // 📊 Tracking: Registro de creación de accesorio
-      this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'Registro').subscribe();
-
-      this.mantenimientoService.postAccesorio(model)
-          .subscribe({
-            next: (accesorio: AccesorioLista) => {
-              this.AccesorioValorRetorno.push(accesorio);
-              this.toastr.success('Accesorio registrado con exito!');
-              this.formRegistro.reset({});
-            },
-            error: (error) => {
-              console.error('Error al registrar accesorio:', error);
-              // Opcionalmente mostrar un mensaje de error al usuario
-              // this.toastr.error('Error al registrar el accesorio');
+      // Si ya existe un accesorio con el mismo modelo y descripcion en el almacen, no se registra de nuevo:
+      // se le muestra la lista para que elija a cual sumarle la cantidad.
+      this.mantenimientoService
+        .getAccesorioCoincidencias(model.id_Modelo, model.descripcion_Accesorio, Number(model.id_Almacen))
+        .subscribe({
+          next: (coincidencias: AccesorioCoincidencia[]) => {
+            if (coincidencias && coincidencias.length) {
+              this.abrirCoincidencias(coincidencias, model);
+            } else {
+              this.guardarNuevoAccesorio(model);
             }
-          });
+          },
+          error: (error) => {
+            console.error('Error al buscar accesorios existentes:', error);
+            this.toastr.error('No se pudo verificar si el accesorio ya existe. Intente de nuevo.');
+          }
+        });
+    }
   }
-}
+
+  private guardarNuevoAccesorio(model: Accesorio) {
+    // 📊 Tracking: Registro de creación de accesorio
+    this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'Registro').subscribe();
+
+    this.mantenimientoService.postAccesorio(model)
+        .subscribe({
+          next: (accesorio: AccesorioLista) => {
+            this.AccesorioValorRetorno.push(accesorio);
+            this.toastr.success('Accesorio registrado con exito!');
+            this.formRegistro.reset({});
+          },
+          error: (error) => {
+            console.error('Error al registrar accesorio:', error);
+            // Opcionalmente mostrar un mensaje de error al usuario
+            // this.toastr.error('Error al registrar el accesorio');
+          }
+        });
+  }
+
+  // ---- Accesorio que ya existe: sumarle la cantidad en lugar de registrarlo de nuevo ----
+  abrirCoincidencias(coincidencias: AccesorioCoincidencia[], model: Accesorio) {
+    this.coincidencias = coincidencias;
+    this.modeloPendiente = model;
+    // Si hay una sola y esta activa, ya viene elegida
+    const activas = coincidencias.filter(c => c.estado === 'A');
+    this.coincidenciaElegida = coincidencias.length === 1 && activas.length === 1 ? activas[0] : null;
+    this.cantidadSumar = model.cantidad;
+    this.actualizarPrecios = false;
+    this.mostrarCoincidencias = true;
+  }
+
+  cerrarCoincidencias() {
+    if (this.sumando) { return; }
+    this.mostrarCoincidencias = false;
+    this.coincidencias = [];
+    this.coincidenciaElegida = null;
+    this.modeloPendiente = null;
+  }
+
+  elegirCoincidencia(c: AccesorioCoincidencia) {
+    this.coincidenciaElegida = c;
+  }
+
+  get elegidaInactiva(): boolean {
+    return !!this.coincidenciaElegida && this.coincidenciaElegida.estado !== 'A';
+  }
+
+  get cantidadSumarValida(): boolean {
+    const n = Number(this.cantidadSumar);
+    return Number.isInteger(n) && n > 0 && n <= 9999;
+  }
+
+  get existenciaResultante(): number {
+    return (this.coincidenciaElegida?.cantidad ?? 0) + Number(this.cantidadSumar);
+  }
+
+  sumarCantidadAlExistente() {
+    if (!this.coincidenciaElegida || !this.modeloPendiente || !this.cantidadSumarValida || this.sumando) { return; }
+
+    const m = this.modeloPendiente;
+    const elegida = this.coincidenciaElegida;
+    this.sumando = true;
+
+    this.tracking.trackAction('MNU_MANT_ACCESORIOS', 'SumarCantidad').subscribe();
+
+    this.mantenimientoService.postAccesorioSumarExistencia({
+      idAccesorio: elegida.idAccesorio,
+      cantidad: Number(this.cantidadSumar),
+      usuario: this.loginService.getUserName(),
+      actualizarPrecios: this.actualizarPrecios,
+      costoEquipo: this.actualizarPrecios ? m.costo_Equipo : undefined,
+      precioPorMayor: this.actualizarPrecios ? m.precio_Por_Mayor : undefined,
+      precioDetalle: this.actualizarPrecios ? m.precio_Detalle : undefined,
+    }).subscribe({
+      next: (r: AccesorioSumarRespuesta) => {
+        this.sumando = false;
+        this.AccesorioValorRetorno.push({
+          descripcion_Accesorio: elegida.descripcion,
+          precio_Por_Mayor: this.actualizarPrecios ? m.precio_Por_Mayor : elegida.precioPorMayor,
+          precio_Detalle: this.actualizarPrecios ? m.precio_Detalle : elegida.precioDetalle,
+          cantidad: Number(this.cantidadSumar),
+        });
+        this.toastr.success(`Se sumó la cantidad al accesorio existente. Existencia actual: ${r?.cantidad}`);
+        this.mostrarCoincidencias = false;
+        this.coincidencias = [];
+        this.coincidenciaElegida = null;
+        this.modeloPendiente = null;
+        this.formRegistro.reset({});
+      },
+      error: (error) => {
+        this.sumando = false;
+        console.error('Error al sumar la cantidad al accesorio:', error);
+        this.toastr.error(typeof error?.error === 'string' ? error.error : 'No se pudo sumar la cantidad.');
+      }
+    });
+  }
   modeloRegistroAccesorio() {
     const accesorioModel: Accesorio = {
       // codigo: this.formRegistro.get('IMEI')?.value,

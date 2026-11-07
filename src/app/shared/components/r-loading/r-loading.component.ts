@@ -16,8 +16,10 @@ export class RLoadingComponent implements OnInit {
         .subscribe( loading => {
               this.isLoading = loading;
               this.message = this.loadingService.Message;
+              this.detail = this.loadingService.Detail;
           })
   }
   isLoading:boolean = false;
   message:string = "";
+  detail:string = "";
 }

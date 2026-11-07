@@ -7,10 +7,13 @@ export let APIURL = {
     Accesorio: {
         Inserta: {
             AccesorioInserta: API + 'Accesorios/Accesorio_Insert',
+            AccesorioSumarExistencia: API + 'Accesorios/Accesorio_Sumar_Existencia',
         },
         Consulta: {
             Accesorio: API + 'Accesorios/GetAccesorios',
             AccesorioById: API + 'Accesorios/GetAccesorioById',
+            AccesorioMovimientos: API + 'Accesorios/Accesorio_Movimientos',
+            AccesorioCoincidencias: API + 'Accesorios/Accesorio_Coincidencias',
             AccesorioVendidos: API + 'Accesorios/GetAccesoriosVendidos',
         },
         Edita:{
@@ -36,7 +39,7 @@ export let APIURL = {
             FacturaReporteMini: API + 'FacturacionReporte/ReportFacturaMini',
             ReportCotizacion: API + 'FacturacionReporte/ReportCotizacion',
             AnulaFactura: API + 'Factura/PostAnulaFactura',
-            NotaCredito: API + 'NotaCredito/PostNotaCreditoProveedor2',
+            NotaCredito: API + 'NotaCredito/PostNotaCredito',
             NotaCreditoReporte: API + 'NotaCredito/ReportNotaCredito',
         },
         Consulta:{
@@ -97,6 +100,22 @@ export let APIURL = {
           GestionarEquipoConexionActual: API + 'Equipos/GestionarEquipo/ConexionActual',
           GestionarEquipoConsultaSql: API + 'Equipos/GestionarEquipo/ConsultaSql'
         }
+    },
+    Laptops: {
+        Configuracion: API + 'api/Laptops/Configuracion',
+        Equipo: API + 'api/Laptops/Equipo',
+        Accesorios: API + 'api/Laptops/Accesorios',
+        CambioPieza: API + 'api/Laptops/CambioPieza',
+        CambioPiezaAnular: API + 'api/Laptops/CambioPieza/Anular',
+        Historial: API + 'api/Laptops/Historial',
+        ConfiguracionModulos: API + 'api/Laptops/Configuracion/Modulos',
+        ConfiguracionModulosCorregir: API + 'api/Laptops/Configuracion/Modulos/Corregir',
+        ConfiguracionModelosComponente: API + 'api/Laptops/Configuracion/ModelosComponente',
+        ConfiguracionCorrecciones: API + 'api/Laptops/Configuracion/Correcciones',
+        CustodiaConfiguracion: API + 'api/Laptops/Custodia/Configuracion',
+        CustodiaPendientes: API + 'api/Laptops/Custodia/Pendientes',
+        CustodiaRecibir: API + 'api/Laptops/Custodia/Recibir',
+        CustodiaEntregarCliente: API + 'api/Laptops/Custodia/EntregarCliente',
     },
     Marca: {
         Inserta: {

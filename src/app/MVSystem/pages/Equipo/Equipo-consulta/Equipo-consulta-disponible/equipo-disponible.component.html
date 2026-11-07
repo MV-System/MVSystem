@@ -264,7 +264,11 @@
                             <tbody>
                                 <tr *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
                                     <td class="fixed-item code">{{Equipo.imei}}</td>
-                                    <td class="fixed-item desc"><span>{{Equipo.descripcion}}</span></td>
+                                    <td class="fixed-item desc"><span>{{Equipo.descripcion}}<ng-container *ngIf="Equipo.configuracion"> · {{Equipo.configuracion}}</ng-container></span>
+                                        <button *ngIf="Equipo.configuracion && puedeVerHistorialLaptop()" type="button" class="btn btn-sm btn-link p-0 ms-1" title="Historial de cambios de pieza" (click)="historialImei = Equipo.imei">
+                                            <i class="bi bi-clock-history"></i>
+                                        </button>
+                                    </td>
                                     <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
                                     <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
                                     <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
@@ -289,7 +293,7 @@
                         <div class="equipo-cards">
                             <div class="card-equipo" *ngFor="let Equipo of equiposDisponibles | paginate : { itemsPerPage: filter.pageSize, currentPage: filter.pageIndex, totalItems: totalRecord }">
                                 <div class="card-header">
-                                    <span class="codigo">{{Equipo.descripcion | titlecase}}</span>
+                                    <span class="codigo">{{Equipo.descripcion | titlecase}}<ng-container *ngIf="Equipo.configuracion"> · {{Equipo.configuracion}}</ng-container></span>
                                 </div>
 
                                 <div class="card-body">
@@ -333,6 +337,11 @@
                                             <span class="label">Fecha Registro:</span>
                                             <span class="valor">{{Equipo.fecharegistro | date:'dd/MM/yyyy'}}</span>
                                         </div>
+                                        <div class="item item-full-width mt-3" *ngIf="Equipo.configuracion && puedeVerHistorialLaptop()">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary w-100" (click)="historialImei = Equipo.imei">
+                                                <i class="bi bi-clock-history me-2"></i> Cambios de pieza
+                                            </button>
+                                        </div>
                                         <div class="item item-full-width mt-3">
                                             <button type="button" class="btn btn-sm btn-primary w-100" (click)="generarLabelEquipo(Equipo)">
                                                 <i class="bi bi-tag me-2"></i> Generar Etiqueta
@@ -356,4 +365,5 @@
         <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
         </pagination-controls>
     </div>
+    <app-laptop-historial *ngIf="historialImei" [imei]="historialImei" (cerrar)="historialImei = null"></app-laptop-historial>
 </div>

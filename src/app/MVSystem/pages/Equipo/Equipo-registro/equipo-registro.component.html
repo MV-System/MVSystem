@@ -69,9 +69,52 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label modern-label small mb-1">Modelo <span class="required-star">*</span></label>
-                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccionar" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" class="form-select-sm" required></ng-select>
+                                        <ng-select [items]="listaModelo" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Seleccionar" [class.is-invalid]="validarCampos('modelo')" formControlName="modelo" (change)="onModeloChange()" class="form-select-sm" required></ng-select>
                                         <div class="small text-danger" *ngIf="validarCampos('modelo')">Requerido</div>
                                     </div>
+
+                                    <!-- Configuración de laptop (solo modelos del grupo Laptops) -->
+                                    <ng-container *ngIf="esLaptop">
+                                        <!-- Memoria RAM: primero el tipo y despues la capacidad de cada modulo -->
+                                        <div class="col-12 d-flex flex-wrap align-items-center gap-1">
+                                            <span class="small fw-semibold me-1" style="min-width: 62px">RAM</span>
+                                            <select formControlName="ramTipo" class="form-select form-select-sm" style="width: 190px" [ngClass]="{'border-danger': ramTipoFaltante}">
+                                                <option [ngValue]="null" disabled>Tipo de RAM</option>
+                                                <option *ngFor="let tipo of tiposRam" [value]="tipo">{{tipo}}</option>
+                                            </select>
+                                            <div class="input-group input-group-sm w-auto" *ngFor="let memoria of memorias; let i = index; trackBy: trackByIndex">
+                                                <input type="number" class="form-control" [class.is-invalid]="memoriaInvalida(i)" style="width: 66px" placeholder="GB" min="1" max="512"
+                                                       [ngModel]="memorias[i]" (ngModelChange)="memorias[i] = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                <span class="input-group-text px-1">GB</span>
+                                                <button type="button" class="btn btn-outline-danger px-2" *ngIf="memorias.length > 1" (click)="quitarMemoria(i)" title="Quitar módulo"><i class="bi bi-x"></i></button>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-primary btn-sm px-2" (click)="agregarMemoria()" title="Agregar módulo de memoria"><i class="bi bi-plus-lg"></i></button>
+                                            <span class="small text-muted ms-1">Total: <strong>{{totalRam}}GB</strong></span>
+                                        </div>
+
+                                        <!-- Almacenamiento: primero la capacidad y despues el modelo de cada disco -->
+                                        <div class="col-12">
+                                            <div class="d-flex flex-wrap align-items-center gap-1" [class.mt-1]="i > 0" *ngFor="let disco of discos; let i = index; trackBy: trackByIndex">
+                                                <span class="small fw-semibold me-1" style="min-width: 62px">{{i === 0 ? 'Disco' : ''}}</span>
+                                                <select class="form-select form-select-sm" [class.is-invalid]="discoModeloInvalido(i)" style="width: 190px" [ngModel]="disco.idModelo" (ngModelChange)="disco.idModelo = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                    <option [ngValue]="null" disabled>Modelo de disco</option>
+                                                    <option *ngFor="let modelo of modelosDisco" [ngValue]="modelo.iD_Modelo">{{modelo.descripcion}}</option>
+                                                </select>
+                                                <div class="input-group input-group-sm w-auto">
+                                                    <input type="number" class="form-control" [class.is-invalid]="discoCapacidadInvalida(i)" style="width: 76px" placeholder="GB" min="1" max="16000"
+                                                           [ngModel]="disco.capacidad" (ngModelChange)="disco.capacidad = $event; onConfigCambio()" [ngModelOptions]="{standalone: true}">
+                                                    <span class="input-group-text px-1">GB</span>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-danger btn-sm px-2" *ngIf="discos.length > 1" (click)="quitarDisco(i)" title="Quitar disco"><i class="bi bi-x"></i></button>
+                                                <button type="button" class="btn btn-outline-primary btn-sm px-2" *ngIf="i === discos.length - 1" (click)="agregarDisco()" title="Agregar disco"><i class="bi bi-plus-lg"></i></button>
+                                            </div>
+                                            <div class="small text-muted mt-1">Opcional: déjelo vacío si la laptop llega sin memoria o sin disco.</div>
+                                            <div class="small text-danger mt-1" *ngIf="configIntentada && errorConfigLaptop">{{errorConfigLaptop}}</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control form-control-sm" formControlName="configNotas" maxlength="250" placeholder="Notas de configuración (opcional)">
+                                        </div>
+                                    </ng-container>
 
                                     <!-- Suplidor -->
                                     <div class="col-12">
@@ -86,19 +129,19 @@
                                     <!-- Precios: Costo, Mayor, Detalle -->
                                     <div class="col-4">
                                         <label class="form-label modern-label small mb-1">Costo <span class="required-star">*</span></label>
-                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="costo" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('costo')">
+                                        <input type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-sm" placeholder="RD$" formControlName="costo" appMoney [class.is-invalid]="validarCampos('costo')">
                                         <div class="invalid-feedback small" *ngIf="validarCampos('costo')">{{costoErrorMsg}}</div>
                                     </div>
                                     <div class="col-4">
                                         <label class="form-label modern-label small mb-1">Mayor <span class="required-star">*</span></label>
-                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="alPorMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alPorMayor') || formRegistro.errors?.['precioMayorSuperaDetalle'] || formRegistro.errors?.['precioMayorMenorQueCosto']">
+                                        <input type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-sm" placeholder="RD$" formControlName="alPorMayor" appMoney [class.is-invalid]="validarCampos('alPorMayor') || formRegistro.errors?.['precioMayorSuperaDetalle'] || formRegistro.errors?.['precioMayorMenorQueCosto']">
                                         <div class="invalid-feedback small" *ngIf="validarCampos('alPorMayor')">{{alPorMayorErrorMsg}}</div>
                                         <div class="text-danger small" *ngIf="formRegistro.errors?.['precioMayorSuperaDetalle'] && formRegistro.get('alPorMayor')?.touched">Menor detalle</div>
                                         <div class="text-danger small" *ngIf="formRegistro.errors?.['precioMayorMenorQueCosto'] && formRegistro.get('alPorMayor')?.touched">Mayor costo</div>
                                     </div>
                                     <div class="col-4">
                                         <label class="form-label modern-label small mb-1">Detalle <span class="required-star">*</span></label>
-                                        <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="alDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('alDetalle') || formRegistro.errors?.['precioDetalleMenorQueCosto']">
+                                        <input type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-sm" placeholder="RD$" formControlName="alDetalle" appMoney [class.is-invalid]="validarCampos('alDetalle') || formRegistro.errors?.['precioDetalleMenorQueCosto']">
                                         <div class="invalid-feedback small" *ngIf="validarCampos('alDetalle')">{{alDetalleErrorMsg}}</div>
                                         <div class="text-danger small" *ngIf="formRegistro.errors?.['precioDetalleMenorQueCosto'] && formRegistro.get('alDetalle')?.touched">Mayor costo</div>
                                     </div>
@@ -142,14 +185,14 @@
                                                 <!-- Comisión Detalle y Mayor -->
                                                 <div class="col-6">
                                                     <label class="form-label modern-label small mb-1">Com. Detalle</label>
-                                                    <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionDetalle" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionDetalle') || formRegistro.errors?.['comisionDetalleSuperaPrecio']">
+                                                    <input type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionDetalle" appMoney [class.is-invalid]="validarCampos('comisionDetalle') || formRegistro.errors?.['comisionDetalleSuperaPrecio']">
                                                     <div class="invalid-feedback small" *ngIf="validarCampos('comisionDetalle')">{{comisionDetalleErrorMsg}}</div>
                                                     <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionDetalleSuperaPrecio'] && formRegistro.get('comisionDetalle')?.touched">Mayor precio</div>
                                                 </div>
 
                                                 <div class="col-6">
                                                     <label class="form-label modern-label small mb-1">Com. Mayor</label>
-                                                    <input type="number" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionMayor" appNumeric [maxlen]="9" [class.is-invalid]="validarCampos('comisionMayor') || formRegistro.errors?.['comisionMayorSuperaDetalle'] || formRegistro.errors?.['comisionMayorSuperaPrecio']">
+                                                    <input type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-sm" placeholder="RD$" formControlName="comisionMayor" appMoney [class.is-invalid]="validarCampos('comisionMayor') || formRegistro.errors?.['comisionMayorSuperaDetalle'] || formRegistro.errors?.['comisionMayorSuperaPrecio']">
                                                     <div class="invalid-feedback small" *ngIf="validarCampos('comisionMayor')">{{comisionMayorErrorMsg}}</div>
                                                     <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionMayorSuperaDetalle'] && formRegistro.get('comisionMayor')?.touched">Mayor detalle</div>
                                                     <div class="text-danger small" *ngIf="formRegistro.errors?.['comisionMayorSuperaPrecio'] && formRegistro.get('comisionMayor')?.touched">Mayor precio</div>
@@ -204,7 +247,10 @@
                                     <tr *ngFor="let equipo of equipoValorRetorno;let i = index">
                                         <td><span class="badge bg-primary">{{i + 1}}</span></td>
                                         <td><span class="fw-semibold small">{{equipo.imei}}</span></td>
-                                        <td class="small">{{equipo?.modelo}}</td>
+                                        <td class="small">
+                                            {{equipo?.modelo}}
+                                            <div *ngIf="configuracionesGuardadas[equipo.imei]" class="text-muted">{{configuracionesGuardadas[equipo.imei]}}</div>
+                                        </td>
                                         <td class="small">{{equipo?.costo_Equipo | currency}}</td>
                                         <td class="small">{{equipo?.precioPorMayor | currency}} / {{equipo?.precioDetalle | currency}}</td>
                                         <td class="text-center">

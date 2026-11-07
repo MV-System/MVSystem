@@ -48,6 +48,11 @@
                         <i class="bi bi-circle"></i><span>Equipos</span>
                     </a>
                 </li>
+                <li *ngIf="VerFormLaptops()">
+                    <a (click)="onMenuClick()" routerLink="./equipo/laptops">
+                        <i class="bi bi-circle"></i><span>Laptops</span>
+                    </a>
+                </li>
                 <li *ngIf="VerFormTransferenciasEquipos()">
                     <a (click)="onMenuClick()" routerLink="./equipo/transferencia">
                         <i class="bi bi-circle"></i><span>Transferir equipo</span>
