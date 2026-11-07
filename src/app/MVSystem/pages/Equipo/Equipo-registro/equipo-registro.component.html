@@ -238,7 +238,7 @@
                                         <th style="width: 5%">#</th>
                                         <th style="width: 25%">IMEI</th>
                                         <th style="width: 20%">Modelo</th>
-                                        <th style="width: 15%">Costo</th>
+                                        <th style="width: 15%" *ngIf="puedeVerCosto()">Costo</th>
                                         <th style="width: 20%">Mayor/Det.</th>
                                         <th style="width: 15%" class="text-center">Acción</th>
                                     </tr>
@@ -251,7 +251,7 @@
                                             {{equipo?.modelo}}
                                             <div *ngIf="configuracionesGuardadas[equipo.imei]" class="text-muted">{{configuracionesGuardadas[equipo.imei]}}</div>
                                         </td>
-                                        <td class="small">{{equipo?.costo_Equipo | currency}}</td>
+                                        <td class="small" *ngIf="puedeVerCosto()">{{equipo?.costo_Equipo | currency}}</td>
                                         <td class="small">{{equipo?.precioPorMayor | currency}} / {{equipo?.precioDetalle | currency}}</td>
                                         <td class="text-center">
                                             <button (click)="EliminaEquipoDeRegistro(equipo.imei)" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">

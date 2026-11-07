@@ -35,7 +35,7 @@
                                 <tr>
                                     <th>Laptop</th>
                                     <th>Pieza retirada</th>
-                                    <th class="text-end">Costo</th>
+                                    <th class="text-end" *ngIf="puedeVerCosto()">Costo</th>
                                     <th>Registrado</th>
                                     <th>Antigüedad</th>
                                     <th class="text-end" *ngIf="puedeRecibir">Acciones</th>
@@ -50,7 +50,7 @@
                                     <td>
                                         <strong>{{p.tipo_Pieza}}</strong> · {{p.pieza_Retirada || '—'}}
                                     </td>
-                                    <td class="text-end">{{p.costo_Retirado | currency}}</td>
+                                    <td class="text-end" *ngIf="puedeVerCosto()">{{p.costo_Retirado | currency}}</td>
                                     <td>{{p.fecha_Registro | date:'dd/MM/yyyy HH:mm'}}<div class="text-muted">{{p.usuario_Registro}}</div></td>
                                     <td [class.antiguedad-vencida]="p.vencido">
                                         {{antiguedad(p.horas_Transcurridas)}}
@@ -81,7 +81,7 @@
             <h6 class="mb-2">{{accion === 'RECIBIR' ? 'Recibir pieza' : 'Pieza entregada al cliente'}}</h6>
             <div class="small mb-2">
                 <div>{{seleccionado.marca}} {{seleccionado.modelo}} · {{seleccionado.imei}}</div>
-                <div><strong>{{seleccionado.tipo_Pieza}}</strong> · {{seleccionado.pieza_Retirada || '—'}} ({{seleccionado.costo_Retirado | currency}})</div>
+                <div><strong>{{seleccionado.tipo_Pieza}}</strong> · {{seleccionado.pieza_Retirada || '—'}}<span *ngIf="puedeVerCosto()"> ({{seleccionado.costo_Retirado | currency}})</span></div>
                 <div class="text-muted">Técnico: {{seleccionado.tecnico}}</div>
             </div>
             <div class="small text-muted mb-2" *ngIf="accion === 'RECIBIR'">

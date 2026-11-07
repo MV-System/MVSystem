@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Almacen, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
 import { EquipoDisponible, EquipoDisponibleParam } from 'src/app/core/interfaces/equipo.interface';
@@ -17,7 +18,13 @@ export class EquipoConsultaComponent implements OnInit {
     private fb: FormBuilder,
     private catalogosService: CatalogosService,
     private equiposService: EquipoService,
+    private validatorPermissionService: ValidatorPermissionService,
   ) { }
+
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
+
   almacenes:   Almacen[] = [];
   Suplidores:   Suplidor[] = [];
   Modelos: ModeloEquipo[]=[];

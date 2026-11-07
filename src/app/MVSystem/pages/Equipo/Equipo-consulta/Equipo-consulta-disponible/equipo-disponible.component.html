@@ -248,7 +248,7 @@
                                 <tr>
                                     <th class="fixed-item code">IMEI/Código</th>
                                     <th class="fixed-item desc">Descripción</th>
-                                    <th class="align-center">Costo</th>
+                                    <th class="align-center" *ngIf="puedeVerCosto()">Costo</th>
                                     <th class="align-center">Precio Detalle</th>
                                     <th class="align-center">Precio PM</th>
                                     <th class="align-center">Almacén</th>
@@ -269,7 +269,7 @@
                                             <i class="bi bi-clock-history"></i>
                                         </button>
                                     </td>
-                                    <td class="align-center">{{Equipo.costoEquipo|currency}}</td>
+                                    <td class="align-center" *ngIf="puedeVerCosto()">{{Equipo.costoEquipo|currency}}</td>
                                     <td class="align-center">{{Equipo.precioDetalle|currency}}</td>
                                     <td class="align-center">{{Equipo.precioPorMayor|currency}}</td>
                                     <td class="align-center">{{Equipo.descripcionAlmacen}}</td>
@@ -309,7 +309,7 @@
                                     </div>
 
                                     <div class="info">
-                                        <div class="item">
+                                        <div class="item" *ngIf="puedeVerCosto()">
                                             <span class="label">Costo:</span>
                                             <span class="valor">{{Equipo.costoEquipo | currency:'RD$':'symbol':'1.2-2'}}</span>
                                         </div>

@@ -50,6 +50,10 @@ export class LaptopCambioPiezaComponent implements OnInit {
   isLoading = false;
   isBuscando = false;
 
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
+
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,

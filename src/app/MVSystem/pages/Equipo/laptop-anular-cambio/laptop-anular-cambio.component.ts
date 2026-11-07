@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/auth/login.service';
 import { LaptopCambioHistorial } from 'src/app/core/interfaces/laptop.interface';
@@ -21,8 +22,13 @@ export class LaptopAnularCambioComponent {
   constructor(
     private laptopsService: LaptopsService,
     private toastr: ToastrService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private validatorPermissionService: ValidatorPermissionService
   ) { }
+
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
 
   get motivoValido(): boolean {
     return this.motivo.trim().length > 0;

@@ -72,7 +72,7 @@
             </div>
 
             <!-- Costo -->
-            <div class="valor-compact text-success">
+            <div class="valor-compact text-success" *ngIf="puedeVerCosto()">
                 {{ formatCurrency(equipo.costoTotal) }}
             </div>
         </div>
@@ -108,7 +108,7 @@
                         <strong>{{ modeloSeleccionado?.cantidadEquipos }} unidades</strong>
                     </div>
                 </div>
-                <div class="resumen-item">
+                <div class="resumen-item" *ngIf="puedeVerCosto()">
                     <i class="bi bi-cash-coin text-success"></i>
                     <div>
                         <small>Inversión Total</small>
@@ -136,7 +136,7 @@
                         <span><i class="bi bi-building"></i> {{ eq.descripcionAlmacen }}</span>
                         <span><i class="bi bi-truck"></i> {{ eq.suplidor }}</span>
                         <span><i class="bi bi-calendar-event"></i> Ingreso: {{ formatearFechaDetalle(eq.fecharegistro) }}</span>
-                        <span><i class="bi bi-cash"></i> Costo: {{ formatCurrency(eq.costoEquipo) }}</span>
+                        <span *ngIf="puedeVerCosto()"><i class="bi bi-cash"></i> Costo: {{ formatCurrency(eq.costoEquipo) }}</span>
                     </div>
                 </div>
             </div>

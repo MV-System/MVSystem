@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Almacen, Desbloqueo, Garantia, MarcaEquipo, ModeloEquipo, Tecnologia } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
@@ -138,8 +139,13 @@ export class EquipoRegistroComponent implements OnInit {
     private mantenimientoService: MantenimientoService,
     private loginService: LoginService,
     private tracking: UserTrackingService,
-    private laptopsService: LaptopsService
+    private laptopsService: LaptopsService,
+    private validatorPermissionService: ValidatorPermissionService
   ) { }
+
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
 
   ngOnInit(): void {
     this.obtenerGrupoLaptops();

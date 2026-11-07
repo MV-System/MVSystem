@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AccesoriosService } from 'src/app/core/services/accesorios.service';
 import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
 import { ToastrService } from 'ngx-toastr';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 
 declare var JsBarcode: any;
 
@@ -16,8 +17,13 @@ export class AccesorioListComponent implements OnInit, OnChanges {
   constructor(
     private accesoriosService: AccesoriosService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private validatorPermissionService: ValidatorPermissionService
   ) { }
+
+  puedeVerCosto(): boolean {
+    return this.validatorPermissionService.validateUserRole("EQP_VER_COSTO");
+  }
 
   ngOnInit(): void {}
 

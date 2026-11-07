@@ -10,7 +10,7 @@
             Al anular se revierte:
             <ul class="mb-0">
                 <li>La pieza instalada vuelve al inventario (+1).</li>
-                <li>El costo de la laptop vuelve a {{cambio.costo_Equipo_Anterior | currency}}.</li>
+                <li *ngIf="puedeVerCosto()">El costo de la laptop vuelve a {{cambio.costo_Equipo_Anterior | currency}}.</li>
                 <li>La configuración vuelve a {{cambio.config_Anterior || 'sin configuración'}}.</li>
                 <li *ngIf="cambio.pieza_Retirada">La pieza retirada deja de estar en custodia.</li>
             </ul>
