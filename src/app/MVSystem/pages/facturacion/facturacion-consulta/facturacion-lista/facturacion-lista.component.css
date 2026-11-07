@@ -508,3 +508,33 @@ tr.detalle-row,
     color: #fff;
     box-shadow: 0 2px 8px rgba(110, 168, 254, 0.10);
 }
+/* La columna Cliente queda fija a 151px del borde (mainStyles.css); la primera columna debe medir al menos eso para que
+   no se corra encima de la columna Telefono. */
+.scrollable-table th.fixed-item:nth-child(1),
+.scrollable-table td.fixed-item:nth-child(1) {
+    min-width: 151px;
+}
+
+/* Montos a la derecha, total destacado; comprobante en fuente monoespaciada; nombre del cliente en una linea con puntos suspensivos */
+.scrollable-table th.col-monto,
+.scrollable-table td.col-monto {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.scrollable-table td.col-total {
+    font-weight: 600;
+}
+
+.scrollable-table td.col-ncf {
+    font-family: Consolas, 'Courier New', monospace;
+    white-space: nowrap;
+}
+
+.scrollable-table td.cliente-celda {
+    min-width: 200px;
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
