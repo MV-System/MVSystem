@@ -65,11 +65,11 @@
                                         <th scope="col">TELEFONO</th>
                                         <th scope="col">TIPO DE FACTURA</th>
                                         <th scope="col">TIPO DE PAGO</th>
-                                        <th scope="col">SUB TOTAL</th>
-                                        <th scope="col">DESCUENTO</th>
-                                        <th scope="col">ITBIS</th>
-                                        <th scope="col">ABONO</th>
-                                        <th scope="col">TOTAL</th>
+                                        <th scope="col" class="col-monto">SUB TOTAL</th>
+                                        <th scope="col" class="col-monto">DESCUENTO</th>
+                                        <th scope="col" class="col-monto">ITBIS</th>
+                                        <th scope="col" class="col-monto">ABONO</th>
+                                        <th scope="col" class="col-monto">TOTAL</th>
                                         <th scope="col">NCF</th>
                                         <th scope="col">RNC</th>
                                         <th scope="col">VENDEDOR</th>
@@ -111,10 +111,13 @@
                                                     <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Emitir Nota de Crédito">
                                                         <i class="bi bi-file-earmark-minus"></i>
                                                     </button>
+                                                    <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Imprimir Nota de Crédito">
+                                                        <i class="bi bi-printer"></i>
+                                                    </button>
                                                 </div>
                                                 <span class="id-badge">{{factura.numeroFactura}}</span>
                                             </td>
-                                            <td class="fixed-item">{{factura.nombres}} {{factura.apellidos}}</td>
+                                            <td class="fixed-item cliente-celda" [title]="factura.nombres + ' ' + factura.apellidos">{{factura.nombres}} {{factura.apellidos}}</td>
                                             <td>{{ factura.telefono }} </td>
                                             <td>{{ factura.tipoFactura }}</td>
                                             <td>
@@ -127,13 +130,13 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td>{{ factura.subTotal | currency}}</td>
-                                            <td>{{ factura.descuento | currency }}</td>
-                                            <td>{{ factura.itbis | currency}}</td>
-                                            <td>{{ factura.abono | currency}}</td>
-                                            <td>{{ factura.total | currency}}</td>
-                                            <td>{{ !factura.ncf ?'*':factura.ncf}}</td>
-                                            <td>{{ !factura.rnc ?'*':factura.rnc}}</td>
+                                            <td class="col-monto">{{ factura.subTotal | currency}}</td>
+                                            <td class="col-monto">{{ factura.descuento | currency }}</td>
+                                            <td class="col-monto">{{ factura.itbis | currency}}</td>
+                                            <td class="col-monto">{{ factura.abono | currency}}</td>
+                                            <td class="col-monto col-total">{{ factura.total | currency}}</td>
+                                            <td class="col-ncf">{{ !factura.ncf ? '—' : factura.ncf }}</td>
+                                            <td>{{ !factura.rnc ? '—' : factura.rnc }}</td>
                                             <td>{{ factura.vendedor }}</td>
                                             <td>{{ factura.almacen }}</td>
                                             <td>
@@ -198,6 +201,9 @@
                                         </button>
                                         <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Emitir Nota de Crédito">
                                             <i class="bi bi-file-earmark-minus"></i>
+                                        </button>
+                                        <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-share" title="Imprimir Nota de Crédito">
+                                            <i class="bi bi-printer"></i>
                                         </button>
                                     </div>
                                 </div>

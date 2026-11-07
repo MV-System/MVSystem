@@ -402,6 +402,35 @@ onCancel(detalle: DetalleFacturaList) {
     );
   }
 
+  /** Reimprime la Nota de crédito de una factura anulada (abre el PDF en otra pestaña). */
+  imprimirNotaCredito(numeroFactura: number) {
+    if (this.isLoading) { return; }
+    this.isLoading = true;
+    const request = {
+      NumeroFacturaOrigen: +(`${numeroFactura}`),
+      IDsucursal: this.sucursalActiva,
+      Usuario: this.loginService.getUserName(),
+      Motivo: ''
+    };
+    const sub = this.mantenimientoService.postNotaCreditoReport(request).subscribe({
+      next: (blob) => {
+        this.isLoading = false;
+        const url = URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+        window.open(url, '_blank');
+      },
+      error: async (err) => {
+        this.isLoading = false;
+        let mensaje = 'No se pudo imprimir la Nota de Crédito';
+        try {
+          const cuerpo = err?.error instanceof Blob ? JSON.parse(await err.error.text()) : err?.error;
+          mensaje = cuerpo?.error ?? mensaje;
+        } catch { }
+        this.toast.warning(mensaje);
+      }
+    });
+    this.subs.push(sub);
+  }
+
   rebajarEquipo(detalle: DetalleFacturaList) {
     this.rDialogService.openDialog(
       'Confirmación',

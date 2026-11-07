@@ -1167,3 +1167,10 @@ td {
         max-width: 100%;
     }
 }
+
+/* La columna Descripcion queda fija a 151px del borde (mainStyles.css); la columna IMEI debe medir al menos eso para que
+   no se corra encima de la columna Cliente. */
+.scrollable-table th.code,
+.scrollable-table td.code {
+    min-width: 151px;
+}
