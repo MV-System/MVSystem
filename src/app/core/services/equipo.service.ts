@@ -32,6 +32,7 @@ export class EquipoService{
             .set('imei', EquipoDisponible.imei || '') // ✅ Angular maneja automáticamente el & y otros caracteres especiales
             .set('modelo', EquipoDisponible.modelo || '')
             .set('grupo', EquipoDisponible.grupo || '')
+            .set('marca', EquipoDisponible.marca ? EquipoDisponible.marca.toString() : '')
             .set('pageIndex', EquipoDisponible.pageIndex.toString())
             .set('pageSize', EquipoDisponible.pageSize.toString())
             .set('fechaInicio', EquipoDisponible.fechaInicio || '')

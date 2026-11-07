@@ -135,6 +135,7 @@ export interface EquipoDisponibleParam extends DatePaging ,Pagination{
     imei: string;
     modelo: string;
     grupo: string;
+    marca?: number | string | null;
 }
 export interface EquipoVendidoFilter extends DatePaging,Pagination{
     almacen:  number;

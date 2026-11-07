@@ -122,7 +122,11 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label modern-label"><i class="bi bi-phone me-1"></i> Modelo</label>
-                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            <ng-select [items]="opcionesModeloMarca" bindLabel="label" bindValue="key" placeholder="Modelo o marca" formControlName="modelo" [searchable]="true" [searchFn]="buscarModeloMarca" [virtualScroll]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span *ngIf="item.tipo === 'marca'" class="fw-bold">{{ item.label }}</span>
+                                    <span *ngIf="item.tipo === 'modelo'">{{ item.label }} <small class="text-muted" *ngIf="item.marca">· {{ item.marca }}</small></span>
+                                </ng-template>
                             </ng-select>
                         </div>
                         <div class="col-md-4">
@@ -188,7 +192,11 @@
                         <!-- Modelo -->
                         <div class="sucursal-select-wrapper">
                             <i class="bi bi-cpu select-icon"></i>
-                            <ng-select [items]="modeloListado" bindLabel="descripcion" bindValue="iD_Modelo" placeholder="Selecciona un Modelo" formControlName="modelo" [searchable]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                            <ng-select [items]="opcionesModeloMarca" bindLabel="label" bindValue="key" placeholder="Modelo o marca" formControlName="modelo" [searchable]="true" [searchFn]="buscarModeloMarca" [virtualScroll]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span *ngIf="item.tipo === 'marca'" class="fw-bold">{{ item.label }}</span>
+                                    <span *ngIf="item.tipo === 'modelo'">{{ item.label }} <small class="text-muted" *ngIf="item.marca">· {{ item.marca }}</small></span>
+                                </ng-template>
                             </ng-select>
                         </div>
                         <!-- Grupo -->

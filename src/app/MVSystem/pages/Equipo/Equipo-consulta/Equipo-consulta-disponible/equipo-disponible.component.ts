@@ -7,6 +7,7 @@ declare var JsBarcode: any;
 
 import {
   Almacen,
+  MarcaEquipo,
   ModeloEquipo,
   Suplidor,
   Grupo,
@@ -105,6 +106,8 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   lastLine!:       number;
   almacenListado: Almacen[] = [];
   modeloListado:  ModeloEquipo[] = [];
+  /** Opciones del combo "Modelo o marca": una por marca ("MARCA – todos los modelos") y una por modelo. */
+  opcionesModeloMarca: OpcionModeloMarca[] = [];
   listaVendedor:  VendedorLista[] = [];
   listaSuplidor:  Suplidor[] = [];
   listaGrupos:    Grupo[] = [];
@@ -117,6 +120,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   filter: any = {
     almacen: 0,
     modelo: 0,
+    marca: null,
     grupo: null,
     imei: '',
     suplidor: '',
@@ -135,7 +139,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     almacen: [''],
     suplidor: [''],
     imei: [''],
-    modelo: [0,],
+    modelo: [null],
     grupo: [null],
     rangeDate: [''],
     totalEquipos: [0,],
@@ -164,6 +168,7 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
     this.filter.fechaFinal !==""||
     this.filter.almacen  !==""||
     this.filter.modelo !== 0 ||
+    this.filter.marca ||
     this.filter.suplidor !==""){
 
       this.filter.pageIndex = 1;
@@ -682,7 +687,15 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
 
     this.filter.almacen = almacenValue == null ? 0 : almacenValue;
     this.filter.suplidor = suplidorValue == null ? '' : suplidorValue;
-    this.filter.modelo = modeloValue == null ? 0 : modeloValue;
+    // El combo "Modelo o marca" guarda una clave: 'ma-<idMarca>' (todos los modelos de la marca) o 'mo-<idModelo>'
+    this.filter.modelo = 0;
+    this.filter.marca = null;
+    const claveModeloMarca = typeof modeloValue === 'string' ? modeloValue : '';
+    if (claveModeloMarca.startsWith('ma-')) {
+      this.filter.marca = Number(claveModeloMarca.substring(3)) || null;
+    } else if (claveModeloMarca.startsWith('mo-')) {
+      this.filter.modelo = Number(claveModeloMarca.substring(3)) || 0;
+    }
     this.filter.imei = imei == null ? '' : imei;
     this.filter.grupo = this.form.get('grupo')?.value ?? null;
   }
@@ -727,12 +740,71 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       this.catalogosService.getModeloLista(),
       this.catalogosService.getSuplidorLista(),
       this.catalogosService.getGruposLista(),
+      this.catalogosService.getMarcasLista(),
     ]).subscribe(resp =>{
       this.almacenListado = resp[0];
       this.modeloListado = resp[1];
       this.listaSuplidor = resp[2];
       this.listaGrupos = resp[3];
+      this.opcionesModeloMarca = this.armarOpcionesModeloMarca(resp[4], resp[1]);
     })
     this.loading.hideLoading();
   }
+
+  private static normalizarTexto(texto: string): string {
+    return (texto || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  }
+
+  /** Una opción por marca (primero) y una por cada uno de sus modelos, ordenadas por marca. */
+  private armarOpcionesModeloMarca(marcas: MarcaEquipo[], modelos: ModeloEquipo[]): OpcionModeloMarca[] {
+    const norm = EquipoDisponibleComponent.normalizarTexto;
+    const nombreMarca = new Map<number, string>();
+    (marcas || []).forEach(m => { if (m.iD_Marca != null) nombreMarca.set(m.iD_Marca, (m.descripcion || '').trim()); });
+
+    const modelosPorMarca = new Map<number, ModeloEquipo[]>();
+    (modelos || []).forEach(m => {
+      const idMarca = m.iD_Marca ?? 0;
+      if (!modelosPorMarca.has(idMarca)) modelosPorMarca.set(idMarca, []);
+      modelosPorMarca.get(idMarca)!.push(m);
+    });
+
+    const idsMarca = Array.from(modelosPorMarca.keys())
+      .sort((a, b) => (nombreMarca.get(a) || '').localeCompare(nombreMarca.get(b) || '', 'es'));
+
+    const opciones: OpcionModeloMarca[] = [];
+    idsMarca.forEach(idMarca => {
+      const marca = nombreMarca.get(idMarca) || '';
+      if (idMarca && marca) {
+        opciones.push({
+          key: `ma-${idMarca}`, tipo: 'marca', label: `${marca} – todos los modelos`, marca,
+          busca: norm(marca)
+        });
+      }
+      modelosPorMarca.get(idMarca)!
+        .sort((a, b) => (a.descripcion || '').localeCompare(b.descripcion || '', 'es'))
+        .forEach(m => opciones.push({
+          key: `mo-${m.iD_Modelo}`, tipo: 'modelo', label: m.descripcion, marca,
+          busca: norm(`${m.descripcion} ${marca}`)
+        }));
+    });
+    return opciones;
+  }
+
+  /**
+   * Coincide por el texto del modelo o por el nombre de su marca, sin distinguir mayúsculas ni acentos.
+   * Cada palabra escrita debe aparecer (en cualquier orden): "dell latitude" encuentra "Latitude 3410" de la marca Dell.
+   */
+  buscarModeloMarca = (termino: string, item: OpcionModeloMarca): boolean =>
+    EquipoDisponibleComponent.normalizarTexto(termino)
+      .split(/\s+/)
+      .filter(palabra => palabra.length > 0)
+      .every(palabra => item.busca.includes(palabra));
+}
+
+export interface OpcionModeloMarca {
+  key: string;
+  tipo: 'marca' | 'modelo';
+  label: string;
+  marca: string;
+  busca: string;
 }
