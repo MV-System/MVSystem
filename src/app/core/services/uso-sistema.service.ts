@@ -94,6 +94,11 @@ export class UsoSistemaService {
     try { sessionStorage.removeItem(this.claveSesion); } catch { }
   }
 
+  /** Cierra de inmediato las sesiones del usuario (por su login). Requiere el permiso USO_SISTEMA_DESCONECTAR. */
+  desconectar(usuario: string): Observable<any> {
+    return this.http.post(`${this.url}/Desconectar`, { usuario });
+  }
+
   conectados(minutos = 5): Observable<UsoConectado[]> {
     return this.http.get<UsoConectado[]>(`${this.url}/Conectados`, { params: { minutos: String(minutos) } });
   }

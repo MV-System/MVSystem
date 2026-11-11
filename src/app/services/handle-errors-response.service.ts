@@ -45,9 +45,12 @@ export class HandleErrorsResponseService {
             this.toastr.error('Error: Por favor verifique su conexión a internet, inténtelo de nuevo más tarde.', '');
             this.router.navigate(['**']);
         } else if (error.status === 401) {
-            // No autorizado, sesión expirada o token inválido
+            // No autorizado, sesión expirada o token inválido (o sesión cerrada por el administrador)
+            const cerradaPorAdmin = error.headers?.get('X-Sesion-Cerrada') === '1';
             localStorage.clear();
-            this.toastr.error('Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
+            this.toastr.error(cerradaPorAdmin
+                ? 'Su sesión fue cerrada por el administrador. Inicie sesión nuevamente.'
+                : 'Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
             this.router.navigate(['/']);
         } else if (error.status === 404) {
             // No encontrado

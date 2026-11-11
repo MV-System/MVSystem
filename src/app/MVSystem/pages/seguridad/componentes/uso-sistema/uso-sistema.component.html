@@ -61,6 +61,7 @@
                 <th>Pantalla actual</th>
                 <th>Conectado desde</th>
                 <th>Ultima actividad</th>
+                <th *ngIf="puedeDesconectar()"></th>
               </tr>
             </thead>
             <tbody>
@@ -73,9 +74,14 @@
                 <td>{{ nombreDePantalla(c.ruta) }}</td>
                 <td>{{ c.inicio | date:'dd/MM HH:mm' }}</td>
                 <td>{{ hace(c.ultimaActividad) }}</td>
+                <td *ngIf="puedeDesconectar()" class="text-end">
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Desconectar usuario" (click)="desconectar(c)">
+                    <i class="bi bi-power"></i> Desconectar
+                  </button>
+                </td>
               </tr>
               <tr *ngIf="!cargando && conectados.length === 0">
-                <td colspan="5" class="text-center text-muted py-4">No hay usuarios conectados en este momento.</td>
+                <td [attr.colspan]="puedeDesconectar() ? 6 : 5" class="text-center text-muted py-4">No hay usuarios conectados en este momento.</td>
               </tr>
             </tbody>
           </table>
