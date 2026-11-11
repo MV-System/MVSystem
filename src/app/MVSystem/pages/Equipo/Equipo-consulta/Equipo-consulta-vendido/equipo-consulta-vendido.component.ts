@@ -18,6 +18,7 @@ import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { formatearNumero } from 'src/app/core/utils/formato';
 
 interface SalesInsight {
   title: string;
@@ -121,39 +122,39 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   // Mensajes inteligentes para loading de insights
   private mensajesInsightsDisponibles = [
     {
-      titulo: '🧠 Estoy analizando los patrones de venta, dame un momento...',
+      titulo: '🧠 Estoy analizando los patrones de venta, dame un momento…',
       subtitulo: 'Estoy identificando qué modelos y vendedores están generando más ingresos.'
     },
     {
-      titulo: '🔍 Estoy revisando el rendimiento de tu equipo, no voy a tardar...',
+      titulo: '🔍 Estoy revisando el rendimiento de tu equipo, no voy a tardar…',
       subtitulo: 'Estoy comparando vendedores para mostrarte quién está destacando.'
     },
     {
-      titulo: '📊 Estoy calculando métricas de ventas, espera...',
+      titulo: '📊 Estoy calculando métricas de ventas, espera…',
       subtitulo: 'Estoy preparando información clave para optimizar tu negocio.'
     },
     {
-      titulo: '💡 Voy a procesar todos los datos de ventas, dame un chance...',
+      titulo: '💡 Voy a procesar todos los datos de ventas, dame un chance…',
       subtitulo: 'Estoy analizando cada transacción para darte insights valiosos.'
     },
     {
-      titulo: '🎯 Estoy detectando los productos estrella, ya casi termino...',
+      titulo: '🎯 Estoy detectando los productos estrella, ya casi termino…',
       subtitulo: 'Estoy identificando cuáles equipos tienen mejor rotación y rentabilidad.'
     },
     {
-      titulo: '✨ Voy a generar tu análisis personalizado, un segundo...',
+      titulo: '✨ Voy a generar tu análisis personalizado, un segundo…',
       subtitulo: 'Estoy organizando las estadísticas de forma clara y accionable.'
     },
     {
-      titulo: '⚙️ Estoy conectando con todo el historial de ventas, dame un momento...',
+      titulo: '⚙️ Estoy conectando con todo el historial de ventas, dame un momento…',
       subtitulo: 'Estoy validando cada dato para darte información 100% precisa.'
     },
     {
-      titulo: '📌 Validando información de rendimiento...',
+      titulo: '📌 Validando información de rendimiento…',
       subtitulo: 'Estoy asegurándome de que los números reflejen la realidad de tu negocio.'
     },
     {
-      titulo: '🚀 Optimizando el análisis...',
+      titulo: '🚀 Optimizando el análisis…',
       subtitulo: 'Estoy maximizando la velocidad para mostrarte los insights rápidamente.'
     }
   ];
@@ -273,7 +274,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     if (!valor) return '';
     const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
     if (!partes) return valor;
-    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString();
+    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString('es-DO');
   }
   pageChanged(index: number) {
     this.currentPage = index;
@@ -393,13 +394,11 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       pageSize: 999999 // Traer todos los datos de una vez
     };
 
-    console.log("Filtros optimizados (una sola llamada):", filtroCompleto);
 
     this.subscription = this.equipoService
       .getEquipoVendidoParaInsights(filtroCompleto)
       .subscribe({
         next: (equiposCompletos) => {
-          console.log("Equipos recibidos (consulta única):", equiposCompletos.length);
 
           // Guardar todos los equipos
           this.equiposVendidosCompletos = equiposCompletos;
@@ -458,7 +457,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.line = this.equiposVendidosCompletos.length > 0 ? startIndex + 1 : 0;
     this.lastLine = Math.min(endIndex, this.equiposVendidosCompletos.length);
 
-    console.log(`Paginación cliente: Mostrando ${this.line} al ${this.lastLine} de ${this.totalRecord}`);
   }
   printReportEquipoVendido(){
     this.isLoading = true; // Iniciar carga
@@ -573,7 +571,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   // Método para formatear números con separadores de coma
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO');
+    return formatearNumero(value);
   }
 
   // Método para formatear rango de fechas para insights
@@ -581,11 +579,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     const fechaInicial = this.filter.fechaInicioFactura;
     const fechaFinal = this.filter.fechaFinalFactura;
 
-    console.log('📅 DEBUG FECHAS:', {
-      fechaInicial,
-      fechaFinal,
-      filterCompleto: this.filter
-    });
 
     if (!fechaInicial || !fechaFinal) {
       return 'Sin filtro de fecha';
@@ -596,10 +589,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       const dateInicial = new Date(fechaInicial + 'T00:00:00');
       const dateFinal = new Date(fechaFinal + 'T00:00:00');
 
-      console.log('📅 FECHAS PROCESADAS:', {
-        dateInicial,
-        dateFinal
-      });
 
       const formatOptions: Intl.DateTimeFormatOptions = {
         day: '2-digit',
@@ -610,10 +599,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       const fechaInicialFormateada = dateInicial.toLocaleDateString('es-DO', formatOptions);
       const fechaFinalFormateada = dateFinal.toLocaleDateString('es-DO', formatOptions);
 
-      console.log('📅 FECHAS FORMATEADAS:', {
-        fechaInicialFormateada,
-        fechaFinalFormateada
-      });
 
       return `${fechaInicialFormateada} - ${fechaFinalFormateada}`;
     } catch (error) {
@@ -708,7 +693,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   private seleccionarMensajeAleatorioInsights(): void {
     const indiceAleatorio = Math.floor(Math.random() * this.mensajesInsightsDisponibles.length);
     this.mensajeCargaInsights = this.mensajesInsightsDisponibles[indiceAleatorio];
-    console.log('[EquipoConsultaVendido] Mensaje insights seleccionado:', this.mensajeCargaInsights.titulo);
   }
 
 }

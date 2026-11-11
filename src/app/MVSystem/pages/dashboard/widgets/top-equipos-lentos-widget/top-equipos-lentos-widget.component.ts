@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { EquipoService } from 'src/app/core/services/equipo.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { EquipoDisponible, EquipoDisponibleParam } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto, formatearNumero } from 'src/app/core/utils/formato';
 
 interface TopEquipoLentoInsight {
   modelo: string;
@@ -44,39 +45,39 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   // Mensajes inteligentes para loading
   private mensajesDisponibles = [
     {
-      titulo: '🧠 Estoy analizando tu inventario, dame un momento...',
+      titulo: '🧠 Estoy analizando tu inventario, dame un momento…',
       subtitulo: 'Estoy identificando qué equipos llevan más tiempo sin venderse.'
     },
     {
-      titulo: '🔍 Estoy revisando el tiempo de permanencia, espera...',
+      titulo: '🔍 Estoy revisando el tiempo de permanencia, espera…',
       subtitulo: 'Estoy calculando cuánto tiempo lleva cada modelo en tu almacén.'
     },
     {
-      titulo: '📊 Estoy calculando días de inventario, ya casi...',
+      titulo: '📊 Estoy calculando días de inventario, ya casi…',
       subtitulo: 'Estoy detectando equipos que necesitan atención urgente.'
     },
     {
-      titulo: '💡 Voy a mostrarte equipos estancados, dame un chance...',
+      titulo: '💡 Voy a mostrarte equipos estancados, dame un chance…',
       subtitulo: 'Estoy analizando cuáles equipos están afectando tu capital de trabajo.'
     },
     {
-      titulo: '🎯 Estoy detectando inventario de lenta rotación, no tardo...',
+      titulo: '🎯 Estoy detectando inventario de lenta rotación, no tardo…',
       subtitulo: 'Estoy identificando oportunidades de descuentos y promociones.'
     },
     {
-      titulo: '✨ Voy a generar análisis de antigüedad, un segundo...',
+      titulo: '✨ Voy a generar análisis de antigüedad, un segundo…',
       subtitulo: 'Estoy organizando los datos por tiempo de permanencia en stock.'
     },
     {
-      titulo: '⚙️ Estoy conectando con tu inventario actual, dame un momento...',
+      titulo: '⚙️ Estoy conectando con tu inventario actual, dame un momento…',
       subtitulo: 'Estoy validando fechas de registro para darte información exacta.'
     },
     {
-      titulo: '📌 Validando tiempos de rotación...',
+      titulo: '📌 Validando tiempos de rotación…',
       subtitulo: 'Estoy asegurándome de que cada cálculo sea preciso y útil para ti.'
     },
     {
-      titulo: '🚀 Optimizando el análisis de inventario...',
+      titulo: '🚀 Optimizando el análisis de inventario…',
       subtitulo: 'Estoy maximizando la velocidad para mostrarte los resultados rápido.'
     }
   ];
@@ -215,11 +216,11 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   }
 
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   formatCurrency(value: number): string {
-    return `RD$${this.formatNumber(value)}`;
+    return formatearMonto(value, 0);
   }
 
   getCategoriaClass(categoria: string): string {

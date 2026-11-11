@@ -151,7 +151,7 @@
                                     <div class="filter-search-container">
                                         <div class="search-input-wrapper">
                                             <i class="bi bi-search search-icon"></i>
-                                            <input class="form-control mobile-search-input" placeholder="Buscar accesorios..." formControlName="accesorio" (keyup)="getAccesorios()" type="search" autocomplete="off">
+                                            <input class="form-control mobile-search-input" placeholder="Buscar accesorios…" formControlName="accesorio" (keyup)="getAccesorios()" type="search" autocomplete="off">
                                             <button type="button" class="clear-search-btn" *ngIf="form.get('accesorio')?.value" (click)="form.get('accesorio')?.setValue(''); getAccesorios()">
                                                 <i class="bi bi-x-circle-fill"></i>
                                             </button>

@@ -6,6 +6,7 @@ import { DashboardAnalyticsService } from 'src/app/core/services/dashboard-analy
 import { LoginService } from 'src/app/auth/login.service';
 import { Anomalia, DeteccionAnomalias } from 'src/app/core/interfaces/dashboard-ia.interface';
 import { EquipoVendidoFilter } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto, formatearNumero, formatearPorcentaje } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-anomalias-widget',
@@ -170,15 +171,15 @@ export class AnomaliasWidgetComponent implements OnInit, OnDestroy {
   }
 
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   formatCurrency(value: number): string {
-    return value.toLocaleString('es-DO', { style: 'currency', currency: 'DOP', minimumFractionDigits: 2 });
+    return formatearMonto(value, 2);
   }
 
   formatPorcentaje(value: number): string {
-    return value.toFixed(1) + '%';
+    return formatearPorcentaje(value, 1);
   }
 
   private formatearFecha(fecha: Date): string {

@@ -156,7 +156,6 @@ export class FormClienteComponent implements OnInit {
           this.Loading.hideLoading();
           this.toastr.error('Upss! Ha ocurrido un error')
           this.toastr.error('',err.error)
-          console.log(err);
 
         });
     }

@@ -35,7 +35,7 @@
 
                 <div *ngIf="isLoading" class="text-center py-4" role="status">
                     <div class="spinner-border text-primary" aria-hidden="true"></div>
-                    <div class="mt-2">Consultando cotizaciones...</div>
+                    <div class="mt-2">Consultando cotizaciones…</div>
                 </div>
 
                 <div class="table-responsive" *ngIf="!isLoading">
@@ -98,7 +98,7 @@
                             <tr *ngFor="let cotizacion of cotizaciones" [hidden]="!detallesVisibles[cotizacion.codigo]">
                                 <td colspan="12" class="bg-light">
                                     <div *ngIf="cargandoDetalle[cotizacion.codigo]" class="text-center py-2">
-                                        <span class="spinner-border spinner-border-sm text-primary" role="status"></span> Cargando detalle...
+                                        <span class="spinner-border spinner-border-sm text-primary" role="status"></span> Cargando detalle…
                                     </div>
                                     <div class="table-responsive" *ngIf="!cargandoDetalle[cotizacion.codigo]">
                                         <table class="table table-sm mb-0" *ngIf="detalles[cotizacion.codigo]?.length">

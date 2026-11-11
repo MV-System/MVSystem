@@ -220,7 +220,6 @@ export class EquipoRecepcionComponent implements OnInit {
 
   actualizarEstadoEquipo(data: EquipoEstadoUpdate){
     this.mantenimientoService.equipoEstadoActualiza(data).subscribe( res =>{} , err => {
-      console.log(err);
     })
   }
 

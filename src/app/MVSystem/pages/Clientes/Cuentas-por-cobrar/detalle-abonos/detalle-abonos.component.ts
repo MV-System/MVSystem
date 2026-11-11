@@ -5,6 +5,7 @@ import { LoadingService } from 'src/app/shared/components/r-loading/loading.serv
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { formatearMonto } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-detalle-abonos',
@@ -84,10 +85,7 @@ export class DetalleAbonosComponent implements OnInit, OnChanges, OnDestroy {
    * Formatea un número como moneda
    */
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('es-DO', {
-      style: 'currency',
-      currency: 'DOP'
-    }).format(value);
+    return formatearMonto(value, 2);
   }
 
   /**

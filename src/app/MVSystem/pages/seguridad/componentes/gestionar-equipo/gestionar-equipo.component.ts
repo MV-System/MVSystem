@@ -70,7 +70,7 @@ import { EquipoValidacionEliminacion } from 'src/app/core/interfaces/equipo.inte
                         <td>{{ existeEnTabla('Equipos') ? 'Sí' : 'No' }}</td>
                         <td class="d-flex gap-2">
                           <button *ngIf="existeEnTabla('Equipos')" type="button" class="btn btn-sm btn-outline-primary" (click)="verTabla('Equipos')">Ver</button>
-                          <button *ngIf="existeEnTabla('Equipos')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('Equipos')">{{ eliminandoTabla === 'Equipos' ? 'Eliminando...' : 'Eliminar' }}</button>
+                          <button *ngIf="existeEnTabla('Equipos')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('Equipos')">{{ eliminandoTabla === 'Equipos' ? 'Eliminando…' : 'Eliminar' }}</button>
                         </td>
                       </tr>
                       <tr>
@@ -78,7 +78,7 @@ import { EquipoValidacionEliminacion } from 'src/app/core/interfaces/equipo.inte
                         <td>{{ existeEnTabla('InventarioEquipo') ? 'Sí' : 'No' }}</td>
                         <td class="d-flex gap-2">
                           <button *ngIf="existeEnTabla('InventarioEquipo')" type="button" class="btn btn-sm btn-outline-primary" (click)="verTabla('InventarioEquipo')">Ver</button>
-                          <button *ngIf="existeEnTabla('InventarioEquipo')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('InventarioEquipo')">{{ eliminandoTabla === 'InventarioEquipo' ? 'Eliminando...' : 'Eliminar' }}</button>
+                          <button *ngIf="existeEnTabla('InventarioEquipo')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('InventarioEquipo')">{{ eliminandoTabla === 'InventarioEquipo' ? 'Eliminando…' : 'Eliminar' }}</button>
                         </td>
                       </tr>
                       <tr>
@@ -86,7 +86,7 @@ import { EquipoValidacionEliminacion } from 'src/app/core/interfaces/equipo.inte
                         <td>{{ existeEnTabla('Detalle_Facturas') ? 'Sí' : 'No' }}</td>
                         <td class="d-flex gap-2">
                           <button *ngIf="existeEnTabla('Detalle_Facturas')" type="button" class="btn btn-sm btn-outline-primary" (click)="verTabla('Detalle_Facturas')">Ver</button>
-                          <button *ngIf="existeEnTabla('Detalle_Facturas')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('Detalle_Facturas')">{{ eliminandoTabla === 'Detalle_Facturas' ? 'Eliminando...' : 'Eliminar' }}</button>
+                          <button *ngIf="existeEnTabla('Detalle_Facturas')" type="button" class="btn btn-sm btn-outline-danger" [disabled]="eliminandoTabla !== null" (click)="eliminarDeTabla('Detalle_Facturas')">{{ eliminandoTabla === 'Detalle_Facturas' ? 'Eliminando…' : 'Eliminar' }}</button>
                         </td>
                       </tr>
                       <tr>

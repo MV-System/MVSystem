@@ -20,6 +20,7 @@ import { Subject } from 'rxjs';
 import { AccesorioLista, AsumeITBIS } from 'src/app/core/interfaces/catalogo.interface';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { LoginService } from 'src/app/auth/login.service';
+import { formatearMonto } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-cotizacion-list',
@@ -315,7 +316,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
       const costo = Number(articulo.costo_Equipo ?? 0);
       const precioVenta = Number(actual.precio) - Number(actual.descuento || 0);
       if (costo > 0 && precioVenta < costo) {
-        this.toastr.error(`El precio final del equipo ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será revertido.`);
+        this.toastr.error(`El precio final del equipo (${formatearMonto(precioVenta)}) no puede ser menor al costo (${formatearMonto(costo)}). El descuento será revertido.`);
         group.patchValue({ descuento: 0 });
         this.obtenerDetalleFactura(index);
       }
@@ -630,7 +631,7 @@ export class CotizacionListComponent implements OnInit, OnChanges {
 
         if (costo > 0 && precioVenta < costo) {
           this.toastr.error(
-            `El equipo (línea ${i+1}) no puede cotizarse por debajo de su costo. Costo: $${costo}, Precio: $${precioVenta}`
+            `El equipo (línea ${i+1}) no puede cotizarse por debajo de su costo. Costo: ${formatearMonto(costo)}, Precio: ${formatearMonto(precioVenta)}`
           );
           return false;
         }

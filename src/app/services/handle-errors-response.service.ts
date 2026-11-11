@@ -45,16 +45,24 @@ export class HandleErrorsResponseService {
             this.toastr.error('Error: Por favor verifique su conexión a internet, inténtelo de nuevo más tarde.', '');
             this.router.navigate(['**']);
         } else if (error.status === 401) {
-            // No autorizado, sesión expirada o token inválido
+            // No autorizado, sesión expirada o token inválido (o sesión cerrada por el administrador)
+            const cerradaPorAdmin = error.headers?.get('X-Sesion-Cerrada') === '1';
             localStorage.clear();
-            this.toastr.error('Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
+            this.toastr.error(cerradaPorAdmin
+                ? 'Su sesión fue cerrada por el administrador. Inicie sesión nuevamente.'
+                : 'Sesión expirada o no autorizada. Inicie sesión nuevamente.', '');
             this.router.navigate(['/']);
         } else if (error.status === 404) {
             // No encontrado
             this.toastr.error('Recurso no encontrado.', '');
+        } else if (error.status === 429) {
+            // Demasiados intentos (login bloqueado temporalmente)
+            const mensaje = this.extraerMensajeHttp400(error);
+            this.toastr.warning(mensaje || 'Demasiados intentos. Intente en unos minutos.', '');
         } else if (error.status === 500) {
-            // Error interno del servidor
-            this.toastr.error('Error interno del servidor. Contacte al administrador.', '');
+            // Error interno del servidor (el API devuelve una referencia para soporte)
+            const referencia = error.error && typeof error.error.id === 'string' ? ` (Ref: ${error.error.id})` : '';
+            this.toastr.error('Error interno del servidor. Contacte al administrador.' + referencia, '');
         } else if (error.status === 403) {
             // Prohibido
             this.toastr.error('No tiene permisos para realizar esta acción.', '');

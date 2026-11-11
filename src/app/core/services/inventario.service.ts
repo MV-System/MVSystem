@@ -25,8 +25,6 @@ export class InventarioService {
      * Inicia una nueva sesión de inventario
      */
     iniciarSesion(dto: IniciarInventarioDTO): Observable<IniciarInventarioResponse> {
-        console.log('🌐 INVENTARIO-SERVICE - URL Iniciar:', `${APIURL.Inventario.IniciarSesion}`);
-        console.log('🌐 INVENTARIO-SERVICE - DTO Iniciar:', dto);
 
         return this.http.post<IniciarInventarioResponse>(
             `${APIURL.Inventario.IniciarSesion}`,
@@ -96,8 +94,6 @@ export class InventarioService {
      */
     reanudarInventario(dto: GestionarInventarioDTO): Observable<any> {
         const url = `${APIURL.Inventario.Reanudar}`;
-        console.log('🌐 INVENTARIO-SERVICE - URL:', url);
-        console.log('🌐 INVENTARIO-SERVICE - DTO:', dto);
 
         return this.http.post(url, dto);
     }
@@ -110,7 +106,6 @@ export class InventarioService {
             ? `${APIURL.Inventario.Activos}?idAlmacen=${idAlmacen}`
             : `${APIURL.Inventario.Activos}`;
 
-        console.log('🌐 INVENTARIO-SERVICE - URL Activos:', url);
         return this.http.get<InventarioSesion[]>(url);
     }
 
@@ -119,8 +114,6 @@ export class InventarioService {
      */
     cancelarInventario(idSesion: number): Observable<any> {
         const url = `${APIURL.Inventario.Cancelar}/${idSesion}`;
-        console.log('🌐 INVENTARIO-SERVICE - URL Cancelar:', url);
-        console.log('🌐 INVENTARIO-SERVICE - ID Sesion:', idSesion);
 
         return this.http.delete(url);
     }

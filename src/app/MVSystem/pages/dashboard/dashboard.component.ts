@@ -156,9 +156,12 @@ const filterSemana: utilidadesFiltros = {
   };
   //this.loading.showLoading();
   // Cargar utilidades
-  this.GetUtilidadesDia(filterDia);
-  this.GetUtilidadesSemana(filterSemana);
-  this.GetUtilidadesMes(filterMes);
+  // Solo quien tiene el permiso de Utilidades ve este panel; sin él, el API responde 403 y no se consulta.
+  if (this.VerFormConsultaUtilidades()) {
+    this.GetUtilidadesDia(filterDia);
+    this.GetUtilidadesSemana(filterSemana);
+    this.GetUtilidadesMes(filterMes);
+  }
   //this.loading.hideLoading();
 }
 GetUtilidadesDia(filterDia: utilidadesFiltros) {

@@ -6,6 +6,7 @@ import { DashboardAnalyticsService } from 'src/app/core/services/dashboard-analy
 import { LoginService } from 'src/app/auth/login.service';
 import { TopModeloInsight } from 'src/app/core/interfaces/dashboard-ia.interface';
 import { EquipoVendidoFilter, EquipoVendido } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto, formatearNumero } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-top-modelos-widget',
@@ -34,39 +35,39 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
   // Array de mensajes para mostrar aleatoriamente en cada visita
   private mensajesDisponibles = [
     {
-      titulo: '🧠 Estoy analizando tus ventas, Dame un momento...',
+      titulo: '🧠 Estoy analizando tus ventas, Dame un momento…',
       subtitulo: 'Estoy evaluando qué modelos están destacando últimamente para darte información más precisa.'
     },
     {
-      titulo: '🔍 Estoy Revisando tu inventario, no voy a tardar mucho...',
+      titulo: '🔍 Estoy Revisando tu inventario, no voy a tardar mucho…',
       subtitulo: 'Estoy comparando entradas vs salidas para detectar dónde está tu verdadera rotación.'
     },
     {
-      titulo: '📊 Estoy Calculando estadísticas de tus equipos vendidos, espera...',
+      titulo: '📊 Estoy Calculando estadísticas de tus equipos vendidos, espera…',
       subtitulo: 'Estoy preparando métricas inteligentes para que tomes mejores decisiones sin perder tiempo.'
     },
     {
-      titulo: '💡 Voy a procesar información actualizada para mostrarte una cosa que te va a gustar, dame un chance...',
+      titulo: '💡 Voy a procesar información actualizada para mostrarte una cosa que te va a gustar, dame un chance…',
       subtitulo: 'Estoy analizando los patrones de compra reales de tus clientes… esto te dará ventaja.'
     },
     {
-      titulo: '🎯 Estoy Detectando tendencias del mercado segun tus ventas, no te desesperes, ya casi te muestro...',
+      titulo: '🎯 Estoy Detectando tendencias del mercado segun tus ventas, no te desesperes, ya casi te muestro…',
       subtitulo: 'Estoy identificando cuál modelo está teniendo mayor demanda en este momento.'
     },
     {
-      titulo: '✨ Voy a Generar tu reporte personalizado, dame un chance...',
+      titulo: '✨ Voy a Generar tu reporte personalizado, dame un chance…',
       subtitulo: 'Estoy organizando los datos para presentártelos de la forma más clara posible.'
     },
     {
-      titulo: '⚙️ Voy a conectar con tus datos históricos, Dame un segundo...',
+      titulo: '⚙️ Voy a conectar con tus datos históricos, Dame un segundo…',
       subtitulo: 'Estoy validando comportamiento previo para mejorar la predicción actual.'
     },
     {
-      titulo: '📌 Validando información con precisión...',
+      titulo: '📌 Validando información con precisión…',
       subtitulo: 'Estoy asegurándome de que cada dato mostrado refleje la realidad de tu tienda.'
     },
     {
-      titulo: '🚀 Optimizando la consulta...',
+      titulo: '🚀 Optimizando la consulta…',
       subtitulo: 'Estoy maximizando la eficiencia para que todo cargue rápido y exacto.'
     }
   ];
@@ -155,12 +156,12 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
 
   // Formatear números con separadores de miles
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   // Formatear moneda
   formatCurrency(value: number): string {
-    return `RD$${this.formatNumber(value)}`;
+    return formatearMonto(value, 0);
   }
 
   // Obtener clase CSS según velocidad de venta

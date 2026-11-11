@@ -160,7 +160,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     if (!valor) return '';
     const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
     if (!partes) return valor;
-    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString();
+    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString('es-DO');
   }
   myDateRangePickerOptions: IMyDrpOptions = {
     dateFormat: 'dd.mm.yyyy',

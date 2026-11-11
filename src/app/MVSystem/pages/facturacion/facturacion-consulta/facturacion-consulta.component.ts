@@ -171,7 +171,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     if (partes.length === 3 && partes.every(Number.isFinite)) {
       const [anio, mes, dia] = partes;
       const fecha = new Date(anio, mes - 1, dia);
-      if (!isNaN(fecha.getTime())) return fecha.toLocaleDateString();
+      if (!isNaN(fecha.getTime())) return fecha.toLocaleDateString('es-DO');
     }
     return valor;
   }
@@ -340,24 +340,19 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     const tipoPago = factura.tipoPago ? factura.tipoPago.toString().toUpperCase() : '';
     const esMixto = tipoPago.includes('MIXTO') || tipoPago === '6' || tipoPago.includes('MIX');
 
-    console.log('🔍 Detectando pago mixto para factura', `${factura.idSucursal || 0}:${factura.numeroFactura}`, '- tipoPago:', factura.tipoPago, 'esMixto:', esMixto);
     return esMixto ? 6 : 0;
   }
 
   // Cargar desglose de pagos mixtos
   loadDesglosePagos(numeroFactura: number) {
-    console.log('🔄 loadDesglosePagos - Iniciando petición HTTP para factura:', numeroFactura);
     const sub = this.mantenimientoService.getDesglosePagos(numeroFactura).subscribe({
       next: (desglose) => {
         const desgloseArray = desglose || [];
-        console.log('✅ Respuesta recibida - Cantidad de items:', desgloseArray.length);
-        console.log('   Contenido:', JSON.stringify(desgloseArray, null, 2));
 
         // Actualizar el objeto de facturas Y reasignarlo para que Angular detecte el cambio
         this.desglosePagosPorFactura[numeroFactura] = desgloseArray;
         this.desglosePagosPorFactura = { ...this.desglosePagosPorFactura }; // Reasignar para trigger @Input
 
-        console.log('📊 Objeto desglosePagosPorFactura actualizado - Claves:', Object.keys(this.desglosePagosPorFactura));
 
         // Mantener también el array global para compatibilidad
         this.desglosePagos = desgloseArray;
@@ -378,14 +373,12 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
    * Manejador para cuando el usuario solicita cargar el desglose desde el botón
    */
   onLoadDesglose(numeroFactura: number) {
-    console.log('📥 onLoadDesglose - Recibida solicitud para factura:', numeroFactura);
     this.loadDesglosePagos(numeroFactura);
   }
 
   // Getter para obtener el desglose de una factura específica
   getDesglosePagosPorNumero(numeroFactura: number): DetallePagoMixto[] {
     const desglose = this.desglosePagosPorFactura[numeroFactura];
-    console.log('🔍 getDesglosePagosPorNumero - Buscando desglose para factura:', numeroFactura, '-> encontrado:', !!desglose);
     return desglose || [];
   }
 
@@ -410,7 +403,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
   }
   printFactura(){
     const filtro = this.modelFacturaFilterParaImpresion();
-    console.info('📤 Datos enviados para imprimir factura normal:', JSON.stringify(filtro, null, 2));
     this.loading.showLoading();
     const sub = this.mantenimientoService.postFacturaReport(filtro,this.numerofactura)
     .subscribe(blob =>{
@@ -465,7 +457,6 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
 
   printFacturaMini(){
     const filtro = this.modelFacturaFilterParaImpresion();
-    console.info('📤 Datos enviados para imprimir factura mini:', JSON.stringify(filtro, null, 2));
     this.loading.showLoading();
     this.printing = !this.printing;
     const sub = this.mantenimientoService.postFacturaMiniReport(filtro,this.numerofactura)
@@ -540,7 +531,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
               } else if (shareError.name !== 'AbortError') {
                 // Cualquier otro error que no sea cancelación del usuario
                 console.error('Error al compartir:', shareError);
-                this.toast.warning('Error al compartir. Descargando archivo...');
+                this.toast.warning('Error al compartir. Descargando archivo…');
                 CreatorPDFFile(blob);
               }
             }

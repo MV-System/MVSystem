@@ -13,7 +13,7 @@ export interface EtapaEspera {
 export class LoadingService {
 
   isLoading:Subject<boolean> = new Subject<boolean>();
-  private message:string = "Cargando...";
+  private message:string = "Cargando…";
   private detail:string = "";
   private temporizadores: any[] = [];
   /** Último mensaje elegido por etapa, para no repetirlo seguido (ni dentro de una espera ni en la siguiente). */
@@ -23,7 +23,7 @@ export class LoadingService {
   }
 
   /** message: texto principal; detail (opcional): línea secundaria más pequeña, p. ej. "Por favor espere...". */
-  showLoading(message:string = 'Cargando...', detail:string = ''){
+  showLoading(message:string = 'Cargando…', detail:string = ''){
     this.limpiarTemporizadores();
     this.message = message;
     this.detail = detail;
@@ -53,7 +53,7 @@ export class LoadingService {
   hideLoading(){
     this.limpiarTemporizadores();
     this.isLoading.next(false);
-    this.message = 'Cargando...';
+    this.message = 'Cargando…';
     this.detail = '';
   }
 

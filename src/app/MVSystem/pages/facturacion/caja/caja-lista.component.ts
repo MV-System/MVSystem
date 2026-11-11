@@ -181,12 +181,6 @@ export class CajaListaComponent implements OnInit {
 
     const pagosConDatos = pagos.filter(pago => Number(pago.ID_Tipo_Pago) > 0 || Number(pago.Monto_Pago) > 0);
 
-    console.log('DEBUG_GUARDAR_PAGOS', {
-      numeroPreFactura: prefactura.numero_PreFactura,
-      totalFactura: prefactura.total,
-      pagos,
-      pagosConDatos
-    });
 
     const suma = pagosConDatos.reduce((total, pago) => total + (Number.isFinite(pago.Monto_Pago) ? Number(pago.Monto_Pago) : 0), 0);
     const totalFactura = Number(prefactura.total || 0);
@@ -520,7 +514,7 @@ export class CajaListaComponent implements OnInit {
                   URL.revokeObjectURL(url);
                 }, 100);
               } else if (shareError.name !== 'AbortError') {
-                this.toast.warning('Error al compartir. Descargando archivo...');
+                this.toast.warning('Error al compartir. Descargando archivo…');
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;

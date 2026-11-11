@@ -36,7 +36,7 @@
                         <!-- Campo de búsqueda optimizado - OCULTO porque ahora se maneja desde el padre -->
                         <div class="search-container" style="display: none;">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Buscar por cliente, número de factura o teléfono..." [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
+                                <input type="text" class="form-control" placeholder="Buscar por cliente, número de factura o teléfono…" [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
 
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-primary" type="button" (click)="searchManually()" [disabled]="isLoading">
@@ -105,14 +105,14 @@
                                         <tr class="animate__animated animate__fadeIn tr-hover" [ngClass]="{'selected-row': selectedRowIndex === i, 'collapsed-row': facturaVisibility[getFacturaKey(factura)]}" (click)="handleClick(factura, i)">
                                             <td class="fixed-item">
                                                 <div class="btns-group">
-                                                    <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura)" class="btns flat oorange" data-bs-original-title="Anular Factura">
-                                                        <i class="bx bx-trash-alt"></i>
+                                                    <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" title="Anular factura" aria-label="Anular factura">
+                                                        <i class="bx bx-trash-alt" aria-hidden="true"></i>
                                                     </button>
-                                                    <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Emitir Nota de Crédito">
-                                                        <i class="bi bi-file-earmark-minus"></i>
+                                                    <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" title="Emitir nota de crédito" aria-label="Emitir nota de crédito">
+                                                        <i class="bi bi-file-earmark-minus" aria-hidden="true"></i>
                                                     </button>
-                                                    <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" data-bs-original-title="Imprimir Nota de Crédito">
-                                                        <i class="bi bi-printer"></i>
+                                                    <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btns flat oorange" title="Imprimir nota de crédito" aria-label="Imprimir nota de crédito">
+                                                        <i class="bi bi-printer" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                                 <span class="id-badge">{{factura.numeroFactura}}</span>
@@ -151,21 +151,21 @@
                                                 <td col="1">
                                                     <ng-container *ngIf="!detalle.editMode">
                                                         Cod: {{ detalle.idEquipo }}
-                                                        <button *ngIf="detalle.idTipo === 1 && btnCambiaImei()" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo">
-                                                            <i class="bx bx-edit-alt"></i>
+                                                        <button *ngIf="detalle.idTipo === 1 && btnCambiaImei()" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo" aria-label="Editar artículo">
+                                                            <i class="bx bx-edit-alt" aria-hidden="true"></i>
                                                         </button>
                                                         <!-- Botón para rebajar equipo si idTipo es 1 -->
-                                                        <button *ngIf="detalle.idTipo === 1 && btnRebajaEquipo()" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
-                                              <i class="bi bi-arrow-bar-down" style="color: #dc3545; font-size: 1.2em;"></i>
+                                                        <button *ngIf="detalle.idTipo === 1 && btnRebajaEquipo()" (click)="rebajarEquipo(detalle); $event.stopPropagation();" class="btns flat danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Rebajar equipo" aria-label="Rebajar equipo" style="color: #dc3545; border-color: #dc3545;">
+                                              <i class="bi bi-arrow-bar-down" aria-hidden="true" style="color: #dc3545; font-size: 1.2em;"></i>
                                           </button>
                                                     </ng-container>
                                                     <ng-container *ngIf="detalle.editMode">
                                                         <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control" placeholder="Ingrese el código" />
-                                                        <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar">
-                                                            <i class="bx bx-save"></i>
+                                                        <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar" aria-label="Guardar">
+                                                            <i class="bx bx-save" aria-hidden="true"></i>
                                                         </button>
-                                                        <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar">
-                                                            <i class="bx bx-x"></i>
+                                                        <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar" aria-label="Cancelar">
+                                                            <i class="bx bx-x" aria-hidden="true"></i>
                                                         </button>
                                                     </ng-container>
                                                 </td>
@@ -193,17 +193,17 @@
                                         <span><b>Factura #{{factura.numeroFactura}}</b></span>
                                     </div>
                                     <div class="factura-actions">
-                                        <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura">
-                                            <i class="bi bi-share-fill"></i>
+                                        <button class="btn-icon-share" (click)="compartirFacturaMobile(factura.numeroFactura); $event.stopPropagation();" title="Compartir factura" aria-label="Compartir factura">
+                                            <i class="bi bi-share-fill" aria-hidden="true"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura">
-                                            <i class="bi bi-trash-fill"></i>
+                                        <button *ngIf="estadoFactura !== 'X' && btnAnulaFactura() && !usaNotaCredito(factura)" (click)="anulaFactura(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Anular factura" aria-label="Anular factura">
+                                            <i class="bi bi-trash-fill" aria-hidden="true"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Emitir Nota de Crédito">
-                                            <i class="bi bi-file-earmark-minus"></i>
+                                        <button *ngIf="estadoFactura !== 'X' && btnNotaCredito() && usaNotaCredito(factura)" (click)="emitirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-delete" title="Emitir nota de crédito" aria-label="Emitir nota de crédito">
+                                            <i class="bi bi-file-earmark-minus" aria-hidden="true"></i>
                                         </button>
-                                        <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-share" title="Imprimir Nota de Crédito">
-                                            <i class="bi bi-printer"></i>
+                                        <button *ngIf="estadoFactura === 'X' && usaNotaCredito(factura)" (click)="imprimirNotaCredito(factura.numeroFactura); $event.stopPropagation();" class="btn-icon-share" title="Imprimir nota de crédito" aria-label="Imprimir nota de crédito">
+                                            <i class="bi bi-printer" aria-hidden="true"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -313,24 +313,24 @@
 </section>
 
 <!-- Modal: motivo de la anulación de la factura (obligatorio) -->
-<div *ngIf="facturaPorAnular !== null" class="modal fade show" style="display: block; background: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog" aria-modal="true">
+<div *ngIf="facturaPorAnular !== null" class="modal fade show" style="display: block; background: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="tituloAnulacion" (keydown.escape)="cerrarModalAnulacion()">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="bi bi-x-octagon me-2"></i> Anular factura #{{ facturaPorAnular }}</h5>
-                <button type="button" class="btn-close btn-close-white" (click)="cerrarModalAnulacion()" [disabled]="isLoading"></button>
+                <h5 class="modal-title" id="tituloAnulacion"><i class="bi bi-x-octagon me-2" aria-hidden="true"></i> Anular factura #{{ facturaPorAnular }}</h5>
+                <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrarModalAnulacion()" [disabled]="isLoading"></button>
             </div>
             <div class="modal-body">
                 <p class="mb-2">Esta acción devuelve al inventario los artículos de la factura y no se puede deshacer.</p>
-                <label class="form-label fw-bold">Motivo de la anulación <span class="text-danger">*</span></label>
-                <textarea class="form-control" rows="3" maxlength="500" [(ngModel)]="motivoAnulacion" placeholder="Indique por qué se anula esta factura" [disabled]="isLoading"></textarea>
+                <label class="form-label fw-bold" for="motivoAnulacion">Motivo de la anulación <span class="text-danger">*</span></label>
+                <textarea id="motivoAnulacion" class="form-control" rows="3" maxlength="500" [(ngModel)]="motivoAnulacion" placeholder="Indique por qué se anula esta factura…" [disabled]="isLoading"></textarea>
                 <small class="text-muted">Mínimo {{ minMotivoAnulacion }} caracteres. Queda registrado con su usuario y la fecha.</small>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cerrarModalAnulacion()" [disabled]="isLoading">No, fue un error</button>
                 <button type="button" class="btn btn-danger" (click)="confirmarAnulacion()" [disabled]="!motivoAnulacionValido || isLoading">
                     <span *ngIf="!isLoading">Sí, anular factura</span>
-                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="isLoading"><span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Anulando…</span>
                 </button>
             </div>
         </div>

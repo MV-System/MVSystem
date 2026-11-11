@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { formatearMonto } from 'src/app/core/utils/formato';
+import { escaparHtml } from 'src/app/core/utils/html';
 
 @Component({
   selector: 'app-cierre-caja-reporte',
@@ -171,10 +173,7 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
    * Formatea un número como moneda
    */
   formatearMoneda(valor: number): string {
-    return new Intl.NumberFormat('es-DO', {
-      style: 'currency',
-      currency: 'DOP'
-    }).format(valor);
+    return formatearMonto(valor, 2);
   }
 
   /**
@@ -299,19 +298,18 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
           headerElement.insertAdjacentHTML('afterbegin', imgElement);
         }
       }).catch((err) => {
-        console.log('No se pudo cargar el logo:', err);
         // Continuar sin logo
       });
     }
 
     // Nombre de la empresa
     if (this.cierreCajaResumen.datosEmpresaFactura) {
-      printWindow.document.write('<h2>' + this.cierreCajaResumen.datosEmpresaFactura.NombreEmpresa + '</h2>');
+      printWindow.document.write('<h2>' + escaparHtml(this.cierreCajaResumen.datosEmpresaFactura.NombreEmpresa) + '</h2>');
     }
 
     // Nombre de la sucursal
     if (this.cierreCajaResumen.almacen) {
-      printWindow.document.write('<p><strong>Sucursal: ' + this.cierreCajaResumen.almacen + '</strong></p>');
+      printWindow.document.write('<p><strong>Sucursal: ' + escaparHtml(this.cierreCajaResumen.almacen) + '</strong></p>');
     }
 
     printWindow.document.write('<p>Período: ' + new Date(this.cierreCajaResumen.fechaInicio).toLocaleDateString('es-DO') + ' al ' + new Date(this.cierreCajaResumen.fechaFinal).toLocaleDateString('es-DO') + '</p>');
@@ -345,7 +343,7 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
     // Detalles por tipo de pago
     this.cierreCajaResumen.detallesPorTipoPago.forEach(detalle => {
       printWindow.document.write('<tr>');
-      printWindow.document.write('<td>' + detalle.tipoPago + '</td>');
+      printWindow.document.write('<td>' + escaparHtml(detalle.tipoPago) + '</td>');
       printWindow.document.write('<td class="text-center">' + detalle.cantidadFacturas + '</td>');
       printWindow.document.write('<td class="text-end">' + this.formatearMoneda(detalle.montoAbonos) + '</td>');
       printWindow.document.write('<td class="text-end">' + this.formatearMoneda(detalle.subTotal) + '</td>');

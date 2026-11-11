@@ -50,7 +50,7 @@
 
             <div class="col-md-9">
                 <button class="button-imprimir-reporte" [ngClass]="{'disabled': (!idTransferenciaSeleccionada)}" (click)="printReportTransferencia()">
-                    <span class="d-inline">{{ isLoading ? 'Procesando...' : 'Reimprimir Transferencia' }}</span>
+                    <span class="d-inline">{{ isLoading ? 'Procesando…' : 'Reimprimir Transferencia' }}</span>
                     <span class="spinner-grow spinner-grow-sm m-0 x-10" role="status" aria-hidden="true" *ngIf="isLoading"></span>
                 </button>
             </div>
@@ -59,7 +59,7 @@
 
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
-        <span>Cargando datos, por favor espere...</span>
+        <span>Cargando datos, por favor espere…</span>
     </mat-spinner>
     <!-- Sección de Equipos -->
     <section class="section mt-4">

@@ -61,17 +61,13 @@ export class ClientesConsultaComponent implements OnInit {
    * Navigate to client registration page
    */
   agregarCliente() {
-    console.log('Navegando a registro de cliente...');
-    console.log('Current URL:', this.router.url);
 
     // Usar navegación relativa desde la ruta actual
     this.router.navigate(['../registro'], { relativeTo: this.route }).then(
       (success) => {
-        console.log('Navegación exitosa:', success);
         if (success) {
           this.toastr.success('Navegando al formulario de registro', 'Éxito');
         } else {
-          console.log('Navegación relativa falló, probando ruta absoluta...');
           // Si la navegación relativa falla, probar ruta absoluta
           this.router.navigate(['/mvSystem/home/clientes/registro']).then(
             (success2) => {
@@ -95,7 +91,6 @@ export class ClientesConsultaComponent implements OnInit {
    * Navigate to client detail page
    */
   verDetalle(clienteId: number) {
-    console.log('Navegando a detalle del cliente:', clienteId);
     this.router.navigate(['../detalle', clienteId], { relativeTo: this.route });
   }
 
@@ -103,7 +98,6 @@ export class ClientesConsultaComponent implements OnInit {
    * Navigate to client edit page
    */
   editarCliente(clienteId: number) {
-    console.log('Navegando a editar cliente:', clienteId);
     this.router.navigate(['../editar', clienteId], { relativeTo: this.route });
   }
 
@@ -111,13 +105,11 @@ export class ClientesConsultaComponent implements OnInit {
    * Load all clients on component initialization
    */
   cargarTodosLosClientes() {
-    console.log('Cargando todos los clientes...');
     this.isLoading = true;
 
     this.clientesService.getClientesPorNombreTelefono('')
       .subscribe({
         next: (clientes) => {
-          console.log('Clientes cargados:', clientes.length);
           this.listaClientes = clientes;
           this.isLoading = false;
 

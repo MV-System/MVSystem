@@ -13,7 +13,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
 import { ToastrService } from 'ngx-toastr';
 import { EquipoDisponible } from 'src/app/core/interfaces/equipo.interface';
-import { Almacen, Grupo, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
+import { Almacen, Grupo, MarcaEquipo, ModeloEquipo, Suplidor } from 'src/app/core/interfaces/catalogo.interface';
 
 describe('EquipoDisponibleComponent', () => {
   let component: EquipoDisponibleComponent;
@@ -86,8 +86,13 @@ describe('EquipoDisponibleComponent', () => {
   ];
 
   const mockModelos: ModeloEquipo[] = [
-    { iD_Modelo: 1, descripcion: 'iPhone 14 Pro' } as ModeloEquipo,
-    { iD_Modelo: 2, descripcion: 'Samsung Galaxy S23' } as ModeloEquipo
+    { iD_Modelo: 1, iD_Marca: 1, descripcion: 'iPhone 14 Pro' } as ModeloEquipo,
+    { iD_Modelo: 2, iD_Marca: 2, descripcion: 'Samsung Galaxy S23' } as ModeloEquipo
+  ];
+
+  const mockMarcas: MarcaEquipo[] = [
+    { iD_Marca: 1, descripcion: 'Apple' },
+    { iD_Marca: 2, descripcion: 'Samsung' }
   ];
 
   const mockSuplidores: Suplidor[] = [
@@ -103,7 +108,7 @@ describe('EquipoDisponibleComponent', () => {
   beforeEach(async () => {
     // Create spy objects
     mockEquipoService = jasmine.createSpyObj('EquipoService', ['getEquipoDisponible', 'postEquipoDisponible']);
-    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales', 'getModeloLista', 'getSuplidorLista', 'getGruposLista']);
+    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getSucursales', 'getModeloLista', 'getSuplidorLista', 'getGruposLista', 'getMarcasLista']);
     mockLoadingService = jasmine.createSpyObj('LoadingService', ['showLoading', 'hideLoading']);
     mockLoginService = jasmine.createSpyObj('LoginService', [], {
       getUserEmpresa: 'MV System',
@@ -120,6 +125,7 @@ describe('EquipoDisponibleComponent', () => {
     mockCatalogosService.getModeloLista.and.returnValue(of(mockModelos));
     mockCatalogosService.getSuplidorLista.and.returnValue(of(mockSuplidores));
     mockCatalogosService.getGruposLista.and.returnValue(of(mockGrupos));
+    mockCatalogosService.getMarcasLista.and.returnValue(of(mockMarcas));
     mockValidatorPermissionService.validateUserRole.and.returnValue(true);
     mockTrackingService.trackPageView.and.returnValue(of({ success: true, message: 'Tracked' }));
     mockTrackingService.trackAction.and.returnValue(of({ success: true, message: 'Tracked' }));
@@ -281,10 +287,19 @@ describe('EquipoDisponibleComponent', () => {
       expect(mockCatalogosService.getSucursales).toHaveBeenCalled();
       expect(mockCatalogosService.getModeloLista).toHaveBeenCalled();
       expect(mockCatalogosService.getSuplidorLista).toHaveBeenCalled();
+      expect(mockCatalogosService.getMarcasLista).toHaveBeenCalled();
       expect(component.almacenListado).toEqual(mockAlmacenes);
       expect(component.modeloListado).toEqual(mockModelos);
       expect(component.listaSuplidor).toEqual(mockSuplidores);
       expect(mockLoadingService.hideLoading).toHaveBeenCalled();
+    });
+
+    it('should build the "Modelo o marca" options with the brand first and then its models', () => {
+      component.loadCatalogos();
+
+      expect(component.opcionesModeloMarca.map(o => o.key)).toEqual(['ma-1', 'mo-1', 'ma-2', 'mo-2']);
+      expect(component.opcionesModeloMarca[0].label).toBe('Apple – todos los modelos');
+      expect(component.opcionesModeloMarca[1].marca).toBe('Apple');
     });
 
     // Test comentado porque el componente no maneja errores en loadCatalogos()
@@ -300,7 +315,7 @@ describe('EquipoDisponibleComponent', () => {
       component.form.patchValue({
         almacen: 2,
         suplidor: 'Apple Inc',
-        modelo: 'iPhone 14 Pro',
+        modelo: 'mo-1',
         imei: '123456789'
       });
 
@@ -308,8 +323,29 @@ describe('EquipoDisponibleComponent', () => {
 
       expect(component.filter.almacen).toBe(2);
       expect(component.filter.suplidor).toBe('Apple Inc');
-      expect(component.filter.modelo).toBe('iPhone 14 Pro');
+      expect(component.filter.modelo).toBe(1);
+      expect(component.filter.marca).toBeNull();
       expect(component.filter.imei).toBe('123456789');
+    });
+
+    it('should filter by brand when the combo has a brand key', () => {
+      component.form.patchValue({ modelo: 'ma-2' });
+
+      component.getValueFilterForm();
+
+      expect(component.filter.marca).toBe(2);
+      expect(component.filter.modelo).toBe(0);
+    });
+
+    it('should clear brand and model when the combo is empty', () => {
+      component.form.patchValue({ modelo: 'ma-2' });
+      component.getValueFilterForm();
+      component.form.patchValue({ modelo: null });
+
+      component.getValueFilterForm();
+
+      expect(component.filter.marca).toBeNull();
+      expect(component.filter.modelo).toBe(0);
     });
 
     it('should use default sucursal when almacen is empty', () => {
@@ -726,14 +762,39 @@ describe('EquipoDisponibleComponent', () => {
     it('should maintain filter state across multiple searches', () => {
       component.form.patchValue({
         imei: '123456',
-        modelo: 'iPhone'
+        modelo: 'mo-1'
       });
 
       component.obtenerEquiposDisponibles();
       component.obtenerEquiposDisponibles();
 
       expect(component.filter.imei).toBe('123456');
-      expect(component.filter.modelo).toBe('iPhone');
+      expect(component.filter.modelo).toBe(1);
+    });
+  });
+
+  describe('Combo "Modelo o marca" - buscarModeloMarca()', () => {
+    beforeEach(() => component.loadCatalogos());
+    const modelo = () => component.opcionesModeloMarca.find(o => o.key === 'mo-1')!;
+    const marca = () => component.opcionesModeloMarca.find(o => o.key === 'ma-1')!;
+
+    it('should match a model by the brand name', () => {
+      expect(component.buscarModeloMarca('apple', modelo())).toBeTrue();
+    });
+
+    it('should match every word in any order', () => {
+      expect(component.buscarModeloMarca('apple iphone', modelo())).toBeTrue();
+      expect(component.buscarModeloMarca('iphone apple', modelo())).toBeTrue();
+      expect(component.buscarModeloMarca('samsung iphone', modelo())).toBeFalse();
+    });
+
+    it('should ignore case and accents', () => {
+      expect(component.buscarModeloMarca('ÁPPLE', modelo())).toBeTrue();
+    });
+
+    it('should match the brand option only by brand name', () => {
+      expect(component.buscarModeloMarca('apple', marca())).toBeTrue();
+      expect(component.buscarModeloMarca('iphone', marca())).toBeFalse();
     });
   });
 
@@ -741,7 +802,7 @@ describe('EquipoDisponibleComponent', () => {
     it('should update filter when form values change', () => {
       component.form.patchValue({
         imei: '999999999999999',
-        modelo: 'Test Model',
+        modelo: 'mo-7',
         suplidor: 'Test Supplier',
         almacen: 3
       });
@@ -749,7 +810,7 @@ describe('EquipoDisponibleComponent', () => {
       component.getValueFilterForm();
 
       expect(component.filter.imei).toBe('999999999999999');
-      expect(component.filter.modelo).toBe('Test Model');
+      expect(component.filter.modelo).toBe(7);
       expect(component.filter.suplidor).toBe('Test Supplier');
       expect(component.filter.almacen).toBe(3);
     });

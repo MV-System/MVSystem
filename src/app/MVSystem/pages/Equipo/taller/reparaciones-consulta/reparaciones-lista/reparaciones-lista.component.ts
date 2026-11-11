@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ReparacionConsulta } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-reparaciones-lista',
@@ -69,6 +70,6 @@ export class ReparacionesListaComponent {
    * Formatear precio/costo
    */
   formatCurrency(value: number): string {
-    return `RD$${value.toFixed(2)}`;
+    return formatearMonto(value, 2);
   }
 }

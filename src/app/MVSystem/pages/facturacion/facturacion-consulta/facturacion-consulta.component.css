@@ -405,7 +405,6 @@ select.form-select.modern-select[formControlName="almacen"]:focus {
     border-color: #bfc9d1;
     box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12);
     background: #fff;
-    outline: none;
 }
 
 
@@ -510,7 +509,6 @@ select.form-select.modern-select[formControlName="almacen"]:focus {
     border-color: #bfc9d1 !important;
     box-shadow: 0 0 0 0.2rem rgba(191, 201, 209, 0.12) !important;
     background: #fff !important;
-    outline: none !important;
 }
 
 .modern-datepicker input::placeholder {

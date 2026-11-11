@@ -90,10 +90,7 @@ selectedRowIndex: number | null = null;
 
     // Log cuando se reciben cambios en desglosePagosPorFactura
     if (changes['desglosePagosPorFactura']) {
-      console.log('👁️ ListaComponent - desglosePagosPorFactura cambio detectado en ngOnChanges');
-      console.log('   Claves en el objeto:', Object.keys(this.desglosePagosPorFactura));
       Object.entries(this.desglosePagosPorFactura).forEach(([numeroFactura, desglose]) => {
-        console.log(`     Factura ${numeroFactura}: ${desglose.length} items`);
       });
     }
   }
@@ -158,7 +155,6 @@ selectedRowIndex: number | null = null;
   toggleDesgloseVisible(factura: FacturaConsulta, event?: Event) {
     const facturaId = factura.numeroFactura;
     const facturaKey = this.getFacturaKey(factura);
-    console.log('🔘 CLICK en botón desglose - Factura:', facturaKey);
 
     // Evitar que se propague el evento si viene de un clic directo
     if (event) {
@@ -172,17 +168,12 @@ selectedRowIndex: number | null = null;
       }
     });
 
-    const desgloseActual = this.desglosePagosPorFactura[facturaId];
-    console.log('   Desglose actual cargado:', desgloseActual ? `${desgloseActual.length} items` : 'NO CARGADO');
-
     // Si está a punto de abrirse y el desglose no está cargado, solicitar la carga
     if (!this.desgloseVisible[facturaKey] && (!this.desglosePagosPorFactura[facturaId] || this.desglosePagosPorFactura[facturaId].length === 0)) {
-      console.log('   📤 Emitiendo evento onLoadDesgloseRequest para cargar desglose');
       this.onLoadDesgloseRequest.emit(facturaId);
     }
 
     this.desgloseVisible[facturaKey] = !this.desgloseVisible[facturaKey];
-    console.log('   Desglose ahora está:', this.desgloseVisible[facturaKey] ? 'VISIBLE' : 'OCULTO');
   }
 
   /**
@@ -198,7 +189,6 @@ selectedRowIndex: number | null = null;
  onEdit(detalle: DetalleFacturaList) {
   // Guardar el valor original antes de editarlo
   detalle.EquipoActual = detalle.idEquipo;
-  console.log("Equipo Capturado",detalle.EquipoActual);
   detalle.editMode = true;
 }
 
@@ -223,7 +213,6 @@ DetalleFacturaCambiaImeiOnSave(detalle: DetalleFacturaList) {
             next: (respuesta) => {
               //this.isLoading = false; // Finalizar la carga
               const mensaje = respuesta.mensaje; // Captura el mensaje del backend
-             console.log(respuesta);
               this.toast.info(mensaje); // Muestra un mensaje de éxito
             },
             error: (err) => {
@@ -287,6 +276,8 @@ onCancel(detalle: DetalleFacturaList) {
   anulaFactura(numeroFactura: number){
     this.facturaPorAnular = +(`${numeroFactura}`);
     this.motivoAnulacion = '';
+    // El foco pasa al campo del motivo (y Escape cierra el modal)
+    setTimeout(() => document.getElementById('motivoAnulacion')?.focus(), 0);
   }
 
   cerrarModalAnulacion(): void {

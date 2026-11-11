@@ -65,7 +65,7 @@
                     <button type="button" class="btn btn-secondary" (click)="closeModal.emit()" [disabled]="isLoading">Cancelar</button>
                     <button type="submit" class="btn btn-primary" [disabled]="form.invalid || !isPriceRelationValid() || isLoading">
                         <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
-                        {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
+                        {{ isLoading ? 'Guardando…' : 'Guardar cambios' }}
                     </button>
                 </div>
             </form>

@@ -1,4 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { UsoConectado, UsoDetalleUsuario, UsoResumen, UsoSistemaService } from 'src/app/core/services/uso-sistema.service';
 import { buscarPantalla, PANTALLAS, PantallaCatalogo } from './pantallas.catalogo';
 
@@ -50,7 +53,35 @@ export class UsoSistemaComponent implements OnInit, OnDestroy {
   // Mientras se ve otra pestana, el resumen (que es la consulta mas pesada) se refresca cada 3 ciclos (30 s)
   private readonly cicloResumenSegundoPlano = 3;
 
-  constructor(private uso: UsoSistemaService) { }
+  constructor(
+    private uso: UsoSistemaService,
+    private toastr: ToastrService,
+    private validatorPermissionService: ValidatorPermissionService,
+    private rDialogService: RDialogService
+  ) { }
+
+  puedeDesconectar(): boolean {
+    return this.validatorPermissionService.validateUserRole('USO_SISTEMA_DESCONECTAR');
+  }
+
+  desconectar(c: UsoConectado): void {
+    this.rDialogService.openDialog(
+      'Desconectar usuario',
+      `¿Desconectar a ${c.nombreUsuario || c.usuario}? Perderá el acceso de inmediato en todos sus equipos y podrá volver a iniciar sesión.`,
+      () => { },
+      () => {
+        this.uso.desconectar(c.usuario).subscribe({
+          next: () => {
+            this.toastr.success('Usuario desconectado.');
+            this.conectados = this.conectados.filter(x => x.usuario !== c.usuario);
+          },
+          error: (err) => this.toastr.error(typeof err === 'string' && err ? err : (err?.error?.error ?? 'No se pudo desconectar al usuario.'))
+        });
+      },
+      'Sí, desconectar',
+      'Cancelar'
+    );
+  }
 
   ngOnInit(): void {
     this.uso.empresas().subscribe({ next: e => this.empresas = e, error: () => { } });

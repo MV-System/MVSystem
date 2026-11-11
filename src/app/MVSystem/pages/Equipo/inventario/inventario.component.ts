@@ -104,16 +104,12 @@ export class InventarioComponent implements OnInit, OnDestroy {
   }
 
   cargarInventariosActivos(): void {
-    console.log('🔍 INVENTARIO - Cargando inventarios activos...');
 
     this.inventarioService.obtenerInventariosActivos().subscribe({
       next: (inventarios) => {
-        console.log('✅ INVENTARIO - Inventarios activos cargados:', inventarios);
-        console.log('📊 INVENTARIO - Cantidad de inventarios:', inventarios.length);
 
         // Log detallado de cada inventario
         inventarios.forEach((inv, index) => {
-          console.log(`📋 INVENTARIO ${index + 1} - ID: ${inv.iD_Sesion}, Estado: ${inv.estado}, Almacén: ${inv.iD_Almacen}`);
         });
 
         this.inventariosActivos = inventarios;
@@ -121,7 +117,6 @@ export class InventarioComponent implements OnInit, OnDestroy {
         // AUTO-CARGAR: Si hay un inventario EN_PROCESO, cargarlo automáticamente
         const inventarioEnProceso = inventarios.find(inv => inv.estado === 'EN_PROCESO');
         if (inventarioEnProceso) {
-          console.log('🔄 INVENTARIO - Detectado inventario EN_PROCESO, cargando automáticamente...', inventarioEnProceso);
           this.toastr.info(`Continuando con inventario en proceso del almacén ${inventarioEnProceso.nombre_Almacen || inventarioEnProceso.iD_Almacen}`, 'Inventario Activo', { timeOut: 3000 });
 
           // Cargar el inventario automáticamente
@@ -155,14 +150,10 @@ export class InventarioComponent implements OnInit, OnDestroy {
       usuario: 'mvpruebas'
     };
 
-    console.log('🚀 INVENTARIO - Iniciando nueva sesión con DTO:', dto);
 
     this.loading.showLoading();
     this.inventarioService.iniciarSesion(dto).subscribe({
       next: (response) => {
-        console.log('✅ INVENTARIO - Sesión iniciada exitosamente:', response);
-        console.log('📦 INVENTARIO - Total equipos esperados:', response.total_Esperados);
-        console.log('🆔 INVENTARIO - ID Sesión creada:', response.iD_Sesion);
 
         this.toastr.success(
           `Inventario iniciado: ${response.total_Esperados} equipos esperados`,
@@ -185,13 +176,10 @@ export class InventarioComponent implements OnInit, OnDestroy {
   }
 
   reanudarInventario(idSesion: number): void {
-    console.log('🔄 INVENTARIO - Reanudando inventario ID:', idSesion);
 
     // Buscar el inventario en la lista para mostrar su estado actual
     const inventario = this.inventariosActivos.find(inv => inv.iD_Sesion === idSesion);
     if (inventario) {
-      console.log('📋 INVENTARIO - Estado actual:', inventario.estado);
-      console.log('📋 INVENTARIO - Datos completos:', inventario);
 
       if (inventario.estado !== 'PAUSADO') {
         console.warn('⚠️ INVENTARIO - El inventario NO está en estado PAUSADO, está en:', inventario.estado);
@@ -208,11 +196,9 @@ export class InventarioComponent implements OnInit, OnDestroy {
       usuario: this.loginService.getUserName()
     };
 
-    console.log('📤 INVENTARIO - DTO reanudar:', dto);
 
     this.inventarioService.reanudarInventario(dto).subscribe({
       next: (response) => {
-        console.log('✅ INVENTARIO - Reanudación exitosa:', response);
         this.cargarSesion(idSesion);
         this.loading.hideLoading();
         this.toastr.success('Inventario reanudado correctamente', 'Éxito');
@@ -360,7 +346,6 @@ export class InventarioComponent implements OnInit, OnDestroy {
       observaciones: this.formFinalizar.value.observaciones
     }).subscribe({
       next: (response) => {
-        console.log('✅ INVENTARIO - Finalización exitosa:', response);
         this.loading.hideLoading();
         this.toastr.success(response.mensaje, 'Inventario Finalizado');
         this.detenerTimer();
@@ -369,7 +354,6 @@ export class InventarioComponent implements OnInit, OnDestroy {
         if (this.sesionActiva) {
           this.inventarioService.obtenerSesion(this.sesionActiva.iD_Sesion).subscribe({
             next: (sesionActualizada) => {
-              console.log('📊 INVENTARIO - Sesión actualizada:', sesionActualizada);
               this.sesionActiva = sesionActualizada;
               this.vistaActual = 'resumen';
             },
@@ -415,17 +399,14 @@ export class InventarioComponent implements OnInit, OnDestroy {
   }
 
   cancelarInventario(idSesion: number): void {
-    console.log('🗑️ INVENTARIO - Cancelando inventario ID:', idSesion);
 
     if (!confirm('¿Está seguro de cancelar este inventario? Esta acción no se puede deshacer.')) {
-      console.log('❌ INVENTARIO - Usuario canceló confirmación');
       return;
     }
 
     this.loading.showLoading();
     this.inventarioService.cancelarInventario(idSesion).subscribe({
       next: (response) => {
-        console.log('✅ INVENTARIO - Cancelación exitosa:', response);
         this.toastr.success('Inventario cancelado correctamente', 'Éxito');
         this.cargarInventariosActivos();
         this.tracking.trackAction('MNU_MANT_PASARINVEQ', 'Cancelar Inventario').subscribe();
@@ -438,7 +419,6 @@ export class InventarioComponent implements OnInit, OnDestroy {
         this.toastr.error(errorMsg, 'Error');
       },
       complete: () => {
-        console.log('🏁 INVENTARIO - Operación completada');
         this.loading.hideLoading();
       }
     });
@@ -529,12 +509,12 @@ export class InventarioComponent implements OnInit, OnDestroy {
 
   reproducirSonidoExito(): void {
     const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGnOD0u2YcBjOO1vLRgC0FIXjE8N+TQQU='); // Sonido simple de éxito
-    audio.play().catch(e => console.log('No se pudo reproducir sonido'));
+    audio.play().catch(() => { /* el navegador puede bloquear el sonido */ });
   }
 
   reproducirSonidoError(): void {
     const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgg=='); // Sonido de error
-    audio.play().catch(e => console.log('No se pudo reproducir sonido'));
+    audio.play().catch(() => { /* el navegador puede bloquear el sonido */ });
   }
 
   // ===================================

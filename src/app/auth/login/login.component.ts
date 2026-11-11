@@ -42,9 +42,9 @@ export class LoginComponent implements OnInit {
     this.isAlert =false;
     this.loginService.login(userName, password).subscribe(res => {
 
-      if (!res) {
+      if (!res || !res.token) {
         // this.toastr.error('Credenciales incorrectas')
-        this.showAlert = 'Credenciales incorrectas';
+        this.showAlert = (res as any)?.mensaje || 'Credenciales incorrectas';
         this.isAlert =true;
         this.isLoading =false;
         return

@@ -2,7 +2,9 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEsDo from '@angular/common/locales/es-DO';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +17,9 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { LoginService } from './auth/login.service';
 import { DashboardComponent } from './MVSystem/pages/dashboard/dashboard.component';
 
+
+// Montos (RD$) y fechas en español de República Dominicana en todo el sistema
+registerLocaleData(localeEsDo);
 
 // export function initializeAppFactory(Permisos: LoginService) {
 //   return () => Permisos.LoadPermisos(); // Retorna una función que llame al método
@@ -46,6 +51,8 @@ import { DashboardComponent } from './MVSystem/pages/dashboard/dashboard.compone
   ],
 
   providers: [
+    { provide: LOCALE_ID, useValue: 'es-DO' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'DOP' },
     LoginService, // Asegúrate de que el servicio esté aquí
     {
       provide: HTTP_INTERCEPTORS,

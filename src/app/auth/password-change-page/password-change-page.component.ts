@@ -48,7 +48,6 @@ export class PasswordChangePageComponent implements OnInit {
   onStrengthChange(strength: any) {
 
 
-    console.log(strength)
   }
   validateFields(fieldName: string) {
     return (
@@ -85,7 +84,6 @@ export class PasswordChangePageComponent implements OnInit {
     let sub = this.loginService.changePwdUser(model).subscribe(() =>{
         this.toastr.success('Tu contraseña ha sido cambiada con éxito','');
       });
-      console.log(sub);
 
       this.sub.push(sub);
     }

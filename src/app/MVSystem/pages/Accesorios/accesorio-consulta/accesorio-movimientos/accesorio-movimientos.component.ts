@@ -141,7 +141,7 @@ export class AccesorioMovimientosComponent implements OnInit {
 
   private fechaVisible(valor: string): string {
     const p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor || '');
-    return p ? new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3])).toLocaleDateString() : '';
+    return p ? new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3])).toLocaleDateString('es-DO') : '';
   }
 
   seleccionarPeriodoRapido(periodo: 'hoy' | 'semana' | 'mes'): void {
