@@ -394,13 +394,11 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       pageSize: 999999 // Traer todos los datos de una vez
     };
 
-    console.log("Filtros optimizados (una sola llamada):", filtroCompleto);
 
     this.subscription = this.equipoService
       .getEquipoVendidoParaInsights(filtroCompleto)
       .subscribe({
         next: (equiposCompletos) => {
-          console.log("Equipos recibidos (consulta única):", equiposCompletos.length);
 
           // Guardar todos los equipos
           this.equiposVendidosCompletos = equiposCompletos;
@@ -459,7 +457,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     this.line = this.equiposVendidosCompletos.length > 0 ? startIndex + 1 : 0;
     this.lastLine = Math.min(endIndex, this.equiposVendidosCompletos.length);
 
-    console.log(`Paginación cliente: Mostrando ${this.line} al ${this.lastLine} de ${this.totalRecord}`);
   }
   printReportEquipoVendido(){
     this.isLoading = true; // Iniciar carga
@@ -582,11 +579,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     const fechaInicial = this.filter.fechaInicioFactura;
     const fechaFinal = this.filter.fechaFinalFactura;
 
-    console.log('📅 DEBUG FECHAS:', {
-      fechaInicial,
-      fechaFinal,
-      filterCompleto: this.filter
-    });
 
     if (!fechaInicial || !fechaFinal) {
       return 'Sin filtro de fecha';
@@ -597,10 +589,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       const dateInicial = new Date(fechaInicial + 'T00:00:00');
       const dateFinal = new Date(fechaFinal + 'T00:00:00');
 
-      console.log('📅 FECHAS PROCESADAS:', {
-        dateInicial,
-        dateFinal
-      });
 
       const formatOptions: Intl.DateTimeFormatOptions = {
         day: '2-digit',
@@ -611,10 +599,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
       const fechaInicialFormateada = dateInicial.toLocaleDateString('es-DO', formatOptions);
       const fechaFinalFormateada = dateFinal.toLocaleDateString('es-DO', formatOptions);
 
-      console.log('📅 FECHAS FORMATEADAS:', {
-        fechaInicialFormateada,
-        fechaFinalFormateada
-      });
 
       return `${fechaInicialFormateada} - ${fechaFinalFormateada}`;
     } catch (error) {
@@ -709,7 +693,6 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
   private seleccionarMensajeAleatorioInsights(): void {
     const indiceAleatorio = Math.floor(Math.random() * this.mensajesInsightsDisponibles.length);
     this.mensajeCargaInsights = this.mensajesInsightsDisponibles[indiceAleatorio];
-    console.log('[EquipoConsultaVendido] Mensaje insights seleccionado:', this.mensajeCargaInsights.titulo);
   }
 
 }

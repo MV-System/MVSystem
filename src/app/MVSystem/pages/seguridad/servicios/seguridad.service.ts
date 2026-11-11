@@ -200,8 +200,6 @@ export class SeguridadService {
       permisosIds: permisosIds
     };
     const url = `${this.baseUrl}/asignaciones/modificar-permisos`;
-    console.log('🔍 Modificar Permisos - URL:', url);
-    console.log('🔍 Payload:', payload);
     return this.http.put(url, payload, { headers: this.getHeaders() });
   }
 

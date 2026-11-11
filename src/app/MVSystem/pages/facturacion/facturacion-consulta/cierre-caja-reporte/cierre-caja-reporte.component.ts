@@ -297,7 +297,6 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
           headerElement.insertAdjacentHTML('afterbegin', imgElement);
         }
       }).catch((err) => {
-        console.log('No se pudo cargar el logo:', err);
         // Continuar sin logo
       });
     }

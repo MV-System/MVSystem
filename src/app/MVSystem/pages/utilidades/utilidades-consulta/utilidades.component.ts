@@ -430,7 +430,6 @@ setResponsiveView() {
         },
         complete: () => {
           // Asegurar que siempre se oculte el loading
-          console.log('Consulta de utilidades completada');
         }
       });
   }
@@ -498,7 +497,6 @@ setResponsiveView() {
         },
         complete: () => {
           // Asegurar que siempre se oculte el loading
-          console.log('Consulta de utilidades completada');
         }
       });
   }
@@ -585,7 +583,6 @@ setResponsiveView() {
 
     // Si no hay movimiento, no generar insights
     if (totalVentas === 0 && totalGanancias === 0 && totalCostos === 0) {
-      console.info('[UtilidadesComponent] No hay movimiento en el período seleccionado');
       return;
     }
 

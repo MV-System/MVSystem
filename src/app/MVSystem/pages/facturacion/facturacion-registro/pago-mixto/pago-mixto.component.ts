@@ -114,7 +114,6 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       !t.descripcion_Tipo_Pagos?.toLowerCase().includes('crédito') &&
       !t.descripcion_Tipo_Pagos?.toLowerCase().includes('credito')
     );
-    console.log('tiposPagoFiltrados actualizado:', this.tiposPagoFiltrados);
   }
 
   get detallesPagos(): FormArray {
@@ -150,13 +149,6 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       Monto_Pago: numericValue
     }, { emitEvent: false });
 
-    console.log('DEBUG_MONTO_INPUT', {
-      index,
-      rawValue,
-      numericValue,
-      controlValue: this.detallesPagos.at(index)?.get('Monto_Pago')?.value,
-      totalFactura: this.getTotalFacturaNumerico()
-    });
 
     this.actualizarTotales();
   }
@@ -170,13 +162,6 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
       ID_Tipo_Pago: numericValue
     }, { emitEvent: false });
 
-    console.log('DEBUG_TIPO_PAGO_CHANGE', {
-      index,
-      rawValue,
-      numericValue,
-      controlValue: this.detallesPagos.at(index)?.get('ID_Tipo_Pago')?.value,
-      totalFactura: this.getTotalFacturaNumerico()
-    });
 
     this.actualizarTotales();
   }
@@ -214,17 +199,6 @@ export class PagoMixtoComponent implements OnInit, OnChanges, OnDestroy {
     const totalFactura = this.getTotalFacturaNumerico();
     this.saldoPendiente = this.normalizarMonto(totalFactura - this.pagosTotales);
 
-    console.log('DEBUG_PAGO_MIXTO', {
-      totalFactura,
-      pagosTotales: this.pagosTotales,
-      saldoPendiente: this.saldoPendiente,
-      pagos,
-      controles: this.detallesPagos.controls.map(c => ({
-        id: c.get('ID_Tipo_Pago')?.value,
-        monto: c.get('Monto_Pago')?.value,
-        referencia: c.get('Numero_Referencia')?.value
-      }))
-    });
 
     this.pagosMixtoChange.emit(pagos);
   }

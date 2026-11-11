@@ -125,7 +125,6 @@ export class EquipoModificacionEstatusComponent implements OnInit {
       this.toastr.success('Modificacion de estado del equipo exitosa', '',this.toastrDefaultConfig)
       window.location.reload();
     }, err => {
-      console.log(err);
     })
   }
 

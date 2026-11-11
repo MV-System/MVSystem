@@ -40,8 +40,6 @@ export class RDialogService {
                 btnConfirmText
             }
         // this.message = message;
-        console.log(onConfirm);
-        console.log(onCancel);
         
         this.onConfirm = onConfirm;
         this.onCancel = onCancel;

@@ -109,25 +109,17 @@ export class AsignacionesComponent implements OnInit {
     const tokenData = this.loginService.tokenDecoded;
     const perfilUsuarioLogueado = parseInt(tokenData?.Perfil, 10) || 0;
 
-    console.log('Token Data completo:', tokenData);
-    console.log('Perfil raw:', tokenData?.Perfil);
-    console.log('Perfil parseado:', perfilUsuarioLogueado);
-    console.log('¿Está en PERFILES_ACCESO_TOTAL?', this.PERFILES_ACCESO_TOTAL.includes(perfilUsuarioLogueado));
-    console.log('PERFILES_ACCESO_TOTAL:', this.PERFILES_ACCESO_TOTAL);
 
     // Si el usuario logueado está en la lista de acceso total, mostrar todos los permisos
     if (this.PERFILES_ACCESO_TOTAL.includes(perfilUsuarioLogueado)) {
-      console.log('✅ Mostrando TODOS los permisos');
       this.permisosFiltrados = [...this.permisos];
     } else {
       // Para otros perfiles, mostrar solo permisos básicos
-      console.log('❌ Mostrando solo permisos básicos');
       this.permisosFiltrados = this.permisos.filter(p => {
         const esBasico = p.basico === true || p.basico === 1 || p.basico === '1';
         return esBasico;
       });
     }
-    console.log('Permisos filtrados:', this.permisosFiltrados.length);
   }
 
   filtrarPermisos(): void {
@@ -192,8 +184,6 @@ export class AsignacionesComponent implements OnInit {
 
     const codigoUsuario = this.usuarioSeleccionado.codigo;
 
-    console.log('Permisos seleccionados:', this.permisosSeleccionados);
-    console.log('Permisos que tenía:', this.usuarioSeleccionado.codigosPermisosAsignados);
 
     // Usar el nuevo método que modifica (agrega y elimina automáticamente)
     this.seguridadService.modificarPermisosUsuario(codigoUsuario, this.permisosSeleccionados).subscribe({

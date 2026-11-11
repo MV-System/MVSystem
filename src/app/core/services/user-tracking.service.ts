@@ -233,7 +233,6 @@ export class UserTrackingService {
    */
   setTrackingEnabled(enabled: boolean): void {
     this.isEnabled = enabled;
-    console.log(`Tracking ${enabled ? 'habilitado' : 'deshabilitado'}`);
   }
 
   /**

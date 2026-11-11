@@ -143,7 +143,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
   }
 
   imprimir() {
-    console.log('=== INICIANDO GENERACIÓN DE COTIZACIÓN ===');
 
     // Validar que el formulario sea válido
     if (!this.form.valid) {
@@ -160,7 +159,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       return;
     }
 
-    console.log(`Artículos: ${this.articulos.length}`);
 
     // Validar campos requeridos de los artículos
     if (!this.cotizacionList.validarCamposRequeridos()) {
@@ -182,11 +180,6 @@ export class CotizacionComponent implements OnInit,OnDestroy {
 
     // Preparar datos para enviar al backend
     const data = this.generarModeloCotizacion();
-    console.log('Modelo generado:', JSON.stringify(data, null, 2));
-    console.log('Campo empresa:', data.empresa);
-    console.log('Campo idEmpresa:', data.idEmpresa);
-    console.log('Campo idSucursal:', data.idSucursal);
-    console.log('Enviando al backend...');
 
     // Si todas las validaciones pasaron, generar la cotización
     this.sub = this.mantenimientoService.postCotizacionReport(data)

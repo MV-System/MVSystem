@@ -87,7 +87,6 @@ this.obtenerAlmacen();
     this.obtenerTransferencias();
   }
   onDateRangeChanged(event: any) {
-    console.log("this.filter.pageIndex entrando",this.filter.pageIndex);
     this.filter.pageIndex = 1;
     this.idTransferenciaSeleccionada = null;
     this.equiposDetalles = []; // Limpiar los detalles cuando se deselecciona

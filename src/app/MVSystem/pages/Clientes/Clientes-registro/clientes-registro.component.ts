@@ -235,14 +235,12 @@ export class ClientesRegistroComponent implements OnInit {
   }
   registroCliente() {
     const model: ClienteRegistro = this.modeloRegistroCliente();
-    console.log('registroCliente llamado, isModal:', this.isModal);
 
     if (this.formRegistro.valid) {
       this.isLoading = true;
       this.clientesService.postCliente(model)
         .subscribe({
           next: (clienteInsertado: Cliente) => {
-            console.log('Cliente insertado:', clienteInsertado);
             this.clientesListar = clienteInsertado;
             this.isLoading = false;
             const mensaje = clienteInsertado.mensaje || '';
@@ -257,7 +255,6 @@ export class ClientesRegistroComponent implements OnInit {
 
               // El servidor devuelve 'idContacto' en lugar de 'id_Cliente'
               const clienteId = clienteInsertado.id_Cliente || (clienteInsertado as any).idContacto;
-              console.log('Verificando id_Cliente:', clienteInsertado.id_Cliente, 'idContacto:', (clienteInsertado as any).idContacto);
 
               // Si el registro fue exitoso y tenemos un ID
               if (clienteId) {
@@ -274,12 +271,10 @@ export class ClientesRegistroComponent implements OnInit {
                   limite_Credito: model.limite_Credito?.toString()
                 };
 
-                console.log('Emitiendo cliente:', clienteEmitido, 'isModal:', this.isModal);
 
                 // Si estamos en modo modal, emitir el cliente
                 if (this.isModal) {
                   this.customer.emit(clienteEmitido);
-                  console.log('Cliente emitido en modo modal');
                   // No limpiar el formulario aquí, el componente padre se encarga
                   return; // Salir para evitar ejecutar el código de abajo
                 } else {

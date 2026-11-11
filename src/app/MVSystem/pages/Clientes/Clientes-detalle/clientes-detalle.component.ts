@@ -59,7 +59,6 @@ export class ClientesDetalleComponent implements OnInit {
   editarCliente(): void {
     if (this.cliente) {
       const clienteId = this.cliente.id_Cliente;
-      console.log('Navegando a editar cliente desde detalle:', clienteId);
       // Usar navegación absoluta para evitar problemas de rutas relativas
       this.router.navigateByUrl(`/home/clientes/editar/${clienteId}`);
     }

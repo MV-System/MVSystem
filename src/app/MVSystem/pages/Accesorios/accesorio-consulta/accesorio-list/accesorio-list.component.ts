@@ -111,7 +111,6 @@ export class AccesorioListComponent implements OnInit, OnChanges {
    * Edit accessory
    */
   editarAccesorio(accesorioId: number) {
-    console.log('Editando accesorio:', accesorioId);
     this.accesoriosService.getAccesorioById(accesorioId).subscribe(accesorio => {
       this.accesorio = accesorio;
       this.isOpenModal = true;
@@ -122,31 +121,10 @@ export class AccesorioListComponent implements OnInit, OnChanges {
    * View accessory details
    */
   verDetalle(accesorioId: number) {
-    console.log('Viendo detalle del accesorio:', accesorioId);
     this.accesoriosService.getAccesorioById(accesorioId)
       .subscribe({
         next: (accesorio) => {
           this.accesorioDetalle = accesorio;
-          // Debug: Mostrar todos los datos del accesorio en consola
-          console.log('Datos completos del accesorio:', accesorio);
-          console.log('Campos específicos:', {
-            id: accesorio.id,
-            modelo: accesorio.modelo,
-            codigo: accesorio.codigo,
-            codBarra: accesorio.codBarra,
-            almacen: accesorio.almacen,
-            disponible: accesorio.disponible,
-            disponibleDetalle: accesorio.disponibleDetalle,
-            descripcionAccesorio: accesorio.descripcionAccesorio,
-            cantidad: accesorio.cantidad,
-            costoEquipo: accesorio.costoEquipo,
-            precioDetalle: accesorio.precioDetalle,
-            precioPorMayor: accesorio.precioPorMayor,
-            totalInventario: accesorio.totalInventario,
-            totalFacturado: accesorio.totalFacturado,
-            totalGanancia: accesorio.totalGanancia,
-            totalItbis: accesorio.totalItbis
-          });
           this.isOpenDetalleModal = true;
           this.toastr.success('Cargando detalles del accesorio', 'Éxito');
         },
@@ -238,7 +216,6 @@ export class AccesorioListComponent implements OnInit, OnChanges {
     const codigoBarras = accesorio.codBarra;
     const descripcion = accesorio.descripcionAccesorio || 'Accesorio';
     const codigo = accesorio.codigo || 'N/A';
-    const cantidad = accesorio.cantidad || 0;
 
     // Determinar qué precio mostrar (Detalle si existe, sino Mayor)
     const precioMostrar = accesorio.precioDetalle > 0 ? accesorio.precioDetalle : accesorio.precioPorMayor;

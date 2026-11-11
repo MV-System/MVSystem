@@ -250,7 +250,6 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
 
   ngOnInit(): void {
-    console.log('[CuentasPorCobrar] Componente inicializado');
     this.cargarTiposPago();
     this.obtenerClientes();
 
@@ -303,10 +302,6 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       return;
     }
 
-    console.log('=== INICIO procesarAbono ===');
-    console.log('Detalle:', detalle);
-    console.log('filterParam antes:', this.filterParam);
-    console.log('idClienteSeleccionado:', this.idClienteSeleccionado);
 
     if (this.filterParam.MontoAbono === 0) {
 
@@ -354,19 +349,15 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
       this.ClienteService.postAbonoFactura(filterParam).subscribe({
         next: (response) => {
-          console.log('=== ABONO FACTURA SUCCESS ===');
-          console.log('Response:', response);
           this.isLoading = false;  // Terminar carga
 
           const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
-          console.log('Mensaje:', mensaje);
           this.toastr.info(mensaje);
 
           // Guardar datos antes de limpiar
           const clienteId = filterParam.Id_Cliente;
           const facturaNum = filterParam.NumeroFactura;
 
-          console.log('Datos guardados - clienteId:', clienteId, 'facturaNum:', facturaNum);
 
           // Confirmar antes de imprimir recibo
           this.confirmarImpresionRecibo(clienteId, facturaNum, false);
@@ -387,10 +378,6 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
       return;
     }
 
-    console.log('=== INICIO procesarAbonoGeneral ===');
-    console.log('Abono:', Abono);
-    console.log('filterParam antes:', this.filterParam);
-    console.log('idClienteSeleccionado:', this.idClienteSeleccionado);
 
     if (this.filterParam.MontoAbono === 0) {
 
@@ -438,12 +425,9 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
       this.ClienteService.postAbonoGeneral(filterParam).subscribe({
         next: (response) => {
-          console.log('=== ABONO GENERAL SUCCESS ===');
-          console.log('Response:', response);
           this.isLoading = false;  // Terminar carga
 
           const mensaje = response.mensaje;  // Accediendo correctamente a 'mensaje'
-          console.log('Mensaje:', mensaje);
           this.toastr.info(mensaje);
 
           this.idLoteAbonoActual = response.idLoteAbono || '';
@@ -452,7 +436,6 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
           const clienteId = filterParam.Id_Cliente;
           const facturaNum = filterParam.NumeroFactura;
 
-          console.log('Datos guardados - clienteId:', clienteId, 'facturaNum:', facturaNum);
 
           // Confirmar antes de imprimir recibo
           this.confirmarImpresionRecibo(clienteId, facturaNum, true);
@@ -901,7 +884,6 @@ this.procesarAbonoGeneral(filterParam);
   onEdit(detalle: FacturasPorClienteRetorn) {
     // Guardar el valor original antes de editarlo
     detalle.montoPendiente = detalle.montoPendiente;
-    console.log("Equipo Capturado",detalle.montoPendiente);
     detalle.editMode = true;
   }
   obtenerFacturasPorCLiente(idClienteSeleccionado: number) {
@@ -1011,7 +993,6 @@ obtenerClientes() {
 
   // Validar el criterio, evitar enviar una búsqueda vacía
   // if (!criterio) {
-  //   console.log("Criterio de búsqueda vacío");
   //   this.loading.hideLoading();  // Detener el cargando si no hay criterio
   //   return;  // No hacer la solicitud si no hay criterio
   // }
@@ -1032,7 +1013,6 @@ obtenerClientes() {
         // Aquí puedes almacenar el total en una variable para mostrarlo en un label
         this.totalMontoPendiente = totalMontoPendiente;
       } else {
-        console.log("No se encontraron clientes con facturas pendientes.");
         this.CLientesPorCobrar = [];  // Limpiar la lista si no se encuentran datos
         this.totalMontoPendiente = 0; // Si no hay clientes, el total es 0
       }

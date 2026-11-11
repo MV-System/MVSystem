@@ -60,7 +60,6 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
 
   // Este método se llama cuando cambia el número de elementos por página
   onPageSizeChange() {
-     console.log("total registros",this.totalRecord);
    //  debugger;
     // Si se selecciona "Todos", mostramos todos los registros
     if (this.filter.pageSize === this.totalRecord) {

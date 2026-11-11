@@ -60,7 +60,6 @@ export class ClientesEditarComponent implements OnInit {
         this.router.navigateByUrl('/home/clientes/consulta');
       }
     });
-    console.log('Cliente Tipo:', this.getClienteTipoId());
   }
 
   async cargarDatosIniciales(): Promise<void> {
@@ -275,14 +274,12 @@ export class ClientesEditarComponent implements OnInit {
       this.isSaving = true;
       const modelo = this.modeloActualizarCliente();
 
-      console.log('Modelo de actualización a enviar:', modelo);
 
       // Llamar al servicio de actualización
       this.clientesService.putCliente(modelo)
         .subscribe({
           next: (response) => {
             this.isSaving = false;
-            console.log('Cliente actualizado exitosamente:', response);
             this.toastr.success('Cliente actualizado correctamente', 'Éxito');
             this.router.navigateByUrl(`/home/clientes/detalle/${this.clienteId}`);
           },

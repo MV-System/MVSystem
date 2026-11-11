@@ -57,7 +57,6 @@ export class ErrorHandler implements ErrorHandlingPattern {
 
   recoverFromError(error: any): void {
     // Implementar lógica de recuperación
-    console.log('Attempting error recovery...');
   }
 }
 
@@ -211,7 +210,6 @@ export class ApiOperation<T> implements ApiOperationPattern<T> {
   }
 
   handleSuccess(data: T): void {
-    console.log(`[${this.context}] Operación exitosa:`, data);
   }
 
   handleError(error: any): void {
@@ -287,18 +285,15 @@ export class TestCase implements TestingPattern {
 
   arrange(): void {
     // Preparar datos de prueba, mocks, etc.
-    console.log('Arranging test scenario...');
   }
 
   act(): any {
     // Ejecutar la función/método a probar
-    console.log('Acting - executing test action...');
     return null;
   }
 
   assert(result: any): void {
     // Verificar que el resultado sea el esperado
-    console.log('Asserting test result...');
   }
 }
 
@@ -321,21 +316,17 @@ export class ComponentLifecycleManager implements ComponentLifecyclePattern {
   ) {}
 
   initializeComponent(): void {
-    console.log('Initializing component...');
     this.loadInitialData();
     this.setupSubscriptions();
   }
 
   setupSubscriptions(): void {
-    console.log('Setting up subscriptions...');
   }
 
   loadInitialData(): void {
-    console.log('Loading initial data...');
   }
 
   cleanupComponent(): void {
-    console.log('Cleaning up component...');
     this.subscriptionManager.cleanupSubscriptions();
     this.loadingManager.stopLoading();
   }
@@ -358,7 +349,6 @@ export class UserFeedbackManager implements UserFeedbackPattern {
   constructor(private toastr?: any) {}
 
   showSuccess(message: string): void {
-    console.log(`✅ Success: ${message}`);
     if (this.toastr) {
       this.toastr.success(message);
     }
@@ -379,18 +369,15 @@ export class UserFeedbackManager implements UserFeedbackPattern {
   }
 
   showInfo(message: string): void {
-    console.info(`ℹ️ Info: ${message}`);
     if (this.toastr) {
       this.toastr.info(message);
     }
   }
 
   showLoading(message: string): void {
-    console.log(`⏳ Loading: ${message}`);
   }
 
   hideLoading(): void {
-    console.log('✅ Loading complete');
   }
 }
 

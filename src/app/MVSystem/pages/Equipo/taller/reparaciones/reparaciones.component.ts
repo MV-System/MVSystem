@@ -143,7 +143,6 @@ export class ReparacionesComponent implements OnInit {
    * @param customer Cliente a agregar
    */
   onAddCustomer(customer: Cliente) {
-    console.log('onAddCustomer llamado con:', customer);
 
     // Si customer es undefined o null, significa que se canceló
     if (!customer) {
@@ -166,7 +165,6 @@ export class ReparacionesComponent implements OnInit {
 
     // Cerrar el modal
     this.showModal = false;
-    console.log('Modal cerrado, showModal:', this.showModal);
 
     // Mostrar mensaje de éxito
     this.toastr.success('Cliente agregado correctamente');
