@@ -122,39 +122,39 @@ export class EquipoConsultaVendidoComponent implements OnInit, OnDestroy,OnChang
   // Mensajes inteligentes para loading de insights
   private mensajesInsightsDisponibles = [
     {
-      titulo: '🧠 Estoy analizando los patrones de venta, dame un momento...',
+      titulo: '🧠 Estoy analizando los patrones de venta, dame un momento…',
       subtitulo: 'Estoy identificando qué modelos y vendedores están generando más ingresos.'
     },
     {
-      titulo: '🔍 Estoy revisando el rendimiento de tu equipo, no voy a tardar...',
+      titulo: '🔍 Estoy revisando el rendimiento de tu equipo, no voy a tardar…',
       subtitulo: 'Estoy comparando vendedores para mostrarte quién está destacando.'
     },
     {
-      titulo: '📊 Estoy calculando métricas de ventas, espera...',
+      titulo: '📊 Estoy calculando métricas de ventas, espera…',
       subtitulo: 'Estoy preparando información clave para optimizar tu negocio.'
     },
     {
-      titulo: '💡 Voy a procesar todos los datos de ventas, dame un chance...',
+      titulo: '💡 Voy a procesar todos los datos de ventas, dame un chance…',
       subtitulo: 'Estoy analizando cada transacción para darte insights valiosos.'
     },
     {
-      titulo: '🎯 Estoy detectando los productos estrella, ya casi termino...',
+      titulo: '🎯 Estoy detectando los productos estrella, ya casi termino…',
       subtitulo: 'Estoy identificando cuáles equipos tienen mejor rotación y rentabilidad.'
     },
     {
-      titulo: '✨ Voy a generar tu análisis personalizado, un segundo...',
+      titulo: '✨ Voy a generar tu análisis personalizado, un segundo…',
       subtitulo: 'Estoy organizando las estadísticas de forma clara y accionable.'
     },
     {
-      titulo: '⚙️ Estoy conectando con todo el historial de ventas, dame un momento...',
+      titulo: '⚙️ Estoy conectando con todo el historial de ventas, dame un momento…',
       subtitulo: 'Estoy validando cada dato para darte información 100% precisa.'
     },
     {
-      titulo: '📌 Validando información de rendimiento...',
+      titulo: '📌 Validando información de rendimiento…',
       subtitulo: 'Estoy asegurándome de que los números reflejen la realidad de tu negocio.'
     },
     {
-      titulo: '🚀 Optimizando el análisis...',
+      titulo: '🚀 Optimizando el análisis…',
       subtitulo: 'Estoy maximizando la velocidad para mostrarte los insights rápidamente.'
     }
   ];
@@ -274,7 +274,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
     if (!valor) return '';
     const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
     if (!partes) return valor;
-    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString();
+    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3])).toLocaleDateString('es-DO');
   }
   pageChanged(index: number) {
     this.currentPage = index;

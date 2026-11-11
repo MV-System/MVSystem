@@ -171,7 +171,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     if (partes.length === 3 && partes.every(Number.isFinite)) {
       const [anio, mes, dia] = partes;
       const fecha = new Date(anio, mes - 1, dia);
-      if (!isNaN(fecha.getTime())) return fecha.toLocaleDateString();
+      if (!isNaN(fecha.getTime())) return fecha.toLocaleDateString('es-DO');
     }
     return valor;
   }
@@ -540,7 +540,7 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
               } else if (shareError.name !== 'AbortError') {
                 // Cualquier otro error que no sea cancelación del usuario
                 console.error('Error al compartir:', shareError);
-                this.toast.warning('Error al compartir. Descargando archivo...');
+                this.toast.warning('Error al compartir. Descargando archivo…');
                 CreatorPDFFile(blob);
               }
             }

@@ -1911,7 +1911,7 @@ printFacturaMini() {
               } else if (shareError.name !== 'AbortError') {
                 // Cualquier otro error que no sea cancelación del usuario
                 console.error('Error al compartir:', shareError);
-                this.toastr.warning('Error al compartir. Descargando archivo...');
+                this.toastr.warning('Error al compartir. Descargando archivo…');
                 CreatorPDFFile(blob);
               }
             }

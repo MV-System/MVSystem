@@ -9,7 +9,7 @@
     <div formArrayName="detallesPagos">
         <div *ngFor="let i of getIndices()" [formGroupName]="i" class="mixto-row">
             <select formControlName="ID_Tipo_Pago" class="form-select form-select-sm" (change)="onTipoPagoChange(i, $event)">
-                <option value="">Tipo de pago...</option>
+                <option value="">Tipo de pago…</option>
                 <option *ngFor="let tipo of getTiposPagoDisponibles(i)" [value]="tipo.iD_Tipo_Pagos">
                     {{ tipo.descripcion_Tipo_Pagos }}
                 </option>

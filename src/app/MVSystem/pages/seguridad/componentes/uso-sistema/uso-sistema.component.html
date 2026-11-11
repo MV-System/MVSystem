@@ -158,7 +158,7 @@
                 <tr *ngIf="esSeleccionada(f)" class="detalle-usuarios">
                   <td></td>
                   <td [attr.colspan]="verBotones ? 6 : 5">
-                    <div *ngIf="cargandoDetalle" class="text-muted small py-2">Cargando...</div>
+                    <div *ngIf="cargandoDetalle" class="text-muted small py-2">Cargando…</div>
                     <table *ngIf="!cargandoDetalle" class="table table-sm table-borderless mb-0">
                       <thead>
                         <tr class="text-muted small">
@@ -223,7 +223,7 @@
         </div>
       </ng-container>
 
-      <div *ngIf="cargando" class="text-center text-muted py-3">Cargando...</div>
+      <div *ngIf="cargando" class="text-center text-muted py-3">Cargando…</div>
     </div>
   </div>
 </app-main>

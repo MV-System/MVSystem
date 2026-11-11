@@ -6,7 +6,7 @@
     <!-- End Page Title -->
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
-        <span>Cargando datos, por favor espere...</span>
+        <span>Cargando datos, por favor espere…</span>
     </mat-spinner>
     <section class="section">
         <div class="row">
@@ -117,7 +117,7 @@
                                     <button class="button-imprimir-reporte w-100" [disabled]="!puedeReimprimir()" [ngClass]="{'disabled': !puedeReimprimir()}" (click)="puedeReimprimir() ? ReimprimeFactura() : null">
                                         <i class="bi bi-arrow-repeat me-2"></i>
                                         <span class="d-inline">
-                                            {{ isLoading ? 'Procesando...' :
+                                            {{ isLoading ? 'Procesando…' :
                                                (puedeReimprimir() ? 'Reimprimir Factura' : 'Seleccione una factura') }}
                                         </span>
                                         <span class="spinner-grow spinner-grow-sm m-0 x-10 ms-2" role="status" aria-hidden="true" *ngIf="isLoading"></span>
@@ -178,7 +178,7 @@
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getCantidadFacturasCliente() === 0" class="text-muted">Sin resultados</span>
                                                     <span *ngIf="!isLoading && getCantidadFacturasCliente() > 0">En el período</span>
-                                                    <span *ngIf="isLoading">Cargando...</span>
+                                                    <span *ngIf="isLoading">Cargando…</span>
                                                 </small>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getTotalFacturadoCliente() === 0" class="text-muted">Sin montos</span>
                                                     <span *ngIf="!isLoading && getTotalFacturadoCliente() > 0">Monto total</span>
-                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                    <span *ngIf="isLoading">Calculando…</span>
                                                 </small>
                                             </div>
                                         </div>
@@ -234,7 +234,7 @@
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getTotalItbisCliente() === 0" class="text-muted">Sin ITBIS</span>
                                                     <span *ngIf="!isLoading && getTotalItbisCliente() > 0">Impuesto separado</span>
-                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                    <span *ngIf="isLoading">Calculando…</span>
                                                 </small>
                                             </div>
                                         </div>
@@ -262,7 +262,7 @@
                                                 <small class="stats-subtitle-horizontal">
                                                     <span *ngIf="!isLoading && getTotalVentaSinItbisCliente() === 0" class="text-muted">Sin base gravada</span>
                                                     <span *ngIf="!isLoading && getTotalVentaSinItbisCliente() > 0">Venta base</span>
-                                                    <span *ngIf="isLoading">Calculando...</span>
+                                                    <span *ngIf="isLoading">Calculando…</span>
                                                 </small>
                                             </div>
                                         </div>

@@ -49,7 +49,7 @@
             <div class="col-12" *ngIf="form.destino === 'EMPRESA'">
               <label class="form-label small mb-1">Empresa</label>
               <select class="form-select form-select-sm" [(ngModel)]="form.destinoValor" name="empresa">
-                <option value="">Seleccione...</option>
+                <option value="">Seleccione…</option>
                 <option *ngFor="let e of empresas" [value]="e">{{ e }}</option>
               </select>
             </div>
@@ -76,7 +76,7 @@
 
           <div class="d-flex justify-content-end mt-3">
             <button type="button" class="btn btn-primary btn-sm" [disabled]="!puedeEnviar" (click)="enviar()">
-              <i class="bi bi-send me-1"></i>{{ enviando ? 'Publicando...' : 'Publicar' }}
+              <i class="bi bi-send me-1"></i>{{ enviando ? 'Publicando…' : 'Publicar' }}
             </button>
           </div>
         </div>
@@ -136,7 +136,7 @@
                   </tr>
                   <tr *ngIf="avisoSeleccionado === a" class="detalle-vistos">
                     <td colspan="6">
-                      <div *ngIf="cargandoVistos" class="text-muted small">Cargando...</div>
+                      <div *ngIf="cargandoVistos" class="text-muted small">Cargando…</div>
                       <table *ngIf="!cargandoVistos" class="table table-sm table-borderless mb-0">
                         <thead>
                           <tr class="text-muted small"><th>Usuario</th><th>Lo vio</th></tr>
@@ -161,7 +161,7 @@
               </tbody>
             </table>
           </div>
-          <div *ngIf="cargando" class="text-center text-muted py-2">Cargando...</div>
+          <div *ngIf="cargando" class="text-center text-muted py-2">Cargando…</div>
         </div>
       </div>
     </div>

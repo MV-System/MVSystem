@@ -555,7 +555,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
           };
 
           document.body.appendChild(iframe);
-          this.toastr.success('Abriendo reporte de histórico de abonos...');
+          this.toastr.success('Abriendo reporte de histórico de abonos…');
         } catch (error) {
           this.toastr.error('Error al procesar el reporte');
           console.error('Error:', error);

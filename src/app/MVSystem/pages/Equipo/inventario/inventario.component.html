@@ -187,7 +187,7 @@
                                 <i class="fas fa-hourglass-half me-2 text-secondary"></i> Pendientes por Escanear
                                 <span class="badge bg-light text-dark ms-2">{{equiposPendientes.length}}</span>
                             </h6>
-                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaPendientes" placeholder="🔍 Buscar equipos...">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaPendientes" placeholder="🔍 Buscar equipos…">
                         </div>
                         <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
                             <div *ngFor="let equipo of equiposPendientesFiltrados" class="list-group-item list-group-item-action border-0">
@@ -216,7 +216,7 @@
                                 <i class="fas fa-check-circle me-2 text-primary"></i> Equipos Escaneados
                                 <span class="badge bg-light text-dark ms-2">{{equiposEscaneados.length}}</span>
                             </h6>
-                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaEscaneados" placeholder="🔍 Buscar equipos...">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="busquedaEscaneados" placeholder="🔍 Buscar equipos…">
                         </div>
                         <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
                             <div *ngFor="let equipo of equiposEscaneadosFiltrados; let i = index" class="list-group-item border-0" [ngClass]="{'bg-light border-start border-4 border-primary': i === 0}">

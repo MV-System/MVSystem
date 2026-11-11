@@ -277,7 +277,7 @@
                     <!-- Búsqueda por teléfono -->
                     <div class="search-input-wrapper">
                         <i class="bi bi-telephone search-icon"></i>
-                        <input class="form-control mobile-search-input" placeholder="Teléfono del cliente..." formControlName="telefono" (keyup)="onSearchByTelefono($event)" (search)="onSearchByTelefono()" type="search" autocomplete="off">
+                        <input class="form-control mobile-search-input" placeholder="Teléfono del cliente…" formControlName="telefono" (keyup)="onSearchByTelefono($event)" (search)="onSearchByTelefono()" type="search" autocomplete="off">
                         <button type="button" class="clear-search-btn" *ngIf="form.get('telefono')?.value" (click)="form.get('telefono')?.setValue(''); onSearchByTelefono()">
                             <i class="bi bi-x-circle-fill"></i>
                         </button>
@@ -286,7 +286,7 @@
                     <!-- Búsqueda por IMEI -->
                     <div class="search-input-wrapper">
                         <i class="bi bi-device-hdd search-icon"></i>
-                        <input class="form-control mobile-search-input" placeholder="IMEI del equipo..." formControlName="imei" (keyup)="obtenerEquiposVendidos()" type="search" autocomplete="off">
+                        <input class="form-control mobile-search-input" placeholder="IMEI del equipo…" formControlName="imei" (keyup)="obtenerEquiposVendidos()" type="search" autocomplete="off">
                         <button type="button" class="clear-search-btn" *ngIf="form.get('imei')?.value" (click)="form.get('imei')?.setValue(''); obtenerEquiposVendidos()">
                             <i class="bi bi-x-circle-fill"></i>
                         </button>
@@ -339,7 +339,7 @@
     </form>
     <mat-spinner *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
-        <span>Cargando datos, por favor espere...</span>
+        <span>Cargando datos, por favor espere…</span>
     </mat-spinner>
 
     <section class="section mt-4">

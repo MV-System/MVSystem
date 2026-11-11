@@ -45,39 +45,39 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   // Mensajes inteligentes para loading
   private mensajesDisponibles = [
     {
-      titulo: '🧠 Estoy analizando tu inventario, dame un momento...',
+      titulo: '🧠 Estoy analizando tu inventario, dame un momento…',
       subtitulo: 'Estoy identificando qué equipos llevan más tiempo sin venderse.'
     },
     {
-      titulo: '🔍 Estoy revisando el tiempo de permanencia, espera...',
+      titulo: '🔍 Estoy revisando el tiempo de permanencia, espera…',
       subtitulo: 'Estoy calculando cuánto tiempo lleva cada modelo en tu almacén.'
     },
     {
-      titulo: '📊 Estoy calculando días de inventario, ya casi...',
+      titulo: '📊 Estoy calculando días de inventario, ya casi…',
       subtitulo: 'Estoy detectando equipos que necesitan atención urgente.'
     },
     {
-      titulo: '💡 Voy a mostrarte equipos estancados, dame un chance...',
+      titulo: '💡 Voy a mostrarte equipos estancados, dame un chance…',
       subtitulo: 'Estoy analizando cuáles equipos están afectando tu capital de trabajo.'
     },
     {
-      titulo: '🎯 Estoy detectando inventario de lenta rotación, no tardo...',
+      titulo: '🎯 Estoy detectando inventario de lenta rotación, no tardo…',
       subtitulo: 'Estoy identificando oportunidades de descuentos y promociones.'
     },
     {
-      titulo: '✨ Voy a generar análisis de antigüedad, un segundo...',
+      titulo: '✨ Voy a generar análisis de antigüedad, un segundo…',
       subtitulo: 'Estoy organizando los datos por tiempo de permanencia en stock.'
     },
     {
-      titulo: '⚙️ Estoy conectando con tu inventario actual, dame un momento...',
+      titulo: '⚙️ Estoy conectando con tu inventario actual, dame un momento…',
       subtitulo: 'Estoy validando fechas de registro para darte información exacta.'
     },
     {
-      titulo: '📌 Validando tiempos de rotación...',
+      titulo: '📌 Validando tiempos de rotación…',
       subtitulo: 'Estoy asegurándome de que cada cálculo sea preciso y útil para ti.'
     },
     {
-      titulo: '🚀 Optimizando el análisis de inventario...',
+      titulo: '🚀 Optimizando el análisis de inventario…',
       subtitulo: 'Estoy maximizando la velocidad para mostrarte los resultados rápido.'
     }
   ];

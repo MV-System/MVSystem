@@ -32,14 +32,14 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Tipo de pago</label>
                                     <select class="form-select" formControlName="tipoPago" (change)="desactivarActivarFechaLimitepago()">
-                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="" disabled>Seleccionar…</option>
                                         <option *ngFor="let tipoPago of pagoTipos" [value]="tipoPago.iD_Tipo_Pagos">{{ tipoPago.descripcion_Tipo_Pagos }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Garantía</label>
                                     <select class="form-select" formControlName="garantia">
-                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="" disabled>Seleccionar…</option>
                                         <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">{{ garantia.descripcion }}</option>
                                     </select>
                                 </div>
@@ -50,7 +50,7 @@
                     <div class="cot-card cot-card-green">
                         <div class="cot-card-header"><i class="bi bi-person-circle"></i> Cliente <span class="text-danger">*</span></div>
                         <div class="cot-card-body">
-                            <ng-select formControlName="telefono" placeholder="Buscar por nombre o teléfono..." [clearable]="false" (change)="obtenerClientesPorNombreTelefono()" [ngClass]="{ 'is-invalid': validarCampos('telefono') }">
+                            <ng-select formControlName="telefono" placeholder="Buscar por nombre o teléfono…" [clearable]="false" (change)="obtenerClientesPorNombreTelefono()" [ngClass]="{ 'is-invalid': validarCampos('telefono') }">
                                 <ng-option *ngFor="let cliente of clientes" [value]="getClienteTelefono(cliente)">
                                     {{ cliente.nombres | titlecase }} {{ cliente.apellidos | titlecase }} - {{ getClienteTelefono(cliente) }}
                                 </ng-option>
@@ -78,7 +78,7 @@
                                 <div class="col-12">
                                     <label class="form-label">Tipo de factura</label>
                                     <select class="form-select" formControlName="tipoFactura" [ngClass]="{ 'is-invalid': validarCampos('tipoFactura') }">
-                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="" disabled>Seleccionar…</option>
                                         <option *ngFor="let tipoFact of facturaTipos" [value]="tipoFact.iD_Tipo_Factura">{{ tipoFact.descripcion_Factura_Tipo }}</option>
                                     </select>
                                     <div class="invalid-feedback d-block" *ngIf="validarCampos('tipoFactura')">Este campo es requerido</div>
@@ -86,7 +86,7 @@
                                 <div class="col-12">
                                     <label class="form-label">Vendedor</label>
                                     <select class="form-select" formControlName="vendedor" [ngClass]="{ 'is-invalid': validarCampos('vendedor') }">
-                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="" disabled>Seleccionar…</option>
                                         <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">{{ vendedor.nombres }}</option>
                                     </select>
                                     <div class="invalid-feedback d-block" *ngIf="validarCampos('vendedor')">Este campo es requerido</div>
@@ -125,7 +125,7 @@
                 <button type="button" class="btn cot-btn-main" [disabled]="form.invalid || printing" (click)="imprimir()">
                     <span *ngIf="!printing"><i class="bi bi-printer me-2"></i>Generar cotización</span>
                     <span *ngIf="printing">
-                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando...
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando…
                     </span>
                 </button>
             </div>

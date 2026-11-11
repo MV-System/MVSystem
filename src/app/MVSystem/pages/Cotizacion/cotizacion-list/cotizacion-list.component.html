@@ -20,7 +20,7 @@
                             <tr *ngFor="let detalleFactura of articulos.controls; let i = index">
                                 <ng-container [formGroupName]="i">
                                     <td class="name-cell">
-                                        <ng-select formControlName="articulo" [items]="accesoriosBuffer" id="articulo" required [clearable]="false" [readonly]="isArticuloReadonly(i)" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" placeholder="Buscar artículo o IMEI..."
+                                        <ng-select formControlName="articulo" [items]="accesoriosBuffer" id="articulo" required [clearable]="false" [readonly]="isArticuloReadonly(i)" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" placeholder="Buscar artículo o IMEI…"
                                             (search)="onSearchAccesorio($event, i)" (keydown.enter)="cantidadInput.focus()" (change)="obtenerDetalleFactura(i); cantidadInput.focus()">
                                             <ng-template ng-label-tmp ng-option-tmp let-articulo="item">
                                                 <span>{{ articulo.accesorio_Descripcion | titlecase }}</span>
@@ -74,7 +74,7 @@
                             <div class="mobile-field mb-3">
                                 <label class="mobile-label">Artículo</label>
                                 <ng-select formControlName="articulo" [items]="accesoriosBuffer" required [clearable]="false" [readonly]="isArticuloReadonly(i)" [virtualScroll]="true" appendTo="body" bindLabel="accesorio_Descripcion" [addTag]="addArticuloByImei" (search)="onSearchAccesorio($event, i)"
-                                    (change)="obtenerDetalleFactura(i)" placeholder="Seleccionar artículo...">
+                                    (change)="obtenerDetalleFactura(i)" placeholder="Seleccionar artículo…">
                                 </ng-select>
                             </div>
 

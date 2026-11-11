@@ -17,8 +17,8 @@ import { ConsultaSqlResultado } from 'src/app/core/interfaces/equipo.interface';
             <div class="card-body p-0">
               <div class="terminal-screen">
                 <div class="terminal-system-line">MVSystem SQL Console</div>
-                <div class="terminal-system-line">Servidor: {{ servidorActual || (cargandoConexion ? 'Consultando...' : 'No disponible') }}</div>
-                <div class="terminal-system-line">Base de datos: {{ baseDatosActual || (cargandoConexion ? 'Consultando...' : 'No disponible') }}</div>
+                <div class="terminal-system-line">Servidor: {{ servidorActual || (cargandoConexion ? 'Consultando…' : 'No disponible') }}</div>
+                <div class="terminal-system-line">Base de datos: {{ baseDatosActual || (cargandoConexion ? 'Consultando…' : 'No disponible') }}</div>
                 <div class="terminal-security-line">SELECT: máximo 200 filas · UPDATE/DELETE: máximo 10 filas por ejecución · sin límite de tiempo SQL</div>
 
                 <div *ngIf="mensajeConsultaSql" class="terminal-message" [class.terminal-error]="consultaSqlError" role="status">{{ mensajeConsultaSql }}</div>
@@ -54,10 +54,10 @@ import { ConsultaSqlResultado } from 'src/app/core/interfaces/equipo.interface';
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between align-items-center">
-              <span class="small text-muted"><i class="bi bi-circle-fill text-success me-2"></i>{{ ejecutandoConsultaSql ? 'Ejecutando consulta...' : 'Conectado' }}</span>
+              <span class="small text-muted"><i class="bi bi-circle-fill text-success me-2"></i>{{ ejecutandoConsultaSql ? 'Ejecutando consulta…' : 'Conectado' }}</span>
               <button type="button" class="btn btn-success" [disabled]="ejecutandoConsultaSql || !consultaSql.trim()" (click)="ejecutarConsultaSql($event)">
                 <span *ngIf="ejecutandoConsultaSql" class="spinner-border spinner-border-sm me-2"></span>
-                {{ ejecutandoConsultaSql ? 'Ejecutando...' : 'Ejecutar' }}
+                {{ ejecutandoConsultaSql ? 'Ejecutando…' : 'Ejecutar' }}
               </button>
             </div>
           </div>

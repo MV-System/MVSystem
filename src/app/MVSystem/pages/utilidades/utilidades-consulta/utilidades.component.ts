@@ -39,7 +39,7 @@ export class UtilidadesComponent implements OnInit {
     const fecha = iso
       ? new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]))
       : new Date(valor);
-    return isNaN(fecha.getTime()) ? valor : fecha.toLocaleDateString();
+    return isNaN(fecha.getTime()) ? valor : fecha.toLocaleDateString('es-DO');
   }
 
   almacenes!: Almacen[];

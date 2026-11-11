@@ -520,7 +520,7 @@ export class CajaListaComponent implements OnInit {
                   URL.revokeObjectURL(url);
                 }, 100);
               } else if (shareError.name !== 'AbortError') {
-                this.toast.warning('Error al compartir. Descargando archivo...');
+                this.toast.warning('Error al compartir. Descargando archivo…');
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;

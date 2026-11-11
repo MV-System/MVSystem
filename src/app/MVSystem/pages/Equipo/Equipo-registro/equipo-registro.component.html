@@ -24,9 +24,9 @@
                         </div>
                         <div *ngIf="isLoading" class="text-center my-1">
                             <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Guardando...</span>
+                                <span class="visually-hidden">Guardando…</span>
                             </div>
-                            <div class="small">Guardando...</div>
+                            <div class="small">Guardando…</div>
                         </div>
                         <!-- Modern Form -->
                         <form [formGroup]="formRegistro" (ngSubmit)="registroEquipos()" class="modern-form" novalidate>
@@ -228,7 +228,7 @@
                             </h5>
                             <button class="btn-imprimir-reporte" (click)="imprimirReporte()" [disabled]="isPrinting" title="Imprimir reporte">
                                 <i class="bi" [ngClass]="isPrinting ? 'bi-hourglass-split spin' : 'bi-printer-fill'"></i>
-                                <span>{{ isPrinting ? 'Generando...' : 'Imprimir' }}</span>
+                                <span>{{ isPrinting ? 'Generando…' : 'Imprimir' }}</span>
                             </button>
                         </div>
                         <div class="table-responsive">

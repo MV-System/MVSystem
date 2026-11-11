@@ -36,7 +36,7 @@
                         <!-- Campo de búsqueda optimizado - OCULTO porque ahora se maneja desde el padre -->
                         <div class="search-container" style="display: none;">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Buscar por cliente, número de factura o teléfono..." [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
+                                <input type="text" class="form-control" placeholder="Buscar por cliente, número de factura o teléfono…" [(ngModel)]="criterio" (input)="onSearchInput($event)" (keydown)="onSearchKeydown($event)" [disabled]="isLoading">
 
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-primary" type="button" (click)="searchManually()" [disabled]="isLoading">
