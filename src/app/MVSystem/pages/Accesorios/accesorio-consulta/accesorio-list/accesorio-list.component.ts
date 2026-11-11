@@ -4,6 +4,7 @@ import { AccesoriosService } from 'src/app/core/services/accesorios.service';
 import { Accesorio } from '../../../../../core/interfaces/accesorio.interface';
 import { ToastrService } from 'ngx-toastr';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
+import { escaparHtml } from 'src/app/core/utils/html';
 
 declare var JsBarcode: any;
 
@@ -245,7 +246,7 @@ export class AccesorioListComponent implements OnInit, OnChanges {
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Etiqueta - ${codigoBarras}</title>
+        <title>Etiqueta - ${escaparHtml(codigoBarras)}</title>
         <style>
           @page {
             size: 50mm 30mm;
@@ -425,15 +426,15 @@ export class AccesorioListComponent implements OnInit, OnChanges {
         </div>
 
         <div class="label-container">
-          <div class="label-header">${descripcion.substring(0, 20)}</div>
+          <div class="label-header">${escaparHtml(descripcion.substring(0, 20))}</div>
 
           <div class="barcode-section">
             <img src="${barcodeSVG}" alt="Código de barras" />
-            <div class="barcode-value">${codigoBarras}</div>
+            <div class="barcode-value">${escaparHtml(codigoBarras)}</div>
           </div>
 
           <div class="description-section">
-            Código: ${codigo}
+            Código: ${escaparHtml(codigo)}
           </div>
 
           <div class="label-footer">

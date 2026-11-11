@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
 import { forkJoin, Subscription } from 'rxjs';
+import { escaparHtml } from 'src/app/core/utils/html';
 
 declare var JsBarcode: any;
 
@@ -380,7 +381,7 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Etiqueta - ${equipo.imei}</title>
+        <title>Etiqueta - ${escaparHtml(equipo.imei)}</title>
         <style>
           @page {
             size: 50mm 30mm;
@@ -560,14 +561,14 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
         </div>
 
         <div class="label-container">
-          <div class="label-header">${empresaNombre}</div>
+          <div class="label-header">${escaparHtml(empresaNombre)}</div>
 
           <div class="barcode-section">
             ${barcodeSVG ? `<img src="${barcodeSVG}" alt="Código de barras">` : ''}
-            <div class="barcode-value">${equipo.imei}</div>
+            <div class="barcode-value">${escaparHtml(equipo.imei)}</div>
           </div>
 
-          <div class="modelo-section">${equipo.descripcion}</div>
+          <div class="modelo-section">${escaparHtml(equipo.descripcion)}</div>
 
           <div class="label-footer">
             <div class="footer-item">
