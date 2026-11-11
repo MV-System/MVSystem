@@ -538,3 +538,8 @@ tr.detalle-row,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* El modal de anulación no desplaza la página de fondo al llegar al final */
+.modal.show {
+    overscroll-behavior: contain;
+}

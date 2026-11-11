@@ -287,6 +287,8 @@ onCancel(detalle: DetalleFacturaList) {
   anulaFactura(numeroFactura: number){
     this.facturaPorAnular = +(`${numeroFactura}`);
     this.motivoAnulacion = '';
+    // El foco pasa al campo del motivo (y Escape cierra el modal)
+    setTimeout(() => document.getElementById('motivoAnulacion')?.focus(), 0);
   }
 
   cerrarModalAnulacion(): void {

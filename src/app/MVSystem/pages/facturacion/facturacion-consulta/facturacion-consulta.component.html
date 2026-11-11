@@ -22,11 +22,11 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-8">
-                                    <label class="form-label modern-label fecha-periodo-header">
+                                    <label class="form-label modern-label fecha-periodo-header" for="filtroCriterio">
                                         <i class="bi bi-search me-1"></i>
                                         Buscar por cliente, # de factura
                                     </label>
-                                    <input type="text" class="form-control modern-input" [class.is-invalid]="form.get('criterio')?.invalid && form.get('criterio')?.touched" placeholder="Ej: Cliente, número de factura..." formControlName="criterio" maxlength="100" (keydown.enter)="$event.preventDefault()">
+                                    <input id="filtroCriterio" autocomplete="off" type="text" class="form-control modern-input" [class.is-invalid]="form.get('criterio')?.invalid && form.get('criterio')?.touched" placeholder="Ej: Juan Pérez, 1250…" formControlName="criterio" maxlength="100" (keydown.enter)="$event.preventDefault()">
                                     <div class="invalid-feedback" *ngIf="form.get('criterio')?.invalid && form.get('criterio')?.touched">
                                         {{ criterioErrorMsg }}
                                     </div>
@@ -46,11 +46,11 @@
                                     <my-date-range-picker [options]="myDateRangePickerOptions" formControlName="rangeDate" (dateRangeChanged)="onDateRangeChanged($event)" [placeholder]="rangoFechasFactura" class="modern-datepicker"></my-date-range-picker>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label modern-label">
+                                    <label class="form-label modern-label" for="filtroVendedor">
                                         <i class="bi bi-person-badge me-1"></i>
                                         Vendedor
                                     </label>
-                                    <select class="form-select modern-select vendedor-dropdown" [class.is-invalid]="form.get('iD_Vendedor')?.invalid && form.get('iD_Vendedor')?.touched" formControlName="iD_Vendedor" (change)="getFacturas()">
+                                    <select id="filtroVendedor" class="form-select modern-select vendedor-dropdown" [class.is-invalid]="form.get('iD_Vendedor')?.invalid && form.get('iD_Vendedor')?.touched" formControlName="iD_Vendedor" (change)="getFacturas()">
                                         <option value="">Todos</option>
                                         <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                                             {{ vendedor.nombres || vendedor.nombre }}
@@ -61,11 +61,11 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label modern-label">
+                                    <label class="form-label modern-label" for="filtroTipoPago">
                                         <i class="bi bi-credit-card me-1"></i>
                                         Tipo de pago
                                     </label>
-                                    <select class="form-select modern-select" formControlName="idTipoPago" (change)="getFacturas()">
+                                    <select id="filtroTipoPago" class="form-select modern-select" formControlName="idTipoPago" (change)="getFacturas()">
                                         <option [ngValue]="0">Todos</option>
                                         <option *ngFor="let tipoPago of tiposPago" [ngValue]="tipoPago.iD_Tipo_Pagos">
                                             {{ tipoPago.descripcion_Tipo_Pagos }}
@@ -73,11 +73,11 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4" *ngIf="SelectSucursal()">
-                                    <label class="form-label modern-label">
+                                    <label class="form-label modern-label" for="filtroSucursal">
                                         <i class="bi bi-building me-1"></i>
                                         Sucursal
                                     </label>
-                                    <select class="form-select modern-select" [class.is-invalid]="form.get('almacen')?.invalid && form.get('almacen')?.touched" formControlName="almacen" (change)="getFacturas()">
+                                    <select id="filtroSucursal" class="form-select modern-select" [class.is-invalid]="form.get('almacen')?.invalid && form.get('almacen')?.touched" formControlName="almacen" (change)="getFacturas()">
                                         <option value="" disabled>Seleccione una sucursal</option>
                                         <option *ngFor="let almacen of almacenes" [value]="almacen.iD_Almacen">
                                             {{almacen.descripcion}}
@@ -89,15 +89,15 @@
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end">
                                     <div *ngIf="CheckComprobante()" class="form-check form-check-inline ms-2">
-                                        <input type="checkbox" name="checkcomprobantes" value="1" class="form-check-input modern-check" (change)="onCheckboxComprobanteChange($event)" />
-                                        <label class="form-check-label modern-radio-label">
+                                        <input id="chkComprobantes" type="checkbox" name="checkcomprobantes" value="1" class="form-check-input modern-check" (change)="onCheckboxComprobanteChange($event)" />
+                                        <label class="form-check-label modern-radio-label" for="chkComprobantes">
                                             <i class="bi bi-file-earmark-check me-1 text-info"></i>
                                             Comprobantes
                                         </label>
                                     </div>
                                     <div *ngIf="CheckAnuladas()" class="form-check form-check-inline ms-2">
-                                        <input type="checkbox" name="chekanuladas" value="1" class="form-check-input modern-check" (change)="onCheckboxAnuladasChange($event)" />
-                                        <label class="form-check-label modern-radio-label">
+                                        <input id="chkAnuladas" type="checkbox" name="chekanuladas" value="1" class="form-check-input modern-check" (change)="onCheckboxAnuladasChange($event)" />
+                                        <label class="form-check-label modern-radio-label" for="chkAnuladas">
                                             <i class="bi bi-file-earmark-check me-1 text-info"></i>
                                             Anuladas
                                         </label>
