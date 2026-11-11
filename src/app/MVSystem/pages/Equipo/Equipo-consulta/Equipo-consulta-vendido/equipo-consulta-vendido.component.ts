@@ -18,6 +18,7 @@ import { LoginService } from 'src/app/auth/login.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { formatearNumero } from 'src/app/core/utils/formato';
 
 interface SalesInsight {
   title: string;
@@ -573,7 +574,7 @@ FechaInicio = new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(), 1)
 
   // Método para formatear números con separadores de coma
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO');
+    return formatearNumero(value);
   }
 
   // Método para formatear rango de fechas para insights

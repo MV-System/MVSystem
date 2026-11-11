@@ -12,6 +12,7 @@ import { ValidatorPermissionService } from 'src/app/core/services/validator-perm
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { formatearMonto, formatearNumero } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-utilidades',
@@ -212,12 +213,7 @@ export class UtilidadesComponent implements OnInit {
 
   formatearMontoAbono(monto: number | string | null | undefined): string {
     const valor = Number(monto);
-    return new Intl.NumberFormat('es-DO', {
-      style: 'currency',
-      currency: 'DOP',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(Number.isFinite(valor) ? valor : 0);
+    return formatearMonto(Number.isFinite(valor) ? valor : 0, 2);
   }
 
   getTotalCostoDetalleAbonos(): number {
@@ -612,7 +608,7 @@ setResponsiveView() {
           tipo: 'success',
           icono: '🏆',
           mensaje: `${mejorCategoria.nombre} es tu categoría más rentable`,
-          detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales ($${this.formatNumber(mejorCategoria.ganancia)})`,
+          detalle: `Representa el ${porcentajeContribucion}% de tus ganancias totales (${formatearMonto(mejorCategoria.ganancia)})`,
           metadata: {
             categoria: mejorCategoria.nombre,
             valor: mejorCategoria.ganancia,
@@ -758,8 +754,8 @@ setResponsiveView() {
       this.aiInsights.push({
         tipo: 'success',
         icono: '💰',
-        mensaje: `Ganancias totales: $${this.formatNumber(totalGanancias)}`,
-        detalle: `Ventas: $${this.formatNumber(totalVentas)} | Costos: $${this.formatNumber(totalCostos)}`,
+        mensaje: `Ganancias totales: ${formatearMonto(totalGanancias)}`,
+        detalle: `Ventas: ${formatearMonto(totalVentas)} | Costos: ${formatearMonto(totalCostos)}`,
         metadata: {
           totalVentas: totalVentas,
           totalGanancias: totalGanancias,
@@ -884,7 +880,7 @@ setResponsiveView() {
             tipo,
             icono,
             mensaje: `${cat.nombre} ${accion} ${Math.abs(crecimientoVentas).toFixed(1)}%`,
-            detalle: `Ventas: $${this.formatNumber(cat.ventaAnterior)} → $${this.formatNumber(cat.ventaActual)}`,
+            detalle: `Ventas: ${formatearMonto(cat.ventaAnterior)} → ${formatearMonto(cat.ventaActual)}`,
             metadata: {
               categoria: cat.nombre,
               valor: cat.ventaActual,
@@ -895,7 +891,7 @@ setResponsiveView() {
               totalGanancias: cat.gananciaActual,
               totalCostos: cat.ventaActual - cat.gananciaActual,
               margen: margenCat,
-              comparacion: `Período anterior: $${this.formatNumber(cat.ventaAnterior)}`
+              comparacion: `Período anterior: ${formatearMonto(cat.ventaAnterior)}`
             }
           });
         }
@@ -928,7 +924,7 @@ setResponsiveView() {
                 totalGanancias: cat.gananciaActual,
                 totalCostos: cat.ventaActual - cat.gananciaActual,
                 margen: margenCat,
-                comparacion: `Ganancias anteriores: $${this.formatNumber(cat.gananciaAnterior)}. Ventas crecieron: +${crecimientoVentas.toFixed(1)}%`
+                comparacion: `Ganancias anteriores: ${formatearMonto(cat.gananciaAnterior)}. Ventas crecieron: +${crecimientoVentas.toFixed(1)}%`
               }
             });
           }
@@ -940,7 +936,7 @@ setResponsiveView() {
             tipo: 'success',
             icono: '💰',
             mensaje: `${cat.nombre}: Excelente crecimiento en ganancias (+${crecimientoGanancias.toFixed(1)}%)`,
-            detalle: `Ganancias: $${this.formatNumber(cat.gananciaAnterior)} → $${this.formatNumber(cat.gananciaActual)}`,
+            detalle: `Ganancias: ${formatearMonto(cat.gananciaAnterior)} → ${formatearMonto(cat.gananciaActual)}`,
             metadata: {
               categoria: cat.nombre,
               valor: cat.gananciaActual,
@@ -951,7 +947,7 @@ setResponsiveView() {
               totalGanancias: cat.gananciaActual,
               totalCostos: cat.ventaActual - cat.gananciaActual,
               margen: margenCat,
-              comparacion: `Período anterior: $${this.formatNumber(cat.gananciaAnterior)}`
+              comparacion: `Período anterior: ${formatearMonto(cat.gananciaAnterior)}`
             }
           });
         }
@@ -967,7 +963,7 @@ setResponsiveView() {
           tipo: 'success',
           icono: '🎉',
           mensaje: `Ventas totales crecieron ${crecimientoTotal.toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalVentasAnt)} a $${this.formatNumber(totalVentasAct)}`,
+          detalle: `De ${formatearMonto(totalVentasAnt)} a ${formatearMonto(totalVentasAct)}`,
           metadata: {
             valor: totalVentasAct,
             porcentaje: crecimientoTotal,
@@ -977,7 +973,7 @@ setResponsiveView() {
             totalGanancias: totalGananciasAct,
             totalCostos: totalCostosAct,
             margen: margenAct,
-            comparacion: `Período anterior: $${this.formatNumber(totalVentasAnt)} (Margen: ${margenAnt.toFixed(1)}%)`
+            comparacion: `Período anterior: ${formatearMonto(totalVentasAnt)} (Margen: ${margenAnt.toFixed(1)}%)`
           }
         });
       } else if (crecimientoTotal < -10) {
@@ -985,7 +981,7 @@ setResponsiveView() {
           tipo: 'warning',
           icono: '⚠️',
           mensaje: `Ventas totales cayeron ${Math.abs(crecimientoTotal).toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalVentasAnt)} a $${this.formatNumber(totalVentasAct)}`,
+          detalle: `De ${formatearMonto(totalVentasAnt)} a ${formatearMonto(totalVentasAct)}`,
           metadata: {
             valor: totalVentasAct,
             porcentaje: crecimientoTotal,
@@ -995,7 +991,7 @@ setResponsiveView() {
             totalGanancias: totalGananciasAct,
             totalCostos: totalCostosAct,
             margen: margenAct,
-            comparacion: `Período anterior: $${this.formatNumber(totalVentasAnt)} (Caída de ${Math.abs(crecimientoTotal).toFixed(1)}%)`
+            comparacion: `Período anterior: ${formatearMonto(totalVentasAnt)} (Caída de ${Math.abs(crecimientoTotal).toFixed(1)}%)`
           }
         });
       }
@@ -1009,7 +1005,7 @@ setResponsiveView() {
           tipo: 'success',
           icono: '💎',
           mensaje: `Ganancias totales aumentaron ${crecimientoGananciasTotal.toFixed(1)}%`,
-          detalle: `De $${this.formatNumber(totalGananciasAnt)} a $${this.formatNumber(totalGananciasAct)}`,
+          detalle: `De ${formatearMonto(totalGananciasAnt)} a ${formatearMonto(totalGananciasAct)}`,
           metadata: {
             valor: totalGananciasAct,
             porcentaje: crecimientoGananciasTotal,
@@ -1019,7 +1015,7 @@ setResponsiveView() {
             totalGanancias: totalGananciasAct,
             totalCostos: totalCostosAct,
             margen: margenAct,
-            comparacion: `Período anterior: $${this.formatNumber(totalGananciasAnt)} (Crecimiento: +${crecimientoGananciasTotal.toFixed(1)}%)`
+            comparacion: `Período anterior: ${formatearMonto(totalGananciasAnt)} (Crecimiento: +${crecimientoGananciasTotal.toFixed(1)}%)`
           }
         });
       }
@@ -1039,7 +1035,7 @@ setResponsiveView() {
         totalGanancias: totalGananciasAct,
         totalCostos: totalCostosAct,
         margen: margenAct,
-        comparacion: `Período anterior - Ventas: $${this.formatNumber(totalVentasAnt)}, Ganancias: $${this.formatNumber(totalGananciasAnt)}, Margen: ${margenAnt.toFixed(1)}%`
+        comparacion: `Período anterior - Ventas: ${formatearMonto(totalVentasAnt)}, Ganancias: ${formatearMonto(totalGananciasAnt)}, Margen: ${margenAnt.toFixed(1)}%`
       }
     });
   }
@@ -1112,10 +1108,7 @@ setResponsiveView() {
    * @returns Número formateado con comas
    */
   private formatNumber(value: number, decimales: number = 2): string {
-    return value.toLocaleString('en-US', {
-      minimumFractionDigits: decimales,
-      maximumFractionDigits: decimales
-    });
+    return formatearNumero(value, decimales);
   }
 
   /**
@@ -1148,15 +1141,15 @@ setResponsiveView() {
 
     // Datos financieros
     if (meta.totalVentas !== undefined) {
-      tooltip += `💵 VENTAS: $${this.formatNumber(meta.totalVentas, 2)}\n`;
+      tooltip += `💵 VENTAS: ${formatearMonto(meta.totalVentas, 2)}\n`;
     }
 
     if (meta.totalGanancias !== undefined) {
-      tooltip += `💰 GANANCIAS: $${this.formatNumber(meta.totalGanancias, 2)}\n`;
+      tooltip += `💰 GANANCIAS: ${formatearMonto(meta.totalGanancias, 2)}\n`;
     }
 
     if (meta.totalCostos !== undefined) {
-      tooltip += `💳 COSTOS: $${this.formatNumber(meta.totalCostos, 2)}\n`;
+      tooltip += `💳 COSTOS: ${formatearMonto(meta.totalCostos, 2)}\n`;
     }
 
     if (meta.margen !== undefined) {
@@ -1179,7 +1172,7 @@ setResponsiveView() {
     }
 
     if (meta.valor !== undefined && !meta.totalVentas) {
-      tooltip += `💵 VALOR: $${this.formatNumber(meta.valor, 2)}\n`;
+      tooltip += `💵 VALOR: ${formatearMonto(meta.valor, 2)}\n`;
     }
 
     // Comparaciones
@@ -1385,7 +1378,7 @@ setResponsiveView() {
         recomendaciones.push({
           icono: '💰',
           titulo: 'Alto Volumen de Ventas',
-          descripcion: `Promedio diario de $${promedioDiario.toFixed(2)} indica alta demanda.`,
+          descripcion: `Promedio diario de ${formatearMonto(promedioDiario)} indica alta demanda.`,
           accion: 'Asegurar inventario suficiente y considerar expandir capacidad',
           prioridad: 'media'
         });
@@ -1393,7 +1386,7 @@ setResponsiveView() {
         recomendaciones.push({
           icono: '📊',
           titulo: 'Bajo Volumen',
-          descripcion: `Ventas diarias promedio de $${promedioDiario.toFixed(2)} están por debajo de lo esperado.`,
+          descripcion: `Ventas diarias promedio de ${formatearMonto(promedioDiario)} están por debajo de lo esperado.`,
           accion: 'Implementar estrategias de marketing o promociones',
           prioridad: 'media'
         });

@@ -18,6 +18,7 @@ import {
   ResumenEjecutivoIA,
   Insight
 } from '../interfaces/dashboard-ia.interface';
+import { formatearNumero } from 'src/app/core/utils/formato';
 
 @Injectable({
   providedIn: 'root'
@@ -1192,7 +1193,7 @@ export class DashboardAnalyticsService {
   }
 
   private formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   private resumenVacio(): ResumenEjecutivoIA {

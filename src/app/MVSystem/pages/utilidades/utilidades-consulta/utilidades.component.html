@@ -158,9 +158,9 @@
                                 <div class="kpi-icon">💵</div>
                                 <div class="kpi-content">
                                     <div class="kpi-label">Ventas Totales</div>
-                                    <div class="kpi-value">${{ insightSeleccionado.metadata.totalVentas | number:'1.2-2' }}</div>
+                                    <div class="kpi-value">{{ insightSeleccionado.metadata.totalVentas | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="kpi-insight">
-                                        Promedio diario: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                        Promedio diario: {{ calcularPromedioDiario(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | currency:'DOP':'symbol':'1.2-2' }}
                                     </div>
                                 </div>
                             </div>
@@ -169,9 +169,9 @@
                                 <div class="kpi-icon">💰</div>
                                 <div class="kpi-content">
                                     <div class="kpi-label">Ganancias Netas</div>
-                                    <div class="kpi-value success">${{ insightSeleccionado.metadata.totalGanancias | number:'1.2-2' }}</div>
+                                    <div class="kpi-value success">{{ insightSeleccionado.metadata.totalGanancias | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="kpi-insight">
-                                        Ganancia por día: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                        Ganancia por día: {{ calcularPromedioDiario(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | currency:'DOP':'symbol':'1.2-2' }}
                                     </div>
                                 </div>
                             </div>
@@ -180,9 +180,9 @@
                                 <div class="kpi-icon">💳</div>
                                 <div class="kpi-content">
                                     <div class="kpi-label">Costos de Operación</div>
-                                    <div class="kpi-value danger">${{ insightSeleccionado.metadata.totalCostos | number:'1.2-2' }}</div>
+                                    <div class="kpi-value danger">{{ insightSeleccionado.metadata.totalCostos | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="kpi-insight">
-                                        Inversión diaria: ${{ calcularPromedioDiario(insightSeleccionado.metadata.totalCostos, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | number:'1.2-2' }}
+                                        Inversión diaria: {{ calcularPromedioDiario(insightSeleccionado.metadata.totalCostos, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin) | currency:'DOP':'symbol':'1.2-2' }}
                                     </div>
                                 </div>
                             </div>
@@ -216,21 +216,21 @@
                                     <span class="breakdown-label">
                     <i class="bi bi-cart-check text-primary me-1"></i> Ingresos por Ventas
                   </span>
-                                    <span class="breakdown-value">${{ insightSeleccionado.metadata.totalVentas | number:'1.2-2' }}</span>
+                                    <span class="breakdown-value">{{ insightSeleccionado.metadata.totalVentas | currency:'DOP':'symbol':'1.2-2' }}</span>
                                     <span class="breakdown-percent">100%</span>
                                 </div>
                                 <div class="breakdown-row" *ngIf="insightSeleccionado.metadata.totalCostos">
                                     <span class="breakdown-label">
                     <i class="bi bi-dash-circle text-danger me-1"></i> Costos de Productos/Servicios
                   </span>
-                                    <span class="breakdown-value text-danger">-${{ insightSeleccionado.metadata.totalCostos | number:'1.2-2' }}</span>
+                                    <span class="breakdown-value text-danger">-{{ insightSeleccionado.metadata.totalCostos | currency:'DOP':'symbol':'1.2-2' }}</span>
                                     <span class="breakdown-percent">{{ calcularPorcentaje(insightSeleccionado.metadata.totalCostos, insightSeleccionado.metadata.totalVentas) | number:'1.1-1' }}%</span>
                                 </div>
                                 <div class="breakdown-row breakdown-total" *ngIf="insightSeleccionado.metadata.totalGanancias">
                                     <span class="breakdown-label">
                     <i class="bi bi-check-circle text-success me-1"></i> <strong>Utilidad Neta</strong>
                                     </span>
-                                    <span class="breakdown-value text-success"><strong>${{ insightSeleccionado.metadata.totalGanancias | number:'1.2-2' }}</strong></span>
+                                    <span class="breakdown-value text-success"><strong>{{ insightSeleccionado.metadata.totalGanancias | currency:'DOP':'symbol':'1.2-2' }}</strong></span>
                                     <span class="breakdown-percent"><strong>{{ insightSeleccionado.metadata.margen | number:'1.1-1' }}%</strong></span>
                                 </div>
                             </div>
@@ -244,22 +244,22 @@
                             <div class="projections-grid">
                                 <div class="projection-item">
                                     <div class="projection-period">� Semanal</div>
-                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 7) | number:'1.2-2' }}</div>
+                                    <div class="projection-value">{{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 7) | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="projection-label">Ventas estimadas/semana</div>
                                 </div>
                                 <div class="projection-item">
                                     <div class="projection-period">📅 Mensual</div>
-                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | number:'1.2-2' }}</div>
+                                    <div class="projection-value">{{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="projection-label">Ventas estimadas/mes</div>
                                 </div>
                                 <div class="projection-item" *ngIf="insightSeleccionado.metadata.totalGanancias">
                                     <div class="projection-period">💰 Ganancia Mensual</div>
-                                    <div class="projection-value success">${{ proyectarVentas(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | number:'1.2-2' }}</div>
+                                    <div class="projection-value success">{{ proyectarVentas(insightSeleccionado.metadata.totalGanancias, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 30) | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="projection-label">Ganancia estimada/mes</div>
                                 </div>
                                 <div class="projection-item">
                                     <div class="projection-period">📈 Anual</div>
-                                    <div class="projection-value">${{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 365) | number:'1.2-2' }}</div>
+                                    <div class="projection-value">{{ proyectarVentas(insightSeleccionado.metadata.totalVentas, insightSeleccionado.metadata.fechaInicio, insightSeleccionado.metadata.fechaFin, 365) | currency:'DOP':'symbol':'1.2-2' }}</div>
                                     <div class="projection-label">Proyección anual</div>
                                 </div>
                             </div>
@@ -352,7 +352,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Ventas Totales</p>
-                            <h4 class="stat-value">${{ getTotalVentas() | number:'1.0-0' }}</h4>
+                            <h4 class="stat-value">{{ getTotalVentas() | currency:'DOP':'symbol':'1.0-0' }}</h4>
                             <small class="stat-change text-success" *ngIf="dataAnterior">
                 <i class="bi bi-arrow-up"></i> vs período anterior
               </small>
@@ -366,7 +366,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Ganancias Totales</p>
-                            <h4 class="stat-value">${{ getTotalGanancias() | number:'1.0-0' }}</h4>
+                            <h4 class="stat-value">{{ getTotalGanancias() | currency:'DOP':'symbol':'1.0-0' }}</h4>
                             <small class="stat-change text-success" *ngIf="dataAnterior">
                 <i class="bi bi-graph-up"></i> {{ getMargenGeneral() }}% margen
               </small>
@@ -380,7 +380,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Costos Totales</p>
-                            <h4 class="stat-value">${{ getTotalCostos() | number:'1.0-0' }}</h4>
+                            <h4 class="stat-value">{{ getTotalCostos() | currency:'DOP':'symbol':'1.0-0' }}</h4>
                             <small class="stat-change text-muted">
                 <i class="bi bi-info-circle"></i> Inversión total
               </small>
@@ -409,7 +409,7 @@
                         </div>
                         <div class="stat-content">
                             <p class="stat-label">Abonos recibidos de crédito</p>
-                            <h4 class="stat-value">${{ data.abonos_Credito | number:'1.2-2' }}</h4>
+                            <h4 class="stat-value">{{ data.abonos_Credito | currency:'DOP':'symbol':'1.2-2' }}</h4>
                             <small class="stat-change text-muted">
                                 <i class="bi bi-info-circle"></i> Ingresos del período, mostrados por separado
                             </small>
@@ -527,20 +527,20 @@
                             <h5 class="chart-title">
                                 <i class="bi bi-bag-check text-success me-2"></i> Ventas
                             </h5>
-                            <span class="chart-total">${{ getTotalVentas() | number:'1.0-0' }}</span>
+                            <span class="chart-total">{{ getTotalVentas() | currency:'DOP':'symbol':'1.0-0' }}</span>
                         </div>
                         <div class="sales-breakdown-row">
                             <div class="sales-breakdown-item sales-breakdown-base">
                                 <span class="sales-breakdown-label">Venta Sin ITBIS</span>
-                                <span class="sales-breakdown-value">${{ getTotalVentasSinItbis() | number:'1.0-0' }}</span>
+                                <span class="sales-breakdown-value">{{ getTotalVentasSinItbis() | currency:'DOP':'symbol':'1.0-0' }}</span>
                             </div>
                             <div class="sales-breakdown-item sales-breakdown-itbis">
                                 <span class="sales-breakdown-label">ITBIS</span>
-                                <span class="sales-breakdown-value">${{ getTotalItbis() | number:'1.0-0' }}</span>
+                                <span class="sales-breakdown-value">{{ getTotalItbis() | currency:'DOP':'symbol':'1.0-0' }}</span>
                             </div>
                             <div class="sales-breakdown-item sales-breakdown-total">
                                 <span class="sales-breakdown-label">Venta Total Con ITBIS</span>
-                                <span class="sales-breakdown-value">${{ getTotalVentas() | number:'1.0-0' }}</span>
+                                <span class="sales-breakdown-value">{{ getTotalVentas() | currency:'DOP':'symbol':'1.0-0' }}</span>
                             </div>
                         </div>
                         <div class="chart-body">
@@ -557,7 +557,7 @@
                             <h5 class="chart-title">
                                 <i class="bi bi-currency-dollar text-warning me-2"></i> Ganancias
                             </h5>
-                            <span class="chart-total">${{ getTotalGanancias() | number:'1.0-0' }}</span>
+                            <span class="chart-total">{{ getTotalGanancias() | currency:'DOP':'symbol':'1.0-0' }}</span>
                         </div>
                         <div class="chart-body">
                             <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleGanancias" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
@@ -573,7 +573,7 @@
                             <h5 class="chart-title">
                                 <i class="bi bi-wallet2 text-danger me-2"></i> Costos
                             </h5>
-                            <span class="chart-total">${{ getTotalCostos() | number:'1.0-0' }}</span>
+                            <span class="chart-total">{{ getTotalCostos() | currency:'DOP':'symbol':'1.0-0' }}</span>
                         </div>
                         <div class="chart-body">
                             <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme1" [results]="singleCostos" [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">

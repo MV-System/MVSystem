@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { EquipoService } from 'src/app/core/services/equipo.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { EquipoDisponible, EquipoDisponibleParam } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto, formatearNumero } from 'src/app/core/utils/formato';
 
 interface TopEquipoLentoInsight {
   modelo: string;
@@ -215,11 +216,11 @@ export class TopEquiposLentosWidgetComponent implements OnInit, OnDestroy {
   }
 
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   formatCurrency(value: number): string {
-    return `RD$${this.formatNumber(value)}`;
+    return formatearMonto(value, 0);
   }
 
   getCategoriaClass(categoria: string): string {

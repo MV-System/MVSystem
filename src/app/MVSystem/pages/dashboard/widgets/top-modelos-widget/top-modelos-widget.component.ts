@@ -6,6 +6,7 @@ import { DashboardAnalyticsService } from 'src/app/core/services/dashboard-analy
 import { LoginService } from 'src/app/auth/login.service';
 import { TopModeloInsight } from 'src/app/core/interfaces/dashboard-ia.interface';
 import { EquipoVendidoFilter, EquipoVendido } from 'src/app/core/interfaces/equipo.interface';
+import { formatearMonto, formatearNumero } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-top-modelos-widget',
@@ -155,12 +156,12 @@ export class TopModelosWidgetComponent implements OnInit, OnDestroy {
 
   // Formatear números con separadores de miles
   formatNumber(value: number): string {
-    return value.toLocaleString('es-DO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatearNumero(value, 0);
   }
 
   // Formatear moneda
   formatCurrency(value: number): string {
-    return `RD$${this.formatNumber(value)}`;
+    return formatearMonto(value, 0);
   }
 
   // Obtener clase CSS según velocidad de venta

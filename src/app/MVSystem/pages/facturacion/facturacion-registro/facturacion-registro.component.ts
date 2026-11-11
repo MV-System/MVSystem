@@ -26,6 +26,7 @@ import { ValidatorPermissionService } from '../../../../core/services/validator-
 import { Cliente, ClienteConsultaCriterio } from '../../../../core/interfaces/cliente.interface';
 import { CotizacionAmount } from 'src/app/core/interfaces/cotizacion.interface';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { formatearMonto } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-facturacion',
@@ -63,7 +64,7 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
         }
         const precioVenta = Number(articulo.precio);
         if (precioVenta < costo) {
-          this.toastr.error(`El equipo (línea ${i+1}) no puede venderse por debajo de su costo. Costo: $${costo}, Precio: $${precioVenta}`);
+          this.toastr.error(`El equipo (línea ${i+1}) no puede venderse por debajo de su costo. Costo: ${formatearMonto(costo)}, Precio: ${formatearMonto(precioVenta)}`);
           return false;
         }
       }
@@ -600,7 +601,7 @@ onModalClose(rep: any) {
       }
       const precioVenta = Number(currentArticulo.precio) - Number(currentArticulo.descuento || 0);
       if (precioVenta < costo) {
-        this.toastr.error(`El precio final del equipo ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será revertido.`);
+        this.toastr.error(`El precio final del equipo (${formatearMonto(precioVenta)}) no puede ser menor al costo (${formatearMonto(costo)}). El descuento será revertido.`);
         currentFormGroup.get('descuento')?.setValue(0);
         // Recalcular total
         const cantidad = currentFormGroup.get('cantidad')?.value;
@@ -1047,7 +1048,7 @@ else
     }
     const precioVenta = Number(currentArticulo.precio) - Number(currentArticulo.descuento || 0);
     if (precioVenta < costo) {
-      this.toastr.error(`El precio de venta ($${precioVenta}) no puede ser menor al costo ($${costo}). El descuento será puesto en cero.`);
+      this.toastr.error(`El precio de venta (${formatearMonto(precioVenta)}) no puede ser menor al costo (${formatearMonto(costo)}). El descuento será puesto en cero.`);
       currentArticulo.descuento = 0;
       currentArticulo.total = currentArticulo.subTotal;
       currentFormGroup.setValue(currentArticulo);
@@ -1272,7 +1273,7 @@ else
             precioMayor: [0],
           });
           this.articulos().insert(index - 1, data);
-          this.articulos().controls[index].get('articulo')?.patchValue(`${articulo.descripcion.toUpperCase()} | $${articulo.precio}`)
+          this.articulos().controls[index].get('articulo')?.patchValue(`${articulo.descripcion.toUpperCase()} | ${formatearMonto(articulo.precio)}`)
 
         })
 

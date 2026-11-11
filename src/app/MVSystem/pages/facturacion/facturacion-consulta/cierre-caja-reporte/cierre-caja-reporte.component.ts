@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { Subscription } from 'rxjs';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { formatearMonto } from 'src/app/core/utils/formato';
 
 @Component({
   selector: 'app-cierre-caja-reporte',
@@ -171,10 +172,7 @@ export class CierreCajaReporteComponent implements OnInit, OnDestroy, OnChanges 
    * Formatea un número como moneda
    */
   formatearMoneda(valor: number): string {
-    return new Intl.NumberFormat('es-DO', {
-      style: 'currency',
-      currency: 'DOP'
-    }).format(valor);
+    return formatearMonto(valor, 2);
   }
 
   /**
