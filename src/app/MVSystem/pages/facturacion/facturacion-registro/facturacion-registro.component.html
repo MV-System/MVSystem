@@ -8,21 +8,21 @@
                     <div class="stats-card-facturacion datos-facturacion">
                         <div class="card-header-facturacion">
                             <span class="header-title-ft">
-                      <i class="bi bi-receipt"></i> Datos de Facturación
+                      <i class="bi bi-receipt" aria-hidden="true"></i> Datos de Facturación
                     </span>
                         </div>
                         <div class="card-body-ft sm-padding">
                             <div class="grid two-cols" *ngIf="isFactura">
-                                <div><strong>Tipo de pago:</strong></div>
+                                <div><label for="tipoPago" class="mb-0"><strong>Tipo de pago:</strong></label></div>
                                 <div class="info">
                                     <!-- Selector de Tipo de Pago -->
-                                    <select class="form-select modern-select" formControlName="tipoPago" (change)="onTipoPagoChange($any($event.target).value)" [ngClass]="{'input-error': validarCampos('tipoPago')}">
+                                    <select id="tipoPago" class="form-select modern-select" formControlName="tipoPago" (change)="onTipoPagoChange($any($event.target).value)" [ngClass]="{'input-error': validarCampos('tipoPago')}">
                                         <option value="">-- Seleccionar --</option>
                                         <option *ngFor="let tipo of pagoTipos" [value]="tipo.iD_Tipo_Pagos">
                                             {{ tipo.descripcion_Tipo_Pagos }}
                                         </option>
                                     </select>
-                                    <div class="required-field" *ngIf="validarCampos('tipoPago')">
+                                    <div class="required-field" aria-live="polite" *ngIf="validarCampos('tipoPago')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -33,33 +33,33 @@
                                 </app-pago-mixto>
                             </div>
                             <div class="grid two-cols" *ngIf="CambiarFechaFactura()">
-                                <div><strong>Fecha de {{isFactura?'facturación':'Cotización'}}:</strong></div>
+                                <div><label for="fechaFacturacion" class="mb-0"><strong>Fecha de {{isFactura?'facturación':'cotización'}}:</strong></label></div>
                                 <div class="info">
-                                    <input class="form-control" type="datetime-local" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
-                                    <div class="required-field" *ngIf="validarCampos('fechaFacturacion')">
+                                    <input id="fechaFacturacion" class="form-control" type="datetime-local" required [ngClass]="{'input-error': validarCampos('fechaFacturacion') }" formControlName="fechaFacturacion" />
+                                    <div class="required-field" aria-live="polite" *ngIf="validarCampos('fechaFacturacion')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
                             </div>
                             <div class="grid two-cols" *ngIf="isCredit">
-                                <div><strong>Fecha límite de pago:</strong></div>
+                                <div><label for="fechaLimitePago" class="mb-0"><strong>Fecha límite de pago:</strong></label></div>
                                 <div class="info">
-                                    <input class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
-                                    <div class="required-field" *ngIf="validarCampos('fechaLimitePago')">
+                                    <input id="fechaLimitePago" class="form-control" type="datetime-local" required [min]="currentDateTime()" [ngClass]="{ 'input-error': validarCampos('fechaLimitePago') }" formControlName="fechaLimitePago" />
+                                    <div class="required-field" aria-live="polite" *ngIf="validarCampos('fechaLimitePago')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
                             </div>
                             <div class="grid two-cols" *ngIf="isFactura && hasNumberConfirmation()">
-                                <div><strong>Núm. Confirmación:</strong></div>
+                                <div><label for="numConfirmacion" class="mb-0"><strong>Núm. confirmación:</strong></label></div>
                                 <div>
-                                    <input type="number" formControlName="numConfirmacion" class="form-control">
+                                    <input id="numConfirmacion" type="number" formControlName="numConfirmacion" class="form-control" autocomplete="off">
                                 </div>
                             </div>
                             <div class="grid two-cols">
-                                <div><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></div>
+                                <div><label for="garantia" class="mb-0"><strong>{{isFactura?'Garantía':'Vigencia'}}:</strong></label></div>
                                 <div>
-                                    <select formControlName="garantia" class="form-select modern-select">
+                                    <select id="garantia" formControlName="garantia" class="form-select modern-select">
                           <option *ngFor="let garantia of garantias" [value]="garantia.iD_Garantia">
                             {{garantia.descripcion}}
                           </option>
@@ -68,18 +68,18 @@
                             </div>
 
                             <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>RNC:</strong> <span class="required-field" *ngIf="isFactura">*</span></div>
+                                <div><label for="rnc" class="mb-0"><strong>RNC:</strong></label> <span class="required-field" *ngIf="isFactura">*</span></div>
                                 <div>
-                                    <input type="text" class="form-control" placeholder="101000000" formControlName="RNC" [ngClass]="{'is-invalid': isFactura && form.get('RNC')?.touched && rncVacio()}">
-                                    <div class="required-field" *ngIf="isFactura && form.get('RNC')?.touched && rncVacio()">Este campo es requerido.</div>
+                                    <input id="rnc" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" class="form-control" placeholder="Ej: 101000000…" formControlName="RNC" [ngClass]="{'is-invalid': isFactura && form.get('RNC')?.touched && rncVacio()}">
+                                    <div class="required-field" aria-live="polite" *ngIf="isFactura && form.get('RNC')?.touched && rncVacio()">Este campo es requerido.</div>
                                 </div>
                             </div>
 
                             <div class="grid two-cols" *ngIf="isNcfRequire">
-                                <div><strong>Empresa:</strong> <span class="required-field" *ngIf="isFactura">*</span></div>
+                                <div><label for="empresa" class="mb-0"><strong>Empresa:</strong></label> <span class="required-field" *ngIf="isFactura">*</span></div>
                                 <div>
-                                    <input type="text" class="form-control" formControlName="empresa" placeholder="Nombre Empresa" [ngClass]="{'is-invalid': isFactura && form.get('empresa')?.touched && empresaVacia()}">
-                                    <div class="required-field" *ngIf="isFactura && form.get('empresa')?.touched && empresaVacia()">Este campo es requerido.</div>
+                                    <input id="empresa" type="text" autocomplete="off" class="form-control" formControlName="empresa" placeholder="Ej: Comercial Pérez SRL…" [ngClass]="{'is-invalid': isFactura && form.get('empresa')?.touched && empresaVacia()}">
+                                    <div class="required-field" aria-live="polite" *ngIf="isFactura && form.get('empresa')?.touched && empresaVacia()">Este campo es requerido.</div>
                                 </div>
                             </div>
                         </div>
@@ -88,8 +88,8 @@
                     <div class="facturar-a">
                         <div class="cliente-mobile-layout">
                             <div class="cliente-info-row">
-                                <label class="cliente-label-mobile">
-                                    <i class="bi bi-person"></i> Cliente <span class="required-field">*</span>
+                                <label class="cliente-label-mobile" for="clienteTelefono">
+                                    <i class="bi bi-person" aria-hidden="true"></i> Cliente <span class="required-field">*</span>
                                 </label>
                                 <div class="clientDetail client-detail-row">
                                     <span class="name">{{ ( !customer?.nombres?'[Nombre cliente]':customer?.nombres + ' ' + customer?.apellidos | titlecase)}} </span>
@@ -97,15 +97,16 @@
                                 </div>
                             </div>
                             <div class="cliente-select-row">
-                                <ng-select formControlName="telefono" class="modern-select-ng flex-grow-1" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': true }" appendTo="body">
+                                <ng-select formControlName="telefono" labelForId="clienteTelefono" [inputAttrs]="{ 'aria-label': 'Buscar cliente por nombre o teléfono' }" class="modern-select-ng flex-grow-1" (change)="obtenerClientesPorNombreTelefono()" [clearable]="false" [ngClass]="{ 'is-invalid': validarCampos('telefono') }" appendTo="body">
                                     <ng-option *ngFor="let customer of customers" [value]="getClienteTelefono(customer)">
                                         {{ customer.nombres | titlecase }} {{ customer.apellidos | titlecase }} - {{ getClienteTelefono(customer) }}
                                     </ng-option>
                                 </ng-select>
-                                <button class="btns icon primary" type="button" (click)="onAdd()">
-                                    <i class="bx bx-plus"></i>
+                                <button class="btns icon primary" type="button" title="Agregar cliente" aria-label="Agregar cliente" (click)="onAdd()">
+                                    <i class="bx bx-plus" aria-hidden="true"></i>
                                 </button>
                             </div>
+                            <div class="required-field" aria-live="polite" *ngIf="validarCampos('telefono')">Seleccione un cliente.</div>
                         </div>
                     </div>
                 </div>
@@ -115,25 +116,25 @@
                         <div class="filters-card-body-ft card-body sm-padding">
                             <div class="card-header-facturacion mb-3">
                                 <span class="header-title">
-                        <i class="bi bi-funnel"></i> Filtros de Facturación
+                        <i class="bi bi-funnel" aria-hidden="true"></i> Filtros de Facturación
                       </span>
                             </div>
                             <div class="row flex-column">
                                 <div class="col-12">
-                                    <label class="form-label">Tipo de Factura <span class="required-field">*</span></label>
-                                    <select class="form-select modern-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
+                                    <label class="form-label" for="tipoFactura">Tipo de factura <span class="required-field">*</span></label>
+                                    <select id="tipoFactura" class="form-select modern-select" formControlName="tipoFactura" (change)="onChangeTipoFactura($event)" [ngClass]="{'input-error':validarCampos('tipoFactura')}">
                           <option *ngFor="let TipoFactura of facturaTipos"
                               [value]="TipoFactura.iD_Tipo_Factura">
                               {{TipoFactura.descripcion_Factura_Tipo}}
                           </option>
                         </select>
-                                    <div class="required-field" *ngIf="validarCampos('tipoFactura')">
+                                    <div class="required-field" aria-live="polite" *ngIf="validarCampos('tipoFactura')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
                                 <div class="col-12" *ngIf="isFactura">
-                                    <label class="form-label">Tipo de Comprobante <span class="required-field">*</span></label>
-                                    <select class="form-select modern-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
+                                    <label class="form-label" for="comprobante">Tipo de comprobante <span class="required-field">*</span></label>
+                                    <select id="comprobante" class="form-select modern-select" formControlName="comprobante" (change)="onCheckboxChangeComprobante()">
                           <option *ngFor="let tipoComprobante of comprobanteTipos;"
                               [value]="tipoComprobante.nfcTipoNumero">
                               {{tipoComprobante.nfcTipoDescripcion}}
@@ -156,13 +157,13 @@
                                     </small>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Vendedor <span class="required-field">*</span></label>
-                                    <select class="form-select modern-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
+                                    <label class="form-label" for="vendedor">Vendedor <span class="required-field">*</span></label>
+                                    <select id="vendedor" class="form-select modern-select" required formControlName="vendedor" [ngClass]="{'input-error':validarCampos('vendedor')}">
                           <option *ngFor="let vendedor of vendedores" [value]="vendedor.iD_Vendedor">
                               {{vendedor.nombres}} {{vendedor.apellidos}}
                           </option>
                         </select>
-                                    <div class="required-field" *ngIf="validarCampos('vendedor')">
+                                    <div class="required-field" aria-live="polite" *ngIf="validarCampos('vendedor')">
                                         Este campo es requerido.
                                     </div>
                                 </div>
@@ -178,13 +179,13 @@
                     <div class="d-flex justify-content-between align-items-center nota-articulo-row" style="margin-bottom: 1.2rem;">
                         <!-- Caja de texto -->
                         <div class="flex-grow-1 me-3">
-                            <input type="text" class="form-control modern-input" formControlName="nota" placeholder="Escriba una nota para la factura" />
+                            <input type="text" class="form-control modern-input" formControlName="nota" aria-label="Nota de la factura" autocomplete="off" placeholder="Escriba una nota para la factura…" />
                         </div>
 
                         <!-- Botón -->
                         <div class="pull-right">
                             <button class="btns secondary add-item" type="button" (click)="agregarArticulo()">
-                      <i class="bx bx-plus"></i>
+                      <i class="bx bx-plus" aria-hidden="true"></i>
                       Agregar artículo
                     </button>
                         </div>
@@ -223,7 +224,7 @@
                                 <tr *ngFor="let detalleFactura of articulos().controls; let i = index" [class.resaltado-imei]="i === articuloResaltadoIndex">
                                     <ng-container [formGroupName]="i">
                                         <td>
-                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" id="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"
+                                            <ng-select class="form-select modern-select-ng" formControlName="articulo" [labelForId]="'articulo-' + i" [inputAttrs]="{ 'aria-label': 'Artículo' }" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); descuentoInput.focus()"
                                                 (change)="obtenerDetalleFactura(i); cantidadInput.focus()" (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required [ngClass]="{ 'is-invalid': form.get('articulo')?.invalid && form.get('articulo')?.touched }">
                                                 <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                     {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
@@ -232,12 +233,12 @@
                                             </ng-select>
                                         </td>
                                         <td class="col-md-1 align-center">
-                                            <input type="number" class="form-control align-center" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
+                                            <input type="number" class="form-control align-center" aria-label="Cantidad" autocomplete="off" placeholder="Cantidad" required #cantidadInput formControlName="cantidad" (keydown.enter)="$event.preventDefault();
                                         descuentoInput.focus()" (keyup)="obtenerDetalleFactura(i)" [ngClass]="{'is-invalid':validarCamposArticulo(detalleFactura,'cantidad')}" appNumeric [decimals]="0" [maxlen]="4">
                                         </td>
 
                                         <td class="col-md-1 align-center">
-                                            <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
+                                            <input type="text" (blur)="onPrecioChange(i)" class="form-control align-center" aria-label="Precio" inputmode="decimal" autocomplete="off" placeholder="Precio" formControlName="precio" (keydown.enter)="$event.preventDefault();
                                 descuentoInput.focus()" [maxlen]="7" appNumeric>
                                         </td>
 
@@ -246,15 +247,15 @@
                                             {{detalleFactura.value.precio * detalleFactura.value.cantidad | number:'1.2-2'}}
                                         </td>
                                         <td class="col-md-1">
-                                            <input class="form-control align-right" type="number" formControlName="descuento" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
+                                            <input class="form-control align-right" type="number" formControlName="descuento" aria-label="Descuento" autocomplete="off" appNumeric #descuentoInput [maxlen]="4" [decimals]="2" (keydown.enter)="$event.preventDefault(); agregarArticulo(); " (keyup)="obtenerDetalleFactura(i)" />
                                         </td>
                                         <td class="align-right hide-mobile">
                                             <!-- Total: (precio x cantidad - descuento) + ITBIS (si aplica y no está incluido) -->
                                             {{detalleFactura.value.total | number:'1.2-2'}}
                                         </td>
                                         <td class="align-center">
-                                            <button class="btns flat oorange" (click)="borrarArticulo(i)">
-                                <i class="bx bx-trash-alt"></i>
+                                            <button class="btns flat oorange" type="button" title="Quitar artículo" aria-label="Quitar artículo" (click)="borrarArticulo(i)">
+                                <i class="bx bx-trash-alt" aria-hidden="true"></i>
                             </button>
                                         </td>
                                     </ng-container>
@@ -270,36 +271,36 @@
                                 <ng-container [formGroupName]="i">
                                     <!-- Indicador de artículo completado -->
                                     <div class="articulo-status" *ngIf="detalleFactura.value.articulo && detalleFactura.value.articulo !== ''">
-                                        <i class="bi bi-check-circle-fill"></i>
+                                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
                                         <span>Artículo #{{i + 1}}</span>
                                     </div>
 
                                     <div class="articulo-card-header">
                                         <div class="articulo-descripcion">
-                                            <ng-select class="modern-select-ng" formControlName="articulo" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()" (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()"
+                                            <ng-select class="modern-select-ng" formControlName="articulo" [labelForId]="'articulo-m-' + i" [inputAttrs]="{ 'aria-label': 'Artículo' }" [addTag]="addArticuloImei" [virtualScroll]="true" [clearable]="false" [readonly]="isArticuloReadonly(i)" (keydown.enter)="$event.preventDefault(); cantidadInputMobile.focus()" (change)="obtenerDetalleFactura(i); cantidadInputMobile.focus()"
                                                 (scroll)="onScroll($event)" (search)="onSearchAccesorio($event, i)" required placeholder="Seleccionar artículo" appendTo="body">
                                                 <ng-option *ngFor="let articulo of accesoriosBuffer" [value]="articulo">
                                                     {{ articulo.accesorio_Descripcion | titlecase }} | {{ calcularPrecioSegunTipofactura(articulo.precio_Detalle, articulo.precio_Por_Mayor) | currency }}
                                                 </ng-option>
                                             </ng-select>
                                         </div>
-                                        <button class="articulo-eliminar-btn" type="button" (click)="borrarArticulo(i)">
-                                            <i class="bx bx-trash-alt"></i>
+                                        <button class="articulo-eliminar-btn" type="button" title="Quitar artículo" aria-label="Quitar artículo" (click)="borrarArticulo(i)">
+                                            <i class="bx bx-trash-alt" aria-hidden="true"></i>
                                         </button>
                                     </div>
 
                                     <div class="articulo-grid" [class.hidden]="!detalleFactura.value.articulo || detalleFactura.value.articulo === ''">
                                         <div class="articulo-field">
-                                            <label>Cantidad</label>
-                                            <input type="number" class="form-control align-center" placeholder="0" formControlName="cantidad" #cantidadInputMobile (keydown.enter)="$event.preventDefault(); precioInputMobile.focus()" (keyup)="obtenerDetalleFactura(i)" appNumeric [decimals]="0" [maxlen]="4">
+                                            <label [attr.for]="'cantidad-m-' + i">Cantidad</label>
+                                            <input type="number" class="form-control align-center" placeholder="0" [attr.id]="'cantidad-m-' + i" autocomplete="off" formControlName="cantidad" #cantidadInputMobile (keydown.enter)="$event.preventDefault(); precioInputMobile.focus()" (keyup)="obtenerDetalleFactura(i)" appNumeric [decimals]="0" [maxlen]="4">
                                         </div>
                                         <div class="articulo-field">
-                                            <label>Precio</label>
-                                            <input type="text" class="form-control align-right" placeholder="0.00" formControlName="precio" #precioInputMobile (keydown.enter)="$event.preventDefault(); descuentoInputMobile.focus()" (blur)="onPrecioChange(i)" [maxlen]="7" appNumeric>
+                                            <label [attr.for]="'precio-m-' + i">Precio</label>
+                                            <input type="text" class="form-control align-right" placeholder="0.00" [attr.id]="'precio-m-' + i" inputmode="decimal" autocomplete="off" formControlName="precio" #precioInputMobile (keydown.enter)="$event.preventDefault(); descuentoInputMobile.focus()" (blur)="onPrecioChange(i)" [maxlen]="7" appNumeric>
                                         </div>
                                         <div class="articulo-field">
-                                            <label>Descuento</label>
-                                            <input type="number" class="form-control align-right" placeholder="0.00" formControlName="descuento" #descuentoInputMobile (keydown.enter)="$event.preventDefault(); agregarArticulo()" (keyup)="obtenerDetalleFactura(i)" [maxlen]="4" [decimals]="2" appNumeric>
+                                            <label [attr.for]="'descuento-m-' + i">Descuento</label>
+                                            <input type="number" class="form-control align-right" placeholder="0.00" [attr.id]="'descuento-m-' + i" autocomplete="off" formControlName="descuento" #descuentoInputMobile (keydown.enter)="$event.preventDefault(); agregarArticulo()" (keyup)="obtenerDetalleFactura(i)" [maxlen]="4" [decimals]="2" appNumeric>
                                         </div>
                                     </div>
 
@@ -328,7 +329,7 @@
                             <!-- Botones de acción alineados con el total (solo desktop) -->
                             <div class="desktop-action-buttons d-flex flex-column gap-2">
                                 <button class="btn btn-warning btn-lg px-4 py-3" type="button" (click)="onPreFacturar()" *ngIf="BotonPreFacturar()" [disabled]="isLoading">
-                                    <i class="bi bi-clock-history me-2"></i>
+                                    <i class="bi bi-clock-history me-2" aria-hidden="true"></i>
                                     <span class="d-inline">{{isLoading?'Procesando…': 'Pre-Facturar'}} </span>
                                     <span class="spinner-grow spinner-grow-sm ms-2"
                                          role="status"
@@ -337,7 +338,7 @@
                                 </button>
 
                                 <button class="btn btn-success btn-lg px-4 py-3" type="submit" *ngIf="BotonProcesarFactura()" [disabled]="isLoading">
-                                    <i class="bi bi-check-circle me-2"></i>
+                                    <i class="bi bi-check-circle me-2" aria-hidden="true"></i>
                                     <span class="d-inline">{{isLoading?'Procesando…': 'Procesar factura'}} </span>
                                     <span class="spinner-grow spinner-grow-sm ms-2"
                                          role="status"
@@ -346,7 +347,7 @@
                                 </button>
 
                                 <button class="btn btn-outline-secondary btn-lg px-4 py-2" type="button" (click)="onClean()">
-                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    <i class="bi bi-arrow-clockwise me-2" aria-hidden="true"></i>
                                     Limpiar datos
                                 </button>
                             </div>
@@ -355,7 +356,7 @@
                             <div class="totals-card-modern">
                                 <div class="totals-header-modern">
                                     <h2 class="totals-title-modern">
-                                        <i class="bi bi-calculator text-emerald-500"></i> Resumen
+                                        <i class="bi bi-calculator text-emerald-500" aria-hidden="true"></i> Resumen
                                     </h2>
                                     <span class="totals-subtitle-modern">Factura actual</span>
                                 </div>
@@ -363,28 +364,28 @@
                                 <div class="totals-body-modern">
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">Subtotal</span>
-                                        <span class="totals-value-modern">RD$ {{subTotal | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{subTotal | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">Descuento</span>
-                                        <span class="totals-value-modern">RD$ {{descuento | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{descuento | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">ITBIS</span>
-                                        <span class="totals-value-modern">RD$ {{itbis | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{itbis | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern" *ngIf="isCredit && isFactura">
                                         <span class="totals-label-modern">Abono</span>
                                         <div>
                                             <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="12" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
-                                            <small class="text-danger" *ngIf="form.get('abono')?.value > total">No puede exceder RD$ {{total | number:'1.2-2'}}</small>
+                                            <small class="text-danger" aria-live="polite" *ngIf="form.get('abono')?.value > total">No puede exceder {{total | currency:'DOP':'symbol':'1.2-2'}}</small>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="totals-total-modern">
                                     <span class="totals-total-label-modern">Total</span>
-                                    <span class="totals-total-amount-modern">RD$ {{total | number:'1.2-2'}}</span>
+                                    <span class="totals-total-amount-modern">{{total | currency:'DOP':'symbol':'1.2-2'}}</span>
                                 </div>
                             </div>
                         </div>
@@ -394,7 +395,7 @@
                             <div class="totals-card-modern">
                                 <div class="totals-header-modern">
                                     <h2 class="totals-title-modern">
-                                        <i class="bi bi-calculator text-emerald-500"></i> Resumen
+                                        <i class="bi bi-calculator text-emerald-500" aria-hidden="true"></i> Resumen
                                     </h2>
                                     <span class="totals-subtitle-modern">Factura actual</span>
                                 </div>
@@ -402,35 +403,35 @@
                                 <div class="totals-body-modern">
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">Subtotal</span>
-                                        <span class="totals-value-modern">RD$ {{subTotal | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{subTotal | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">Descuento</span>
-                                        <span class="totals-value-modern">RD$ {{descuento | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{descuento | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern">
                                         <span class="totals-label-modern">ITBIS</span>
-                                        <span class="totals-value-modern">RD$ {{itbis | number:'1.2-2'}}</span>
+                                        <span class="totals-value-modern">{{itbis | currency:'DOP':'symbol':'1.2-2'}}</span>
                                     </div>
                                     <div class="totals-item-modern" *ngIf="isCredit && isFactura">
                                         <span class="totals-label-modern">Abono</span>
                                         <div>
                                             <input class="totals-input-modern" type="number" formControlName="abono" appNumeric [maxlen]="12" [decimals]="2" (keyup)="agregarAbono()" placeholder="0.00" [class.is-invalid]="form.get('abono')?.value > total" />
-                                            <small class="text-danger" *ngIf="form.get('abono')?.value > total">No puede exceder RD$ {{total | number:'1.2-2'}}</small>
+                                            <small class="text-danger" aria-live="polite" *ngIf="form.get('abono')?.value > total">No puede exceder {{total | currency:'DOP':'symbol':'1.2-2'}}</small>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="totals-total-modern">
                                     <span class="totals-total-label-modern">Total</span>
-                                    <span class="totals-total-amount-modern">RD$ {{total | number:'1.2-2'}}</span>
+                                    <span class="totals-total-amount-modern">{{total | currency:'DOP':'symbol':'1.2-2'}}</span>
                                 </div>
 
                                 <!-- Botones de acción dentro del card (solo móvil) -->
                                 <div class="mobile-actions-modern">
 
                                     <button class="btn btn-warning mobile-btn-primary-modern-prefactura" type="button" (click)="onPreFacturar()" *ngIf="BotonPreFacturar()">
-                                    <i class="bi bi-clock-history me-2"></i>
+                                    <i class="bi bi-clock-history me-2" aria-hidden="true"></i>
                                     <span class="d-inline">{{isLoading?'Procesando…': 'Pre-Facturar'}} </span>
                                     <span class="spinner-grow spinner-grow-sm ms-2"
                                          role="status"
@@ -439,7 +440,7 @@
                                 </button>
 
                                     <button class="mobile-btn-primary-modern" type="submit" *ngIf="BotonProcesarFactura()">
-                                        <i class="bi bi-check-circle me-2"></i>
+                                        <i class="bi bi-check-circle me-2" aria-hidden="true"></i>
                                         <span class="d-inline">{{isLoading?'Procesando…': 'Procesar factura'}} </span>
                                         <span class="spinner-grow spinner-grow-sm ms-2"
                                              role="status"
@@ -448,7 +449,7 @@
                                     </button>
 
                                     <button class="mobile-btn-secondary-modern" type="button" (click)="onClean()">
-                                        <i class="bi bi-arrow-clockwise me-2"></i>
+                                        <i class="bi bi-arrow-clockwise me-2" aria-hidden="true"></i>
                                         Limpiar datos
                                     </button>
                                 </div>
@@ -462,7 +463,7 @@
 </main>
 
 <!-- Modal de cliente -->
-<div class="modal-wrapper" [class.show]="showModal">
+<div class="modal-wrapper" [class.show]="showModal" role="dialog" aria-modal="true" aria-label="Registro de cliente">
     <div class="modal-content">
         <app-clientes-registro (customer)="onAddCustomer($any($event))" (cancelar)="closeModal()" [isModal]="true">
         </app-clientes-registro>
