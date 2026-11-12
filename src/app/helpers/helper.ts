@@ -59,3 +59,21 @@ export function currentDate(){
     String(date.getMonth() + 1).padStart(2,'0')  + '-' +
     String(date.getDate()).padStart(2,'0');
   }
+/** Lee el usuario y la empresa de un token JWT; devuelve '' si no hay token o no se puede leer. */
+function identidadDelToken(token: string | null): string {
+    if (!token) { return ''; }
+    try {
+        const { name, IdEmpresa } = jwt_decode<{ name?: string; IdEmpresa?: string }>(token);
+        return `${name ?? ''}|${IdEmpresa ?? ''}`;
+    } catch {
+        return '';
+    }
+}
+
+/**
+ * Indica si el token guardado en el navegador (compartido por todas las pestañas) pasó a ser de otro usuario o
+ * de otra empresa, o se borró. Una renovación del token del mismo usuario no cuenta como cambio.
+ */
+export function cambioDeSesion(tokenAnterior: string | null, tokenNuevo: string | null): boolean {
+    return identidadDelToken(tokenAnterior) !== identidadDelToken(tokenNuevo);
+}
