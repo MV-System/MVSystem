@@ -48,6 +48,15 @@ export interface TipoComprobante {
   nfcTipoSecuencia?: number;
 }
 
+/** Registro del listado de RNC de la DGII. Solo un RNC ACTIVO puede facturarse con comprobante. */
+export interface RncDgii {
+  rnc: string;
+  razonSocial: string;
+  nombreComercial?: string;
+  estado: string;
+  activo: boolean;
+}
+
 export interface AccesorioLista {
   accesorio_Descripcion: string;
   codigo?: string;

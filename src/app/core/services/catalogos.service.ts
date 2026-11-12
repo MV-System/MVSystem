@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { APIURL } from "src/app/config/url";
-import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS, CanalesLista, StatusTaller, Grupo } from '../interfaces/catalogo.interface';
+import { TipoTelefono, MarcaEquipo, ModeloEquipo, Almacen, TipoFactura, TipoPago, TipoComprobante, AccesorioLista, Garantia, Desbloqueo, CondicionEquipo, Tecnologia, Suplidor, AsumeITBIS, CanalesLista, StatusTaller, Grupo, RncDgii } from '../interfaces/catalogo.interface';
 import { Equipo } from "../interfaces/equipo.interface";
 
 
@@ -40,6 +40,13 @@ export class CatalogosService {
   }
   getTipoPagoLista(): Observable<TipoPago[]> {
     return this.http.get<TipoPago[]>(APIURL.Catalogos.tipoPagoLista);
+  }
+  /**
+   * Consulta un RNC o cédula en el listado de la DGII. Responde 404 si no está listado: es un resultado normal, por eso la
+   * petición va 'silenciosa' (sin reintentos ni aviso automático) y quien llama decide qué mostrar.
+   */
+  getRncDgii(rnc: string): Observable<RncDgii> {
+    return this.http.get<RncDgii>(`${APIURL.Catalogos.rncDgii}/${encodeURIComponent(rnc)}`, { headers: { 'X-Uso-Silencioso': '1' } });
   }
   getTipoComprobanteLista(): Observable<TipoComprobante[]> {
     return this.http.get<TipoComprobante[]>(APIURL.Catalogos.tipoComprobanteLista);
