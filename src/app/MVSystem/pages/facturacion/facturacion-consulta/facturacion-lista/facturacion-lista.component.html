@@ -148,7 +148,7 @@
                                         <!-- Detalle de factura con fondo diferenciado -->
                                         <ng-container *ngIf="facturaVisibility[getFacturaKey(factura)] && i == index">
                                             <tr class="animate__animated animate__fadeIn tr-collapse detalle-row" *ngFor="let detalle of detalleFactura; let d = index">
-                                                <td col="1">
+                                                <td col="1" [attr.colspan]="detalle.editMode ? 3 : 1">
                                                     <ng-container *ngIf="!detalle.editMode">
                                                         Cod: {{ detalle.idEquipo }}
                                                         <button *ngIf="detalle.idTipo === 1 && btnCambiaImei()" (click)="onEdit(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar artículo" aria-label="Editar artículo">
@@ -160,16 +160,18 @@
                                           </button>
                                                     </ng-container>
                                                     <ng-container *ngIf="detalle.editMode">
-                                                        <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control" placeholder="Ingrese el código" />
-                                                        <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar" aria-label="Guardar">
-                                                            <i class="bx bx-save" aria-hidden="true"></i>
-                                                        </button>
-                                                        <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar" aria-label="Cancelar">
-                                                            <i class="bx bx-x" aria-hidden="true"></i>
-                                                        </button>
+                                                        <div class="d-flex align-items-center gap-2 campo-imei-edicion">
+                                                            <input type="text" [(ngModel)]="detalle.idEquipo" class="form-control flex-grow-1" aria-label="Nuevo IMEI o serial" autocomplete="off" spellcheck="false" placeholder="Nuevo IMEI o serial…" />
+                                                            <button (click)="DetalleFacturaCambiaImeiOnSave(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar" aria-label="Guardar">
+                                                                <i class="bx bx-save" aria-hidden="true"></i>
+                                                            </button>
+                                                            <button (click)="onCancel(detalle)" class="btns flat gunmetal" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar" aria-label="Cancelar">
+                                                                <i class="bx bx-x" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
                                                     </ng-container>
                                                 </td>
-                                                <td colspan="4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
+                                                <td [attr.colspan]="detalle.editMode ? 2 : 4"><b>Descripcion:</b> {{ detalle.descripcion }} </td>
                                                 <td><b>Cantidad:</b> {{ detalle.cantidad }}</td>
                                                 <td><b>Precio:</b> {{ detalle.precio | currency }}</td>
                                                 <td colspan="2"><b>SubTotal:</b> {{ detalle.subTotal | currency}}</td>
