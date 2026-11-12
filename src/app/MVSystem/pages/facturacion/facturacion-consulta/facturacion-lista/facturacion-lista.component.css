@@ -543,3 +543,8 @@ tr.detalle-row,
 .modal.show {
     overscroll-behavior: contain;
 }
+
+/* Campo del nuevo IMEI al editar un artículo: ocupa el ancho disponible junto a los botones */
+.campo-imei-edicion .form-control {
+    min-width: 0;
+}
