@@ -3,7 +3,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControlOptions } from '@angular/forms';
 import { forkJoin, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, takeUntil } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -98,12 +98,63 @@ export class FacturacionRegistroComponent implements OnInit, OnDestroy {
     return !(this.form.get('empresa')?.value ?? '').toString().trim();
   }
 
+  /** Estado del RNC según la DGII cuando NO es ACTIVO (suspendido, dado de baja…); null si es activo, no está listado o no se consultó. */
+  rncEstadoDgii: string | null = null;
+  /** Último nombre puesto por la consulta a la DGII: solo ese se reemplaza al cambiar de RNC, nunca un nombre escrito a mano. */
+  private empresaDeDgii: string | null = null;
+  /** Verdadero mientras se consulta el RNC: el campo Empresa queda de solo lectura para que no se escriba el nombre a mano. */
+  consultandoRnc = false;
+  private consultaRnc?: Subscription;
+
+  /** Cuando el RNC (9 dígitos) o la cédula (11) está completo y la factura lleva comprobante, busca la razón social en el listado de la DGII. */
+  private consultarRncDgii(valor: any): void {
+    this.rncEstadoDgii = null;
+    this.consultaRnc?.unsubscribe();
+    this.consultandoRnc = false;
+    const rnc = (valor ?? '').toString().replace(/[\s-]/g, '');
+    if (!this.isNcfRequire || !/^(\d{9}|\d{11})$/.test(rnc)) {
+      return;
+    }
+    this.consultandoRnc = true;
+    this.consultaRnc = this.catalogosService.getRncDgii(rnc)
+      .pipe(takeUntil(this.destroy$), finalize(() => this.consultandoRnc = false))
+      .subscribe({
+        next: registro => {
+          // El usuario pudo cambiar el RNC mientras se consultaba
+          if ((this.form.get('RNC')?.value ?? '').toString().replace(/[\s-]/g, '') !== rnc) { return; }
+          if (!registro.activo) {
+            this.rncEstadoDgii = registro.estado;
+            this.toastr.warning(`RNC ${registro.estado.toLowerCase()} según la DGII: no se puede facturar con comprobante a este RNC.`);
+            return;
+          }
+          const empresa = this.form.get('empresa');
+          const actual = (empresa?.value ?? '').toString().trim();
+          if (!actual || actual === this.empresaDeDgii) {
+            empresa?.setValue(registro.razonSocial);
+            this.empresaDeDgii = registro.razonSocial;
+          }
+        },
+        error: (err) => {
+          if (err?.status === 404) {
+            this.toastr.info('RNC no encontrado en el listado de la DGII; escriba el nombre de la empresa.');
+          } else if (err?.status !== 400) {
+            this.toastr.warning('No se pudo consultar el RNC en la DGII; escriba el nombre de la empresa.');
+          }
+        }
+      });
+  }
+
   private validarRncComprobante(): boolean {
     if (!this.isFactura || !this.isNcfRequire) {
       return true;
     }
     const rncVacio = this.rncVacio();
     const empresaVacia = this.empresaVacia();
+    if (this.rncEstadoDgii) {
+      this.form.get('RNC')?.markAsTouched();
+      this.toastr.error(`RNC ${this.rncEstadoDgii.toLowerCase()} según la DGII: no se puede facturar con comprobante a este RNC.`);
+      return false;
+    }
     if (!rncVacio && !empresaVacia) {
       return true;
     }
@@ -370,6 +421,11 @@ onModalClose(rep: any) {
     this.loadCatalogos();
     this.obtenerItbis();
     this.obtenerClientes();
+
+    // Al escribir un RNC completo se busca el nombre en el listado de la DGII
+    this.form.get('RNC')?.valueChanges
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(valor => this.consultarRncDgii(valor));
 
     // Sincronizar tipoPago con tipoPagoSeleccionado
     this.form.get('tipoPago')?.valueChanges.subscribe((value: any) => {

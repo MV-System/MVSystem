@@ -78,7 +78,8 @@
                             <div class="grid two-cols" *ngIf="isNcfRequire">
                                 <div><label for="empresa" class="mb-0"><strong>Empresa:</strong></label> <span class="required-field" *ngIf="isFactura">*</span></div>
                                 <div>
-                                    <input id="empresa" type="text" autocomplete="off" class="form-control" formControlName="empresa" placeholder="Ej: Comercial Pérez SRL…" [ngClass]="{'is-invalid': isFactura && form.get('empresa')?.touched && empresaVacia()}">
+                                    <input id="empresa" type="text" autocomplete="off" class="form-control" [readonly]="consultandoRnc" formControlName="empresa" placeholder="Ej: Comercial Pérez SRL…" [ngClass]="{'is-invalid': isFactura && form.get('empresa')?.touched && empresaVacia()}">
+                                    <div class="text-muted small" aria-live="polite" *ngIf="consultandoRnc"><span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Buscando el nombre en la DGII…</div>
                                     <div class="required-field" aria-live="polite" *ngIf="isFactura && form.get('empresa')?.touched && empresaVacia()">Este campo es requerido.</div>
                                 </div>
                             </div>
