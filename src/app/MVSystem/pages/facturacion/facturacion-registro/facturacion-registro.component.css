@@ -638,6 +638,7 @@ ng-select[readonly] ::ng-deep .ng-value {
 /* ===== ESTILOS PARA EL MODAL DE CLIENTE ===== */
 
 .modal-wrapper {
+    overscroll-behavior: contain;
     position: fixed;
     top: 0;
     left: 0;
@@ -1046,7 +1047,6 @@ ng-select[readonly] ::ng-deep .ng-value {
     .articulo-field input:focus {
         border-color: #467ff1 !important;
         box-shadow: 0 0 0 3px rgba(70, 127, 241, 0.1) !important;
-        outline: none !important;
     }
     .articulo-totales {
         display: flex;
@@ -1414,7 +1414,6 @@ ng-select[readonly] ::ng-deep .ng-value {
 }
 
 .totals-input-modern:focus {
-    outline: none;
     border-color: #10b981;
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     background: #ffffff;
@@ -1537,4 +1536,8 @@ ng-select[readonly] ::ng-deep .ng-value {
     display: block;
     font-size: 0.875rem;
     margin-top: 0.25rem;
+}
+
+::ng-deep .cliente-select-row .ng-select.is-invalid .ng-select-container {
+    border-color: #dc3545 !important;
 }
