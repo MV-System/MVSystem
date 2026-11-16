@@ -109,11 +109,12 @@ describe('PreFacturasService', () => {
   });
 
   it('debe anular una pre-factura', () => {
-    service.anularPreFactura(1).subscribe(resp => {
+    service.anularPreFactura(1, null, 'Cliente desistió').subscribe(resp => {
       expect(resp).toBeTruthy();
     });
     const req = httpMock.expectOne(`${APIURL.PreFacturas.Anular}/1/anular`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ motivo: 'Cliente desistió' });
     req.flush({ ok: true });
   });
 });

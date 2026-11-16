@@ -7,6 +7,7 @@ import { FacturaFilter } from 'src/app/core/interfaces/mantenimiento';
 import { ToastrService } from 'ngx-toastr';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { UserTrackingService } from 'src/app/core/services/user-tracking.service';
+import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
 import { DetallePago } from '../facturacion-registro/pago-mixto/pago-mixto.component';
 
 @Component({
@@ -68,6 +69,7 @@ export class CajaListaComponent implements OnInit {
     return this.preFacturas.reduce((acc, pf) => acc + (pf.total || 0), 0);
   }
   subs: any[] = [];
+  verAnuladas = false;
   facturaNumberReporte: number | null = null;
   @Output() imprimirFactura = new EventEmitter<number>();
   preFacturas: PreFactura[] = [];
@@ -256,7 +258,7 @@ export class CajaListaComponent implements OnInit {
   executeSearch(searchTerm: string): void {
     if (searchTerm.length >= this.minSearchLength || searchTerm.length === 0) {
       this.loading = true;
-      this.preFacturasService.listarPreFacturas({ Estado: 'P', criterio: searchTerm }).subscribe({
+      this.preFacturasService.listarPreFacturas({ Estado: this.estadoConsulta, criterio: searchTerm }).subscribe({
         next: (data) => {
           this.preFacturas = data;
           this.loading = false;
@@ -275,8 +277,32 @@ export class CajaListaComponent implements OnInit {
     private mantenimientoService: MantenimientoService,
     private toast: ToastrService,
     private rDialogService: RDialogService,
-    private tracking: UserTrackingService
+    private tracking: UserTrackingService,
+    private validatorPermissionService: ValidatorPermissionService
   ) {}
+
+  CheckAnuladas(): boolean {
+    return this.validatorPermissionService.validateUserRole("vercheckfacturasAnuladas");
+  }
+
+  /** Estado que se consulta: 'X' anuladas, 'P' pendientes */
+  get estadoConsulta(): string {
+    return this.verAnuladas ? 'X' : 'P';
+  }
+
+  onToggleAnuladas(): void {
+    this.expandedRowIndex = null;
+    this.selectedRowIndex = null;
+    this.detallePrefactura = [];
+    this.detalleError = null;
+    this.pageIndex = 1;
+    this.executeSearch(this.criterio);
+  }
+
+  usuarioAnulo(pf: PreFactura): string {
+    const usuario = pf.usuario_Procesamiento;
+    return usuario && usuario !== 'suser_sname()' ? usuario : '—';
+  }
 
   ngOnInit(): void {
     this.cargarTiposPagos();
@@ -349,7 +375,7 @@ export class CajaListaComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.preFacturasService.listarPreFacturas({ Estado: 'P' }).subscribe({
+    this.preFacturasService.listarPreFacturas({ Estado: this.estadoConsulta }).subscribe({
       next: (data) => {
         this.preFacturas = data || [];
         this.loading = false;
@@ -364,7 +390,7 @@ export class CajaListaComponent implements OnInit {
   }
 
   private cargarPreFacturasConAjustePago(numeroPreFactura: number): void {
-    this.preFacturasService.listarPreFacturas({ Estado: 'P' }).subscribe({
+    this.preFacturasService.listarPreFacturas({ Estado: this.estadoConsulta }).subscribe({
       next: (data) => {
         this.preFacturas = data || [];
         const prefactura = this.preFacturas.find(p => p.numero_PreFactura === numeroPreFactura);
@@ -627,20 +653,56 @@ export class CajaListaComponent implements OnInit {
     return null; // Implementa la referencia real aquí
   }
 
-  anularPreFactura(id: number, literal?: string | null): void {
+  // --- Anulación de pre-factura con motivo obligatorio ---
+  preFacturaPorAnular: PreFactura | null = null;
+  motivoAnulacion: string = '';
+  readonly minMotivoAnulacion = 5;
+
+  get motivoAnulacionValido(): boolean {
+    return this.motivoAnulacion.trim().length >= this.minMotivoAnulacion;
+  }
+
+  /** Abre el modal que pide el motivo de la anulación */
+  anularPreFactura(pf: PreFactura): void {
+    this.preFacturaPorAnular = pf;
+    this.motivoAnulacion = '';
+    // El foco pasa al campo del motivo (y Escape cierra el modal)
+    setTimeout(() => document.getElementById('motivoAnulacionPf')?.focus(), 0);
+  }
+
+  cerrarModalAnulacion(): void {
+    if (this.accionEnCurso !== null) { return; }
+    this.preFacturaPorAnular = null;
+    this.motivoAnulacion = '';
+  }
+
+  confirmarAnulacion(): void {
+    const pf = this.preFacturaPorAnular;
+    if (pf === null) { return; }
+
+    if (!this.motivoAnulacionValido) {
+      this.toast.warning(`Indique el motivo de la anulación (mínimo ${this.minMotivoAnulacion} caracteres)`);
+      return;
+    }
+
+    const id = pf.numero_PreFactura;
     this.accionEnCurso = id;
     this.mensaje = null;
-    this.preFacturasService.anularPreFactura(id, literal).subscribe({
+    const sub = this.preFacturasService.anularPreFactura(id, pf.literal, this.motivoAnulacion.trim()).subscribe({
       next: () => {
         this.mensaje = 'Pre-factura anulada correctamente.';
         this.accionEnCurso = null;
+        this.preFacturaPorAnular = null;
+        this.motivoAnulacion = '';
         this.cargarPreFacturas();
       },
-      error: () => {
-        this.mensaje = 'Error al anular la pre-factura.';
+      error: (err) => {
+        // El interceptor devuelve el mensaje del API como texto en los errores 400
+        this.mensaje = typeof err === 'string' && err ? err : 'Error al anular la pre-factura.';
         this.accionEnCurso = null;
       }
     });
+    this.subs.push(sub);
   }
 
   reimprimirPreFactura(pf: PreFactura): void {
