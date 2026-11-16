@@ -31,6 +31,7 @@ export interface PreFactura {
   fecha_Registro: string;
   fecha_Procesamiento: string | null;
   usuario_Procesamiento: string | null;
+  motivo_Anulacion?: string;
   nfcTipoNumero: string;
   nfcfiscal: string;
   ncF_NUMERO: string;
@@ -107,9 +108,10 @@ export class PreFacturasService {
   }
 
   // 6. Anular pre-factura
-  anularPreFactura(id: number, literal?: string | null): Observable<any> {
+  // El usuario no se envía: el API lo toma de la sesión
+  anularPreFactura(id: number, literal: string | null | undefined, motivo: string): Observable<any> {
     const params = literal ? new HttpParams().set('literal', literal) : undefined;
-    return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, {}, { params });
+    return this.http.post(`${APIURL.PreFacturas.Anular}/${id}/anular`, { motivo }, { params });
   }
 
   // 7. Actualizar tipo de pago de pre-factura
