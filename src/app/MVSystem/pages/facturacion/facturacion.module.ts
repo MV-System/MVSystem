@@ -15,7 +15,6 @@ import { FacturacionDetailComponent } from './facturacion-consulta/facturacion-d
 import { SharedModule } from '../../../shared/shared.module';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
 import { FormClienteComponent } from './facturacion-registro/form-cliente/form-cliente.component';
-import { CotizacionListComponent } from './facturacion-registro/cotizacion-list/cotizacion-list.component';
 import { ClientesModule } from '../Clientes/clientes.module'; // Importar el módulo de clientes
 import { CierreCajaReporteComponent } from './facturacion-consulta/cierre-caja-reporte/cierre-caja-reporte.component';
 
@@ -36,7 +35,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     FacturacionListaComponent,
     FacturacionDetailComponent,
     FormClienteComponent,
-    CotizacionListComponent,
     CierreCajaReporteComponent
   ],
   imports: [
