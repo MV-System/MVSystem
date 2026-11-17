@@ -611,6 +611,46 @@ label.total {
     color: #495057;
 }
 
+
+/* Botón buscar móvil (IMEI): a la derecha; la X queda a su izquierda */
+
+.search-input-wrapper .mobile-search-input {
+    padding-right: 5.5rem;
+}
+
+.search-input-wrapper .mobile-search-btn {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    color: #667eea;
+    font-size: 1.15rem;
+    z-index: 1;
+}
+
+.search-input-wrapper .mobile-search-btn:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.search-input-wrapper .clear-search-btn {
+    right: 2.9rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .filter-dropdowns-container {
     display: flex;
     gap: 0.75rem;
@@ -681,6 +721,14 @@ label.total {
     border-color: #28a745;
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
     outline: none;
+}
+
+/* ng-select "Modelo o marca" en móvil: mismo alto, borde y radio que .mobile-select */
+.mobile-ng-select ::ng-deep .ng-select-container {
+    height: 48px;
+    min-height: 48px;
+    border: 2px solid #e9ecef;
+    border-radius: 24px;
 }
 
 .mobile-actions-container {

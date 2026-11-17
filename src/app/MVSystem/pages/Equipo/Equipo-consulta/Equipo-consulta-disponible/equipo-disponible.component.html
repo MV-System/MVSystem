@@ -153,9 +153,12 @@
                         <!-- Búsqueda por IMEI -->
                         <div class="search-input-wrapper">
                             <i class="bi bi-upc-scan search-icon"></i>
-                            <input class="form-control mobile-search-input" placeholder="IMEI del equipo…" formControlName="imei" (keyup)="obtenerEquiposDisponibles()" type="text" autocomplete="off">
+                            <input class="form-control mobile-search-input" placeholder="IMEI del equipo…" formControlName="imei" (keyup.enter)="onEnterKey($event)" type="search" enterkeyhint="search" aria-label="IMEI del equipo" spellcheck="false" autocomplete="off">
                             <button type="button" class="clear-search-btn" *ngIf="form.get('imei')?.value" (click)="form.get('imei')?.setValue(''); obtenerEquiposDisponibles()">
                                 <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                            <button type="button" class="mobile-search-btn" title="Buscar" aria-label="Buscar" (click)="obtenerEquiposDisponibles()">
+                                <i class="bi bi-search"></i>
                             </button>
                         </div>
                     </div>
@@ -163,13 +166,19 @@
                     <!-- Dropdowns modernos -->
                     <div class="filter-dropdowns-container">
                         <!-- Sucursal -->
-                        <div class="sucursal-select-wrapper" *ngIf="SelectSucursal()">
-                            <i class="bi bi-building select-icon"></i>
-                            <select class="form-select mobile-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
-                                <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
-                                    {{ almacen.descripcion }}
-                                </option>
-                            </select>
+                        <div class="sucursal-select-wrapper-with-label" *ngIf="SelectSucursal()">
+                            <div class="mobile-filter-label">
+                                <i class="bi bi-building me-2 text-orange"></i>
+                                <span class="label-text">Sucursal:</span>
+                            </div>
+                            <div class="sucursal-select-wrapper">
+                                <i class="bi bi-building select-icon"></i>
+                                <select class="form-select mobile-select" formControlName="almacen" (change)="obtenerEquiposDisponibles()">
+                                    <option *ngFor="let almacen of almacenListado" [value]="almacen.iD_Almacen">
+                                        {{ almacen.descripcion }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Suplidor -->
@@ -190,7 +199,7 @@
                         </div>
 
                         <!-- Modelo -->
-                        <div class="sucursal-select-wrapper">
+                        <div class="sucursal-select-wrapper mobile-ng-select">
                             <i class="bi bi-cpu select-icon"></i>
                             <ng-select [items]="opcionesModeloMarca" bindLabel="label" bindValue="key" placeholder="Modelo o marca" formControlName="modelo" [searchable]="true" [searchFn]="buscarModeloMarca" [virtualScroll]="true" (change)="obtenerEquiposDisponibles()" class="modern-select-ng">
                                 <ng-template ng-option-tmp let-item="item">
