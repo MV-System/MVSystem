@@ -19,12 +19,10 @@ import { MantenimientoService } from '../../../../core/services/mantenimiento.se
 import { PreFacturasService, PreFactura, PreDetalleFactura } from '../../../../core/services/prefacturas.service';
 import { LoadingService } from '../../../../shared/components/r-loading/loading.service';
 import { DETALLE_ESPERA_DGII, ETAPAS_ESPERA_DGII } from '../../../../shared/components/r-loading/espera-dgii.mensajes';
-import { CotizacionService } from '../../../../core/services/cotizacion.service';
 import { LoginService } from '../../../../auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { ValidatorPermissionService } from '../../../../core/services/validator-permission.service';
 import { Cliente, ClienteConsultaCriterio } from '../../../../core/interfaces/cliente.interface';
-import { CotizacionAmount } from 'src/app/core/interfaces/cotizacion.interface';
 import { CreatorPDFFile } from 'src/app/helpers/helper';
 import { formatearMonto } from 'src/app/core/utils/formato';
 
@@ -187,7 +185,6 @@ reparaciones: any[] = [];
     private vendedorService: VendedorService,
     private mantenimientoService: MantenimientoService,
     private loading: LoadingService,
-    private cotizacionService: CotizacionService,
     private loginService: LoginService,
     private rDialogService: RDialogService,
   private validatorPermissionService: ValidatorPermissionService,
@@ -444,7 +441,6 @@ onModalClose(rep: any) {
   printing: boolean = false;
   customer?: Cliente;
   buscandoCliente: boolean = false; // true mientras se resuelve el cliente elegido (evita facturar con cliente en cero)
-  cotizaciones!: CotizacionAmount[];
   detalleFacturaRegistroLista: DetalleFacturaList[] = [];
   customers: Cliente[] = []
   facturaTipos: TipoFactura[] = [];
@@ -736,14 +732,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
     }
     }
   }
-  onSelectCotizacion(cotizacion: CotizacionAmount) {
-    this.abono = cotizacion.abono;
-    this.descuento = cotizacion.descuento;
-    this.itbis = cotizacion.itbis;
-    this.subTotal = cotizacion.subTotal;
-    this.total = cotizacion.total;
-    this.loadDetalleCotizacion(cotizacion.numero_Factura);
-  }
   agregarAbono() {
     const { abono } = this.form.value;
 
@@ -764,14 +752,6 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
 
     this.abono = abono;
     this.refreshGeneralValues();
-  }
-  onToggle(e: boolean) {
-    if (e == true) {
-      this.isFactura = !this.isFactura;
-    }
-    else {
-      this.isFactura = !this.isFactura;
-    }
   }
   onClean() {
     //  setTimeout(() => {
@@ -931,16 +911,11 @@ calcularSubTotalArticulo(precio: number, cantidad: number) {
         return;
       }
 
-      // Solo la factura exige cliente válido (la cotización conserva su comportamiento)
       if (this.isFactura && !this.validarCliente()) {
         return;
       }
 
-      if (this.isFactura) {
-        this.generateFactura();
-      } else {
-        this.generateCotizacion();
-      }
+      this.generateFactura();
     } else {
       this.form.markAllAsTouched();
     }
@@ -1304,36 +1279,6 @@ else
       return false;
     }
     return true;
-  }
-  loadDetalleCotizacion(numeroRegistro: number) {
-
-    this.cotizacionService.getDetalleCotizacionConsulta(numeroRegistro, Number(this.loginService.getUserIdSucursal))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(articulos => {
-        articulos.forEach((articulo, index) => {
-          const data = this.fb.group({
-            cantidad: [articulo.cantidad],
-            descripcion: [articulo.descripcion],
-            descuento: [articulo.descuento],
-            fechaRegistro: [new Date().toDateString()],
-            idEquipo: [articulo.iD_Equipo],
-            idGarantia: [0],
-            idTipo: [articulo.iD_Tipo],
-            numeroFactura: [articulo.numero_Factura],
-            precio: [articulo.precio],
-            subTotal: [articulo.subTotal],
-            total: [articulo.total],
-            itbis: [articulo.itbis || 0],
-            articulo: [''],
-            precioDetalle: [0],
-            precioMayor: [0],
-          });
-          this.articulos().insert(index - 1, data);
-          this.articulos().controls[index].get('articulo')?.patchValue(`${articulo.descripcion.toUpperCase()} | ${formatearMonto(articulo.precio)}`)
-
-        })
-
-      })
   }
   actualizarContadorModelos() {
     const conteo = new Map<string, number>();
@@ -1869,32 +1814,6 @@ printFacturaMini() {
       factura.detalleFacturaList.push(this.modeloArticulos(control))
     }
     return factura;
-  }
-  generateCotizacion() {
-    this.isLoading = true;
-    const data = this.loadDataToPrint()
-    this.mantenimientoService.postCotizacionReport(data)
-    .pipe(takeUntil(this.destroy$))
-      .subscribe((blobResponse) => {
-        this.form.reset({
-          tipoFactura: 1,
-          tipoPago: 1,
-          comprobante: 0,
-          garantia: 7,
-          aplicarItbis: false,
-        })
-
-        this.articulos().clear()
-        this.agregarArticulo()
-
-        CreatorPDFFile(blobResponse);
-        this.isLoading = false;
-        this.onClean();
-
-      },error=>{
-        this.isLoading = false;
-        this.toastr.error(error)
-      })
   }
   loadFacturaNumero() {
     this.mantenimientoService.getFacturaNumero()

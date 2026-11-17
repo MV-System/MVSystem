@@ -11,7 +11,6 @@ import { VendedorService } from 'src/app/core/services/vendedor.service';
 import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { MantenimientoService } from 'src/app/core/services/mantenimiento.service';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
-import { CotizacionService } from 'src/app/core/services/cotizacion.service';
 import { LoginService } from 'src/app/auth/login.service';
 import { RDialogService } from 'src/app/shared/components/r-dialog/r-dialog.service';
 import { ValidatorPermissionService } from 'src/app/core/services/validator-permission.service';
@@ -101,14 +100,9 @@ describe('FacturacionRegistroComponent', () => {
       mantenimientoService: jasmine.createSpyObj('MantenimientoService', [
         'getReparacionesPendientes',
         'postFactura',
-        'getFacturaNumero',
-        'postCotizacionReport'
+        'getFacturaNumero'
       ]),
       loadingService: jasmine.createSpyObj('LoadingService', ['showLoading', 'hideLoading']),
-      cotizacionService: jasmine.createSpyObj('CotizacionService', [
-        'getDetalleCotizacionConsulta',
-        'postCotizacion'
-      ]),
       loginService: jasmine.createSpyObj('LoginService', ['getUserName'], {
         getUserIdSucursal: 1,
         getUserEmpresa: 'Test Company',
@@ -131,7 +125,6 @@ describe('FacturacionRegistroComponent', () => {
         { provide: CatalogosService, useValue: mockServices.catalogosService },
         { provide: MantenimientoService, useValue: mockServices.mantenimientoService },
         { provide: LoadingService, useValue: mockServices.loadingService },
-        { provide: CotizacionService, useValue: mockServices.cotizacionService },
         { provide: LoginService, useValue: mockServices.loginService },
         { provide: RDialogService, useValue: mockServices.rDialogService },
         { provide: ValidatorPermissionService, useValue: mockServices.validatorPermissionService }
@@ -154,8 +147,6 @@ describe('FacturacionRegistroComponent', () => {
     mockServices.mantenimientoService.getReparacionesPendientes.and.returnValue(of({ data: [] }));
     mockServices.mantenimientoService.postFactura.and.returnValue(of({ factura: { numeroFactura: 12345 }, mensaje: 'Factura guardada exitosamente' }));
     mockServices.mantenimientoService.getFacturaNumero.and.returnValue(of({ numero: 'F-001' }));
-    mockServices.cotizacionService.getDetalleCotizacionConsulta.and.returnValue(of([]));
-    mockServices.cotizacionService.postCotizacion.and.returnValue(of({ success: true }));
     mockServices.loginService.getUserName.and.returnValue('testuser');
     mockServices.validatorPermissionService.validateUserRole.and.returnValue(true);
   });
@@ -642,17 +633,6 @@ describe('FacturacionRegistroComponent', () => {
       expect(component.generateFactura).not.toHaveBeenCalled();
     });
 
-    it('should submit valid form for quotation', () => {
-      component.isFactura = false;
-      component.form.get('telefono')?.setValue('8091234567');
-      component.form.get('vendedor')?.setValue(1);
-      spyOn(component, 'generateCotizacion');
-
-      component.onSubmit();
-
-      expect(component.generateCotizacion).toHaveBeenCalled();
-    });
-
     it('should handle form submission errors', () => {
       const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
       const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
@@ -901,69 +881,6 @@ describe('FacturacionRegistroComponent', () => {
       component.generateFactura();
 
       expect(component.accesoriosBuffer.length).toBe(0);
-    });
-  });
-
-  describe('Quotation Generation Flow', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-
-    it('should generate quotation successfully', () => {
-      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
-
-      const mockPdfBlob = new Blob(['PDF content'], { type: 'application/pdf' });
-      mockMantenimientoService.postCotizacionReport.and.returnValue(of(mockPdfBlob));
-
-      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
-      component.isFactura = false;
-      component.form.get('telefono')?.setValue('8091234567');
-      component.form.get('vendedor')?.setValue(1);
-
-      component.generateCotizacion();
-
-      // After async operations complete, isLoading should be false
-      expect(component.isLoading).toBeFalse();
-      expect(mockMantenimientoService.postCotizacionReport).toHaveBeenCalled();
-    });
-
-    it('should reset form after successful quotation generation', () => {
-      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
-
-      const mockPdfBlob = new Blob(['PDF content'], { type: 'application/pdf' });
-      mockMantenimientoService.postCotizacionReport.and.returnValue(of(mockPdfBlob));
-
-      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
-      // Set form values
-      component.form.patchValue({
-        telefono: '8091234567',
-        vendedor: 1,
-        tipoFactura: 2,
-        tipoPago: 2,
-        aplicarItbis: true
-      });
-
-      component.generateCotizacion();
-
-      // Verify form reset with default values
-      expect(component.form.get('tipoFactura')?.value).toBe(1);
-      expect(component.form.get('tipoPago')?.value).toBe(1);
-      expect(component.form.get('comprobante')?.value).toBe(0);
-      expect(component.form.get('garantia')?.value).toBe(7);
-      expect(component.form.get('aplicarItbis')?.value).toBe(false);
-    });
-
-    it('should handle quotation generation error', () => {
-      const mockMantenimientoService = TestBed.inject(MantenimientoService) as jasmine.SpyObj<MantenimientoService>;
-      const mockToastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
-
-      component.customer = { id_Cliente: 1, nombres: 'Test', apellidos: 'Client', numero_de_telefono: 8091234567, tipo_de_Cliente: 'Por Menor', iD_Canal: 1 };
-      const errorMessage = 'Error al generar cotización';
-      mockMantenimientoService.postCotizacionReport.and.returnValue(throwError(errorMessage));
-
-      component.generateCotizacion();
-
-      expect(mockToastr.error).toHaveBeenCalledWith(errorMessage);
     });
   });
 
