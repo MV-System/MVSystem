@@ -507,7 +507,7 @@
     </section>
     <!-- Controles de Paginación -->
     <div *ngIf="equiposVendidos.length > 0">
-        <pagination-controls (pageChange)="pageChanged($event)" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
+        <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" [currentPage]="currentPage" [totalItems]="totalRecord" [itemsPerPage]="filter.pageSize">
         </pagination-controls>
     </div>
     <app-laptop-historial *ngIf="historialImei" [imei]="historialImei" (cerrar)="historialImei = null"></app-laptop-historial>

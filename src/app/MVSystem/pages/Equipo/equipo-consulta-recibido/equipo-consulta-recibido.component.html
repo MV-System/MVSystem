@@ -171,6 +171,6 @@
     </section>
 
     <div class="d-flex justify-content-center mt-3" *ngIf="totalRegistros > filtro.pageSize && equiposRecibidos.length">
-        <pagination-controls (pageChange)="pageChanged($event)" class="modern-pagination"></pagination-controls>
+        <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" class="modern-pagination"></pagination-controls>
     </div>
 </div>
