@@ -12,7 +12,7 @@ import { CatalogosService } from 'src/app/core/services/catalogos.service';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LoadingService } from 'src/app/shared/components/r-loading/loading.service';
 import { DETALLE_ESPERA_DGII, ETAPAS_ESPERA_DGII } from 'src/app/shared/components/r-loading/espera-dgii.mensajes';
-import { CreatorPDFFile } from 'src/app/helpers/helper';
+import { CreatorPDFFile, ImprimirPdfBlob } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-facturacion-lista',
@@ -322,6 +322,20 @@ onCancel(detalle: DetalleFacturaList) {
     return this.loginService.isCertificado && String(factura?.ncf ?? '').trim().toUpperCase().startsWith('E');
   }
 
+  /** Texto con el que el API registra el motivo de las facturas anuladas por una nota de crédito. */
+  private readonly prefijoMotivoNotaCredito = 'Anulada por Nota de Crédito';
+
+  /** La factura quedó anulada por una nota de crédito (no por otra causa, como un rechazo de la DGII). */
+  anuladaPorNotaCredito(factura: FacturaConsulta): boolean {
+    return String(factura?.motivoAnulacion ?? '').trim().toLowerCase().startsWith(this.prefijoMotivoNotaCredito.toLowerCase());
+  }
+
+  /** La factura tiene comprobante fiscal: no admite cambios ni rebajas de artículo (la nota de crédito es por la factura completa). */
+  tieneComprobante(factura: FacturaConsulta): boolean {
+    const ncf = String(factura?.ncf ?? '').trim();
+    return ncf !== '' && ncf !== '0';
+  }
+
   /**
    * Muestra el resultado de la nota de crédito con tiempo para leerlo (15 s, se cierra al tocarlo o con la X).
    * Si la factura quedó anulada, la página se recarga cuando el aviso se cierra, no antes.
@@ -393,10 +407,14 @@ onCancel(detalle: DetalleFacturaList) {
     );
   }
 
-  /** Reimprime la Nota de crédito de una factura anulada (abre el PDF en otra pestaña). */
+  /**
+   * Reimprime la Nota de crédito de una factura anulada. Igual que las facturas, el PDF se imprime en un iframe oculto:
+   * abrirlo con window.open después de la respuesta lo bloquea el navegador (ya no hay un clic del usuario en curso).
+   */
   imprimirNotaCredito(numeroFactura: number) {
     if (this.isLoading) { return; }
     this.isLoading = true;
+    this.loading.showLoading('Generando la nota de crédito…', 'Por favor espere…');
     const request = {
       NumeroFacturaOrigen: +(`${numeroFactura}`),
       IDsucursal: this.sucursalActiva,
@@ -406,11 +424,12 @@ onCancel(detalle: DetalleFacturaList) {
     const sub = this.mantenimientoService.postNotaCreditoReport(request).subscribe({
       next: (blob) => {
         this.isLoading = false;
-        const url = URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-        window.open(url, '_blank');
+        this.loading.hideLoading();
+        ImprimirPdfBlob(blob);
       },
       error: async (err) => {
         this.isLoading = false;
+        this.loading.hideLoading();
         let mensaje = 'No se pudo imprimir la Nota de Crédito';
         try {
           const cuerpo = err?.error instanceof Blob ? JSON.parse(await err.error.text()) : err?.error;
