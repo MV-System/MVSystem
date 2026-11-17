@@ -112,10 +112,6 @@ export class ClientesConsultaComponent implements OnInit {
         next: (clientes) => {
           this.listaClientes = clientes;
           this.isLoading = false;
-
-          if (clientes.length > 0) {
-            this.toastr.success(`Se cargaron ${clientes.length} cliente(s)`, "Clientes cargados");
-          }
         },
         error: (error) => {
           this.isLoading = false;
