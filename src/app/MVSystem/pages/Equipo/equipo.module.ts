@@ -12,7 +12,6 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 import { DirectiveModule } from '../../../core/directives/directives.module';
-import { EquipoConsultaComponent } from './Equipo-consulta/equipo-consulta.component';
 import { EquipoConsultaRecibidoComponent } from './equipo-consulta-recibido/equipo-consulta-recibido.component';
 import { EquipoConsultaVendidoComponent } from './Equipo-consulta/Equipo-consulta-vendido/equipo-consulta-vendido.component';
 import { EquipoDisponibleComponent } from './Equipo-consulta/Equipo-consulta-disponible/equipo-disponible.component';
@@ -46,7 +45,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 @NgModule({
   declarations: [
     EquipoRegistroComponent,
-    EquipoConsultaComponent,
     EquipoConsultaVendidoComponent,
     EquipoDisponibleComponent,
     EquipoModificacionEstatusComponent,
