@@ -453,7 +453,8 @@ describe('EquipoDisponibleComponent', () => {
 
       component.clearFilters();
 
-      expect(component.form.get('almacen')?.value).toBeNull();
+      // Al limpiar, la sucursal vuelve a ser la del usuario (como al cargar la pantalla)
+      expect(component.form.get('almacen')?.value).toEqual(mockLoginService.getUserIdSucursal as any);
       expect(component.form.get('suplidor')?.value).toBeNull();
       expect(component.form.get('modelo')?.value).toBeNull();
       expect(component.form.get('imei')?.value).toBeNull();

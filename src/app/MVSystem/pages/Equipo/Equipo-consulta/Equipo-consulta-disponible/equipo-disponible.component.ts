@@ -148,6 +148,11 @@ export class EquipoDisponibleComponent implements OnInit, OnDestroy, OnChanges {
   clearFilters() {
    // this.loading.showLoading();
     this.form.reset();
+    // Como al cargar la página: el combo de sucursal vuelve a la sucursal del usuario
+    const sucursalUsuario = this.loginService.getUserIdSucursal;
+    if (sucursalUsuario) {
+      this.form.get('almacen')?.setValue(sucursalUsuario, { emitEvent: false });
+    }
     this.filter.imei = '';
     this.filter.fechaInicio = '';
     this.filter.fechaFinal = '';
@@ -743,6 +748,13 @@ obtenerEquiposDisponibles(resetPage: boolean = true) {
       this.catalogosService.getMarcasLista(),
     ]).subscribe(resp =>{
       this.almacenListado = resp[0];
+      // El combo de sucursal muestra la sucursal del usuario (la consulta inicial ya la usa)
+      const almacenActual = this.form.get('almacen')?.value;
+      const sucursalUsuario = this.loginService.getUserIdSucursal;
+      if ((almacenActual === '' || almacenActual == null) && sucursalUsuario
+        && this.almacenListado.some(a => String(a.iD_Almacen) === String(sucursalUsuario))) {
+        this.form.get('almacen')?.setValue(sucursalUsuario, { emitEvent: false });
+      }
       this.modeloListado = resp[1];
       this.listaSuplidor = resp[2];
       this.listaGrupos = resp[3];
