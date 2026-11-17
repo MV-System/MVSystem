@@ -234,7 +234,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
       telefono: this.form.get('telefono')?.value || '',
       vendedor: this.form.get('vendedor')?.value || '',
       idVendedor: Number(this.form.get('vendedor')?.value) || 0,
-      idAlmacen: 2,
+      idAlmacen: Number(this.loginService.getUserIdSucursal) || 0,
       idTipoFactura: Number(this.form.get('tipoFactura')?.value) || 1,
       idTipoPago: Number(this.form.get('tipoPago')?.value) || 1,
       fechaFacturacion: this.form.get('fechaFacturacion')?.value,
@@ -275,7 +275,7 @@ export class CotizacionComponent implements OnInit,OnDestroy {
         itbis: articulo.itbis || 0,
         total: articulo.total || 0,
         fechaRegistro: articulo.fechaRegistro || new Date().toDateString(),
-        usuario: 'admin',
+        usuario: this.loginService.getUserName() || '',
       });
     });
 
