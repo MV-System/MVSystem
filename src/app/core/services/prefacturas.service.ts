@@ -38,6 +38,7 @@ export interface PreFactura {
   rnc: string;
   literal: string | null;
   cotizacion_Numero: number;
+  iD_Garantia?: number;
   detalleFacturaList: any;
 }
 
