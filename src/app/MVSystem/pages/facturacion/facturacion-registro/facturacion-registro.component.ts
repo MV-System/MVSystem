@@ -237,6 +237,7 @@ reparaciones: any[] = [];
       rnc: this.form.get('RNC')?.value,
       literal: 'X',
       cotizacion_Numero: 0,
+      iD_Garantia: this.obtenerIdGarantiaSeleccionada(),
       detalleFacturaList: []
     };
 
