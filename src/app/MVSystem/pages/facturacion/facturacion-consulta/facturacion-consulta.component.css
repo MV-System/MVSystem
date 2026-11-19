@@ -44,7 +44,10 @@
 /* Contenedor principal horizontal */
 
 .stats-horizontal-container {
-    display: flex;
+    /* Las tarjetas se acomodan solas al ancho: nunca se salen de la pantalla */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.75rem 1rem;
     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 0.75rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
@@ -63,9 +66,9 @@
 /* Tarjetas individuales horizontales */
 
 .stats-card-horizontal {
-    flex: 1;
     display: flex;
     align-items: center;
+    min-width: 0;
 }
 
 
@@ -102,8 +105,9 @@
 
 .stats-info-horizontal {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
     flex: 1;
     min-width: 0;
 }
@@ -126,12 +130,13 @@
 
 .stats-number-horizontal {
     color: #2c3e50;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.25rem;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
 
@@ -146,11 +151,9 @@
 
 /* Divisor entre tarjetas */
 
+/* Con la cuadricula el espacio entre tarjetas lo da el gap */
 .stats-divider {
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, #dee2e6, transparent);
-    margin: 0 1rem;
-    align-self: stretch;
+    display: none;
 }
 
 
@@ -184,8 +187,8 @@
 
 @media (max-width: 768px) {
     .stats-horizontal-container {
-        flex-direction: column;
-        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.6rem;
         padding: 0.6rem 0.8rem;
     }
     .stats-content-horizontal {

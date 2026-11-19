@@ -236,6 +236,10 @@ export class UtilidadesComponent implements OnInit {
     return this.getDetalleAbonosVisible().reduce((total, abono) => total + (Number(abono.montoAbono) || 0), 0);
   }
 
+  getTotalRetencionDetalleAbonos(): number {
+    return this.getDetalleAbonosVisible().reduce((total, abono) => total + (Number(abono.retencionAbono) || 0), 0);
+  }
+
   getTotalGananciaDetalleAbonos(): number {
     return this.getDetalleAbonosVisible()
       .filter(abono => this.esAbonoQueSaldaFactura(abono))
@@ -1074,6 +1078,13 @@ setResponsiveView() {
            this.data.ganancia_Accesorios +
            this.data.ganancia_Desbloqueos +
            this.data.ganancia_Reparaciones;
+  }
+
+  /**
+   * Ganancia real: ganancias totales menos la retención de tarjeta del período
+   */
+  getGananciaReal(): number {
+    return this.getTotalGanancias() - (this.data.retencion_Tarjeta || 0);
   }
 
   /**

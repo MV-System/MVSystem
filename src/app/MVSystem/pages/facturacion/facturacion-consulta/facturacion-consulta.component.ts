@@ -727,6 +727,21 @@ export class FacturacionConsultaComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  getTotalRetencionTarjetaCliente(): number {
+    if (!this.facturas || this.facturas.length === 0) {
+      return 0;
+    }
+
+    // Usar el valor agregado que viene del SP si está disponible
+    const totalFromSP = this.facturas[0]?.totalRetencionTarjeta;
+    if (typeof totalFromSP === 'number' && !isNaN(totalFromSP)) {
+      return totalFromSP;
+    }
+
+    // Fallback: sumar manualmente si no viene del SP
+    return this.facturas.reduce((total, factura) => total + (factura.montoRetencionTarjeta || 0), 0);
+  }
+
   getTotalVentaSinItbisCliente(): number {
     if (!this.facturas || this.facturas.length === 0) {
       return 0;

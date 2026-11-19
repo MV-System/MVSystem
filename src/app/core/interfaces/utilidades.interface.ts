@@ -21,6 +21,7 @@ export interface Utilidades {
   itbis_Desbloqueos: number;
   ganancia_Desbloqueos: number;
   abonos_Credito: number;
+  retencion_Tarjeta?: number;
   valida: number;
 }
 
@@ -31,6 +32,7 @@ export interface UtilidadAbonoDetalle {
   numeroFactura: number;
   fechaAbono: string;
   montoAbono: number;
+  retencionAbono?: number;
   facturaSaldada: boolean;
   esAbonoQueSaldaFactura: boolean;
   costoFactura: number;

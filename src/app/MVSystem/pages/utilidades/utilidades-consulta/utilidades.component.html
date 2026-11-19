@@ -376,6 +376,20 @@
                 <div class="col-xl col-md-4 col-sm-6">
                     <div class="stat-card stat-costos">
                         <div class="stat-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Retención tarjeta</p>
+                            <h4 class="stat-value">{{ (data.retencion_Tarjeta || 0) | currency:'DOP':'symbol':'1.0-0' }}</h4>
+                            <small class="stat-change text-muted">
+                                Ganancia real: {{ getGananciaReal() | currency:'DOP':'symbol':'1.0-0' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl col-md-4 col-sm-6">
+                    <div class="stat-card stat-costos">
+                        <div class="stat-icon">
                             <i class="bi bi-calculator"></i>
                         </div>
                         <div class="stat-content">
@@ -470,6 +484,7 @@
                                         <th class="text-end">Costo factura</th>
                                         <th class="text-end">Total factura</th>
                                         <th class="text-end">Monto abonado</th>
+                                        <th class="text-end">Retención</th>
                                         <th class="text-end">Ganancia del abono</th>
                                         <th>Usuario</th>
                                         <th>Nota</th>
@@ -483,6 +498,7 @@
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.costoFactura) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.totalFactura) }}</td>
                                         <td class="text-end text-nowrap fw-semibold text-success">{{ formatearMontoAbono(abono.montoAbono) }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(abono.retencionAbono) }}</td>
                                         <td class="text-end text-nowrap fw-semibold" [class.text-success]="esAbonoQueSaldaFactura(abono) && getGananciaVisible(abono) >= 0" [class.text-danger]="esAbonoQueSaldaFactura(abono) && getGananciaVisible(abono) < 0">
                                             {{ esAbonoQueSaldaFactura(abono) ? formatearMontoAbono(getGananciaVisible(abono)) : '—' }}
                                         </td>
@@ -496,6 +512,7 @@
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalCostoDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalFacturaDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalDetalleAbonos()) }}</td>
+                                        <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalRetencionDetalleAbonos()) }}</td>
                                         <td class="text-end text-nowrap">{{ formatearMontoAbono(getTotalGananciaDetalleAbonos()) }}</td>
                                         <td colspan="2"></td>
                                     </tr>

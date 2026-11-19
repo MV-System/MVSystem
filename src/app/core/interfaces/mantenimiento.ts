@@ -195,6 +195,8 @@ export interface FacturaConsulta {
     totalFacturado: number;
     totalItbis?: number;
     totalSinItbis?: number;
+    montoRetencionTarjeta?: number;
+    totalRetencionTarjeta?: number;
     nota: string;
     motivoAnulacion?: string | null;
     usuarioAnulacion?: string | null;
