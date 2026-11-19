@@ -174,10 +174,10 @@ GetUtilidadesDia(filterDia: utilidadesFiltros) {
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasDia = [
-            { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Acc.", "value": this.data.venta_Accesorios },
-  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
-  { "name": "Reps.", "value": this.data.venta_Reparaciones }
+            { "name": "Equipos", "value": Math.round(this.data.venta_Equipos) },
+  { "name": "Acc.", "value": Math.round(this.data.venta_Accesorios) },
+  { "name": "Desblq.", "value": Math.round(this.data.venta_Desbloqueos) },
+  { "name": "Reps.", "value": Math.round(this.data.venta_Reparaciones) }
           ];
           //this.loading.hideLoading(); // Terminar carga
         } else {
@@ -200,10 +200,10 @@ GetUtilidadesSemana(filterSemana: utilidadesFiltros) {
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasSemana = [
-            { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Acc.", "value": this.data.venta_Accesorios },
-  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
-  { "name": "Reps.", "value": this.data.venta_Reparaciones }
+            { "name": "Equipos", "value": Math.round(this.data.venta_Equipos) },
+  { "name": "Acc.", "value": Math.round(this.data.venta_Accesorios) },
+  { "name": "Desblq.", "value": Math.round(this.data.venta_Desbloqueos) },
+  { "name": "Reps.", "value": Math.round(this.data.venta_Reparaciones) }
           ];
          // this.loading.hideLoading(); // Terminar carga
         } else {
@@ -228,10 +228,10 @@ GetUtilidadesMes(filterMes: utilidadesFiltros) {
         if (equipos) {
           this.data = equipos; // Asigna el primer objeto a data
           this.singleVentasMes = [
-          { "name": "Equipos", "value": this.data.venta_Equipos },
-  { "name": "Acc.", "value": this.data.venta_Accesorios },
-  { "name": "Desblq.", "value": this.data.venta_Desbloqueos },
-  { "name": "Reps.", "value": this.data.venta_Reparaciones }
+          { "name": "Equipos", "value": Math.round(this.data.venta_Equipos) },
+  { "name": "Acc.", "value": Math.round(this.data.venta_Accesorios) },
+  { "name": "Desblq.", "value": Math.round(this.data.venta_Desbloqueos) },
+  { "name": "Reps.", "value": Math.round(this.data.venta_Reparaciones) }
           ];
           this.loading.hideLoading();
         } else {
