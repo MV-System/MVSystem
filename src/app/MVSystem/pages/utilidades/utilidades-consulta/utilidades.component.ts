@@ -92,6 +92,15 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
   resumen = {
     ventas: 0,
     ventasSinItbis: 0,
+    // Desglose de Ventas: contado del período + facturas a crédito saldadas en el período
+    ventasContado: 0,
+    ventasCredito: 0,
+    costoContado: 0,
+    costoCredito: 0,
+    itbisContado: 0,
+    itbisCredito: 0,
+    retencionContado: 0,
+    retencionCredito: 0,
     costo: 0,
     itbis: 0,
     retencionTarjeta: 0,
@@ -327,9 +336,18 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
 
     // El resumen sale de la fila Total, para que los dos cuadren siempre
     const t = this.filaTotal as FilaUtilidad;
+    const c = this.filaCreditoSaldado;
     this.resumen = {
       ventas: t.venta,
       ventasSinItbis: t.venta - t.itbis,
+      ventasContado: ventas,
+      ventasCredito: c ? c.venta : 0,
+      costoContado: costoContado,
+      costoCredito: c ? c.costo : 0,
+      itbisContado: this.getTotalItbis(),
+      itbisCredito: c ? c.itbis : 0,
+      retencionContado: retencionContado,
+      retencionCredito: c ? -(c.retencion || 0) : 0,
       costo: t.costo,
       itbis: t.itbis,
       retencionTarjeta: -(t.retencion || 0),

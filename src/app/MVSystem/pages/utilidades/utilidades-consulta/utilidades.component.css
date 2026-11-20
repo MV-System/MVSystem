@@ -732,3 +732,56 @@
     font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
+
+/* Tarjetas del resumen: compactas, contenido arriba */
+.resumen-grid {
+    gap: 0.75rem;
+}
+
+.resumen-item.stat-card {
+    padding: 0.85rem 1rem 0.75rem 1.1rem;
+    align-items: flex-start;
+}
+
+.resumen-item .stat-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.15rem;
+}
+
+.resumen-item .stat-value {
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.resumen-destacado .stat-value {
+    font-size: 1.6rem;
+}
+
+/* Desglose: etiqueta a la izquierda, valor a la derecha, una linea cada uno */
+.stat-card .stat-change.ventas-desglose {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    line-height: 1.25;
+    margin-top: 0.4rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid #edf2f7;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.desglose-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+}
+
+.desglose-fila > span:last-child {
+    font-weight: 600;
+    color: #4a5568;
+}

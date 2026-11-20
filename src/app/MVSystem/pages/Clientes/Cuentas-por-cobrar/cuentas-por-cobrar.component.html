@@ -150,7 +150,10 @@
                                               'factura-no-vencida': !isFacturaVencida(detalle.fechaLimitePagoFactura)}">
 
                                                 <div class="d-flex" style="min-width: 100px; padding-right: 10px; align-items: center;">
-                                                    <strong>Factura #:</strong> {{ detalle.numeroFactura }}
+                                                    <strong>Factura #:</strong>
+                                                    <button type="button" class="btn btn-link btn-ver-factura" title="Ver factura"
+                                                        [attr.aria-label]="'Ver factura ' + detalle.numeroFactura"
+                                                        (click)="verFactura(detalle); $event.stopPropagation()">{{ detalle.numeroFactura }}</button>
                                                 </div>
 
                                                 <div class="d-flex" style="min-width: 150px; padding-right: 10px; align-items: center;">
@@ -282,7 +285,9 @@
                                 <div class="factura-info-grid">
                                     <div class="factura-numero">
                                         <i class="bi bi-receipt"></i>
-                                        <span><b>Factura #{{detalle.numeroFactura}}</b></span>
+                                        <button type="button" class="btn btn-link btn-ver-factura" title="Ver factura"
+                                            [attr.aria-label]="'Ver factura ' + detalle.numeroFactura"
+                                            (click)="verFactura(detalle); $event.stopPropagation()"><b>Factura #{{detalle.numeroFactura}}</b></button>
                                     </div>
 
                                     <div class="factura-montos">

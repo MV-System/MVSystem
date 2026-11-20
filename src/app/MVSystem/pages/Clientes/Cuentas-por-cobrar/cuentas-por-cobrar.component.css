@@ -565,3 +565,23 @@ td {
         overflow-x: hidden !important;
     }
 }
+/* Numero de factura: clic para ver el PDF */
+.btn-ver-factura {
+    padding: 0 0 0 4px;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    vertical-align: baseline;
+    touch-action: manipulation;
+}
+
+.btn-ver-factura:hover {
+    color: var(--bs-primary, #0d6efd);
+}
+
+.btn-ver-factura:focus-visible {
+    outline: 2px solid var(--bs-primary, #0d6efd);
+    outline-offset: 2px;
+    box-shadow: none;
+}
