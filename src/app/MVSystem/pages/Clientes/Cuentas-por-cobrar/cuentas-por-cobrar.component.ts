@@ -315,6 +315,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (!idTipoPago || idTipoPago <= 0) {
       this.toastr.info('Seleccione un tipo de pago para continuar.');
+      this.resetFilterParam();
       return;
     }
 
@@ -332,6 +333,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (monto > detalle.montoPendiente) {
       this.toastr.info('El abono no puede ser mayor al monto pendiente.');
+      this.resetFilterParam();
       return;
     }
 
@@ -391,6 +393,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (!idTipoPago || idTipoPago <= 0) {
       this.toastr.info('Seleccione un tipo de pago para continuar.');
+      this.resetFilterParam();
       return;
     }
 
@@ -408,6 +411,7 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
 
     if (monto > Abono.montoPendiente) {
       this.toastr.info('El abono no puede ser mayor al monto pendiente.');
+      this.resetFilterParam();
       return;
     }
 
@@ -796,22 +800,12 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
         this.toastr.info("No se procesa la acción."); // Acción para el botón "No"
       },
       () => {
-        // Configuramos los parámetros del abono
-        this.filterParam.MontoAbono = detalle.montoPendiente;
-        this.filterParam.NumeroFactura = detalle.numeroFactura;
-
-        const filterParam: AbonoFacturaParam = {
-          Id_Cliente: this.idClienteSeleccionado,
-          NumeroFactura: detalle.numeroFactura,
-          MontoAbono: detalle.montoPendiente,
-          IdTipoPago: Number(detalle?.idTipoPago || this.idTipoPagoSeleccionado),
-          Nota: (detalle?.notaAbono || this.notaAbono || '').trim(),
-          IdSucursal: +this.loginService.getUserIdSucursal, // Asegúrate de llamar al método con paréntesis
-          Usuario: this.loginService.getUserName()
-        };
-
-        // Procesamos el abono
-        this.procesarAbono(filterParam);
+        // No se envía: se abren los campos de la factura para elegir tipo de pago
+        // y nota; el usuario pulsa "Procesar" (procesarAbono valida y envía).
+        detalle.showInput = true;
+        detalle.montoAbono = detalle.montoPendiente;
+        detalle.idTipoPago = 0;
+        detalle.notaAbono = '';
       },
       "Sí", // Etiqueta del botón para confirmar la acción
       "No, fue un error" // Etiqueta del botón para cancelar
@@ -826,19 +820,12 @@ imprimirReciboAbono(idCliente: number, numeroFactura: number, debeRecargar: bool
         this.toastr.info("No se procesa la acción.");
       },
       () => {
-        this.filterParam.MontoAbono = Saldar.montoPendiente;
-        this.filterParam.Id_Cliente = Saldar.id_Cliente;
-
-        const filterParam: AbonoFacturaParam = {
-      Id_Cliente:this.idClienteSeleccionado,
-      NumeroFactura:0,
-      MontoAbono: Saldar.montoPendiente,
-      IdTipoPago: Number(Saldar?.idTipoPago || this.idTipoPagoSeleccionado),
-      Nota: (Saldar?.notaAbono || this.notaAbono || '').trim(),
-      IdSucursal:+this.loginService.getUserIdSucursal,
-      Usuario: this.loginService.getUserName()
-    };
-this.procesarAbonoGeneral(filterParam);
+        // No se envía: se abren los campos del cliente para elegir tipo de pago
+        // y nota; el usuario pulsa "Procesar" (procesarAbonoGeneral valida y envía).
+        Saldar.showInput = true;
+        Saldar.montoAbonoGeneral = Saldar.montoPendiente;
+        Saldar.idTipoPago = 0;
+        Saldar.notaAbono = '';
       },
       "Si", // Etiqueta del botón para Anular la factura
       "No, Fue un error" // fue un error

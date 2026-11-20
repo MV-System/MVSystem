@@ -242,6 +242,34 @@
 
                                     <div class="stats-divider"></div>
 
+                                    <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalRetencionTarjetaCliente() === 0 && !isLoading}">
+                                        <div class="stats-content-horizontal">
+                                            <div class="stats-icon-horizontal">
+                                                <div *ngIf="isLoading" class="spinner-border spinner-border-sm text-warning" role="status"></div>
+                                                <i *ngIf="!isLoading" class="bi bi-credit-card text-warning"></i>
+                                            </div>
+                                            <div class="stats-info-horizontal">
+                                                <h6 class="stats-title-horizontal">
+                                                    Retención tarjeta
+                                                    <span *ngIf="hayFiltrosActivos()" class="filter-indicator" title="Filtros aplicados">
+                                                        <i class="bi bi-funnel-fill text-info"></i>
+                                                    </span>
+                                                </h6>
+                                                <span class="stats-number-horizontal" [ngClass]="{'animate-number': !isLoading}">
+                                                    <span *ngIf="isLoading" class="loading-placeholder">---</span>
+                                                <span *ngIf="!isLoading">{{ getTotalRetencionTarjetaCliente() | currency:'DOP':'symbol':'1.0-0' }}</span>
+                                                </span>
+                                                <small class="stats-subtitle-horizontal">
+                                                    <span *ngIf="!isLoading && getTotalRetencionTarjetaCliente() === 0" class="text-muted">Sin retención</span>
+                                                    <span *ngIf="!isLoading && getTotalRetencionTarjetaCliente() > 0">Comisión del procesador</span>
+                                                    <span *ngIf="isLoading">Calculando…</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="stats-divider"></div>
+
                                     <div class="stats-card-horizontal" [ngClass]="{'stats-loading': isLoading, 'stats-empty': getTotalVentaSinItbisCliente() === 0 && !isLoading}">
                                         <div class="stats-content-horizontal">
                                             <div class="stats-icon-horizontal">
