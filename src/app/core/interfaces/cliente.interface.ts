@@ -96,6 +96,7 @@ export interface FacturasPorClienteRetorn {
   totalFactura:   string;
   montoPendiente: string;
   fechaFactura:   string;
+  idSucursal?:    number; // Sucursal (almacén) de la factura
   editMode:       boolean;// Agregar la propiedad editMode aquí
   montoAbono:     number;
   idTipoPago?:    number;

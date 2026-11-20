@@ -93,6 +93,68 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     private tracking: UserTrackingService,
     private catalogosService: CatalogosService
   ) { }
+
+  /**
+   * Filtro del PDF de una factura con SU sucursal (almacén); si no viene, la del usuario.
+   */
+  private filtroPdfFactura(detalle: any): FacturaFilter {
+    const sucursal = Number(detalle?.idSucursal) || Number(this.loginService.getUserIdSucursal);
+    return {
+      almacen: sucursal,
+      criterio: '',
+      empresa: this.loginService.getUserEmpresa,
+      IdEmpresa: this.loginService.getUserIdEmpresa,
+      IdSucursal: String(sucursal),
+      ComprobanteCheck: 1,
+      EstadoFactura: 'A',
+      IdVendedor: 0,
+      pageIndex: 1,
+      pageSize: 1,
+      fechaInicio: '',
+      fechaFinal: '',
+      Usuario: this.loginService.getUserName(),
+    };
+  }
+
+  /**
+   * Abre el PDF de la factura pendiente en otra pestaña.
+   */
+  verFactura(detalle: any): void {
+    const numeroFactura = detalle?.numeroFactura;
+    if (!numeroFactura || numeroFactura <= 0) {
+      this.toastr.error('Número de factura inválido');
+      return;
+    }
+
+    // La pestaña se abre en el clic para que el navegador no la bloquee; el PDF se carga al llegar
+    const ventana = window.open('', '_blank');
+    this.loading.showLoading();
+
+    this.mantenimientoService.postFacturaReport(this.filtroPdfFactura(detalle), numeroFactura).subscribe({
+      next: (blob: Blob) => {
+        this.loading.hideLoading();
+        const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+        if (ventana) {
+          ventana.location.href = url;
+        } else {
+          // Ventanas emergentes bloqueadas: se descarga el PDF
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Factura_${numeroFactura}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      },
+      error: () => {
+        this.loading.hideLoading();
+        ventana?.close();
+        this.toastr.error('No se pudo abrir la factura. Intente de nuevo.');
+      }
+    });
+  }
+
   /**
    * Compartir factura pendiente (solo móvil) usando Web Share API
    */
@@ -111,22 +173,8 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     this.loading.showLoading();
     this.isLoading = true;
 
-    // Construir el filtro para el PDF (ajustar según tu lógica de negocio)
-    const filter: FacturaFilter = {
-      almacen:Number(this.loginService.getUserIdSucursal),// Si tienes almacén, pon el valor correcto
-      criterio: '',
-      empresa: this.loginService.getUserEmpresa,
-      IdEmpresa: this.loginService.getUserIdEmpresa,
-      IdSucursal: this.loginService.getUserIdSucursal,
-      ComprobanteCheck: 1,
-      EstadoFactura: 'A',
-      IdVendedor: 0,
-      pageIndex: 1,
-      pageSize: 1,
-      fechaInicio: '',
-      fechaFinal: '',
-      Usuario: this.loginService.getUserName(),
-    };
+    // Filtro del PDF con la sucursal de la factura
+    const filter: FacturaFilter = this.filtroPdfFactura(detalle);
 
     try {
       this.mantenimientoService.postFacturaReport(filter, numeroFactura).subscribe({
@@ -192,25 +240,10 @@ FechaInicio = '';//new Date(this.fechaHoy.getFullYear(), this.fechaHoy.getMonth(
     try {
       // Limitar a 10 facturas para evitar problemas de tamaño (ajusta según necesidad)
       const facturas = this.FacturasPorClientes.slice(0, 10);
-      const filterBase: FacturaFilter = {
-        almacen: Number(this.loginService.getUserIdSucursal),
-        criterio: '',
-        empresa: this.loginService.getUserEmpresa,
-        IdEmpresa: this.loginService.getUserIdEmpresa,
-        IdSucursal: this.loginService.getUserIdSucursal,
-        ComprobanteCheck: 1,
-        EstadoFactura: 'A',
-        IdVendedor: 0,
-        pageIndex: 1,
-        pageSize: 1,
-        fechaInicio: '',
-        fechaFinal: '',
-        Usuario: this.loginService.getUserName(),
-      };
-      // Descargar todos los PDFs en paralelo
+      // Descargar todos los PDFs en paralelo (cada uno con la sucursal de su factura)
       const pdfPromises = facturas.map(detalle =>
         new Promise<File>((resolve, reject) => {
-          this.mantenimientoService.postFacturaReport(filterBase, detalle.numeroFactura).subscribe({
+          this.mantenimientoService.postFacturaReport(this.filtroPdfFactura(detalle), detalle.numeroFactura).subscribe({
             next: (blob: Blob) => {
               const file = new File([blob], `Factura_${detalle.numeroFactura}.pdf`, { type: 'application/pdf' });
               resolve(file);
