@@ -33,6 +33,8 @@ export interface UtilidadAbonoDetalle {
   fechaAbono: string;
   montoAbono: number;
   retencionAbono?: number;
+  // En el abono que salda la factura: retención de todos sus abonos con tarjeta
+  retencionFactura?: number;
   facturaSaldada: boolean;
   esAbonoQueSaldaFactura: boolean;
   costoFactura: number;

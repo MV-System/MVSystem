@@ -236,7 +236,14 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
   }
 
   getGananciaVisible(abono: any): number {
-    return this.esAbonoQueSaldaFactura(abono) ? (Number(abono?.gananciaAbono) || 0) : 0;
+    // Ganancia de la factura saldada, menos la retención de todos sus abonos con tarjeta
+    return this.esAbonoQueSaldaFactura(abono)
+      ? (Number(abono?.gananciaAbono) || 0) - this.getRetencionFactura(abono)
+      : 0;
+  }
+
+  getRetencionFactura(abono: any): number {
+    return this.esAbonoQueSaldaFactura(abono) ? (Number(abono?.retencionFactura) || 0) : 0;
   }
 
   getTotalDetalleAbonos(): number {
@@ -250,7 +257,7 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
   getTotalGananciaDetalleAbonos(): number {
     return this.getDetalleAbonosVisible()
       .filter(abono => this.esAbonoQueSaldaFactura(abono))
-      .reduce((total, abono) => total + (Number(abono.gananciaAbono) || 0), 0);
+      .reduce((total, abono) => total + this.getGananciaVisible(abono), 0);
   }
 
   cargarGananciaAbonos(): void {
@@ -274,7 +281,7 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
     const abonos = this.abonosResumen;
     const saldados = abonos.filter(a => this.esAbonoQueSaldaFactura(a));
     const gananciaSaldados = saldados.reduce((t, a) => t + (Number(a.gananciaAbono) || 0), 0);
-    const retencionSaldados = saldados.reduce((t, a) => t + (Number(a.retencionAbono) || 0), 0);
+    const retencionSaldados = saldados.reduce((t, a) => t + this.getRetencionFactura(a), 0);
 
     this.credito = {
       abonos: abonos.length,
