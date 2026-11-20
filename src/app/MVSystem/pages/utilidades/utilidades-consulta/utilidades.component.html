@@ -69,32 +69,51 @@
                     <div class="stat-content">
                         <p class="stat-label"><i class="bi bi-cart-check me-1" aria-hidden="true"></i>Ventas</p>
                         <h4 class="stat-value">{{ resumenAnimado.ventas | currency:'DOP':'symbol':'1.0-0' }}</h4>
-                        <small class="stat-change text-muted">Sin ITBIS: {{ resumenAnimado.ventasSinItbis | currency:'DOP':'symbol':'1.0-0' }}</small>
+                        <small class="stat-change text-muted ventas-desglose">
+                            <span class="desglose-fila"><span>Contado</span><span>{{ resumen.ventasContado | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="desglose-fila"><span>Crédito saldado</span><span>{{ resumen.ventasCredito | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                        </small>
                     </div>
                 </div>
                 <div class="stat-card stat-costos resumen-item">
                     <div class="stat-content">
                         <p class="stat-label"><i class="bi bi-calculator me-1" aria-hidden="true"></i>Costo</p>
                         <h4 class="stat-value">{{ resumenAnimado.costo | currency:'DOP':'symbol':'1.0-0' }}</h4>
+                        <small class="stat-change text-muted ventas-desglose">
+                            <span class="desglose-fila"><span>Contado</span><span>{{ resumen.costoContado | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="desglose-fila"><span>Crédito saldado</span><span>{{ resumen.costoCredito | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                        </small>
                     </div>
                 </div>
                 <div class="stat-card stat-margen resumen-item">
                     <div class="stat-content">
                         <p class="stat-label"><i class="bi bi-receipt me-1" aria-hidden="true"></i>ITBIS</p>
                         <h4 class="stat-value">{{ resumenAnimado.itbis | currency:'DOP':'symbol':'1.0-0' }}</h4>
+                        <small class="stat-change text-muted ventas-desglose">
+                            <span class="desglose-fila"><span>Contado</span><span>{{ resumen.itbisContado | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="desglose-fila"><span>Crédito saldado</span><span>{{ resumen.itbisCredito | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                        </small>
                     </div>
                 </div>
                 <div class="stat-card stat-costos resumen-item">
                     <div class="stat-content">
                         <p class="stat-label"><i class="bi bi-credit-card me-1" aria-hidden="true"></i>Retención tarjeta</p>
                         <h4 class="stat-value">{{ resumenAnimado.retencionTarjeta | currency:'DOP':'symbol':'1.0-0' }}</h4>
+                        <small class="stat-change text-muted ventas-desglose">
+                            <span class="desglose-fila"><span>Contado</span><span>{{ resumen.retencionContado | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="desglose-fila"><span>Crédito saldado</span><span>{{ resumen.retencionCredito | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                        </small>
                     </div>
                 </div>
                 <div class="stat-card stat-ganancias resumen-item resumen-destacado">
                     <div class="stat-content">
                         <p class="stat-label"><i class="bi bi-cash-stack me-1" aria-hidden="true"></i>Ganancia real</p>
                         <h4 class="stat-value">{{ resumenAnimado.gananciaReal | currency:'DOP':'symbol':'1.0-0' }}</h4>
-                        <small class="stat-change text-muted">Margen {{ resumen.margen | number:'1.1-1' }} %</small>
+                        <small class="stat-change text-muted ventas-desglose">
+                            <span class="desglose-fila"><span>Contado</span><span>{{ resumen.gananciaContado | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="desglose-fila"><span>Crédito saldado</span><span>{{ resumen.gananciaCredito | currency:'DOP':'symbol':'1.0-0' }}</span></span>
+                            <span class="d-block text-nowrap">Margen {{ resumen.margen | number:'1.1-1' }} %</span>
+                        </small>
                     </div>
                 </div>
             </div>
