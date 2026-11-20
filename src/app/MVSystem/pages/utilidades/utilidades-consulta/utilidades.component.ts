@@ -8,7 +8,8 @@ import {
   ApexPlotOptions,
   ApexTooltip,
   ApexXAxis,
-  ApexYAxis
+  ApexYAxis,
+  ApexGrid
 } from 'ng-apexcharts';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMyDrpOptions } from 'mydaterangepicker';
@@ -139,6 +140,7 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
   barYaxis!: ApexYAxis;
   barLegend!: ApexLegend;
   barTooltip!: ApexTooltip;
+  barGrid!: ApexGrid;
   barAlto = 240;
 
   // Tabla por categoría (se calcula en recalcularResumen)
@@ -375,6 +377,8 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
     const sinMovimiento = this.reducirMovimiento();
     const animations = { enabled: !sinMovimiento, easing: 'easeinout' as const, speed: 800 };
     const positivo = (v: number) => (v > 0 ? v : 0);
+    // En celular los textos son más pequeños para que no se monten (los montos van completos)
+    const esMovil = typeof window !== 'undefined' && window.matchMedia('(max-width: 576px)').matches;
 
     // Dona
     this.perdidaTexto = r.gananciaReal < 0 ? `Pérdida: ${fmt(Math.abs(r.gananciaReal))}` : '';
@@ -382,7 +386,7 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
     const margenTexto = `${r.margen.toLocaleString('es-DO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
     this.donutChart = {
       type: 'donut',
-      height: 300,
+      height: esMovil ? 320 : 300,
       fontFamily: 'inherit',
       toolbar: { show: false },
       animations
@@ -390,11 +394,11 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
     this.donutPlotOptions = {
       pie: {
         donut: {
-          size: '68%',
+          size: esMovil ? '74%' : '68%',
           labels: {
             show: true,
-            name: { show: true, fontSize: '14px' },
-            value: { show: true, fontSize: '22px', formatter: (v: string) => fmt(Number(v)) },
+            name: { show: true, fontSize: esMovil ? '12px' : '14px', offsetY: esMovil ? -4 : 0 },
+            value: { show: true, fontSize: esMovil ? '16px' : '22px', offsetY: esMovil ? 2 : 0, formatter: (v: string) => fmt(Number(v)) },
             total: {
               show: true,
               showAlways: true,
@@ -406,7 +410,7 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
       }
     };
     this.donutDataLabels = { enabled: false };
-    this.donutLegend = { show: true, position: 'bottom', fontSize: '13px' };
+    this.donutLegend = { show: true, position: 'bottom', fontSize: esMovil ? '12px' : '13px', itemMargin: { horizontal: 6, vertical: 2 } };
     this.donutTooltip = { y: { formatter: (v: number) => fmt(v) } };
 
     // Barras por categoría
@@ -420,17 +424,38 @@ export class UtilidadesComponent implements OnInit, OnDestroy {
       toolbar: { show: false },
       animations
     };
-    this.barPlotOptions = { bar: { horizontal: true, distributed: true, borderRadius: 6, barHeight: '60%' } };
+    // El monto va FUERA de la barra, al final, en texto oscuro: así no lo tapa el color ni se corta en barras cortas
+    this.barPlotOptions = {
+      bar: { horizontal: true, distributed: true, borderRadius: 6, barHeight: '60%', dataLabels: { position: 'top' } }
+    };
     this.barDataLabels = {
       enabled: true,
       formatter: (v: number) => fmt(v),
-      style: { fontSize: '12px' }
+      textAnchor: 'start',
+      offsetX: 8,
+      style: { fontSize: esMovil ? '11px' : '12px', fontWeight: 700, colors: ['#334155'] },
+      dropShadow: { enabled: false }
     };
+    // Espacio a la derecha para el monto completo de la barra más larga: la barra nunca llena todo el ancho,
+    // así el monto siempre cabe al lado. Se calcula con el ancho disponible y el largo del texto.
+    const valores = filasBarra.map(f => f.ganancia);
+    const maxValor = Math.max(0, ...valores);
+    const minValor = Math.min(0, ...valores);
+    const anchoEjeY = esMovil ? 90 : 140;
+    const anchoGrafico = esMovil ? Math.max(240, window.innerWidth - 64) : 480;
+    const anchoBarras = Math.max(120, anchoGrafico - anchoEjeY - 24);
+    const anchoTexto = Math.max(...valores.map(v => fmt(v).length), 1) * (esMovil ? 7 : 7.5) + 16;
+    const factorMax = anchoBarras / Math.max(40, anchoBarras - anchoTexto);
     this.barXaxis = {
       categories: filasBarra.map(f => f.nombre === 'Crédito saldado en el período' ? 'Crédito saldado' : f.nombre),
-      labels: { formatter: (v: string) => fmt(Number(v)) }
+      min: minValor < 0 ? minValor * 1.15 : 0,
+      max: maxValor > 0 ? maxValor * Math.min(3, Math.max(1.15, factorMax)) : undefined,
+      // El monto ya está en cada barra: el eje de abajo no muestra montos (se montaban unos sobre otros)
+      labels: { show: false },
+      axisTicks: { show: false }
     };
-    this.barYaxis = { labels: { maxWidth: 140 } };
+    this.barGrid = { xaxis: { lines: { show: false } }, yaxis: { lines: { show: false } }, padding: { right: esMovil ? 8 : 16 } };
+    this.barYaxis = { labels: { maxWidth: anchoEjeY, style: { fontSize: esMovil ? '11px' : '12px' } } };
     this.barLegend = { show: false };
     this.barTooltip = { y: { formatter: (v: number) => fmt(v) } };
   }
